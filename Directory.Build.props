@@ -16,7 +16,38 @@
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <IsTestProject Condition="'$(IsTestProject)' == ''">false</IsTestProject>
+    <IsTestProject Condition="$(MSBuildProjectName.StartsWith('Tests.'))">true</IsTestProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPerfProject Condition="'$(IsPerfProject)' == ''">false</IsPerfProject>
+    <IsPerfProject Condition="$(MSBuildProjectName.StartsWith('Perf.')) Or $(MSBuildProjectName.EndsWith('.Perf'))">true</IsPerfProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPlaygroundProject Condition="'$(IsPlaygroundProject)' == ''">false</IsPlaygroundProject>
+    <IsPlaygroundProject Condition="$(MSBuildProjectName.Contains('Playground'))">true</IsPlaygroundProject>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' == 'false' And '$(IsPerfProject)' == 'false' And '$(IsPlaygroundProject)' == 'false'">
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true' Or '$(IsPerfProject)' == 'true' Or '$(IsPlaygroundProject)' == 'true'">
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsPlaygroundProject)' == 'false'">
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <ProjectReference Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\TestUtilities.csproj" />
   </ItemGroup>
 </Project>

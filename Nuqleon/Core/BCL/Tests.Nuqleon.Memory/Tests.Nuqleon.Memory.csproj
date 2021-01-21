@@ -2,15 +2,8 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
-    <IsPackable>false</IsPackable>
     <DefineConstants>$(DefineConstants);NETSTD</DefineConstants>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Nuqleon.Memory\Nuqleon.Memory.csproj" />
@@ -69,10 +62,6 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>TupletTests.Generated.tt</DependentUpon>
     </Compile>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Include="..\..\..\..\Common\AssertEx.cs" Link="AssertEx.cs" />
   </ItemGroup>
 
 </Project>
