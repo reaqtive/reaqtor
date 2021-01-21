@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472</TargetFrameworks>
     <Description>Prototype of binary expression tree serialization.</Description>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- NB: Also supports non-slim expressions. Currently not enabled in build. -->
     <DefineConstants>$(DefineConstants);USE_SLIM</DefineConstants>

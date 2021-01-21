@@ -7,6 +7,9 @@
     <RootNamespace>Reaqtive.QueryEngine</RootNamespace>
 
     <Description>Utilities for operator local storage.</Description>
+
+    <!-- TODODOC -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

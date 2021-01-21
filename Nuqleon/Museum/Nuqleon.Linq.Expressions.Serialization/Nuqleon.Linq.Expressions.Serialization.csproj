@@ -4,7 +4,6 @@
     <!-- NB: Uses System.Reflection.Emit APIs that aren't in .NET Standard 2.0. -->
     <TargetFrameworks>net472</TargetFrameworks>
     <Description>Legacy serialization for the LINQ expressions API.</Description>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -7,6 +7,9 @@
     <RootNamespace>Reaqtive.QueryEngine</RootNamespace>
 
     <Description>IRP service query engine with operator local storage.</Description>
+
+    <!-- TODODOC -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

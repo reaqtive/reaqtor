@@ -4,7 +4,6 @@
     <TargetFrameworks>net472</TargetFrameworks>
     <Description>Provides utilities to analyze memory usage.</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,6 @@
   <PropertyGroup>
     <TargetFrameworks>net472;net50</TargetFrameworks>
     <Description>Just-in-time compiler for expression trees.</Description>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>

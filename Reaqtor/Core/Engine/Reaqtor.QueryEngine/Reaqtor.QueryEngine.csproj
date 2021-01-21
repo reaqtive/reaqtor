@@ -4,7 +4,6 @@
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
     <Description>IRP service query engine.</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
 
   <!--
