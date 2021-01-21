@@ -5,10 +5,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\Nuqleon.Linq.Expressions.Serialization\Nuqleon.Linq.Expressions.Serialization.csproj" />
     <ProjectReference Include="..\..\Core\LINQ\Tests.VisualBasic\Tests.VisualBasic.vbproj" />
   </ItemGroup>

@@ -4,10 +4,6 @@
     <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\SampleTrees\SampleTrees.csproj" />
     <ProjectReference Include="..\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />

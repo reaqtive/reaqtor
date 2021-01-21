@@ -6,10 +6,6 @@
     <DefineConstants>$(DefineConstants);USE_SLIM</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Library\Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj" />
   </ItemGroup>
