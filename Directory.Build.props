@@ -48,6 +48,19 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
-    <ProjectReference Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\TestUtilities.csproj" />
+    <!--
+      NB: Trying to put these in a .csproj included through RrojectReference results in errors at runtime:
+
+            Testhost process exited with error: A fatal error was encountered. The library 'hostpolicy.dll'
+            required to execute the application was not found in 'C:\Program Files\dotnet'.
+
+          Apparently cross-referencing test projects causes 'testhost.runtimeconfig.json' to not get copied
+          properly to the test project output folder, which then causes the test runner to treat the project
+          as a "self-contained app".
+    -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+    <Compile Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\AssertEx.cs" Link="AssertEx.cs" />
   </ItemGroup>
 </Project>
