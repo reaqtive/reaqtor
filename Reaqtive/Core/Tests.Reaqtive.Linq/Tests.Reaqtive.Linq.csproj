@@ -1,0 +1,104 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtive.Testing\Reaqtive.Testing.csproj" />
+    <ProjectReference Include="..\Reaqtive.Linq\Reaqtive.Linq.csproj" />
+    <ProjectReference Include="..\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Operators\Average.Declarative.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Average.Declarative.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Operators\Average.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Average.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Operators\CombineLatest.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CombineLatest.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Operators\Max.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Max.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Operators\Min.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Min.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Operators\MinMax.Declarative.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MinMax.Declarative.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Operators\MinMax.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MinMax.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Operators\Sum.Declarative.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Sum.Declarative.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Operators\Sum.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Sum.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Operators\Average.Declarative.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Average.Declarative.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Operators\Average.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Average.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Operators\CombineLatest.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CombineLatest.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Operators\Max.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Max.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Operators\Min.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Min.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Operators\MinMax.Declarative.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MinMax.Declarative.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Operators\MinMax.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MinMax.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Operators\Sum.Declarative.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Sum.Declarative.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Operators\Sum.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Sum.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,320 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+// #define USE_VALUETUPLE // REVIEW: Is the use of ValueTuple desirable? Cf. the implementation of GetHashCode for arity >= 8.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var curry = false;
+
+var ordinals = new[] { "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth" };
+#>
+using System.Collections.Generic;
+
+namespace System.Memory
+{
+    partial class FunctionMemoizationExtensions
+    {
+<#
+for (var n = 2; n <= 16; n++)
+{
+    var genArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "T" + i));
+    var args = string.Join(", ", Enumerable.Range(1, n).Select(i => "a.Item" + i));
+    var pars = string.Join(", ", Enumerable.Range(1, n).Select(i => "t" + i));
+#>
+        /// <summary>
+        /// Memoizes the specified <paramref name="function"/> using the specified <paramref name="memoizer"/>.
+        /// </summary>
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+        /// <typeparam name="T<#=i#>">Type of the <#=ordinals[i - 1]#> function argument.</typeparam>
+<#
+}
+#>
+        /// <typeparam name="TResult">Type of the function result.</typeparam>
+        /// <param name="memoizer">The memoizer used to memoize the function.</param>
+        /// <param name="function">The function to memoize.</param>
+        /// <param name="options">Flags to influence the memoization behavior.</param>
+        /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
+        public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> Memoize<<#=genArgs#>, TResult>(this IMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options = MemoizationOptions.None)
+        {
+            if (memoizer == null)
+                throw new ArgumentNullException(nameof(memoizer));
+            if (function == null)
+                throw new ArgumentNullException(nameof(function));
+
+#if USE_VALUETUPLE
+            var res = memoizer.Memoize<(<#=genArgs#>), TResult>(a => function(<#=args#>), options, comparer: null);
+            var memoized = res.Delegate;
+            return new MemoizedDelegate<Func<<#=genArgs#>, TResult>>((<#=pars#>) => memoized((<#=pars#>)), res.Cache);
+#else
+            var res = memoizer.Memoize<Tuplet<<#=genArgs#>>, TResult>(a => function(<#=args#>), options, comparer: null);
+            var memoized = res.Delegate;
+            return new MemoizedDelegate<Func<<#=genArgs#>, TResult>>((<#=pars#>) => memoized(new Tuplet<<#=genArgs#>>(<#=pars#>)), res.Cache);
+#endif
+        }
+
+<#
+}
+#>
+<#
+for (var n = 2; n <= 16; n++)
+{
+    var genArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "T" + i));
+    var args = string.Join(", ", Enumerable.Range(1, n).Select(i => "a.Item" + i));
+    var pars = string.Join(", ", Enumerable.Range(1, n).Select(i => "t" + i));
+    var parsCurried = string.Join("", Enumerable.Range(1, n).Select(i => "(t" + i + ")"));
+    var comparerPars = string.Join(", ", Enumerable.Range(1, n).Select(i => "IEqualityComparer<T" + i + "> comparer" + i));
+#>
+        /// <summary>
+        /// Memoizes the specified <paramref name="function"/> using the specified <paramref name="memoizer"/> and the specified comparers to compare function arguments against cache entries.
+        /// </summary>
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+        /// <typeparam name="T<#=i#>">Type of the <#=ordinals[i - 1]#> function argument.</typeparam>
+<#
+}
+#>
+        /// <typeparam name="TResult">Type of the function result.</typeparam>
+        /// <param name="memoizer">The memoizer used to memoize the function.</param>
+        /// <param name="function">The function to memoize.</param>
+        /// <param name="options">Flags to influence the memoization behavior.</param>
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+        /// <param name="comparer<#=i#>">Comparer to compare the <#=ordinals[i - 1]#> function argument during lookup in the memoization cache.</param>
+<#
+}
+#>
+        /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
+        public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> Memoize<<#=genArgs#>, TResult>(this IMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options, <#=comparerPars#>)
+        {
+            if (memoizer == null)
+                throw new ArgumentNullException(nameof(memoizer));
+            if (function == null)
+                throw new ArgumentNullException(nameof(function));
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            if (comparer<#=i#> == null)
+                throw new ArgumentNullException(nameof(comparer<#=i#>));
+<#
+}
+#>
+
+<#
+if (curry)
+{
+#>
+            var res =
+<#
+var ind = "";
+
+for (var i = 1; i < n; i++)
+{
+    var rem = "Func<T" + n + ", TResult>";
+
+    for (var j = n - 1; j >= i + 1; j--)
+    {
+        rem = "Func<T" + j + ", " + rem + ">";
+    }
+
+    ind += "    ";
+#>
+                <#=ind#>memoizer.Memoize<T<#=i#>, <#=rem#>>(t<#=i#> =>
+<#
+}
+
+ind += "    ";
+#>
+                <#=ind#>memoizer.Memoize<T<#=n#>, TResult>(t<#=n#> =>
+                <#=ind#>    function(<#=pars#>),
+                <#=ind#>    options,
+<#
+for (var i = n; i >= 1; i--)
+{
+#>
+                <#=ind#>    comparer: comparer<#=i#>)<#=i != 1 ? "," : ""#>
+<#
+    ind = new string(' ', ind.Length - 4);
+}
+#>
+            ;
+
+            var memoized = res.Delegate;
+            return MemoizedDelegate<Func<<#=genArgs#>, TResult>>((<#=pars#>) => memoized<#=parsCurried#>, res.Cache);
+<#
+}
+else
+{
+    var comparers = string.Join(", ", Enumerable.Range(1, n).Select(i => "comparer" + i));
+#>
+#if USE_VALUETUPLE
+            var comparer = EqualityComparerExtensions.CombineWithValueTuple(<#=comparers#>);
+            var res = memoizer.Memoize<(<#=genArgs#>), TResult>(a => function(<#=args#>), options, comparer);
+            var memoized = res.Delegate;
+            return new MemoizedDelegate<Func<<#=genArgs#>, TResult>>((<#=pars#>) => memoized((<#=pars#>)), res.Cache);
+#else
+            var comparer = EqualityComparerExtensions.CombineWithTuplet(<#=comparers#>);
+            var res = memoizer.Memoize<Tuplet<<#=genArgs#>>, TResult>(a => function(<#=args#>), options, comparer);
+            var memoized = res.Delegate;
+            return new MemoizedDelegate<Func<<#=genArgs#>, TResult>>((<#=pars#>) => memoized(new Tuplet<<#=genArgs#>>(<#=pars#>)), res.Cache);
+#endif
+<#
+}
+#>
+        }
+
+<#
+}
+#>
+<#
+for (var n = 2; n <= 16; n++)
+{
+    var genArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "T" + i));
+    var args = string.Join(", ", Enumerable.Range(1, n).Select(i => "a.Item" + i));
+    var pars = string.Join(", ", Enumerable.Range(1, n).Select(i => "t" + i));
+    var parsWeak = string.Join(", ", Enumerable.Range(1, n).Select(i => "t" + i));
+    var parsCurried = string.Join("", Enumerable.Range(1, n).Select(i => "(t" + i + ")"));
+#>
+        /// <summary>
+        /// Memoizes the specified <paramref name="function"/> using the specified <paramref name="memoizer"/> without keeping function arguments alive by the memoization cache.
+        /// </summary>
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+        /// <typeparam name="T<#=i#>">Type of the <#=ordinals[i - 1]#> function argument. This type has to be a reference type.</typeparam>
+<#
+}
+#>
+        /// <typeparam name="TResult">Type of the function result.</typeparam>
+        /// <param name="memoizer">The memoizer used to memoize the function.</param>
+        /// <param name="function">The function to memoize.</param>
+        /// <param name="options">Flags to influence the memoization behavior.</param>
+        /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
+        /// <remarks>
+        /// This method curries the specified function in order to build a hierarchy of weak reference memoization cache and can be expensive in terms of memory usage.
+        /// If only a subset of function arguments need to be treated as weak references, consider manually curring the function, as illustrated below.
+        /// <code><![CDATA[
+        ///     //
+        ///     // The memoization cache for this function should not keep T1 alive, but T2 poses no risk for a space leak:
+        ///     //
+        ///     Func<T1, T2, R> f = (x, y) => { return /* implementation */ };
+        ///
+        ///     //
+        ///     // Assume we have weak memoizers and regular memoizers available:
+        ///     //
+        ///     IMemoizer memstrong = ...;
+        ///     IWeakMemoizer memweak = ...;
+        ///
+        ///     //
+        ///     // With this, we can manually memoize the function by curring it, as shown in a step-by-step fashion below:
+        ///     //
+        ///     // 1. Just curry the function
+        ///     //
+        ///     Func<T1, Func<T2, R>> memf1 = x => y => f(x, y);
+        ///
+        ///     //
+        ///     // 2. Memoize on the first argument using a weak memoizer
+        ///     //
+        ///     Func<T1, Func<T2, R>> memf2 = memweak.MemoizeWeak<T1, Func<T2, R>>(x =>
+        ///                                   {
+        ///                                       return y => f(x, y);
+        ///                                   }).Delegate;
+        ///
+        ///     //
+        ///     // 3. Memoize the inner function
+        ///     //
+        ///     Func<T1, Func<T2, R>> memf3 = memweak.MemoizeWeak<T1, Func<T2, R>>(x =>
+        ///                                   {
+        ///                                       return memstrong.Memoize<T2, R>(y => f(x, y)).Delegate;
+        ///                                   }).Delegate;
+        ///
+        ///     //
+        ///     // Finally, we can uncurry the memoized function:
+        ///     //
+        ///     Func<T1, T2, R> memf = (x, y) => memf3(x)(y);
+        /// ]]></code>
+        /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
+        /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
+        /// </remarks>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
+        public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> MemoizeWeak<<#=genArgs#>, TResult>(this IWeakMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options = MemoizationOptions.None)
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            where T<#=i#> : class
+<#
+}
+#>
+        {
+            if (memoizer == null)
+                throw new ArgumentNullException(nameof(memoizer));
+            if (function == null)
+                throw new ArgumentNullException(nameof(function));
+
+            var mem =
+<#
+var ind = "";
+
+for (var i = 1; i < n; i++)
+{
+    var rem = "Func<T" + n + ", TResult>";
+
+    for (var j = n - 1; j >= i + 1; j--)
+    {
+        rem = "Func<T" + j + ", " + rem + ">";
+    }
+
+    ind += "    ";
+#>
+                <#=ind#>// Note the closure over t<#=i#> does not keep the cache entry alive due to CWT's guarantees.
+                <#=ind#><#=i == 1 ? "" : "return "#>memoizer.MemoizeWeak<T<#=i#>, <#=rem#>>(t<#=i#> =>
+                <#=ind#>{
+<#
+}
+
+ind += "    ";
+#>
+                <#=ind#>return memoizer.MemoizeWeak<T<#=n#>, TResult>(t<#=n#> =>
+                <#=ind#>    function(<#=parsWeak#>),
+                <#=ind#>    options
+<#
+for (var i = n; i >= 1; i--)
+{
+#>
+                <#=ind#><#=i == n ? "" : "}"#>)<#=i == 1 ? "" : ".Delegate"#>;
+<#
+    ind = new string(' ', ind.Length - 4);
+}
+#>
+
+            var memoized = mem.Delegate;
+
+            return new MemoizedDelegate<Func<<#=genArgs#>, TResult>>((<#=pars#>) => memoized<#=parsCurried#>, mem.Cache);
+        }
+
+<#
+}
+#>
+    }
+}

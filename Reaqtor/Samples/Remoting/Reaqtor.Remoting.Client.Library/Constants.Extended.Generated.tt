@@ -1,0 +1,83 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+namespace Reaqtor.Remoting.Client
+{
+    /// <summary>
+    /// Constant definitions that must be exactly the same on both the client
+    /// and the service. These are just for the Rx operators.
+    /// </summary>
+    public static partial class Constants
+    {
+        public static partial class Observable
+        {
+<#
+foreach (var op in new[] { "Sum", "Min", "Max", "Average" })
+{
+#>
+            public static partial class <#=op#>
+            {
+                public static class NoSelector
+                {
+<#
+var numTypes = new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) };
+
+foreach (var t in numTypes)
+{
+    foreach (var n in new[] { false, true })
+    {
+        var tn = t.Name;
+        var tc = t.Name;
+
+        if (n)
+        {
+            tn = "Nullable" + tn;
+            tc += "?";
+        }
+
+#>
+                    public const string <#=tn#> = "rx://operators/<#=op.ToLower()#>/<#=tn#>";
+<#
+    }
+}
+#>
+                }
+
+                public static class Selector
+                {
+<#
+foreach (var t in numTypes)
+{
+    foreach (var n in new[] { false, true })
+    {
+        var tn = t.Name;
+        var tc = t.Name;
+
+        if (n)
+        {
+            tn = "Nullable" + tn;
+            tc += "?";
+        }
+
+#>
+                    public const string <#=tn#> = "rx://operators/<#=op.ToLower()#>/selector/<#=tn#>";
+<#
+    }
+}
+#>
+                }
+            }
+
+<#
+}
+#>
+        }
+    }
+}

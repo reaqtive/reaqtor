@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Collections.Specialized\Nuqleon.Collections.Specialized.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="System\Collections\Specialized\ByteArrayTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ByteArrayTests.cs</LastGenOutput>
+    </None>
+    <None Update="System\Collections\Specialized\EnumDictionaryFactoryTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EnumDictionaryFactoryTests.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="System\Collections\Specialized\ByteArrayTests.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ByteArrayTests.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Collections\Specialized\EnumDictionaryFactoryTests.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EnumDictionaryFactoryTests.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

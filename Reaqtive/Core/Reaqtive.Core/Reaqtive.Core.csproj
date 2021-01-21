@@ -1,0 +1,32 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Base classes for building query operators in Reaqtive.</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtive.Interfaces\Reaqtive.Interfaces.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="EventMetadata.tt">
+      <LastGenOutput>EventMetadata.Generated.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="EventMetadata.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EventMetadata.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <Description>Protocol used in the Reaqtor remoting stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Core\Service\Reaqtor.Service.Contracts\Reaqtor.Service.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\BCL\Nuqleon.Runtime.Remoting.Tasks\Nuqleon.Runtime.Remoting.Tasks.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Scheduler\Reaqtive.Scheduler.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,66 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Provides abstractions used by implementations of reactive event processing services.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Service.Core\Reaqtor.Service.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Service.Model\Reaqtor.Service.Model.csproj" />
+    <ProjectReference Include="..\..\Engine\Reaqtor.Engine.Contracts\Reaqtor.Engine.Contracts.csproj" />
+    <ProjectReference Include="..\..\Expressions\Reaqtor.Expressions.Core\Reaqtor.Expressions.Core.csproj" />
+    <ProjectReference Include="..\..\Expressions\Reaqtor.Expressions.Model\Reaqtor.Expressions.Model.csproj" />
+    <ProjectReference Include="..\..\Local\Reaqtor.Local.Core\Reaqtor.Local.Core.csproj" />
+    <ProjectReference Include="..\..\Metadata\Reaqtor.Metadata.Model\Reaqtor.Metadata.Model.csproj" />
+    <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Core\Reaqtor.Shared.Core.csproj" />
+    <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Model\Reaqtor.Shared.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Nuqleon\Reactive\ReactiveDefinition.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveDefinition.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Nuqleon\Reactive\ReactiveServiceContextBase.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveServiceContextBase.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\ReactiveDefinition.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveDefinition.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\ReactiveServiceContextBase.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveServiceContextBase.HigherArities.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Nuqleon\Reactive\ReactiveDefinition.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveDefinition.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Nuqleon\Reactive\ReactiveServiceContextBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveServiceContextBase.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\ReactiveDefinition.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveDefinition.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\ReactiveServiceContextBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveServiceContextBase.HigherArities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Service.Core\Reaqtor.Service.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Service.Model\Reaqtor.Service.Model.csproj" />
+  </ItemGroup>
+
+</Project>

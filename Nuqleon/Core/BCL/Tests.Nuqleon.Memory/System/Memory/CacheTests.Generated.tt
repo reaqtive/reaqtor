@@ -1,0 +1,114 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+const int N = 4;
+#>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
+using System.Memory;
+
+namespace Tests.System.Memory
+{
+    public partial class CacheTests
+    {
+<#
+for (var i = 2; i <= N; ++i)
+{
+#>
+        [TestMethod]
+        public void Cache_<#=i#>SharedComponents_ArgumentChecks()
+        {
+            var innerCache = new Cache<string>();
+<#
+for (var j = 1; j <= i; ++j)
+{
+    var args = Enumerable.Repeat("innerCache", i).ToArray();
+    args[j-1] = "innerCache" + j + ": null";
+#>
+            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache<#=i#>(<#=string.Join(", ", args)#>), ex => Assert.AreEqual("innerCache<#=j#>", ex.ParamName));
+<#
+}
+#>
+        }
+
+        [TestMethod]
+        public void Cache_<#=i#>SharedComponents_Dummies()
+        {
+            var dummyCache = new DummyCache<string>();
+            var cache = new TestCache<#=i#>(<#=string.Join(", ", Enumerable.Repeat("dummyCache", i))#>);
+
+            var s = new[] { <#=string.Join(", ", Enumerable.Range(1, i + 2).Select(j => "\"s" + j + "\""))#> };
+            var ref1 = cache.Create(s);
+            Assert.IsTrue(s.SequenceEqual(ref1.Value));
+        }
+
+        [TestMethod]
+        public void Cache_<#=i#>SharedComponents()
+        {
+            var cache1 = new TestCache<#=i#>();
+
+            Assert.IsNull(cache1.Create(value: null).Value);
+
+            var s = new[] { <#=string.Join(", ", Enumerable.Range(1, i + 2).Select(j => "\"s" + j + "\""))#> };
+
+            var ref0 = cache1.Create(s);
+            Assert.IsTrue(s.SequenceEqual(ref0.Value));
+        }
+
+        [TestMethod]
+        public void Cache_<#=i#>SharedComponents_GetValueAfterDispose()
+        {
+            var cache = new TestCache<#=i#>();
+            var s = new[] { <#=string.Join(", ", Enumerable.Range(1, i + 2).Select(j => "\"s" + j + "\""))#> };
+            var ref0 = cache.Create(s);
+            ref0.Dispose();
+            var unused = default(string[]);
+            Assert.ThrowsException<ObjectDisposedException>(() => unused = ref0.Value);
+        }
+
+        private sealed class TestCache<#=i#> : Cache<string[], <#=string.Join(", ", Enumerable.Repeat("string", i))#>, string[]>
+        {
+            public TestCache<#=i#>() { }
+
+            public TestCache<#=i#>(<#=string.Join(", ", Enumerable.Range(1, i).Select(j => "ICache<string> innerCache" + j))#>)
+                : base(<#=string.Join(", ", Enumerable.Range(1, i).Select(j => "innerCache" + j))#>)
+            {
+            }
+
+            protected override Deconstructed<<#=string.Join(", ", Enumerable.Repeat("string", i))#>, string[]> Deconstruct(string[] item)
+            {
+                var rem = new string[item.Length - <#=i#>];
+                Array.Copy(item, <#=i#>, rem, 0, item.Length - <#=i#>);
+                return Deconstructed.Create(<#=string.Join(", ", Enumerable.Range(0, i).Select(j => "item[" + j + "]"))#>, rem);
+            }
+
+            protected override string[] Reconstruct(Deconstructed<<#=string.Join(", ", Enumerable.Repeat("string", i))#>, string[]> deconstructed)
+            {
+                var item = new string[deconstructed.NonCached.Length + <#=i#>];
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+                item[<#=j-1#>] = deconstructed.Cached<#=j#>;
+<#
+}
+#>
+                Array.Copy(deconstructed.NonCached, 0, item, <#=i#>, deconstructed.NonCached.Length);
+                return item;
+            }
+        }
+
+<#
+}
+#>
+    }
+}

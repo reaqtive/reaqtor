@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+    <!-- NB: Also supports non-slim expressions. Currently not enabled in build. -->
+    <DefineConstants>$(DefineConstants);USE_SLIM</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Library\Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj" />
+  </ItemGroup>
+
+</Project>

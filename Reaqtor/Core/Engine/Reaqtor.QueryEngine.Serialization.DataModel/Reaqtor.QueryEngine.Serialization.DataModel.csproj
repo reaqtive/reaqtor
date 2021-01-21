@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Implementation of query engine state persistence using the Nuqleon DataModel serialization framework.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.QueryEngine.Interfaces\Reaqtor.QueryEngine.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Reactive\Reaqtor.Reactive.HigherOrder\Reaqtor.Reactive.HigherOrder.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\BCL\Nuqleon.IO.StreamSegment\Nuqleon.IO.StreamSegment.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel.Serialization.Json\Nuqleon.DataModel.Serialization.Json.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\JSON\Nuqleon.Json.Interop.Newtonsoft\Nuqleon.Json.Interop.Newtonsoft.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.Expressions.Bonsai.Serialization\Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Quotation\Reaqtive.Quotation.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,35 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+  <Words>
+    <Recognized>
+      <Word>AddChecked</Word>
+      <Word>AddMethod</Word>
+      <Word>ArrayIndex</Word>
+      <Word>CatchBlock</Word>
+      <Word>ConvertChecked</Word>
+      <Word>ElementInit</Word>
+      <Word>Globals</Word>
+      <Word>GotoExpressionKind</Word>
+      <Word>IsKey</Word>
+      <Word>LabelTarget</Word>
+      <Word>LabelTargets</Word>
+      <Word>ListBinding</Word>
+      <Word>ListInit</Word>
+      <Word>MemberAccess</Word>
+      <Word>MemberAssignment</Word>
+      <Word>MemberBinding</Word>
+      <Word>MemberInit</Word>
+      <Word>NegateChecked</Word>
+      <Word>NewArrayBounds</Word>
+      <Word>NewArrayInit</Word>
+      <Word>SubtractChecked</Word>
+      <Word>SwitchCase</Word>
+      <Word>TestValues</Word>
+      <Word>TypeAs</Word>
+      <Word>TypeEqual</Word>
+      <Word>TypeIs</Word>
+      <Word>UnaryPlus</Word>
+      <Word>UnaryPlusChecked</Word>
+    </Recognized>
+  </Words>
+</Dictionary>

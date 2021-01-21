@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Linq.Expressions.Serialization\Nuqleon.Linq.Expressions.Serialization.csproj" />
+    <ProjectReference Include="..\..\Core\LINQ\Tests.VisualBasic\Tests.VisualBasic.vbproj" />
+  </ItemGroup>
+
+</Project>

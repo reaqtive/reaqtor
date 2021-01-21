@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <Description>Framework for reified operations in the Reaqtor remoting stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Protocol\Reaqtor.Remoting.Protocol.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.InMemory\Reaqtor.Remoting.Platform.InMemory.csproj" />
+    <ProjectReference Include="..\..\..\Core\Testing\Reaqtor.ReificationFramework\Reaqtor.ReificationFramework.csproj" />
+    <ProjectReference Include="..\..\..\Core\Testing\Reaqtor.ReifiedOperations\Reaqtor.ReifiedOperations.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
+  </ItemGroup>
+
+</Project>

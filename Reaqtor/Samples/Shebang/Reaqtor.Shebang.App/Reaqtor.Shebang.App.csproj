@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFrameworks>netcoreapp3.1;net5.0</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Shebang.Client\Reaqtor.Shebang.Client.csproj" />
+    <ProjectReference Include="..\Reaqtor.Shebang.Service\Reaqtor.Shebang.Service.csproj" />
+  </ItemGroup>
+
+</Project>

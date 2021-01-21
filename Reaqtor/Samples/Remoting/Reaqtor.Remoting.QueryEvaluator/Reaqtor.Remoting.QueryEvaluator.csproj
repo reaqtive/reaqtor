@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <Description>Query evaluator for the Reaqtor remoting stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Protocol\Reaqtor.Remoting.Protocol.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform\Reaqtor.Remoting.Platform.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine.Serialization.DataModel\Reaqtor.QueryEngine.Serialization.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Service\Reaqtor.Hosting.Service.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\JSON\Nuqleon.Json.Serialization\Nuqleon.Json.Serialization.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
+
+    <!-- NB: This ensures that reactive artifact types can be loaded dynamically. -->
+    <ProjectReference Include="..\Reaqtor.Remoting.Deployable\Reaqtor.Remoting.Deployable.csproj" />
+  </ItemGroup>
+
+</Project>

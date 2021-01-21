@@ -1,0 +1,75 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="ParameterTableTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ParameterTableTests.Generated.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <ProjectReference Include="..\Nuqleon.Linq.Expressions.Optimizers\Nuqleon.Linq.Expressions.Optimizers.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="ExpressionOptimizerTests.Binary.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExpressionOptimizerTests.Binary.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ExpressionOptimizerTests.Unary.Convert.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExpressionOptimizerTests.Unary.Convert.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ExpressionOptimizerTests.Unary.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExpressionOptimizerTests.Unary.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="MemberTableTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MemberTableTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ParameterTableTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ParameterTableTests.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="ExpressionOptimizerTests.Binary.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExpressionOptimizerTests.Binary.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ExpressionOptimizerTests.Unary.Convert.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExpressionOptimizerTests.Unary.Convert.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ExpressionOptimizerTests.Unary.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExpressionOptimizerTests.Unary.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="MemberTableTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MemberTableTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ParameterTableTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ParameterTableTests.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

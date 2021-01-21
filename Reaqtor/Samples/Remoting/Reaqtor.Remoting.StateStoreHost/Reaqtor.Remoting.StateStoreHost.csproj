@@ -1,0 +1,15 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <Description>Host for the state store used by the query engine in the Reaqtor remoting stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.StateStore\Reaqtor.Remoting.StateStore.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform\Reaqtor.Remoting.Platform.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Tcp\Reaqtor.Remoting.Platform.Tcp.csproj" />
+  </ItemGroup>
+
+</Project>

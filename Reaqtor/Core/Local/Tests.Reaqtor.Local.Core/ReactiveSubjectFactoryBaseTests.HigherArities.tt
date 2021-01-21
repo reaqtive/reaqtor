@@ -1,0 +1,92 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 15;#>
+<#var ordinals = new string[] { "Zeroth", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth" };#>
+using System;
+
+using Reaqtor;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Tests
+{
+    [TestClass]
+    public class ReactiveSubjectFactoryBaseTests
+    {
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var argsList = new List<string>();
+    var paramsList = new List<string>();
+
+    for (int j = 1; j <= i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        argsList.Add(string.Format("arg{0}", j));
+        paramsList.Add(string.Format("TArg{0} arg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var arguments = string.Join(", ", argsList.ToArray());
+    var parameters = string.Join(", ", paramsList.ToArray());
+
+    var genArgs = string.Join(", ", Enumerable.Repeat("int", i));
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => j.ToString()));
+#>
+        [TestMethod]
+        public void ReactiveSubjectFactoryBase<#=i#>_ArgumentChecking()
+        {
+            var s = new MyReactiveSubjectFactory<int, int, <#=genArgs#>>();
+
+            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, <#=args#>, new object()));
+        }
+
+        [TestMethod]
+        public void ReactiveSubjectFactoryBase<#=i#>_Create()
+        {
+            var s = new MyReactiveSubjectFactory<int, int, <#=genArgs#>>();
+
+            var uri = new Uri("bar://foo");
+            var stateObj = new object();
+
+            s.CreateImpl = (streamUri, <#=arguments#>, state) =>
+            {
+                Assert.AreEqual(uri, streamUri);
+<#
+    for (int j = 1; j <= i; j++)
+    {
+#>
+                Assert.AreEqual(<#=j#>, arg<#=j#>);
+<#
+    }
+#>
+                Assert.AreSame(stateObj, state);
+
+                return null;
+            };
+
+            _ = s.Create(uri, <#=args#>, stateObj);
+        }
+
+        private delegate IReactiveSubject<TInput, TOutput> Create<TInput, TOutput, <#=typeArgs#>>(Uri streamUri, <#=parameters#>, object state);
+
+        private sealed class MyReactiveSubjectFactory<TInput, TOutput, <#=typeArgs#>> : ReactiveSubjectFactoryBase<TInput, TOutput, <#=typeArgs#>>
+        {
+            public Create<TInput, TOutput, <#=typeArgs#>> CreateImpl;
+
+            protected override IReactiveSubject<TInput, TOutput> CreateCore(Uri streamUri, <#=parameters#>, object state) => CreateImpl(streamUri, <#=arguments#>, state);
+        }
+
+<#
+}
+#>
+    }
+}

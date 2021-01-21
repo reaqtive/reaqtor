@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Expressions.Core\Reaqtor.Expressions.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Expressions.Model\Reaqtor.Expressions.Model.csproj" />
+  </ItemGroup>
+
+</Project>

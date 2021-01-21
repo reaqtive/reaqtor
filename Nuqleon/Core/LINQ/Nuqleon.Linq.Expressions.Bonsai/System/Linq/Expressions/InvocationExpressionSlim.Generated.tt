@@ -1,0 +1,146 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+
+namespace System.Linq.Expressions
+{
+<#
+int N = 5;
+
+for (var i = 1; i <= N; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "ExpressionSlim arg" + j));
+#>
+    internal sealed class InvocationExpressionSlim<#=i#> : InvocationExpressionSlim
+    {
+        private object _arg0;
+<#
+for (var j = 1; j < i; j++)
+{
+#>
+        private readonly ExpressionSlim _arg<#=j#>;
+<#
+}
+#>
+
+        public InvocationExpressionSlim<#=i#>(ExpressionSlim expression, <#=args#>)
+            : base(expression)
+        {
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+            _arg<#=j#> = arg<#=j#>;
+<#
+}
+#>
+        }
+
+        public override int ArgumentCount => <#=i#>;
+
+        public override ExpressionSlim GetArgument(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return ReturnObject<ExpressionSlim>(_arg0);
+<#
+for (var j = 1; j < i; j++)
+{
+#>
+                case <#=j#>:
+                    return _arg<#=j#>;
+<#
+}
+#>
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(index));
+            }
+        }
+
+        protected override ReadOnlyCollection<ExpressionSlim> GetOrMakeArguments()
+        {
+            return ReturnReadOnly(this, ref _arg0);
+        }
+
+        internal override InvocationExpressionSlim Rewrite(ExpressionSlim expression, IList<ExpressionSlim> args)
+        {
+<#
+var newArgs = string.Join(", ", Enumerable.Range(0, i).Select(j => "args[" + j + "]"));
+var oldArgs = string.Join(", ", new[] { "ReturnObject<ExpressionSlim>(_arg0)" }.Concat(Enumerable.Range(1, i - 1).Select(j => "_arg" + j)));
+#>
+            Debug.Assert(expression != null);
+            Debug.Assert(args == null || args.Count == <#=i#>);
+
+            if (args != null)
+            {
+                return ExpressionSlim.Invoke(expression, <#=newArgs#>);
+            }
+            else
+            {
+                return ExpressionSlim.Invoke(expression, <#=oldArgs#>);
+            }
+        }
+    }
+
+<#
+}
+#>
+#pragma warning disable 1591
+    partial class ExpressionSlim
+    {
+<#
+for (var i = 0; i <= N; i++)
+{
+    var pars = string.Join(", ", new[] { "ExpressionSlim expression" }.Concat(Enumerable.Range(0, i).Select(j => "ExpressionSlim arg" + j)));
+    var args = string.Join(", ", new[] { "expression" }.Concat(Enumerable.Range(0, i).Select(j => "arg" + j)));
+#>
+        public static InvocationExpressionSlim Invoke(<#=pars#>)
+        {
+            Require(expression, nameof(expression));
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+            Require(arg<#=j#>, nameof(arg<#=j#>));
+<#
+}
+#>
+
+            return new InvocationExpressionSlim<#=i#>(<#=args#>);
+        }
+
+<#
+}
+#>
+    }
+
+    partial class ExpressionSlimUnsafe
+    {
+<#
+for (var i = 0; i <= N; i++)
+{
+    var pars = string.Join(", ", new[] { "ExpressionSlim expression" }.Concat(Enumerable.Range(0, i).Select(j => "ExpressionSlim arg" + j)));
+    var args = string.Join(", ", new[] { "expression" }.Concat(Enumerable.Range(0, i).Select(j => "arg" + j)));
+#>
+        public static InvocationExpressionSlim Invoke(<#=pars#>)
+        {
+            return new InvocationExpressionSlim<#=i#>(<#=args#>);
+        }
+
+<#
+}
+#>
+    }
+#pragma warning restore
+}

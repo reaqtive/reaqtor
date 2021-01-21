@@ -1,0 +1,81 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Async\AsyncReactiveSubjectFactoryBaseTests.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveSubjectFactoryBaseTests.HigherArities.tt</DependentUpon>
+    </None>
+    <None Include="Async\AsyncReactiveSubscriptionFactoryBaseTests.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveSubscriptionFactoryBaseTests.tt</DependentUpon>
+    </None>
+    <None Include="ReactiveSubjectFactoryBaseTests.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveSubjectFactoryBaseTests.HigherArities.tt</DependentUpon>
+    </None>
+    <None Include="ReactiveSubscriptionFactoryBaseTests.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveSubscriptionFactoryBaseTests.HigherArities.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Local.Core\Reaqtor.Local.Core.csproj" />
+    <ProjectReference Include="..\Reaqtor.Local.Model\Reaqtor.Local.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Async\AsyncReactiveSubjectFactoryBaseTests.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AsyncReactiveSubjectFactoryBaseTests.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Async\AsyncReactiveSubscriptionFactoryBaseTests.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AsyncReactiveSubscriptionFactoryBaseTests.cs</LastGenOutput>
+    </None>
+    <None Update="ReactiveSubjectFactoryBaseTests.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveSubjectFactoryBaseTests.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="ReactiveSubscriptionFactoryBaseTests.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveSubscriptionFactoryBaseTests.HigherArities.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Async\AsyncReactiveSubjectFactoryBaseTests.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveSubjectFactoryBaseTests.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Async\AsyncReactiveSubscriptionFactoryBaseTests.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveSubscriptionFactoryBaseTests.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ReactiveSubjectFactoryBaseTests.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveSubjectFactoryBaseTests.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ReactiveSubscriptionFactoryBaseTests.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveSubscriptionFactoryBaseTests.HigherArities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

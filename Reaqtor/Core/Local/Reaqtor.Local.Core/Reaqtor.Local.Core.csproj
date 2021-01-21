@@ -1,0 +1,67 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Provides base classes and utilities for local evaluation of reactive computations.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="Reaqtor\Async\AsyncReactiveSubscriptionFactoryBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveSubscriptionFactoryBase.HigherArities.tt</DependentUpon>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Local.Model\Reaqtor.Local.Model.csproj" />
+    <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Model\Reaqtor.Shared.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Reaqtor\Async\AsyncReactiveSubscriptionFactoryBase.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AsyncReactiveSubscriptionFactoryBase.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\Async\AsyncReactiveSubjectFactoryBase.HigherArities.tt">
+      <LastGenOutput>AsyncReactiveSubjectFactoryBase.HigherArities.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Reaqtor\ReactiveSubscriptionFactoryBase.HigherArities.tt">
+      <LastGenOutput>ReactiveSubscriptionFactoryBase.HigherArities.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
+    <None Update="Reaqtor\ReactiveSubjectFactoryBase.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveSubjectFactoryBase.HigherArities.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Reaqtor\Async\AsyncReactiveSubscriptionFactoryBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveSubscriptionFactoryBase.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\Async\AsyncReactiveSubjectFactoryBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveSubjectFactoryBase.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\ReactiveSubjectFactoryBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveSubjectFactoryBase.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\ReactiveSubscriptionFactoryBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveSubscriptionFactoryBase.HigherArities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

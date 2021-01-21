@@ -1,0 +1,57 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Json.Serialization\Nuqleon.Json.Serialization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="DeserializerTests.Integers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DeserializerTests.Integers.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="EmitterTests.Integers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EmitterTests.Integers.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="ParserTests.Integers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ParserTests.Integers.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="SerializerTests.Integers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>SerializerTests.Integers.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="DeserializerTests.Integers.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DeserializerTests.Integers.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="EmitterTests.Integers.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EmitterTests.Integers.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="ParserTests.Integers.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ParserTests.Integers.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="SerializerTests.Integers.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>SerializerTests.Integers.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

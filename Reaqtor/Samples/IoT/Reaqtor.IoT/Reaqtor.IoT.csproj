@@ -1,0 +1,39 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472;net50</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <Description>Stand-alone sample of Reaqtor in an IoT edge context.</Description>
+    <IsPackable>false</IsPackable>
+    <AnalysisMode>Default</AnalysisMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine.Serialization.DataModel\Reaqtor.QueryEngine.Serialization.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client\Reaqtor.Client.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Linq\Reaqtive.Linq.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Scheduler\Reaqtive.Scheduler.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Client\Operators.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Operators.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Client\Operators.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Operators.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

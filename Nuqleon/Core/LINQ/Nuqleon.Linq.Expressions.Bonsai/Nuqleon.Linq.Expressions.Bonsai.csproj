@@ -1,0 +1,126 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Serialization for the LINQ expressions API via slim expressions API.</Description>
+    <DefineConstants>$(DefineConstants);USE_SLIM</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <ProjectReference Include="..\..\BCL\Nuqleon.Reflection.Virtualization\Nuqleon.Reflection.Virtualization.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\ExpressionEqualityComparator.cs">
+      <Link>CompilerServices\Expressions\Visitors\ExpressionEqualityComparator.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\ExpressionEqualityComparer.cs">
+      <Link>CompilerServices\Expressions\Visitors\ExpressionEqualityComparer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\Rewriters\Misc\ExpressionTupletizer.cs">
+      <Link>CompilerServices\Expressions\Rewriters\Misc\ExpressionTupletizer.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\Rewriters\TypeSystem\TypeSubstitutionExpressionVisitor.cs">
+      <Link>CompilerServices\Expressions\Rewriters\TypeSystem\TypeSubstitutionExpressionVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\Visitors\ExpressionVisitor.Generic.cs">
+      <Link>System\Linq\Expressions\ExpressionVisitor.Generic.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\Visitors\ExpressionVisitorBase.Generic.cs">
+      <Link>System\Linq\Expressions\ExpressionVisitorBase.Generic.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\Visitors\ExpressionVisitorWithReflection.cs">
+      <Link>CompilerServices\Expressions\Visitors\ExpressionVisitorWithReflection.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\Visitors\ScopedExpressionVisitor.cs">
+      <Link>CompilerServices\Expressions\Visitors\ScopedExpressionVisitor.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\Visitors\ScopedExpressionVisitor.Generic.cs">
+      <Link>CompilerServices\Expressions\Visitors\ScopedExpressionVisitor.Generic.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\Visitors\ScopedExpressionVisitorBase.cs">
+      <Link>CompilerServices\Expressions\Visitors\ScopedExpressionVisitorBase.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\Expressions\Visitors\ScopedExpressionVisitorBase.Generic.cs">
+      <Link>CompilerServices\Expressions\Visitors\ScopedExpressionVisitorBase.Generic.cs</Link>
+    </Compile>
+    <Compile Include="..\Nuqleon.Linq.CompilerServices\TypeSystem\TypeSubstitutor.cs">
+      <Link>CompilerServices\TypeSystem\TypeSubstitutor.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="System\Linq\Expressions\ExpressionSlimFactory.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExpressionSlimFactory.generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Linq\Expressions\ExpressionSlimUnsafeFactory.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExpressionSlimUnsafeFactory.generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Linq\Expressions\IExpressionSlimFactory.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IExpressionSlimFactory.generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Linq\Expressions\InvocationExpressionSlim.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>InvocationExpressionSlim.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Linq\Expressions\MethodCallExpressionSlim.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>MethodCallExpressionSlim.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Linq\Expressions\NewExpressionSlim.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>NewExpressionSlim.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Reflection\GenericTypeSlim.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>GenericTypeSlim.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="System\Linq\Expressions\ExpressionSlimFactory.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExpressionSlimFactory.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Linq\Expressions\ExpressionSlimUnsafeFactory.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExpressionSlimUnsafeFactory.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Linq\Expressions\IExpressionSlimFactory.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IExpressionSlimFactory.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Linq\Expressions\InvocationExpressionSlim.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>InvocationExpressionSlim.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Linq\Expressions\MethodCallExpressionSlim.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>MethodCallExpressionSlim.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Linq\Expressions\NewExpressionSlim.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>NewExpressionSlim.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Reflection\GenericTypeSlim.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GenericTypeSlim.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

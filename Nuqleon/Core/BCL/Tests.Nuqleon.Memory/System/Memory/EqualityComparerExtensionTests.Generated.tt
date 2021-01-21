@@ -1,0 +1,81 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+
+namespace Tests
+{
+    [TestClass]
+    public class CombineWithTupletTests
+    {
+<#
+var r = new Random(1983);
+
+for (var i = 2; i <= 16; i++)
+{
+    var types = string.Join(", ", Enumerable.Repeat("int", i));
+    var comps = string.Join(", ", Enumerable.Repeat("EqualityComparer<int>.Default", i));
+
+    var ints1 = Enumerable.Range(0, i).Select(_ => r.Next()).ToList();
+    var vals1 = string.Join(", ", ints1);
+
+    var ints2 = Enumerable.Range(0, i).Select(_ => r.Next()).ToList();
+    var vals2 = string.Join(", ", ints2);
+#>
+        [TestMethod]
+        public void CombineWithTuplet<#=i#>()
+        {
+            var eq = EqualityComparerExtensions.CombineWithTuplet<<#=types#>>(<#=comps#>);
+
+            var args1 = new Tuplet<<#=types#>>(<#=vals1#>);
+            var args2 = new Tuplet<<#=types#>>(<#=vals2#>);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+<#
+}
+
+for (var i = 2; i <= 16; i++)
+{
+    var types = string.Join(", ", Enumerable.Repeat("int", i));
+    var comps = string.Join(", ", Enumerable.Repeat("EqualityComparer<int>.Default", i));
+    var ints1 = Enumerable.Range(0, i).Select(_ => r.Next()).ToList();
+    var vals1 = string.Join(", ", ints1);
+
+    var ints2 = Enumerable.Range(0, i).Select(_ => r.Next()).ToList();
+    var vals2 = string.Join(", ", ints2);
+#>
+        [TestMethod]
+        public void CombineWithValueTuple<#=i#>()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<<#=types#>>(<#=comps#>);
+
+            var args1 = (<#=vals1#>);
+            var args2 = (<#=vals2#>);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+<#
+}
+#>
+    }
+}

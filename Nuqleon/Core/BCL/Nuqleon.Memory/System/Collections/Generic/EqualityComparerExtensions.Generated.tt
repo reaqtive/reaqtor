@@ -1,0 +1,301 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var specialize = true;
+var includeGeneralization = false;
+var requireNullChecks = false;
+var includeValueTuple = true;
+#>
+namespace System.Collections.Generic
+{
+    internal static class EqualityComparerExtensions
+    {
+<#
+if (includeGeneralization)
+{
+#>
+<#
+for (var n = 2; n <= 16; n++)
+{
+    var genArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "T" + i));
+    var pars = string.Join(", ", Enumerable.Range(1, n).Select(i => "IEqualityComparer<T" + i + "> comparer" + i));
+    var args = string.Join(", ", Enumerable.Range(1, n).Select(i => "comparer" + i));
+    var decomposePars = string.Join(", ", Enumerable.Range(1, n).Select(i => "Func<TArgs, T" + i + "> get" + i));
+    var decomposeArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "get" + i));
+#>
+        public static IEqualityComparer<TArgs> Combine<<#=genArgs#>, TArgs>(<#=pars#>, <#=decomposePars#>)
+        {
+<#
+if (requireNullChecks)
+{
+#>
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            if (comparer<#=i#> == null)
+                throw new ArgumentNullException(nameof(comparer<#=i#>));
+<#
+}
+#>
+
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            if (get<#=i#> == null)
+                throw new ArgumentNullException(nameof(get<#=i#>));
+<#
+}
+#>
+
+<#
+}
+#>
+            return new EqualityComparer<<#=genArgs#>, TArgs>(<#=args#>, <#=decomposeArgs#>);
+        }
+
+        private sealed class EqualityComparer<<#=genArgs#>, TArgs> : IEqualityComparer<TArgs>
+        {
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            private readonly IEqualityComparer<T<#=i#>> _comparer<#=i#>;
+<#
+}
+#>
+
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            private readonly Func<TArgs, T<#=i#>> _get<#=i#>;
+<#
+}
+#>
+
+            public EqualityComparer(<#=pars#>, <#=decomposePars#>)
+            {
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+                _comparer<#=i#> = comparer<#=i#>;
+<#
+}
+#>
+
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+                _get<#=i#> = get<#=i#>;
+<#
+}
+#>
+            }
+
+            public bool Equals(TArgs x, TArgs y) =>
+                   _comparer1.Equals(_get1(x), _get1(y))
+<#
+for (var i = 2; i <= n; i++)
+{
+#>
+                && _comparer<#=i#>.Equals(_get<#=i#>(x), _get<#=i#>(y))<#=i == n ? ";" : ""#>
+<#
+}
+#>
+
+            public int GetHashCode(TArgs obj) =>
+                HashHelpers.Combine(
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+                    _comparer<#=i#>.GetHashCode(<#=i#>(obj))<#=i != n ? "," : ""#>
+<#
+}
+#>
+
+                );
+        }
+
+<#
+}
+#>
+<#
+}
+#>
+<#
+for (var n = 2; n <= 16; n++)
+{
+    var genArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "T" + i));
+    var pars = string.Join(", ", Enumerable.Range(1, n).Select(i => "IEqualityComparer<T" + i + "> comparer" + i));
+    var args = string.Join(", ", Enumerable.Range(1, n).Select(i => "comparer" + i));
+#>
+        public static IEqualityComparer<Tuplet<<#=genArgs#>>> CombineWithTuplet<<#=genArgs#>>(<#=pars#>)
+        {
+<#
+if (requireNullChecks)
+{
+#>
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            if (comparer<#=i#> == null)
+                throw new ArgumentNullException(nameof(comparer<#=i#>));
+<#
+}
+#>
+
+<#
+}
+#>
+<#
+if (specialize)
+{
+#>
+            return new TupletEqualityComparer<<#=genArgs#>>(<#=args#>);
+<#
+}
+else
+{
+    var extract = string.Join(", ", Enumerable.Range(1, n).Select(i => "a => a.Item" + i));
+#>
+            return new EqualityComparer<<#=genArgs#>, Tuplet<<#=genArgs#>>>(<#=args#>, <#=extract#>);
+<#
+}
+#>
+        }
+
+<#
+if (specialize)
+{
+#>
+        private sealed class TupletEqualityComparer<<#=genArgs#>> : IEqualityComparer<Tuplet<<#=genArgs#>>>
+        {
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            private readonly IEqualityComparer<T<#=i#>> _comparer<#=i#>;
+<#
+}
+#>
+
+            public TupletEqualityComparer(<#=pars#>)
+            {
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+                _comparer<#=i#> = comparer<#=i#>;
+<#
+}
+#>
+            }
+
+            public bool Equals(Tuplet<<#=genArgs#>> x, Tuplet<<#=genArgs#>> y) =>
+                   _comparer1.Equals(x.Item1, y.Item1)
+<#
+for (var i = 2; i <= n; i++)
+{
+#>
+                && _comparer<#=i#>.Equals(x.Item<#=i#>, y.Item<#=i#>)<#=i == n ? ";" : ""#>
+<#
+}
+#>
+
+            public int GetHashCode(Tuplet<<#=genArgs#>> obj) =>
+                HashHelpers.Combine(
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+                    _comparer<#=i#>.GetHashCode(obj.Item<#=i#>)<#=i != n ? "," : ""#>
+<#
+}
+#>
+                );
+        }
+
+<#
+}
+#>
+<#
+}
+
+if (includeValueTuple)
+{
+for (var n = 2; n <= 16; n++)
+{
+    var genArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "T" + i));
+    var namedArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "T" + i + " Item" + i));
+    var pars = string.Join(", ", Enumerable.Range(1, n).Select(i => "IEqualityComparer<T" + i + "> comparer" + i));
+    var args = string.Join(", ", Enumerable.Range(1, n).Select(i => "comparer" + i));
+#>
+        public static IEqualityComparer<(<#=genArgs#>)> CombineWithValueTuple<<#=genArgs#>>(<#=pars#>) => new ValueTupleEqualityComparer<<#=genArgs#>>(<#=args#>);
+
+        private sealed class ValueTupleEqualityComparer<<#=genArgs#>> : IEqualityComparer<(<#=namedArgs#>)>
+        {
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            private readonly IEqualityComparer<T<#=i#>> _comparer<#=i#>;
+<#
+}
+#>
+
+            public ValueTupleEqualityComparer(<#=pars#>)
+            {
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+                _comparer<#=i#> = comparer<#=i#>;
+<#
+}
+#>
+            }
+
+            public bool Equals((<#=namedArgs#>) x, (<#=namedArgs#>) y) =>
+                   _comparer1.Equals(x.Item1, y.Item1)
+<#
+for (var i = 2; i <= n; i++)
+{
+#>
+                && _comparer<#=i#>.Equals(x.Item<#=i#>, y.Item<#=i#>)<#=i == n ? ";" : ""#>
+<#
+}
+#>
+
+            public int GetHashCode((<#=namedArgs#>) obj) =>
+                HashHelpers.Combine(
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+                    _comparer<#=i#>.GetHashCode(obj.Item<#=i#>)<#=i != n ? "," : ""#>
+<#
+}
+#>
+                );
+        }
+
+<#
+}
+}
+#>
+    }
+}

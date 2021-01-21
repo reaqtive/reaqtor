@@ -1,0 +1,17 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Interoperability functionality between Nuqleon.Json and Newtonsoft.Json.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Json\Nuqleon.Json.csproj" />
+    <ProjectReference Include="..\..\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj" />
+  </ItemGroup>
+
+</Project>

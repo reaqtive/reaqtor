@@ -1,0 +1,69 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Provides base classes and utilities to represent quoted reactive artifacts.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Expressions.Model\Reaqtor.Expressions.Model.csproj" />
+    <ProjectReference Include="..\..\Local\Reaqtor.Local.Core\Reaqtor.Local.Core.csproj" />
+    <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Model\Reaqtor.Shared.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Reaqtor\Async\AsyncReactiveQubjectFactoryBase.HighArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AsyncReactiveQubjectFactoryBase.HighArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\Async\AsyncReactiveQubscriptionFactoryBase.HighArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AsyncReactiveQubscriptionFactoryBase.HighArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\ReactiveQbservable.generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveQbservable.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\ReactiveQubjectFactoryBase.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveQubjectFactoryBase.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\ReactiveQubscriptionFactoryBase.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveQubscriptionFactoryBase.HigherArities.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Reaqtor\Async\AsyncReactiveQubjectFactoryBase.HighArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveQubjectFactoryBase.HighArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\Async\AsyncReactiveQubscriptionFactoryBase.HighArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveQubscriptionFactoryBase.HighArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\ReactiveQbservable.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveQbservable.generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\ReactiveQubjectFactoryBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveQubjectFactoryBase.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\ReactiveQubscriptionFactoryBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveQubscriptionFactoryBase.HigherArities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

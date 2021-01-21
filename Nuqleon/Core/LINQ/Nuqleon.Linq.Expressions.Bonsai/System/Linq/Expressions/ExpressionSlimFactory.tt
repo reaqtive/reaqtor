@@ -1,0 +1,234 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="$(ProjectDir)\..\..\BCL\Nuqleon.Documentation\bin\Debug\net472\Nuqleon.Documentation.dll" #>
+<#@ import namespace="System.Documentation" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+<#
+var typeMappings = new Dictionary<Type, string>
+{
+    { typeof(object), "ObjectSlim" },
+    { typeof(CatchBlock), "CatchBlockSlim" },
+    { typeof(ElementInit), "ElementInitSlim" },
+    { typeof(LabelTarget), "LabelTargetSlim" },
+    { typeof(SwitchCase), "SwitchCaseSlim" },
+};
+
+var crefRegexes = new[]
+{
+    new Regex(@"(<see cref="".*?)(CatchBlock)([\.""].*? />)"),
+    new Regex(@"(<see cref="".*?)(ElementInit)([\.""].*? />)"),
+    new Regex(@"(<see cref=""[TPF]:System\.Linq\.Expressions\.\w*?)(Expression)([\.""].*? />)"),
+    new Regex(@"(<see cref="".*?)(Info)([\.""].*? />)"),
+    new Regex(@"(<see cref="".*?)(LabelTarget)([\.""].*? />)"),
+    new Regex(@"(<see cref="".*?)(MemberAssignment)([\.""].*? />)"),
+    new Regex(@"(<see cref="".*?)(MemberBinding)([\.""].*? />)"),
+    new Regex(@"(<see cref="".*?)(MemberListBinding)([\.""].*? />)"),
+    new Regex(@"(<see cref="".*?)(Object)([\.""].*? />)"),
+    new Regex(@"(<see cref="".*?)(SwitchCase)([\.""].*? />)"),
+};
+
+var crefTypeRegex =	new Regex(@"(<see cref="".*?)System.Type([\.""].*? />)");
+
+Func<string, string> FixCrefs = null;
+FixCrefs = (string line) =>
+{
+    foreach (var regex in crefRegexes)
+    {
+        line = regex.Replace(line, "$1$2Slim$3");
+    }
+
+    line = crefTypeRegex.Replace(line, "$1System.Reflection.TypeSlim$2");
+
+    return line;
+};
+
+Func<Type, string> ToCSharp = null;
+ToCSharp = (Type type) =>
+{
+    if (type.IsGenericType)
+    {
+        return type.GetGenericTypeDefinition().Name.Substring(0, type.Name.IndexOf('`')) + "<" + string.Join(", ", type.GetGenericArguments().Select(ToCSharp).ToArray()) + ">";
+    }
+
+    if (type.IsArray)
+    {
+        return ToCSharp(type.GetElementType()) + "[]";
+    }
+
+    if (typeof(Expression).IsAssignableFrom(type) ||
+        typeof(MemberInfo).IsAssignableFrom(type) ||
+        typeof(MemberBinding).IsAssignableFrom(type))
+    {
+        return type.Name + "Slim";
+    }
+
+    var result = default(string);
+    if (typeMappings.TryGetValue(type, out result))
+    {
+        return result;
+    }
+
+    return type.Name;
+};
+
+var keywords = new[] { "break", "continue", "finally" };
+
+Func<string, string> noKeyword = s =>
+{
+    if (keywords.Contains(s))
+        return "@" + s;
+    return s;
+};
+
+var reserved = new [] { "And", "AndAlso", "Or", "OrElse", "Call", "Catch", "Continue", "Default", "Field", "Goto", "Loop", "New", "Not", "Property", "Return", "Throw", "MakeTry", "TryFinally", "TryFault", "TryCatchFinally" };
+var reservedParams = new [] { "field", "property" };
+
+var exclude = new[] { "TryGetFuncType", "TryGetActionType", "GetFuncType", "GetActionType", "GetDelegateType" };
+
+// Factories not yet available
+var excludeFactories = new[]
+{
+    "ClearDebugInfo",
+    "DebugInfo",
+    "Dynamic",
+    "MakeDynamic",
+    "PropertyOrField",
+    "RuntimeVariables",
+    "SymbolDocument",
+    "Variable"
+};
+var excludeAll = exclude.Concat(excludeFactories).ToArray();
+
+// Signatures not yet available...
+var excludeSignatures = new[]
+{
+    // Can't reflect indexer method
+    new MethodMatcher("ArrayIndex", typeof(Expression), typeof(Expression[])),
+    new MethodMatcher("ArrayIndex", typeof(Expression), typeof(IEnumerable<Expression>)),
+
+    // Lambda names not available in slim
+    new MethodMatcher("Lambda", typeof(Expression), typeof(string), typeof(IEnumerable<ParameterExpression>)),
+    new MethodMatcher("Lambda", typeof(Expression), typeof(string), typeof(bool), typeof(IEnumerable<ParameterExpression>)),
+    new MethodMatcher("Lambda", typeof(Type), typeof(Expression), typeof(string), typeof(IEnumerable<ParameterExpression>)),
+    new MethodMatcher("Lambda", typeof(Type), typeof(Expression), typeof(string), typeof(bool), typeof(IEnumerable<ParameterExpression>)),
+
+    // Tail call flag not available in slim
+    new MethodMatcher("Lambda", typeof(Expression), typeof(bool), typeof(ParameterExpression[])),
+    new MethodMatcher("Lambda", typeof(Expression), typeof(bool), typeof(IEnumerable<ParameterExpression>)),
+    new MethodMatcher("Lambda", typeof(Type), typeof(Expression), typeof(bool), typeof(ParameterExpression[])),
+    new MethodMatcher("Lambda", typeof(Type), typeof(Expression), typeof(bool), typeof(IEnumerable<ParameterExpression>)),
+
+    // Can't reflect Add method from new expression type
+    new MethodMatcher("ListInit", typeof(NewExpression), typeof(Expression[])),
+    new MethodMatcher("ListInit", typeof(NewExpression), typeof(IEnumerable<Expression>)),
+
+    // Can't reflect member from name
+    new MethodMatcher("Call", typeof(Expression), typeof(string), typeof(Type[]), typeof(Expression[])),
+    new MethodMatcher("Call", typeof(Type), typeof(string), typeof(Type[]), typeof(Expression[])),
+    new MethodMatcher("Field", typeof(Expression), typeof(string)),	
+    new MethodMatcher("Field", typeof(Expression), typeof(Type), typeof(string)),
+    new MethodMatcher("Property", typeof(Expression), typeof(string)),
+    new MethodMatcher("Property", typeof(Expression), typeof(Type), typeof(string)),
+    new MethodMatcher("Property", typeof(Expression), typeof(string), typeof(Expression[])),
+
+    // Can't reflect property from accessor method
+    new MethodMatcher("Bind", typeof(MethodInfo), typeof(Expression)),
+    new MethodMatcher("ListBind", typeof(MethodInfo), typeof(ElementInit[])),
+    new MethodMatcher("ListBind", typeof(MethodInfo), typeof(IEnumerable<ElementInit>)),
+    new MethodMatcher("MemberBind", typeof(MethodInfo), typeof(MemberBinding[])),
+    new MethodMatcher("MemberBind", typeof(MethodInfo), typeof(IEnumerable<MemberBinding>)),
+    new MethodMatcher("Property", typeof(Expression), typeof(MethodInfo)),
+};
+#>
+using System.Collections.Generic;
+using System.Reflection;
+
+namespace System.Linq.Expressions
+{
+    /// <summary>
+    /// Factory for slim expression trees that uses the default factory methods on <see cref="T:System.Linq.Expressions.ExpressionSlim" />.
+    /// </summary>
+    public sealed class ExpressionSlimFactory : IExpressionSlimFactory
+    {
+        /// <summary>
+        /// Gets the singleton instance of the factory.
+        /// </summary>
+        public static readonly IExpressionSlimFactory Instance = new ExpressionSlimFactory();
+
+        private ExpressionSlimFactory() {}
+
+<#
+foreach (var m in typeof(Expression).GetMethods().Where(m => m.IsStatic && !m.IsGenericMethodDefinition && m.DeclaringType == typeof(Expression)).Where(m => !excludeAll.Contains(m.Name) && !excludeSignatures.Any(mm => mm.Match(m))).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length))
+{
+    var xml = string.Join("\r\n", m.GetXmlDoc().Elements().Select(e => e.ToString()));
+    var xmlLines = xml.ToString().Split('\n');
+    var docSb = new StringBuilder();
+    foreach (var line in xmlLines)
+    {
+        if (!string.IsNullOrEmpty(line))
+            docSb.AppendLine("        /// " + FixCrefs(line).TrimEnd('\r'));
+    }
+    var doc = docSb.ToString().Replace(@"<paramref name=""TDelegate"" />", @"<typeparamref name=""TDelegate"" />").TrimEnd('\r', '\n');
+
+    if (m.Name == "Bind" && m.GetParameters()[0].Name == "propertyAccessor")
+    {
+        doc = doc.Replace(@"<paramref name=""member"" />", @"<paramref name=""propertyAccessor"" />");
+    }
+
+    var ret = ToCSharp(m.ReturnType);
+    var name = m.Name;
+    var genArgs = m.IsGenericMethodDefinition ? "<" + string.Join(", ", m.GetGenericArguments().Select(ToCSharp).ToArray()) + ">" : "";
+    var pars = string.Join(", ", m.GetParameters().Select(p => ToCSharp(p.ParameterType) + " " + noKeyword(p.Name)).ToArray());
+    var args = string.Join(", ", m.GetParameters().Select(p => noKeyword(p.Name)).ToArray());
+#>
+<#=doc#>
+        public <#=ret#> <#=name#><#=genArgs#>(<#=pars#>)
+        {
+            return ExpressionSlim.<#=name#><#=genArgs#>(<#=args#>);
+        }
+
+<#
+}
+#>
+    }
+}
+<#+
+class MethodMatcher
+{
+    private readonly string _name;
+    private readonly Type[] _parameters;
+
+    public MethodMatcher(string name, params Type[] parameters)
+    {
+        _name = name;
+        _parameters = parameters;
+    }
+
+    public string Name
+    {
+        get { return _name; }
+    }
+
+    public Type[] Parameters
+    {
+        get { return _parameters; }
+    }
+
+    public bool Match(MethodInfo method)
+    {
+        return method.Name == _name && method.GetParameters().Select(p => p.ParameterType).SequenceEqual(_parameters);
+    }
+}
+#>

@@ -1,0 +1,246 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - January 2017 - Created this file.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq.Expressions;
+
+namespace Tests.System.Linq.Expressions.Optimizers
+{
+    partial class ExpressionOptimizerTests
+    {
+<#
+var alias = new Dictionary<Type, string>
+{
+    { typeof(bool), "bool" },
+    { typeof(sbyte), "sbyte" },
+    { typeof(byte), "byte" },
+    { typeof(short), "short" },
+    { typeof(ushort), "ushort" },
+    { typeof(int), "int" },
+    { typeof(uint), "uint" },
+    { typeof(long), "long" },
+    { typeof(ulong), "ulong" },
+    { typeof(float), "float" },
+    { typeof(double), "double" },
+};
+
+var values = new Dictionary<Type, object[]>
+{
+    { typeof(bool), new object[] { false, true } },
+    { typeof(sbyte), new object[] { sbyte.MinValue, (sbyte)-1, (sbyte)0, (sbyte)1, (sbyte)42, sbyte.MaxValue } },
+    { typeof(short), new object[] { short.MinValue, (short)-1, (short)0, (short)1, (short)42, short.MaxValue } },
+    { typeof(int), new object[] { int.MinValue, (int)-1, (int)0, (int)1, (int)42, int.MaxValue } },
+    { typeof(long), new object[] { long.MinValue, (long)-1, (long)0, (long)1, (long)42, long.MaxValue } },
+    { typeof(byte), new object[] { (byte)0, (byte)1, (byte)42, byte.MaxValue } },
+    { typeof(ushort), new object[] { (ushort)0, (ushort)1, (ushort)42, ushort.MaxValue } },
+    { typeof(uint), new object[] { (uint)0, (uint)1, (uint)42, uint.MaxValue } },
+    { typeof(ulong), new object[] { (ulong)0, (ulong)1, (ulong)42, ulong.MaxValue } },
+    { typeof(float), new object[] { (float)0.0, (float)1.0, (float)3.14, float.MinValue, float.MaxValue, float.NaN, float.NegativeInfinity, float.PositiveInfinity } },
+    { typeof(double), new object[] { (double)0.0, (double)1.0, (double)3.14, double.MinValue, double.MaxValue, double.NaN, double.NegativeInfinity, double.PositiveInfinity } },
+};
+
+Func<object, string> toString = o =>
+{
+    if (o is float)
+    {
+        if (float.IsNaN((float)o)) return "float.NaN";
+        if (float.IsPositiveInfinity((float)o)) return "float.PositiveInfinity";
+        if (float.IsNegativeInfinity((float)o)) return "float.NegativeInfinity";
+        if ((float)o == float.MinValue) return "float.MinValue";
+        if ((float)o == float.MaxValue) return "float.MaxValue";
+    }
+
+    if (o is double)
+    {
+        if (double.IsNaN((double)o)) return "double.NaN";
+        if (double.IsPositiveInfinity((double)o)) return "double.PositiveInfinity";
+        if (double.IsNegativeInfinity((double)o)) return "double.NegativeInfinity";
+        if ((double)o == double.MinValue) return "double.MinValue";
+        if ((double)o == double.MaxValue) return "double.MaxValue";
+    }
+
+    return o.ToString().ToLower();
+};
+
+var ts = new[]
+{
+    typeof(bool),
+    typeof(sbyte),
+    typeof(byte),
+    typeof(short),
+    typeof(ushort),
+    typeof(int),
+    typeof(uint),
+    typeof(long),
+    typeof(ulong),
+    typeof(float),
+    typeof(double)
+};
+
+var ops = new[]
+{
+    ExpressionType.Add,
+    ExpressionType.AddChecked,
+    ExpressionType.Subtract,
+    ExpressionType.SubtractChecked,
+    ExpressionType.Multiply,
+    ExpressionType.MultiplyChecked,
+    ExpressionType.Divide,
+    ExpressionType.Modulo,
+    ExpressionType.Power,
+
+    ExpressionType.And,
+    ExpressionType.Or,
+    ExpressionType.ExclusiveOr,
+
+    ExpressionType.LeftShift,
+    ExpressionType.RightShift,
+
+    ExpressionType.LessThan,
+    ExpressionType.LessThanOrEqual,
+    ExpressionType.GreaterThan,
+    ExpressionType.GreaterThanOrEqual,
+    ExpressionType.Equal,
+    ExpressionType.NotEqual,
+};
+
+foreach (var op in ops)
+{
+    foreach (var t in ts)
+    {
+        var a = alias[t];
+
+        var has = false;
+
+        var p1 = Expression.Parameter(t);
+        var p2 = Expression.Parameter(t);
+        var f = default(Delegate);
+        try
+        {
+            var e = Expression.MakeBinary(op, p1, p2);
+            if (e.Method == null)
+            {
+                f = Expression.Lambda(e, p1, p2).Compile();
+                has = true;
+            }
+        }
+        catch {}
+
+        if (has)
+        {
+#>
+        [TestMethod]
+        public void Binary_<#=op#>_Eval_<#=t.Name#>()
+        {
+<#
+            foreach (var val1 in values[t])
+            {
+                foreach (var val2 in values[t])
+                {
+#>
+            AssertEval(
+                Expression.<#=op#>(Expression.Constant((<#=a#>)<#=toString(val1)#>, typeof(<#=a#>)), Expression.Constant((<#=a#>)<#=toString(val2)#>, typeof(<#=a#>)))
+<#
+                var res = default(object);
+                try
+                {
+                    res = f.DynamicInvoke(new object[] { val1, val2 });
+                }
+                catch (TargetInvocationException ex)
+                {
+#>
+                /* typeof(global::<#=ex.InnerException.GetType().FullName#> */
+<#
+                }
+
+                    if (res != null)
+                    {
+#>
+                /* <#=res.ToString().ToLower()#> */
+<#
+                    }
+#>
+            );
+<#
+                }
+            }
+#>
+        }
+
+        [TestMethod]
+        public void Binary_<#=op#>_Eval_Nullable<#=t.Name#>()
+        {
+            var n = Expression.Constant((<#=a#>?)null, typeof(<#=a#>?));
+
+            AssertEval(
+                Expression.<#=op#>(n, n)
+                /* null */
+            );
+<#
+            foreach (var val1 in values[t])
+            {
+#>
+            AssertEval(
+                Expression.<#=op#>(Expression.Constant((<#=a#>?)null, typeof(<#=a#>?)), n)
+                /* null */
+            );
+            AssertEval(
+                Expression.<#=op#>(n, Expression.Constant((<#=a#>?)null, typeof(<#=a#>?)))
+                /* null */
+            );
+<#
+                foreach (var val2 in values[t])
+                {
+#>
+            AssertEval(
+                Expression.<#=op#>(Expression.Constant((<#=a#>?)<#=toString(val1)#>, typeof(<#=a#>?)), Expression.Constant((<#=a#>?)<#=toString(val2)#>, typeof(<#=a#>?)))//,
+<#
+                var res = default(object);
+                try
+                {
+                    res = f.DynamicInvoke(new object[] { val1, val2 });
+                }
+                catch (TargetInvocationException ex)
+                {
+#>
+                /* typeof(global::<#=ex.InnerException.GetType().FullName#>) */
+<#
+                }
+
+                if (res != null)
+                {
+#>
+                /* <#=res.ToString().ToLower()#> */
+<#
+                }
+#>
+            );
+<#
+                }
+            }
+#>
+        }
+
+<#
+        }
+    }
+}
+#>
+    }
+}

@@ -1,0 +1,146 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+//   BD - 04/05/2016 - Created fast JSON deserializer functionality.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nuqleon.Json.Serialization;
+using System;
+using System.Numerics;
+
+namespace Tests
+{
+    partial class ParserTests
+    {
+<#
+var ts = new[] { typeof(sbyte), typeof(short), typeof(int), typeof(long), typeof(byte), typeof(ushort), typeof(uint), typeof(ulong) };
+
+foreach (var t in ts)
+{
+    var tn = t.Name;
+    var unsigned = t == typeof(byte) || tn.StartsWith("U");
+#>
+        [TestMethod]
+        public void FastParser_<#=tn#>()
+        {
+            AssertParse(Parser.Parse<#=tn#>, <#=tn#>.MinValue.ToString(), (<#=tn#>)<#=tn#>.MinValue);
+            AssertParse(Parser.Parse<#=tn#>, <#=tn#>.MaxValue.ToString(), (<#=tn#>)<#=tn#>.MaxValue);
+            AssertParse(Parser.Parse<#=tn#>, ((<#=tn#>)(<#=tn#>.MinValue + 1)).ToString(), (<#=tn#>)(<#=tn#>.MinValue + 1));
+            AssertParse(Parser.Parse<#=tn#>, ((<#=tn#>)(<#=tn#>.MaxValue - 1)).ToString(), (<#=tn#>)(<#=tn#>.MaxValue - 1));
+
+<#
+if (!unsigned)
+{
+#>
+            for (var i = -128; i <= 127; i++)
+            {
+                AssertParse(Parser.Parse<#=tn#>, i.ToString(), (<#=tn#>)i);
+            }
+
+            AssertParseFail(Parser.Parse<#=tn#>, "-");
+<#
+}
+else
+{
+#>
+            for (var i = 0; i <= 255; i++)
+            {
+                AssertParse(Parser.Parse<#=tn#>, i.ToString(), (<#=tn#>)i);
+            }
+
+            AssertParseFail(Parser.Parse<#=tn#>, "-1");
+<#
+}
+#>
+
+            AssertParseFail(Parser.Parse<#=tn#>, "");
+            AssertParseFail(Parser.Parse<#=tn#>, " ");
+
+            AssertParseFail(Parser.Parse<#=tn#>, "true");
+            AssertParseFail(Parser.Parse<#=tn#>, "[");
+            AssertParseFail(Parser.Parse<#=tn#>, "]");
+            AssertParseFail(Parser.Parse<#=tn#>, "{");
+            AssertParseFail(Parser.Parse<#=tn#>, "}");
+            AssertParseFail(Parser.Parse<#=tn#>, ",");
+            AssertParseFail(Parser.Parse<#=tn#>, ":");
+
+            AssertParseFail(Parser.Parse<#=tn#>, "null");
+
+            AssertParseFail(Parser.Parse<#=tn#>, (new BigInteger(<#=tn#>.MinValue) - 1).ToString());
+            AssertParseFail(Parser.Parse<#=tn#>, (new BigInteger(<#=tn#>.MaxValue) + 1).ToString());
+        }
+
+        [TestMethod]
+        public void FastParser_Nullable<#=tn#>()
+        {
+            AssertParse(Parser.ParseNullable<#=tn#>, "null", (<#=tn#>?)null);
+            AssertParse(Parser.ParseNullable<#=tn#>, <#=tn#>.MinValue.ToString(), (<#=tn#>?)<#=tn#>.MinValue);
+            AssertParse(Parser.ParseNullable<#=tn#>, <#=tn#>.MaxValue.ToString(), (<#=tn#>?)<#=tn#>.MaxValue);
+            AssertParse(Parser.ParseNullable<#=tn#>, ((<#=tn#>)(<#=tn#>.MinValue + 1)).ToString(), (<#=tn#>?)(<#=tn#>.MinValue + 1));
+            AssertParse(Parser.ParseNullable<#=tn#>, ((<#=tn#>)(<#=tn#>.MaxValue - 1)).ToString(), (<#=tn#>?)(<#=tn#>.MaxValue - 1));
+
+<#
+if (!unsigned)
+{
+#>
+            for (var i = -128; i <= 127; i++)
+            {
+                AssertParse(Parser.ParseNullable<#=tn#>, i.ToString(), (<#=tn#>?)i);
+            }
+
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "-");
+<#
+}
+else
+{
+#>
+            for (var i = 0; i <= 255; i++)
+            {
+                AssertParse(Parser.ParseNullable<#=tn#>, i.ToString(), (<#=tn#>?)i);
+            }
+
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "-1");
+<#
+}
+#>
+
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, " ");
+
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "true");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "[");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "]");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "{");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "}");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, ",");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, ":");
+
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "n");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "nu");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "nul");
+
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "Null");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "nUll");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "nuLl");
+            AssertParseFail(Parser.ParseNullable<#=tn#>, "nulL");
+
+            AssertParseFail(Parser.ParseNullable<#=tn#>, (new BigInteger(<#=tn#>.MinValue) - 1).ToString());
+            AssertParseFail(Parser.ParseNullable<#=tn#>, (new BigInteger(<#=tn#>.MaxValue) + 1).ToString());
+        }
+
+<#
+}
+#>
+    }
+}

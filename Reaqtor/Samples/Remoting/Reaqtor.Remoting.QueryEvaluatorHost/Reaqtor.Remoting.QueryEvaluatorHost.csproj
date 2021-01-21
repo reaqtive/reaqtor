@@ -1,0 +1,14 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <Description>Query evaluator host for the Reaqtor remoting stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.QueryEvaluator\Reaqtor.Remoting.QueryEvaluator.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Tcp\Reaqtor.Remoting.Platform.Tcp.csproj" />
+  </ItemGroup>
+
+</Project>

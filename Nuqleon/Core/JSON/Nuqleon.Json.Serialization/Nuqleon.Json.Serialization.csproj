@@ -1,0 +1,82 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Fast serialization support for JSON data.</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net50'">
+    <DefineConstants>USE_SPAN</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Json\Nuqleon.Json.csproj" />
+    <ProjectReference Include="..\..\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Emitter\Emitter.Integers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Emitter.Integers.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Emitter\Emitter.Nullable.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Emitter.Nullable.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Emitter\Emitter.Reals.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Emitter.Reals.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Parser\Parser.Integers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parser.Integers.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Parser\Parser.Nullable.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parser.Nullable.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Parser\Parser.Reals.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Parser.Reals.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Emitter\Emitter.Integers.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Emitter.Integers.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Emitter\Emitter.Nullable.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Emitter.Nullable.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Emitter\Emitter.Reals.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Emitter.Reals.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Parser\Parser.Integers.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Parser.Integers.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Parser\Parser.Nullable.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Parser.Nullable.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Parser\Parser.Reals.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Parser.Reals.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,833 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq.Expressions;
+using System.Memory.Diagnostics;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
+namespace ProjectJohnnie
+{
+    class Demo
+    {
+        static readonly ClrObjectWalkerFactory s_factory = new(emitEdges: true);
+
+        static void Analyze()
+        {
+            Expression<Func<string, int>> f = s => (s + "foo").Length * 2 - 1;
+
+            var sw = Stopwatch.StartNew();
+            var i = 0;
+
+            while (sw.Elapsed < TimeSpan.FromSeconds(10))
+            {
+                Analyze(f);
+                i++;
+            }
+
+            Console.WriteLine((double)i / sw.Elapsed.TotalSeconds);
+
+            Analyze(1);
+            Analyze(new KeyValuePair<int, int>(2, 3));
+            Analyze(new { kv = new KeyValuePair<int, int>(2, 3) });
+            Analyze(new { a = (object)1 });
+            Analyze("bar");
+            Analyze(new[] { 1, 2, 3 });
+            Analyze(new int[2, 3] { { 1, 2, 3 }, { 4, 5, 6 } });
+            Analyze(new { a = 1, b = "bar" });
+        }
+
+        static void Analyze(object o)
+        {
+            Console.WriteLine(o);
+            Console.WriteLine();
+
+            var a = new HeapAnalyzer(s_factory);
+            a.Walk(o, null);
+            a.Report();
+        }
+
+        static void Print()
+        {
+            var walkerFactory = new ClrObjectWalkerFactory(emitEdges: true);
+
+            Print(walkerFactory, new object());
+
+            Print(walkerFactory, 42);
+            Print(walkerFactory, "bar");
+
+            Print(walkerFactory, DateTimeOffset.Now);
+
+            Print(walkerFactory, new { a = 1, b = "bar" });
+
+            Print(walkerFactory, new int[0]);
+            Print(walkerFactory, new[] { 2, 3, 5 });
+
+            Print(walkerFactory, new { a = 1, bc = new { b = new[] { 3, 4 }, c = 5 }, d = 6 });
+
+            Print(walkerFactory, new { a = 1, b = "bar", c = DateTimeOffset.Now, d = new[] { "qux", "baz" }, e = new KeyValuePair<int, string>(42, "foo") });
+
+            A a = new A();
+            a.Next = a;
+
+            Print(walkerFactory, a);
+
+            Print(walkerFactory, new int[2, 3] { { 1, 2, 3 }, { 4, 5, 6 } });
+            Print(walkerFactory, new int[3, 2] { { 1, 2 }, { 3, 4 }, { 5, 6 } });
+            Print(walkerFactory, new int[2, 3, 5] { { { 1, 2, 3, 4, 5 }, { 6, 7, 8, 9, 10 }, { 11, 12, 13, 14, 15 } }, { { 16, 17, 18, 19, 20 }, { 21, 22, 23, 24, 25 }, { 26, 27, 28, 29, 30 } } });
+        }
+
+        static void Print(object o) => new PrintingClrObjectWalker(new ClrObjectWalkerFactory(true)).Walk(o, null);
+
+        static void Print<T>(ClrObjectWalkerFactory factory, T obj) => new PrintingClrObjectWalker(factory).Walk(obj, null);
+
+    }
+
+    class HeapAnalyzer : NonCyclicClrObjectWalker
+    {
+        //private static readonly ConcurrentDictionary<Type, int> s_sizes = new();
+
+        private readonly Dictionary<Type, long> _count = new();
+        private readonly Dictionary<Type, long> _arrayElementCount = new();
+        private readonly HashSet<string> _strings = new(ReferenceEqualityComparer<object>.Instance);
+        private long _stringLength = 0;
+
+        public HeapAnalyzer(ClrObjectWalkerFactory walkerFactory)
+            : base(walkerFactory, new BreadthFirstTraversal<IEdge>(), useDynamicType: true)
+        {
+        }
+
+        private static bool IsBoxingAssignment(FieldInfo field) =>
+            field.FieldType == typeof(object) ||
+            field.FieldType == typeof(ValueType) ||
+            field.FieldType == typeof(Enum);
+
+        protected override bool BeforeWalk<T>(T obj, IEdge edge)
+        {
+            var res = base.BeforeWalk(obj, edge);
+
+            if (res)
+            {
+                Analyze(obj, edge);
+            }
+
+            return res;
+        }
+
+        private void Analyze<TObject>(TObject obj, IEdge edge)
+        {
+            if (obj == null)
+            {
+                return;
+            }
+
+            var type = obj.GetType();
+
+            if (!type.IsValueType || edge == null || edge?.Access is FieldAccess f && IsBoxingAssignment(f.Field))
+            {
+                if (!_count.TryGetValue(type, out var count))
+                {
+                    count = 0;
+                }
+
+                _count[type] = count + 1;
+            }
+
+            if (obj is string s)
+            {
+                if (_strings.Add(s))
+                {
+                    _stringLength += s.Length;
+                }
+            }
+            else
+            {
+                if (type.IsArray)
+                {
+                    var length = ((Array)(object)obj).Length;
+
+                    if (!_arrayElementCount.TryGetValue(type, out var elementCount))
+                    {
+                        elementCount = 0;
+                    }
+
+                    _arrayElementCount[type] = elementCount + length;
+                }
+            }
+        }
+
+        public void Report()
+        {
+            Console.WriteLine("Count\tSize\tTotal\tType");
+            Console.WriteLine("-------\t-------\t-------\t--------------------------------");
+
+            long total = 0L;
+
+            foreach (var kv in _count)
+            {
+                var type = kv.Key;
+                var count = kv.Value;
+
+                var size = TypeHelpers.SizeOf(type);
+
+                if (type.IsValueType) // boxing cost
+                {
+                    size += TypeHelpers.IntPtrSize * 2; // SyncBlock + MethodTable
+                }
+
+                Console.WriteLine($"{count}\t{size}\t{count * size}\t{type}");
+                total += size * count;
+            }
+
+            Console.WriteLine();
+
+            Console.WriteLine("Strings:");
+
+            foreach (var s in _strings)
+            {
+                Console.WriteLine("  " + s);
+            }
+
+            Console.WriteLine();
+
+            Console.WriteLine("Total character count: " + _stringLength);
+
+            total += _stringLength;
+
+            Console.WriteLine();
+
+            Console.WriteLine("Elems\tSize\tTotal\tArray type");
+            Console.WriteLine("-------\t-------\t-------\t--------------------------------");
+
+            foreach (var kv in _arrayElementCount)
+            {
+                var type = kv.Key;
+                var count = kv.Value;
+
+                var elemType = type.GetElementType();
+
+                if (elemType.IsValueType)
+                {
+                    var elemSize = TypeHelpers.SizeOf(elemType);
+                    total += elemSize * count; // NB: This ignores alignment and padding.
+
+                    Console.WriteLine($"{count}\t{elemSize}\t{count * elemSize}\t{type}");
+                }
+                else
+                {
+                    total += TypeHelpers.IntPtrSize * count;
+
+                    Console.WriteLine($"{count}\t{TypeHelpers.IntPtrSize}\t{count * TypeHelpers.IntPtrSize}\t{type}");
+                }
+            }
+
+            Console.WriteLine();
+
+            Console.WriteLine("Total size: " + total);
+        }
+    }
+
+    class PrintingClrObjectWalker : NonCyclicClrObjectWalker
+    {
+        public PrintingClrObjectWalker(ClrObjectWalkerFactory walkerFactory)
+            : base(walkerFactory, new DepthFirstTraversal<IEdge>(lexicographic: true), useDynamicType: true)
+        {
+        }
+
+        protected override void Visit<TObject>(TObject obj, IEdge edge)
+        {
+            Console.WriteLine($"{edge} = {obj}");
+
+            base.Visit(obj, edge);
+        }
+    }
+
+    class NonCyclicClrObjectWalker : ClrObjectWalker
+    {
+        protected readonly HashSet<object> _objects = new(ReferenceEqualityComparer<object>.Instance);
+
+        public NonCyclicClrObjectWalker(ClrObjectWalkerFactory walkerFactory, ITraversal<IEdge> traversal, bool useDynamicType)
+            : base(walkerFactory, traversal, useDynamicType)
+        {
+        }
+
+        protected override bool BeforeWalk<T>(T obj, IEdge edge)
+        {
+            if (obj == null)
+            {
+                return false;
+            }
+
+            if (default(T) == null && !(typeof(T).IsGenericType && typeof(T).GetGenericTypeDefinition() == typeof(Nullable<>)))
+            {
+                return _objects.Add(obj);
+            }
+
+            return true;
+        }
+    }
+
+    class ClrObjectWalker : ObjectWalker<IEdge>
+    {
+        public ClrObjectWalker(ClrObjectWalkerFactory walkerFactory, ITraversal<IEdge> traversal, bool useDynamicType)
+            : base(walkerFactory, traversal, useDynamicType)
+        {
+        }
+    }
+
+    interface ITraversal<TEdge>
+    {
+        bool LeftToRight { get; }
+        void Add(IVisit<TEdge> next);
+        void Clear();
+        bool TryGetNext(out IVisit<TEdge> next);
+    }
+
+    class BreadthFirstTraversal<TEdge> : QueueTraversal<TEdge>
+    {
+        public BreadthFirstTraversal() : base(true)
+        {
+        }
+    }
+
+    class DepthFirstTraversal<TEdge> : StackTraversal<TEdge>
+    {
+        public DepthFirstTraversal(bool lexicographic) : base(!lexicographic)
+        {
+        }
+    }
+
+    class QueueTraversal<TEdge> : ITraversal<TEdge>
+    {
+        private readonly Queue<IVisit<TEdge>> _queue = new();
+
+        public QueueTraversal(bool leftToRight)
+        {
+            LeftToRight = leftToRight;
+        }
+
+        public bool LeftToRight { get; }
+
+        public void Add(IVisit<TEdge> next) => _queue.Enqueue(next);
+
+        public void Clear() => _queue.Clear();
+
+        public bool TryGetNext(out IVisit<TEdge> next)
+        {
+            if (_queue.Count > 0)
+            {
+                next = _queue.Dequeue();
+                return true;
+            }
+
+            next = null;
+            return false;
+        }
+    }
+
+    class StackTraversal<TEdge> : ITraversal<TEdge>
+    {
+        private readonly Stack<IVisit<TEdge>> _stack = new();
+
+        public StackTraversal(bool leftToRight)
+        {
+            LeftToRight = leftToRight;
+        }
+
+        public bool LeftToRight { get; }
+
+        public void Add(IVisit<TEdge> next) => _stack.Push(next);
+
+        public void Clear() => _stack.Clear();
+
+        public bool TryGetNext(out IVisit<TEdge> next)
+        {
+            if (_stack.Count > 0)
+            {
+                next = _stack.Pop();
+                return true;
+            }
+
+            next = null;
+            return false;
+        }
+    }
+
+    class ObjectWalker<TEdge> : IObjectWalker<TEdge>
+    {
+        private readonly IWalkerFactory<TEdge> _walkerFactory;
+        private readonly ITraversal<TEdge> _traversal;
+        private readonly bool _useDynamicType;
+        private bool _isRunning;
+
+        public ObjectWalker(IWalkerFactory<TEdge> walkerFactory, ITraversal<TEdge> traversal, bool useDynamicType)
+        {
+            _walkerFactory = walkerFactory;
+            _traversal = traversal;
+            _useDynamicType = useDynamicType;
+        }
+
+        void IObjectVisitor<TEdge>.Visit<TObject>(TObject obj, TEdge edge)
+        {
+            Visit(obj, edge);
+        }
+
+        protected virtual void Visit<TObject>(TObject obj, TEdge edge)
+        {
+            if (BeforeWalk(obj, edge))
+            {
+                var walker =
+                    _useDynamicType
+                        ? _walkerFactory.GetOrCreateWalker<TObject>(obj.GetType(), _traversal.LeftToRight)
+                        : _walkerFactory.GetOrCreateWalker<TObject>(_traversal.LeftToRight);
+
+                walker(obj, this);
+
+                AfterWalk(obj, edge);
+            }
+        }
+
+        public virtual void Walk<TObject>(TObject obj, TEdge edge)
+        {
+            _traversal.Add(new Visit<TObject, TEdge>(obj, edge));
+
+            if (!_isRunning)
+            {
+                _isRunning = true;
+
+                try
+                {
+                    while (_traversal.TryGetNext(out var next))
+                    {
+                        next.Accept(this);
+                    }
+                }
+                finally
+                {
+                    _traversal.Clear();
+                    _isRunning = false;
+                }
+            }
+        }
+
+        protected virtual bool BeforeWalk<T>(T obj, TEdge edge) => obj != null;
+
+        protected virtual void AfterWalk<T>(T obj, TEdge edge) { }
+    }
+
+    delegate void Walker<out TEdge, in TObject>(TObject obj, IObjectWalker<TEdge> walker);
+
+    interface IWalkerFactory<TEdge>
+    {
+        Walker<TEdge, TObject> GetOrCreateWalker<TObject>(bool leftToRight);
+        Walker<TEdge, TObject> GetOrCreateWalker<TObject>(Type type, bool leftToRight);
+    }
+
+    class ClrObjectWalkerFactory : IWalkerFactory<IEdge>
+    {
+        private static readonly ConcurrentDictionary<Type, WalkerInfo> s_walkers = new();
+        private static readonly ConcurrentDictionary<Type, MethodInfo> s_walkMethods = new();
+
+        private static readonly MethodInfo s_walkMethod = typeof(IObjectWalker<IEdge>).GetMethod(nameof(IObjectWalker<IEdge>.Walk));
+        private static readonly MethodInfo s_createEdge = typeof(Edge).GetMethod(nameof(Edge.Create));
+        private static readonly MethodInfo s_fieldAccess = typeof(Access).GetMethod(nameof(Access.Field));
+        private static readonly MethodInfo s_vectorElementAccess = typeof(Access).GetMethod(nameof(Access.VectorElement));
+        private static readonly MethodInfo s_multidimensionalArrayElementAccess = typeof(Access).GetMethod(nameof(Access.MultidimensionalArrayElement));
+        private static readonly MethodInfo s_getLowerBound = typeof(Array).GetMethod(nameof(Array.GetLowerBound));
+        private static readonly MethodInfo s_getUpperBound = typeof(Array).GetMethod(nameof(Array.GetUpperBound));
+
+        private static readonly ParameterExpression s_walkerParameter = Expression.Parameter(typeof(IObjectWalker<IEdge>), "walker");
+
+        private readonly bool _emitEdges;
+
+        public ClrObjectWalkerFactory(bool emitEdges)
+        {
+            _emitEdges = emitEdges;
+        }
+
+        public Walker<IEdge, TObject> GetOrCreateWalker<TObject>(bool leftToRight) => GetOrCreateWalker<TObject>(typeof(TObject), leftToRight);
+
+        public Walker<IEdge, TObject> GetOrCreateWalker<TObject>(Type type, bool leftToRight)
+        {
+            return (Walker<IEdge, TObject>)GetOrCreateWalkerInfo(type).CreateDelegate<TObject>(type, leftToRight);
+        }
+
+        private WalkerInfo GetOrCreateWalkerInfo(Type type)
+        {
+            if (s_walkers.TryGetValue(type, out var walker))
+            {
+                return walker;
+            }
+
+            var newWalker = CreateWalker(type);
+
+            return s_walkers.GetOrAdd(type, newWalker);
+        }
+
+        private WalkerInfo CreateWalker(Type type)
+        {
+            if (type.IsArray)
+            {
+                if (type.GetElementType().MakeArrayType() == type)
+                {
+                    return CreateVectorWalker(type);
+                }
+                else
+                {
+                    return CreateMultidimensionalArrayWalker(type);
+                }
+            }
+            else if (type.IsPrimitive)
+            {
+                return new WalkerInfo((p, l) => Expression.Empty());
+            }
+            else
+            {
+                return CreateFieldWalker(type);
+            }
+        }
+
+        private WalkerInfo CreateFieldWalker(Type type)
+        {
+            var createEdgeMethod = s_createEdge.MakeGenericMethod(type);
+
+            var baseWalkers = new List<WalkerInfo>();
+
+            for (var baseType = type.BaseType; baseType != null; baseType = baseType.BaseType)
+            {
+                var baseWalker = GetOrCreateWalkerInfo(baseType);
+
+                baseWalkers.Add(baseWalker);
+            }
+
+            var fields = type.GetFields(BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
+
+            return new WalkerInfo(GetWalkerExpression);
+
+            Expression GetWalkerExpression(Expression objParameter, bool leftToRight)
+            {
+                var walkExprs = new List<Expression>();
+
+                foreach (var baseWalker in baseWalkers)
+                {
+                    var baseWalkerExpr = baseWalker.ExpressionFactory(objParameter, /* leftToRight*/ true);
+
+                    if (baseWalkerExpr.NodeType != ExpressionType.Default)
+                    {
+                        if (baseWalkerExpr.NodeType == ExpressionType.Block)
+                        {
+                            walkExprs.AddRange(((BlockExpression)baseWalkerExpr).Expressions);
+                        }
+                        else
+                        {
+                            walkExprs.Add(baseWalkerExpr);
+                        }
+                    }
+                }
+
+                foreach (var field in fields)
+                {
+                    var fieldType = field.FieldType;
+
+                    if (!fieldType.IsPointer && !fieldType.IsByRef && field.DeclaringType == type)
+                    {
+                        var edgeExpr = default(Expression);
+
+                        if (_emitEdges)
+                        {
+                            var accessExpr = Expression.Call(s_fieldAccess, Expression.Constant(field, typeof(FieldInfo)));
+                            edgeExpr = Expression.Call(createEdgeMethod, objParameter, accessExpr);
+                        }
+                        else
+                        {
+                            edgeExpr = Expression.Default(typeof(IEdge));
+                        }
+
+                        var walkMethod = GetWalkMethod(field.FieldType);
+                        var fieldExpr = Expression.Field(objParameter, field);
+                        var walkCallExpr = Expression.Call(s_walkerParameter, walkMethod, fieldExpr, edgeExpr);
+
+                        walkExprs.Add(walkCallExpr);
+                    }
+                }
+
+                if (walkExprs.Count == 0)
+                {
+                    return Expression.Empty();
+                }
+                else
+                {
+                    if (!leftToRight)
+                    {
+                        walkExprs.Reverse();
+                    }
+
+                    return Expression.Block(typeof(void), walkExprs);
+                }
+            }
+        }
+
+        private WalkerInfo CreateVectorWalker(Type type)
+        {
+            var createEdgeMethod = s_createEdge.MakeGenericMethod(type);
+
+            return new WalkerInfo(GetWalkerExpression);
+
+            Expression GetWalkerExpression(Expression objParameter, bool leftToRight)
+            {
+                var walkMethod = GetWalkMethod(objParameter.Type.GetElementType());
+
+                var indexVar = Expression.Parameter(typeof(int));
+                var lengthVar = Expression.Parameter(typeof(int));
+                var lengthExpr = Expression.ArrayLength(objParameter);
+                var breakLabel = Expression.Label();
+
+                var edgeExpr = default(Expression);
+
+                if (_emitEdges)
+                {
+                    edgeExpr =
+                        Expression.Call(
+                            createEdgeMethod,
+                            objParameter,
+                            Expression.Call(
+                                s_vectorElementAccess,
+                                indexVar
+                            )
+                        );
+                }
+                else
+                {
+                    edgeExpr = Expression.Default(typeof(IEdge));
+                }
+
+                Expression initialize, condition, update;
+
+                if (leftToRight)
+                {
+                    initialize = Expression.Assign(indexVar, Expression.Constant(0));
+                    condition = Expression.Equal(indexVar, lengthExpr);
+                    update = Expression.PreIncrementAssign(indexVar);
+                }
+                else
+                {
+                    initialize = Expression.Assign(indexVar, Expression.Subtract(lengthExpr, Expression.Constant(1)));
+                    condition = Expression.LessThan(indexVar, Expression.Constant(0));
+                    update = Expression.PreDecrementAssign(indexVar);
+                }
+
+                return
+                    Expression.Block(
+                        typeof(void),
+                        new[] { indexVar, lengthVar },
+                        Expression.Assign(lengthVar, lengthExpr),
+                        initialize,
+                        Expression.Loop(
+                            Expression.Block(
+                                Expression.IfThen(
+                                    condition,
+                                    Expression.Break(breakLabel)
+                                ),
+                                Expression.Call(
+                                    s_walkerParameter,
+                                    walkMethod,
+                                    Expression.ArrayIndex(
+                                        objParameter,
+                                        indexVar
+                                    ),
+                                    edgeExpr
+                                ),
+                                update
+                            ),
+                            breakLabel
+                        )
+                    );
+            }
+        }
+
+        private WalkerInfo CreateMultidimensionalArrayWalker(Type type)
+        {
+            var createEdgeMethod = s_createEdge.MakeGenericMethod(type);
+
+            var rank = type.GetArrayRank();
+
+            return new WalkerInfo(GetWalkerExpression);
+
+            Expression GetWalkerExpression(Expression objParameter, bool leftToRight)
+            {
+                var rangeVariables = new ParameterExpression[rank];
+                var lowerBoundVariables = new ParameterExpression[rank];
+                var upperBoundVariables = new ParameterExpression[rank];
+                var variables = new ParameterExpression[rank * 2];
+                var exprs = new Expression[rank * 2 + 1];
+                var breakLabels = new LabelTarget[rank];
+
+                for (var i = 0; i < rank; i++)
+                {
+                    var index = Expression.Constant(i);
+
+                    var rangeVariable = Expression.Parameter(typeof(int), "i" + i);
+                    rangeVariables[i] = rangeVariable;
+
+                    var lowerBoundVariable = Expression.Parameter(typeof(int), "l" + i);
+                    lowerBoundVariables[i] = lowerBoundVariable;
+                    variables[i * 2] = lowerBoundVariable;
+
+                    var upperBoundVariable = Expression.Parameter(typeof(int), "u" + i);
+                    upperBoundVariables[i] = upperBoundVariable;
+                    variables[i * 2 + 1] = upperBoundVariable;
+
+                    exprs[i * 2] = Expression.Assign(lowerBoundVariable, Expression.Call(objParameter, s_getLowerBound, index));
+                    exprs[i * 2 + 1] = Expression.Assign(upperBoundVariable, Expression.Call(objParameter, s_getUpperBound, index));
+
+                    breakLabels[i] = Expression.Label();
+                }
+
+                var edgeExpr = default(Expression);
+
+                if (_emitEdges)
+                {
+                    edgeExpr =
+                        Expression.Call(
+                            createEdgeMethod,
+                            objParameter,
+                            Expression.Call(
+                                s_multidimensionalArrayElementAccess,
+                                Expression.NewArrayInit(
+                                    typeof(int),
+                                    rangeVariables
+                                )
+                            )
+                        );
+                }
+                else
+                {
+                    edgeExpr = Expression.Default(typeof(IEdge));
+                }
+
+                var walkMethod = GetWalkMethod(objParameter.Type.GetElementType());
+
+                var body = (Expression)
+                    Expression.Call(
+                        s_walkerParameter,
+                        walkMethod,
+                        Expression.ArrayIndex(
+                            objParameter,
+                            rangeVariables
+                        ),
+                        edgeExpr
+                    );
+
+                for (var i = rank - 1; i >= 0; i--)
+                {
+                    var rangeVariable = rangeVariables[i];
+                    var lowerBoundVariable = lowerBoundVariables[i];
+                    var upperBoundVariable = upperBoundVariables[i];
+                    var breakLabel = breakLabels[i];
+
+                    Expression initialize, condition, update;
+
+                    if (leftToRight)
+                    {
+                        initialize = Expression.Assign(rangeVariable, lowerBoundVariable);
+                        condition = Expression.GreaterThan(rangeVariable, upperBoundVariable);
+                        update = Expression.PreIncrementAssign(rangeVariable);
+                    }
+                    else
+                    {
+                        initialize = Expression.Assign(rangeVariable, upperBoundVariable);
+                        condition = Expression.LessThan(rangeVariable, lowerBoundVariable);
+                        update = Expression.PreDecrementAssign(rangeVariable);
+                    }
+
+                    body =
+                        Expression.Block(
+                            typeof(void),
+                            new[] { rangeVariable },
+                            initialize,
+                            Expression.Loop(
+                                Expression.Block(
+                                    Expression.IfThen(
+                                        condition,
+                                        Expression.Break(breakLabel)
+                                    ),
+                                    body,
+                                    update
+                                ),
+                                breakLabel
+                            )
+                        );
+                }
+
+                exprs[exprs.Length - 1] = body;
+
+                var res = Expression.Block(typeof(void), variables, exprs);
+
+                return res;
+            }
+        }
+
+        private static MethodInfo GetWalkMethod(Type type)
+        {
+            if (s_walkMethods.TryGetValue(type, out var method))
+            {
+                return method;
+            }
+
+            method = s_walkMethod.MakeGenericMethod(type);
+
+            return s_walkMethods.GetOrAdd(type, method);
+        }
+
+        class WalkerInfo
+        {
+            private readonly ConcurrentDictionary<(Type, Type), Delegate> _delegates = new(1, 1);
+
+            public WalkerInfo(Func<Expression, bool, Expression> expressionFactory)
+            {
+                ExpressionFactory = expressionFactory;
+            }
+
+            public Delegate CreateDelegate<TObject>(Type type, bool leftToRight)
+            {
+                if (_delegates.TryGetValue((type, typeof(TObject)), out var res))
+                {
+                    return res;
+                }
+
+                res = CreateDelegateCore<TObject>(type, leftToRight);
+
+                return _delegates.GetOrAdd((type, typeof(TObject)), res);
+            }
+
+            private Delegate CreateDelegateCore<TObject>(Type type, bool leftToRight)
+            {
+                var staticType = typeof(TObject);
+
+                var parameter = Expression.Parameter(staticType, "obj");
+
+                var walkerDelegateType = typeof(Walker<,>).MakeGenericType(typeof(IEdge), staticType);
+
+                var obj = staticType == type ? parameter : (Expression)Expression.Convert(parameter, type);
+                var body = ExpressionFactory(obj, leftToRight);
+                var lambda = Expression.Lambda(walkerDelegateType, body, parameter, s_walkerParameter);
+
+                //Console.Write("C");
+
+                return lambda.Compile();
+            }
+
+            public Func<Expression, bool, Expression> ExpressionFactory { get; }
+        }
+    }
+
+    class A
+    {
+        public A Next;
+    }
+}

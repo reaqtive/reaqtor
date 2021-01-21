@@ -1,0 +1,69 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Collections.Generic;
+
+namespace ProjectJohnnie
+{
+<#
+for (var i = 1; i <= 7; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "T" + j));
+    var comparers = string.Join(", ", Enumerable.Range(1, i).Select(j => "IEqualityComparer<T" + j + "> comparer" + j));
+#>
+    internal sealed class TupleEqualityComparer<<#=args#>> : IEqualityComparer<Tuple<<#=args#>>>
+    {
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+        private readonly IEqualityComparer<T<#=j#>> _comparer<#=j#>;
+<#
+}
+#>
+
+        public TupleEqualityComparer(<#=comparers#>)
+        {
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+            _comparer<#=j#> = comparer<#=j#>;
+<#
+}
+#>
+        }
+
+        public bool Equals(Tuple<<#=args#>> x, Tuple<<#=args#>> y)
+        {
+            if (x == null && y == null)
+                return true;
+
+            if (x == null || y == null)
+                return true;
+
+            return <#=string.Join(" && ", Enumerable.Range(1, i).Select(j => "_comparer" + j + ".Equals(x.Item" + j + ", y.Item" + j + ")"))#>;
+        }
+
+        public int GetHashCode(Tuple<<#=args#>> obj)
+        {
+            if (obj == null)
+                return 0;
+
+            return HashHelpers.Combine(<#=string.Join(", ", Enumerable.Range(1, i).Select(j => "_comparer" + j + ".GetHashCode(obj.Item" + j + ")"))#>);
+        }
+
+    }
+
+<#
+}
+#>
+}

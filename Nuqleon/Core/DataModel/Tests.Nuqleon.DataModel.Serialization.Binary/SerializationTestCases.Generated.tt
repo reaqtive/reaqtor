@@ -1,0 +1,466 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Globalization" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Globalization" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.Linq;
+
+using Nuqleon.DataModel;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Tests.Nuqleon.DataModel.Serialization.Binary
+{
+    using Tests = DataModelSerializerFactoryTestCase.Tests;
+    using IsotopeTestCase = DataModelSerializerFactoryTestCase.IsotopeTestCase;
+    using ArrayComparer = DataModelSerializerFactoryTestCase.ArrayComparer;
+    using DeepComparer = DataModelSerializerFactoryTestCase.DeepComparer;
+
+    public partial class DataModelSerializerFactoryTests
+    {
+        private SerializationTestCases generatedTests = new();
+
+<# foreach (var type in DataTypes) { #>
+        [TestMethod]
+        public void BinarySerialization_<#= type.NameStr #>_Arrays()
+        {
+            Run(generatedTests.BinarySerialization_<#= type.NameStr #>_Arrays_Tests());
+        }
+
+<# } #>
+
+<# foreach (var type in TestTypes) { #>
+        [TestMethod]
+        public void BinarySerialization_<#= type.Name #>_Arrays()
+        {
+            Run(generatedTests.BinarySerialization_<#= type.Name #>_Arrays_Tests());
+        }
+
+<# } #>
+
+<# foreach (var isotopeGroup in IsotopeGroups) { #>
+        [TestMethod]
+        public void BinarySerialization_IsotopeTest_<#= isotopeGroup.Name #>()
+        {
+            RunIsotopeTest(new IsotopeTestCase
+            {
+<# foreach (var isotope in isotopeGroup.Isotopes) { #>
+                { typeof(<#= isotope.Name #>), RandValue.<#= isotope.Name #>},
+<# } #>
+            }, new DeepComparer());
+        }
+
+<# } #>
+    }
+
+    public partial class DataModelSerializerFactoryParallelTests
+    {
+        private SerializationTestCases generatedTests = new SerializationTestCases();
+
+<# foreach (var type in DataTypes) { #>
+        [TestMethod]
+        public void BinarySerialization_<#= type.NameStr #>_Arrays()
+        {
+            Run(generatedTests.BinarySerialization_<#= type.NameStr #>_Arrays_Tests());
+        }
+
+<# } #>
+
+<# foreach (var type in TestTypes) { #>
+        [TestMethod]
+        public void BinarySerialization_<#= type.Name #>_Arrays()
+        {
+            Run(generatedTests.BinarySerialization_<#= type.Name #>_Arrays_Tests());
+        }
+
+<# } #>
+    }
+
+    public class SerializationTestCases
+    {
+<# foreach (var type in DataTypes) { #>
+        public Tests BinarySerialization_<#= type.NameStr #>_Arrays_Tests()
+        {
+            var tests = new Tests
+            {
+                { "(<#= type.CodeStr #>[])null, ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), null, ArrayComparer.Instance },
+                { "(<#= type.CodeStr #>[])new <#= type.CodeStr #>[0], ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), new <#= type.CodeStr #>[0], ArrayComparer.Instance },
+                { "(<#= type.CodeStr #>[])new <#= type.CodeStr #>[] {<#= type.RandValue #>}, ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), new <#= type.CodeStr #>[] {<#= type.RandValue #>}, ArrayComparer.Instance },
+<# if (type.IsNullableType) { #>
+                { "(<#= type.CodeStr #>[])Enumerable.Range(0, 8).Select(i => i % 2 == 0? (<#= type.CodeStr #>)<#= type.RandValue #> : null).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Range(0, 8).Select(i => i % 2 == 0? (<#= type.CodeStr #>)<#= type.RandValue #> : null).ToArray(), ArrayComparer.Instance },
+<# } #>
+<# foreach (var value in type.SpecialValues) { #>
+                { "(<#= type.CodeStr #>[])Enumerable.Repeat(<#= value.Replace("\"", "\\\"") #>, 2).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Repeat<<#= type.CodeStr #>>(<#= value #>, 2).ToArray(), ArrayComparer.Instance },
+                { "(<#= type.CodeStr #>[])Enumerable.Repeat(<#= value.Replace("\"", "\\\"") #>, 4).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Repeat<<#= type.CodeStr #>>(<#= value #>, 4).ToArray(), ArrayComparer.Instance },
+                { "(<#= type.CodeStr #>[])Enumerable.Repeat(<#= value.Replace("\"", "\\\"") #>, 16).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Repeat<<#= type.CodeStr #>>(<#= value #>, 16).ToArray(), ArrayComparer.Instance },
+                { "(<#= type.CodeStr #>[])Enumerable.Repeat(<#= value.Replace("\"", "\\\"") #>, 256).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Repeat<<#= type.CodeStr #>>(<#= value #>, 256).ToArray(), ArrayComparer.Instance },
+<# } #>
+            };
+
+            return tests;
+        }
+
+<# } #>
+
+<# foreach (var type in TestTypes) { #>
+        public Tests BinarySerialization_<#= type.Name #>_Arrays_Tests()
+        {
+            var tests = new Tests
+            {
+                /* null array               */ { "(<#= type.CodeStr #>[])null, DeepComparer.Instance", typeof(<#= type.CodeStr #> []), null, DeepComparer.Instance },
+                /* empty array              */ { "(<#= type.CodeStr #>[])new <#= type.CodeStr #>[0], DeepComparer.Instance", typeof(<#= type.CodeStr #> []), new <#= type.CodeStr #>[0], DeepComparer.Instance },
+                /* array of 1 value         */ { "(<#= type.CodeStr #>[])new <#= type.CodeStr #>[] {<#= type.RandValue #>}, DeepComparer.Instance", typeof(<#= type.CodeStr #> []), new <#= type.CodeStr #>[] {<#= type.RandValue #>}, DeepComparer.Instance },
+                /* array of non-null values */ { "(<#= type.CodeStr #>[])Enumerable.Range(0, 10).Select(i => <#= type.CodeStr #>.RandValue).ToArray(), DeepComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Range(0, 10).Select(i => RandValue.<#= type.CodeStr #>).ToArray(), DeepComparer.Instance },
+<# if (type.Type.Name == "Class") { #>
+                /* array of 1 null value               */ { "(<#= type.CodeStr #>[])new <#= type.CodeStr #>[] { null }, DeepComparer.Instance", typeof(<#= type.CodeStr #> []), new <#= type.CodeStr #>[] { null }, DeepComparer.Instance },
+                /* array of mixed null/non-null values */ { "(<#= type.CodeStr #>[])Enumerable.Range(0, 10).Select(i => i % 2 == 0? (<#= type.CodeStr #>)<#= type.RandValue #> : null).ToArray(), DeepComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Range(0, 10).Select(i => i % 2 == 0? (<#= type.CodeStr #>)<#= type.RandValue #> : null).ToArray(), DeepComparer.Instance },
+<# } #>
+            };
+
+            return tests;
+        }
+
+<# } #>
+    }
+
+    public static class RandValue
+    {
+<# foreach (var testType in AllTestTypes) { #>
+        public static <#= testType.CodeStr #> <#= testType.Name #> = <#= testType.RandValue #>;
+<# } #>
+    }
+
+<# foreach (var testType in AllTestTypes.Where(t => t.Type != null)) { #>
+    public <#= testType.Type.CodeStr #> <#= testType.Name #>
+    {
+<# foreach (var property in testType.Properties) { #>
+        [Mapping("datamodel:testtype/<#= testType.Type.CodeStr.ToLower() #>/<#= property.PropertyName.ToLower() #>")]
+        public <#= property.PropertyType.CodeStr #> <#= property.PropertyName #> { get; set; }
+<# } #>
+    }
+
+<# } #>
+}
+
+<#+
+List<DataType> DataTypes = new List<DataType>
+{
+    DataType.Sbyte,
+    DataType.Byte,
+    DataType.Char,
+    DataType.Short,
+    DataType.Ushort,
+    DataType.Int,
+    DataType.Uint,
+    DataType.Long,
+    DataType.Ulong,
+    DataType.Single,
+    DataType.Double,
+    DataType.Float,
+    DataType.Decimal,
+    DataType.Bool,
+    DataType.DateTime,
+    DataType.Guid,
+    DataType.DateTimeOffset,
+    DataType.TimeSpan,
+    DataType.String,
+    DataType.Uri,
+    DataType.N_Sbyte,
+    DataType.N_Byte,
+    DataType.N_Char,
+    DataType.N_Short,
+    DataType.N_Ushort,
+    DataType.N_Int,
+    DataType.N_Uint,
+    DataType.N_Long,
+    DataType.N_Ulong,
+    DataType.N_Single,
+    DataType.N_Double,
+    DataType.N_Float,
+    DataType.N_Decimal,
+    DataType.N_Bool,
+    DataType.N_DateTime,
+    DataType.N_Guid,
+    DataType.N_DateTimeOffset,
+    DataType.N_TimeSpan,
+};
+
+static List<TestType> TestTypes = GenerateTestTypes();
+
+static List<IsotopeGroup> IsotopeGroups = new List<IsotopeGroup>
+{
+    CreateIsotopeGroup("BigStruct1", TestTypeType.Struct, new TestType [] { TestType.Int, TestType.NullableIntArray, TestType.DateTime }),
+    CreateIsotopeGroup("BigStruct2", TestTypeType.Struct, new TestType [] { TestType.Int, TestType.Int, TestType.Int }),
+    CreateIsotopeGroup("BigStruct3", TestTypeType.Struct, new TestType [] { TestType.Int, TestTypes[5], TestTypes[5], TestTypes[7] }),
+    CreateIsotopeGroup("BigClass1", TestTypeType.Class, new TestType [] { TestType.Int, TestType.NullableIntArray, TestType.DateTime }),
+    CreateIsotopeGroup("BigClass2", TestTypeType.Class, new TestType [] { TestType.Int, TestType.Int, TestType.Int }),
+    CreateIsotopeGroup("BigClass3", TestTypeType.Class, new TestType [] { TestType.Int, TestTypes[5], TestTypes[5], TestTypes[7] }),
+};
+
+static List<TestType> AllTestTypes =
+               (new TestType [] {TestType.Int, TestType.NullableInt, TestType.IntArray, TestType.NullableIntArray, TestType.DateTime})
+        .Concat(TestTypes)
+        .Concat(IsotopeGroups.SelectMany(ig => ig.Isotopes)).ToList();
+
+class DataType
+{
+    public static DataType Sbyte = new NumericDataType("sbyte");
+    public static DataType Byte = new NumericDataType("byte");
+    public static DataType Short = new NumericDataType("short");
+    public static DataType Ushort = new NumericDataType("ushort");
+    public static DataType Int = new NumericDataType("int");
+    public static DataType Uint = new NumericDataType("uint");
+    public static DataType Long = new NumericDataType("long");
+    public static DataType Ulong = new NumericDataType("ulong");
+    public static DataType Single = new NumericDataType("Single", new string [] {"Single.Epsilon", "Single.NaN", "Single.NegativeInfinity", "Single.PositiveInfinity"});
+    public static DataType Double = new NumericDataType("double", new string [] {"double.Epsilon", "double.NaN", "double.NegativeInfinity", "double.PositiveInfinity"});
+    public static DataType Float = new NumericDataType("float", new string [] {"float.Epsilon", "float.NaN", "float.NegativeInfinity", "float.PositiveInfinity"});
+    public static DataType Decimal = new NumericDataType("decimal", new string [] {"decimal.Zero", "decimal.One", "decimal.MinusOne"});
+
+    public static DataType Char = new DataType("char", "'a'");
+    public static DataType Bool = new DataType("bool");
+    public static DataType DateTime = new DataType("DateTime", new string [] {"DateTime.Now", "DateTime.MinValue", "DateTime.MaxValue"});
+    public static DataType Guid = new DataType("Guid", new string [] {"Guid.Empty"});
+    public static DataType DateTimeOffset = new DataType("DateTimeOffset", new string [] {"DateTimeOffset.Now", "DateTimeOffset.MinValue", "DateTimeOffset.MaxValue"});
+    public static DataType TimeSpan = new DataType("TimeSpan", new string [] {"TimeSpan.Zero", "TimeSpan.MinValue", "TimeSpan.MaxValue"});
+
+    public static DataType String = new DataType("string", new string [] {"string.Empty"});
+    public static DataType Uri = new DataType("Uri", new string [] {"new Uri(\"test:test\")"});
+
+    public static DataType N_Sbyte = new NumericDataType("sbyte?");
+    public static DataType N_Byte = new NumericDataType("byte?");
+    public static DataType N_Short = new NumericDataType("short?");
+    public static DataType N_Ushort = new NumericDataType("ushort?");
+    public static DataType N_Int = new NumericDataType("int?");
+    public static DataType N_Uint = new NumericDataType("uint?");
+    public static DataType N_Long = new NumericDataType("long?");
+    public static DataType N_Ulong = new NumericDataType("ulong?");
+    public static DataType N_Single = new NumericDataType("Single?", new string [] {"Single.Epsilon", "Single.NaN", "Single.NegativeInfinity", "Single.PositiveInfinity"});
+    public static DataType N_Double = new NumericDataType("double?", new string [] {"double.Epsilon", "double.NaN", "double.NegativeInfinity", "double.PositiveInfinity"});
+    public static DataType N_Float = new NumericDataType("float?", new string [] {"float.Epsilon", "float.NaN", "float.NegativeInfinity", "float.PositiveInfinity"});
+    public static DataType N_Decimal = new NumericDataType("decimal?", new string [] {"decimal.Zero", "decimal.One", "decimal.MinusOne"});
+
+    public static DataType N_Char = new DataType("char?", "'a'");
+    public static DataType N_Bool = new DataType("bool?", "true");
+    public static DataType N_DateTime = new DataType("DateTime?", "DateTime.Now", new string [] {"DateTime.Now", "DateTime.MinValue", "DateTime.MaxValue"});
+    public static DataType N_Guid = new DataType("Guid?", "Guid.NewGuid()", new string [] {"Guid.Empty"});
+    public static DataType N_DateTimeOffset = new DataType("DateTimeOffset?", "DateTimeOffset.Now", new string [] {"DateTimeOffset.Now", "DateTimeOffset.MinValue", "DateTimeOffset.MaxValue"});
+    public static DataType N_TimeSpan = new DataType("TimeSpan?", "TimeSpan.Zero", new string [] {"TimeSpan.Zero", "TimeSpan.MinValue", "TimeSpan.MaxValue"});
+
+    public DataType(string codeStr) : this(codeStr, null, Enumerable.Empty<string>())
+    {
+    }
+
+    public DataType(string codeStr, IEnumerable<string> specialValues) : this(codeStr, null, specialValues)
+    {
+    }
+
+    public DataType(string codeStr, string randValue) : this(codeStr, randValue, Enumerable.Empty<string>())
+    {
+    }
+
+    public DataType(string codeStr, string randValue, IEnumerable<string> specialValues)
+    {
+        this.CodeStr = codeStr;
+        this.IsNullableType = codeStr.EndsWith("?");
+        this.NameStr = this.IsNullableType ?
+            "Nullable" + CultureInfo.InvariantCulture.TextInfo.ToTitleCase(codeStr.Substring(0, codeStr.Length - 1)) :
+            CultureInfo.InvariantCulture.TextInfo.ToTitleCase(codeStr);
+        this.RandValue = randValue ?? "default(" + codeStr + ")";
+        this.SpecialValues = specialValues.ToList();
+    }
+
+    public bool IsNullableType { get; set; }
+
+    public string CodeStr { get; set; }
+
+    public string NameStr { get; set; }
+
+    public string RandValue { get; set; }
+
+    public List<string> SpecialValues {get; set;}
+}
+
+class NumericDataType : DataType
+{
+    public NumericDataType(string codeStr) : this(codeStr, "42", Enumerable.Empty<string>())
+    {
+    }
+
+    public NumericDataType(string codeStr, IEnumerable<string> specialValues) : this(codeStr, "42", specialValues)
+    {
+    }
+
+    public NumericDataType(string codeStr, string randValue) : this(codeStr, randValue, Enumerable.Empty<string>())
+    {
+    }
+
+    public NumericDataType(string codeStr, string randValue, IEnumerable<string> specialValues) : base(codeStr, randValue)
+    {
+        var baseStr = this.IsNullableType?codeStr.TrimEnd('?') : codeStr;
+        this.SpecialValues = new List<string>
+        {
+            "((" + codeStr + ")0)",
+            baseStr + ".MinValue",
+            baseStr + ".MaxValue",
+        }.Concat(specialValues).ToList();
+    }
+}
+
+public static List<TestType> GenerateTestTypes()
+{
+	var l3TypeTypes = new [] {TestTypeType.Class, TestTypeType.Struct};
+	var l2TypeTypes = new [] {TestTypeType.Class, TestTypeType.Struct};
+	var baseTypes = new [] {TestType.Int, TestType.NullableInt, TestType.IntArray, TestType.NullableIntArray};
+	
+	var l2TypeList = Permutate(l2TypeTypes, baseTypes, (type) => type.RandValue);
+	var l3TypeList = Permutate(l3TypeTypes, l2TypeList, (type) => string.Format("RandValue.{0}", type.Name));
+	
+	return l2TypeList.Concat(l3TypeList).ToList();
+}
+
+public static IEnumerable<IEnumerable<T>> GetPermutations<T>(IEnumerable<T> elements)
+{
+	//terminal condition
+	if (elements.Count() <= 1)
+	{
+		return (new [] {elements});
+	}
+    return elements.SelectMany((el, i) => GetPermutations(RemoveAt(elements, i)).Select (x => (new [] {el}).Concat(x)));
+}
+
+public static IEnumerable<T> RemoveAt<T>(IEnumerable<T> elements, int index)
+{
+	return elements.Take(index).Concat(elements.Skip(index + 1));
+}
+
+
+public static IsotopeGroup CreateIsotopeGroup(string isotopeName, TestTypeType typetype, IEnumerable<TestType> propertyTypes)
+{
+    var propertyList = propertyTypes.Select((pt, i) => new TestProperty { PropertyName = string.Format("P{0}_{1}", i, pt.Name), PropertyType = pt});
+
+    var isotopePropertiesList = GetPermutations(propertyList);
+
+    var isotopes = isotopePropertiesList.Select((isotopeProperties, i) =>
+    {
+        var typeName = isotopeName + "_Permutation" + i.ToString();
+        var typeCodeStr = typeName;
+        var propAssignments = string.Join(", ", isotopeProperties.Select(ip => string.Format("{0} = {1}", ip.PropertyName, "RandValue." + ip.PropertyType.Name)));
+        var randValue = string.Format("new {0}() {{ {1} }} ", typeName, propAssignments);
+
+        return new TestType
+            {
+		        Name = typeName,
+		        CodeStr = typeCodeStr,
+		        Type = typetype,
+                RandValue = randValue,
+		        Properties = isotopeProperties.ToList(),
+            };
+    });
+
+    return new IsotopeGroup(isotopeName, isotopes);
+}
+
+public static List<TestType> Permutate(IEnumerable<TestTypeType> typeTypes, IEnumerable<TestType> baseTypes, Func<TestType, string> randValueGenerator)
+{
+	var permutations = new List<TestType>();
+	
+	foreach(var typetype in typeTypes)
+	{
+		foreach(var baseType in baseTypes)
+		{
+            var newTypeName = typetype.Name + "With" + baseType.Name;
+            var newTypeCodeStr = typetype.Name + "With" + baseType.Name;
+            var newPropName = baseType.Name + "Value";
+            var newPropType = baseType;
+
+            var newRandValue = randValueGenerator(baseType);
+
+			var newType = new TestType
+			{
+				Name = newTypeName,
+				CodeStr = newTypeCodeStr,
+				Type = typetype,
+                RandValue = string.Format("new {0}() {{ {1} = {2} }} ", newTypeName, newPropName, newRandValue),
+				Properties = new List<TestProperty>
+				{
+					new TestProperty
+					{
+						PropertyName = newPropName,
+						PropertyType = newPropType,
+					}
+				}
+			};
+			
+			permutations.Add(newType);
+		}
+	}
+	
+	return permutations;
+}
+
+public class IsotopeGroup
+{
+    public IsotopeGroup(string name, IEnumerable<TestType> isotopes)
+    {
+        this.Name = name;
+        this.Isotopes = isotopes.ToList();
+    }
+
+    public string Name { get; private set; }
+    public List<TestType> Isotopes { get; private set; }
+}
+
+public class TestTypeType
+{
+	public readonly static TestTypeType Base = new TestTypeType();
+	public readonly static TestTypeType Struct = new TestTypeType() {Name = "Struct", CodeStr = "struct"};
+	public readonly static TestTypeType Class = new TestTypeType() {Name = "Class", CodeStr = "class"};
+	
+	private TestTypeType()
+	{
+	}
+	
+	public string Name { get; private set; }
+	public string CodeStr { get; private set; }
+}
+
+public class TestType
+{
+	public static TestType Int = new TestType{Name = "Int", CodeStr = "int", RandValue = "42"};
+	public static TestType NullableInt = new TestType{Name = "NullableInt", CodeStr = "int?", RandValue = "42"};
+	public static TestType IntArray = new TestType{Name = "IntArray", CodeStr = "int []", RandValue = "new int [] {42}"};
+	public static TestType NullableIntArray = new TestType{Name = "NullableIntArray", CodeStr = "int? []", RandValue = "new int? [] {42}"};
+    public static TestType DateTime = new TestType{Name = "DateTime", CodeStr = "DateTime", RandValue = "new DateTime(2042, 4, 2, 4, 2, 0)"};
+    public static TestType String = new TestType{Name = "String", CodeStr = "string", RandValue = "\"42\""};
+    public static TestType Uri = new TestType{Name = "Uri", CodeStr = "Uri", RandValue = "new Uri(\"datamodel:testtype/uri/42\")"};
+
+    public string Name { get; set; }
+	
+	public string CodeStr { get; set; }
+	
+	public TestTypeType Type { get; set; }
+
+	public bool IsBaseType { get { return this.Properties == null; } }
+
+    public string RandValue { get; set; }
+
+    public List<TestProperty> Properties { get; set; }
+}
+
+public class TestProperty
+{
+    public string PropertyName { get; set; }
+
+    public TestType PropertyType { get; set; }
+}
+
+#>

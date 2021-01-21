@@ -1,0 +1,84 @@
+﻿<#@include file="..\..\..\..\Common\IrpEventSource.tt" #>
+
+<#+
+/***********************************************************************
+ *                                                                     *
+ *  USER DEFINED VARIABLES - MODIFY THESE FOR EACH EVENT YOU GENERATE  *
+ *                                                                     *
+ ***********************************************************************/
+
+enum EventKeyword : ulong
+{
+    // Sub-systems
+    ReliableSubscriptionBase = (ulong)1 << 0,
+}
+
+// Values must be in the range from 1 through 65534
+enum EventTask
+{
+    //Need our own `None`, because EventSource is trying to be "helpful"
+    //and generates a task for us if we use EventTask.None,
+    //which is not desirable from the backward compatibility standpoint
+    None = 1,
+}
+
+// Values must be in the range from 11 through 239
+enum EventOpcode
+{
+}
+
+string Namespace = "Reaqtor.Reliable";
+string EventSourceName = "Nuqleon-Reactive-Reliable";
+
+// It's better not to reorder event definitions
+List<EventMetadata> EventRegistry = new List<EventMetadata>
+{
+    new EventMetadata
+    {
+        Name = "ReliableSubscriptionBase_OnStateSaved",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.ReliableSubscriptionBase },
+        Message = "Reliable subscription input for '{0}' sent AcknowledgeRange({1}).",
+        Parameters = new[]
+        {
+            new Parameter("instanceId", "System.Uri"),
+            new Parameter("sequenceId", "System.Int64"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "ReliableSubscriptionBase_OnStateSavedDispose",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.ReliableSubscriptionBase },
+        Message = "Reliable subscription input for '{0}' sent AcknowledgeRange({1}) then Dispose().",
+        Parameters = new[]
+        {
+            new Parameter("instanceId", "System.Uri"),
+            new Parameter("sequenceId", "System.Int64"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "ReliableSubscriptionBase_OnStateSavedMuted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.ReliableSubscriptionBase },
+        Message = "Reliable subscription input for '{0}' muting AcknowledgeRange({1}) due to disposed state.",
+        Parameters = new[]
+        {
+            new Parameter("instanceId", "System.Uri"),
+            new Parameter("sequenceId", "System.Int64"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "ReliableSubscriptionBase_Stop",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.ReliableSubscriptionBase },
+        Message = "Reliable subscription input for '{0}' sent Stop().",
+        Parameters = new[]
+        {
+            new Parameter("instanceId", "System.Uri"),
+        }
+    },
+};
+#>

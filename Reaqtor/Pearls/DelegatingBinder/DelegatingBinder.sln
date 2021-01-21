@@ -1,0 +1,61 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deps", "deps", "{3A4851B2-3E35-4359-A28D-A8F853C96FA6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{695A55DF-E11D-4C19-8F15-066BD0B988D7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Memory", "..\..\..\Nuqleon\Core\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj", "{2AA86F2F-B6D8-4832-ADB1-646F833E3A4E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Time", "..\..\..\Nuqleon\Core\BCL\Nuqleon.Time\Nuqleon.Time.csproj", "{C61072A4-FFB8-4C4B-8101-D6D9CF852095}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Linq.CompilerServices", "..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj", "{88A4B299-D70A-452D-9D61-34BC3B0F022E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reaqtor.Pearls.DelegatingBinder", "Reaqtor.Pearls.DelegatingBinder.csproj", "{527FD84B-87EF-4D7F-ACD3-480516865E68}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuqleon", "Nuqleon", "{529CEDFB-8659-4772-83F7-03E03F961717}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BCL", "BCL", "{33D87A66-0A60-4407-B197-5C1BE5D6CBFF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LINQ", "LINQ", "{1B4060F4-1005-4697-9E70-4D2392163270}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2AA86F2F-B6D8-4832-ADB1-646F833E3A4E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2AA86F2F-B6D8-4832-ADB1-646F833E3A4E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2AA86F2F-B6D8-4832-ADB1-646F833E3A4E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2AA86F2F-B6D8-4832-ADB1-646F833E3A4E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C61072A4-FFB8-4C4B-8101-D6D9CF852095}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C61072A4-FFB8-4C4B-8101-D6D9CF852095}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C61072A4-FFB8-4C4B-8101-D6D9CF852095}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C61072A4-FFB8-4C4B-8101-D6D9CF852095}.Release|Any CPU.Build.0 = Release|Any CPU
+		{88A4B299-D70A-452D-9D61-34BC3B0F022E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{88A4B299-D70A-452D-9D61-34BC3B0F022E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{88A4B299-D70A-452D-9D61-34BC3B0F022E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{88A4B299-D70A-452D-9D61-34BC3B0F022E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{527FD84B-87EF-4D7F-ACD3-480516865E68}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{527FD84B-87EF-4D7F-ACD3-480516865E68}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{527FD84B-87EF-4D7F-ACD3-480516865E68}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{527FD84B-87EF-4D7F-ACD3-480516865E68}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{2AA86F2F-B6D8-4832-ADB1-646F833E3A4E} = {33D87A66-0A60-4407-B197-5C1BE5D6CBFF}
+		{C61072A4-FFB8-4C4B-8101-D6D9CF852095} = {33D87A66-0A60-4407-B197-5C1BE5D6CBFF}
+		{88A4B299-D70A-452D-9D61-34BC3B0F022E} = {1B4060F4-1005-4697-9E70-4D2392163270}
+		{527FD84B-87EF-4D7F-ACD3-480516865E68} = {695A55DF-E11D-4C19-8F15-066BD0B988D7}
+		{529CEDFB-8659-4772-83F7-03E03F961717} = {3A4851B2-3E35-4359-A28D-A8F853C96FA6}
+		{33D87A66-0A60-4407-B197-5C1BE5D6CBFF} = {529CEDFB-8659-4772-83F7-03E03F961717}
+		{1B4060F4-1005-4697-9E70-4D2392163270} = {529CEDFB-8659-4772-83F7-03E03F961717}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3762DD7F-6813-4A86-8A19-FF54B04BFD7C}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,64 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 15;#>
+//
+// Revision history:
+//
+// BD, ER - August 2013 - Created this file.
+// Auto-generated file, changes to source may be lost
+//
+
+using System;
+using System.Linq.Expressions;
+
+namespace Reaqtor
+{
+<#/*
+
+generating the code for:
+
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2> : QubjectFactory<TInput, TOutput, TArg1, TArg2>, IKnownResource
+    {
+        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
+            : base(expression, provider)
+        {
+            Uri = streamFactoryUri;
+        }
+
+        public Uri Uri { get; }
+    }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+
+    for (int j = 1; j <= i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+
+#>
+    internal sealed class KnownQubjectFactory<TInput, TOutput, <#=typeArgs#>> : QubjectFactory<TInput, TOutput, <#=typeArgs#>>, IKnownResource
+    {
+        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
+            : base(expression, provider)
+        {
+            Uri = streamFactoryUri;
+        }
+
+        public Uri Uri { get; }
+    }
+
+<# } #>
+}

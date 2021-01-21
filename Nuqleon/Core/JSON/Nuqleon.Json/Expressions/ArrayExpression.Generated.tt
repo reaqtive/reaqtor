@@ -1,0 +1,183 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var numbers = new[] { "one", "two", "three", "four", "five", "six" };
+var ordinals = new[] { "first", "second", "third", "fourth", "fifth", "sixth" };
+#>
+//
+// Revision history:
+//
+// BD - June 2014 - Created this file.
+//
+
+using System;
+using System.Collections.ObjectModel;
+using System.Text;
+
+namespace Nuqleon.Json.Expressions
+{
+    public partial class Expression
+    {
+<#
+for (var i = 1; i <= 6; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(x => "Expression element" + x));
+    var elements = string.Join(", ", Enumerable.Range(1, i).Select(x => "element" + x));
+#>
+        /// <summary>
+        /// Creates an expression tree node representing an array with <#=numbers[i-1]#> element<#=i > 1 ? "s" : ""#>.
+        /// </summary>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+        /// <param name="element<#=j#>">Expression representing the <#=ordinals[j-1]#> element in the array.</param>
+<#
+}
+#>
+        /// <returns>Array expression tree node for the given elements.</returns>
+        public static ArrayExpression Array(<#=args#>)
+        {
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+            if (element<#=j#> == null)
+                throw new ArgumentNullException(nameof(element<#=j#>));
+<#
+}
+#>
+
+            return new ArrayExpression<#=i#>(<#=elements#>);
+        }
+
+<#
+}
+#>
+    }
+
+<#
+for (var i = 1; i <= 6; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(x => "Expression element" + x));
+    var elements = string.Join(", ", Enumerable.Range(2, i - 1).Select(x => "_element" + x));
+    var elementsPack = string.Join(", ", Enumerable.Range(1, i).Select(x => (x > 1 ? "_" : "") + "element" + x));
+#>
+    /// <summary>
+    /// Expression tree node representing a JSON array with <#=numbers[i-1]#> element<#=i > 1 ? "s" : ""#>.
+    /// </summary>
+    internal sealed class ArrayExpression<#=i#> : ArrayExpressionN
+    {
+<#
+for (var j = 2; j <= i; j++)
+{
+#>
+        /// <summary>
+        /// Expression representing the <#=ordinals[j-1]#> element in the array.
+        /// </summary>
+        private readonly Expression _element<#=j#>;
+
+<#
+}
+#>
+        /// <summary>
+        /// Creates an instance of an expression tree node representing an array with <#=numbers[i-1]#> element<#=i > 1 ? "s" : ""#>.
+        /// </summary>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+        /// <param name="element<#=j#>">Expression representing the <#=ordinals[j-1]#> element in the array.</param>
+<#
+}
+#>
+        internal ArrayExpression<#=i#>(<#=args#>)
+            : base(element1)
+        {
+<#
+for (var j = 2; j <= i; j++)
+{
+#>
+            _element<#=j#> = element<#=j#>;
+<#
+}
+#>
+        }
+
+        /// <summary>
+        /// Gets the number of elements in the array.
+        /// </summary>
+        public override int ElementCount => <#=i#>;
+
+        /// <summary>
+        /// Gets the expression of the element at the specified index.
+        /// </summary>
+        /// <param name="index">The index of the element whose expression to get.</param>
+        /// <returns>The expression representing the element at the specified index.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown when the index is out of range.</exception>
+        public override Expression GetElement(int index)
+        {
+            switch (index)
+            {
+                case 0:
+                    return First;
+<#
+for (var j = 1; j < i; j++)
+{
+#>
+                case <#=j#>:
+                    return _element<#=j + 1#>;
+<#
+}
+#>
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(index));
+            }
+        }
+
+        /// <summary>
+        /// Packs the elements in the array expression into a read-only collection.
+        /// </summary>
+        /// <param name="element1">First element in the array.</param>
+        /// <returns>Read-only collection containing all of the elements in the array expression.</returns>
+        protected override ReadOnlyCollection<Expression> Pack(Expression element1)
+        {
+            return new ReadOnlyCollection<Expression>(new[] { <#=elementsPack#> });
+        }
+
+        /// <summary>
+        /// Appends the JSON fragment representing the array expression to the specified string builder.
+        /// </summary>
+        /// <param name="builder">The string builder to append to.</param>
+        /// <param name="element1">First element in the array.</param>
+        protected override void ToString(StringBuilder builder, Expression element1)
+        {
+            builder.Append('[');
+
+            element1.ToStringCore(builder);
+<#
+for (var j = 2; j <= i; j++)
+{
+#>
+            builder.Append(',');
+            _element<#=j#>.ToStringCore(builder);
+<#
+}
+#>
+
+            builder.Append(']');
+        }
+    }
+
+<#
+}
+#>
+}

@@ -1,0 +1,375 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="$(ProjectDir)\..\..\..\..\Reaqtive\Core\Reaqtive.Interfaces\bin\$(Configuration)\net472\Reaqtive.Interfaces.dll" #>
+<#@ assembly name="$(ProjectDir)\..\..\..\..\Reaqtive\Core\Reaqtive.Core\bin\$(Configuration)\net472\Reaqtive.Core.dll" #>
+<#@ assembly name="$(ProjectDir)\..\..\..\..\Reaqtive\Core\Reaqtive.Linq\bin\$(Configuration)\net472\Reaqtive.Linq.dll" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Runtime.CompilerServices" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Collections.Generic;
+using System.Linq.CompilerServices.TypeSystem;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Reaqtive;
+
+namespace Reaqtor.Shebang.Linq
+{
+    internal static class DeployQueryOperators
+    {
+<#
+var toCSharp = default(Func<Type, string>);
+toCSharp = t =>
+{
+    if (t == typeof(int))
+        return "int";
+    else if (t == typeof(long))
+        return "long";
+    else if (t == typeof(short))
+        return "short";
+    else if (t == typeof(byte))
+        return "byte";
+    else if (t == typeof(uint))
+        return "uint";
+    else if (t == typeof(ulong))
+        return "ulong";
+    else if (t == typeof(ushort))
+        return "ushort";
+    else if (t == typeof(sbyte))
+        return "sbyte";
+    else if (t == typeof(float))
+        return "float";
+    else if (t == typeof(double))
+        return "double";
+    else if (t == typeof(decimal))
+        return "decimal";
+    else if (t == typeof(bool))
+        return "bool";
+    else if (t == typeof(string))
+        return "string";
+    else if (t == typeof(char))
+        return "char";
+    else if (t == typeof(object))
+        return "object";
+    else
+    {
+        if (t.IsGenericType)
+        {
+            if (t.IsGenericTypeDefinition)
+            {
+                return t.Name.Substring(0, t.Name.LastIndexOf('`'));
+            }
+            else
+            {
+                var d = t.GetGenericTypeDefinition();
+                if (d == typeof(Nullable<>))
+                {
+                    var n = toCSharp(t.GetGenericArguments()[0]);
+                    return n + "?";
+                }
+
+                var dn = toCSharp(d);
+                return dn + "<" + string.Join(", ", t.GetGenericArguments().Select(toCSharp)) + ">";
+            }
+        }
+        else if (t.IsArray)
+        {
+            var e = toCSharp(t.GetElementType());
+            var r = t.GetArrayRank();
+            var rank = r == 1 ? "" : new string(',', r - 1);
+            return e + "[" + rank + "]";
+        }
+        else if (t.IsGenericParameter)
+        {
+            return t.Name;
+        }
+        else
+        {
+            return t.Name;
+        }
+    }
+};
+
+var toQuoted = new Func<Type, string>(t =>
+{
+    if (typeof(Delegate).IsAssignableFrom(t))
+    {
+        t = typeof(Expression<>).MakeGenericType(t);
+    }
+    return toCSharp(t).Replace("ISubscribable", "IAsyncReactiveQbservable").Replace("IGroupedSubscribable", "IAsyncReactiveGroupedQbservable");
+});
+
+var toQuotedShallow = new Func<Type, string>(t =>
+{
+    var name = toCSharp(t);
+
+    if (name.StartsWith("ISubscribable"))
+    {
+        name = "IAsyncReactiveQbservable" + name.Substring("ISubscribable".Length);
+    }
+
+    if (name.StartsWith("IGroupedSubscribable"))
+    {
+        name = "IAsyncReactiveGroupedQbservable" + name.Substring("IGroupedSubscribable".Length);
+    }
+
+    return name;
+});
+
+var methods = typeof(Reaqtive.Subscribable).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.Name != "ToSubscribable" && !(m.Name == "CombineLatest" && m.GetGenericArguments().Length > 8)).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length);
+
+var uris = new HashSet<string>();
+
+var all = new List<KeyValuePair<string, MethodInfo>>();
+
+foreach (var method in methods)
+{
+    var parameters = method.GetParameters();
+    var retElementType = method.ReturnType.GetGenericArguments()[0];
+
+    var name = method.Name.ToLower();
+    if (name.EndsWith("async"))
+    {
+        name = name.Substring(0, name.Length - "async".Length);
+    }
+
+    var uri = "rx://observable/" + name;
+
+    if (method.Name == "Aggregate" || method.Name == "Scan")
+    {
+        if (parameters.Any(p => p.Name == "seed"))
+        {
+            uri += "/seed";
+        }
+
+        if (parameters.Any(p => p.Name == "resultSelector"))
+        {
+            uri += "/result";
+        }
+    }
+
+    if (method.Name == "Average" || method.Name == "Sum" || method.Name == "Min" || method.Name == "Max")
+    {
+        Type sourceElementType;
+
+        if (parameters.Any(p => p.Name == "selector"))
+        {
+            uri += "/selector";
+
+            sourceElementType = parameters[1].ParameterType.GetGenericArguments()[1];
+        }
+        else
+        {
+            sourceElementType = parameters[0].ParameterType.GetGenericArguments()[0];
+        }
+
+        if (parameters.Any(p => p.Name == "comparer"))
+        {
+            uri += "/comparer";
+        }
+
+        if (!retElementType.IsGenericParameter)
+        {
+            var numType = sourceElementType.IsGenericType ? "nullable_" + toCSharp(sourceElementType.GetGenericArguments()[0]) : toCSharp(sourceElementType);
+
+            uri += "/" + numType;
+        }
+    }
+
+    if (method.Name == "Any" || method.Name.StartsWith("First") || method.Name.StartsWith("Last") || method.Name.StartsWith("Single") || method.Name.EndsWith("Count"))
+    {
+        if (parameters.Any(p => p.Name == "predicate"))
+        {
+            uri += "/predicate";
+        }
+    }
+
+    if (method.Name == "Buffer" || method.Name == "Window" || method.Name == "Do" || method.Name == "DistinctUntilChanged" || method.Name == "GroupBy")
+    {
+        uri += "/" + string.Join("/", parameters.Skip(1).Select(p => p.Name));
+    }
+
+    if (method.Name == "CombineLatest")
+    {
+        uri += "/" + (parameters.Length - 1);
+    }
+
+    if (method.Name == "Skip" || method.Name == "Take")
+    {
+        uri += "/" + parameters[1].Name;
+    }
+
+    if (method.Name == "DelaySubscription" || method.Name == "SkipUntil" || method.Name == "TakeUntil")
+    {
+        if (parameters.Any(p => p.ParameterType == typeof(DateTimeOffset)))
+        {
+            uri += "/absolute";
+        }
+        else if (parameters.Any(p => p.ParameterType == typeof(TimeSpan)))
+        {
+            uri += "/relative";
+        }
+    }
+
+    if (method.Name == "Where" || method.Name == "Select" || method.Name == "TakeWhile" || method.Name == "SkipWhile")
+    {
+        if (parameters[1].ParameterType.GetGenericArguments()[1] == typeof(int))
+        {
+            uri += "/indexed";
+        }
+    }
+
+    if (method.Name == "Merge")
+    {
+        if (parameters.Length == 2)
+        {
+            uri += "/2";
+        }
+
+        if (parameters[0].ParameterType.IsArray)
+        {
+            uri += "/N";
+
+            // NB: Skipping for now; some complexity around the array conversion in the code-gen below.
+            continue;
+        }
+    }
+
+    if (method.Name == "Retry")
+    {
+        if (parameters.Length == 2)
+        {
+            uri += "/count";
+        }
+    }
+
+    if (method.Name == "Sample")
+    {
+        if (parameters[1].ParameterType == typeof(TimeSpan))
+        {
+            uri += "/period";
+        }
+    }
+
+    if (method.Name == "Throttle")
+    {
+        if (parameters[1].ParameterType == typeof(TimeSpan))
+        {
+            uri += "/duration";
+        }
+    }
+
+    if (method.Name == "SelectMany")
+    {
+        if (parameters.Any(p => p.Name == "resultSelector"))
+        {
+            uri += "/result";
+        }
+    }
+
+    if (method.Name == "SequenceEqual")
+    {
+        if (parameters.Any(p => p.Name == "comparer"))
+        {
+            uri += "/comparer";
+        }
+    }
+
+    if (method.Name == "Timer")
+    {
+        if (parameters.Length == 1)
+        {
+            uri += "/single";
+        }
+        else
+        {
+            uri += "/period";
+        }
+
+        if (parameters[0].ParameterType == typeof(TimeSpan))
+        {
+            uri += "/relative";
+        }
+        else
+        {
+            uri += "/absolute";
+        }
+    }
+
+    if (!uris.Add(uri))
+    {
+        throw new Exception("Conflict for " + uri);
+    }
+
+    all.Add(new KeyValuePair<string, MethodInfo>(uri, method));
+}
+#>
+        public static async Task DefineAsync(ReactiveClientContext ctx, CancellationToken token = default)
+        {
+<#
+foreach (var kv in all)
+{
+    var uri = kv.Key;
+    var method = kv.Value;
+
+    var parameters = method.GetParameters();
+    var pars = string.Join(", ", parameters.Select(p => toQuotedShallow(p.ParameterType) + " " + p.Name));
+
+    var mtd = method.Name;
+
+    if (method.IsGenericMethod)
+    {
+        mtd += "<" + string.Join(", ", method.GetGenericArguments().Select(a => a.Name)) + ">";
+    }
+
+    var args = string.Join(", ", parameters.Select(p => p.Name + (p.ParameterType.IsGenericType && p.ParameterType.GetGenericTypeDefinition() == typeof(Reaqtive.ISubscribable<>) ? ".AsSubscribable()" : "")));
+
+    var retElementType = method.ReturnType.GetGenericArguments()[0];
+
+    //var genArgs = string.Join(", ", parameters.Select(p => toQuotedShallow(p.ParameterType)).Concat(new[] { toCSharp(retElementType) }));
+
+    var expr = "(" + pars + ") => Subscribable." + mtd + "(" + args + ").AsAsyncQbservable()";
+#>
+            await ctx.DefineObservableAsync(new Uri("<#=uri#>"), <#=expr#>, null, token).ConfigureAwait(false);
+<#
+}
+#>
+        }
+
+        public static async Task UndefineAsync(ReactiveClientContext ctx, CancellationToken token = default)
+        {
+<#
+foreach (var kv in all)
+{
+    var uri = kv.Key;
+#>
+            await ctx.UndefineObservableAsync(new Uri("<#=uri#>"), token).ConfigureAwait(false);
+<#
+}
+#>
+        }
+
+        private static Task DefineObservableAsync<TResult>(this ReactiveClientContextBase ctx, Uri uri, Expression<Func<IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default)
+            => ctx.DefineObservableAsync(uri, ctx.Provider.CreateQbservable<TResult>(observable.Body), state, token);
+    }
+
+<#
+var genericParameterTypes = all.Select(kv => kv.Value).Where(m => m.IsGenericMethod).SelectMany(m => m.GetGenericArguments().Select(a => a.Name)).Distinct();
+foreach (var t in genericParameterTypes)
+{
+#>
+    [TypeWildcard] internal sealed class <#=t#> { }
+<#
+}
+#>
+}

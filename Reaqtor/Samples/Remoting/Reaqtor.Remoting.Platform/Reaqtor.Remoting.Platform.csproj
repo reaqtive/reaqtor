@@ -1,0 +1,27 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <Description>Common platform functionality for the Reaqtor remoting stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Runtime.Remoting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Azure.Cosmos.Table" Version="1.0.8" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Protocol\Reaqtor.Remoting.Protocol.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Client.Library\Reaqtor.Remoting.Client.Library.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client\Reaqtor.Client.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.Engine.Contracts\Reaqtor.Engine.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Core\Service\Reaqtor.Service\Reaqtor.Service.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Scheduler\Reaqtive.Scheduler.csproj" />
+  </ItemGroup>
+
+</Project>

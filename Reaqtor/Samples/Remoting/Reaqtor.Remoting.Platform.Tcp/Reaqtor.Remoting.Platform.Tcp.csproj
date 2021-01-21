@@ -1,0 +1,22 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <Description>Implementation of the Reaqtor remoting stack platform with process isolation and TCP/IP communication.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Runtime.Remoting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform\Reaqtor.Remoting.Platform.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.KeyValueStore\Reaqtor.Remoting.KeyValueStore.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Messaging\Reaqtor.Remoting.Messaging.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Metadata\Reaqtor.Remoting.Metadata.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.QueryCoordinator\Reaqtor.Remoting.QueryCoordinator.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.QueryEvaluator\Reaqtor.Remoting.QueryEvaluator.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.StateStore\Reaqtor.Remoting.StateStore.csproj" />
+  </ItemGroup>
+
+</Project>

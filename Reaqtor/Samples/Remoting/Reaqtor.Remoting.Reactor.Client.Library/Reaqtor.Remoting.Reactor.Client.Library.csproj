@@ -1,0 +1,21 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <Description>Client library for the Reaqtor remoting stack with some pre-defined artifacts.</Description>
+    <AnalysisMode>Default</AnalysisMode>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Client.Library\Reaqtor.Remoting.Client.Library.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform\Reaqtor.Remoting.Platform.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client.Model\Reaqtor.Client.Model.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client.Core\Reaqtor.Client.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+  </ItemGroup>
+
+</Project>

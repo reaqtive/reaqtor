@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472;net50</TargetFrameworks>
+    <Description>Provides utilities to analyze memory usage.</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Core\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj" />
+  </ItemGroup>
+
+</Project>

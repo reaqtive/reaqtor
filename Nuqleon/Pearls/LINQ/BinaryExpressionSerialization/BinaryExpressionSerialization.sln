@@ -1,0 +1,76 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deps", "deps", "{C08CC391-B5C6-48F2-A5F8-E758565849E9}")
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{4E76FEBD-EA40-42F1-9EAE-505905E4D3A2}")
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{43B4FF51-E7C8-48A5-918D-FAFB6DF420CC}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Nuqleon.Memory", "..\..\..\Core\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj", "{C3C2246B-378E-40F5-A15B-09914B45D8FA}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Nuqleon.Reflection.Virtualization", "..\..\..\Core\BCL\Nuqleon.Reflection.Virtualization\Nuqleon.Reflection.Virtualization.csproj", "{8F4BC74D-A5DF-4207-A8B3-0395B5412A2C}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Nuqleon.Time", "..\..\..\Core\BCL\Nuqleon.Time\Nuqleon.Time.csproj", "{1FA2C2E8-1AA5-444D-908C-28CC3B6B3256}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Nuqleon.Json", "..\..\..\Core\JSON\Nuqleon.Json\Nuqleon.Json.csproj", "{EEB1FFDF-ECEE-4F09-A9E7-737B574567DC}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Nuqleon.Linq.CompilerServices", "..\..\..\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj", "{6F3EF784-D8A5-4F7F-9224-3551CC617A57}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Nuqleon.Linq.Expressions.Bonsai", "..\..\..\Core\LINQ\Nuqleon.Linq.Expressions.Bonsai\Nuqleon.Linq.Expressions.Bonsai.csproj", "{F326A753-DE90-4652-8B7D-5AF1EA7877A5}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Nuqleon.Linq.Expressions.Bonsai.Serialization", "..\..\..\Core\LINQ\Nuqleon.Linq.Expressions.Bonsai.Serialization\Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj", "{45A7BC45-3696-4DA5-B2C2-66606667ADE3}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.Perf", "BinaryExpressionSerialization\Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.Perf.csproj", "{20CB895D-7B6F-4D78-9207-931394602DDC}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary", "Library\Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj", "{D4014E63-C15A-4EF4-836E-EB6366A23A1D}")
+EndProject
+Project("{{9A19103F-16F7-4668-BE54-9A1E7A4F7556}}") = "Tests.Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary", "Tests\Tests.Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj", "{45B2A4D6-10B7-4611-A7B1-1969C270EE23}")
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+        {C3C2246B-378E-40F5-A15B-09914B45D8FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {C3C2246B-378E-40F5-A15B-09914B45D8FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {8F4BC74D-A5DF-4207-A8B3-0395B5412A2C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {8F4BC74D-A5DF-4207-A8B3-0395B5412A2C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {1FA2C2E8-1AA5-444D-908C-28CC3B6B3256}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {1FA2C2E8-1AA5-444D-908C-28CC3B6B3256}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {EEB1FFDF-ECEE-4F09-A9E7-737B574567DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {EEB1FFDF-ECEE-4F09-A9E7-737B574567DC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {6F3EF784-D8A5-4F7F-9224-3551CC617A57}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {6F3EF784-D8A5-4F7F-9224-3551CC617A57}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {F326A753-DE90-4652-8B7D-5AF1EA7877A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {F326A753-DE90-4652-8B7D-5AF1EA7877A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {45A7BC45-3696-4DA5-B2C2-66606667ADE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {45A7BC45-3696-4DA5-B2C2-66606667ADE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {20CB895D-7B6F-4D78-9207-931394602DDC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {20CB895D-7B6F-4D78-9207-931394602DDC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {D4014E63-C15A-4EF4-836E-EB6366A23A1D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {D4014E63-C15A-4EF4-836E-EB6366A23A1D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+        {45B2A4D6-10B7-4611-A7B1-1969C270EE23}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+        {45B2A4D6-10B7-4611-A7B1-1969C270EE23}.Debug|Any CPU.Build.0 = Debug|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{C3C2246B-378E-40F5-A15B-09914B45D8FA} = {C08CC391-B5C6-48F2-A5F8-E758565849E9}
+		{8F4BC74D-A5DF-4207-A8B3-0395B5412A2C} = {C08CC391-B5C6-48F2-A5F8-E758565849E9}
+		{1FA2C2E8-1AA5-444D-908C-28CC3B6B3256} = {C08CC391-B5C6-48F2-A5F8-E758565849E9}
+		{EEB1FFDF-ECEE-4F09-A9E7-737B574567DC} = {C08CC391-B5C6-48F2-A5F8-E758565849E9}
+		{6F3EF784-D8A5-4F7F-9224-3551CC617A57} = {C08CC391-B5C6-48F2-A5F8-E758565849E9}
+		{F326A753-DE90-4652-8B7D-5AF1EA7877A5} = {C08CC391-B5C6-48F2-A5F8-E758565849E9}
+		{45A7BC45-3696-4DA5-B2C2-66606667ADE3} = {C08CC391-B5C6-48F2-A5F8-E758565849E9}
+		{20CB895D-7B6F-4D78-9207-931394602DDC} = {4E76FEBD-EA40-42F1-9EAE-505905E4D3A2}
+		{D4014E63-C15A-4EF4-836E-EB6366A23A1D} = {4E76FEBD-EA40-42F1-9EAE-505905E4D3A2}
+		{45B2A4D6-10B7-4611-A7B1-1969C270EE23} = {43B4FF51-E7C8-48A5-918D-FAFB6DF420CC}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {AC48B384-E168-492C-8A3B-362D4082DCDA}
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472;net50</TargetFrameworks>
+    <Description>Just-in-time compiler for expression trees.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="System\Runtime\CompilerServices\Closures.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Closures.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Runtime\CompilerServices\Thunks.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Thunks.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="System\Runtime\CompilerServices\Closures.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Closures.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Runtime\CompilerServices\Thunks.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Thunks.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

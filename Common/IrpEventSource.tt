@@ -1,0 +1,413 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.ServiceModel" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.ServiceModel.Description" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Text.RegularExpressions" #>
+<#@ import namespace="System.Diagnostics" #>
+<#@ import namespace="System.Diagnostics.Tracing" #>
+<#@ output extension=".Generated.cs" #>
+<#
+var excludeFromCodeCoverage = true;
+var includeShouldTrace = false;
+Func<EventLevel, TraceEventType> eventLevelToTraceEventType = e =>
+{
+    switch (e)
+    {
+        case EventLevel.Error:
+            return TraceEventType.Error;
+        case EventLevel.Informational:
+            return TraceEventType.Information;
+        case EventLevel.Verbose:
+            return TraceEventType.Verbose;
+        case EventLevel.Critical:
+            return TraceEventType.Critical;
+        case EventLevel.Warning:
+            return TraceEventType.Warning;
+        default:
+            throw new ArgumentException(e.ToString() + " is not supported.");
+    }
+};
+#>
+// <WARNING>
+//   This file was auto-generated on <#=DateTime.Now#>.
+//   To make changes, edit the .tt file.
+// </WARNING>
+
+namespace <#=Namespace#>
+{
+    using System;
+    using System.Runtime.CompilerServices;
+    using System.Diagnostics;
+    using System.Diagnostics.Tracing;
+
+<#
+if (excludeFromCodeCoverage)
+{
+#>
+    [System.Diagnostics.CodeAnalysis.ExcludeFromCodeCoverage]
+<#
+}
+#>
+    internal static class Tracing
+    {
+<#
+foreach (var eventDesc in EventRegistry.Select((e, i) => new { e, i }))
+{
+    var evt = eventDesc.e;
+    var i = eventDesc.i;
+
+    var pars = (evt.Parameters.Count() > 0 ? ", " : "") + string.Join(", ", evt.Parameters.Select(p => p.Type + " " + p.Name + (p.CustomToString ? "Source, Func<" + p.Type + ", string> " + p.Name + "ToString" : "")));
+    var level = "TraceEventType." + eventLevelToTraceEventType(evt.Level).ToString();
+
+    var message = evt.Message;
+    var args = string.Join(", ", Enumerable.Range(0, evt.Parameters.Count()).Select(idx => "arg" + idx));
+
+    message = "\"" + message + "\"";
+    message = message.Replace("\"\" + ", "").Replace(" + \"\"", "");
+
+#>
+        public static void <#=evt.Name#>(this TraceSource source<#=pars#>)
+        {
+<#
+var extraChecks = includeShouldTrace ? " && source.Switch.ShouldTrace(" + level + ")" : "";
+#>
+            var shouldUseTraceSource = source != null<#=extraChecks#>;
+            var shouldUseEventSource = Impl.ShouldTrace<#=evt.Name#>;
+
+            if (shouldUseTraceSource || shouldUseEventSource)
+            {
+<#
+if (evt.Parameters.Any(p => p.CustomToString))
+{
+#>
+                <#=string.Join(@"
+                ", evt.Parameters.Where(p => p.CustomToString).Select(p => string.Format("var {0} = {0}ToString({0}Source);", p.Name)))#>
+<#
+}
+#>
+                <#=string.Join(@"
+                ", evt.Parameters.Select((parameter, idx) => "var arg" + idx + " = " + parameter.ConversionString + ";"))#>
+
+                if (shouldUseTraceSource)
+                {
+                    source.TraceEvent(<#=level#>, <#=i+1#>, <#=message#><#=evt.Parameters.Count() > 0 ? ", " + args : ""#>);
+                }
+
+                if (shouldUseEventSource)
+                {
+                    Impl.Instance.<#=evt.Name#>(<#=args#>);
+                }
+            }
+        }
+
+<#
+}
+#>
+
+        [EventSource(Name = "<#=EventSourceName#>")]
+        private class Impl : EventSource
+        {
+            internal static Impl Instance = new();
+
+            private Impl()
+                : base()
+            {
+            }
+
+            /// <summary>
+            /// Class providing keywords to annotate events with in order to allow filtering.
+            /// </summary>
+            public static class Keywords
+            {
+<#
+foreach (var value in System.Enum.GetValues(typeof(EventKeyword)))
+{
+#>
+                /// <summary>
+                /// Underlying value for keyword <#=((EventKeyword)value)#>
+                /// </summary>
+                public const EventKeywords <#=((EventKeyword)value)#> = (EventKeywords)<#=(ulong)value#>UL;
+
+<#
+}
+#>
+            }
+
+            public static class Tasks
+            {
+<#
+foreach (var value in System.Enum.GetValues(typeof(EventTask)))
+{
+#>
+                public const EventTask <#=((EventTask)value)#> = (EventTask)<#=(int)value#>;
+<#
+}
+#>
+            }
+
+            public static class Opcodes
+            {
+<#
+foreach (var value in System.Enum.GetValues(typeof(EventOpcode)))
+{
+#>
+                public const EventOpcode <#=((EventOpcode)value)#> = (EventOpcode)<#=(int)value#>;
+<#
+}
+#>
+            }
+<#
+foreach (var generatedEventInfo in EventRegistry.Select((evt, i) => new { UserEventInfo = evt, EventId = i + 1 }))
+{
+#>
+
+            [Event(<#=generatedEventInfo.EventId#>,
+                Level = EventLevel.<#=generatedEventInfo.UserEventInfo.Level#>,
+                Keywords = <#=generatedEventInfo.UserEventInfo.Keywords != null ? string.Join(" | ", generatedEventInfo.UserEventInfo.Keywords.Select(k => "Keywords." + k)) : "EventKeywords.None" #>,
+                Opcode = <#=generatedEventInfo.UserEventInfo.Opcode.HasValue ? "Opcodes." + generatedEventInfo.UserEventInfo.Opcode.Value : "EventOpcode.Info"#>,
+                Task = <#=generatedEventInfo.UserEventInfo.Task.HasValue ? "Tasks." + generatedEventInfo.UserEventInfo.Task.Value : "Tasks.None"#>,
+                Message = "<#=generatedEventInfo.UserEventInfo.Message#>",
+                Version = <#=generatedEventInfo.UserEventInfo.Version.HasValue ? generatedEventInfo.UserEventInfo.Version.Value : 1#>)]
+            internal unsafe void <#=generatedEventInfo.UserEventInfo.Name#>(<#=string.Join(", ", generatedEventInfo.UserEventInfo.Parameters.Select(parameter => parameter.BaseType + " " + parameter.Name))#>)
+            {
+<#
+foreach (var stringParam in generatedEventInfo.UserEventInfo.Parameters.Where(parameter => parameter.BaseType == ParameterType.String))
+{
+#>
+                <#=stringParam.Name#> ??= string.Empty;
+<#
+}
+#>
+<#
+foreach (var stringParam in generatedEventInfo.UserEventInfo.Parameters.Where(parameter => parameter.BaseType == ParameterType.String))
+{
+#>
+                fixed (char* <#=stringParam.Name#>Bytes = <#=stringParam.Name#>)
+<#
+}
+#>
+                {
+                    var dataCount = <#=generatedEventInfo.UserEventInfo.Parameters.Count()#>;
+                    var descrs = stackalloc EventSource.EventData[dataCount];
+
+<#
+foreach (var parameter in generatedEventInfo.UserEventInfo.Parameters.Select((p, j) => new { Parameter = p, Index = j } ))
+{
+#>
+<#
+if (parameter.Parameter.BaseType == ParameterType.String)
+{
+#>
+                    descrs[<#=parameter.Index#>].DataPointer = (IntPtr)<#=parameter.Parameter.Name#>Bytes;
+                    descrs[<#=parameter.Index#>].Size = checked((<#=parameter.Parameter.Name#>.Length + 1) * 2);
+<#
+}
+else if (parameter.Parameter.BaseType == ParameterType.DateTime)
+{
+#>
+                    var <#=parameter.Parameter.Name#>FileTime = <#=parameter.Parameter.Name#>.ToFileTimeUtc();
+                    descrs[<#=parameter.Index#>].DataPointer = (IntPtr)(&<#=parameter.Parameter.Name#>FileTime);
+                    descrs[<#=parameter.Index#>].Size = sizeof(long);
+<#
+}
+else if (parameter.Parameter.BaseType == ParameterType.Boolean)
+{
+#>
+                    descrs[<#=parameter.Index#>].DataPointer = (IntPtr)(&<#=parameter.Parameter.Name#>);
+                    descrs[<#=parameter.Index#>].Size = 4;
+<#
+}
+else
+{
+#>
+                    descrs[<#=parameter.Index#>].DataPointer = (IntPtr)(&<#=parameter.Parameter.Name#>);
+                    descrs[<#=parameter.Index#>].Size = sizeof(<#=parameter.Parameter.BaseType#>);
+<#
+}
+#>
+
+<#
+}
+#>
+                    WriteEventCore(<#=generatedEventInfo.EventId#>, dataCount, descrs);
+                }
+            }
+
+            internal static bool ShouldTrace<#=generatedEventInfo.UserEventInfo.Name#> => Impl.Instance.IsEnabled(EventLevel.<#=generatedEventInfo.UserEventInfo.Level#>, <#=generatedEventInfo.UserEventInfo.Keywords != null ? string.Join(" | ", generatedEventInfo.UserEventInfo.Keywords.Select(k => "Keywords." + k)) : "EventKeywords.None" #>);
+<#
+}
+#>
+        }
+
+        private static string ToTraceString<T>(this T obj) => obj?.ToString();
+    }
+}
+
+<#+
+/***********************************************************************
+ *                                                                     *
+ *                 T4 DEFINITIONS - DO NOT MODIFY                      *
+ *                                                                     *
+ ***********************************************************************/
+enum ParameterType
+{
+    Invalid,
+
+    Boolean,
+    Char,
+    Byte,
+    SByte,
+    Int16,
+    UInt16,
+    Int32,
+    UInt32,
+    Int64,
+    UInt64,
+    Single,
+    Double,
+    Guid,
+    Decimal,
+    String,
+    DateTime,
+}
+
+class Parameter
+{
+    private readonly ParameterType _type;
+
+    public string Name { get; private set; }
+    public string Type { get; private set; }
+    public bool CanBeNull { get; set; }
+    public bool CustomToString { get; set; }
+
+    public Parameter(string name, ParameterType type)
+    {
+        if (type == ParameterType.Invalid)
+        {
+            throw new ArgumentException("type");
+        }
+
+        Name = name;
+        _type = type;
+        Type = type.ToString();
+        CanBeNull = true;
+        CustomToString = false;
+    }
+
+    public Parameter(string name, string type)
+    {
+        Name = name;
+        _type = ToParameterType(type);
+        Type = type;
+        CanBeNull = true;
+        CustomToString = false;
+    }
+
+    public ParameterType BaseType
+    {
+        get
+        {
+            if (_type == ParameterType.Invalid)
+            {
+                return ParameterType.String;
+            }
+
+            return _type;
+        }
+    }
+
+    public string ConversionString
+    {
+        get
+        {
+            if (!CustomToString && _type == ParameterType.Invalid)
+            {
+                return this.Name + ".ToTraceString()";
+            }
+
+            return this.Name;
+        }
+    }
+
+    private static ParameterType ToParameterType(string type)
+    {
+        switch (type)
+        {
+            case "System.Boolean":
+                return ParameterType.Boolean;
+            case "System.Char":
+                return ParameterType.Char;
+            case "System.Byte":
+                return ParameterType.Byte;
+            case "System.SByte":
+                return ParameterType.SByte;
+            case "System.Int16":
+                return ParameterType.Int16;
+            case "System.UInt16":
+                return ParameterType.UInt16;
+            case "System.Int32":
+                return ParameterType.Int32;
+            case "System.UInt32":
+                return ParameterType.UInt32;
+            case "System.Int64":
+                return ParameterType.Int64;
+            case "System.UInt64":
+                return ParameterType.UInt64;
+            case "System.Single":
+                return ParameterType.Single;
+            case "System.Double":
+                return ParameterType.Double;
+            case "System.Guid":
+                return ParameterType.Guid;
+            case "System.Decimal":
+                return ParameterType.Decimal;
+            case "System.String":
+                return ParameterType.String;
+            case "System.DateTime":
+                return ParameterType.DateTime;
+            default:
+                return ParameterType.Invalid;
+        }
+    }
+}
+
+class EventMetadata
+{
+    public string Name { get; set; }
+
+    // The level is designed to enable filtering based on the severity or verbosity of events.
+    // LogAlways, Critical, Error, Warning, Informational, Verbose
+    public EventLevel Level { get; set; }
+
+    // The keyword is designed to indicate sub-components in a provider.
+    // Developers may assign different keywords to sub-components of the application.
+    // By enabling selectively with different level and keywords,
+    // the trace controller can enable providers to log only error events from sub-component B,
+    // or all events from sub-components A and C, and so forth.
+    // Use values from the EventKeyword enum.
+    // http://msdn.microsoft.com/en-us/library/windows/desktop/dd996915%28v=vs.85%29.aspx
+    public EventKeyword[] Keywords { get; set; }
+
+    // An opcode signifies the specific operation being performed at the time the event is written.
+    // Opcode indicates what the operation was, such as Create, Open, Read, and Write.
+    public EventOpcode? Opcode { get; set; }
+
+    // A task specifies a common logical component, feature or task being instrumented.
+    // The task often represents the key high-level steps that a component takes to achieve its purpose.
+    // http://msdn.microsoft.com/en-us/library/windows/desktop/dd996918%28v=vs.85%29.aspx
+    public EventTask? Task { get; set; }
+
+    public string Message { get; set; }
+
+    public IEnumerable<Parameter> Parameters { get; set; }
+
+    public byte? Version { get; set; }
+}
+#>

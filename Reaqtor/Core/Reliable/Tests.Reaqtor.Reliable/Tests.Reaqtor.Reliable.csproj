@@ -1,0 +1,13 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Reliable\Reaqtor.Reliable.csproj" />
+    <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Core\Reaqtor.Shared.Core.csproj" />
+    <ProjectReference Include="..\..\Testing\Reaqtor.TestingFramework.Reliable\Reaqtor.TestingFramework.Reliable.csproj" />
+  </ItemGroup>
+
+</Project>
