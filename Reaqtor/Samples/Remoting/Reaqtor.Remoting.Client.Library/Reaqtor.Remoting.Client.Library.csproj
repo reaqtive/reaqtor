@@ -1,0 +1,52 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <Description>Client library for the IRP remoting stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Runtime.Remoting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Protocol\Reaqtor.Remoting.Protocol.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client.Model\Reaqtor.Client.Model.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client.Core\Reaqtor.Client.Core.csproj" />
+    <ProjectReference Include="..\..\..\Core\Client\Reaqtor.Client\Reaqtor.Client.csproj" />
+    <ProjectReference Include="..\..\..\Core\Hosting\Reaqtor.Hosting.Shared\Reaqtor.Hosting.Shared.csproj" />
+    <ProjectReference Include="..\..\..\Core\Service\Reaqtor.Service.Contracts\Reaqtor.Service.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\Core\Shared\Reaqtor.Shared.Model\Reaqtor.Shared.Model.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Constants.Extended.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Constants.Extended.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Operators.Extended.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Operators.Extended.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Constants.Extended.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Constants.Extended.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Operators.Extended.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Operators.Extended.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

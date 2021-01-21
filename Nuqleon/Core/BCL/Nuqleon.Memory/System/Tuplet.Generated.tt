@@ -1,0 +1,329 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var numbers = new[] { "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen" };
+var ordinals = new[] { "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth" };
+#>
+using System.Collections;
+using System.Collections.Generic;
+
+namespace System
+{
+<#
+for (var n = 1; n <= 16; n++)
+{
+    var plural = n == 1 ? "" : "s";
+    var genArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "T" + i));
+    var ctorArgs = string.Join(", ", Enumerable.Range(1, n).Select(i => "T" + i + " item" + i));
+#>
+    /// <summary>
+    /// Represents a <#=n#>-tuple value.
+    /// </summary>
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+    /// <typeparam name="T<#=i#>">Type of the tuple's <#=ordinals[i - 1]#> component.</typeparam>
+<#
+}
+#>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
+    public struct Tuplet<<#=genArgs#>> : ITuplet, IEquatable<Tuplet<<#=genArgs#>>>, IComparable, IComparable<Tuplet<<#=genArgs#>>>, IStructuralEquatable, IStructuralComparable
+    {
+        /// <summary>
+        /// Creates a value representing a <#=n#>-tuple.
+        /// </summary>
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+        /// <param name="item<#=i#>">Value of the tuple's <#=ordinals[i - 1]#> component.</param>
+<#
+}
+#>
+        public Tuplet(<#=ctorArgs#>)
+        {
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            Item<#=i#> = item<#=i#>;
+<#
+}
+#>
+        }
+
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+        /// <summary>
+        /// Gets the value of the tuple's <#=ordinals[i - 1]#> component.
+        /// </summary>
+        public T<#=i#> Item<#=i#> { get; }
+
+<#
+}
+#>
+        /// <summary>
+        /// Gets a hash code for the current value.
+        /// </summary>
+        /// <returns>A hash code for the current value.</returns>
+        public override int GetHashCode() =>
+<#
+if (n == 1)
+{
+#>
+            FastEqualityComparer<T1>.Default.GetHashCode(Item1);
+<#
+}
+else
+{
+#>
+            HashHelpers.Combine(
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+                FastEqualityComparer<T<#=i#>>.Default.GetHashCode(Item<#=i#>)<#=i != n ? "," : ""#>
+<#
+}
+#>
+            );
+<#
+}
+#>
+
+        /// <summary>
+        /// Checks whether the current value is equal to the specified object.
+        /// </summary>
+        /// <param name="obj">The object to compare the current value against.</param>
+        /// <returns>true if the current value is equal to the specified object; otherwise, false.</returns>
+        public override bool Equals(object obj) => obj is Tuplet<<#=genArgs#>> && Equals((Tuplet<<#=genArgs#>>)obj);
+
+        /// <summary>
+        /// Checks whether the current value is equal to the specified value.
+        /// </summary>
+        /// <param name="other">The value to compare the current value against.</param>
+        /// <returns>true if the current value is equal to the specified value; otherwise, false.</returns>
+        public bool Equals(Tuplet<<#=genArgs#>> other) =>
+               FastEqualityComparer<T1>.Default.Equals(Item1, other.Item1)
+<#
+for (var i = 2; i <= n; i++)
+{
+#>
+            && FastEqualityComparer<T<#=i#>>.Default.Equals(Item<#=i#>, other.Item<#=i#>)
+<#
+}
+#>
+            ;
+
+        /// <summary>
+        /// Compares the current value with another value and returns an integer that indicates whether the current value precedes, follows, or occurs in the same position in the sort order as the other value.
+        /// </summary>
+        /// <param name="other">A value to compare with this value.</param>
+        /// <returns>A value that indicates the relative order of the values being compared.</returns>
+        public int CompareTo(Tuplet<<#=genArgs#>> other)
+        {
+            var res = 0;
+
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            res = FastComparer<T<#=i#>>.Default.Compare(Item<#=i#>, other.Item<#=i#>);
+<#
+if (i != n)
+{
+#>
+
+            if (res != 0)
+            {
+                return res;
+            }
+<#
+}
+#>
+
+<#
+}
+#>
+            return res;
+        }
+
+        /// <summary>
+        /// Checks whether the specified values are equal.
+        /// </summary>
+        /// <param name="first">The first value to compare.</param>
+        /// <param name="second">The second value to compare.</param>
+        /// <returns>true if the values are equal; otherwise, false.</returns>
+        public static bool operator ==(Tuplet<<#=genArgs#>> first, Tuplet<<#=genArgs#>> second) => first.Equals(second);
+
+        /// <summary>
+        /// Checks whether the specified values are not equal.
+        /// </summary>
+        /// <param name="first">The first value to compare.</param>
+        /// <param name="second">The second value to compare.</param>
+        /// <returns>true if the values are not equal; otherwise, false.</returns>
+        public static bool operator !=(Tuplet<<#=genArgs#>> first, Tuplet<<#=genArgs#>> second) => !first.Equals(second);
+
+        /// <summary>
+        /// Checks whether the <paramref name="first"/> value is less than the <paramref name="second"/> value.
+        /// </summary>
+        /// <param name="first">The first value to compare.</param>
+        /// <param name="second">The second value to compare.</param>
+        /// <returns>true if the first value is less than the second value; otherwise, false.</returns>
+        public static bool operator <(Tuplet<<#=genArgs#>> first, Tuplet<<#=genArgs#>> second) => first.CompareTo(second) < 0;
+
+        /// <summary>
+        /// Checks whether the <paramref name="first"/> value is less than or equal to the <paramref name="second"/> value.
+        /// </summary>
+        /// <param name="first">The first value to compare.</param>
+        /// <param name="second">The second value to compare.</param>
+        /// <returns>true if the first value is less than or equal to the second value; otherwise, false.</returns>
+        public static bool operator <=(Tuplet<<#=genArgs#>> first, Tuplet<<#=genArgs#>> second) => first.CompareTo(second) <= 0;
+
+        /// <summary>
+        /// Checks whether the <paramref name="first"/> value is larger than the <paramref name="second"/> value.
+        /// </summary>
+        /// <param name="first">The first value to compare.</param>
+        /// <param name="second">The second value to compare.</param>
+        /// <returns>true if the first value is larger than the second value; otherwise, false.</returns>
+        public static bool operator >(Tuplet<<#=genArgs#>> first, Tuplet<<#=genArgs#>> second) => first.CompareTo(second) > 0;
+
+        /// <summary>
+        /// Checks whether the <paramref name="first"/> value is larger than or equal to the <paramref name="second"/> value.
+        /// </summary>
+        /// <param name="first">The first value to compare.</param>
+        /// <param name="second">The second value to compare.</param>
+        /// <returns>true if the first value is larger than or equal to the second value; otherwise, false.</returns>
+        public static bool operator >=(Tuplet<<#=genArgs#>> first, Tuplet<<#=genArgs#>> second) => first.CompareTo(second) >= 0;
+
+<#
+var strParts = string.Join(" + \", \" + ", Enumerable.Range(1, n).Select(j => "Item" + j + "?.ToString()"));
+var strEnd = strParts + " + \")\"";
+var strAll = "\"(\" + " + strEnd;
+#>
+        /// <summary>
+        /// Gets a string representation of the current value.
+        /// </summary>
+        /// <returns>A string representation for the current value.</returns>
+        public override string ToString() => <#=strAll#>;
+
+        string ITuplet.ToStringEnd() => <#=strEnd#>;
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Errors.ThrowArgumentNull does the check.")]
+        bool IStructuralEquatable.Equals(object other, IEqualityComparer comparer)
+        {
+            Errors.ThrowArgumentNull(comparer, nameof(comparer));
+
+            if (!(other is Tuplet<<#=genArgs#>>))
+            {
+                return false;
+            }
+
+            var args = (Tuplet<<#=genArgs#>>)other;
+
+            return comparer.Equals(Item1, args.Item1)
+<#
+for (var i = 2; i <= n; i++)
+{
+#>
+                && comparer.Equals(Item<#=i#>, args.Item<#=i#>)
+<#
+}
+#>
+                ;
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Errors.ThrowArgumentNull does the check.")]
+        int IStructuralEquatable.GetHashCode(IEqualityComparer comparer)
+        {
+            Errors.ThrowArgumentNull(comparer, nameof(comparer));
+
+<#
+if (n == 1)
+{
+#>
+            return comparer.GetHashCode(Item1);
+<#
+}
+else
+{
+#>
+            return
+                HashHelpers.Combine(
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+                    comparer.GetHashCode(Item<#=i#>)<#=i != n ? "," : ""#>
+<#
+}
+#>
+                );
+<#
+}
+#>
+        }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:ValidateArgumentsOfPublicMethods", Justification = "Errors.ThrowArgumentNull does the check.")]
+        int IStructuralComparable.CompareTo(object other, IComparer comparer)
+        {
+            Errors.ThrowArgumentNull(comparer, nameof(comparer));
+
+            if (other == null)
+            {
+                return 1;
+            }
+
+            if (!(other is Tuplet<<#=genArgs#>>))
+            {
+                throw new ArgumentException("The specified argument is not of type Tuplet<<#=genArgs#>>.", nameof(other));
+            }
+
+            var args = (Tuplet<<#=genArgs#>>)other;
+
+            var res = 0;
+
+<#
+for (var i = 1; i <= n; i++)
+{
+#>
+            res = comparer.Compare(Item<#=i#>, args.Item<#=i#>);
+<#
+if (i != n)
+{
+#>
+
+            if (res != 0)
+            {
+                return res;
+            }
+<#
+}
+#>
+
+<#
+}
+#>
+            return res;
+        }
+
+        int IComparable.CompareTo(object obj) => ((IStructuralComparable)this).CompareTo(obj, FastComparer<object>.Default);
+    }
+
+<#
+}
+#>
+}

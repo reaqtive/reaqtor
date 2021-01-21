@@ -1,0 +1,50 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Various utilities for creating, comparing, and modifying LINQ expression trees.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Expressions\ExpressionFactory.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExpressionFactory.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Expressions\ExpressionUnsafeFactory.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ExpressionUnsafeFactory.generated.cs</LastGenOutput>
+    </None>
+    <None Update="Expressions\IExpressionFactory.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IExpressionFactory.generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Expressions\ExpressionFactory.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExpressionFactory.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Expressions\ExpressionUnsafeFactory.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ExpressionUnsafeFactory.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Expressions\IExpressionFactory.generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IExpressionFactory.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

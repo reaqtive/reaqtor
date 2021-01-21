@@ -1,0 +1,515 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - January 2017 - Created this file.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace Tests.System.Linq.Expressions.Optimizers
+{
+    partial class MemberTableTests
+    {
+<#
+var rand = new Random(1983);
+
+for (var i = 0; i <= 16; i++)
+{
+    var staticPars = string.Join(", ", Enumerable.Range(0, i).Select(j => "A" + j + " a" + j));
+    var instancePars = string.Join(", ", new[] { "Stuff s" }.Concat(Enumerable.Range(0, i).Select(j => "A" + j + " a" + j)));
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "a" + j));
+#>
+        [TestMethod]
+        public void MemberTable_Add_MethodInfo_Static<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.StaticMethod<#=i#>));
+
+            mt.Add(method);
+
+            AssertHasMember(mt, method);
+        }
+
+        [TestMethod]
+        public void MemberTable_Add_MethodInfo_StaticVoid<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.StaticMethodVoid<#=i#>));
+
+            mt.Add(method);
+
+            AssertHasMember(mt, method);
+        }
+
+        [TestMethod]
+        public void MemberTable_Add_Expression_MethodInfo_Static<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.StaticMethod<#=i#>));
+
+            mt.Add((<#=staticPars#>) => Stuff.StaticMethod<#=i#>(<#=args#>));
+
+            AssertHasMember(mt, method);
+        }
+
+        [TestMethod]
+        public void MemberTable_Add_Expression_MethodInfo_StaticVoid<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.StaticMethodVoid<#=i#>));
+
+            mt.Add((<#=staticPars#>) => Stuff.StaticMethodVoid<#=i#>(<#=args#>));
+
+            AssertHasMember(mt, method);
+        }
+
+        [TestMethod]
+        public void MemberTable_Evaluator_MethodInfo_Static<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.StaticMethod<#=i#>));
+
+            mt.Add(method);
+
+            var eval = GetEvaluator(mt, method);
+
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+            var a<#=j#> = new A<#=j#> { Value = <#=rand.Next(10, 100)#> };
+<#
+}
+
+var staticInvokeArgs = string.Join(", ", Enumerable.Range(0, i).Select(j => "a" + j));
+#>
+            var args = new object[] { <#=staticInvokeArgs#> };
+
+            var expected = method.Invoke(obj: null, args);
+            var actual = eval.DynamicInvoke(args);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void MemberTable_Evaluator_MethodInfo_StaticVoid<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.StaticMethodVoid<#=i#>));
+
+            mt.Add(method);
+
+            var eval = GetEvaluator(mt, method);
+
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+            var a<#=j#> = new A<#=j#> { Value = <#=rand.Next(10, 100)#> };
+<#
+}
+#>
+            var args = new object[] { <#=staticInvokeArgs#> };
+
+            lock (Stuff.StaticWriteLock)
+            {
+                Stuff.StaticCallResult = null;
+
+                var expected = method.Invoke(obj: null, args);
+                var expectedValue = Stuff.StaticCallResult.Value;
+
+                Stuff.StaticCallResult = null;
+
+                var actual = eval.DynamicInvoke(args);
+                var actualValue = Stuff.StaticCallResult.Value;
+
+                Assert.AreEqual(expected, actual);
+                Assert.AreEqual(expectedValue, actualValue);
+            }
+        }
+
+        [TestMethod]
+        public void MemberTable_Add_MethodInfo_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.InstanceMethod<#=i#>));
+
+            mt.Add(method);
+
+            AssertHasMember(mt, method);
+        }
+
+        [TestMethod]
+        public void MemberTable_Add_MethodInfo_InstanceVoid<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.InstanceMethodVoid<#=i#>));
+
+            mt.Add(method);
+
+            AssertHasMember(mt, method);
+        }
+
+<#
+if (i != 16) // NB: No Expression<`17> overload
+{
+#>
+        [TestMethod]
+        public void MemberTable_Add_Expression_MethodInfo_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.InstanceMethod<#=i#>));
+
+            mt.Add((<#=instancePars#>) => s.InstanceMethod<#=i#>(<#=args#>));
+
+            AssertHasMember(mt, method);
+        }
+
+        [TestMethod]
+        public void MemberTable_Add_Expression_MethodInfo_InstanceVoid<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.InstanceMethodVoid<#=i#>));
+
+            mt.Add((<#=instancePars#>) => s.InstanceMethodVoid<#=i#>(<#=args#>));
+
+            AssertHasMember(mt, method);
+        }
+
+<#
+}
+#>
+        [TestMethod]
+        public void MemberTable_Evaluator_MethodInfo_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.InstanceMethod<#=i#>));
+
+            mt.Add(method);
+
+            var eval = GetEvaluator(mt, method);
+
+            var stuff = new Stuff { InstanceField = 42 };
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+            var a<#=j#> = new A<#=j#> { Value = <#=rand.Next(10, 100)#> };
+<#
+}
+
+var instanceInvokeArgs = string.Join(", ", Enumerable.Range(0, i).Select(j => "a" + j));
+#>
+            var args = new object[] { <#=instanceInvokeArgs#> };
+            var instanceAndArgs = new object[] { stuff, <#=instanceInvokeArgs#> };
+
+            var expected = method.Invoke(stuff, args);
+            var actual = eval.DynamicInvoke(instanceAndArgs);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void MemberTable_Evaluator_MethodInfo_InstanceVoid<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var method = typeof(Stuff).GetMethod(nameof(Stuff.InstanceMethodVoid<#=i#>));
+
+            mt.Add(method);
+
+            var eval = GetEvaluator(mt, method);
+
+            var stuff = new Stuff { InstanceField = 42 };
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+            var a<#=j#> = new A<#=j#> { Value = <#=rand.Next(10, 100)#> };
+<#
+}
+#>
+            var args = new object[] { <#=instanceInvokeArgs#> };
+            var instanceAndArgs = new object[] { stuff, <#=instanceInvokeArgs#> };
+
+            stuff.InstanceCallResult = null;
+
+            var expected = method.Invoke(stuff, args);
+            var expectedValue = stuff.InstanceCallResult.Value;
+
+            stuff.InstanceCallResult = null;
+
+            var actual = eval.DynamicInvoke(instanceAndArgs);
+            var actualValue = stuff.InstanceCallResult.Value;
+
+            Assert.AreEqual(expected, actual);
+            Assert.AreEqual(expectedValue, actualValue);
+        }
+
+<#
+}
+
+for (var i = 1; i <= 16; i++)
+{
+    var indexerArgTypes = string.Join(", ", Enumerable.Range(1, i).Select(j => "typeof(A" + j + ")"));
+    var indexerPars = string.Join(", ", Enumerable.Range(1, i).Select(j => "A" + j + " a" + j));
+    var indexerArgs = string.Join(", ", Enumerable.Range(1, i).Select(j => "a" + j));
+#>
+        [TestMethod]
+        public void MemberTable_Add_PropertyInfo_Indexer_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var property = typeof(Stuff).GetProperty("Item", new[] { <#=indexerArgTypes#> });
+
+            mt.Add(property);
+
+            AssertHasMember(mt, property);
+            AssertHasMember(mt, property.GetGetMethod());
+        }
+
+<#
+if (i < 16)
+{
+#>
+        [TestMethod]
+        public void MemberTable_Add_Expression_PropertyInfo_Indexer_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var property = typeof(Stuff).GetProperty("Item", new[] { <#=indexerArgTypes#> });
+
+            mt.Add((Stuff s, <#=indexerPars#>) => s[<#=indexerArgs#>]);
+
+            AssertHasMember(mt, property.GetGetMethod());
+        }
+
+<#
+}
+#>
+        [TestMethod]
+        public void MemberTable_Add_IndexExpression_PropertyInfo_Indexer_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var property = typeof(Stuff).GetProperty("Item", new[] { <#=indexerArgTypes#> });
+
+            var stuff = Expression.Parameter(typeof(Stuff));
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+            var p<#=j#> = Expression.Parameter(typeof(A<#=j#>));
+<#
+}
+
+var idxArgs = string.Join(", ", Enumerable.Range(1, i).Select(j => "p" + j));
+var parExprs = string.Join(", ", new[] { "stuff" }.Concat(Enumerable.Range(1, i).Select(j => "p" + j)));
+#>
+            var e = Expression.Lambda(Expression.MakeIndex(stuff, property, new Expression[] { <#=idxArgs#> }), <#=parExprs#>);
+            mt.Add(e);
+
+            AssertHasMember(mt, property.GetGetMethod());
+        }
+
+        [TestMethod]
+        public void MemberTable_Evaluator_PropertyInfo_Indexer_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var property = typeof(Stuff).GetProperty("Item", new[] { <#=indexerArgTypes#> });
+
+            mt.Add(property);
+
+            var eval1 = GetEvaluator(mt, property);
+            var eval2 = GetEvaluator(mt, property.GetGetMethod());
+
+            var stuff = new Stuff();
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+            var a<#=j#> = new A<#=j#> { Value = <#=rand.Next(10, 100)#> };
+<#
+}
+
+var indexerInvokeArgs = string.Join(", ", Enumerable.Range(1, i).Select(j => "a" + j));
+#>
+            var args = new object[] { <#=indexerInvokeArgs#> };
+            var instanceAndArgs = new object[] { stuff, <#=indexerInvokeArgs#> };
+
+            var expected = property.GetValue(stuff, args);
+            var actual1 = eval1.DynamicInvoke(instanceAndArgs);
+            var actual2 = eval2.DynamicInvoke(instanceAndArgs);
+
+            Assert.AreEqual(expected, actual1);
+            Assert.AreEqual(expected, actual2);
+        }
+
+<#
+}
+
+for (var i = 0; i <= 16; i++)
+{
+    var constructorArgTypes = string.Join(", ", Enumerable.Range(0, i).Select(j => "typeof(A" + j + ")"));
+    var constructorPars = string.Join(", ", Enumerable.Range(0, i).Select(j => "A" + j + " a" + j));
+    var constructorArgs = string.Join(", ", Enumerable.Range(0, i).Select(j => "a" + j));
+#>
+        [TestMethod]
+        public void MemberTable_Add_ConstructorInfo_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var constructor = typeof(Stuff<#=i#>).GetConstructor(new Type[] { <#=constructorArgTypes#> });
+
+            mt.Add(constructor);
+
+            AssertHasMember(mt, constructor);
+        }
+
+        [TestMethod]
+        public void MemberTable_Add_Expression_ConstructorInfo_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var constructor = typeof(Stuff<#=i#>).GetConstructor(new Type[] { <#=constructorArgTypes#> });
+
+            mt.Add((<#=constructorPars#>) => new Stuff<#=i#>(<#=constructorArgs#>));
+
+            AssertHasMember(mt, constructor);
+        }
+
+        [TestMethod]
+        public void MemberTable_Evaluator_ConstructorInfo_Instance<#=i#>()
+        {
+            var mt = new MemberTable();
+
+            var constructor = typeof(Stuff<#=i#>).GetConstructor(new Type[] { <#=constructorArgTypes#> });
+
+            mt.Add(constructor);
+
+            var eval = GetEvaluator(mt, constructor);
+
+            var stuff = new Stuff();
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+            var a<#=j#> = new A<#=j#> { Value = <#=rand.Next(10, 100)#> };
+<#
+}
+
+var constructorInvokeArgs = string.Join(", ", Enumerable.Range(0, i).Select(j => "a" + j));
+#>
+            var args = new object[] { <#=constructorInvokeArgs#> };
+
+            var expected = constructor.Invoke(args);
+            var actual = eval.DynamicInvoke(args);
+
+            Assert.AreEqual(expected, actual);
+        }
+
+<#
+}
+#>
+        partial class Stuff
+        {
+            public static int? StaticCallResult;
+            public int? InstanceCallResult;
+
+<#
+for (var i = 0; i <= 16; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "A" + j + " a" + j));
+    var val = string.Join(" + ", new[] { "StaticField" }.Concat(Enumerable.Range(0, i).Select(j => "a" + j + ".Value")));
+#>
+            public static int StaticMethod<#=i#>(<#=args#>) => <#=val#>;
+            public static void StaticMethodVoid<#=i#>(<#=args#>) { StaticCallResult = <#=val#>; }
+<#
+}
+
+for (var i = 0; i <= 16; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "A" + j + " a" + j));
+    var val = string.Join(" + ", new[] { "InstanceField" }.Concat(Enumerable.Range(0, i).Select(j => "a" + j + ".Value")));
+#>
+            public int InstanceMethod<#=i#>(<#=args#>) => <#=val#>;
+            public void InstanceMethodVoid<#=i#>(<#=args#>) { InstanceCallResult = <#=val#>; }
+<#
+}
+
+for (var i = 1; i <= 16; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "A" + j + " a" + j));
+    var val = string.Join(" + ", new[] { "InstanceField" }.Concat(Enumerable.Range(1, i).Select(j => "a" + j + ".Value")));
+#>
+            public int this[<#=args#>] => <#=val#>;
+<#
+}
+#>
+        }
+
+<#
+for (var i = 0; i <= 16; i++)
+{
+    var pars = string.Join(", ", Enumerable.Range(0, i).Select(j => "A" + j + " a" + j));
+    var val = string.Join(" + ", new[] { "42" }.Concat(Enumerable.Range(0, i).Select(j => "a" + j + ".Value")));
+#>
+        private class Stuff<#=i#> : IEquatable<Stuff<#=i#>>
+        {
+            public int Value;
+
+            public Stuff<#=i#>(<#=pars#>) => Value = <#=val#>;
+
+            public bool Equals(Stuff<#=i#> obj) => obj != null && obj.Value == Value;
+            public override bool Equals(object obj) => Equals(obj as Stuff<#=i#>);
+            public override int GetHashCode() => Value;
+        }
+
+<#
+}
+
+for (var i = 0; i <= 16; i++)
+{
+#>
+
+        private class A<#=i#>
+        {
+            private int _value;
+
+            public int Value
+            {
+                get => _value;
+                set => _value = value * <#=Math.Pow(2, i)#>;
+            }
+        }
+<#
+}
+#>
+    }
+}

@@ -1,0 +1,241 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Linq;
+using System.Linq.CompilerServices.Optimizers;
+using System.Linq.Expressions;
+
+namespace Tests.System.Linq.CompilerServices.Optimizers
+{
+    public partial class LetOptimizerTests
+    {
+        [TestMethod]
+        public void LetCoalescer_Tupletization_Types1()
+        {
+<#
+var numericalTypes = new []
+{
+   "char",
+    "byte",
+    "sbyte",
+    "short",
+    "ushort",
+    "int",
+    "uint",
+    "long",
+    "ulong",
+    "float",
+    "double",
+    "float",
+    "ulong",
+    "long",
+    "uint",
+    "int",
+    "ushort",
+    "short",
+    "sbyte",
+    "byte",
+    "char",
+};
+
+for (var i = 1; i < numericalTypes.Length; i++)
+{
+#>
+            {
+                var e =
+                    Infer(() => 
+                        from i in Enumerable.Range(0, 1)
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+                        let x<#=j#> = (<#=numericalTypes[j]#>)i
+<#
+}
+#>
+                        select (<#=string.Join(" + \" \" + ", Enumerable.Range(0, i).Select(k => "x" + k + ".GetType()"))#>).ToString()
+                    ).Body;
+
+                var converter = new EnumerableToQueryTreeConverter();
+                var q = converter.Convert(e);
+                var l = new LetOptimizer();
+                var o = l.Optimize(q);
+                var r = o.Reduce();
+
+                var counter = new SelectCountingVisitor();
+                counter.Visit(r);
+                Assert.AreEqual(2, counter.Count); // one for the coalesced let and one for the final select
+                Assert.AreEqual(e.Funcletize<IEnumerable<string>>().Compile()().First(), r.Funcletize<IEnumerable<string>>().Compile()().First());
+            }
+
+<#
+}
+#>
+        }
+
+        [TestMethod]
+        public void LetCoalescer_Tupletization_Types2()
+        {
+<#
+for (var i = 1; i < numericalTypes.Length; i++)
+{
+#>
+            {
+                var e =
+                    Infer(() => 
+                        from i in Enumerable.Range(0, 1)
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+                        let x<#=j#> = (<#=numericalTypes[j]#>)0
+<#
+}
+#>
+                        select (<#=string.Join(" + \" \" + ", Enumerable.Range(0, i).Select(k => "x" + k + ".GetType()"))#>).ToString()
+                    ).Body;
+
+                var converter = new EnumerableToQueryTreeConverter();
+                var q = converter.Convert(e);
+                var l = new LetOptimizer();
+                var o = l.Optimize(q);
+                var r = o.Reduce();
+
+                var counter = new SelectCountingVisitor();
+                counter.Visit(r);
+                Assert.AreEqual(2, counter.Count); // one for the coalesced let and one for the final select
+                Assert.AreEqual(e.Funcletize<IEnumerable<string>>().Compile()().First(), r.Funcletize<IEnumerable<string>>().Compile()().First());
+            }
+
+<#
+}
+#>
+        }
+
+        [TestMethod]
+        public void LetCoalescer_Tupletization_Types3()
+        {
+<#
+for (var i = 1; i < numericalTypes.Length; i++)
+{
+#>
+            {
+                var e =
+                    Infer(() => 
+                        from i in Enumerable.Range(0, 1)
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+                        let x<#=j#> = (<#=numericalTypes[j]#>)<#=j==0?"i":("x"+(j-1))#>
+<#
+}
+#>
+                        select (<#=string.Join(" + \" \" + ", Enumerable.Range(0, i).Select(k => "x" + k + ".GetType()"))#>).ToString()
+                    ).Body;
+
+                var converter = new EnumerableToQueryTreeConverter();
+                var q = converter.Convert(e);
+                var l = new LetOptimizer();
+                var o = l.Optimize(q);
+                var r = o.Reduce();
+
+                var counter = new SelectCountingVisitor();
+                counter.Visit(r);
+                Assert.AreEqual(<#=1+i#> , counter.Count); // one for the coalesced let and one for the final select
+                Assert.AreEqual(e.Funcletize<IEnumerable<string>>().Compile()().First(), r.Funcletize<IEnumerable<string>>().Compile()().First());
+            }
+
+<#
+}
+#>
+        }
+
+        [TestMethod]
+        public void LetCoalescer_Tupletization_Types4()
+        {
+<#
+for (var i = 1; i < numericalTypes.Length; i++)
+{
+#>
+            {
+                var e =
+                    Infer(() => 
+                        from i in Enumerable.Range(0, 1)
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+                        let x<#=j#> = (<#=numericalTypes[j]#>)<#=j==0?"i":("x"+(j-1)/2*2)#>
+<#
+}
+#>
+                        select (<#=string.Join(" + \" \" + ", Enumerable.Range(0, i).Select(k => "x" + k + ".GetType()"))#>).ToString()
+                    ).Body;
+
+                var converter = new EnumerableToQueryTreeConverter();
+                var q = converter.Convert(e);
+                var l = new LetOptimizer();
+                var o = l.Optimize(q);
+                var r = o.Reduce();
+
+                var counter = new SelectCountingVisitor();
+                counter.Visit(r);
+                Assert.AreEqual(<#=2+i/2#> , counter.Count); // one for the coalesced let and one for the final select
+                Assert.AreEqual(e.Funcletize<IEnumerable<string>>().Compile()().First(), r.Funcletize<IEnumerable<string>>().Compile()().First());
+            }
+
+<#
+}
+#>
+        }
+
+        [TestMethod]
+        public void LetCoalescer_Tupletization_Types5()
+        {
+<#
+for (var i = 1; i < numericalTypes.Length; i++)
+{
+#>
+            {
+                var e =
+                    Infer(() => 
+                        from i in Enumerable.Range(0, 1)
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+                        let x<#=j#> = (<#=numericalTypes[j]#>)<#=j==0||j==2?"i":("x"+((j-1)/2*2 - (j%2==0?1:0)))#>
+<#
+}
+#>
+                        select (<#=string.Join(" + \" \" + ", Enumerable.Range(0, i).Select(k => "x" + k + ".GetType()"))#>).ToString()
+                    ).Body;
+
+                var converter = new EnumerableToQueryTreeConverter();
+                var q = converter.Convert(e);
+                var l = new LetOptimizer();
+                var o = l.Optimize(q);
+                var r = o.Reduce();
+
+                var counter = new SelectCountingVisitor();
+                counter.Visit(r);
+                Assert.AreEqual(<#=2+i/2#> , counter.Count); // one for the coalesced let and one for the final select
+                Assert.AreEqual(e.Funcletize<IEnumerable<string>>().Compile()().First(), r.Funcletize<IEnumerable<string>>().Compile()().First());
+            }
+
+<#
+}
+#>
+        }
+    }
+}

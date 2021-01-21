@@ -1,0 +1,79 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 15;#>
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD, ER - August 2013 - Created this file.
+// Auto-generated file, changes to source may be lost
+//
+
+using System;
+using System.Linq.Expressions;
+
+namespace Reaqtor
+{
+<#/*
+
+generating the code for:
+
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2>
+    {
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
+
+        protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, object state)
+        {
+            return ((ReactiveQueryProviderBase)base.Provider).CreateStream(this, arg1, arg2, streamUri, state);
+        }
+    }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var paramsList = new List<string>();
+    var argsList = new List<string>();
+    for (int j = 1; j<=i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        paramsList.Add(string.Format("TArg{0} arg{0}", j));
+        argsList.Add(string.Format("arg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var parameters = string.Join(", ", paramsList.ToArray());
+    var arguments = string.Join(", ", argsList.ToArray());
+
+#>
+    internal class QubjectFactory<TInput, TOutput, <#=typeArgs#>> : ReactiveQubjectFactoryBase<TInput, TOutput, <#=typeArgs#>>
+    {
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
+
+        protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, <#=parameters#>, object state)
+        {
+            return ((ReactiveQueryProviderBase)base.Provider).CreateStream(this, <#=arguments#>, streamUri, state);
+        }
+    }
+
+<# } #>
+}

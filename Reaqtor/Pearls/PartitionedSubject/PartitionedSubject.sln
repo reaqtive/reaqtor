@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{20366A5C-BCF1-43C4-B19F-925ABD26A400}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reaqtor.Pearls.PartitionedSubject", "Reaqtor.Pearls.PartitionedSubject.csproj", "{03CF46D6-CBE4-4262-A734-5BF9F617F401}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{03CF46D6-CBE4-4262-A734-5BF9F617F401}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{03CF46D6-CBE4-4262-A734-5BF9F617F401}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{03CF46D6-CBE4-4262-A734-5BF9F617F401}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{03CF46D6-CBE4-4262-A734-5BF9F617F401}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{03CF46D6-CBE4-4262-A734-5BF9F617F401} = {20366A5C-BCF1-43C4-B19F-925ABD26A400}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {44ABA771-AE1D-4426-9614-BC40CB22B0D1}
+	EndGlobalSection
+EndGlobal

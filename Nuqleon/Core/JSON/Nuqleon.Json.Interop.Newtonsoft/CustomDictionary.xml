@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Dictionary>
+  <Words>
+    <Recognized>
+      <Word>DateFormatHandling</Word>
+      <Word>FloatFormatHandling</Word>
+      <Word>MicrosoftDateFormat</Word>
+      <Word>PropertyName</Word>
+      <Word>StartArray</Word>
+      <Word>StartObject</Word>
+    </Recognized>
+  </Words>
+</Dictionary>

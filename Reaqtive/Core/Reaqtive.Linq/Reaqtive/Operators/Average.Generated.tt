@@ -1,0 +1,210 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+using System;
+
+<#
+    var ts = new []
+    {
+        new { src = typeof(int),     sum = typeof(long),    cnv = typeof(double), res = typeof(double)  },
+        new { src = typeof(long),    sum = typeof(long),    cnv = typeof(double), res = typeof(double)  },
+        new { src = typeof(float),   sum = typeof(double),  cnv = default(Type),  res = typeof(float)   },
+        new { src = typeof(double),  sum = typeof(double),  cnv = default(Type),  res = typeof(double)  },
+        new { src = typeof(decimal), sum = typeof(decimal), cnv = default(Type),  res = typeof(decimal) },
+    };
+
+foreach (var nullable in new[] { false, true })
+{
+var emptyRemark = !nullable
+    ? " If the source sequence is empty, an error of type <see cref=\"System.InvalidOperationException\"/> is propagated."
+    : " If the source sequence is empty, a <c>null</c> value is returned.";
+
+foreach (var t in ts)
+{
+    var tn = t.src.Name;
+    var to = t.res.Name;
+    var ta = t.sum.Name;
+
+    var cn = tn;
+
+    if (nullable)
+    {
+        tn += "?";
+        to += "?";
+        cn = "Nullable" + cn;
+    }
+
+    var cast = t.cnv == null ? "" : "(" + t.cnv.Name + ")";
+    var getValue = nullable ? ".Value" : "";
+#>
+namespace Reaqtive
+{
+    using Operators;
+
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Maintainability", "CA1506:AvoidExcessiveClassCoupling", Justification = "Lots of primitive types.")]
+    public static partial class Subscribable
+    {
+        /// <summary>
+        /// Aggregates the source sequence to return the average of the element values.
+        /// </summary>
+        /// <param name="source">Source sequence whose average of elements to obtain.</param>
+        /// <returns>Observable sequence containing a single element with the average of all values in the source sequence.<#=emptyRemark#></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
+        public static ISubscribable<<#=to#>> Average(this ISubscribable<<#=tn#>> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new Average<#=cn#>(source);
+        }
+
+        /// <summary>
+        /// Aggregates the source sequence to return the average of the values obtained from applying the specified selector function to each element in the source sequence.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose average of projected elements to obtain.</param>
+        /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence containing a single element with the average of all projected values in the source sequence.<#=emptyRemark#></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
+        public static ISubscribable<<#=to#>> Average<TSource>(this ISubscribable<TSource> source, Func<TSource, <#=tn#>> selector)
+        {
+            //
+            // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
+            //
+            return source.Select(selector).Average();
+        }
+    }
+}
+
+namespace Reaqtive.Operators
+{
+    internal sealed class Average<#=cn#> : SubscribableBase<<#=to#>>
+    {
+        private readonly ISubscribable<<#=tn#>> _source;
+
+        public Average<#=cn#>(ISubscribable<<#=tn#>> source)
+        {
+            _source = source;
+        }
+
+        protected override ISubscription SubscribeCore(IObserver<<#=to#>> observer)
+        {
+            return new _(this, observer);
+        }
+
+        private sealed class _ : StatefulUnaryOperator<Average<#=cn#>, <#=to#>>, IObserver<<#=tn#>>
+        {
+            private <#=ta#> _sum;
+            private long _count;
+
+            public _(Average<#=cn#> parent, IObserver<<#=to#>> observer)
+                : base(parent, observer)
+            {
+            }
+
+            public override string Name => "rc:Average<#=cn#>";
+
+            public override Version Version => Versioning.v1;
+
+            public void OnCompleted()
+            {
+                if (_count == 0)
+                {
+<#
+if (!nullable)
+{
+#>
+                    Output.OnError(new InvalidOperationException("Sequence contains no elements."));
+<#
+}
+else
+{
+#>
+                    Output.OnNext(null);
+                    Output.OnCompleted();
+<#
+}
+#>
+                    Dispose();
+                    return;
+                }
+
+                var res = (<#=to#>)(<#=cast#>_sum / _count);
+
+                Output.OnNext(res);
+                Output.OnCompleted();
+                Dispose();
+            }
+
+            public void OnError(Exception error)
+            {
+                Output.OnError(error);
+                Dispose();
+            }
+
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Core to the OnError design.")]
+            public void OnNext(<#=tn#> value)
+            {
+<#
+if (nullable)
+{
+#>
+                if (value == null)
+                    return;
+
+<#
+}
+#>
+                try
+                {
+                    checked
+                    {
+                        _sum += value<#=getValue#>;
+                        _count++;
+                        StateChanged = true;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Output.OnError(ex);
+                    Dispose();
+                }
+            }
+
+            protected override ISubscription OnSubscribe()
+            {
+                return Params._source.Subscribe(this);
+            }
+
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Caller is trusted.")]
+            protected override void LoadStateCore(IOperatorStateReader reader)
+            {
+                base.LoadStateCore(reader);
+
+                _sum = reader.Read<<#=ta#>>();
+                _count = reader.Read<long>();
+            }
+
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Caller is trusted.")]
+            protected override void SaveStateCore(IOperatorStateWriter writer)
+            {
+                base.SaveStateCore(writer);
+
+                writer.Write<<#=ta#>>(_sum);
+                writer.Write<long>(_count);
+            }
+        }
+    }
+}
+
+<#
+}
+}
+#>

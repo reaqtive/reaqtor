@@ -1,0 +1,383 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Reflection;
+
+using Reaqtive;
+using Reaqtive.Testing;
+using Reaqtive.TestingFramework;
+
+#if GLITCHING
+using Reaqtor;
+using Reaqtor.TestingFramework;
+#endif
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Test.Nuqleon.Reactive.Operators
+{
+    public partial class Average
+    {
+<#
+var d = new Dictionary<Type, Tuple<IEnumerable, IEnumerable>>
+{
+    { typeof(int), Tuple.Create<IEnumerable, IEnumerable>(new[] { 17, -8, 25, 2, 3, -5, -7, 36 }, new[] { 0, int.MinValue, int.MaxValue }) },
+    { typeof(long), Tuple.Create<IEnumerable, IEnumerable>(new[] { 17L, -8L, 25L, 2L, 3L, -5L, -7L, 36L }, new[] { 0, long.MinValue, long.MaxValue }) },
+    { typeof(float), Tuple.Create<IEnumerable, IEnumerable>(new[] { 17.8f, -25.2f, 3.5f, -7.36f }, new[] { 0.0f, float.NegativeInfinity, float.PositiveInfinity, float.NaN }) },
+    { typeof(double), Tuple.Create<IEnumerable, IEnumerable>(new[] { 17.8, -25.2, 3.5, -7.36 }, new[] { 0.0, double.NegativeInfinity, double.PositiveInfinity, double.NaN }) },
+    { typeof(decimal), Tuple.Create<IEnumerable, IEnumerable>(new[] { 24.95m, -7m, 499.99m, 123m }, new[] { 0.0m }) },
+};
+
+var litsuf = new Dictionary<Type, string>
+{
+    { typeof(int), "" },
+    { typeof(long), "L" },
+    { typeof(float), "f" },
+    { typeof(double), "d" },
+    { typeof(decimal), "m" },
+};
+
+foreach (var kv in d)
+{
+    var t = kv.Key;
+
+    foreach (var nul in new[] { false, true })
+    {
+        var tn = nul ? "Nullable" + t.Name : t.Name;
+        var tncs = nul ? t.Name + "?" : t.Name;
+
+        var r = t == typeof(int) || t == typeof(long) ? typeof(double) : t;
+        var rncs = nul ? r.Name + "?" : r.Name;
+
+        var charm = kv.Value.Item1;
+        var strange = kv.Value.Item2;
+#>
+        [TestMethod]
+        public void Average<#=tn#>_Empty()
+        {
+            Run(client =>
+            {
+                var xs = client.CreateColdObservable(
+                    OnCompleted<<#=tncs#>>(50)
+                );
+
+                var res = client.Start(() =>
+                    xs.Average()
+                );
+
+                res.Messages.AssertEqual(
+<#
+if (nul)
+{
+#>
+                    OnNext<<#=rncs#>>(250, default(<#=rncs#>)),
+                    OnCompleted<<#=rncs#>>(250)
+<#
+}
+else
+{
+#>
+                    OnError<<#=rncs#>>(250, ex => ex is InvalidOperationException)
+<#
+}
+#>
+                );
+
+                xs.Subscriptions.AssertEqual(
+                    Subscribe(200, 250)
+                );
+            });
+        }
+
+        [TestMethod]
+        public void Average<#=tn#>_Selector_Empty()
+        {
+            Run(client =>
+            {
+                var xs = client.CreateColdObservable(
+                    OnCompleted<Tuple<<#=tncs#>>>(50)
+                );
+
+                var res = client.Start(() =>
+                    xs.Average(x => x.Item1)
+                );
+
+                res.Messages.AssertEqual(
+<#
+if (nul)
+{
+#>
+                    OnNext<<#=rncs#>>(250, default(<#=rncs#>)),
+                    OnCompleted<<#=rncs#>>(250)
+<#
+}
+else
+{
+#>
+                    OnError<<#=rncs#>>(250, ex => ex is InvalidOperationException)
+<#
+}
+#>
+                );
+
+                xs.Subscriptions.AssertEqual(
+                    Subscribe(200, 250)
+                );
+            });
+        }
+
+        [TestMethod]
+        public void Average<#=tn#>_Throw()
+        {
+            Run(client =>
+            {
+                var ex = new Exception();
+
+                var xs = client.CreateColdObservable(
+                    OnError<<#=tncs#>>(50, ex)
+                );
+
+                var res = client.Start(() =>
+                    xs.Average()
+                );
+
+                res.Messages.AssertEqual(
+                    OnError<<#=rncs#>>(250, ex)
+                );
+
+                xs.Subscriptions.AssertEqual(
+                    Subscribe(200, 250)
+                );
+            });
+        }
+
+        [TestMethod]
+        public void Average<#=tn#>_Selector_Throw()
+        {
+            Run(client =>
+            {
+                var ex = new Exception();
+
+                var xs = client.CreateColdObservable(
+                    OnError<Tuple<<#=tncs#>>>(50, ex)
+                );
+
+                var res = client.Start(() =>
+                    xs.Average(x => x.Item1)
+                );
+
+                res.Messages.AssertEqual(
+                    OnError<<#=rncs#>>(250, ex)
+                );
+
+                xs.Subscriptions.AssertEqual(
+                    Subscribe(200, 250)
+                );
+            });
+        }
+
+        [TestMethod]
+        public void Average<#=tn#>_SelectorThrows()
+        {
+            Run(client =>
+            {
+                var xs = client.CreateColdObservable(
+                    OnNext<<#=tncs#>[]>(50, new <#=tncs#>[0])
+                );
+
+                var res = client.Start(() =>
+                    xs.Average(x => x[0])
+                );
+
+                res.Messages.AssertEqual(
+                    OnError<<#=rncs#>>(250, ex => ex is IndexOutOfRangeException)
+                );
+
+                xs.Subscriptions.AssertEqual(
+                    Subscribe(200, 250)
+                );
+            });
+        }
+
+<#
+        var cast = typeof(Enumerable).GetMethod("Cast");
+
+        var sets = (IEnumerable<Tuple<string, IEnumerable, Type>>)new[] { new Tuple<string, IEnumerable, Type>("", charm, t) };
+        
+        if (nul)
+        {
+            var nt = typeof(Nullable<>).MakeGenericType(t);
+            var withNull = charm.Cast<object>().ToList();
+            withNull.Insert(withNull.Count / 3, null);
+            withNull.Insert(withNull.Count / 2, null);
+            withNull.Insert(3 * withNull.Count / 4, null);
+            var charmNull = (IEnumerable)cast.MakeGenericMethod(nt).Invoke(null, new object[] { withNull });
+            sets = sets.Concat(new[] { new Tuple<string, IEnumerable, Type>("_Null", charmNull, nt) });
+        }
+        
+        foreach (var set in sets)
+        {
+            var name = set.Item1;
+            var seq = set.Item2;
+            var type = set.Item3;
+
+            var avg = typeof(Enumerable).GetMethod("Average", new[] { typeof(IEnumerable<>).MakeGenericType(type) });
+
+            var res = avg.Invoke(null, new object[] { seq });
+
+            var suf = litsuf[t];
+            var def = "default(" + tncs + ")";
+
+            var rsuf = litsuf[r];
+            var rdef = "default(" + rncs + ")";
+
+            var ress = res.ToString() + rsuf;
+
+            var vals = seq.Cast<object>().Select((o, i) => new { Time = (i + 1) * 10, Value = o == null ? def : o.ToString() + suf }).ToList();
+            var end = 10 * (vals.Count + 1);
+
+            var nnvals = seq.Cast<object>().Where(o => o != null).Select((o, i) => new { Time = (i + 1) * 10, Value = o.ToString() + suf }).ToList();
+            var nnend = 10 * (nnvals.Count + 1);
+
+            var m = name;
+
+            if (r == typeof(float) || r == typeof(double))
+            {
+                ress = "avg => Math.Abs((" + r.Name + ")(avg - " + ress + ")) < 0.0001" + rsuf;
+            }
+
+#>
+        [TestMethod]
+        public void Average<#=tn#>_Simple<#=m#>()
+        {
+            Run(client =>
+            {
+                var xs = client.CreateColdObservable(
+<#
+foreach (var val in vals)
+{
+#>
+                    OnNext<<#=tncs#>>(<#=val.Time#>, <#=val.Value#>),
+<#
+}
+#>
+                    OnCompleted<<#=tncs#>>(<#=end#>)
+                );
+
+                var res = client.Start(() =>
+                    xs.Average()
+                );
+
+                res.Messages.AssertEqual(
+                    OnNext<<#=rncs#>>(200 + <#=end#>, <#=ress#>),
+                    OnCompleted<<#=rncs#>>(200 + <#=end#>)
+                );
+
+                xs.Subscriptions.AssertEqual(
+                    Subscribe(200, 200 + <#=end#>)
+                );
+            });
+        }
+
+        [TestMethod]
+        public void Average<#=tn#>_Selector_Simple<#=m#>()
+        {
+            Run(client =>
+            {
+                var xs = client.CreateColdObservable(
+<#
+foreach (var val in vals)
+{
+#>
+                    OnNext<Tuple<<#=tncs#>>>(<#=val.Time#>, Tuple.Create<<#=tncs#>>(<#=val.Value#>)),
+<#
+}
+#>
+                    OnCompleted<Tuple<<#=tncs#>>>(<#=end#>)
+                );
+
+                var res = client.Start(() =>
+                    xs.Average(x => x.Item1)
+                );
+
+                res.Messages.AssertEqual(
+                    OnNext<<#=rncs#>>(200 + <#=end#>, <#=ress#>),
+                    OnCompleted<<#=rncs#>>(200 + <#=end#>)
+                );
+
+                xs.Subscriptions.AssertEqual(
+                    Subscribe(200, 200 + <#=end#>)
+                );
+            });
+        }
+
+#if !GLITCHING
+        [TestMethod]
+        public void Average<#=tn#>_Overflow<#=m#>()
+        {
+            Run(client =>
+            {
+                var xs = client.CreateColdObservable(
+<#
+foreach (var val in nnvals)
+{
+#>
+                    OnNext<<#=tncs#>>(<#=val.Time#>, <#=val.Value#>),
+<#
+}
+#>
+                    OnCompleted<<#=tncs#>>(<#=nnend#>)
+                );
+
+                var res = client.CreateObserver<<#=rncs#>>();
+
+                client.ScheduleAbsolute(default(object), 200, (s, _) =>
+                {
+                    var ys = xs.Average();
+                    var sub = ys.Subscribe(res);
+
+                    new SubscriptionInitializeVisitor(sub).Initialize(client.CreateContext());
+
+                    // Yes, dirty. No, I don't care.
+                    SubscriptionVisitor.Do<IOperator>(op =>
+                    {
+                        var top = op.GetType();
+                        if (top.DeclaringType == ys.GetType())
+                        {
+                            var count = top.GetField("_count", BindingFlags.Instance | BindingFlags.NonPublic);
+                            count.SetValue(op, long.MaxValue - 2);
+                        }
+                    }).Apply(sub);
+                });
+
+                client.Start();
+
+                res.Messages.AssertEqual(
+                    OnError<<#=rncs#>>(230, ex => ex is OverflowException)
+                );
+
+                xs.Subscriptions.AssertEqual(
+                    Subscribe(200, 230)
+                );
+            });
+        }
+#endif
+
+<#
+        }
+#>
+<#
+    }
+}
+#>
+    }
+}

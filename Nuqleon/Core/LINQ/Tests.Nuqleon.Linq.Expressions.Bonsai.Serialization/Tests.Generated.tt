@@ -1,0 +1,249 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - December 2016 - Created this file.
+//
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Linq.Expressions;
+
+namespace Tests
+{
+    partial class Tests
+    {
+<#
+for (var i = 0; i < 10; i++)
+{
+    var funcArgs = string.Join(", ", Enumerable.Repeat("int", i).Concat(new[] { "NewTest" + i }));
+    var outerFuncType = "Func<" + funcArgs + ">";
+    var exprType = "Expression<" + outerFuncType + ">";
+
+    var pars = string.Join(", ", Enumerable.Range(0, i).Select(j => "arg" + j));
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "arg" + j));
+    var vals = string.Join(", ", Enumerable.Range(1, i).Select(j => j.ToString()));
+
+    var expect = "new NewTest" + i + "(" + string.Join(", ", Enumerable.Range(1, i).Select(j => j.ToString())) + ")";
+#>
+        [TestMethod]
+        public void Bonsai_New<#=i#>()
+        {
+            var e = (<#=exprType#>)((<#=pars#>) => new NewTest<#=i#>(<#=args#>));
+
+            var i = Roundtrip(e) as <#=exprType#>;
+            Assert.IsNotNull(i);
+            Assert.IsTrue(i.Body is NewExpression);
+
+            Assert.AreEqual(<#=expect#>, i.Compile()(<#=vals#>));
+
+            var i08 = Roundtrip(e, V08) as <#=exprType#>;
+            Assert.IsNotNull(i08);
+            Assert.IsTrue(i08.Body is NewExpression);
+
+            Assert.AreEqual(<#=expect#>, i08.Compile()(<#=vals#>));
+        }
+
+<#
+}
+
+for (var i = 0; i < 16; i++)
+{
+    var funcArgs = string.Join(", ", Enumerable.Repeat("int", i + 1));
+    var innerFuncType = "Func<" + funcArgs + ">";
+    var outerFuncType = "Func<" + innerFuncType + ", " + funcArgs + ">";
+    var exprType = "Expression<" + outerFuncType + ">";
+
+    var pars = string.Join(", ", new[] { "f" }.Concat(Enumerable.Range(0, i).Select(j => "arg" + j)));
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "arg" + j));
+
+    var lambda = "(" + args + ") => " + string.Join(" + ", new[] { "42" }.Concat(Enumerable.Range(0, i).Select(j => "arg" + j)));
+    var vals = string.Join(", ", Enumerable.Range(1, i).Select(j => j.ToString()));
+
+    if (i > 0)
+    {
+        vals = ", " + vals;
+    }
+
+    var expect = string.Join(" + ", new[] { "42" }.Concat(Enumerable.Range(1, i).Select(j => j.ToString())));
+#>
+        [TestMethod]
+        public void Bonsai_Invocation<#=i#>()
+        {
+            var e = (<#=exprType#>)((<#=pars#>) => f(<#=args#>));
+
+            var i = Roundtrip(e) as <#=exprType#>;
+            Assert.IsNotNull(i);
+            Assert.IsTrue(i.Body is InvocationExpression);
+
+            Assert.AreEqual(<#=expect#>, i.Compile()(<#=lambda#><#=vals#>));
+
+            var i08 = Roundtrip(e, V08) as <#=exprType#>;
+            Assert.IsNotNull(i08);
+            Assert.IsTrue(i08.Body is InvocationExpression);
+
+            Assert.AreEqual(<#=expect#>, i08.Compile()(<#=lambda#><#=vals#>));
+        }
+
+<#
+}
+
+for (var i = 0; i < 10; i++)
+{
+    var funcArgs = string.Join(", ", Enumerable.Repeat("int", i + 1));
+    var outerFuncType = "Func<" + funcArgs + ">";
+    var exprType = "Expression<" + outerFuncType + ">";
+
+    var pars = string.Join(", ", Enumerable.Range(0, i).Select(j => "arg" + j));
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "arg" + j));
+    var vals = string.Join(", ", Enumerable.Range(1, i).Select(j => j.ToString()));
+
+    var expect = string.Join(" + ", new[] { "42" }.Concat(Enumerable.Range(1, i).Select(j => j.ToString())));
+#>
+        [TestMethod]
+        public void Bonsai_StaticCall<#=i#>()
+        {
+            var e = (<#=exprType#>)((<#=pars#>) => CallTests.S<#=i#>(<#=args#>));
+
+            var i = Roundtrip(e) as <#=exprType#>;
+            Assert.IsNotNull(i);
+            Assert.IsTrue(i.Body is MethodCallExpression);
+
+            Assert.AreEqual(<#=expect#>, i.Compile()(<#=vals#>));
+
+            var i08 = Roundtrip(e, V08) as <#=exprType#>;
+            Assert.IsNotNull(i08);
+            Assert.IsTrue(i08.Body is MethodCallExpression);
+
+            Assert.AreEqual(<#=expect#>, i08.Compile()(<#=vals#>));
+        }
+
+<#
+}
+
+for (var i = 0; i < 10; i++)
+{
+    var funcArgs = string.Join(", ", Enumerable.Repeat("int", i + 1));
+    var outerFuncType = "Func<CallTests, " + funcArgs + ">";
+    var exprType = "Expression<" + outerFuncType + ">";
+
+    var pars = string.Join(", ", new[] { "c" }.Concat(Enumerable.Range(0, i).Select(j => "arg" + j)));
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "arg" + j));
+    var vals = string.Join(", ", new[] { "new CallTests(42)" }.Concat(Enumerable.Range(1, i).Select(j => j.ToString())));
+
+    var expect = string.Join(" + ", new[] { "42" }.Concat(Enumerable.Range(1, i).Select(j => j.ToString())));
+#>
+        [TestMethod]
+        public void Bonsai_InstanceCall<#=i#>()
+        {
+            var e = (<#=exprType#>)((<#=pars#>) => c.I<#=i#>(<#=args#>));
+
+            var i = Roundtrip(e) as <#=exprType#>;
+            Assert.IsNotNull(i);
+            Assert.IsTrue(i.Body is MethodCallExpression);
+
+            Assert.AreEqual(<#=expect#>, i.Compile()(<#=vals#>));
+
+            var i08 = Roundtrip(e, V08) as <#=exprType#>;
+            Assert.IsNotNull(i08);
+            Assert.IsTrue(i08.Body is MethodCallExpression);
+
+            Assert.AreEqual(<#=expect#>, i08.Compile()(<#=vals#>));
+        }
+
+<#
+}
+#>
+    }
+
+    public class CallTests
+    {
+        private readonly int _seed;
+
+        public CallTests(int seed)
+        {
+            _seed = seed;
+        }
+
+<#
+for (var i = 0; i < 10; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "int arg" + j));
+    var res = string.Join(" + ", new[]{ "42" }.Concat(Enumerable.Range(0, i).Select(j => "arg" + j)));
+#>
+        public static int S<#=i#>(<#=args#>) => <#=res#>;
+<#
+}
+#>
+
+<#
+for (var i = 0; i < 10; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "int arg" + j));
+    var res = string.Join(" + ", new[]{ "_seed" }.Concat(Enumerable.Range(0, i).Select(j => "arg" + j)));
+#>
+        public int I<#=i#>(<#=args#>) => <#=res#>;
+<#
+}
+#>
+    }
+
+<#
+for (var i = 0; i < 10; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "int arg" + j));
+#>
+    public class NewTest<#=i#> : IEquatable<NewTest<#=i#>>
+    {
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+        private readonly int _arg<#=j#>;
+<#
+}
+#>
+
+        public NewTest<#=i#>(<#=args#>)
+        {
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+            _arg<#=j#> = arg<#=j#>;
+<#
+}
+#>
+        }
+
+        public bool Equals(NewTest<#=i#> other)
+        {
+            return other != null
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+                && _arg<#=j#> == other._arg<#=j#>
+<#
+}
+#>
+                ;
+        }
+
+        public override bool Equals(object other) => Equals(other as NewTest<#=i#>);
+        public override int GetHashCode() => 0;
+    }
+
+<#
+}
+#>
+}

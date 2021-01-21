@@ -1,0 +1,25 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - January 2018
+//
+
+namespace Reaqtive.Serialization
+{
+    /// <summary>
+    /// Interface representing a factory for strongly typed deserializers.
+    /// </summary>
+    public interface IDeserializerFactory
+    {
+        /// <summary>
+        /// Gets a deserializer for objects of type <typeparamref name="T"/>.
+        /// </summary>
+        /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
+        /// <returns>A deserializer for objects of type <typeparamref name="T"/>.</returns>
+        IDeserializer<T> GetDeserializer<T>();
+    }
+}

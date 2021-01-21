@@ -1,0 +1,196 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 15;#>
+<#var ordinals = new string[] { "Zeroth", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth" };#>
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - Feburary 2016 - Created this file.
+// Auto-generated file, changes to source may be lost
+//
+
+using System;
+using System.Linq.Expressions;
+
+namespace Reaqtor
+{
+<#/*
+
+generating the code for:
+
+    /// <summary>
+    /// Base class for the implementation of parameterized subscription factories represented by an expression tree.
+    /// </summary>
+    /// <typeparam name="TArg1">Type of the first parameter passed to the subscription factory.</typeparam>
+    /// <typeparam name="TArg2">Type of the second parameter passed to the subscription factory.</typeparam>
+    public abstract class ReactiveQubscriptionFactoryBase<TArg1, TArg2> : IReactiveQubscriptionFactory<TArg1, TArg2>
+    {
+        /// <summary>
+        /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subscription factory.</param>
+        protected ReactiveQubscriptionFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
+
+        /// <summary>
+        /// Creates a new subscription with the specified subscription URI.
+        /// </summary>
+        /// <param name="subscriptionUri">URI identifying the subscription.</param>
+        /// <param name="Creates a new subscription1">First parameter to pass to the subscription factory.</param>
+        /// <param name="arg1">First parameter to pass to the subscription factory.</param>
+        /// <param name="arg2">Second parameter to pass to the subscription factory.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+        public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state = null)
+        {
+            if (subscriptionUri == null)
+                throw new ArgumentNullException(nameof(subscriptionUri));
+
+            return CreateCore(subscriptionUri, arg1, arg2, state);
+        }
+
+        /// <summary>
+        /// Creates a new subscription with the specified subscription URI.
+        /// </summary>
+        /// <param name="subscriptionUri">URI identifying the subscription.</param>
+        /// <param name="arg1">First parameter to pass to the subscription factory.</param>
+        /// <param name="arg2">Second parameter to pass to the subscription factory.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+        IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state)
+        {
+            if (subscriptionUri == null)
+                throw new ArgumentNullException(nameof(subscriptionUri));
+
+            return CreateCore(subscriptionUri, arg1, arg2, state);
+        }
+
+        /// <summary>
+        /// Creates a new subscription with the specified subscription URI.
+        /// </summary>
+        /// <param name="subscriptionUri">URI identifying the subscription.</param>
+        /// <param name="arg1">First parameter to pass to the subscription factory.</param>
+        /// <param name="arg2">Second parameter to pass to the subscription factory.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+        protected abstract IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state);
+
+        /// <summary>
+        /// Gets the query provider that is associated with the subscription factory.
+        /// </summary>
+        public IReactiveQueryProvider Provider { get; }
+
+        /// <summary>
+        /// Gets the expression tree representing the subscription factory.
+        /// </summary>
+        public abstract Expression Expression { get; }
+    }
+*/#>
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var typeArgsList = new List<string>(); 
+    var paramsList = new List<string>(); 
+    var argsList = new List<string>(); 
+
+    for (int j = 1; j<=i; j++)  
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        paramsList.Add(string.Format("TArg{0} arg{0}", j, j));
+        argsList.Add(string.Format("arg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var parameters = string.Join(", ", paramsList.ToArray());
+    var arguments = string.Join(", ", argsList.ToArray());
+#>
+    /// <summary>
+    /// Base class for the implementation of parameterized subscription factories represented by an expression tree.
+    /// </summary>
+<#
+for (int j = 1; j<=i; j++)  
+    {
+#>
+    <#= string.Format("/// <typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subscription factory.</typeparam>", j, ordinals[j].ToLower()) #>
+<#}#>
+    public abstract class ReactiveQubscriptionFactoryBase<<#=typeArgs#>> : IReactiveQubscriptionFactory<<#=typeArgs#>>
+    {
+        /// <summary>
+        /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subscription factory.</param>
+        protected ReactiveQubscriptionFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
+
+        /// <summary>
+        /// Gets the query provider that is associated with the subscription factory.
+        /// </summary>
+        public IReactiveQueryProvider Provider { get; }
+
+        /// <summary>
+        /// Gets the expression tree representing the subscription factory.
+        /// </summary>
+        public abstract Expression Expression { get; }
+
+        /// <summary>
+        /// Creates a new subscription with the specified subscription URI.
+        /// </summary>
+        /// <param name="subscriptionUri">URI identifying the subscription.</param>
+<#
+for (int j = 1; j<=i; j++)  
+    {
+#>
+        <#= string.Format("/// <param name=\"arg{0}\">{1} parameter to pass to the subscription factory.</param>", j, ordinals[j]) #>
+<#}#>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+        public IReactiveQubscription Create(Uri subscriptionUri, <#=parameters#>, object state = null)
+        {
+            if (subscriptionUri == null)
+                throw new ArgumentNullException(nameof(subscriptionUri));
+
+            return CreateCore(subscriptionUri, <#=arguments#>, state);
+        }
+
+        /// <summary>
+        /// Creates a new subscription with the specified subscription URI.
+        /// </summary>
+        /// <param name="subscriptionUri">URI identifying the subscription.</param>
+<#
+for (int j = 1; j<=i; j++)  
+    {
+#>
+        <#= string.Format("/// <param name=\"arg{0}\">{1} parameter to pass to the subscription factory.</param>", j, ordinals[j]) #>
+<#}#>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+        IReactiveSubscription IReactiveSubscriptionFactory<<#=typeArgs#>>.Create(Uri subscriptionUri, <#=parameters#>, object state)
+        {
+            if (subscriptionUri == null)
+                throw new ArgumentNullException(nameof(subscriptionUri));
+
+            return CreateCore(subscriptionUri, <#=arguments#>, state);
+        }
+
+        /// <summary>
+        /// Creates a new subscription with the specified subscription URI.
+        /// </summary>
+        /// <param name="subscriptionUri">URI identifying the subscription.</param>
+<#
+for (int j = 1; j<=i; j++)  
+    {
+#>
+        <#= string.Format("/// <param name=\"arg{0}\">{1} parameter to pass to the subscription factory.</param>", j, ordinals[j]) #>
+<#}#>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+        protected abstract IReactiveQubscription CreateCore(Uri subscriptionUri, <#=parameters#>, object state);
+    }
+
+<# } #>
+}

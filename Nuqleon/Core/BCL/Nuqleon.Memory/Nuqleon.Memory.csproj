@@ -1,0 +1,96 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>A collection of utilities for optimizing memory usage.</Description>
+    <DefineConstants>$(DefineConstants);CODEGEN</DefineConstants>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Time\Nuqleon.Time.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="System\HashHelpers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>HashHelpers.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="PooledObjects.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>PooledObjects.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Collections\Generic\EqualityComparerExtensions.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EqualityComparerExtensions.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Memory\Bundle.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Bundle.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Memory\Cache.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Cache.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Memory\Deconstructed.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Deconstructed.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Memory\FunctionMemoizationExtensions.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FunctionMemoizationExtensions.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Tuplet.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>Tuplet.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="System\HashHelpers.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>HashHelpers.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="PooledObjects.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>PooledObjects.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Collections\Generic\EqualityComparerExtensions.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EqualityComparerExtensions.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Memory\Bundle.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Bundle.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Memory\Cache.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Cache.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Memory\Deconstructed.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Deconstructed.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Memory\FunctionMemoizationExtensions.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FunctionMemoizationExtensions.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Tuplet.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Tuplet.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

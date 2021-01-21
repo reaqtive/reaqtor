@@ -1,0 +1,112 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var types = new List<Tuple<string, int>>
+{
+    Tuple.Create(typeof(sbyte).Name, sizeof(sbyte)),
+    Tuple.Create(typeof(short).Name, sizeof(short)),
+    Tuple.Create(typeof(ushort).Name, sizeof(ushort)),
+    Tuple.Create(typeof(int).Name, sizeof(int)),
+    Tuple.Create(typeof(uint).Name, sizeof(uint)),
+    Tuple.Create(typeof(long).Name, sizeof(long)),
+    Tuple.Create(typeof(ulong).Name, sizeof(ulong)),
+    Tuple.Create(typeof(float).Name, sizeof(float)),
+    Tuple.Create(typeof(double).Name, sizeof(double)),
+    Tuple.Create(typeof(decimal).Name, sizeof(decimal)),
+    Tuple.Create(typeof(char).Name, sizeof(char)),
+};
+
+var pools = new List<int>();
+
+#>
+using System;
+using System.Diagnostics;
+using System.IO;
+
+namespace Nuqleon.DataModel.Serialization.Binary
+{
+    internal static partial class StreamHelpers
+    {
+<#
+foreach (var type in types)
+{
+    if (!pools.Contains(type.Item2))
+    {
+        pools.Add(type.Item2);
+#>
+        /// <summary>
+        /// Array pool for arrays containing <#=type.Item2#> bytes, e.g. for the representation of <#=type.Item2 * 8#> bit integer values.
+        /// </summary>
+        private static readonly ArrayPool<byte> s_size<#=type.Item2#>ArrayPool = new ArrayPool<byte>(<#=type.Item2#>);
+
+<#
+    }
+#>
+        /// <summary>
+        /// Writes the specified <#=type.Item1#> value to the stream.
+        /// </summary>
+        /// <param name="stream">Stream to write to.</param>
+        /// <param name="value"><#=type.Item1#> value to write to the stream.</param>
+        public static unsafe void Write<#=type.Item1#>(this Stream stream, <#=type.Item1#> value)
+        {
+            var array = s_size<#=type.Item2#>ArrayPool.Get();
+            try
+            {
+                fixed (byte* ptr = array)
+                {
+                    *(<#=type.Item1#>*)ptr = value;
+                }
+
+                stream.Write(array, 0, <#=type.Item2#>);
+            }
+            finally
+            {
+                s_size<#=type.Item2#>ArrayPool.Release(array);
+            }
+        }
+
+        /// <summary>
+        /// Reads an integer <#=type.Item1#> from the stream.
+        /// </summary>
+        /// <param name="stream">Stream to read from.</param>
+        /// <returns><#=type.Item1#> value read from the stream.</returns>
+        /// <exception cref="EndOfStreamException">Thrown when the end of the stream is reached prematurely.</exception>
+        public static unsafe <#=type.Item1#> Read<#=type.Item1#>(this Stream stream)
+        {
+            Debug.Assert(BitConverter.IsLittleEndian, "This method is implemented assuming little endian.");
+
+            var array = s_size<#=type.Item2#>ArrayPool.Get();
+
+            try
+            {
+                var i = stream.Read(array, 0, <#=type.Item2#>);
+
+                if (i != <#=type.Item2#>)
+                {
+                    throw new EndOfStreamException("Expected <#=type.Item2#>-byte value.");
+                }
+
+                fixed (byte* pbyte = &array[0])
+                {
+                    return *((<#=type.Item1#>*)pbyte);
+                }
+            }
+            finally
+            {
+                s_size<#=type.Item2#>ArrayPool.Release(array);
+            }
+        }
+
+<#
+}
+#>
+    }
+}

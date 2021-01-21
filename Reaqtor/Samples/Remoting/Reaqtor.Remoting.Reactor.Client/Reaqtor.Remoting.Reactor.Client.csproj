@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <Description>Client host for the IRP remoting stack with some Reactor artifacts.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="System.Runtime.Remoting" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Client.Library\Reaqtor.Remoting.Client.Library.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Deployable\Reaqtor.Remoting.Deployable.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform\Reaqtor.Remoting.Platform.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.AppDomain\Reaqtor.Remoting.Platform.AppDomain.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.InMemory\Reaqtor.Remoting.Platform.InMemory.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Tcp\Reaqtor.Remoting.Platform.Tcp.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Reactor.Client.Library\Reaqtor.Remoting.Reactor.Client.Library.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Reactor.Deployable\Reaqtor.Remoting.Reactor.Deployable.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.TestingFramework\Reaqtor.Remoting.TestingFramework.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Linq\Reaqtive.Linq.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
+  </ItemGroup>
+
+</Project>

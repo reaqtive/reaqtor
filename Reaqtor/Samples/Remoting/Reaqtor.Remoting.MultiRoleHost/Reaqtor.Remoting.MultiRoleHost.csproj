@@ -1,0 +1,18 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <Description>Host for various services in the IRP remoting stack.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.KeyValueStore\Reaqtor.Remoting.KeyValueStore.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Messaging\Reaqtor.Remoting.Messaging.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.StateStore\Reaqtor.Remoting.StateStore.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.QueryCoordinator\Reaqtor.Remoting.QueryCoordinator.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.QueryEvaluator\Reaqtor.Remoting.QueryEvaluator.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Tcp\Reaqtor.Remoting.Platform.Tcp.csproj" />
+  </ItemGroup>
+
+</Project>

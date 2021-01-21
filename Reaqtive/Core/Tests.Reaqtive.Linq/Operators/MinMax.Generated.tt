@@ -1,0 +1,76 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+using Reaqtive;
+using Reaqtive.Testing;
+using Reaqtive.TestingFramework;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Test.Nuqleon.Reactive.Operators
+{
+    public partial class MinMax
+    {
+<#
+var d = new Dictionary<Type, Tuple<IEnumerable, IEnumerable>>
+{
+	{ typeof(int), Tuple.Create<IEnumerable, IEnumerable>(new[] { 17, -5, 25, 2, 3, -8, -7, 36 }, new[] { 0, int.MinValue, int.MaxValue }) },
+	{ typeof(long), Tuple.Create<IEnumerable, IEnumerable>(new[] { 17L, -5L, 25L, 2L, 3L, -8L, -7L, 36L }, new[] { 0, long.MinValue, long.MaxValue }) },
+	{ typeof(float), Tuple.Create<IEnumerable, IEnumerable>(new[] { 17.8f, -25.2f, 3.5f, -7.36f, 1.24f }, new[] { 0.0f, float.NegativeInfinity, float.PositiveInfinity, float.NaN }) },
+	{ typeof(double), Tuple.Create<IEnumerable, IEnumerable>(new[] { 17.8, -25.2, 3.5, -7.36, 1.24 }, new[] { 0.0, double.NegativeInfinity, double.PositiveInfinity, double.NaN }) },
+	{ typeof(decimal), Tuple.Create<IEnumerable, IEnumerable>(new[] { 24.95m, -7m, 499.99m, -123m, 8.49m }, new[] { 0.0m }) },
+};
+
+var litsuf = new Dictionary<Type, string>
+{
+	{ typeof(int), "" },
+	{ typeof(long), "L" },
+	{ typeof(float), "f" },
+	{ typeof(double), "d" },
+	{ typeof(decimal), "m" },
+};
+
+foreach (var op in new [] { "Min", "Max" })
+{
+foreach (var kv in d)
+{
+	var t = kv.Key;
+
+	foreach (var nul in new[] { false, true })
+	{
+		var tn = nul ? "Nullable" + t.Name : t.Name;
+		var tncs = nul ? t.Name + "?" : t.Name;
+
+		var charm = kv.Value.Item1;
+		var strange = kv.Value.Item2;
+#>
+        [TestMethod]
+        public void <#=op#><#=tn#>_ArgumentChecking()
+        {
+            ReactiveAssert.Throws<ArgumentNullException>(() => ((ISubscribable<<#=tncs#>>)null).<#=op#>());
+        }
+
+		[TestMethod]
+        public void <#=op#><#=tn#>_Selector_ArgumentChecking()
+        {
+            ReactiveAssert.Throws<ArgumentNullException>(() => ((ISubscribable<Tuple<<#=tncs#>>>)null).<#=op#>(t => t.Item1));
+			ReactiveAssert.Throws<ArgumentNullException>(() => DummySubscribable<Tuple<<#=tncs#>>>.Instance.<#=op#>(default(Func<Tuple<<#=tncs#>>, <#=tncs#>>)));
+        }
+
+<#
+	}
+}
+}
+#>
+    }
+}

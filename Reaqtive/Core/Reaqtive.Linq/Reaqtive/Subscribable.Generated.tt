@@ -1,0 +1,87 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 16;#>
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+using Reaqtive.Operators;
+using System;
+
+namespace Reaqtive
+{
+    public static partial class Subscribable
+    {
+<#
+for (int i = 2; i <= highestSupportedArity; i++)
+{
+#>
+
+        #region CombineLatest<#=i#>
+
+<#
+    // TYPE PARAMS AND FORMAL PARAMS FOR CONSTRUCTOR
+    // ALSO ACTUAL PARAMS FOR LATER FUNCTION CALL
+
+    var ordinals =
+        new[] { "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth" }
+        .Select(o => (char)(o[0] - 'a' + 'A') + o.Substring(1)).ToArray();
+
+    var typeParamArr = new string[i];
+    var formalParamArr = new string[i];
+    var actualParamArr = new string[i];
+    for (int j = 1; j <= i; j++)
+    {
+        typeParamArr[j-1] = "TSource" + j;
+        formalParamArr[j-1] = "ISubscribable<TSource" + j + "> source" + j;
+        actualParamArr[j-1] = "source" + j;
+    }
+    var typeParams = "<" + string.Join(", ", typeParamArr) + ", TResult>";
+    var formalParams = string.Join(", ", formalParamArr) + ", Func" + typeParams + " selector";
+    var actualParams = string.Join(", ", actualParamArr) + ", selector";
+#>
+        /// <summary>
+        /// Combines the latest observed element of each input sequence using the specified selector function upon receiving any element on any of the input sequences.
+        /// </summary>
+<#
+    for (var j = 1; j <= i; j++)
+    {
+#>
+        /// <param name="source<#=j#>"><#=ordinals[j-1]#> observable input sequence.</param>
+<#
+    }
+#>
+        /// <param name="selector">Selector function to apply to the latest observer element of each input sequence.</param>
+        /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
+        public static ISubscribable<TResult> CombineLatest<#=typeParams#>(this <#=formalParams#>)
+        {
+<#
+    for (int j = 1; j <= i; j++)
+    {
+#>
+            if (source<#=j#> == null)
+            {
+                throw new ArgumentNullException(nameof(source<#=j#>));
+            }
+
+<#
+    }
+#>
+            if (selector == null)
+            {
+                throw new ArgumentNullException(nameof(selector));
+            }
+
+            return new CombineLatest<#=typeParams#>(<#=actualParams#>);
+        }
+
+        #endregion
+<#
+}
+#>
+    }
+}

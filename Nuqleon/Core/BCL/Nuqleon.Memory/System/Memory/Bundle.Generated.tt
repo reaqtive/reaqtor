@@ -1,0 +1,135 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+const int N = 16;
+var nums = new[]
+{
+    "one", "two", "three", "four", "five", "six", "seven", "eight", "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen"
+};
+var ords = new[]
+{
+    "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth"
+};
+#>
+namespace System.Memory
+{
+    /// <summary>
+    /// Provides a set of factory methods to create bundles of objects which are stored in a memory-efficient manner.
+    /// </summary>
+    public partial class Bundle
+    {
+<#
+for (var i = 1; i <= N; i++)
+{
+    var targs = string.Join(", ", Enumerable.Range(1, i).Select(j => "T" + j)).Replace("T16", "TRest");
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "T" + j + " item" + j)).Replace("T16", "TRest").Replace("item16", "rest");
+    var pars = string.Join(", ", Enumerable.Range(1, i).Select(j => "item" + j)).Replace("T16", "TRest").Replace("item16", "rest");
+
+    var rem = ".";
+    if (i == N)
+    {
+        rem = " and a bundle with remainder items.";
+    }
+#>
+        /// <summary>
+        /// Creates a bundle with <#=nums[Math.Min(i - 1, N - 2)]#> item<#=i > 1 ? "s" : ""#><#=rem#>
+        /// </summary>
+<#
+for (var j = 1; j <= i; j++)
+{
+    var par = j == N ? "rest" : "item" + j;
+    var desc = j == N ? "The remainder items in the bundle." : "The " + ords[j - 1] + " item in the bundle.";
+#>
+        /// <param name="<#=par#>"><#=desc#></param>
+<#
+}
+#>
+        /// <returns>Bundle value with the specified items.</returns>
+        public static IReadOnlyIndexed Create<<#=targs#>>(<#=args#>) => new Bundle<<#=targs#>>(<#=pars#>);
+
+<#
+}
+#>
+    }
+
+<#
+for (var i = 1; i <= N; i++)
+{
+    var targs = string.Join(", ", Enumerable.Range(1, i).Select(j => "T" + j)).Replace("T16", "TRest");
+#>
+    partial struct Bundle<<#=targs#>> : IReadOnlyIndexed
+    {
+<#
+for (var j = 1; j <= i; j++)
+{
+    var typ = j == N ? "TRest" : "T" + j;
+    var fld = j == N ? "_rest" : "_item" + j;
+#>
+        private readonly <#=typ#> <#=fld#>;
+<#
+}
+    var pars = string.Join(", ", Enumerable.Range(1, i).Select(j => "T" + j + " item" + j)).Replace("T16", "TRest").Replace("item16", "rest");
+#>
+
+        public Bundle(<#=pars#>)
+        {
+<#
+for (var j = 1; j <= i; j++)
+{
+    var fld = j == N ? "_rest" : "_item" + j;
+    var arg = j == N ? "rest" : "item" + j;
+#>
+            <#=fld#> = <#=arg#>;
+<#
+}
+#>
+        }
+
+        public object this[int index]
+        {
+            get
+            {
+                switch (index)
+                {
+<#
+for (var j = 0; j < Math.Min(i, N - 1); j++)
+{
+#>
+                    case <#=j#>:
+                        return _item<#=j+1#>;
+<#
+}
+#>
+                    default:
+<#
+if (i == N)
+{
+#>
+                        var rest = (IReadOnlyIndexed)_rest;
+                        return rest[index - <#=N-1#>];
+<#
+}
+else
+{
+#>
+                        throw new ArgumentOutOfRangeException(nameof(index));
+<#
+}
+#>
+                }
+            }
+        }
+    }
+
+<#
+}
+#>
+}

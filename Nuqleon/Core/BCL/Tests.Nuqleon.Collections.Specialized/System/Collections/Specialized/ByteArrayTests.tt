@@ -1,0 +1,99 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+//   PS - 10/17/2014 - Wrote these tests.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Specialized;
+
+namespace Tests.System.Collections.Specialized
+{
+    [TestClass]
+    public class ByteArrayTests
+    {
+        [TestMethod]
+        public void ByteArray_ManOrBoy()
+        {
+<#
+for (var i = 1; i <= 11; i++)
+{
+#>
+            for (var i = 0; i < <#=i#>; i++)
+            {
+                var arr = default(ByteArray<#=i#>);
+                Assert.AreEqual(arr.Length, <#=i#>);
+                arr[i] = 0xff;
+
+                for (var j = 0; j < <#=i#>; j++)
+                {
+                    Assert.AreEqual(i == j ? 0xff : 0x00, arr[j]);
+                }
+            }
+
+<#
+}
+#>
+        }
+
+        [TestMethod]
+        public void ByteArray_EdgeCases()
+        {
+<#
+for (var i = 1; i <= 11; i++)
+{
+#>
+            var arr<#=i#> = default(ByteArray<#=i#>);
+            try
+            {
+                var dummy = arr<#=i#>[<#=i#>];
+                Assert.Fail();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+            }
+
+            try
+            {
+                var dummy = arr<#=i#>[-1];
+                Assert.Fail();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+            }
+
+            try
+            {
+                arr<#=i#>[<#=i#>] = 1;
+                Assert.Fail();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+            }
+
+            try
+            {
+                arr<#=i#>[-1] = 1;
+                Assert.Fail();
+            }
+            catch (ArgumentOutOfRangeException)
+            {
+            }
+
+<#
+}
+#>
+        }
+    }
+}

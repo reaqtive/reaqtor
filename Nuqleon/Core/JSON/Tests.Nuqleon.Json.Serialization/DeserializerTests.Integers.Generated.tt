@@ -1,0 +1,103 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+//   BD - 04/05/2016 - Created fast JSON deserializer functionality.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nuqleon.Json.Serialization;
+using System;
+using System.Numerics;
+
+namespace Tests
+{
+    partial class DeserializerTests
+    {
+<#
+var ts = new[] { typeof(sbyte), typeof(short), typeof(int), typeof(long), typeof(byte), typeof(ushort), typeof(uint), typeof(ulong) };
+
+foreach (var t in ts)
+{
+    var tn = t.Name;
+    var unsigned = t == typeof(byte) || tn.StartsWith("U");
+#>
+        [TestMethod]
+        public void FastDeserializer_<#=tn#>()
+        {
+            AssertDeserialize(new Asserts<<#=tn#>>
+            {
+                { <#=tn#>.MinValue.ToString(), (<#=tn#>)<#=tn#>.MinValue },
+                { <#=tn#>.MaxValue.ToString(), (<#=tn#>)<#=tn#>.MaxValue },
+                { ((<#=tn#>)(<#=tn#>.MinValue + 1)).ToString(), (<#=tn#>)(<#=tn#>.MinValue + 1) },
+                { ((<#=tn#>)(<#=tn#>.MaxValue - 1)).ToString(), (<#=tn#>)(<#=tn#>.MaxValue - 1) },
+<#
+if (!unsigned)
+{
+    for (var i = -128; i <= 127; i++)
+    {
+#>
+                { "<#=i.ToString()#>", (<#=tn#>)(<#=i#>) },
+<#
+    }
+}
+else
+{
+    for (var i = 0; i <= 255; i++)
+    {
+#>
+                { "<#=i.ToString()#>", (<#=tn#>)<#=i#> },
+<#
+    }
+}
+#>
+            });
+        }
+
+        [TestMethod]
+        public void FastDeserializer_Nullable<#=tn#>()
+        {
+            AssertDeserialize(new Asserts<<#=tn#>?>
+            {
+                { "null", (<#=tn#>?)null },
+                { <#=tn#>.MinValue.ToString(), (<#=tn#>?)<#=tn#>.MinValue },
+                { <#=tn#>.MaxValue.ToString(), (<#=tn#>?)<#=tn#>.MaxValue },
+                { ((<#=tn#>)(<#=tn#>.MinValue + 1)).ToString(), (<#=tn#>?)(<#=tn#>.MinValue + 1) },
+                { ((<#=tn#>)(<#=tn#>.MaxValue - 1)).ToString(), (<#=tn#>?)(<#=tn#>.MaxValue - 1) },
+<#
+if (!unsigned)
+{
+    for (var i = -128; i <= 127; i++)
+    {
+#>
+                { "<#=i.ToString()#>", (<#=tn#>?)(<#=i#>) },
+<#
+    }
+}
+else
+{
+    for (var i = 0; i <= 255; i++)
+    {
+#>
+                { "<#=i.ToString()#>", (<#=tn#>?)<#=i#> },
+<#
+    }
+}
+#>
+            });
+        }
+
+<#
+}
+#>
+    }
+}

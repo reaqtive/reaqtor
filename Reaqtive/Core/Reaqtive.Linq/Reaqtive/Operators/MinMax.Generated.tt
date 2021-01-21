@@ -1,0 +1,261 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+using System;
+
+<#
+    var ts = new []
+    {
+        typeof(int),
+        typeof(long),
+        typeof(float),
+        typeof(double),
+        typeof(decimal),
+    };
+
+foreach (var op in new[] { "Min", "Max" })
+{
+var comp = op == "Min" ? "<" : ">";
+var what = op == "Min" ? "smallest" : "largest";
+foreach (var nullable in new[] { false, true })
+{
+var emptyRemark = !nullable
+    ? " If the source sequence is empty, an error of type <see cref=\"System.InvalidOperationException\"/> is propagated."
+    : " If the source sequence is empty, a <c>null</c> value is returned.";
+
+foreach (var t in ts)
+{
+    var tn = t.Name;
+
+    var cn = tn;
+
+    if (nullable)
+    {
+        tn += "?";
+        cn = "Nullable" + cn;
+    }
+
+    var getValue = nullable ? ".Value" : "";
+    var NaNHack = "";
+
+    if (t == typeof(float) || t == typeof(double))
+    {
+        var variable = op == "Min" ? "value" : "_res";
+        NaNHack = " || " + t.Name + ".IsNaN(" + variable + getValue + ")";
+    }
+#>
+namespace Reaqtive
+{
+    using Operators;
+
+    public static partial class Subscribable
+    {
+        /// <summary>
+        /// Aggregates the source sequence to return the <#=what#> element's value.
+        /// </summary>
+        /// <param name="source">Source sequence whose <#=what#> element to obtain.</param>
+        /// <returns>Observable sequence containing a single element with the <#=what#> value found in the source sequence.<#=emptyRemark#></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
+        public static ISubscribable<<#=tn#>> <#=op#>(this ISubscribable<<#=tn#>> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new <#=op#><#=cn#>(source);
+        }
+
+        /// <summary>
+        /// Aggregates the source sequence to return the <#=what#> value obtained from applying the specified selector function to each element in the source sequence.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose <#=what#> value of projected elements to obtain.</param>
+        /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence containing a single element with the <#=what#> value found in the source sequence.<#=emptyRemark#></returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
+        public static ISubscribable<<#=tn#>> <#=op#><TSource>(this ISubscribable<TSource> source, Func<TSource, <#=tn#>> selector)
+        {
+            //
+            // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
+            //
+            return source.Select(selector).<#=op#>();
+        }
+    }
+}
+
+namespace Reaqtive.Operators
+{
+    internal sealed class <#=op#><#=cn#> : SubscribableBase<<#=tn#>>
+    {
+        private readonly ISubscribable<<#=tn#>> _source;
+
+        public <#=op#><#=cn#>(ISubscribable<<#=tn#>> source)
+        {
+            _source = source;
+        }
+
+        protected override ISubscription SubscribeCore(IObserver<<#=tn#>> observer)
+        {
+            return new _(this, observer);
+        }
+
+        private sealed class _ : StatefulUnaryOperator<<#=op#><#=cn#>, <#=tn#>>, IObserver<<#=tn#>>
+        {
+            private <#=tn#> _res;
+<#
+if (!nullable)
+{
+#>
+            private bool _hasValue;
+<#
+}
+#>
+
+            public _(<#=op#><#=cn#> parent, IObserver<<#=tn#>> observer)
+                : base(parent, observer)
+            {
+            }
+
+            public override string Name => "rc:<#=op#><#=cn#>";
+
+            public override Version Version => Versioning.v1;
+
+            public void OnCompleted()
+            {
+<#
+if (!nullable)
+{
+#>
+                if (!_hasValue)
+                {
+                    Output.OnError(new InvalidOperationException("Sequence contains no elements."));
+                    Dispose();
+                    return;
+                }
+
+<#
+}
+#>
+                Output.OnNext(_res);
+                Output.OnCompleted();
+                Dispose();
+            }
+
+            public void OnError(Exception error)
+            {
+                Output.OnError(error);
+                Dispose();
+            }
+
+            public void OnNext(<#=tn#> value)
+            {
+<#
+if (nullable)
+{
+#>
+<#
+if (NaNHack != "")
+{
+#>
+                // Normally NaN <#=comp#> anything is false, as is anything <#=comp#> NaN
+                // However, this leads to some irksome outcomes in Min and Max.
+                // If we use those semantics then <#=op#>(NaN, 5.0) is NaN, but
+                // <#=op#>(5.0, NaN) is 5.0!  To fix this, we impose a total
+                // ordering where NaN is smaller than every value, including
+                // negative infinity.
+<#
+}
+#>
+                if (value != null && (_res == null || value <#=comp#> _res<#=NaNHack#>))
+                {
+                    StateChanged = true;
+                    _res = value;
+                }
+<#
+}
+else
+{
+#>
+                if (!_hasValue)
+                {
+                    StateChanged = true;
+                    _res = value;
+                    _hasValue = true;
+                }
+                else
+                {
+<#
+if (NaNHack != "")
+{
+#>
+                    // Normally NaN <#=comp#> anything is false, as is anything <#=comp#> NaN
+                    // However, this leads to some irksome outcomes in Min and Max.
+                    // If we use those semantics then <#=op#>(NaN, 5.0) is NaN, but
+                    // <#=op#>(5.0, NaN) is 5.0!  To fix this, we impose a total
+                    // ordering where NaN is smaller than every value, including
+                    // negative infinity.
+<#
+}
+#>
+                    if (value <#=comp#> _res<#=NaNHack#>)
+                    {
+                        StateChanged = true;
+                        _res = value;
+                    }
+                }
+<#
+}
+#>
+            }
+
+            protected override ISubscription OnSubscribe()
+            {
+                return Params._source.Subscribe(this);
+            }
+
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Caller is trusted.")]
+            protected override void LoadStateCore(IOperatorStateReader reader)
+            {
+                base.LoadStateCore(reader);
+
+<#
+if (!nullable)
+{
+#>
+                _hasValue = reader.Read<bool>();
+<#
+}
+#>
+                _res = reader.Read<<#=tn#>>();
+            }
+
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Caller is trusted.")]
+            protected override void SaveStateCore(IOperatorStateWriter writer)
+            {
+                base.SaveStateCore(writer);
+
+<#
+if (!nullable)
+{
+#>
+                writer.Write<bool>(_hasValue);
+<#
+}
+#>
+                writer.Write<<#=tn#>>(_res);
+            }
+        }
+    }
+}
+
+<#
+}
+}
+}
+#>

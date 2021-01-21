@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Interfaces for an IRP service query engine.</Description>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Client\Reaqtor.Client.Model\Reaqtor.Client.Model.csproj" />
+    <ProjectReference Include="..\..\Reliable\Reaqtor.Reliable.Model\Reaqtor.Reliable.Model.csproj" />
+    <ProjectReference Include="..\..\Service\Reaqtor.Service.Model\Reaqtor.Service.Model.csproj" />
+  </ItemGroup>
+
+</Project>

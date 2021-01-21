@@ -1,0 +1,103 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.IO;
+
+using Nuqleon.DataModel.Serialization.Binary;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Tests.Nuqleon.DataModel.Serialization.Binary
+{
+    public partial class StreamHelpersTests
+    {
+<# foreach (var method in testMethods) { #>
+        [TestMethod]
+        public void StreamHelpers_WriteAndRead_<#= method.Name #>()
+        {
+            var testValues = new <#= method.TestValueTypeCodeStr #> [] {
+<# foreach (var value in method.TestValues) { #>
+                <#= value #>,
+<# } #>
+            };
+
+            foreach (var value in testValues)
+            {
+                using (var stream = new MemoryStream())
+                {
+                    stream.<#= method.WriteMethodName #>(value);
+                    stream.Position = 0;
+                    Assert.AreEqual(value, stream.<#= method.ReadMethodName #>());
+                }
+            }
+        }
+
+<# } #>
+    }
+}
+<#+
+public static List<TestMethod> testMethods = new List<TestMethod>
+{
+    TestMethod.Byte,
+    TestMethod.Boolean,
+    TestMethod.Char,
+    TestMethod.Double,
+    TestMethod.Decimal,
+    TestMethod.Guid,
+    TestMethod.Int16,
+    TestMethod.Int32,
+    TestMethod.Int64,
+    TestMethod.SByte,
+    TestMethod.Single,
+    TestMethod.String,
+    TestMethod.UInt16,
+    TestMethod.UInt32,
+    TestMethod.UInt32Compact,
+    TestMethod.UInt64,
+};
+
+public class TestMethod
+{
+    public static TestMethod Byte = new TestMethod("Byte", "byte", "Byte.MinValue", "Byte.MaxValue", "(Byte)0");
+    public static TestMethod Boolean = new TestMethod("Boolean", "bool", "true", "false");
+    public static TestMethod Char = new TestMethod("Char", "char", "Char.MinValue", "Char.MaxValue", "(Char)0");
+    public static TestMethod Double = new TestMethod("Double", "double", "Double.MinValue", "Double.MaxValue", "(Double)0");
+    public static TestMethod Decimal = new TestMethod("Decimal", "decimal", "Decimal.MinValue", "Decimal.MaxValue", "(Decimal)0");
+    public static TestMethod Guid = new TestMethod("Guid", "Guid", "Guid.NewGuid()");
+    public static TestMethod Int16 = new TestMethod("Int16", "Int16", "Int16.MinValue", "Int16.MaxValue", "(Int16)0");
+    public static TestMethod Int32 = new TestMethod("Int32", "Int32", "Int32.MinValue", "Int32.MaxValue", "(Int32)0");
+    public static TestMethod Int64 = new TestMethod("Int64", "Int64", "Int64.MinValue", "Int64.MaxValue", "(Int64)0");
+    public static TestMethod SByte = new TestMethod("SByte", "SByte", "SByte.MinValue", "SByte.MaxValue", "(SByte)0");
+    public static TestMethod Single = new TestMethod("Single", "Single", "Single.MinValue", "Single.MaxValue", "(Single)0");
+    public static TestMethod String = new TestMethod("String", "String", "String.Empty", "\"foobar\"");
+    public static TestMethod UInt16 = new TestMethod("UInt16", "UInt16", "UInt16.MinValue", "UInt16.MaxValue", "(UInt16)0");
+    public static TestMethod UInt32 = new TestMethod("UInt32", "UInt32", "UInt32.MinValue", "UInt32.MaxValue", "(UInt32)0");
+    public static TestMethod UInt32Compact = new TestMethod("UInt32Compact", "UInt32", "UInt32.MinValue", "UInt32.MaxValue", "(UInt32)0");
+    public static TestMethod UInt64 = new TestMethod("UInt64", "UInt64", "UInt64.MinValue", "UInt64.MaxValue", "(UInt64)0");
+
+    public TestMethod(string name, string typeCodeStr, params string [] testValues)
+    {
+        this.Name = name;
+        this.TestValueTypeCodeStr = typeCodeStr;
+        this.WriteMethodName = "Write" + name;
+        this.ReadMethodName = "Read" + name;
+        this.TestValues = testValues;
+    }
+
+    public string Name {get; set;}
+    public string TestValueTypeCodeStr {get; set;}
+    public string WriteMethodName {get; set;}
+    public string ReadMethodName {get; set;}
+    public string [] TestValues {get; set;}
+}
+
+#>
+

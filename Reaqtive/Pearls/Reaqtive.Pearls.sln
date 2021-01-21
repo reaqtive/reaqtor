@@ -1,0 +1,29 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{8FFEF884-0B9C-4F3B-81A5-F2F7B461CB89}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Pearls.Rxcel", "Rxcel\Nuqleon.Pearls.Rxcel.csproj", "{D99A14B2-849C-4C03-81D0-069BF5F76896}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{D99A14B2-849C-4C03-81D0-069BF5F76896}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D99A14B2-849C-4C03-81D0-069BF5F76896}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D99A14B2-849C-4C03-81D0-069BF5F76896}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D99A14B2-849C-4C03-81D0-069BF5F76896}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{D99A14B2-849C-4C03-81D0-069BF5F76896} = {8FFEF884-0B9C-4F3B-81A5-F2F7B461CB89}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6D891588-ECBB-41A3-A0AD-B8CFDDA702B4}
+	EndGlobalSection
+EndGlobal

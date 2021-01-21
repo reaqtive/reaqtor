@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>IRP interfaces for reliable reactive programming.</Description>
+    <!-- TODODOC
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    -->
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Expressions\Reaqtor.Expressions.Model\Reaqtor.Expressions.Model.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Interfaces\Reaqtive.Interfaces.csproj" />
+  </ItemGroup>
+
+</Project>

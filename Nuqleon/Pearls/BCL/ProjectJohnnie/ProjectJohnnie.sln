@@ -1,0 +1,68 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deps", "deps", "{4C68CD48-2FF7-4E8A-BA86-AB1F690E0FB5}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{0C6A8FC3-C0F1-48ED-8D12-057845DB7413}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{D5EABCD6-F741-4202-BD7C-60D2A534BB0D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Memory", "..\..\..\Core\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj", "{CCBEC4FE-1C5F-4D31-8E4D-5B2BB418FE0C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Time", "..\..\..\Core\BCL\Nuqleon.Time\Nuqleon.Time.csproj", "{86E37AAB-7987-47CC-AA67-975D1569EDA5}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Memory.Diagnostics", "Nuqleon.Memory.Diagnostics\Nuqleon.Memory.Diagnostics.csproj", "{A35AE416-B2C8-4B58-A5B1-477D619CD120}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Perf.Nuqleon.Memory.Diagnostics", "Perf.Nuqleon.Memory.Diagnostics\Perf.Nuqleon.Memory.Diagnostics.csproj", "{E9BF9AEE-DC6B-4939-8A6D-AB106ABB48BD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Memory.Diagnostics.Playground", "ProjectJohnnie\Nuqleon.Memory.Diagnostics.Playground.csproj", "{62816FF1-1EE5-4020-A2FB-45B61F2ECD58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Nuqleon.Memory.Diagnostics", "Tests.Nuqleon.Memory.Diagnostics\Tests.Nuqleon.Memory.Diagnostics.csproj", "{BDE441A9-B5C2-4525-9A7E-401844AE33BA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{CCBEC4FE-1C5F-4D31-8E4D-5B2BB418FE0C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CCBEC4FE-1C5F-4D31-8E4D-5B2BB418FE0C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CCBEC4FE-1C5F-4D31-8E4D-5B2BB418FE0C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CCBEC4FE-1C5F-4D31-8E4D-5B2BB418FE0C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{86E37AAB-7987-47CC-AA67-975D1569EDA5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{86E37AAB-7987-47CC-AA67-975D1569EDA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{86E37AAB-7987-47CC-AA67-975D1569EDA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{86E37AAB-7987-47CC-AA67-975D1569EDA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A35AE416-B2C8-4B58-A5B1-477D619CD120}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A35AE416-B2C8-4B58-A5B1-477D619CD120}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A35AE416-B2C8-4B58-A5B1-477D619CD120}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A35AE416-B2C8-4B58-A5B1-477D619CD120}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9BF9AEE-DC6B-4939-8A6D-AB106ABB48BD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9BF9AEE-DC6B-4939-8A6D-AB106ABB48BD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9BF9AEE-DC6B-4939-8A6D-AB106ABB48BD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9BF9AEE-DC6B-4939-8A6D-AB106ABB48BD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{62816FF1-1EE5-4020-A2FB-45B61F2ECD58}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{62816FF1-1EE5-4020-A2FB-45B61F2ECD58}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{62816FF1-1EE5-4020-A2FB-45B61F2ECD58}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{62816FF1-1EE5-4020-A2FB-45B61F2ECD58}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BDE441A9-B5C2-4525-9A7E-401844AE33BA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BDE441A9-B5C2-4525-9A7E-401844AE33BA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BDE441A9-B5C2-4525-9A7E-401844AE33BA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BDE441A9-B5C2-4525-9A7E-401844AE33BA}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CCBEC4FE-1C5F-4D31-8E4D-5B2BB418FE0C} = {4C68CD48-2FF7-4E8A-BA86-AB1F690E0FB5}
+		{86E37AAB-7987-47CC-AA67-975D1569EDA5} = {4C68CD48-2FF7-4E8A-BA86-AB1F690E0FB5}
+		{A35AE416-B2C8-4B58-A5B1-477D619CD120} = {0C6A8FC3-C0F1-48ED-8D12-057845DB7413}
+		{E9BF9AEE-DC6B-4939-8A6D-AB106ABB48BD} = {D5EABCD6-F741-4202-BD7C-60D2A534BB0D}
+		{62816FF1-1EE5-4020-A2FB-45B61F2ECD58} = {0C6A8FC3-C0F1-48ED-8D12-057845DB7413}
+		{BDE441A9-B5C2-4525-9A7E-401844AE33BA} = {D5EABCD6-F741-4202-BD7C-60D2A534BB0D}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {26172856-B26A-4D67-BEA6-25BFE289567E}
+	EndGlobalSection
+EndGlobal

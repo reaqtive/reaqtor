@@ -1,0 +1,1265 @@
+﻿<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 15;#>
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// RB - July 2013
+// ER - August 2013 - Created this file.
+// Auto-generated file, changes to source may be lost
+//
+
+using System;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Reaqtor;
+using Reaqtor.TestingFramework;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Tests.Reaqtor.Client
+{
+    [TestClass]
+    public class ReactiveClientContextHigherArityTests : ReactiveClientContextTestBase
+    {
+        #region "ReactiveClientContext_AsyncReactiveQueryProvider_ArgumentChecking_HigherArity"
+
+        [TestMethod]
+        public void ReactiveClientContext_AsyncReactiveQueryProvider_ArgumentChecking_HigherArity_CreateQbservable()
+        {
+            Apply(
+                ctx =>
+                {
+                    var provider = (AsyncReactiveQueryProvider)ctx.Provider;
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+<#}#>
+                }
+            );
+        }
+
+        [TestMethod]
+        public void ReactiveClientContext_AsyncReactiveQueryProvider_ArgumentChecking_HigherArity_CreateQbserver()
+        {
+            Apply(
+                ctx =>
+                {
+                    var provider = (AsyncReactiveQueryProvider)ctx.Provider;
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+<#}#>
+                }
+            );
+        }
+
+        [TestMethod]
+        public void ReactiveClientContext_AsyncReactiveQueryProvider_ArgumentChecking_HigherArity_CreateQubjectFactory()
+        {
+            Apply(
+                ctx =>
+                {
+                    var provider = (AsyncReactiveQueryProvider)ctx.Provider;
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
+<#}#>
+                }
+            );
+        }
+
+        [TestMethod]
+        public void ReactiveClientContext_AsyncReactiveQueryProvider_ArgumentChecking_HigherArity_CreateQubscriptionFactory()
+        {
+            Apply(
+                ctx =>
+                {
+                    var provider = (AsyncReactiveQueryProvider)ctx.Provider;
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
+<#}#>
+                }
+            );
+        }
+
+        [TestMethod]
+        public void ReactiveClientContext_AsyncReactiveQueryProvider_CreateQubjectFactory_HigherArity_UnknownArtifact()
+        {
+            Apply(
+                ctx =>
+                {
+                    var provider = (AsyncReactiveQueryProvider)ctx.Provider;
+                    Assert.IsFalse(provider.CreateQubscription(Expression.Default(typeof(IReactiveQubscription))) is IKnownResource);
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.IsFalse(provider.CreateQubjectFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(Expression.Default(typeof(IReactiveQubjectFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>))) is IKnownResource);
+<#}#>
+                }
+            );
+        }
+
+        [TestMethod]
+        public void ReactiveClientContext_AsyncReactiveQueryProvider_CreateQubscriptionFactory_HigherArity_UnknownArtifact()
+        {
+            Apply(
+                ctx =>
+                {
+                    var provider = (AsyncReactiveQueryProvider)ctx.Provider;
+                    Assert.IsFalse(provider.CreateQubscription(Expression.Default(typeof(IReactiveQubscription))) is IKnownResource);
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.IsFalse(provider.CreateQubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(Expression.Default(typeof(IReactiveQubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>))) is IKnownResource);
+<#}#>
+                }
+            );
+        }
+
+        #endregion
+
+        #region "ReactiveClientContext_ReactiveClientProxy_ArgumentChecking_HigherArity"
+
+        [TestMethod]
+        public void ReactiveClientContext_ReactiveClientProxy_ArgumentChecking_HigherArity_GetObservable()
+        {
+            Apply(
+                ctx =>
+                {
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+<#}#>
+                }
+            );
+        }
+
+        [TestMethod]
+        public void ReactiveClientContext_ReactiveClientProxy_ArgumentChecking_HigherArity_GetObserver()
+        {
+            Apply(
+                ctx =>
+                {
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+<#}#>
+                }
+            );
+        }
+
+        [TestMethod]
+        public void ReactiveClientContext_ReactiveClientProxy_ArgumentChecking_HigherArity_GetStreamFactory()
+        {
+            Apply(
+                ctx =>
+                {
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
+<#}#>
+                }
+            );
+        }
+
+        [TestMethod]
+        public void ReactiveClientContext_ReactiveClientProxy_ArgumentChecking_HigherArity_GetSubscriptionFactory()
+        {
+            Apply(
+                ctx =>
+                {
+<#
+for (int i = 2; i<=highestSupportedArity; i++) {
+#>
+                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
+<#}#>
+                }
+            );
+        }
+
+        #endregion
+
+        #region "ReactiveClientContext_SubscribeAsync_Parameterized_Simple1"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var observerList = new List<string>(); 
+    var observableList = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        observableList.Add(string.Format("\"observable_parameter_{0}\"", j));
+        observerList.Add(string.Format("\"observer_parameter_{0}\"", j));
+    }
+
+    var observerArgs = string.Join(", ", observerList.ToArray());
+    var observableArgs = string.Join(", ", observableList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_SubscribeAsync_Parameterized_Simple1_<#=i#>P()
+        {
+            Apply(
+                ctx =>
+                {
+                    var xs = ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observable.XS));
+                    var ob = ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observer.OB));
+                    xs(<#=observableArgs#>).SubscribeAsync(ob(<#=observerArgs#>), new Uri(Constants.Subscription.SUB), state: null).Wait();
+                },
+                new CreateSubscription(
+                    new Uri(Constants.Subscription.SUB),
+                    Expression.Invoke(
+                        Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, IAsyncReactiveQbserver<int>, Task<IAsyncReactiveQubscription>>), Constants.SubscribeUri),
+                        Expression.Invoke(
+                            Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>), Constants.Observable.XS),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                            Expression.Constant("observable_parameter_<#=j#>")<#=comma#>
+<#}#>
+                        ),
+                        Expression.Invoke(
+                            Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbserver<int>>), Constants.Observer.OB),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                            Expression.Constant("observer_parameter_<#=j#>")<#=comma#>
+<#}#>
+                        )
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+
+        #endregion
+
+        #region "ReactiveClientContext_SubscribeAsync_Parameterized_Simple2"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var observerList = new List<string>(); 
+    var observableList = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        observableList.Add(string.Format("\"observable_parameter_{0}\"", j));
+        observerList.Add(string.Format("\"observer_parameter_{0}\"", j));
+    }
+
+    var observerArgs = string.Join(", ", observerList.ToArray());
+    var observableArgs = string.Join(", ", observableList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_SubscribeAsync_Parameterized_Simple2_<#=i#>P()
+        {
+            Apply(
+                ctx =>
+                {
+                    var xs = ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observable.XS));
+
+                    var ys = from x in xs(<#=observableArgs#>)
+                             where x > 0
+                             select x * x;
+
+                    var ob = ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observer.OB));
+                    ys.SubscribeAsync(ob(<#=observerArgs#>), new Uri(Constants.Subscription.SUB), state: null).Wait();
+                },
+                new CreateSubscription(
+                    new Uri(Constants.Subscription.SUB),
+                    Expression.Parameter(typeof(int), "x").Let(x =>
+                        Expression.Invoke(
+                            Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, IAsyncReactiveQbserver<int>, Task<IAsyncReactiveQubscription>>), Constants.SubscribeUri),
+                            Expression.Invoke(
+                                Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, Expression<Func<int, int>>, IAsyncReactiveQbservable<int>>), Constants.Observable.Select),
+                                Expression.Invoke(
+                                    Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, Expression<Func<int, bool>>, IAsyncReactiveQbservable<int>>), Constants.Observable.Where),
+                                    Expression.Invoke(
+                                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>), Constants.Observable.XS),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                                        Expression.Constant("observable_parameter_<#=j#>")<#=comma#>
+<#}#>
+                                    ),
+                                    Expression.Lambda<Func<int, bool>>(
+                                        Expression.GreaterThan(x, Expression.Constant(0)),
+                                        x
+                                    )
+                                ),
+                                Expression.Lambda<Func<int, int>>(
+                                    Expression.Multiply(x, x),
+                                    x
+                                )
+                            ),
+                            Expression.Invoke(
+                                Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbserver<int>>), Constants.Observer.OB),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                                Expression.Constant("observer_parameter_<#=j#>")<#=comma#>
+<#}#>
+                            )
+                        )
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+
+        #endregion
+
+        #region "ReactiveClientContext_SubscribeAsync_Parameterized_Simple3"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var observerList = new List<string>(); 
+    var observableList = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        observableList.Add(string.Format("\"observable_parameter_{0}\"", j));
+        observerList.Add(string.Format("\"observer_parameter_{0}\"", j));
+    }
+
+    var observerArgs = string.Join(", ", observerList.ToArray());
+    var observableArgs = string.Join(", ", observableList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_SubscribeAsync_Parameterized_Simple3_<#=i#>P()
+        {
+            Apply(
+                provider => new MyParameterizedContext(provider),
+                ctx =>
+                {
+                    var xs = ctx.Xs<#=i#>p(<#=observableArgs#>);
+                    var ob = ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observer.OB));
+                    xs.SubscribeAsync(ob(<#=observerArgs#>), new Uri(Constants.Subscription.SUB), state: null).Wait();
+                },
+                new CreateSubscription(
+                    new Uri(Constants.Subscription.SUB),
+                    Expression.Invoke(
+                        Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, IAsyncReactiveQbserver<int>, Task<IAsyncReactiveQubscription>>), Constants.SubscribeUri),
+                        Expression.Invoke(
+                            Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>), Constants.Observable.XS + <#=i#>),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                            Expression.Constant("observable_parameter_<#=j#>")<#=comma#>
+<#}#>
+                        ),
+                        Expression.Invoke(
+                            Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbserver<int>>), Constants.Observer.OB),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                            Expression.Constant("observer_parameter_<#=j#>")<#=comma#>
+<#}#>
+                        )
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+
+        #endregion
+
+        #region "ReactiveClientContext_SubscribeAsync_Parameterized_Closure1"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var observerList = new List<string>(); 
+    var observableList = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        observableList.Add(string.Format("\"observable_parameter_{0}\"", j));
+        observerList.Add(string.Format("\"observer_parameter_{0}\"", j));
+    }
+
+    var observerArgs = string.Join(", ", observerList.ToArray());
+    var observableArgs = string.Join(", ", observableList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_SubscribeAsync_Parameterized_Closure1_<#=i#>P()
+        {
+            Apply(
+                ctx =>
+                {
+                    var xs = ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observable.XS));
+
+                    var a = -1;
+
+                    var ys = from x in xs(<#=observableArgs#>)
+                             where x > a
+                             select x * x;
+
+                    var ob = ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observer.OB));
+
+                    for (var i = 0; i < 3; i++)
+                    {
+                        a = i;
+                        ys.SubscribeAsync(ob(<#=observerArgs#>), new Uri(Constants.Subscription.SUB), state: null).Wait();
+                    }
+                },
+                Enumerable.Range(0, 3).Select(i =>
+                    new CreateSubscription(
+                        new Uri(Constants.Subscription.SUB),
+                        Expression.Parameter(typeof(int), "x").Let(x =>
+                            Expression.Invoke(
+                                Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, IAsyncReactiveQbserver<int>, Task<IAsyncReactiveQubscription>>), Constants.SubscribeUri),
+                                Expression.Invoke(
+                                    Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, Expression<Func<int, int>>, IAsyncReactiveQbservable<int>>), Constants.Observable.Select),
+                                    Expression.Invoke(
+                                        Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, Expression<Func<int, bool>>, IAsyncReactiveQbservable<int>>), Constants.Observable.Where),
+                                        Expression.Invoke(
+                                            Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>), Constants.Observable.XS),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                                            Expression.Constant("observable_parameter_<#=j#>")<#=comma#>
+<#}#>
+                                        ),
+                                        Expression.Lambda<Func<int, bool>>(
+                                            Expression.GreaterThan(x, Expression.Constant(i)),
+                                            x
+                                        )
+                                    ),
+                                    Expression.Lambda<Func<int, int>>(
+                                        Expression.Multiply(x, x),
+                                        x
+                                    )
+                                ),
+                                Expression.Invoke(
+                                    Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbserver<int>>), Constants.Observer.OB),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                                    Expression.Constant("observer_parameter_<#=j#>")<#=comma#>
+<#}#>
+
+                                )
+                            )
+                        ),
+                        state: null
+                    )
+                ).ToArray()
+            );
+        }
+
+<#}#>
+
+        #endregion
+
+        #region "ReactiveClientContext_SubscribeAsync_Parameterized_SelectMany1_Simple"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var observableList = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        observableList.Add(string.Format("\"observable_parameter_{0}\"", j));
+    }
+
+    var observableArgs = string.Join(", ", observableList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_SubscribeAsync_Parameterized_SelectMany1_Simple_<#=i#>P()
+        {
+            Apply(
+                ctx =>
+                {
+                    var xs = ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observable.XS));
+                    var ys = ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, string>(new Uri(Constants.Observable.YS));
+
+                    var zs = from x in xs(<#=observableArgs#>)
+                             from y in ys(<#=string.Join(", ", Enumerable.Repeat("x", i).ToArray())#>)
+                             select x + y.Length;
+
+                    var ob = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
+                    zs.SubscribeAsync(ob, new Uri(Constants.Subscription.SUB), state: null).Wait();
+                },
+                new CreateSubscription(
+                    new Uri(Constants.Subscription.SUB),
+                    Expression.Parameter(typeof(int), "x").Let(x =>
+                        Expression.Parameter(typeof(string), "y").Let(y =>
+                            Expression.Invoke(
+                                Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, IAsyncReactiveQbserver<int>, Task<IAsyncReactiveQubscription>>), Constants.SubscribeUri),
+                                Expression.Invoke(
+                                    Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, Expression<Func<int, IAsyncReactiveQbservable<string>>>, Expression<Func<int, string, int>>, IAsyncReactiveQbservable<int>>), Constants.Observable.SelectMany),
+                                    Expression.Invoke(
+                                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>), Constants.Observable.XS),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                                        Expression.Constant("observable_parameter_<#=j#>")<#=comma#>
+<#}#>
+                                    ),
+                                    Expression.Lambda(
+                                        Expression.Invoke(
+                                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, IAsyncReactiveQbservable<string>>), Constants.Observable.YS),
+                                            <#=string.Join(", ", Enumerable.Repeat("x", i).ToArray())#>
+                                        ),
+                                        x
+                                    ),
+                                    Expression.Lambda(
+                                        Expression.Add(
+                                            x,
+                                            Expression.Property(y, "Length")
+                                        ),
+                                        x, y
+                                    )
+                                ),
+                                Expression.Parameter(typeof(IAsyncReactiveQbserver<int>), Constants.Observer.OB)
+                            )
+                        )
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+
+        #endregion
+
+        #region "ReactiveClientContext_SubscribeAsync_Parameterized_SelectMany2_Closure"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var observableList = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        observableList.Add(string.Format("\"observable_parameter_{0}\"", j));
+    }
+
+    var observableArgs = string.Join(", ", observableList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_SubscribeAsync_Parameterized_SelectMany2_Closure_<#=i#>P()
+        {
+            var xs = default(IAsyncReactiveQbservable<int>);
+            var ys = default(Func<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, IAsyncReactiveQbservable<string>>);
+
+            Apply(
+                ctx =>
+                {
+                    xs = ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observable.XS))(<#=observableArgs#>);
+                    ys = ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, string>(new Uri(Constants.Observable.YS));
+
+                    var zs = from x in xs
+                             from y in ys(<#=string.Join(", ", Enumerable.Repeat("x", i).ToArray())#>)
+                             select x + y.Length;
+
+                    var ob = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
+                    zs.SubscribeAsync(ob, new Uri(Constants.Subscription.SUB), state: null).Wait();
+                },
+                new CreateSubscription(
+                    new Uri(Constants.Subscription.SUB),
+                    Expression.Parameter(typeof(int), "x").Let(x =>
+                        Expression.Parameter(typeof(string), "y").Let(y =>
+                            Expression.Invoke(
+                                Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, IAsyncReactiveQbserver<int>, Task<IAsyncReactiveQubscription>>), Constants.SubscribeUri),
+                                Expression.Invoke(
+                                    Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, Expression<Func<int, IAsyncReactiveQbservable<string>>>, Expression<Func<int, string, int>>, IAsyncReactiveQbservable<int>>), Constants.Observable.SelectMany),
+                                    Expression.Invoke(
+                                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>), Constants.Observable.XS),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                                        Expression.Constant("observable_parameter_<#=j#>")<#=comma#>
+<#}#>
+                                    ),
+                                    Expression.Lambda(
+                                        Expression.Invoke(
+                                            Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, IAsyncReactiveQbservable<string>>), Constants.Observable.YS),
+                                            <#=string.Join(", ", Enumerable.Repeat("x", i).ToArray())#>
+                                        ),
+                                        x
+                                    ),
+                                    Expression.Lambda(
+                                        Expression.Add(
+                                            x,
+                                            Expression.Property(y, "Length")
+                                        ),
+                                        x, y
+                                    )
+                                ),
+                                Expression.Parameter(typeof(IAsyncReactiveQbserver<int>), Constants.Observer.OB)
+                            )
+                        )
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+
+        #endregion
+
+        #region "ReactiveClientContext_SubscribeAsync_Parameterized_SelectMany3_CustomContext"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var observableList1 = new List<string>(); 
+    var observableList2 = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        observableList1.Add(string.Format("\"observable_parameter_{0}\"", j));
+        observableList2.Add(string.Format("\"observable_parameter_{0}\"", j+i));
+    }
+
+    var observableArgs1 = string.Join(", ", observableList1.ToArray());
+    var observableArgs2 = string.Join(", ", observableList2.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_SubscribeAsync_Parameterized_SelectMany3_CustomContext_<#=i#>P()
+        {
+            Apply(
+                provider => new MyParameterizedContext(provider),
+                ctx =>
+                {
+                    var zs = from x1 in ctx.Xs<#=i#>p(<#=observableArgs1#>)
+                             from x2 in ctx.Xs<#=i#>p(<#=observableArgs2#>)
+                             select x1 + x2;
+
+                    var ob = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
+                    zs.SubscribeAsync(ob, new Uri(Constants.Subscription.SUB), state: null).Wait();
+                },
+                new CreateSubscription(
+                    new Uri(Constants.Subscription.SUB),
+                    Expression.Parameter(typeof(int), "x1").Let(x1 =>
+                        Expression.Parameter(typeof(int), "x2").Let(x2 =>
+                            Expression.Invoke(
+                                Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, IAsyncReactiveQbserver<int>, Task<IAsyncReactiveQubscription>>), Constants.SubscribeUri),
+                                Expression.Invoke(
+                                    Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, Expression<Func<int, IAsyncReactiveQbservable<int>>>, Expression<Func<int, int, int>>, IAsyncReactiveQbservable<int>>), Constants.Observable.SelectMany),
+                                    Expression.Invoke(
+                                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>), Constants.Observable.XS + <#=i#>),
+<#
+for (int j = 0; j<observableList1.Count(); j++)  
+    {
+        var comma = j==observableList1.Count()-1 ? "" : ","; 
+#>
+                                        Expression.Constant(<#=observableList1[j]#>)<#=comma#>
+<#}#>
+                                    ),
+                                    Expression.Lambda(
+                                        Expression.Invoke(
+                                            Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>), Constants.Observable.XS + <#=i#>),
+<#
+for (int j = 0; j<observableList2.Count(); j++)  
+    {
+        var comma = j==observableList2.Count()-1 ? "" : ","; 
+#>
+                                            Expression.Constant(<#=observableList2[j]#>)<#=comma#>
+<#}#>
+                                        ),
+                                        x1
+                                    ),
+                                    Expression.Lambda(
+                                        Expression.Add(
+                                            x1,
+                                            x2
+                                        ),
+                                        x1, x2
+                                    )
+                                ),
+                                Expression.Parameter(typeof(IAsyncReactiveQbserver<int>), Constants.Observer.OB)
+                            )
+                        )
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+
+        #endregion
+
+        #region "ReactiveClientContext_SubscribeAsync_Parameterized_Inlined"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var observableList1 = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        observableList1.Add(string.Format("\"observable_parameter_{0}\"", j));
+    }
+
+    var observableArgs1 = string.Join(", ", observableList1.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_SubscribeAsync_Parameterized_Inlined_<#=i#>P()
+        {
+            Apply(
+                ctx =>
+                {
+                    var xs = ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observable.XS))(<#=observableArgs1#>);
+
+                    var zs = from x in xs
+                             from y in ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, string>(new Uri(Constants.Observable.YS))(<#=string.Join(", ", Enumerable.Repeat("x", i).ToArray())#>)
+                             select x + y.Length;
+
+                    var ob = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
+                    zs.SubscribeAsync(ob, new Uri(Constants.Subscription.SUB), state: null).Wait();
+                },
+                new CreateSubscription(
+                    new Uri(Constants.Subscription.SUB),
+                    Expression.Parameter(typeof(int), "x").Let(x =>
+                        Expression.Parameter(typeof(string), "y").Let(y =>
+                            Expression.Invoke(
+                                Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, IAsyncReactiveQbserver<int>, Task<IAsyncReactiveQubscription>>), Constants.SubscribeUri),
+                                Expression.Invoke(
+                                    Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, Expression<Func<int, IAsyncReactiveQbservable<string>>>, Expression<Func<int, string, int>>, IAsyncReactiveQbservable<int>>), Constants.Observable.SelectMany),
+                                    Expression.Invoke(
+                                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>), Constants.Observable.XS),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                                        Expression.Constant("observable_parameter_<#=j#>")<#=comma#>
+<#}#>
+                                    ),
+                                    Expression.Lambda(
+                                        Expression.Invoke(
+                                            Expression.Call(
+                                                Expression.Parameter(typeof(TestClientContext), "rx://builtin/this"),
+                                                "GetObservable",
+                                                new Type[] { <#=string.Join(", ", Enumerable.Repeat("typeof(int)", i).ToArray())#>, typeof(string) },
+                                                new Expression[] {
+                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
+                                                }
+                                            ),
+                                            <#=string.Join(", ", Enumerable.Repeat("x", i).ToArray())#>
+                                        ),
+                                        x
+                                    ),
+                                    Expression.Lambda(
+                                        Expression.Add(
+                                            x,
+                                            Expression.Property(y, "Length")
+                                        ),
+                                        x, y
+                                    )
+                                ),
+                                Expression.Parameter(typeof(IAsyncReactiveQbserver<int>), Constants.Observer.OB)
+                            )
+                        )
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+
+        #endregion
+
+        #region "ReactiveClientContext_GetStreamFactory"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var argList = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        argList.Add(string.Format("\"factory_parameter_{0}\"", j));
+    }
+
+    var args = string.Join(", ", argList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_GetStreamFactory_<#=i#>P()
+        {
+            Apply(
+                ctx =>
+                {
+                    var factory = ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), <#=args#>, state: null, CancellationToken.None).Result;
+
+                    factory.CreateAsync(new Uri(Constants.Stream.BAR), <#=args#>, state: null);
+                    ((IAsyncReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(new Uri(Constants.Stream.QUX), <#=args#>, state: null, CancellationToken.None).Wait();
+
+                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, <#=args#>, state: null).Wait());
+                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(null, <#=args#>, state: null).Wait());
+                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(null, <#=args#>, state: null, CancellationToken.None).Wait());
+
+                    var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
+                    stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
+                },
+                new CreateStream(
+                    new Uri(Constants.Stream.FOO),
+                    Expression.Invoke(
+                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQubject<int, int>>), Constants.StreamFactory.SF),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                        Expression.Constant(<#=argList[j-1]#>)<#=comma#>
+<#}#>
+                    ),
+                    state: null
+                ),
+                new CreateStream(
+                    new Uri(Constants.Stream.BAR),
+                    Expression.Invoke(
+                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQubject<int, int>>), Constants.StreamFactory.SF),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                        Expression.Constant(<#=argList[j-1]#>)<#=comma#>
+<#}#>
+                    ),
+                    state: null
+                ),
+                new CreateStream(
+                    new Uri(Constants.Stream.QUX),
+                    Expression.Invoke(
+                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQubject<int, int>>), Constants.StreamFactory.SF),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                        Expression.Constant(<#=argList[j-1]#>)<#=comma#>
+<#}#>
+                    ),
+                    state: null
+                ),
+                new CreateSubscription(
+                    new Uri(Constants.Subscription.SUB),
+                    Expression.Invoke(
+                        Expression.Parameter(typeof(Func<IAsyncReactiveQbservable<int>, IAsyncReactiveQbserver<int>, Task<IAsyncReactiveQubscription>>), Constants.SubscribeUri),
+                        Expression.Parameter(typeof(IAsyncReactiveQbservable<int>), Constants.Stream.FOO),
+                        Expression.Parameter(typeof(IAsyncReactiveQbserver<int>), Constants.Observer.OB)
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+        #endregion
+
+        #region "ReactiveClientContext_GetSubscriptionFactory"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var argList = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        argList.Add(string.Format("\"factory_parameter_{0}\"", j));
+    }
+
+    var args = string.Join(", ", argList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_GetSubscriptionFactory_<#=i#>P()
+        {
+            Apply(
+                ctx =>
+                {
+                    var factory = ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(new Uri(Constants.SubscriptionFactory.SF));
+                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), <#=args#>, state: null, CancellationToken.None).Wait();
+
+                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
+                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
+                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
+                },
+                new CreateSubscription(
+                    new Uri(Constants.Subscription.SUB1),
+                    Expression.Invoke(
+                        Expression.Parameter(typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQubscription>), Constants.SubscriptionFactory.SF),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                        Expression.Constant(<#=argList[j-1]#>)<#=comma#>
+<#}#>
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+        #endregion
+
+        #region "ReactiveClientContext_DefineObservableAsync"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var paramsList = new List<string>();
+
+    for (int j = 1; j <= i; ++j)
+    {
+        paramsList.Add(string.Format("parameter_{0}", j)); 
+    }
+
+    var parameters = string.Join(", ", paramsList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_DefineObservableAsync_<#=i#>P()
+        {
+            var lambdaParameters = new[] {
+<#
+for (int j = 1; j<=i; ++j)
+{
+    var comma = j==i ? "" : ","; 
+#>
+                Expression.Parameter(typeof(string), "parameter_<#=j#>")<#=comma#>
+<#}#>
+            };
+
+            Apply(
+                ctx =>
+                {
+                    var obs = ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observable.ZS));
+                    ctx.DefineObservableAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
+                        new Uri(Constants.StreamFactory.SG),
+                        (<#=parameters#>) => obs(<#=parameters#>),
+                        state: null,
+                        CancellationToken.None
+                    );
+
+                    Assert.ThrowsException<ArgumentNullException>(() =>
+                        ctx.DefineObservableAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
+                            uri: null,
+                            (<#=parameters#>) => obs(<#=parameters#>),
+                            state: null,
+                            CancellationToken.None
+                        )
+                    );
+
+                    Assert.ThrowsException<ArgumentNullException>(() =>
+                        ctx.DefineObservableAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
+                            new Uri(Constants.StreamFactory.SG),
+                            observable: null,
+                            state: null,
+                            CancellationToken.None
+                        )
+                    );
+                },
+                new DefineObservable(
+                    new Uri(Constants.StreamFactory.SG),
+                    Expression.Lambda(
+                        Expression.Invoke(
+                            Expression.Parameter(
+                                typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbservable<int>>),
+                                Constants.Observable.ZS
+                            ),
+<#
+for (int j = 1; j<=i; j++)  
+{
+var comma = j==i ? "" : ","; 
+#>
+                            lambdaParameters[<#=j-1#>]<#=comma#>
+<#}#>
+                        ),
+<#
+for (int j = 1; j<=i; j++)  
+{
+var comma = j==i ? "" : ","; 
+#>
+                        lambdaParameters[<#=j-1#>]<#=comma#>
+<#}#>
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+        #endregion
+
+        #region "ReactiveClientContext_DefineObserverAsync"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var paramsList = new List<string>();
+
+    for (int j = 1; j <= i; ++j)
+    {
+        paramsList.Add(string.Format("parameter_{0}", j)); 
+    }
+
+    var parameters = string.Join(", ", paramsList.ToArray());
+#>
+        [TestMethod]
+        public void ReactiveClientContext_DefineObserverAsync_<#=i#>P()
+        {
+            var lambdaParameters = new[] {
+<#
+for (int j = 1; j<=i; ++j)
+{
+    var comma = j==i ? "" : ","; 
+#>
+                Expression.Parameter(typeof(string), "parameter_<#=j#>")<#=comma#>
+<#}#>
+            };
+
+            Apply(
+                ctx =>
+                {
+                    var obs = ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observable.ZS));
+                    var obsExpr = (Expression<Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbserver<int>>>)((<#=parameters#>) => obs(<#=parameters#>));
+                    ctx.DefineObserverAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
+
+                    Assert.ThrowsException<ArgumentNullException>(() =>
+                        ctx.DefineObserverAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
+                            uri: null,
+                            obsExpr,
+                            state: null,
+                            CancellationToken.None
+                        )
+                    );
+
+                    Assert.ThrowsException<ArgumentNullException>(() =>
+                        ctx.DefineObserverAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
+                            new Uri(Constants.StreamFactory.SG),
+                            observer: null,
+                            state: null,
+                            CancellationToken.None
+                        )
+                    );
+                },
+                new DefineObserver(
+                    new Uri(Constants.StreamFactory.SG),
+                    Expression.Lambda(
+                        Expression.Invoke(
+                            Expression.Parameter(
+                                typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQbserver<int>>),
+                                Constants.Observable.ZS
+                            ),
+<#
+for (int j = 1; j<=i; j++)  
+{
+var comma = j==i ? "" : ","; 
+#>
+                            lambdaParameters[<#=j-1#>]<#=comma#>
+<#}#>
+                    ),
+<#
+for (int j = 1; j<=i; j++)  
+{
+var comma = j==i ? "" : ","; 
+#>
+                        lambdaParameters[<#=j-1#>]<#=comma#>
+<#}#>
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+        #endregion
+
+        #region "ReactiveClientContext_DefineStreamFactoryAsync"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+#>
+        [TestMethod]
+        public void ReactiveClientContext_DefineStreamFactoryAsync_<#=i#>P()
+        {
+            Apply(
+                ctx =>
+                {
+                    var factory = ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(new Uri(Constants.StreamFactory.SF));
+
+                    Assert.AreEqual(new Uri(Constants.StreamFactory.SF), ((IKnownResource)factory).Uri);
+
+                    ctx.DefineStreamFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
+
+                    Assert.ThrowsException<ArgumentNullException>(() =>
+                        ctx.DefineStreamFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(
+                            uri: null,
+                            factory,
+                            state: null,
+                            CancellationToken.None
+                        )
+                    );
+
+                    Assert.ThrowsException<ArgumentNullException>(() =>
+                        ctx.DefineStreamFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(
+                            new Uri(Constants.StreamFactory.SF),
+                            streamFactory: null,
+                            state: null,
+                            CancellationToken.None
+                        )
+                    );
+                },
+                new DefineStreamFactory(
+                    new Uri(Constants.StreamFactory.SG),
+                    Expression.Parameter(
+                        typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQubject<int, int>>),
+                        Constants.StreamFactory.SF
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+        #endregion
+
+        #region "ReactiveClientContext_DefineSubscriptionFactoryAsync"
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+#>
+        [TestMethod]
+        public void ReactiveClientContext_DefineSubscriptionFactoryAsync_<#=i#>P()
+        {
+            Apply(
+                ctx =>
+                {
+                    var factory = ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(new Uri(Constants.SubscriptionFactory.SF));
+
+                    Assert.AreEqual(new Uri(Constants.SubscriptionFactory.SF), ((IKnownResource)factory).Uri);
+
+                    ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
+
+                    Assert.ThrowsException<ArgumentNullException>(() =>
+                        ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
+                            uri: null,
+                            factory,
+                            state: null,
+                            CancellationToken.None
+                        )
+                    );
+
+                    Assert.ThrowsException<ArgumentNullException>(() =>
+                        ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
+                            new Uri(Constants.SubscriptionFactory.SF),
+                            default(IAsyncReactiveQubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>),
+                            state: null,
+                            CancellationToken.None
+                        )
+                    );
+
+                    Assert.ThrowsException<ArgumentNullException>(() =>
+                        ctx.DefineSubscriptionFactoryAsync<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
+                            new Uri(Constants.SubscriptionFactory.SF),
+                            default(Expression<Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQubscription>>),
+                            state: null,
+                            CancellationToken.None
+                        )
+                    );
+                },
+                new DefineSubscriptionFactory(
+                    new Uri(Constants.SubscriptionFactory.SG),
+                    Expression.Parameter(
+                        typeof(Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IAsyncReactiveQubscription>),
+                        Constants.SubscriptionFactory.SF
+                    ),
+                    state: null
+                )
+            );
+        }
+
+<#}#>
+        #endregion
+
+        private sealed class MyParameterizedContext : MyContext
+        {
+            public MyParameterizedContext(IReactiveServiceProvider provider)
+                : base(provider)
+            {
+            }
+
+<#
+for (int i = 2; i<=highestSupportedArity; i++) { 
+    var paramList = new List<string>(); 
+    
+    for (int j = 1; j<=i; j++)  
+    {
+        paramList.Add(string.Format("string p{0}", j));
+    }
+
+    var parameters = string.Join(", ", paramList.ToArray());
+#>
+            [KnownResource(Constants.Observable.XS + "<#=i#>")]
+            public IAsyncReactiveQbservable<int> Xs<#=i#>p(<#=parameters#>)
+            {
+                return base.Provider.CreateQbservable<int>(
+                    Expression.Call(
+                        Expression.Constant(this),
+                        (MethodInfo)MethodBase.GetCurrentMethod(),
+<#
+for (int j = 1; j<=i; j++)  
+    {
+        var comma = j==i ? "" : ","; 
+#>
+                        Expression.Constant(p<#=j#>, typeof(string))<#=comma#>
+<#}#>
+                    )
+                );
+            }
+
+<#}#>
+        }
+    }
+}

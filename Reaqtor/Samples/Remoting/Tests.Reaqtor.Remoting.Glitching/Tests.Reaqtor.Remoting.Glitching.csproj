@@ -1,0 +1,152 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Protocol\Reaqtor.Remoting.Protocol.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.TestingFramework\Reaqtor.Remoting.TestingFramework.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Testing\Reaqtive.Testing.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.TestingFramework\Reaqtive.TestingFramework.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Scheduler\Reaqtive.Scheduler.csproj" />
+  </ItemGroup>
+
+  <PropertyGroup>
+    <!-- NB: Production testing has a special build that enables additional options, which take hours to run.
+    <DefineConstants>$(DefineConstants);GLITCHING;TEMPLATE_GLITCHING;FULL_GLITCHING</DefineConstants>
+    -->
+    <DefineConstants>$(DefineConstants);GLITCHING</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Aggregate.Declarative.cs">
+      <Link>Operators\Aggregate.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\All.Declarative.cs">
+      <Link>Operators\All.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Any.Declarative.cs">
+      <Link>Operators\Any.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Average.Declarative.cs">
+      <Link>Operators\Average.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Average.Declarative.Generated.cs">
+      <Link>Operators\Average.Declarative.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Buffer.Declarative.cs">
+      <Link>Operators\Buffer.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Count.Declarative.cs">
+      <Link>Operators\Count.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\DelaySubscription.Declarative.cs">
+      <Link>Operators\DelaySubscription.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\DistinctUntilChanged.Declarative.cs">
+      <Link>Operators\DistinctUntilChanged.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Empty.Declarative.cs">
+      <Link>Operators\Empty.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\FirstAsync.Declarative.cs">
+      <Link>Operators\FirstAsync.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\GroupBy.Declarative.cs">
+      <Link>Operators\GroupBy.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\IsEmpty.Declarative.cs">
+      <Link>Operators\IsEmpty.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\LongCount.Declarative.cs">
+      <Link>Operators\LongCount.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Merge.Declarative.cs">
+      <Link>Operators\Merge.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\MinMax.Declarative.Generated.cs">
+      <Link>Operators\MinMax.Declarative.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Never.Declarative.cs">
+      <Link>Operators\Never.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Regressions.Declarative.cs">
+      <Link>Operators\Regressions.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Retry.Declarative.cs">
+      <Link>Operators\Retry.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Return.Declarative.cs">
+      <Link>Operators\Return.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Sample.Declarative.cs">
+      <Link>Operators\Sample.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Scan.Declarative.cs">
+      <Link>Operators\Scan.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Select.Declarative.cs">
+      <Link>Operators\Select.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\SelectMany.Declarative.cs">
+      <Link>Operators\SelectMany.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\SequenceEqual.Declarative.cs">
+      <Link>Operators\SequenceEqual.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Skip.Declarative.cs">
+      <Link>Operators\Skip.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\SkipUntil.Declarative.cs">
+      <Link>Operators\SkipUntil.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\SkipWhile.Declarative.cs">
+      <Link>Operators\SkipWhile.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\StartWith.Declarative.cs">
+      <Link>Operators\StartWith.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Sum.Declarative.cs">
+      <Link>Operators\Sum.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Sum.Declarative.Generated.cs">
+      <Link>Operators\Sum.Declarative.Generated.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Switch.Declarative.cs">
+      <Link>Operators\Switch.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Take.Declarative.cs">
+      <Link>Operators\Take.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\TakeUntil.Declarative.cs">
+      <Link>Operators\TakeUntil.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\TakeWhile.Declarative.cs">
+      <Link>Operators\TakeWhile.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Throttle.Declarative.cs">
+      <Link>Operators\Throttle.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Throw.Declarative.cs">
+      <Link>Operators\Throw.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\ToList.Declarative.cs">
+      <Link>Operators\ToList.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Where.Declarative.cs">
+      <Link>Operators\Where.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Window.Declarative.cs">
+      <Link>Operators\Window.Declarative.cs</Link>
+    </Compile>
+  </ItemGroup>
+
+</Project>

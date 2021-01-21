@@ -1,0 +1,432 @@
+﻿<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 15;#>
+<#var ordinals = new string[] { "zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth" };#>
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD, ER - August 2013 - Created this file.
+// Auto-generated file, changes to source may be lost
+//
+
+using System;
+using System.Linq.Expressions;
+
+namespace Reaqtor
+{
+    public abstract partial class ReactiveClientBase
+    {
+        #region GetObservable
+
+<#/*
+
+generating the code for:
+
+        /// <summary>
+        /// Gets the parameterized observable with the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observable.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observable.</typeparam>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="uri">URI identifying the observable.</param>
+        /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
+        public Func<TArg1, TArg2, IReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TResult>(Uri uri)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return GetObservableCore<TArg1, TArg2, TResult>(uri);
+        }
+
+        /// <summary>
+        /// Gets the parameterized observable with the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observable.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observable.</typeparam>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="uri">URI identifying the observable.</param>
+        /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
+        protected virtual Func<TArg1, TArg2, IReactiveQbservable<TResult>> GetObservableCore<TArg1, TArg2, TResult>(Uri uri)
+        {
+            var function = GetFunctionExpression<TArg1, TArg2, IReactiveQbservable<TResult>>(uri);
+            return _queryProvider.CreateQbservable<TArg1, TArg2, TResult>(function);
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+
+    for (int j = 1; j<=i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+#>
+        /// <summary>
+        /// Gets the parameterized observable with the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j<=i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observable.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="uri">URI identifying the observable.</param>
+        /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
+        public Func<<#=typeArgs#>, IReactiveQbservable<TResult>> GetObservable<<#=typeArgs#>, TResult>(Uri uri)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return GetObservableCore<<#=typeArgs#>, TResult>(uri);
+        }
+
+        /// <summary>
+        /// Gets the parameterized observable with the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j<=i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observable.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="uri">URI identifying the observable.</param>
+        /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
+        protected virtual Func<<#=typeArgs#>, IReactiveQbservable<TResult>> GetObservableCore<<#=typeArgs#>, TResult>(Uri uri)
+        {
+            var function = GetFunctionExpression<<#=typeArgs#>, IReactiveQbservable<TResult>>(uri);
+            return _queryProvider.CreateQbservable<<#=typeArgs#>, TResult>(function);
+        }
+
+<# } #>
+
+        #endregion
+
+        #region GetObserver
+
+<#/*
+
+generating the code for:
+
+        /// <summary>
+        /// Gets the parameterized observer with the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observer.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observer.</typeparam>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="uri">URI identifying the observer.</param>
+        /// <returns>Observer object that can be used to send data.</returns>
+        public Func<TArg1, TArg2, IReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TResult>(Uri uri)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return GetObserverCore<TArg1, TArg2, TResult>(uri);
+        }
+
+        /// <summary>
+        /// Gets the parameterized observer with the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observer.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observer.</typeparam>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="uri">URI identifying the observer.</param>
+        /// <returns>Observer object that can be used to send data.</returns>
+        protected virtual Func<TArg1, TArg2, IReactiveQbserver<TResult>> GetObserverCore<TArg1, TArg2, TResult>(Uri uri)
+        {
+            var function = GetFunctionExpression<TArg1, TArg2, IReactiveQbserver<TResult>>(uri);
+            return _queryProvider.CreateQbserver<TArg1, TArg2, TResult>(function);
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+
+    for (int j = 1; j<=i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+#>
+        /// <summary>
+        /// Gets the parameterized observer with the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j<=i; j++)  
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observer.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="uri">URI identifying the observer.</param>
+        /// <returns>Observer object that can be used to send data.</returns>
+        public Func<<#=typeArgs#>, IReactiveQbserver<TResult>> GetObserver<<#=typeArgs#>, TResult>(Uri uri)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return GetObserverCore<<#=typeArgs#>, TResult>(uri);
+        }
+
+        /// <summary>
+        /// Gets the parameterized observer with the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j<=i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observer.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="uri">URI identifying the observer.</param>
+        /// <returns>Observer object that can be used to send data.</returns>
+        protected virtual Func<<#=typeArgs#>, IReactiveQbserver<TResult>> GetObserverCore<<#=typeArgs#>, TResult>(Uri uri)
+        {
+            var function = GetFunctionExpression<<#=typeArgs#>, IReactiveQbserver<TResult>>(uri);
+            return _queryProvider.CreateQbserver<<#=typeArgs#>, TResult>(function);
+        }
+
+<# } #>
+
+        #endregion
+
+        #region GetStreamFactory
+
+<#/*
+
+generating the code for:
+
+        /// <summary>
+        /// Gets the parameterized stream factory with the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+        /// <param name="uri">URI identifying the stream factory.</param>
+        /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
+        public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> GetStreamFactory<TArg1, TArg2, TInput, TOutput>(Uri uri)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return GetStreamFactoryCore<TArg1, TArg2, TInput, TOutput>(uri);
+        }
+
+        /// <summary>
+        /// Gets the parameterized stream factory with the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+        /// <param name="uri">URI identifying the stream factory.</param>
+        /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
+        protected virtual IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> GetStreamFactoryCore<TArg1, TArg2, TInput, TOutput>(Uri uri)
+        {
+            var expression = GetKnownResourceExpression(typeof(Func<TArg1, TArg2, IReactiveQubject<TInput, TOutput>>), uri);
+            return _queryProvider.CreateQubjectFactory<TArg1, TArg2, TInput, TOutput>(expression);
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+
+    for (int j = 1; j<=i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+#>
+        /// <summary>
+        /// Gets the parameterized stream factory with the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j<=i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subject factory.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+        /// <param name="uri">URI identifying the stream factory.</param>
+        /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
+        public IReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> GetStreamFactory<<#=typeArgs#>, TInput, TOutput>(Uri uri)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return GetStreamFactoryCore<<#=typeArgs#>, TInput, TOutput>(uri);
+        }
+
+        /// <summary>
+        /// Gets the parameterized stream factory with the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j<=i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subject factory.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+        /// <param name="uri">URI identifying the stream factory.</param>
+        /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
+        protected virtual IReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> GetStreamFactoryCore<<#=typeArgs#>, TInput, TOutput>(Uri uri)
+        {
+            var expression = GetKnownResourceExpression(typeof(Func<<#=typeArgs#>, IReactiveQubject<TInput, TOutput>>), uri);
+            return _queryProvider.CreateQubjectFactory<<#=typeArgs#>, TInput, TOutput>(expression);
+        }
+
+<# } #>
+
+        #endregion
+
+        #region GetSubscriptionFactory
+
+<#/*
+
+generating the code for:
+
+        /// <summary>
+        /// Gets the parameterized subscription factory with the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subscription factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subscription factory.</typeparam>
+        /// <param name="uri">URI identifying the subscription factory.</param>
+        /// <returns>Subscription factory that can be used to create subscriptions.</returns>
+        public IReactiveQubscriptionFactory<TArg1, TArg2> GetSubscriptionFactory<TArg1, TArg2>(Uri uri)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return GetSubscriptionFactoryCore<TArg1, TArg2>(uri);
+        }
+
+        /// <summary>
+        /// Gets the parameterized subscription factory with the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subscription factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subscription factory.</typeparam>
+        /// <param name="uri">URI identifying the subscription factory.</param>
+        /// <returns>Subscription factory that can be used to create subscriptions.</returns>
+        protected virtual IReactiveQubscriptionFactory<TArg1, TArg2> GetSubscriptionFactoryCore<TArg1, TArg2>(Uri uri)
+        {
+            var expression = GetKnownResourceExpression(typeof(Func<TArg1, TArg2, IReactiveQubscription>), uri);
+            return _queryProvider.CreateQubscriptionFactory<TArg1, TArg2>(expression);
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+
+    for (int j = 1; j<=i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+#>
+        /// <summary>
+        /// Gets the parameterized subscription factory with the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j<=i; j++)  
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subscription factory.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <param name="uri">URI identifying the subscription factory.</param>
+        /// <returns>Subscription factory that can be used to create subscriptions.</returns>
+        public IReactiveQubscriptionFactory<<#=typeArgs#>> GetSubscriptionFactory<<#=typeArgs#>>(Uri uri)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
+            return GetSubscriptionFactoryCore<<#=typeArgs#>>(uri);
+        }
+
+        /// <summary>
+        /// Gets the parameterized subscription factory with the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j<=i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subscription factory.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <param name="uri">URI identifying the subscription factory.</param>
+        /// <returns>Subscription factory that can be used to create subscriptions.</returns>
+        protected virtual IReactiveQubscriptionFactory<<#=typeArgs#>> GetSubscriptionFactoryCore<<#=typeArgs#>>(Uri uri)
+        {
+            var expression = GetKnownResourceExpression(typeof(Func<<#=typeArgs#>, IReactiveQubscription>), uri);
+            return _queryProvider.CreateQubscriptionFactory<<#=typeArgs#>>(expression);
+        }
+
+<# } #>
+
+        #endregion
+
+        #region Private implementation
+
+<#/*
+
+generating the code for:
+
+        private Expression<Func<TArg1, TArg2, TResult>> GetFunctionExpression<TArg1, TArg2, TResult>(Uri uri)
+        {
+            var function = GetKnownResourceExpression(typeof(Func<TArg1, TArg2, TResult>), uri);
+            var operand1 = Expression.Parameter(typeof(TArg1));
+            var operand2 = Expression.Parameter(typeof(TArg2));
+            return Expression.Lambda<Func<TArg1, TArg2, TResult>>(Expression.Invoke(function, operand1, operand2), operand1, operand2);
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var operandList = new List<string>();
+
+    for (int j = 1; j<=i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        operandList.Add(string.Format("operand{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var operands = string.Join(", ", operandList.ToArray());
+#>
+        private Expression<Func<<#=typeArgs#>, TResult>> GetFunctionExpression<<#=typeArgs#>, TResult>(Uri uri)
+        {
+            var function = GetKnownResourceExpression(typeof(Func<<#=typeArgs#>, TResult>), uri);
+<#
+for (int j = 1; j<=i; j++)  
+    {
+#>
+            <#= string.Format("var operand{0} = Expression.Parameter(typeof(TArg{0}));", j) #>
+<#}#>
+            return Expression.Lambda<Func<<#=typeArgs#>, TResult>>(Expression.Invoke(function, <#=operands#>), <#=operands#>);
+        }
+
+<#}#>
+        #endregion
+
+    }
+}

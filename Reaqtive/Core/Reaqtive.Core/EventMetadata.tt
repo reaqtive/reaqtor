@@ -1,0 +1,73 @@
+﻿<#@include file="..\..\..\Common\IrpEventSource.tt" #>
+
+<#+
+/***********************************************************************
+ *                                                                     *
+ *  USER DEFINED VARIABLES - MODIFY THESE FOR EACH EVENT YOU GENERATE  *
+ *                                                                     *
+ ***********************************************************************/
+
+enum EventKeyword : ulong
+{
+    // Sub-systems
+    ContextSwitch = (ulong)1 << 0,
+}
+
+// Values must be in the range from 1 through 65534
+enum EventTask
+{
+    //Need our own `None`, because EventSource is trying to be "helpful"
+    //and generates a task for us if we use EventTask.None,
+    //which is not desirable from the backward compatibility standpoint
+    None = 1,
+}
+
+// Values must be in the range from 11 through 239
+enum EventOpcode
+{
+}
+
+string Namespace = "Reaqtive";
+string EventSourceName = "Reaqtive-Core";
+
+// It's better not to reorder event definitions
+List<EventMetadata> EventRegistry = new List<EventMetadata>
+{
+    new EventMetadata
+    {
+        Name = "ContextSwitch_OnEnqueueing_Error",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.ContextSwitch },
+        Message = "ContextSwitchOperator Enqueueing event failure. Exception: {0}",
+        Parameters = new Parameter[]
+        {
+            new Parameter("exception", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "ContextSwitch_Dequeued_Error",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.ContextSwitch },
+        Message = "ContextSwitchOperator Dequeued event failure. Exception: {0}",
+        Parameters = new Parameter[]
+        {
+            new Parameter("exception", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "ContextSwitch_Observer_Error",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.ContextSwitch },
+        Message = "ContextSwitchOperator for instance '{0}' failed to call {1}({2}) on the observer due to exception '{3}'. The operator is terminating.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("instanceId", "System.Uri"),
+            new Parameter("call", ParameterType.String),
+            new Parameter("arg", "System.Object"),
+            new Parameter("error", "System.Exception"),
+        }
+    },
+};
+#>

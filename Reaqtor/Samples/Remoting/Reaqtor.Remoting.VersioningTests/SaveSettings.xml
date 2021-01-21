@@ -1,0 +1,7 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Configurations>
+  <Save TemplatizeExpressions="false" SerializationPolicyVersion="1.0.0.0" FileName="TestCases_1.0.0.0.zip" />
+  <Save TemplatizeExpressions="true"  SerializationPolicyVersion="1.0.0.0" FileName="TestCases_1.0.0.0_templatized.zip" />
+  <Save TemplatizeExpressions="false" SerializationPolicyVersion="3.0.0.0" FileName="TestCases_3.0.0.0.zip" />
+  <Save TemplatizeExpressions="true"  SerializationPolicyVersion="3.0.0.0" FileName="TestCases_3.0.0.0_templatized.zip" />
+</Configurations>

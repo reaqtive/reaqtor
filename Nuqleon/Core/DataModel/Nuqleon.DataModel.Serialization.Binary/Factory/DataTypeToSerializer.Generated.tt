@@ -1,0 +1,93 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var types = new List<string>
+{
+    typeof(sbyte).Name,
+    typeof(short).Name,
+    typeof(ushort).Name,
+    typeof(int).Name,
+    typeof(uint).Name,
+    typeof(long).Name,
+    typeof(ulong).Name,
+    typeof(float).Name,
+    typeof(double).Name,
+    typeof(decimal).Name,
+    typeof(char).Name,
+    typeof(bool).Name,
+    typeof(Guid).Name,
+};
+
+#>
+using System;
+using System.IO;
+using System.Linq.CompilerServices;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace Nuqleon.DataModel.Serialization.Binary
+{
+    partial class DataTypeToSerializer
+    {
+<#
+foreach (var type in types)
+{
+#>
+        private static readonly Lazy<MethodInfo> s_write<#=type#> = new Lazy<MethodInfo>(() => (MethodInfo)ReflectionHelpers.InfoOf(() => StreamHelpers.Write<#=type#>(default(Stream), default(<#=type#>))));
+
+        private static LambdaExpression Visit<#=type#>(Type type, bool isNullable)
+        {
+            var valueParameter = Expression.Parameter(type, "value");
+            var streamParameter = Expression.Parameter(typeof(Stream), "stream");
+
+            var typeCode = Protocol.TYPE_<#=type.ToUpperInvariant()#>;
+            var body = default(Expression);
+            if (isNullable)
+            {
+                typeCode |= Protocol.TYPE_FLAG_ISNULLABLE;
+                var tcParameter = Expression.Parameter(typeof(byte), "tc");
+                body = Expression.Block(
+                    // byte tc;
+                    new[] { tcParameter },
+                    // tc = typeCode;
+                    Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
+                    // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
+                    Expression.IfThen(
+                        Expression.Equal(valueParameter, s_nullObject.Value),
+                        Expression.OrAssign(tcParameter, s_nullValueFlag.Value)
+                    ),
+                    // stream.WriteByte(tc);
+                    Expression.Call(streamParameter, s_writeByte.Value, tcParameter),
+                    // if (value != null) stream.Write<#=type#>((<#=type#>)value);
+                    Expression.IfThen(
+                        Expression.NotEqual(valueParameter, s_nullObject.Value),
+                        Expression.Call(s_write<#=type#>.Value, streamParameter, Expression.Convert(valueParameter, typeof(<#=type#>)))
+                    )
+                );
+            }
+            else
+            {
+                body = Expression.Block(
+                    // stream.WriteByte(typeCode);
+                    Expression.Call(streamParameter, s_writeByte.Value, Expression.Constant(typeCode, typeof(byte))),
+                    // stream.Write<#=type#>(value);
+                    Expression.Call(s_write<#=type#>.Value, streamParameter, valueParameter)
+                );
+            }
+
+            return Expression.Lambda(body, streamParameter, valueParameter);
+        }
+
+<#
+}
+#>
+    }
+}

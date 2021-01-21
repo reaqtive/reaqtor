@@ -1,0 +1,89 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+//   BD - 04/16/2016 - Created fast JSON serializer functionality.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nuqleon.Json.Serialization;
+using System;
+
+namespace Tests
+{
+    partial class EmitterTests
+    {
+<#
+var ts = new[] { typeof(sbyte), typeof(short), typeof(int), typeof(long), typeof(byte), typeof(ushort), typeof(uint), typeof(ulong) };
+
+foreach (var t in ts)
+{
+    var tn = t.Name;
+    var unsigned = t == typeof(byte) || tn.StartsWith("U");
+#>
+        [TestMethod]
+        public void FastEmitter_<#=tn#>()
+        {
+            AssertEmit<<#=tn#>>(Emitter.Emit<#=tn#>, <#=tn#>.MinValue, <#=tn#>.MinValue.ToString());
+            AssertEmit<<#=tn#>>(Emitter.Emit<#=tn#>, <#=tn#>.MaxValue, <#=tn#>.MaxValue.ToString());
+
+<#
+if (unsigned)
+{
+#>
+            for (var i = 0; i <= 127; i++)
+<#
+}
+else
+{
+#>
+            for (var i = -128; i <= 127; i++)
+<#
+}
+#>
+            {
+                AssertEmit<<#=tn#>>(Emitter.Emit<#=tn#>, (<#=tn#>)i, i.ToString());
+            }
+        }
+
+        [TestMethod]
+        public void FastEmitter_Nullable<#=tn#>()
+        {
+            AssertEmit<<#=tn#>?>(Emitter.EmitNullable<#=tn#>, null, "null");
+
+            AssertEmit<<#=tn#>?>(Emitter.EmitNullable<#=tn#>, <#=tn#>.MinValue, <#=tn#>.MinValue.ToString());
+            AssertEmit<<#=tn#>?>(Emitter.EmitNullable<#=tn#>, <#=tn#>.MaxValue, <#=tn#>.MaxValue.ToString());
+
+<#
+if (unsigned)
+{
+#>
+            for (var i = 0; i <= 127; i++)
+<#
+}
+else
+{
+#>
+            for (var i = -128; i <= 127; i++)
+<#
+}
+#>
+            {
+                AssertEmit<<#=tn#>?>(Emitter.EmitNullable<#=tn#>, (<#=tn#>)i, i.ToString());
+            }
+        }
+
+<#
+}
+#>
+    }
+}

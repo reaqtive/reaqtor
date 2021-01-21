@@ -1,0 +1,21 @@
+<Project>
+  <PropertyGroup>
+    <GenerateAssemblyInfo>true</GenerateAssemblyInfo>
+
+    <Version>1.0.0-alpha4</Version>
+    <Copyright>Copyright (c) .NET Foundation and Contributors.</Copyright>
+    <Authors>.NET Foundation and Contributors</Authors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="!$(AssemblyName.StartsWith('Tests.')) And !$(AssemblyName.StartsWith('Perf.')) And !$(AssemblyName.EndsWith('.Perf')) And !$(AssemblyName.Contains('Playground'))">
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="!$(AssemblyName.Contains('Playground'))">
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup Condition="!$(AssemblyName.StartsWith('Tests.')) And !$(AssemblyName.StartsWith('Perf.')) And !$(AssemblyName.EndsWith('.Perf')) And !$(AssemblyName.Contains('Playground'))">
+    <InternalsVisibleTo Include="Tests.$(AssemblyName)" />
+  </ItemGroup>
+</Project>

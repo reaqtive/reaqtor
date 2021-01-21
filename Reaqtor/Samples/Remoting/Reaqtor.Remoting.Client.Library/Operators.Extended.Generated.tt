@@ -1,0 +1,65 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Linq.Expressions;
+using System.Reflection;
+
+namespace Reaqtor
+{
+    public static partial class Operators
+    {
+<#
+var numTypes = new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) };
+
+foreach (var op in new [] { "Sum", "Max", "Min", "Average" })
+{
+    foreach (var t in numTypes)
+    {
+        foreach (var n in new[] { false, true })
+        {
+            var tn = t.Name;
+            var tc = t.Name;
+            var tr = op == "Average" && (t == typeof(int) || t == typeof(long)) ? typeof(double).Name : tc;
+
+            if (n)
+            {
+                tn = "Nullable" + tn;
+                tc += "?";
+                tr += "?";
+            }
+
+#>
+        [KnownResource(Remoting.Client.Constants.Observable.<#=op#>.NoSelector.<#=tn#>)]
+        public static IAsyncReactiveQbservable<<#=tr#>> <#=op#>(this IAsyncReactiveQbservable<<#=tc#>> source)
+        {
+            return source.Provider.CreateQbservable<<#=tr#>>(
+                Expression.Call(
+                    (MethodInfo)MethodBase.GetCurrentMethod(),
+                    source.Expression));
+        }
+
+        [KnownResource(Remoting.Client.Constants.Observable.<#=op#>.Selector.<#=tn#>)]
+        public static IAsyncReactiveQbservable<<#=tr#>> <#=op#><T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, <#=tc#>>> selector)
+        {
+            return source.Provider.CreateQbservable<<#=tr#>>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)),
+                    source.Expression,
+                    selector));
+        }
+
+<#
+        }
+    }
+}
+#>
+    }
+}

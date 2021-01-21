@@ -1,0 +1,84 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+//   BD - 04/16/2016 - Created fast JSON serializer functionality.
+//   BD - 05/08/2016 - Added support for serialization to text writers.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Text;
+
+namespace Nuqleon.Json.Serialization
+{
+    internal partial class Emitter
+    {
+<#
+var ts = new[] { typeof(sbyte), typeof(short), typeof(int), typeof(long), typeof(byte), typeof(ushort), typeof(uint), typeof(ulong), typeof(bool), typeof(char), typeof(DateTime), typeof(DateTimeOffset), typeof(float), typeof(double), typeof(decimal) };
+
+foreach (var t in ts)
+{
+    var tn = t.Name;
+
+    if (t.IsValueType)
+    {
+#>
+        /// <summary>
+        /// Emits a nullable <#=t.FullName#> to the specified string builder.
+        /// </summary>
+        /// <param name="builder">The string builder to append the nullable <#=t.FullName#> to.</param>
+        /// <param name="value">The nullable <#=t.FullName#> value to emit.</param>
+        /// <param name="context">The emitter context.</param>
+        internal static void EmitNullable<#=tn#>(StringBuilder builder, <#=tn#>? value, EmitterContext context)
+        {
+            if (value == null)
+            {
+                builder.Append("null");
+            }
+            else
+            {
+                Emit<#=tn#>(builder, value.Value, context);
+            }
+        }
+
+#if !NO_IO
+        /// <summary>
+        /// Emits a nullable <#=t.FullName#> to the specified text writer.
+        /// </summary>
+        /// <param name="writer">The text writer to append the nullable <#=t.FullName#> to.</param>
+        /// <param name="value">The nullable <#=t.FullName#> value to emit.</param>
+        /// <param name="context">The emitter context.</param>
+        internal static void EmitNullable<#=tn#>(System.IO.TextWriter writer, <#=tn#>? value, EmitterContext context)
+        {
+            if (value == null)
+            {
+                //
+                // CONSIDER: Add a flag to EmitterContext to reveal whether the TextWriter is one of the known writers
+                //           which has an efficient implementation of Write(string) that doesn't call ToCharArray on
+                //           the given string (see base class behavior of Write).
+                //
+
+                writer.Write("null");
+            }
+            else
+            {
+                Emit<#=tn#>(writer, value.Value, context);
+            }
+        }
+#endif
+
+<#
+    }
+}
+#>
+    }
+}

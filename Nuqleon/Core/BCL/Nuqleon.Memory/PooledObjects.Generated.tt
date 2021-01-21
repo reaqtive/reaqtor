@@ -1,0 +1,961 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="$(ProjectDir)\..\Nuqleon.Documentation\bin\Debug\net472\Nuqleon.Documentation.dll" #>
+<#@ import namespace="System.Collections" #>
+<#@ import namespace="System.Collections.Concurrent" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Documentation" #>
+<#@ import namespace="System.IO" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+#if CODEGEN
+
+using System.Diagnostics.CodeAnalysis;
+using System.Memory;
+<#
+// ===========================================================<CONFIG>===========================================================
+//
+//
+// Indicates whether the compiler processing the generated code is Roslyn. If Roslyn is used, we can
+// take advantage of relaxed struct initialization rules to generate nicer code with partials.
+//
+var hasRoslyn = false;
+//
+// Used to generate test code, which will put the generated types in a namespace suffixed by ".Test".
+// This is useful to disambiguate between a manually crafted set a pool types and the generates ones.
+//
+var test = false;
+//
+// If the code is being generated as part of the System.Memory assembly, "Fast" variants of Allocate
+// and Free are available, causing inlining. If this is desired, set the following to true. When used
+// from other assemblies, use false.
+//
+var hasFast = true;
+//
+// Commonly used discard conditions and clear checks for collections types, used in the table of types
+// below. Notice "clear checks" will be appended to the object instance, separated by a '.'.
+//
+var discardCollectionIf = "Count > _maxCapacity";
+var collectionClearCheck = "Count == 0";
+//
+// Types to generate pool types for. The following properties should be set in the anonymous types:
+// * If         - if not default(string), used to generate an #ifdef around the generated types
+// * Type       - type to generate the pool types for; this type can be an open generic
+// * Ctors      - array of ConstructorInfo objects that to promote to Create methods on the pool
+// * DiscardIf  - if not default(string), used as a check in the Free path to discard the instance
+// * ClearCheck - if not default(string), used as a Debug.Assert check in the New path
+//
+var types = new[]
+{
+    new { If = default(string), Type = typeof(Dictionary<,>), Ctors = new[] { typeof(Dictionary<,>).GetConstructor(Type.EmptyTypes), typeof(Dictionary<,>).GetConstructor(new[] { typeof(int) }), typeof(Dictionary<,>).GetConstructor(new[] { typeof(IEqualityComparer<>).MakeGenericType(typeof(Dictionary<,>).GetGenericArguments()[0]) }), typeof(Dictionary<,>).GetConstructor(new[] { typeof(int), typeof(IEqualityComparer<>).MakeGenericType(typeof(Dictionary<,>).GetGenericArguments()[0]) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = default(string), Type = typeof(HashSet<>), Ctors = new[] { typeof(HashSet<>).GetConstructor(Type.EmptyTypes), typeof(HashSet<>).GetConstructor(new[] { typeof(IEqualityComparer<>).MakeGenericType(typeof(HashSet<>).GetGenericArguments()[0]) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = default(string), Type = typeof(List<>), Ctors = new[] { typeof(List<>).GetConstructor(Type.EmptyTypes), typeof(List<>).GetConstructor(new[] { typeof(int) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = default(string), Type = typeof(Queue<>), Ctors = new[] { typeof(Queue<>).GetConstructor(Type.EmptyTypes), typeof(Queue<>).GetConstructor(new[] { typeof(int) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = default(string), Type = typeof(Stack<>), Ctors = new[] { typeof(Stack<>).GetConstructor(Type.EmptyTypes), typeof(Stack<>).GetConstructor(new[] { typeof(int) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = default(string), Type = typeof(MemoryStream), Ctors = new[] { typeof(MemoryStream).GetConstructor(Type.EmptyTypes), typeof(MemoryStream).GetConstructor(new[] { typeof(int) }) }, DiscardIf = "!CanWrite || Capacity > _maxCapacity", ClearCheck = "Length == 0" },
+    new { If = default(string), Type = typeof(StringBuilder), Ctors = new[] { typeof(StringBuilder).GetConstructor(Type.EmptyTypes), typeof(StringBuilder).GetConstructor(new[] { typeof(int) }) }, DiscardIf = "StringBuilder.Capacity > _maxCapacity", ClearCheck = "StringBuilder.Length == 0" },
+
+    new { If = "FALSE", Type = typeof(ArrayList), Ctors = new[] { typeof(ArrayList).GetConstructor(Type.EmptyTypes), typeof(ArrayList).GetConstructor(new[] { typeof(int) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(Hashtable), Ctors = new[] { typeof(Hashtable).GetConstructor(Type.EmptyTypes), typeof(Hashtable).GetConstructor(new[] { typeof(int) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(Queue), Ctors = new[] { typeof(Queue).GetConstructor(Type.EmptyTypes), typeof(Queue).GetConstructor(new[] { typeof(int) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(Stack), Ctors = new[] { typeof(Stack).GetConstructor(Type.EmptyTypes), typeof(Stack).GetConstructor(new[] { typeof(int) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(SortedList), Ctors = new[] { typeof(SortedList).GetConstructor(Type.EmptyTypes), typeof(SortedList).GetConstructor(new[] { typeof(int) }), typeof(SortedList).GetConstructor(new[] { typeof(IComparer) }), typeof(SortedList).GetConstructor(new[] { typeof(IComparer), typeof(int) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    
+    // Not very useful for LinkedList; each node has allocations anyways
+    new { If = "FALSE", Type = typeof(LinkedList<>), Ctors = new[] { typeof(LinkedList<>).GetConstructor(Type.EmptyTypes) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(SortedDictionary<,>), Ctors = new[] { typeof(SortedDictionary<,>).GetConstructor(Type.EmptyTypes), typeof(SortedDictionary<,>).GetConstructor(new[] { typeof(IComparer<>).MakeGenericType(typeof(SortedDictionary<,>).GetGenericArguments()[0]) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(SortedList<,>), Ctors = new[] { typeof(SortedList<,>).GetConstructor(Type.EmptyTypes), typeof(SortedList<,>).GetConstructor(new[] { typeof(int) }), typeof(SortedList<,>).GetConstructor(new[] { typeof(IComparer<>).MakeGenericType(typeof(SortedList<,>).GetGenericArguments()[0]) }), typeof(SortedList<,>).GetConstructor(new[] { typeof(int), typeof(IComparer<>).MakeGenericType(typeof(SortedList<,>).GetGenericArguments()[0]) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(SortedSet<>), Ctors = new[] { typeof(SortedSet<>).GetConstructor(Type.EmptyTypes), typeof(SortedSet<>).GetConstructor(new[] { typeof(IComparer<>).MakeGenericType(typeof(SortedSet<>).GetGenericArguments()[0]) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    
+    new { If = "FALSE", Type = typeof(ConcurrentBag<>), Ctors = new[] { typeof(ConcurrentBag<>).GetConstructor(Type.EmptyTypes) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(ConcurrentDictionary<,>), Ctors = new[] { typeof(ConcurrentDictionary<,>).GetConstructor(Type.EmptyTypes), typeof(ConcurrentDictionary<,>).GetConstructor(new[] { typeof(IEqualityComparer<>).MakeGenericType(typeof(ConcurrentDictionary<,>).GetGenericArguments()[0]) }) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(ConcurrentQueue<>), Ctors = new[] { typeof(ConcurrentQueue<>).GetConstructor(Type.EmptyTypes) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+    new { If = "FALSE", Type = typeof(ConcurrentStack<>), Ctors = new[] { typeof(ConcurrentStack<>).GetConstructor(Type.EmptyTypes) }, DiscardIf = discardCollectionIf, ClearCheck = collectionClearCheck },
+};
+//
+//
+// ===========================================================</CONFIG>==========================================================
+
+var pooledPrefix = "Pooled";
+var poolSuffix = "Pool";
+var poolHolderSuffix = "Holder";
+
+/// <summary>
+/// Pretty printer for Type instances in C# syntax. This function will use C# aliases for primitive types (such as int) and
+/// use notations such as the ? suffix for nullable types. Types that are printed using their name will be fully qualified
+/// with their namespace.
+/// </summary>
+/// <param>Type to get the C# syntax for.</param>
+/// <returns>The specified type printed as C#.</returns>
+var toCSharp = default(Func<Type, string>);
+toCSharp = t =>
+{
+    if (t == typeof(int))
+        return "int";
+    else if (t == typeof(long))
+        return "long";
+    else if (t == typeof(short))
+        return "short";
+    else if (t == typeof(byte))
+        return "byte";
+    else if (t == typeof(uint))
+        return "uint";
+    else if (t == typeof(ulong))
+        return "ulong";
+    else if (t == typeof(ushort))
+        return "ushort";
+    else if (t == typeof(sbyte))
+        return "sbyte";
+    else if (t == typeof(float))
+        return "float";
+    else if (t == typeof(double))
+        return "double";
+    else if (t == typeof(decimal))
+        return "decimal";
+    else if (t == typeof(bool))
+        return "bool";
+    else if (t == typeof(string))
+        return "string";
+    else if (t == typeof(char))
+        return "char";
+    else if (t == typeof(object))
+        return "object";
+    else
+    {
+        if (t.IsGenericType)
+        {
+            if (t.IsGenericTypeDefinition)
+            {
+                return t.FullName.Substring(0, t.FullName.LastIndexOf('`'));
+            }
+            else
+            {
+                var d = t.GetGenericTypeDefinition();
+                if (d == typeof(Nullable<>))
+                {
+                    var n = toCSharp(t.GetGenericArguments()[0]);
+                    return n + "?";
+                }
+
+                var dn = toCSharp(d);
+                return dn + "<" + string.Join(", ", t.GetGenericArguments().Select(toCSharp)) + ">";
+            }
+        }
+        else if (t.IsArray)
+        {
+            var e = toCSharp(t.GetElementType());
+            var r = t.GetArrayRank();
+            var rank = r == 1 ? "" : new string(',', r - 1);
+            return e + "[" + rank + "]";
+        }
+        else if (t.IsGenericParameter)
+        {
+            return t.Name;
+        }
+        else
+        {
+            return t.FullName;
+        }
+    }
+};
+
+//
+// The main code-gen loop iterating over the types array specified by the user.
+//
+foreach (var e in types) // <foreach-e-in-types>
+{
+    var type = e.Type;
+    var ctors = e.Ctors;
+    var forget = e.DiscardIf;
+    var check = e.ClearCheck;
+    var ser = type.IsDefined(typeof(SerializableAttribute), true);
+
+    //
+    // Value types, why would you pool that? Time for a CLR lecture dude, I'm
+    // ignoring you.
+    //
+    if (!type.IsValueType) // <if-not-type-isvaluetype>
+    {
+        var typeName = type.Name;
+        var typeNameShort = typeName;
+        var poolTypeName = typeName + poolSuffix;
+        var poolTypeNameShort = poolTypeName;
+        var pooledHolderTypeName = pooledPrefix + typeName + poolHolderSuffix;
+        var pooledHolderTypeNameShort = pooledHolderTypeName;
+        var pooledTypeName = pooledPrefix + typeName;
+        var pooledTypeNameShort = pooledTypeName;
+
+        //
+        // Open generic types need quite some lexical massaging.
+        //
+        if (type.IsGenericTypeDefinition)
+        {
+            typeName = typeName.Substring(0, typeName.LastIndexOf('`'));
+            typeNameShort = typeName;
+
+            pooledTypeName = pooledPrefix + typeName;
+            pooledTypeNameShort = pooledTypeName;
+
+            poolTypeName = typeName + poolSuffix;
+            poolTypeNameShort = poolTypeName;
+        
+            pooledHolderTypeName = pooledPrefix + typeName + poolHolderSuffix;
+            pooledHolderTypeNameShort = pooledHolderTypeName;
+            
+            var args = type.GetGenericArguments();
+            var genArgs = "<" + string.Join(", ", args.Select(t => t.Name)) + ">";
+
+            typeName += genArgs;
+            pooledTypeName += genArgs;
+            poolTypeName += genArgs;
+            pooledHolderTypeName += genArgs;
+        }
+
+        //
+        // Create derivation declaration. If the type is sealed, we emit code
+        // that use containment; otherwise, we'll derive from the given type.
+        //
+        var isDerived = false;
+
+        var derive = " : ";
+        if (!type.IsSealed)
+        {
+            isDerived = true;
+
+            derive += typeName;
+            derive += ", ";
+        }
+        else
+        {
+            ser = false;
+        }
+
+        derive += "IFreeable, IClearable";
+
+        //
+        // Get some strings that are useful in generated XML doc comments,
+        // such as the type name, and an English sounding variant of the
+        // name obtained by splitting the type's parts into words.
+        //
+        var typeNameDoc = typeName.Replace("<", "{").Replace(">", "}");
+        var typeNameDocCref = "<see cref=\"" + typeNameDoc + "\"/>";
+        var typeNameEn = "";
+
+        var i = 0;
+        foreach (var c in typeNameShort)
+        {
+            if (char.IsUpper(c))
+            {
+                typeNameEn += (i > 0 ? " " : "") + c.ToString().ToLower();
+            }
+            else
+            {
+                typeNameEn += c;
+            }
+            i++;
+        }
+
+        //
+        // If the type is generic, we need to document its type parameters.
+        // Here, we're trying to get these from the documentation on the
+        // specified type using our System.Documentation library.
+        //
+        var genArgDoc = "";
+
+        if (type.IsGenericTypeDefinition)
+        {
+            var xmlDoc = XmlDocumentation.GetXmlDoc(type);
+
+            var args = type.GetGenericArguments();
+            var n = args.Length;
+            var j = 0;
+            foreach (var arg in args)
+            {
+                var genArgXml = default(string);
+                if (xmlDoc != null)
+                {
+                    var t = xmlDoc.Elements("typeparam").FirstOrDefault(p => p.Attribute("name").Value == arg.Name);
+                    if (t != null)
+                    {
+                        genArgXml = "/// " + t.ToString();
+                    }
+                }
+
+                genArgXml = genArgXml ?? ("/// <typeparam name=\"" + arg.Name + "\">See " + arg.Name + " on " + typeNameDocCref + ".</typeparam>");
+
+                genArgDoc += genArgXml;
+                if (j != n - 1)
+                {
+                    genArgDoc += "\r\n";
+                }
+                j++;
+            }
+        }
+
+#>
+<#
+        if (e.If != null) // <if-e-if-not-null>
+        {
+#>
+#if <#=e.If#>
+<#
+        } // </if-e-if-not-null>
+#>
+
+namespace <#=type.Namespace#><#=test?".Test":""#>
+{
+<#
+        if (test) // <if-test>
+        {
+#>
+    using global::<#=type.Namespace#>;
+
+<#
+        } // </if-test>
+
+        //
+        // Generate doc comments for the pooled type. If we can find the docs
+        // on the original type using System.Documentation, use that.
+        //
+        var summary = "Represents an instance of " + typeName + " that belongs to a pool.";
+        var summaryXml = XmlDocumentation.GetXmlDoc(type);
+        if (summaryXml != null)
+        {
+            summary = summaryXml.Element("summary").ToString();
+            summary = summary.Substring("<summary>".Length);
+            summary = summary.Substring(0, summary.LastIndexOf('<'));
+        }
+#>
+    /// <summary>
+    /// <#=summary#>
+    /// Instances of this type are kept in a pool for recycling.
+    /// </summary>
+<#
+        //
+        // Emit the type parameter XML documentation.
+        //
+        if (type.IsGenericTypeDefinition) // <if-type-isgenerictypedefinition>
+        {
+#>
+    <#=genArgDoc.Replace("\r\n", "\r\n    ")#>
+<#
+        } // </if-type-isgenerictypedefinition>
+#>
+    public partial class <#=pooledTypeName#><#=derive#>
+    {
+<#
+        //
+        // If the original type is serializable, we're keeping that property
+        // but need to make sure not to serialize the pool instance. Upon
+        // deserializing a pooled instance, it will live on its own, rather
+        // than being adopted by a pool.
+        //
+        if (ser) // <if-ser>
+        {
+#>
+#if !NO_SERIALIZATION
+        [NonSerialized]
+#endif
+<#
+        } // </if-ser>
+#>
+        private readonly <#=poolTypeName#> _pool;
+<#
+        if (ser) // <if-ser>
+        {
+#>
+#if !NO_SERIALIZATION
+        [NonSerialized]
+#endif
+<#
+        } // </if-ser>
+#>
+        private readonly int _maxCapacity = 1024;
+
+<#
+        //
+        // If the type is sealed, we use a containment approach, so we emit
+        // a public readonly *field* to give direct access to the instance.
+        // Use of a field is intentional in this case; we don't need other
+        // means of abstracting accesses and want a "ldfld" rather than a
+        // "callvirt" when trying to access the object.
+        //
+        if (type.IsSealed) // </if-type-issealed>
+        {
+#>
+        /// <summary>
+        /// Gets the <#=typeNameDocCref#> instance held by this pooled <#=typeNameEn#> instance.
+        /// </summary>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "<#=typeNameDoc#> is sealed, so we can't inherit from it to provide straight accesses. We want to get as close as direct invocations of the pooled object's members without extra layers of abstractions on the code path.")]
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "No amount of 'security' will protect against aliasing of mutable object instances.")]
+        public readonly <#=typeName#> <#=typeNameShort#>;
+
+<#
+        } // </if-type-issealed>
+
+        //
+        // Emit the constructors as internal. The generated pool type will emit
+        // calls to these constructors when a new instance is required.
+        //
+        var k = 0;
+        foreach (var ctor in ctors.Concat(new[] { ctors.Last() })) // <foreach-ctor-in-ctors>
+        {
+            var ctorParams = string.Join(", ", ctor.GetParameters().Select(p => toCSharp(p.ParameterType) + " " + p.Name));
+            if (ctorParams != "")
+                ctorParams = ", " + ctorParams;
+            
+            var ctorParamNames = string.Join(", ", ctor.GetParameters().Select(p => p.Name));
+            var fieldNames = string.Join(", ", ctor.GetParameters().Select(p => "_" + p.Name));
+
+            if (k == ctors.Length)
+            {
+                ctorParams = ctorParams + ", int maxCapacity";
+            }
+#>
+        internal <#=pooledTypeNameShort#>(<#=poolTypeName#> pool<#=ctorParams#>)
+<#
+            if (isDerived) // <if-isderived>
+            {
+#>
+            : base(<#=ctorParamNames#>)
+<#
+            } // </if-isderived>
+#>
+        {
+            _pool = pool;
+<#
+            if (k == ctors.Length) // <if-k-equals-ctors-length>
+            {
+#>
+            _maxCapacity = maxCapacity;
+<#
+            } // </if-k-equals-ctors-length>
+
+            if (type.IsSealed) // <if-issealed>
+            {
+#>
+            <#=typeNameShort#> = new <#=typeName#>(<#=ctorParamNames#>);
+<#
+            } // </if-issealed>
+#>
+        }
+
+<#
+            ++k;
+        } // </foreach-ctor-in-ctors>
+#>
+        /// <summary>
+        /// Frees the object and returns it to the pool.
+        /// </summary>
+        public void Free()
+        {
+            if (_pool != null)
+            {
+<#
+        //
+        // If the user specified a condition under which to discard the
+        // pooled instance, emit the check here.
+        //
+        if (forget != null) // <if-forget-not-null>
+        {
+#>
+                if (<#=forget#>)
+                {
+                    _pool.ForgetTrackedObject(this);
+                    return;
+                }
+
+<#
+        } // </if-forget-not-null>
+#>
+                _pool.Free<#=hasFast ? "Fast" : ""#>(this);
+            }
+        }
+
+<#
+        //
+        // Check whether the type we're constructing a pooled variant for
+        // has a Clear method.
+        //
+        var clearMtd = type.GetMethod("Clear");
+        if (clearMtd != null && clearMtd.GetParameters().Length == 0) // <if-has-clear-method>
+        {
+            //
+            // If the type is sealed, we should emit a Clear call to the
+            // underlying instance.
+            //
+            if (type.IsSealed) // <if-type-issealed>
+            {
+#>
+        /// <summary>
+        /// Clears the object.
+        /// </summary>
+        public void Clear()
+        {
+            <#=typeNameShort#>.Clear();
+        }
+<#
+            } // </if-type-issealed>
+        }
+        else // <if-has-clear-method clause="else">
+        {
+#>
+        /// <summary>
+        /// Clears the object.
+        /// </summary>
+        public void Clear()
+        {
+            ClearCore();
+        }
+
+        partial void ClearCore();
+<#
+        } // </if-has-clear-method>
+#>
+    }
+
+<#
+        //
+        // If the original type is serializable, we will keep that property
+        // on the derived type.
+        //
+        if (ser) // <if-ser>
+        {
+#>
+#if !NO_SERIALIZATION
+    [Serializable]
+    partial class <#=pooledTypeName#>
+    {
+<#
+            //
+            // Check whether we have a base constructor for deserialization. If
+            // so, we need to emit such a beast here too, and call the base.
+            //
+            if (type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(System.Runtime.Serialization.SerializationInfo), typeof(System.Runtime.Serialization.StreamingContext) }, null) != null) // <if-base-ctor-for-deserialize>
+            {
+                var pooledTypeNameDoc = pooledTypeName.Replace("<", "{").Replace(">", "}");
+                var pooledTypeNameDocCref = "<see cref=\"" + pooledTypeNameDoc + "\"/>";
+#>
+        /// <summary>
+        /// Initializes a new instance of the <#=pooledTypeNameDocCref#> class with serialized data.
+        /// </summary>
+        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <#=pooledTypeNameDocCref#>.</param>
+        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <#=pooledTypeNameDocCref#>.</param>
+        protected <#=pooledTypeNameShort#>(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
+            : base(info, context)
+        {
+        }
+<#
+            } // </if-base-ctor-for-deserialize>
+#>
+    }
+#endif
+<#
+        } // </if-ser>
+#>
+
+    /// <summary>
+    /// Object pool for <#=typeNameDocCref#> instances.
+    /// </summary>
+<#
+        //
+        // If the type to be pooled is generic, we should emit
+        // the type parameter XML documentation on the pool type.
+        //
+        if (type.IsGenericTypeDefinition) // <if-type-isgenerictypedefinition>
+        {
+#>
+    <#=genArgDoc.Replace("\r\n", "\r\n    ")#>
+<#
+        } // </if-type-isgenerictypedefinition>
+#>
+    public abstract partial class <#=poolTypeName#> : ObjectPoolBase<<#=pooledTypeName#>>
+    {
+        /// <summary>
+        /// Creates a new <#=typeNameDocCref#> pool of the specified pool size.
+        /// </summary>
+        /// <param name="size">Number of <#=typeNameDocCref#> instances to keep in the pool.</param>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="size"/> is less than zero.</exception>
+        protected <#=poolTypeNameShort#>(int size)
+            : base(size)
+        {
+        }
+
+<#
+        //
+        // Emit Create factory methods on the pool type.
+        //
+        k = 0;
+        foreach (var ctor in ctors.Concat(new[] { ctors.Last() })) // <foreach-ctor-in-ctors>
+        {
+            var cps = ctor.GetParameters();
+
+            //
+            // E.g. ", int capacity"
+            //
+            var ctorParams = string.Join(", ", cps.Select(p => toCSharp(p.ParameterType) + " " + p.Name));
+            var ctorParamsS = ctorParams;
+            if (ctorParams != "")
+                ctorParams = ", " + ctorParams;
+
+            //
+            // E.g. ", int capacity, int maxCapacity"
+            //
+            if (k == ctors.Length)
+            {
+                ctorParams = ctorParams + ", int maxCapacity";
+                ctorParamsS = ctorParamsS + ((ctorParamsS != "") ? ", " : "") + "int maxCapacity";
+            }
+
+            //
+            // E.g. ", _capacity"
+            //
+            var fieldNames = string.Join(", ", cps.Select(p => "_" + p.Name));
+            if (fieldNames != "")
+                fieldNames = ", " + fieldNames;
+
+            //
+            // E.g. ", capacity"
+            //
+            var ctorParamNames = string.Join(", ", cps.Select(p => p.Name));
+            var ctorParamNamesS = ctorParamNames;
+            if (ctorParamNames != "")
+                ctorParamNames = ", " + ctorParamNames;
+
+            //
+            // E.g. ", capacity, maxCapacity"
+            //      ", _capacity, _maxCapacity"
+            //
+            if (k == ctors.Length)
+            {
+                ctorParamNames = ctorParamNames + ", maxCapacity";
+                ctorParamNamesS = ctorParamNamesS + ((ctorParamNamesS != "") ? ", " : "") + "maxCapacity";
+
+                fieldNames = fieldNames + ", _maxCapacity";
+            }
+
+            //
+            // Get summary "tag line" to explain the constructor invocation behavior
+            // of the factory method.
+            //
+            var initPhrase = default(string);
+            if (cps.Length == 0)
+            {
+                initPhrase = "The pool creates new instances of " + typeNameDocCref + " by calling the default constructor on " + typeNameDoc + ".";
+            }
+            else
+            {
+                var allcArgs = cps.Select(p => "<paramref name=\"" + p.Name + "\">" + p.Name + "</paramref>").ToArray();
+                var cArgs = "";
+                if (cps.Length > 1)
+                {
+                    cArgs = string.Join(", ", allcArgs.Take(cps.Length - 1)) + " and " + allcArgs.Last();
+                }
+                else
+                {
+                    cArgs = string.Join(", ", allcArgs);
+                }
+                initPhrase = "The pool creates new instances of " + typeNameDocCref + " by calling the constructor on " + typeNameDocCref + ", passing in the specified " + cArgs + ".";
+            }
+#>
+        /// <summary>
+        /// Creates a new <#=typeNameDocCref#> pool of the specified pool size.
+        /// <#=initPhrase#>
+        /// </summary>
+        /// <param name="size">Number of <#=typeNameDocCref#> instances to keep in the pool.</param>
+<#
+            //
+            // Emit XML doc comments for parameters, which we'll try to get
+            // from the original type using System.Documentation.
+            //
+            foreach (var parameter in cps) // <foreach-parameter-in-cps>
+            {
+                var p = parameter.Name;
+                var doc = "<param name=\"" + p + "\">See " + p + " on " + typeNameDocCref + "</param>";
+
+                var xmlDoc = XmlDocumentation.GetXmlDoc(parameter);
+                if (xmlDoc != null)
+                {
+                    doc = xmlDoc.ToString();
+                }
+#>
+        /// <#=doc#>
+<#
+            } // </foreach-parameter-in-cps>
+#>
+<#
+            //
+            // Emit the max capacity parameter if k is equal to the number of constructors
+            //
+            if (k == ctors.Length)
+            {
+#>
+        /// <param name="maxCapacity">The maximum capacity allowed for pooled instances.</param>
+<#
+            } // </if-k-equals-ctors-length>
+#>
+        /// <returns>Newly created pool for <#=typeNameDocCref#> instances.</returns>
+        /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="size"/> is less than zero.</exception>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1000:DoNotDeclareStaticMembersOnGenericTypes", Justification = "Standard factory pattern.")]
+        public static <#=poolTypeName#> Create(int size<#=ctorParams#>)
+        {
+<#
+            //
+            // If we got constructor parameters, emit a partial method
+            // call to allow other parts of the class to specify argument
+            // checks which we can't auto-generate.
+            //
+            if (ctorParams != "") // <if-ctorParams-not-empty>
+            {
+#>
+            CheckArguments(<#=ctorParamNamesS#>);
+
+<#
+            } // </if-ctorParams-not-empty>
+#>
+            return new Impl<#=k#>(size<#=ctorParamNames#>);
+        }
+<#
+            //
+            // If we got constructor parameters, emit a partial method
+            // to allow other parts of the class to specify argument
+            // checks which we can't auto-generate.
+            //
+            if (ctorParams != "") // <if-ctorParams-not-empty>
+            {
+#>
+
+        static partial void CheckArguments(<#=ctorParamsS#>);
+<#
+            } // </if-ctorParams-not-empty>
+#>
+
+        private sealed class Impl<#=k#> : <#=poolTypeName#>
+        {
+<#
+            //
+            // Each constructor parameter needs to be stashed away in
+            // a local field for use during CreateInstance calls that
+            // occur at a later time when the pool request a new
+            // object instance.
+            //
+            foreach (var p in ctor.GetParameters()) // <foreach-p-in-ctorParameters>
+            {
+#>
+            private readonly <#=toCSharp(p.ParameterType)#> _<#=p.Name#>;
+<#
+            } // </foreach-p-in-ctorParameters>
+
+            if (k == ctors.Length)
+            {
+#>
+            private readonly int _maxCapacity;
+<#
+            } // </if-k-equals-ctors-length>
+#>
+
+            public Impl<#=k#>(int size<#=ctorParams#>)
+                : base(size)
+            {
+<#
+            //
+            // Emit assignments for each of the constructor parameters
+            // to their respective fields.
+            //
+            foreach (var p in ctor.GetParameters().Select(p => p.Name)) // <foreach-p-in-ctorParameterNames>
+            {
+#>
+                _<#=p#> = <#=p#>;
+<#
+            } // </foreach-p-in-ctorParameterNames>
+
+            if (k == ctors.Length)
+            {
+#>
+                _maxCapacity = maxCapacity;
+<#
+            } // </if-k-equals-ctors-length>
+#>
+            }
+
+            protected override <#=pooledTypeName#> CreateInstance() => new <#=pooledTypeName#>(this<#=fieldNames#>);
+        }
+
+<#
+            //
+            // Update k, which is used to number the inner pool classes
+            // generated by this loop.
+            //
+            k++;
+        } // </foreach-ctor-in-ctors>
+#>
+
+        /// <summary>
+        /// Gets a holder to a pooled <#=typeNameEn#> instance with RAII capabilities to return it to the pool.
+        /// </summary>
+        /// <returns>Holder to a pooled <#=typeNameEn#> instance.</returns>
+        public new <#=pooledHolderTypeName#> New()
+        {
+            var res = new PooledObject<<#=pooledTypeName#>>(this, /* no closure */ p => p.Allocate<#=hasFast ? "Fast" : ""#>(), /* no closure */ (_, o) => o.Free());
+
+            OnAllocate(res, <#=string.IsNullOrEmpty(check) ? "true" : "res.Object." + check #>);
+
+<#
+        //
+        // If the user specified a clear check, emit it over here to
+        // ensure objects returned from the pool are cleared. This is
+        // only done in DEBUG builds and meant to catch errors in the
+        // usage patterns of the pool. Notice OnAllocate can be used
+        // to provide checks that could take other actions, regardless
+        // of the build flavor (e.g. fail fast), at a small cost.
+        //
+        if (!string.IsNullOrEmpty(check)) // <if-check-not-empty>
+        {
+#>
+            System.Diagnostics.Debug.Assert(res.Object.<#=check#>, "A dirty object was returned from the pool.");
+
+<#
+        } // </if-check-not-empty>
+#>
+            return new <#=pooledHolderTypeName#>(res);
+        }
+
+        partial void OnAllocate(PooledObject<<#=pooledTypeName#>> obj, bool isCleared);
+    }
+
+#pragma warning disable 0282 // Order of fields and their initialization doesn't matter for us
+
+    /// <summary>
+    /// Struct holding a pooled <#=typeNameDocCref#> instance. Values of this type get
+    /// returned from the New methods on <#=pooledPrefix#><#=typeNameDocCref#> and provide a
+    /// strongly typed disposable wrapper around the resource.
+    /// </summary>
+<#
+        //
+        // If the type to be pooled is generic, we should emit
+        // the type parameter XML documentation on the holder type.
+        //
+        if (type.IsGenericTypeDefinition) // <if-type-isgenerictypedefinition>
+        {
+#>
+    <#=genArgDoc.Replace("\r\n", "\r\n    ")#>
+<#
+        } // </if-type-isgenerictypedefinition>
+#>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Performance", "CA1815:OverrideEqualsAndOperatorEqualsOnValueTypes", Justification = "RAII pattern does not require equality checks.")]
+    public partial struct <#=pooledHolderTypeName#> : IDisposable
+    {
+        private readonly PooledObject<<#=pooledTypeName#>> _obj;
+<#
+        if (!hasRoslyn) // <if-not-hasRoslyn>
+        {
+#>
+#if DEBUG
+        private int _disposed; // Put here to work around CS0171 prior to Roslyn
+#endif
+<#
+        } // <if-not-hasRoslyn>
+#>
+
+        /// <summary>
+        /// Creates a new holder for the given pooled <#=typeNameEn#> object.
+        /// </summary>
+        /// <param name="obj">Pooled <#=typeNameEn#> object to create a holder for.</param>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
+        public <#=pooledHolderTypeNameShort#>(PooledObject<<#=pooledTypeName#>> obj)
+        {
+            _obj = obj;
+<#
+        if (!hasRoslyn) // <if-not-hasRoslyn>
+        {
+#>
+#if DEBUG
+            _disposed = 0; // Put here to work around CS0171 prior to Roslyn
+#endif
+<#
+        } // <if-not-hasRoslyn>
+#>
+        }
+
+        /// <summary>
+        /// Gets the <#=typeNameDocCref#> instance held by this instance.
+        /// </summary>
+        /// <returns>The <#=typeNameDocCref#> instance held by the holder.</returns>
+        public <#=typeName#> <#=typeNameShort#>
+        {
+            get
+            {
+                CheckAccess();
+
+                return _obj.Object<#=type.IsSealed ? "." + typeNameShort : ""#>;
+            }
+        }
+
+        /// <summary>
+        /// Returns the pooled <#=typeNameDocCref#> instance back to the pool.
+        /// </summary>
+        public void Dispose()
+        {
+            AssertSingleDispose();
+
+            _obj.Dispose();
+        }
+
+        partial void CheckAccess();
+
+        partial void AssertSingleDispose();
+    }
+
+#if DEBUG
+    partial struct <#=pooledHolderTypeName#>
+    {
+<#
+        if (hasRoslyn) // <if-hasRoslyn>
+        {
+#>
+        private int _disposed = 0;
+
+<#
+        } // </if-hasRoslyn>
+#>
+        [ExcludeFromCodeCoverage]
+        partial void CheckAccess()
+        {
+            if (System.Threading.Volatile.Read(ref _disposed) != 0)
+                throw new ObjectDisposedException("holder");
+        }
+
+        [ExcludeFromCodeCoverage]
+        partial void AssertSingleDispose()
+        {
+            if (System.Threading.Interlocked.Exchange(ref _disposed, 1) != 0)
+                throw new InvalidOperationException("Holder object of type " + ToString() + " got disposed more than once.");
+        }
+    }
+#endif
+
+#pragma warning restore 0282
+}
+<#
+        if (e.If != null) // <if-e-if-not-null>
+        {
+#>
+#endif
+
+<#
+        } // </if-e-if-not-null>
+#>
+<#
+    } // </if-not-type-isvaluetype>
+} // </foreach-e-in-types>
+#>
+
+#endif
