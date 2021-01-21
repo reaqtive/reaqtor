@@ -1,0 +1,417 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 15;#>
+<#var ordinals = new string[] { "zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth" };#>
+//
+// Revision history:
+//
+// BD, ER - August 2013 - Created this file.
+// Auto-generated file, changes to source may be lost
+//
+
+using System;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+namespace Reaqtor
+{
+    public abstract partial class ReactiveDefinitionProxyBase
+    {
+        #region StreamFactory
+
+<#/*
+generating the code for:
+
+        /// <summary>
+        /// Defines a parameterized stream factory identified by the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+        /// <param name="uri">URI identifying the stream factory.</param>
+        /// <param name="streamFactory">Stream factory to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the stream factory definition.</returns>
+        public Task DefineStreamFactoryAsync<TArg1, TArg2, TInput, TOutput>(Uri uri, IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> streamFactory, object state = null, CancellationToken token = default)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (streamFactory == null)
+                throw new ArgumentNullException(nameof(streamFactory));
+
+            return DefineStreamFactoryAsyncCore<TArg1, TArg2, TInput, TOutput>(uri, streamFactory, state, token);
+        }
+
+        /// <summary>
+        /// Defines a parameterized stream factory identified by the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+        /// <param name="uri">URI identifying the stream factory.</param>
+        /// <param name="streamFactory">Stream factory to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the stream factory definition.</returns>
+        protected abstract Task DefineStreamFactoryAsyncCore<TArg1, TArg2, TInput, TOutput>(Uri uri, IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> streamFactory, object state = null, CancellationToken token = default);
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++)
+{
+    var typeArgsList = new List<string>();
+
+    for (int j = 1; j <= i; ++j)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+#>
+        /// <summary>
+        /// Defines a parameterized stream factory identified by the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subject factory.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+        /// <param name="uri">URI identifying the stream factory.</param>
+        /// <param name="streamFactory">Stream factory to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the stream factory definition.</returns>
+        public Task DefineStreamFactoryAsync<<#=typeArgs#>, TInput, TOutput>(Uri uri, IAsyncReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> streamFactory, object state = null, CancellationToken token = default)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (streamFactory == null)
+                throw new ArgumentNullException(nameof(streamFactory));
+
+            return DefineStreamFactoryAsyncCore<<#=typeArgs#>, TInput, TOutput>(uri, streamFactory, state, token);
+        }
+
+        /// <summary>
+        /// Defines a parameterized stream factory identified by the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subject factory.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TInput">Type of the data received by the subjects created by the stream factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subjects created by the stream factory.</typeparam>
+        /// <param name="uri">URI identifying the stream factory.</param>
+        /// <param name="streamFactory">Stream factory to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the stream factory definition.</returns>
+        protected abstract Task DefineStreamFactoryAsyncCore<<#=typeArgs#>, TInput, TOutput>(Uri uri, IAsyncReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> streamFactory, object state = null, CancellationToken token = default);
+
+<#}#>
+        #endregion
+
+        #region Observable
+
+<#/*
+generating the code for:
+
+        /// <summary>
+        /// Defines a parameterized observable identified by the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observable.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observable.</typeparam>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="uri">URI identifying the observable.</param>
+        /// <param name="observable">Observable to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the observable definition.</returns>
+        public Task DefineObservableAsync<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (observable == null)
+                throw new ArgumentNullException(nameof(observable));
+
+            return DefineObservableAsyncCore<TArg1, TArg2, TResult>(uri, observable, state, token);
+        }
+
+        /// <summary>
+        /// Defines a parameterized observable identified by the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observable.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observable.</typeparam>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="uri">URI identifying the observable.</param>
+        /// <param name="observable">Observable to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the observable definition.</returns>
+        protected abstract Task DefineObservableAsyncCore<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default);
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++)
+{
+    var typeArgsList = new List<string>();
+
+    for (int j = 1; j <= i; ++j)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+#>
+        /// <summary>
+        /// Defines a parameterized observable identified by the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observable.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="uri">URI identifying the observable.</param>
+        /// <param name="observable">Observable to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the observable definition.</returns>
+        public Task DefineObservableAsync<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (observable == null)
+                throw new ArgumentNullException(nameof(observable));
+
+            return DefineObservableAsyncCore<<#=typeArgs#>, TResult>(uri, observable, state, token);
+        }
+
+        /// <summary>
+        /// Defines a parameterized observable identified by the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observable.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="uri">URI identifying the observable.</param>
+        /// <param name="observable">Observable to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the observable definition.</returns>
+        protected abstract Task DefineObservableAsyncCore<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default);
+
+<#}#>
+        #endregion
+
+        #region Observer
+
+<#/*
+generating the code for:
+
+        /// <summary>
+        /// Defines a parameterized observer identified by the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observer.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observer.</typeparam>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="uri">URI identifying the observer.</param>
+        /// <param name="observer">Observer to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the observer definition.</returns>
+        public Task DefineObserverAsync<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>>> observer, object state = null, CancellationToken token = default)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (observer == null)
+                throw new ArgumentNullException(nameof(observer));
+
+            return DefineObserverAsyncCore<TArg1, TArg2, TResult>(uri, observer, state, token);
+        }
+
+        /// <summary>
+        /// Defines a parameterized observer identified by the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observer.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observer.</typeparam>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="uri">URI identifying the observer.</param>
+        /// <param name="observer">Observer to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the observer definition.</returns>
+        protected abstract Task DefineObserverAsyncCore<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>>> observer, object state = null, CancellationToken token = default);
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++)
+{
+    var typeArgsList = new List<string>();
+
+    for (int j = 1; j <= i; ++j)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+#>
+        /// <summary>
+        /// Defines a parameterized observer identified by the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observer.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="uri">URI identifying the observer.</param>
+        /// <param name="observer">Observer to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the observer definition.</returns>
+        public Task DefineObserverAsync<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQbserver<TResult>>> observer, object state = null, CancellationToken token = default)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (observer == null)
+                throw new ArgumentNullException(nameof(observer));
+
+            return DefineObserverAsyncCore<<#=typeArgs#>, TResult>(uri, observer, state, token);
+        }
+
+        /// <summary>
+        /// Defines a parameterized observer identified by the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observer.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="uri">URI identifying the observer.</param>
+        /// <param name="observer">Observer to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the observer definition.</returns>
+        protected abstract Task DefineObserverAsyncCore<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQbserver<TResult>>> observer, object state = null, CancellationToken token = default);
+
+<#}#>
+        #endregion
+
+        #region SubscriptionFactory
+
+<#/*
+generating the code for:
+
+        /// <summary>
+        /// Defines a parameterized subscription factory identified by the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subscription factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subscription factory.</typeparam>
+        /// <param name="uri">URI identifying the subscription factory.</param>
+        /// <param name="subscriptionFactory">Subscription factory to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the subscription factory definition.</returns>
+        public Task DefineSubscriptionFactoryAsync<TArg1, TArg2>(Uri uri, IAsyncReactiveQubscriptionFactory<TArg1, TArg2> subscriptionFactory, object state = null, CancellationToken token = default)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (subscriptionFactory == null)
+                throw new ArgumentNullException(nameof(subscriptionFactory));
+
+            return DefineSubscriptionFactoryAsyncCore<TArg1, TArg2>(uri, subscriptionFactory, state, token);
+        }
+
+        /// <summary>
+        /// Defines a parameterized subscription factory identified by the specified URI.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subscription factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subscription factory.</typeparam>
+        /// <param name="uri">URI identifying the subscription factory.</param>
+        /// <param name="subscriptionFactory">Subscription factory to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the subscription factory definition.</returns>
+        protected abstract Task DefineSubscriptionFactoryAsyncCore<TArg1, TArg2>(Uri uri, IAsyncReactiveQubscriptionFactory<TArg1, TArg2> subscriptionFactory, object state = null, CancellationToken token = default);
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++)
+{
+    var typeArgsList = new List<string>();
+
+    for (int j = 1; j <= i; ++j)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+#>
+        /// <summary>
+        /// Defines a parameterized subscription factory identified by the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subscription factory.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <param name="uri">URI identifying the subscription factory.</param>
+        /// <param name="subscriptionFactory">Subscription factory to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the subscription factory definition.</returns>
+        public Task DefineSubscriptionFactoryAsync<<#=typeArgs#>>(Uri uri, IAsyncReactiveQubscriptionFactory<<#=typeArgs#>> subscriptionFactory, object state = null, CancellationToken token = default)
+        {
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (subscriptionFactory == null)
+                throw new ArgumentNullException(nameof(subscriptionFactory));
+
+            return DefineSubscriptionFactoryAsyncCore<<#=typeArgs#>>(uri, subscriptionFactory, state, token);
+        }
+
+        /// <summary>
+        /// Defines a parameterized subscription factory identified by the specified URI.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        /// <#= string.Format("<typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subscription factory.</typeparam>", j, ordinals[j]) #>
+<#}#>
+        /// <param name="uri">URI identifying the subscription factory.</param>
+        /// <param name="subscriptionFactory">Subscription factory to be defined.</param>
+        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+        /// <param name="token">Token to observe for cancellation of the request.</param>
+        /// <returns>Task to await the completion of the subscription factory definition.</returns>
+        protected abstract Task DefineSubscriptionFactoryAsyncCore<<#=typeArgs#>>(Uri uri, IAsyncReactiveQubscriptionFactory<<#=typeArgs#>> subscriptionFactory, object state = null, CancellationToken token = default);
+
+<#}#>
+        #endregion
+    }
+}

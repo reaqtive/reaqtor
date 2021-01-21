@@ -1,0 +1,673 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
+using System.Linq.Expressions;
+using System.Reflection;
+using System.Reflection.Emit;
+using System.Runtime.CompilerServices;
+using System.Threading;
+
+namespace ExpressionJit
+{
+    class Old
+    {
+        static void PrintMT(MethodTable mt, bool header = false)
+        {
+            if (header)
+            {
+                Console.WriteLine("METHODTABLE");
+            }
+
+            var i = 0;
+            foreach (Thunk t in mt.Thunks)
+            {
+                Console.WriteLine($"  [{i++}] {t.Lambda}");
+            }
+
+            Console.WriteLine();
+        }
+
+        static void Thunks()
+        {
+            //var q = (Expression<Func<IEnumerable<int>, IEnumerable<int>, int, int, IEnumerable<int>>>)((xs, ys, a, b) => xs.Where(x => x > a).SelectMany(x => ys.Select(y => x + y - b)));
+            //var q = (Expression<Func<int, int>>)(x => x);
+            var q = (Expression<Func<int, Func<int, int>>>)(x => y => x + y);
+
+            Console.WriteLine("COMPILE " + q);
+            var f = Compile(q);
+            Console.WriteLine();
+
+            var mt = ((FunctionContext<MethodTable>)f.Target).Closure;
+            PrintMT(mt, true);
+
+            Console.WriteLine("EVAL(f1 = f(1))");
+            var f1 = f(1);
+            Console.WriteLine("f1 = " + f1);
+            Console.WriteLine();
+
+            Console.WriteLine("EVAL(f12 = f1(2))");
+            var f12 = f1(2);
+            Console.WriteLine("f12 = " + f12);
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("INSTRUMENT(mt[1])");
+            Console.ResetColor();
+            PrintMT(mt);
+            var t1 = (Thunk)mt.Thunks[1];
+            var old = t1.Lambda;
+
+            var instrBody = TraceInstrumenter.InstrumentOne(old.Body, old.Body.ToString());
+            var instr = Expression.Lambda(old.Type, instrBody, old.Parameters);
+
+            t1.Lambda = instr;
+
+            Console.WriteLine("EVAL(f13 = f1(3))");
+            var f13 = f1(3);
+            Console.WriteLine("f13 = " + f13);
+            Console.WriteLine();
+
+            Console.WriteLine("EVAL(f14 = f1(4))");
+            var f14 = f1(4);
+            Console.WriteLine("f14 = " + f14);
+            Console.WriteLine();
+
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("REVERT(mt[1])");
+            Console.ResetColor();
+            PrintMT(mt);
+            t1.Lambda = old;
+
+            Console.WriteLine("EVAL(f15 = f1(5))");
+            var f15 = f1(5);
+            Console.WriteLine("f15 = " + f15);
+            Console.WriteLine();
+
+            Console.WriteLine("EVAL(f2 = f(2))");
+            var f2 = f(2);
+            Console.WriteLine("f2 = " + f2);
+            Console.WriteLine();
+
+            Console.WriteLine("EVAL(f22 = f2(2))");
+            var f22 = f2(2);
+            Console.WriteLine("f22 = " + f22);
+            Console.WriteLine();
+
+            Console.WriteLine("EVAL(f23 = f2(3))");
+            var f23 = f2(3);
+            Console.WriteLine("f23 = " + f23);
+            Console.WriteLine();
+        }
+
+        static void Thunk()
+        {
+            //var t = new FuncThunk<string, int, int, int>((s, x, y) => s.Length + x + y);
+            //var d = new FuncDispatcher<string, int, int, int>(t, "bar");
+
+            //Console.WriteLine(d.Invoke(2, 1));
+
+            //t.Expression = (s, x, y) => s.Length + Log(x) + y;
+            //var old = t.Target;
+            //t.Target = t.Expression.Compile();
+
+            //Console.WriteLine(d.Invoke(2, 1));
+
+            //t.Target = old;
+
+            //Console.WriteLine(d.Invoke(2, 1));
+        }
+
+        static void Analyze<T>(Expression<T> q)
+        {
+            var res = Analyzer.Analyze(q);
+            foreach (var e in res)
+            {
+                var h = e.Value.Locals ?? Enumerable.Empty<KeyValuePair<ParameterExpression, StorageKind>>();
+                Console.WriteLine($"{e.Key} -> {{{string.Join(", ", h.Select(v => v.Key.Name + ":" + v.Value))}}}");
+            }
+        }
+
+        static T Compile<T>(Expression<T> q)
+        {
+            return q.CompileEx();
+        }
+
+        // Need to deal with Quote
+        // Need to deal with RuntimeVariables
+
+        static T Log<T>(T value)
+        {
+            Console.WriteLine(">>> " + value);
+            return value;
+        }
+    }
+
+    static class JitCompiler
+    {
+        public static TDelegate CompileEx<TDelegate>(this Expression<TDelegate> expression)
+        {
+            var res = Reducer.Instance.VisitAndConvert(expression, nameof(CompileEx));
+
+            var analysis = Analyzer.Analyze(res);
+
+            var rootParam = Expression.Parameter(typeof(MethodTable), "__mt");
+
+            var rewriter = new Rewriter(analysis, rootParam);
+
+            var t = rewriter.Visit(res);
+
+            var f = Expression.Lambda(t, rootParam).Compile();
+
+            var mt = rewriter.GetMethodTable();
+
+            return (TDelegate)f.DynamicInvoke(mt);
+        }
+    }
+
+    // TODO: Flattening of Block scopes when possible
+
+    class Reducer : ExpressionVisitor
+    {
+        // TODO: What about BinaryExpression.Conversion?
+
+        public static readonly Reducer Instance = new Reducer();
+
+        private Reducer() { }
+    }
+
+    class MethodTable
+    {
+        public object[] Thunks;
+    }
+
+    class Rewriter : ExpressionVisitor
+    {
+        private readonly Dictionary<object, Scope> _analysis;
+        private readonly ParameterExpression _root;
+        private readonly Dictionary<int, LambdaInfo> _lambdas = new Dictionary<int, LambdaInfo>();
+        private CompilerScope _scope;
+        private int _closureId;
+
+        public Rewriter(Dictionary<object, Scope> analysis, ParameterExpression mt)
+        {
+            _analysis = analysis;
+            _root = mt;
+            _scope = new CompilerScope(_root);
+        }
+
+        public MethodTable GetMethodTable()
+        {
+            var mt = new MethodTable();
+
+            var count = _lambdas.Count;
+
+            var thunks = new object[count];
+            mt.Thunks = thunks;
+
+            for (var i = 0; i < count; i++)
+            {
+                var lambda = _lambdas[i];
+                var thunk = Activator.CreateInstance(lambda.ThunkType, new object[] { lambda.Lambda });
+                thunks[i] = thunk;
+            }
+
+            return mt;
+        }
+
+        struct LambdaInfo
+        {
+            public LambdaExpression Lambda;
+            public Type ThunkType;
+        }
+
+        protected override Expression VisitLambda<T>(Expression<T> node)
+        {
+            var index = _lambdas.Count;
+            _lambdas[index] = default(LambdaInfo);
+
+            var currentScope = _scope;
+            try
+            {
+                var closureParam = currentScope.Closure;
+                var thunkType = ThunkFactory.GetThunkType(typeof(T), closureParam.Type);
+
+                var scope = _analysis[node];
+                _scope = new CompilerScope(currentScope, scope, _closureId++);
+
+                var builder = _scope.Enter(1, copyLocals: true);
+
+                builder.Append(Visit(node.Body));
+
+                var body = builder.Finish(declareNonHoistedLocals: false);
+
+                var ctor = thunkType.GetConstructors().Single();
+                var innerType = ctor.GetParameters().Single().ParameterType;
+                Debug.Assert(innerType.IsGenericType && innerType.GetGenericTypeDefinition() == typeof(Expression<>));
+                var innerDelegateType = innerType.GetGenericArguments()[0];
+
+                var parameters = new ParameterExpression[node.Parameters.Count + 1];
+                parameters[0] = closureParam;
+                node.Parameters.CopyTo(parameters, 1);
+
+                var lambda = Expression.Lambda(innerDelegateType, body, parameters);
+                _lambdas[index] = new LambdaInfo { ThunkType = thunkType, Lambda = lambda };
+
+                var methodTable = currentScope.Bind(_root);
+
+                var methodTableEntry =
+                    Expression.Convert(
+                        Expression.ArrayIndex(
+                            Expression.Field(methodTable, nameof(MethodTable.Thunks)),
+                            Expression.Constant(index)
+                        ),
+                        thunkType
+                    );
+
+                var createDelegate = thunkType.GetMethod("CreateDelegate");
+
+                return Expression.Call(methodTableEntry, createDelegate, closureParam);
+            }
+            finally
+            {
+                _scope = currentScope;
+            }
+        }
+
+        protected override Expression VisitBlock(BlockExpression node)
+        {
+            var variables = (IEnumerable<ParameterExpression>)node.Variables;
+            var expressions = default(IEnumerable<Expression>);
+
+            var currentScope = _scope;
+            try
+            {
+                var scope = _analysis[node];
+                _scope = new CompilerScope(currentScope, scope, _closureId++);
+
+                if (!scope.HasHoistedLocals)
+                {
+                    expressions = Visit(node.Expressions);
+                }
+                else
+                {
+                    var builder = _scope.Enter(node.Expressions.Count, copyLocals: false);
+
+                    foreach (var expr in node.Expressions)
+                    {
+                        builder.Append(Visit(expr));
+                    }
+
+                    return builder.Finish(declareNonHoistedLocals: true);
+                }
+            }
+            finally
+            {
+                _scope = currentScope;
+            }
+
+            return node.Update(variables, expressions);
+        }
+
+        protected override CatchBlock VisitCatchBlock(CatchBlock node)
+        {
+            var variable = node.Variable;
+            var filter = default(Expression);
+            var body = default(Expression);
+
+            var currentScope = _scope;
+            try
+            {
+                var scope = _analysis[node];
+                _scope = new CompilerScope(currentScope, scope, _closureId++);
+
+                if (!scope.HasHoistedLocals)
+                {
+                    filter = Visit(node.Filter);
+                    body = Visit(node.Body);
+                }
+                else
+                {
+                    // TODO: distinguish where the local is captured
+
+                    if (node.Filter != null)
+                    {
+                        var builder = _scope.Enter(1, copyLocals: true);
+                        builder.Append(Visit(node.Filter));
+                        filter = builder.Finish(declareNonHoistedLocals: false);
+                    }
+
+                    if (node.Body != null)
+                    {
+                        var builder = _scope.Enter(1, copyLocals: true);
+                        builder.Append(Visit(node.Body));
+                        body = builder.Finish(declareNonHoistedLocals: false);
+                    }
+                }
+            }
+            finally
+            {
+                _scope = currentScope;
+            }
+
+            return node.Update(variable, filter, body);
+        }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            return _scope.Bind(node);
+        }
+
+        class CompilerScope
+        {
+            private readonly CompilerScope _parent;
+            private readonly Scope _scope;
+            private readonly List<ParameterExpression> _locals;
+            private readonly Dictionary<ParameterExpression, StorageKind> _hoistedLocals;
+            private readonly ParameterExpression _parentClosure;
+            private readonly ClosureInfo _closureInfo;
+            private readonly ParameterExpression _closure;
+
+            public CompilerScope(ParameterExpression root)
+            {
+                _closure = root;
+                _locals = new List<ParameterExpression>();
+                _hoistedLocals = new Dictionary<ParameterExpression, StorageKind>();
+            }
+
+            public CompilerScope(CompilerScope parent, Scope scope, int index)
+            {
+                _parent = parent;
+                _scope = scope;
+                _locals = new List<ParameterExpression>();
+                _hoistedLocals = new Dictionary<ParameterExpression, StorageKind>();
+
+                foreach (var local in scope.Locals)
+                {
+                    if (local.Value == StorageKind.Local)
+                    {
+                        _locals.Add(local.Key);
+                    }
+                    else
+                    {
+                        _hoistedLocals.Add(local.Key, local.Value);
+                    }
+                }
+
+                _parentClosure = parent?._closure;
+
+                var fieldCount = _hoistedLocals.Count + (_parentClosure != null ? 1 : 0);
+                var fields = new KeyValuePair<ParameterExpression, StorageKind>[fieldCount];
+                var fieldIndex = 0;
+
+                if (_parentClosure != null)
+                {
+                    fields[fieldIndex++] = new KeyValuePair<ParameterExpression, StorageKind>(_parentClosure, StorageKind.Hoisted);
+                }
+
+                foreach (var var in _hoistedLocals)
+                {
+                    fields[fieldIndex++] = var;
+                }
+
+                _closureInfo = ClosureGenerator.Create(fields);
+                _closure = Expression.Parameter(_closureInfo.Type, "__closure" + index);
+            }
+
+            public ParameterExpression Closure => _closure;
+
+            public Builder Enter(int count, bool copyLocals)
+            {
+                return new Builder(this, count, copyLocals);
+            }
+
+            public class Builder
+            {
+                private readonly CompilerScope _scope;
+                private readonly Expression[] _blockStmts;
+                private int _blockIndex;
+
+                public Builder(CompilerScope scope, int count, bool copyLocals)
+                {
+                    _scope = scope;
+
+                    var blockCount = scope._hoistedLocals.Count + 1 + (scope._parentClosure != null ? 1 : 0) + count;
+                    _blockStmts = new Expression[blockCount];
+
+                    _blockStmts[_blockIndex++] = Expression.Assign(scope._closure, Expression.New(scope._closure.Type));
+
+                    if (scope._parentClosure != null)
+                    {
+                        _blockStmts[_blockIndex++] = scope._closureInfo.Assign(scope._closure, scope._parentClosure, scope._parentClosure);
+                    }
+
+                    foreach (var var in scope._hoistedLocals)
+                    {
+                        var value = default(Expression);
+                        if (copyLocals)
+                        {
+                            value = var.Key;
+                        }
+                        else
+                        {
+                            value = Expression.Default(var.Key.Type);
+                        }
+
+                        _blockStmts[_blockIndex++] = scope._closureInfo.Assign(scope._closure, var.Key, value);
+                    }
+                }
+
+                public void Append(Expression expression)
+                {
+                    _blockStmts[_blockIndex++] = expression;
+                }
+
+                public Expression Finish(bool declareNonHoistedLocals)
+                {
+                    var variables = new List<ParameterExpression>();
+                    variables.Add(_scope._closure);
+
+                    if (declareNonHoistedLocals)
+                    {
+                        variables.AddRange(_scope._locals);
+                    }
+
+                    return Expression.Block(variables, _blockStmts);
+                }
+            }
+
+            public Expression Bind(ParameterExpression variable)
+            {
+                return Resolve(_closure, variable);
+            }
+
+            private Expression Resolve(Expression closureAccess, ParameterExpression variable)
+            {
+                if (_scope == null)
+                {
+                    return closureAccess;
+                }
+
+                var kind = default(StorageKind);
+                if (_scope.Locals.TryGetValue(variable, out kind))
+                {
+                    if (kind == StorageKind.Local)
+                    {
+                        return variable;
+                    }
+
+                    return _closureInfo.CreateClosureAccess(closureAccess, variable);
+                }
+
+                return _parent.Resolve(_closureInfo.CreateClosureAccess(closureAccess, _parent._closure), variable);
+            }
+        }
+    }
+
+    static class ClosureGenerator
+    {
+        private static object s_lock = new object();
+        private static int s_count;
+        private static ModuleBuilder s_mod;
+
+        public static ClosureInfo Create(IEnumerable<KeyValuePair<ParameterExpression, StorageKind>> variables)
+        {
+            // TODO: use prebaked generic types when possible
+
+            if (s_mod == null)
+            {
+                lock (s_lock)
+                {
+                    if (s_mod == null)
+                    {
+                        s_mod =
+                            AppDomain
+                                .CurrentDomain
+                                .DefineDynamicAssembly(new AssemblyName("<>__ExpressionJit"), AssemblyBuilderAccess.RunAndCollect)
+                                .DefineDynamicModule("Closures");
+                    }
+                }
+            }
+
+            var typ = s_mod.DefineType("<>__Closure" + Interlocked.Increment(ref s_count), TypeAttributes.Public | TypeAttributes.Class);
+
+            var fields = new HashSet<string>();
+            var map = new Dictionary<ParameterExpression, string>();
+
+            foreach (var var in variables)
+            {
+                var name = var.Key.Name;
+
+                if (fields.Contains(name))
+                {
+                    for (var i = 1; i <= 64; i++)
+                    {
+                        var altName = name + i;
+
+                        if (!fields.Contains(altName))
+                        {
+                            name = altName;
+                            break;
+                        }
+                    }
+
+                    name = Guid.NewGuid().ToString();
+                }
+
+                fields.Add(name);
+
+                map.Add(var.Key, name);
+
+                var type = var.Key.Type;
+
+                if (var.Value == StorageKind.Boxed)
+                {
+                    type = typeof(StrongBox<>).MakeGenericType(type);
+                }
+
+                typ.DefineField(name, type, FieldAttributes.Public);
+            }
+
+            var res = typ.CreateType();
+
+            var varToField = new Dictionary<ParameterExpression, ClosureFieldInfo>(map.Count);
+
+            foreach (var var in variables)
+            {
+                var field = map[var.Key];
+                var info = new ClosureFieldInfo { Field = res.GetField(field), Kind = var.Value };
+                varToField.Add(var.Key, info);
+            }
+
+            return new ClosureInfo { Type = res, FieldMap = varToField };
+        }
+    }
+
+    class ClosureInfo
+    {
+        public Type Type;
+        public Dictionary<ParameterExpression, ClosureFieldInfo> FieldMap;
+
+        public Expression CreateClosureAccess(Expression closure, ParameterExpression variable)
+        {
+            var field = FieldMap[variable];
+
+            var res = Expression.Field(closure, field.Field);
+
+            if (field.Kind == StorageKind.Boxed)
+            {
+                res = Expression.Field(res, "Value");
+            }
+
+            return res;
+        }
+
+        public Expression Assign(Expression closure, ParameterExpression variable, Expression value)
+        {
+            var field = FieldMap[variable];
+
+            var lhs = Expression.Field(closure, field.Field);
+            var rhs = value;
+
+            if (field.Kind == StorageKind.Boxed)
+            {
+                rhs = Expression.New(typeof(StrongBox<>).MakeGenericType(variable.Type).GetConstructor(new[] { variable.Type }), value);
+            }
+
+            return Expression.Assign(lhs, rhs);
+        }
+    }
+
+    struct ClosureFieldInfo
+    {
+        public FieldInfo Field;
+        public StorageKind Kind;
+    }
+
+    public abstract class Thunk
+    {
+        public abstract LambdaExpression Lambda { get; set; }
+    }
+
+    public abstract class Thunk<TDelegate, TClosure, TInner> : Thunk
+    {
+        protected Thunk(Expression<TInner> expression)
+        {
+            Expression = expression;
+            Target = Compiler;
+        }
+
+        public Expression<TInner> Expression;
+        public TInner Target;
+
+        public override LambdaExpression Lambda
+        {
+            get
+            {
+                return Expression;
+            }
+
+            set
+            {
+                Expression = (Expression<TInner>)value;
+                Target = Compiler;
+            }
+        }
+
+        public abstract TInner Compiler { get; }
+    }
+
+    public class FunctionContext<TClosure>
+    {
+        public TClosure Closure;
+    }
+
+    public class Dispatcher<TDelegate, TClosure, TInner> : FunctionContext<TClosure>
+    {
+        public Thunk<TDelegate, TClosure, TInner> Parent;
+    }
+}

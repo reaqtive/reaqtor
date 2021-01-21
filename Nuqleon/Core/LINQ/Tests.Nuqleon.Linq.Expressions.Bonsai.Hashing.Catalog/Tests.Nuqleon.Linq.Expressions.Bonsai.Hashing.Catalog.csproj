@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1</TargetFrameworks>
+    <IsTestProject>false</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Linq.Expressions.Bonsai.Hashing\Nuqleon.Linq.Expressions.Bonsai.Hashing.csproj" />
+  </ItemGroup>
+
+</Project>

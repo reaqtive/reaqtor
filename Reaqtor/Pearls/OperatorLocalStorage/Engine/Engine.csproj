@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472</TargetFrameworks>
+
+    <AssemblyName>Reaqtor.QueryEngine.OperatorLocalStorage</AssemblyName>
+    <RootNamespace>Reaqtor.QueryEngine</RootNamespace>
+
+    <Description>IRP service query engine with operator local storage.</Description>
+
+    <!-- TODODOC -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Utilities\Reaqtive.Storage.Utils.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine.Serialization.DataModel\Reaqtor.QueryEngine.Serialization.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\Core\Engine\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.DataModel.CompilerServices\Nuqleon.DataModel.CompilerServices.csproj" />
+    <ProjectReference Include="..\Nuqleon.DataModel.Serialization.Json\Nuqleon.DataModel.Serialization.Json.csproj" />
+    <ProjectReference Include="..\..\JSON\Nuqleon.Json\Nuqleon.Json.csproj" />
+    <ProjectReference Include="..\..\LINQ\Nuqleon.Linq.Expressions.Bonsai.Serialization\Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+  </ItemGroup>
+
+</Project>

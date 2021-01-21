@@ -1,0 +1,60 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>IRP service query engine.</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <!--
+    NB: The use of System.Configuration is a remnant of former hosting environments for Nuqleon. The code remains,
+        but is guarded by #if SUPPORT_SYS_CONFIG checks. To enable this build flavor, add this to DefineConstants
+        and put back the package reference below.
+  -->
+  <!--
+  <ItemGroup>
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="4.7.0" />
+  </ItemGroup>
+  -->
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Engine.Contracts\Reaqtor.Engine.Contracts.csproj" />
+    <ProjectReference Include="..\Reaqtor.QueryEngine.Interfaces\Reaqtor.QueryEngine.Interfaces.csproj" />
+    <ProjectReference Include="..\..\Client\Reaqtor.Client.Model\Reaqtor.Client.Model.csproj" />
+    <ProjectReference Include="..\..\Expressions\Reaqtor.Expressions.Binding\Reaqtor.Expressions.Binding.csproj" />
+    <ProjectReference Include="..\..\Expressions\Reaqtor.Expressions.Core\Reaqtor.Expressions.Core.csproj" />
+    <ProjectReference Include="..\..\Local\Reaqtor.Local.Core\Reaqtor.Local.Core.csproj" />
+    <ProjectReference Include="..\..\Metadata\Reaqtor.Metadata.Model\Reaqtor.Metadata.Model.csproj" />
+    <ProjectReference Include="..\..\Reactive\Reaqtor.Reactive.HigherOrder\Reaqtor.Reactive.HigherOrder.csproj" />
+    <ProjectReference Include="..\..\Reliable\Reaqtor.Reliable\Reaqtor.Reliable.csproj" />
+    <ProjectReference Include="..\..\Service\Reaqtor.Service.Contracts\Reaqtor.Service.Contracts.csproj" />
+    <ProjectReference Include="..\..\Service\Reaqtor.Service.Core\Reaqtor.Service.Core.csproj" />
+    <ProjectReference Include="..\..\Service\Reaqtor.Service\Reaqtor.Service.csproj" />
+    <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Core\Reaqtor.Shared.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\BCL\Nuqleon.Collections.Specialized\Nuqleon.Collections.Specialized.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\BCL\Nuqleon.IO.StreamSegment\Nuqleon.IO.StreamSegment.csproj" />
+    <ProjectReference Include="..\..\..\..\Nuqleon\Core\DataModel\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Core\Reaqtive.Core.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Quotation\Reaqtive.Quotation.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="EventMetadata.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EventMetadata.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="EventMetadata.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EventMetadata.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,102 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Xml" #>
+<#@ assembly name="System.Xml.Linq" #>
+<#@ assembly name="$(ProjectDir)\..\..\BCL\Nuqleon.Documentation\bin\Debug\net472\Nuqleon.Documentation.dll" #>
+<#@ import namespace="System.Documentation" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".generated.cs" #>
+<#
+Func<Type, string> ToCSharp = null;
+ToCSharp = (Type type) =>
+{
+    if (type.IsGenericType)
+    {
+        return type.GetGenericTypeDefinition().Name.Substring(0, type.Name.IndexOf('`')) + "<" + string.Join(", ", type.GetGenericArguments().Select(ToCSharp).ToArray()) + ">";
+    }
+
+    if (type.IsArray)
+    {
+        return ToCSharp(type.GetElementType()) + "[]";
+    }
+
+    return type.Name;
+};
+
+var keywords = new[] { "break", "continue", "finally" };
+
+Func<string, string> noKeyword = s =>
+{
+    if (keywords.Contains(s))
+        return "@" + s;
+    return s;
+};
+
+var reserved = new [] { "And", "AndAlso", "Or", "OrElse", "Call", "Catch", "Continue", "Default", "Field", "Goto", "Loop", "New", "Not", "Property", "Return", "Throw", "MakeTry", "TryFinally", "TryFault", "TryCatchFinally" };
+var reservedParams = new [] { "field", "property" };
+
+var exclude = new[] { "TryGetFuncType", "TryGetActionType", "GetFuncType", "GetActionType", "GetDelegateType" };
+#>
+using System.Collections.Generic;
+using System.Reflection;
+using System.Runtime.CompilerServices;
+
+namespace System.Linq.Expressions
+{
+    /// <summary>
+    /// Interface for expression factories.
+    /// </summary>
+    public interface IExpressionFactory
+    {
+<#
+foreach (var m in typeof(Expression).GetMethods().Where(m => m.IsStatic && m.DeclaringType == typeof(Expression)).Where(m => !exclude.Contains(m.Name)).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length))
+{
+    var xml = string.Join("\r\n", m.GetXmlDoc().Elements().Where(e => e.Name != "exception").Select(e => e.ToString()));
+    var xmlLines = xml.ToString().Split('\n');
+    var docSb = new StringBuilder();
+    foreach (var line in xmlLines)
+    {
+        if (!string.IsNullOrEmpty(line))
+        docSb.AppendLine("        /// " + line.TrimEnd('\r'));
+    }
+    var doc = docSb.ToString().Replace(@"<paramref name=""TDelegate"" />", @"<typeparamref name=""TDelegate"" />").TrimEnd('\r', '\n');
+
+    if (m.Name == "Bind" && m.GetParameters()[0].Name == "propertyAccessor")
+    {
+        doc = doc.Replace(@"<paramref name=""member"" />", @"<paramref name=""propertyAccessor"" />");
+    }
+
+    var ret = ToCSharp(m.ReturnType);
+    var name = m.Name;
+    var genArgs = m.IsGenericMethodDefinition ? "<" + string.Join(", ", m.GetGenericArguments().Select(ToCSharp).ToArray()) + ">" : "";
+    var ps = m.GetParameters();
+    var n = ps.Length;
+    var pars = string.Join(", ", ps.Select((p, i) => (i == n - 1 && p.ParameterType.IsArray ? "params " : "") + ToCSharp(p.ParameterType) + " " + noKeyword(p.Name)).ToArray());
+#>
+<#=doc#>
+<#
+    if (reserved.Contains(m.Name))
+    {
+        // NB: CA1716:IdentifiersShouldNotMatchKeywords suppression removed.
+    }
+#>
+<#
+    if (m.GetParameters().Any(p => reservedParams.Contains(p.Name)))
+    {
+        // NB: CA1719:ParameterNamesShouldNotMatchMemberNames suppression removed.
+    }
+#>
+        <#=ret#> <#=name#><#=genArgs#>(<#=pars#>);
+
+<#
+}
+#>
+    }
+}

@@ -1,0 +1,137 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 16;#>
+using System;
+using System.Linq.Expressions;
+
+namespace Reaqtor.Expressions.Core
+{
+    /// <summary>
+    /// Signatures of the available operators to be used in operator definitions (DefineObservable).
+    /// This class does not contain implementations for the operators. Expressions using the operators
+    /// have to be rebound to a perticular implementation (Rx or Subscribable) before they can be executed.
+    /// </summary>
+    public static partial class ReactiveQbservable
+    {
+        #region CombineLatest
+
+<#
+for (int i = 2; i <= highestSupportedArity; i++)
+{
+    // TYPE PARAMS AND FORMAL PARAMS FOR CONSTRUCTOR
+    // ALSO ACTUAL PARAMS FOR LATER FUNCTION CALL
+
+    var ordinals =
+        new[] { "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth" }
+        .Select(o => (char)(o[0] - 'a' + 'A') + o.Substring(1)).ToArray();
+
+    var typeParamArr = new string[i];
+    var formalParamArr = new string[i];
+    for (int j = 1; j <= i; j++)
+    {
+        typeParamArr[j-1] = "TSource" + j;
+        formalParamArr[j-1] = "IReactiveQbservable<TSource" + j + "> source" + j;
+    }
+    var typeParams = "<" + string.Join(", ", typeParamArr) + ", TResult>";
+    var formalParams = string.Join(", ", formalParamArr) + ", Expression<Func" + typeParams + "> selector";
+#>
+        /// <summary>
+        /// Combines the latest observed element of each input sequence using the specified selector function upon receiving any element on any of the input sequences.
+        /// </summary>
+<#
+    for (var j = 1; j <= i; j++)
+    {
+#>
+        /// <param name="source<#=j#>"><#=ordinals[j-1]#> observable input sequence.</param>
+<#
+    }
+#>
+        /// <param name="selector">Selector function to apply to the latest observer element of each input sequence.</param>
+        /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
+        public static IReactiveQbservable<TResult> CombineLatest<#=typeParams#>(this <#=formalParams#>)
+        {
+            throw new NotImplementedException();
+        }
+
+<#
+}
+#>
+        #endregion
+
+        #region Aggregates
+
+<#
+foreach (var op in new[] { "Average", "Min", "Max", "Sum" })
+{
+    var what = "";
+
+    if (op == "Average")
+        what = "average";
+    else if (op == "Min")
+        what = "smallest";
+    else if (op == "Max")
+        what = "largest";
+    else if (op == "Sum")
+        what = "sum";
+
+    var emptyRemark = "";
+#>
+        #region <#=op#>
+<#
+    foreach (var nullable in new[] { false, true })
+    {
+        foreach (var t in new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) })
+        {
+            var tn = t.Name;
+            var tc = t.Name;
+            var tr = op == "Average" && (t == typeof(int) || t == typeof(long)) ? typeof(double).Name : tc;
+
+            if (nullable)
+            {
+                tn = "Nullable" + tn;
+                tc += "?";
+                tr += "?";
+            }
+#>
+        /// <summary>
+        /// Aggregates the source sequence to return the <#=what#> of the element values.
+        /// </summary>
+        /// <param name="source">Source sequence whose <#=what#> of elements to obtain.</param>
+        /// <returns>Observable sequence containing a single element with the <#=what#> of all values in the source sequence.<#=emptyRemark#></returns>
+        public static IReactiveQbservable<<#=tr#>> <#=op#>(this IReactiveQbservable<<#=tc#>> source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Aggregates the source sequence to return the <#=what#> of the values obtained from applying the specified selector function to each element in the source sequence.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose <#=what#> of projected elements to obtain.</param>
+        /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence containing a single element with the <#=what#> of all projected values in the source sequence.<#=emptyRemark#></returns>
+        public static IReactiveQbservable<<#=tr#>> <#=op#><TSource>(this IReactiveQbservable<TSource> source, Expression<Func<TSource, <#=tc#>>> selector)
+        {
+            throw new NotImplementedException();
+        }
+
+<#
+        }
+    }
+#>
+        #endregion
+
+<#
+}
+#>
+        #endregion
+    }
+}

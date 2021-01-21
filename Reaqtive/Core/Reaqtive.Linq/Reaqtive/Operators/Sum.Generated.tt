@@ -1,0 +1,188 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+
+<#
+    var ts = new []
+    {
+        typeof(int),
+        typeof(long),
+        typeof(float),
+        typeof(double),
+        typeof(decimal),
+    };
+
+foreach (var nullable in new[] { false, true })
+{
+foreach (var t in ts)
+{
+    var tn = t.Name;
+    var tnf = tn;
+
+    var cn = tn;
+
+    if (nullable)
+    {
+        tn += "?";
+        cn = "Nullable" + cn;
+    }
+
+    var getValue = nullable ? ".Value" : "";
+    var except = !(t == typeof(float) || t == typeof(double));
+#>
+namespace Reaqtive
+{
+    using Operators;
+
+    public static partial class Subscribable
+    {
+        /// <summary>
+        /// Aggregates the source sequence to return the sum of the element values.
+        /// </summary>
+        /// <param name="source">Source sequence whose sum of elements to obtain.</param>
+        /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
+        public static ISubscribable<<#=tn#>> Sum(this ISubscribable<<#=tn#>> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new Sum<#=cn#>(source);
+        }
+
+        /// <summary>
+        /// Aggregates the source sequence to return the sum of the values obtained from applying the specified selector function to each element in the source sequence.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose sum of projected elements to obtain.</param>
+        /// <param name="selector">Selector function to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence containing a single element with the sum of all projected values in the source sequence.</returns>
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Go and learn about functional programming and type systems.")]
+        public static ISubscribable<<#=tn#>> Sum<TSource>(this ISubscribable<TSource> source, Func<TSource, <#=tn#>> selector)
+        {
+            return source.Select(selector).Sum();
+        }
+    }
+}
+
+namespace Reaqtive.Operators
+{
+    internal sealed class Sum<#=cn#> : SubscribableBase<<#=tn#>>
+    {
+        private readonly ISubscribable<<#=tn#>> _source;
+
+        public Sum<#=cn#>(ISubscribable<<#=tn#>> source)
+        {
+            _source = source;
+        }
+
+        protected override ISubscription SubscribeCore(IObserver<<#=tn#>> observer)
+        {
+            return new _(this, observer);
+        }
+
+        private sealed class _ : StatefulUnaryOperator<Sum<#=cn#>, <#=tn#>>, IObserver<<#=tn#>>
+        {
+            private <#=tnf#> _sum = 0;
+
+            public _(Sum<#=cn#> parent, IObserver<<#=tn#>> observer)
+                : base(parent, observer)
+            {
+            }
+
+            public override string Name => "rc:Sum<#=cn#>";
+
+            public override Version Version => Versioning.v1;
+
+            public void OnCompleted()
+            {
+                Output.OnNext(_sum);
+                Output.OnCompleted();
+                Dispose();
+            }
+
+            public void OnError(Exception error)
+            {
+                Output.OnError(error);
+                Dispose();
+            }
+
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1031:DoNotCatchGeneralExceptionTypes", Justification = "Core to the OnError design.")]
+            public void OnNext(<#=tn#> value)
+            {
+<#
+if (nullable)
+{
+#>
+                if (value == null)
+                    return;
+
+<#
+}
+
+if (except)
+{
+#>
+                try
+                {
+                    checked
+                    {
+                        var old = _sum;
+                        _sum += value<#=getValue#>;
+                        StateChanged = StateChanged || _sum != old;
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Output.OnError(ex);
+                    Dispose();
+                }
+<#
+}
+else
+{
+#>
+                var old = _sum;
+                _sum += value<#=getValue#>;
+                StateChanged = StateChanged || _sum != old;
+<#
+}
+#>
+            }
+
+            protected override ISubscription OnSubscribe()
+            {
+                return Params._source.Subscribe(this);
+            }
+
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Caller is trusted.")]
+            protected override void LoadStateCore(IOperatorStateReader reader)
+            {
+                base.LoadStateCore(reader);
+
+                _sum = reader.Read<<#=tnf#>>();
+            }
+
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Caller is trusted.")]
+            protected override void SaveStateCore(IOperatorStateWriter writer)
+            {
+                base.SaveStateCore(writer);
+
+                writer.Write<<#=tnf#>>(_sum);
+            }
+        }
+    }
+}
+
+<#
+}
+}
+#>

@@ -1,0 +1,62 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+//   PS - 10/17/2014 - Wrote these tests.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension="Generated.cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Specialized;
+
+namespace Tests.System.Collections.Specialized
+{
+    public partial class EnumDictionaryFactoryTests
+    {
+        [TestMethod]
+        public void EnumDictionaryFactory_Underlying_BitArray()
+        {
+<#
+for (var i = 0; i < 100; i++)
+{
+#>
+            var dict<#=i#> = EnumDictionary.Create<E<#=i#>, bool>();
+            var expectedBitArray<#=i#> = BitArrayFactory.Create(<#=i#>).GetType();
+            var actualBitArray<#=i#> = dict<#=i#>.GetType().GetGenericArguments()[2];
+            Assert.AreEqual(expectedBitArray<#=i#>, actualBitArray<#=i#>);
+
+<#
+}
+#>
+        }
+
+<#
+for (var i = 0; i < 100; i++)
+{
+#>
+        private enum E<#=i#> : int
+        {
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+            E<#=i#>_<#=j#> = <#=j#>,
+<#
+}
+#>
+        }
+
+<#
+}
+#>
+    }
+}

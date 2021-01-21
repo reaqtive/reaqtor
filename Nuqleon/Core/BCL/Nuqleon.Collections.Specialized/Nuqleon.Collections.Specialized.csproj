@@ -1,0 +1,27 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Specialized data structures implemented for performance. Currently includes an optimized BitArray implementation, and a dictionary implementation optimized for enum keys.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="System\Collections\Specialized\ByteArray.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ByteArray.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="System\Collections\Specialized\ByteArray.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ByteArray.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

@@ -1,0 +1,74 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deps", "deps", "{FD171EB1-2D20-421D-9418-A8B0C04F2182}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{2FE5E843-EC1F-4B71-A8B2-B8FB9DD07050}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{C3EDD48C-C77C-4926-8E9A-8D36E2139C58}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Memory", "..\..\..\Core\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj", "{1D0CC7C5-71F3-49E0-A044-8A702919A1E9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Time", "..\..\..\Core\BCL\Nuqleon.Time\Nuqleon.Time.csproj", "{81DF92ED-218B-4F2F-B245-10B4E8DD2AAB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Linq.CompilerServices", "..\..\..\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj", "{DD2B2A47-429B-4C78-8380-595AAB37C619}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Pearls.PartialExpressionTreeEvaluator", "Library\Nuqleon.Pearls.PartialExpressionTreeEvaluator.csproj", "{B0B8C8B6-598B-4B28-853B-597966BEE3EA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Pearls.PartialExpressionTreeEvaluator.Playground", "PartialTreeEvaluator\Nuqleon.Pearls.PartialExpressionTreeEvaluator.Playground.csproj", "{906B5BE9-D6F2-4533-90C6-FB365C84ED3E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Nuqleon.Pearls.PartialExpressionTreeEvaluator", "Test\Tests.Nuqleon.Pearls.PartialExpressionTreeEvaluator.csproj", "{CFE93D4D-99E8-4D8F-B7A5-55B7A085172D}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BCL", "BCL", "{37711882-081B-489A-859A-9575F436E5E0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "LINQ", "LINQ", "{9AA2D15C-3E13-4926-AEA9-CEC22DA594FB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1D0CC7C5-71F3-49E0-A044-8A702919A1E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D0CC7C5-71F3-49E0-A044-8A702919A1E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D0CC7C5-71F3-49E0-A044-8A702919A1E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D0CC7C5-71F3-49E0-A044-8A702919A1E9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{81DF92ED-218B-4F2F-B245-10B4E8DD2AAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81DF92ED-218B-4F2F-B245-10B4E8DD2AAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{81DF92ED-218B-4F2F-B245-10B4E8DD2AAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{81DF92ED-218B-4F2F-B245-10B4E8DD2AAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DD2B2A47-429B-4C78-8380-595AAB37C619}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DD2B2A47-429B-4C78-8380-595AAB37C619}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DD2B2A47-429B-4C78-8380-595AAB37C619}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DD2B2A47-429B-4C78-8380-595AAB37C619}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0B8C8B6-598B-4B28-853B-597966BEE3EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0B8C8B6-598B-4B28-853B-597966BEE3EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0B8C8B6-598B-4B28-853B-597966BEE3EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0B8C8B6-598B-4B28-853B-597966BEE3EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{906B5BE9-D6F2-4533-90C6-FB365C84ED3E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{906B5BE9-D6F2-4533-90C6-FB365C84ED3E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{906B5BE9-D6F2-4533-90C6-FB365C84ED3E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{906B5BE9-D6F2-4533-90C6-FB365C84ED3E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CFE93D4D-99E8-4D8F-B7A5-55B7A085172D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CFE93D4D-99E8-4D8F-B7A5-55B7A085172D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CFE93D4D-99E8-4D8F-B7A5-55B7A085172D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CFE93D4D-99E8-4D8F-B7A5-55B7A085172D}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1D0CC7C5-71F3-49E0-A044-8A702919A1E9} = {37711882-081B-489A-859A-9575F436E5E0}
+		{81DF92ED-218B-4F2F-B245-10B4E8DD2AAB} = {37711882-081B-489A-859A-9575F436E5E0}
+		{DD2B2A47-429B-4C78-8380-595AAB37C619} = {9AA2D15C-3E13-4926-AEA9-CEC22DA594FB}
+		{B0B8C8B6-598B-4B28-853B-597966BEE3EA} = {2FE5E843-EC1F-4B71-A8B2-B8FB9DD07050}
+		{906B5BE9-D6F2-4533-90C6-FB365C84ED3E} = {2FE5E843-EC1F-4B71-A8B2-B8FB9DD07050}
+		{CFE93D4D-99E8-4D8F-B7A5-55B7A085172D} = {C3EDD48C-C77C-4926-8E9A-8D36E2139C58}
+		{37711882-081B-489A-859A-9575F436E5E0} = {FD171EB1-2D20-421D-9418-A8B0C04F2182}
+		{9AA2D15C-3E13-4926-AEA9-CEC22DA594FB} = {FD171EB1-2D20-421D-9418-A8B0C04F2182}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {3D405071-F9BA-462B-A121-B1F24DF4A160}
+	EndGlobalSection
+EndGlobal

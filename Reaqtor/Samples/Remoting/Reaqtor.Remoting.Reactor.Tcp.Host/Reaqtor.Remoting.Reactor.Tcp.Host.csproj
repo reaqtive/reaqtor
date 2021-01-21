@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+    <OutputType>Exe</OutputType>
+    <Description>Host for a IRP remoting stack platform with process isolation and TCP/IP communication.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Remoting.Platform.Tcp\Reaqtor.Remoting.Platform.Tcp.csproj" />
+    <ProjectReference Include="..\Reaqtor.Remoting.Reactor.Deployable\Reaqtor.Remoting.Reactor.Deployable.csproj" />
+  </ItemGroup>
+
+</Project>

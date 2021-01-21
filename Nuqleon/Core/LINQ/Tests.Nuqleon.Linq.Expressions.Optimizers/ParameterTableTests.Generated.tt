@@ -1,0 +1,91 @@
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - January 2017 - Created this file.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Linq.Expressions;
+
+namespace Tests.System.Linq.Expressions.Optimizers
+{
+    partial class ParameterTableTests
+    {
+<#
+var rand = new Random(1983);
+
+for (int i = 1; i <= 16; i++)
+{
+    var p = rand.Next(0, i);
+    var pars = string.Join(", ", new[] { "int arg" + (p + 1) }.Concat(Enumerable.Range(1, i).Where(j => j != (p + 1)).Select(j => "int arg" + j)));
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "arg" + j));
+#>
+        [TestMethod]
+        public void ParameterTable_Add_Action<#=i#>()
+        {
+            var pt = new ParameterTable();
+
+            pt.Add((<#=pars#>) => Methods.Action<#=i#>(<#=args#>));
+
+            var m = typeof(Methods).GetMethod(nameof(Methods.Action<#=i#>));
+
+            Assert.IsTrue(pt.Contains(m.GetParameters()[<#=p#>]));
+        }
+
+<#
+}
+
+for (int i = 1; i <= 16; i++)
+{
+    var p = rand.Next(0, i);
+    var pars = string.Join(", ", new[] { "int arg" + (p + 1) }.Concat(Enumerable.Range(1, i).Where(j => j != (p + 1)).Select(j => "int arg" + j)));
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "arg" + j));
+#>
+        [TestMethod]
+        public void ParameterTable_Add_Func<#=i#>()
+        {
+            var pt = new ParameterTable();
+
+            pt.Add((<#=pars#>) => Methods.Func<#=i#>(<#=args#>));
+
+            var m = typeof(Methods).GetMethod(nameof(Methods.Func<#=i#>));
+
+            Assert.IsTrue(pt.Contains(m.GetParameters()[<#=p#>]));
+        }
+
+<#
+}
+#>
+
+        private sealed class Methods
+        {
+<#
+for (int i = 1; i <= 16; i++)
+{
+    var pars = string.Join(", ", Enumerable.Range(1, i).Select(j => "int arg" + j));
+#>
+            public static void Action<#=i#>(<#=pars#>) { }
+<#
+}
+
+for (int i = 1; i <= 16; i++)
+{
+    var pars = string.Join(", ", Enumerable.Range(1, i).Select(j => "int arg" + j));
+#>
+            public static int Func<#=i#>(<#=pars#>) => 42;
+<#
+}
+#>
+        }
+    }
+}

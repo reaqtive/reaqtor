@@ -1,0 +1,97 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Linq.CompilerServices.TypeSystem;
+using System.Linq.Expressions;
+using System.Threading;
+using System.Threading.Tasks;
+
+using Reaqtor.Expressions.Core;
+
+namespace Reaqtor.Remoting.Deployable
+{
+	public partial class Deployable
+	{
+		public static async Task UndefineOperatorsExtension(ReactiveClientContext context)
+		{
+			#region Aggregates
+
+<#
+foreach (var op in new[] { "Average", "Min", "Max", "Sum" })
+{
+#>
+			#region <#=op#>
+<#
+	foreach (var nullable in new[] { false, true })
+	{
+		foreach (var t in new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) })
+		{
+			var name = t.Name;
+
+			if (nullable)
+			{
+				name = "Nullable" + name;
+			}
+#>
+            await TryUndefine(() => context.UndefineObservableAsync(new Uri(Client.Constants.Observable.<#=op#>.NoSelector.<#=name#>), CancellationToken.None));
+			await TryUndefine(() => context.UndefineObservableAsync(new Uri(Client.Constants.Observable.<#=op#>.Selector.<#=name#>), CancellationToken.None));
+<#
+		}
+	}
+#>
+			#endregion
+
+<#
+}
+#>
+			#endregion
+		}
+
+		public static async Task DefineOperatorsExtension(ReactiveClientContext context)
+		{
+			#region Aggregates
+
+<#
+foreach (var op in new[] { "Average", "Min", "Max", "Sum" })
+{
+#>
+			#region <#=op#>
+<#
+	foreach (var nullable in new[] { false, true })
+	{
+		foreach (var t in new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) })
+		{
+            var tn = t.Name;
+            var tc = t.Name;
+            var tr = op == "Average" && (t == typeof(int) || t == typeof(long)) ? typeof(double).Name : tc;
+
+            if (nullable)
+            {
+                tn = "Nullable" + tn;
+                tc += "?";
+                tr += "?";
+            }
+#>
+			await context.DefineObservableAsync<IAsyncReactiveQbservable<<#=tc#>>, <#=tr#>>(new Uri(Client.Constants.Observable.<#=op#>.NoSelector.<#=tn#>), source => source.AsSync().<#=op#>().AsAsync(), null, CancellationToken.None);
+			await context.DefineObservableAsync<IAsyncReactiveQbservable<T>, Expression<Func<T, <#=tc#>>>, <#=tr#>>(new Uri(Client.Constants.Observable.<#=op#>.Selector.<#=tn#>), (source, selector) => source.AsSync().<#=op#>(selector).AsAsync(), null, CancellationToken.None);
+<#
+		}
+	}
+#>
+			#endregion
+
+<#
+}
+#>
+			#endregion
+		}
+	}
+}

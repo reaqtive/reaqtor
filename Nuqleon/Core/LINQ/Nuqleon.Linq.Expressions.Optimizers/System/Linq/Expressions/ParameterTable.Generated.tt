@@ -1,0 +1,71 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - January 2017 - Created this file.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var ordinals = new string[] { "zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth" };
+#>
+namespace System.Linq.Expressions
+{
+    partial class ParameterTable
+    {
+<#
+for (var i = 0; i < 16; i++)
+{
+    var args = string.Join(", ", new[] { "TParameter" }.Concat(Enumerable.Range(2, i).Select(j => "T" + j).ToArray()));
+#>
+        /// <summary>
+        /// Adds an entry to the parameter table using the <see cref="System.Reflection.ParameterInfo" /> that's assigned to by the <typeparamref name="TParameter"/> parameter in the specified <paramref name="expression" />.
+        /// </summary>
+        /// <typeparam name="TParameter">The type of the parameter to add to the table.</typeparam>
+<#
+for (var j = 2; j <= i + 1; j++)
+{
+#>
+        /// <typeparam name="T<#=j#>">The <#=ordinals[j]#> type parameter of the action passed in <paramref name="expression" />.</typeparam>
+<#
+}
+#>
+        /// <param name="expression">The expression to obtain the parameter to add from.</param>
+        public void Add<<#=args#>>(Expression<Action<<#=args#>>> expression) => Add((LambdaExpression)expression);
+
+<#
+}
+
+for (var i = 0; i < 16; i++)
+{
+    var args = string.Join(", ", new[] { "TParameter" }.Concat(Enumerable.Range(2, i).Select(j => "T" + j)).Concat(new[] { "R" }).ToArray());
+#>
+        /// <summary>
+        /// Adds an entry to the parameter table using the <see cref="System.Reflection.ParameterInfo" /> that's assigned to by the <typeparamref name="TParameter"/> parameter in the specified <paramref name="expression" />.
+        /// </summary>
+        /// <typeparam name="TParameter">The type of the parameter to add to the table.</typeparam>
+<#
+for (var j = 2; j <= i + 1; j++)
+{
+#>
+        /// <typeparam name="T<#=j#>">The <#=ordinals[j]#> type parameter of the function passed in <paramref name="expression" />.</typeparam>
+<#
+}
+#>
+        /// <typeparam name="R">The result type parameter of the function passed in <paramref name="expression" />.</typeparam>
+        /// <param name="expression">The expression to obtain the parameter to add from.</param>
+        public void Add<<#=args#>>(Expression<Func<<#=args#>>> expression) => Add((LambdaExpression)expression);
+
+<#
+}
+#>
+    }
+}

@@ -1,0 +1,12 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Linq.Expressions.Bonsai.Hashing\Nuqleon.Linq.Expressions.Bonsai.Hashing.csproj" />
+    <ProjectReference Include="..\Tests.Nuqleon.Linq.Expressions.Bonsai.Hashing.Catalog\Tests.Nuqleon.Linq.Expressions.Bonsai.Hashing.Catalog.csproj" />
+  </ItemGroup>
+
+</Project>

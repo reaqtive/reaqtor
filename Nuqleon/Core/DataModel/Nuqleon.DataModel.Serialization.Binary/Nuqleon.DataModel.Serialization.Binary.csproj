@@ -1,0 +1,51 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net50</TargetFrameworks>
+    <Description>Serializers for instances of data model types.</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.DataModel\Nuqleon.DataModel.csproj" />
+    <ProjectReference Include="..\Nuqleon.DataModel.CompilerServices\Nuqleon.DataModel.CompilerServices.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Factory\DataTypeToDeserializer.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DataTypeToDeserializer.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="Factory\DataTypeToSerializer.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DataTypeToSerializer.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="StreamHelpers.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>StreamHelpers.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Factory\DataTypeToDeserializer.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataTypeToDeserializer.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Factory\DataTypeToSerializer.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DataTypeToSerializer.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="StreamHelpers.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>StreamHelpers.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

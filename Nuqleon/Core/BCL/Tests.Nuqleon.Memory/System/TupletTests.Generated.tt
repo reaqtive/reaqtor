@@ -1,0 +1,280 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections;
+using System.Collections.Generic;
+
+namespace Tests
+{
+    partial class TupletTests
+    {
+<#
+var r = new Random(1983);
+
+for (var i = 1; i <= 16; i++)
+{
+    var types = string.Join(", ", Enumerable.Repeat("int", i));
+
+    var ints1 = Enumerable.Range(0, i).Select(_ => r.Next()).ToList();
+    var vals1 = string.Join(", ", ints1);
+
+    var ints2 = Enumerable.Range(0, i).Select(_ => r.Next()).ToList();
+    var vals2 = string.Join(", ", ints2);
+#>
+        [TestMethod]
+        public void Tuplet<#=i#>()
+        {
+            var args1 = new Tuplet<<#=types#>>(<#=vals1#>);
+            var args2 = new Tuplet<<#=types#>>(<#=vals2#>);
+
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+            Assert.AreEqual(<#=ints1[j - 1]#>, args1.Item<#=j#>);
+            Assert.AreEqual(<#=ints2[j - 1]#>, args2.Item<#=j#>);
+<#
+}
+#>
+
+            Assert.AreEqual(args1, args1);
+
+            var copy1 = args1;
+            Assert.IsTrue(args1 == copy1);
+            Assert.IsFalse(args1 != copy1);
+
+            Assert.AreEqual(0, args1.CompareTo(copy1));
+
+            Assert.AreNotEqual(args1.GetHashCode(), args2.GetHashCode());
+            Assert.AreNotEqual(args1, args2);
+            Assert.AreNotEqual(args2, args1);
+
+            var scm1 = (IStructuralComparable)args1;
+            var cmp1 = (IComparable)args1;
+
+            Assert.AreNotEqual(0, args1.CompareTo(args2));
+            Assert.AreNotEqual(0, scm1.CompareTo(args2, Comparer<object>.Default));
+            Assert.AreNotEqual(0, cmp1.CompareTo(args2));
+            Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
+
+            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+
+<#
+for (var j = 0; j < i; j++)
+{
+    var intsn = ints1.Select((x, k) => k == j ? x + 1 : x).ToList();
+    var valsn = string.Join(", ", intsn);
+    var intsp = ints1.Select((x, k) => k == j ? x - 1 : x).ToList();
+    var valsp = string.Join(", ", intsp);
+#>
+            Assert.IsTrue(args1 < new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsTrue(args1 <= new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsFalse(args1 > new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsFalse(args1 >= new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsTrue(args1.CompareTo(new Tuplet<<#=types#>>(<#=valsn#>)) < 0);
+
+            Assert.IsTrue(args1 > new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsTrue(args1 >= new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsFalse(args1 < new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsFalse(args1 <= new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsTrue(args1.CompareTo(new Tuplet<<#=types#>>(<#=valsp#>)) > 0);
+
+            Assert.IsTrue(scm1.CompareTo(new Tuplet<<#=types#>>(<#=valsn#>), Comparer<object>.Default) < 0);
+            Assert.IsTrue(scm1.CompareTo(new Tuplet<<#=types#>>(<#=valsp#>), Comparer<object>.Default) > 0);
+<#
+}
+#>
+
+            Assert.IsFalse(args1 == args2);
+            Assert.IsTrue(args1 != args2);
+
+            Assert.AreNotEqual(args1, "foo");
+            Assert.AreNotEqual(args1, null);
+
+            var seq1 = (IStructuralEquatable)args1;
+            Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
+            Assert.AreEqual(0, seq1.GetHashCode(new ConstantHashEqualityComparer(0)));
+            Assert.IsTrue(seq1.Equals(args1, EqualityComparer<object>.Default));
+            Assert.IsFalse(seq1.Equals(args2, EqualityComparer<object>.Default));
+            Assert.IsFalse(seq1.Equals("foo", EqualityComparer<object>.Default));
+
+            Assert.AreEqual("(<#=string.Join(", ", vals1)#>)", args1.ToString());
+            Assert.AreEqual("(<#=string.Join(", ", vals2)#>)", args2.ToString());
+        }
+
+<#
+}
+
+for (var i = 1; i <= 16; i++)
+{
+    var nonRest = string.Join(", ", Enumerable.Repeat("int", 16));
+    var rest = string.Join(", ", Enumerable.Repeat("int", i));
+    var types = nonRest + ", Tuplet<" + rest + ">";
+
+    var ints1 = Enumerable.Range(0, i + 16).Select(_ => r.Next()).ToList();
+    var vals1 = string.Join(", ", ints1.Take(16)) + ", new Tuplet<" + rest + ">(" + string.Join(", ", ints1.Skip(16)) + ")";
+
+    var ints2 = Enumerable.Range(0, i + 16).Select(_ => r.Next()).ToList();
+    var vals2 = string.Join(", ", ints2.Take(16)) + ", new Tuplet<" + rest + ">(" + string.Join(", ", ints2.Skip(16)) + ")";
+#>
+        [TestMethod]
+        public void Tuplet<#=i+16#>()
+        {
+            var args1 = new Tuplet<<#=types#>>(<#=vals1#>);
+            var args2 = new Tuplet<<#=types#>>(<#=vals2#>);
+
+<#
+for (var j = 1; j <= 16; j++)
+{
+#>
+            Assert.AreEqual(<#=ints1[j - 1]#>, args1.Item<#=j#>);
+            Assert.AreEqual(<#=ints2[j - 1]#>, args2.Item<#=j#>);
+<#
+}
+
+for (var j = 1; j <= i; j++)
+{
+#>
+            Assert.AreEqual(<#=ints1[j + 16 - 1]#>, args1.Rest.Item<#=j#>);
+            Assert.AreEqual(<#=ints2[j + 16 - 1]#>, args2.Rest.Item<#=j#>);
+<#
+}
+#>
+
+            Assert.AreEqual(args1, args1);
+
+            var copy1 = args1;
+            Assert.IsTrue(args1 == copy1);
+            Assert.IsFalse(args1 != copy1);
+
+            Assert.AreNotEqual(args1.GetHashCode(), args2.GetHashCode());
+            Assert.AreNotEqual(args1, args2);
+            Assert.AreNotEqual(args2, args1);
+
+            var scm1 = (IStructuralComparable)args1;
+            var cmp1 = (IComparable)args1;
+
+            Assert.AreNotEqual(0, args1.CompareTo(args2));
+            Assert.AreNotEqual(0, scm1.CompareTo(args2, Comparer<object>.Default));
+            Assert.AreNotEqual(0, cmp1.CompareTo(args2));
+            Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
+
+            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+
+<#
+for (var j = 0; j < i + 1; j++)
+{
+    var intsn = ints1.Select((x, k) => k == j ? x + 1 : x).ToList();
+    var valsn = string.Join(", ", intsn.Take(16)) + ", new Tuplet<" + rest + ">(" + string.Join(", ", intsn.Skip(16)) + ")";
+    var intsp = ints1.Select((x, k) => k == j ? x - 1 : x).ToList();
+    var valsp = string.Join(", ", intsp.Take(16)) + ", new Tuplet<" + rest + ">(" + string.Join(", ", intsp.Skip(16)) + ")";
+#>
+            Assert.IsTrue(args1 < new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsTrue(args1 <= new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsFalse(args1 > new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsFalse(args1 >= new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsTrue(args1.CompareTo(new Tuplet<<#=types#>>(<#=valsn#>)) < 0);
+
+            Assert.IsTrue(args1 > new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsTrue(args1 >= new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsFalse(args1 < new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsFalse(args1 <= new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsTrue(args1.CompareTo(new Tuplet<<#=types#>>(<#=valsp#>)) > 0);
+
+            Assert.IsTrue(scm1.CompareTo(new Tuplet<<#=types#>>(<#=valsn#>), Comparer<object>.Default) < 0);
+            Assert.IsTrue(scm1.CompareTo(new Tuplet<<#=types#>>(<#=valsp#>), Comparer<object>.Default) > 0);
+<#
+}
+#>
+
+            Assert.IsFalse(args1 == args2);
+            Assert.IsTrue(args1 != args2);
+
+            Assert.AreNotEqual(args1, "foo");
+            Assert.AreNotEqual(args1, null);
+
+            var seq1 = (IStructuralEquatable)args1;
+            Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
+            Assert.AreEqual(0, seq1.GetHashCode(new ConstantHashEqualityComparer(0)));
+            Assert.IsTrue(seq1.Equals(args1, EqualityComparer<object>.Default));
+            Assert.IsFalse(seq1.Equals(args2, EqualityComparer<object>.Default));
+            Assert.IsFalse(seq1.Equals("foo", EqualityComparer<object>.Default));
+
+            Assert.AreEqual("(<#=string.Join(", ", ints1)#>)", args1.ToString());
+            Assert.AreEqual("(<#=string.Join(", ", ints2)#>)", args2.ToString());
+        }
+
+<#
+}
+
+for (var i = 1; i <= 16; i++)
+{
+#>
+        [TestMethod]
+        public void Tuplet<#=i#>_ToString()
+        {
+<#
+    var types = Enumerable.Repeat("string", i).ToArray();
+    var tupleType = "Tuplet<" + string.Join(", ", types) + ">";
+    var vals = Enumerable.Range(0, i).Select(j => "\"" + j.ToString() + "\"").ToArray();
+
+    for (var j = 0; j < i; j++)
+    {
+        var newVals = vals.ToArray();
+        newVals[j] = "null";
+        var exp = string.Join(", ", Enumerable.Range(0, i).Select(k => k == j ? null : k.ToString()));
+
+#>
+            {
+                var t = new <#=tupleType#>(<#=string.Join(", ", newVals)#>);
+                Assert.AreEqual("(<#=exp#>)", t.ToString());
+            }
+<#
+    }
+#>
+        }
+
+<#
+}
+
+for (var i = 1; i <= 16; i++)
+{
+#>
+        [TestMethod]
+        public void Tuplet<#=i+16#>_ToString()
+        {
+<#
+    var types = Enumerable.Repeat("string", i).ToArray();
+    var tupleType = "Tuplet<" + string.Join(", ", types) + ">";
+    var vals = Enumerable.Range(16, i).Select(j => "\"" + j.ToString() + "\"").ToArray();
+
+    for (var j = 0; j < i; j++)
+    {
+        var newVals = vals.ToArray();
+        newVals[j] = "null";
+        var exp = string.Join(", ", Enumerable.Range(0, 16).Select(k => k.ToString()).Concat(Enumerable.Range(0, i).Select(k => k == j ? null : (k + 16).ToString())));
+
+#>
+            {
+                var t = new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, <#=tupleType#>>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, new <#=tupleType#>(<#=string.Join(", ", newVals)#>));
+                Assert.AreEqual("(<#=exp#>)", t.ToString());
+            }
+<#
+    }
+#>
+        }
+
+<#
+}
+#>
+    }
+}

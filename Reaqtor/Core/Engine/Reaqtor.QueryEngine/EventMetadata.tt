@@ -1,0 +1,1119 @@
+<#@include file="..\..\..\..\Common\IrpEventSource.tt" #>
+
+<#+
+/***********************************************************************
+ *                                                                     *
+ *  USER DEFINED VARIABLES - MODIFY THESE FOR EACH EVENT YOU GENERATE  *
+ *                                                                     *
+ ***********************************************************************/
+
+enum EventKeyword : ulong
+{
+    // Sub-systems
+    BlobLogs =                   (ulong)1 << 0,
+    Canary =                     (ulong)1 << 1,
+    Checkpoint =                 (ulong)1 << 2,
+    Recovery =                   (ulong)1 << 3,
+    Mitigation =                 (ulong)1 << 4,
+    StateOperation =             (ulong)1 << 5,
+    FailSafe =                   (ulong)1 << 6,
+    LazyStream =                 (ulong)1 << 7,
+    Registry =                   (ulong)1 << 8,
+    GarbageCollection =          (ulong)1 << 9,
+    TemplateMigration =          (ulong)1 << 10,
+    ReliableSubscriptionInput =  (ulong)1 << 11,
+    CheckpointableStateManager = (ulong)1 << 12,
+    Bridge =                     (ulong)1 << 13,
+    TransactionLog =             (ulong)1 << 14,
+    HigherOrderOperator =        (ulong)1 << 15,
+    Edge =                       (ulong)1 << 16,
+}
+
+// Values must be in the range from 1 through 65534
+enum EventTask
+{
+    //Need our own `None`, because EventSource is trying to be "helpful"
+    //and generates a task for us if we use EventTask.None,
+    //which is not desirable from the backward compatibility standpoint
+    None = 1,
+}
+
+// Values must be in the range from 11 through 239
+enum EventOpcode
+{
+}
+
+string Namespace = "Reaqtor.QueryEngine";
+string EventSourceName = "Nuqleon-Reactive-QueryEngine";
+
+// It's better not to reorder event definitions
+List<EventMetadata> EventRegistry = new List<EventMetadata>
+{
+    new EventMetadata
+    {
+        Name = "Checkpoint_ContinueScheduler_Unloaded",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Checkpoint },
+        Message = "Scheduler of query engine '{0}' wasn't resumed from {1} because an unload operation is pending.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("caller", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Checkpoint_DeleteCompleted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Checkpoint },
+        Message = "Query engine '{0}' finished deleting items in category '{1}'. Total = {2}",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+            new Parameter("count", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Checkpoint_DeleteStarted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Checkpoint },
+        Message = "Query engine '{0}' deleting items in category '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Checkpoint_SavingDefinitionsFailure",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.Checkpoint },
+        Message = "Query engine '{0}' failed to save entity in category '{1}' with key '{2}'. Error: {3}",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+            new Parameter("key", "System.String"),
+            new Parameter("errorMsg", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Checkpoint_SavingDefinitionsCompleted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Checkpoint },
+        Message = "Query engine '{0}' finished saving definitions in category '{1}'. Total = {2}, Skipped = {3}, Failed = {4}",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+            new Parameter("total", "System.Int32"),
+            new Parameter("skipped", "System.Int32"),
+            new Parameter("failed", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Checkpoint_SavingDefinitionsStarted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Checkpoint },
+        Message = "Query engine '{0}' saving definitions in category '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Checkpoint_SavingStateFailure",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.Checkpoint },
+        Message = "Query engine '{0}' failed to save entity runtime state in category '{1}' with key '{2}'. Error: {3}",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+            new Parameter("key", "System.String"),
+            new Parameter("errorMsg", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Checkpoint_SavingStateCompleted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Checkpoint },
+        Message = "Query engine '{0}' finished saving runtime state in category '{1}'. Total = {2}, Skipped = {3}, Failed = {4}",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+            new Parameter("total", "System.Int32"),
+            new Parameter("skipped", "System.Int32"),
+            new Parameter("failed", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Checkpoint_SavingStateStarted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Checkpoint },
+        Message = "Query engine '{0}' saving runtime state in category '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "FailSafe_Exception",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.FailSafe },
+        Message = "Action invoked by '{0}' failed with exception '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("method", "System.String"),
+            new Parameter("exception", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "LazyStream_Created",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.LazyStream },
+        Message = "Stream for key '{0}' does not exist on query engine '{1}'. Creating stream from remote definition '{2}'.",
+        Parameters = new[]
+        {
+            new Parameter("key", "System.String"),
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("expression", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "LazyStream_TypeRewrite",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.LazyStream },
+        Message = "Rewriting stream definition for '{0}' from '{1}' to '{2}' on query engine '{3}'.",
+        Parameters = new[]
+        {
+            new Parameter("key", "System.String"),
+            new Parameter("streamType", "System.Type"),
+            new Parameter("newStreamType", "System.Type"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Registry_AddEntityPlaceholder",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry },
+        Message = "Added invalid entity entry to query engine '{0}' registry for '{1}' '{2}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("kind", "System.String"),
+            new Parameter("key", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Registry_RemoveEntity",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry },
+        Message = "Removed '{0}' '{1}' from query engine '{2}'.",
+        Parameters = new[]
+        {
+            new Parameter("kind", "System.String"),
+            new Parameter("key", "System.String"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "RegistryGarbageCollection_LiveDependencies",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry, EventKeyword.GarbageCollection },
+        Message = "Garbage collector on query engine '{0}' has found {1} live dependencies. Mark time = {2}ms",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("count", "System.Int32"),
+            new Parameter("markTime", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "RegistryGarbageCollection_NotEnabled",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry, EventKeyword.GarbageCollection },
+        Message = "Garbage collector on query engine '{0}' is not enabled.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "RegistryGarbageCollection_Started",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry, EventKeyword.GarbageCollection },
+        Message = "Garbage collector on query engine '{0}' has started.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "RegistryGarbageCollection_SweepCompleted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry, EventKeyword.GarbageCollection },
+        Message = "Garbage collector on query engine '{0}' has no further sweep work. Performed {1} sweep operations over {2} iterations. Total sweep time = {3}ms",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("count", "System.Int32"),
+            new Parameter("iterations", "System.Int32"),
+            new Parameter("duration", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "RegistryGarbageCollection_SweepDisabled",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry, EventKeyword.GarbageCollection },
+        Message = "Garbage collector on query engine '{0}' is running without sweeping enabled. No further actions will be taken.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "RegistryGarbageCollection_SweepStarted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry, EventKeyword.GarbageCollection },
+        Message = "Garbage collector on query engine '{0}' is starting the sweep phase. Remaining entities = {1}.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("count", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "RegistryGarbageCollection_SweepStopped",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry, EventKeyword.GarbageCollection },
+        Message = "Garbage collector on query engine '{0}' has finished sweeping {1} artifacts. Remaining entities = {2}. Sweep time = {3}ms",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("count", "System.Int32"),
+            new Parameter("remaining", "System.Int32"),
+            new Parameter("duration", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "RegistryGarbageCollection_UnreachableObservables",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Registry, EventKeyword.GarbageCollection },
+        Message = "Garbage collector on query engine '{0}' has found {1} unreachable observable definitions out of a total {2}. Scan time = {3}ms",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("count", "System.Int32"),
+            new Parameter("total", "System.Int32"),
+            new Parameter("scanTime", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "StateOperation_Error",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.StateOperation },
+        Message = "Failed to {0} {1} '{2}'. Error: {3}",
+        Parameters = new[]
+        {
+            new Parameter("verb", "Reaqtor.QueryEngine.TraceVerb") { CanBeNull = false },
+            new Parameter("noun", "Reaqtor.QueryEngine.TraceNoun") { CanBeNull = false },
+            new Parameter("uri", "System.Uri"),
+            new Parameter("error", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "StateOperation_Executed",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.StateOperation },
+        Message = "Executed {0} {1} '{2}' in {3} ms.",
+        Parameters = new[]
+        {
+            new Parameter("verb", "Reaqtor.QueryEngine.TraceVerb") { CanBeNull = false },
+            new Parameter("noun", "Reaqtor.QueryEngine.TraceNoun") { CanBeNull = false },
+            new Parameter("entityId", "System.Uri"),
+            new Parameter("duration", "System.Int64"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "StateOperation_Warning",
+        Level = EventLevel.Warning,
+        Keywords = new [] { EventKeyword.StateOperation },
+        Message = "Failed to {0} {1} '{2}'. Error: {3}",
+        Parameters = new[]
+        {
+            new Parameter("verb", "Reaqtor.QueryEngine.TraceVerb") { CanBeNull = false },
+            new Parameter("noun", "Reaqtor.QueryEngine.TraceNoun") { CanBeNull = false },
+            new Parameter("entityId", "System.Uri"),
+            new Parameter("error", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "TemplateMigration_Completed",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TemplateMigration },
+        Message = "Template migration task for query engine '{0}' has completed.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "TemplateMigration_Execute",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TemplateMigration },
+        Message = "Template migration task for query engine '{0}' templatized expression for entity '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("entityId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "TemplateMigration_RegexInvalid",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.TemplateMigration },
+        Message = "Template migration task for query engine '{0}' could not parse regular expression '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("regex", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "TemplateMigration_ResetQuota",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TemplateMigration },
+        Message = "Template migration task for query engine '{0}' resetting quota to '{1}' after templatizing '{2}' entities.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("quota", "System.Int32"),
+            new Parameter("count", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "TemplateMigration_Started",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TemplateMigration },
+        Message = "Template migration task for query engine '{0}' has started for entity keys matching '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("regex", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "BlobLogs_Created",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.BlobLogs },
+        Message = "Recovery state blob log created at '{0}' on query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("path", "System.String"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "BlobLogs_CreateFailed",
+        Level = EventLevel.Warning,
+        Keywords = new [] { EventKeyword.BlobLogs },
+        Message = "Recovery state blob log could not be created at '{0}' on query engine '{1}'. Error = {2}",
+        Parameters = new[]
+        {
+            new Parameter("path", "System.String"),
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("error", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Canary_NotRecovered_Observable",
+        Level = EventLevel.Warning,
+        Keywords = new [] { EventKeyword.Canary },
+        Message = "Canary observable '{0}' not recovered for query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("canaryId", "System.Uri"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Canary_NotRecovered_Observer",
+        Level = EventLevel.Warning,
+        Keywords = new [] { EventKeyword.Canary },
+        Message = "Canary observer '{0}' not recovered for query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("canaryId", "System.Uri"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Canary_NotRecovered_Subscription",
+        Level = EventLevel.Warning,
+        Keywords = new [] { EventKeyword.Canary },
+        Message = "Canary subscription '{0}' not recovered for query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("canaryId", "System.Uri"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Canary_Created_Observable",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Canary },
+        Message = "Canary observable '{0}' defined on query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("canaryId", "System.Uri"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Canary_Created_Observer",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Canary },
+        Message = "Canary observer '{0}' defined on query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("canaryId", "System.Uri"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Canary_Created_Subscription",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Canary },
+        Message = "Canary subscription '{0}' defined on query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("canaryId", "System.Uri"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Mitigation_Execute",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Mitigation },
+        Message = "Recovery of '{0}' failed. Executing mitigation '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("entityId", "System.Uri"),
+            new Parameter("mitigation", "Reaqtor.QueryEngine.Events.ReactiveEntityRecoveryFailureMitigation")
+            {
+                CanBeNull = false,
+            },
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Mitigation_NotAccepted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Mitigation },
+        Message = "Mitigation '{0}' for recovery failure of '{1}' was not accepted. Exception: '{2}'.",
+        Parameters = new[]
+        {
+            new Parameter("mitigation", "Reaqtor.QueryEngine.Events.ReactiveEntityRecoveryFailureMitigation")
+            {
+                CanBeNull = false,
+            },
+            new Parameter("entityId", "System.Uri"),
+            new Parameter("error", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Mitigation_Failure",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Mitigation },
+        Message = "Mitigation '{0}' for recovery failure of '{1}' threw exception: '{2}'.",
+        Parameters = new[]
+        {
+            new Parameter("mitigation", "Reaqtor.QueryEngine.Events.ReactiveEntityRecoveryFailureMitigation")
+            {
+                CanBeNull = false,
+            },
+            new Parameter("entityId", "System.Uri"),
+            new Parameter("error", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_LoadingDefinitionsFailure",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' failed to load entity in category '{1}' with key '{2}'. Error: {3}",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+            new Parameter("key", "System.String"),
+            new Parameter("errorMsg", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_LoadingDefinitionsCompleted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' finished loading definitions in category '{1}'. Total = {2}, Failed = {3}",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+            new Parameter("total", "System.Int32"),
+            new Parameter("failed", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_LoadingDefinitionsStarted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' loading definitions in category '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_LoadingStateFailure",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' failed to load entity state in category '{1}'/'{2}' with key '{3}'. Error: {4}",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("category", "System.String"),
+            new Parameter("stateCategory", "System.String"),
+            new Parameter("key", "System.String"),
+            new Parameter("errorMsg", "System.String"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_LoadCompleted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' finished loading artifacts. Elapsed time = {1}ms",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("duration", "System.Int64"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_LoadStarted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' loading artifacts.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_LoadSubjectWithoutState",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Recovering subject '{0}' without state on query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("subjectId", "System.Uri"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_LoadSubscriptionWithoutState",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Recovering subscription '{0}' without state on query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("subjectId", "System.Uri"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_StartCompleted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' finished starting artifacts. Elapsed time = {1}ms",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("duration", "System.Int64"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_StartReliableSubscriptions",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' starting {1} reliable subscriptions.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("count", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_StartStarted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' loading artifacts.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_StartSubjects",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' starting {1} subjects.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("count", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_StartSubscriptions",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Query engine '{0}' starting {1} subscriptions.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("count", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Recovery_Summary",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Recovery },
+        Message = "Recovery summary for {0} on query engine {1} - {2}",
+        Parameters = new[]
+        {
+            new Parameter("category", "System.String"),
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("summary", "System.Collections.Generic.IEnumerable<Reaqtor.Metadata.IReactiveResource>") { CustomToString = true },
+        }
+    },
+    new EventMetadata
+    {
+        Name = "ReliableSubscriptionInput_OnStart",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.ReliableSubscriptionInput },
+        Message = "Reliable subscription input for '{0}' sent Start({1}).",
+        Parameters = new[]
+        {
+            new Parameter("instanceId", "System.Uri"),
+            new Parameter("sequenceId", "System.Int64"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "ReliableSubscriptionInput_OnStateSaved",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.ReliableSubscriptionInput },
+        Message = "Reliable subscription input for '{0}' sent AcknowledgeRange({1}).",
+        Parameters = new[]
+        {
+            new Parameter("instanceId", "System.Uri"),
+            new Parameter("sequenceId", "System.Int64"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "CheckpointableStateManager_TransitionCompleted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.CheckpointableStateManager },
+        Message = "Query engine '{0}' finished '{1}' request. Transitioning from state '{2}' to state '{3}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("caller", "System.String"),
+            new Parameter("oldStatus", "Reaqtor.QueryEngine.QueryEngineStatus") { CanBeNull = false },
+            new Parameter("newStatus", "Reaqtor.QueryEngine.QueryEngineStatus") { CanBeNull = false },
+        }
+    },
+    new EventMetadata
+    {
+        Name = "CheckpointableStateManager_TransitionStarted",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.CheckpointableStateManager },
+        Message = "Query engine '{0}' processing '{1}' request. Transitioning from state '{2}' to state '{3}'.",
+        Parameters = new[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("caller", "System.String"),
+            new Parameter("oldStatus", "Reaqtor.QueryEngine.QueryEngineStatus") { CanBeNull = false },
+            new Parameter("newStatus", "Reaqtor.QueryEngine.QueryEngineStatus") { CanBeNull = false },
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Bridge_CreatingUpstreamObservable",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Bridge },
+        Message = "Defining upstream observable '{0}' for bridge '{1}'. Definition = '{2}'.",
+        Parameters = new[]
+        {
+            new Parameter("observableId", "System.Uri"),
+            new Parameter("bridgeId", "System.Uri"),
+            new Parameter("expression", "System.Linq.Expressions.Expression") { CustomToString = true },
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Bridge_CreatingUpstreamSubscription",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Bridge },
+        Message = "Creating upstream subscription '{0}' for bridge '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("bridgeId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Bridge_DisposingUpstreamObservable",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Bridge },
+        Message = "Disposing upstream observable '{0}' for bridge '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("observableId", "System.Uri"),
+            new Parameter("bridgeId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Bridge_DisposingUpstreamSubscription",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Bridge },
+        Message = "Disposing upstream subscription '{0}' for bridge '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("bridgeId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Replay",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Recovery of query engine '{0}' induced a replay of a '{1}' operation for a(n) '{2}' artifact with id '{3}' from the transaction log.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("operation", ParameterType.String),
+            new Parameter("category", ParameterType.String),
+            new Parameter("entityId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Replay_Failure",
+        Version = 3,
+        Level = EventLevel.Warning,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Replay of a '{1}' operation for a(n) '{2}' artifact with id '{3}' from the transaction log on query engine '{0}' failed. {4}",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("operation", ParameterType.String),
+            new Parameter("category", ParameterType.String),
+            new Parameter("entityId", "System.Uri"),
+            new Parameter("exception", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Garbage_Collection",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Reclaimed '{1}' old versions of the transaction log on query engine '{0}'. Current version: '{2}', Active count: '{3}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("count", ParameterType.Int64),
+            new Parameter("currentVersion", ParameterType.Int64),
+            new Parameter("activeCount", ParameterType.Int64),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Coalesce",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Multiple occurences of artifact with id '{1}' appeared in the transaction log on query engine '{0}'. Coalesced state so far: '{2}', next state '{3}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("entityId", ParameterType.String),
+            new Parameter("coalescesStateSoFar", ParameterType.String),
+            new Parameter("nextState", ParameterType.String),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Initialization",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Transaction log on query engine '{0}' initializing with latest version '{1}', active count '{2}', and held count '{3}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("latest", ParameterType.Int64),
+            new Parameter("activeCount", ParameterType.Int64),
+            new Parameter("heldCount", ParameterType.Int64),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Snapshot",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Transaction log on query engine '{0}' shapshotted with latest version '{1}', active count '{2}', and held count '{3}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("latest", ParameterType.Int64),
+            new Parameter("activeCount", ParameterType.Int64),
+            new Parameter("heldCount", ParameterType.Int64),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Lost_Reference",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Transaction log on query engine '{0}' unreferenced old version. Current latest version '{1}', active count '{2}', and held count '{3}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("latest", ParameterType.Int64),
+            new Parameter("activeCount", ParameterType.Int64),
+            new Parameter("heldCount", ParameterType.Int64),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Garbage_Collection_Start",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Transaction log on query engine '{0}' starting garbage collection. Current latest version '{1}', active count '{2}', and held count '{3}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("latest", ParameterType.Int64),
+            new Parameter("activeCount", ParameterType.Int64),
+            new Parameter("heldCount", ParameterType.Int64),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Garbage_Collection_End",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Transaction log on query engine '{0}' finished garbage collection. Current latest version '{1}', active count '{2}', and held count '{3}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("latest", ParameterType.Int64),
+            new Parameter("activeCount", ParameterType.Int64),
+            new Parameter("heldCount", ParameterType.Int64),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Transaction_Log_Garbage_Collection_Failed",
+        Version = 3,
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Transaction log on query engine '{0}' garbage collection failed. {1}",
+        Parameters = new Parameter[]
+        {
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("exception", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Create_Artifact_Unexpected_Transaction_Disposal_Exception",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.TransactionLog },
+        Message = "Creation of artifact '{0}' failed after adding to engine and transaction log. This is most likely due to an error in disposing the transaction. Exception: '{1}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("entityId", "System.Uri"),
+            new Parameter("exception", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "BlobLogs_Done_Success",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.BlobLogs },
+        Message = "Recovery state blob log finished writing to '{0}' on query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("path", "System.String"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "BlobLogs_Done_Canceled",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.BlobLogs },
+        Message = "Recovery state blob log canceled writing to '{0}' on query engine '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("path", "System.String"),
+            new Parameter("queryEngineId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "BlobLogs_Done_Error",
+        Level = EventLevel.Warning,
+        Keywords = new [] { EventKeyword.BlobLogs },
+        Message = "Recovery state blob log failed writing to '{0}' on query engine '{1}'. Error = {2}",
+        Parameters = new[]
+        {
+            new Parameter("path", "System.String"),
+            new Parameter("queryEngineId", "System.Uri"),
+            new Parameter("error", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "HigherOrderOperator_CreatingBridge",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.HigherOrderOperator },
+        Message = "Creating bridge '{0}' for subscription '{1}'. Definition = '{2}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("bridgeId", "System.Uri"),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("definition", "System.Linq.Expressions.Expression"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "HigherOrderOperator_StartingInnerSubscription",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.HigherOrderOperator },
+        Message = "Starting inner subscription to bridge '{0}' for higher order subscription '{1}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("bridgeId", "System.Uri"),
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "HigherOrderOperator_DisposingInnerSubscription",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.HigherOrderOperator },
+        Message = "Disposing inner subscription to bridge '{0}' for higher order subscription '{1}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("bridgeId", "System.Uri"),
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "HigherOrderOperator_DeletingBridge",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.HigherOrderOperator },
+        Message = "Removing stream for bridge '{0}' for higher order subscription '{1}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("bridgeId", "System.Uri"),
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "InputEdge_ExternalSubscription_Dispose_Failed",
+        Level = EventLevel.Warning,
+        Keywords = new [] { EventKeyword.Edge },
+        Message = "Deleting external subscription '{0}' on input edge '{1}' failed. Exception: '{2}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("externalSubscriptionId", "System.Uri"),
+            new Parameter("edgeId", "System.Uri"),
+            new Parameter("exception", "System.Exception"),
+        }
+    },
+};
+#>

@@ -1,0 +1,91 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>IRP abstractions for reactive client programming.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.Client.Model\Reaqtor.Client.Model.csproj" />
+    <ProjectReference Include="..\..\Expressions\Reaqtor.Expressions.Core\Reaqtor.Expressions.Core.csproj" />
+    <ProjectReference Include="..\..\Expressions\Reaqtor.Expressions.Model\Reaqtor.Expressions.Model.csproj" />
+    <ProjectReference Include="..\..\Local\Reaqtor.Local.Core\Reaqtor.Local.Core.csproj" />
+    <ProjectReference Include="..\..\Metadata\Reaqtor.Metadata.Model\Reaqtor.Metadata.Model.csproj" />
+    <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Core\Reaqtor.Shared.Core.csproj" />
+    <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Model\Reaqtor.Shared.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Reaqtor\AsyncReactiveQueryProviderBase.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>AsyncReactiveQueryProviderBase.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\Internal\KnownQubjectFactory.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>KnownQubjectFactory.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\Internal\KnownQubscriptionFactory.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>KnownQubscriptionFactory.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\Internal\QubjectFactory.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QubjectFactory.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\Internal\QubscriptionFactory.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QubscriptionFactory.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\ReactiveClientProxyBase.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveClientProxyBase.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\ReactiveDefinitionProxyBase.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>ReactiveDefinitionProxyBase.HigherArities.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Reaqtor\AsyncReactiveQueryProviderBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>AsyncReactiveQueryProviderBase.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\Internal\KnownQubjectFactory.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>KnownQubjectFactory.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\Internal\KnownQubscriptionFactory.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>KnownQubscriptionFactory.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\Internal\QubjectFactory.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>QubjectFactory.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\Internal\QubscriptionFactory.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>QubscriptionFactory.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\ReactiveClientProxyBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveClientProxyBase.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\ReactiveDefinitionProxyBase.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ReactiveDefinitionProxyBase.HigherArities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

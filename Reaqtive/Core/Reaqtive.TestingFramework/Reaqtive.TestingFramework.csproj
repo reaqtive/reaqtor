@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>IRP testing framework.</Description>
+    <!-- TODODOC -->
+    <GenerateDocumentationFile>false</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtive.Core\Reaqtive.Core.csproj" />
+    <ProjectReference Include="..\Reaqtive.Scheduler\Reaqtive.Scheduler.csproj" />
+    <ProjectReference Include="..\Reaqtive.Testing\Reaqtive.Testing.csproj" />
+  </ItemGroup>
+
+</Project>

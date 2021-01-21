@@ -1,0 +1,329 @@
+<#@include file="..\..\..\Common\IrpEventSource.tt" #>
+
+<#+
+/***********************************************************************
+ *                                                                     *
+ *  USER DEFINED VARIABLES - MODIFY THESE FOR EACH EVENT YOU GENERATE  *
+ *                                                                     *
+ ***********************************************************************/
+
+enum EventKeyword : ulong
+{
+    // Sub-systems
+    // HigherOrderOperator = (ulong)1 << 1,  // NB: This moved to the engine for architectural layering purposes.
+    DelaySubscription = (ulong)1 << 2,
+    Empty = (ulong)1 << 3,
+    Return = (ulong)1 << 4,
+    Throw = (ulong)1 << 5,
+    StartWith = (ulong)1 << 6,
+    Retry = (ulong)1 << 7,
+    Timer = (ulong)1 << 8,
+    Setting = (ulong)1 << 9,
+}
+
+// Values must be in the range from 1 through 65534
+enum EventTask
+{
+    //Need our own `None`, because EventSource is trying to be "helpful"
+    //and generates a task for us if we use EventTask.None,
+    //which is not desirable from the backward compatibility standpoint
+    None = 1,
+}
+
+// Values must be in the range from 11 through 239
+enum EventOpcode
+{
+}
+
+string Namespace = "Reaqtive";
+string EventSourceName = "Reaqtive-Linq";
+
+// It's better not to reorder event definitions
+List<EventMetadata> EventRegistry = new List<EventMetadata>
+{
+    new EventMetadata
+    {
+        Name = "DelaySubscription_Subscribing",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.DelaySubscription },
+        Message = "DelaySubscription operator for subscription '{0}' subscribing to upstream source.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Empty_Scheduling",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.Empty },
+        Message = "Empty operator for subscription '{0}' scheduled terminal completed message.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Empty_Processing",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.Empty },
+        Message = "Empty operator for subscription '{0}' processing terminal completed message.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Return_Scheduling",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.Return },
+        Message = "Return operator for subscription '{0}' scheduled message.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Return_Processing",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.Return },
+        Message = "Return operator for subscription '{0}' processing message.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Throw_Scheduling",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.Throw },
+        Message = "Throw operator for subscription '{0}' scheduled terminal error message.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Throw_Processing",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.Throw },
+        Message = "Throw operator for subscription '{0}' processing terminal error message.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "StartWith_Scheduling",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.StartWith },
+        Message = "StartWith operator for subscription '{0}' scheduled message for item at index '{1}' (count = '{2}').",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("valuesIndex", ParameterType.Int32),
+            new Parameter("length", ParameterType.Int32),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "StartWith_Processing",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.StartWith },
+        Message = "StartWith operator for subscription '{0}' processing message for item at index '{1}' (count = '{2}').",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("valuesIndex", ParameterType.Int32),
+            new Parameter("length", ParameterType.Int32),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "StartWith_Subscribing",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.StartWith },
+        Message = "StartWith operator for subscription '{0}' subscribing to upstream source.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Retry_Retrying",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Retry },
+        Message = "Retry operator for subscription '{0}' is retrying. Error = {1}",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("error", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Retry_Retrying_Count",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Retry },
+        Message = "Retry operator for subscription '{0}' is retrying. Remaining retry count = {1}, Error = {2}",
+        Parameters = new Parameter[]
+        {
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("count", ParameterType.Int32),
+            new Parameter("error", "System.Exception"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Timer_ScheduledToFire",
+        Version = 2,
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.Timer },
+        Message = "Timer {0} for subscription '{1}' scheduled to fire '{2}' at {3}.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("timerId", ParameterType.Int32),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("tick", ParameterType.Int64),
+            new Parameter("due", "System.DateTimeOffset"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Timer_Disposed",
+        Version = 2,
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.Timer },
+        Message = "Timer {0} for subscription '{1}' disposed.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("timerId", ParameterType.Int32),
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Timer_Muted",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Timer },
+        Message = "Timer {0} for subscription '{1}' muted '{2}' at {3}, was due at {4} (delta = {5}).",
+        Parameters = new Parameter[]
+        {
+            new Parameter("timerId", ParameterType.Int32),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("tick", ParameterType.Int64),
+            new Parameter("now", "System.DateTimeOffset"),
+            new Parameter("due", "System.DateTimeOffset"),
+            new Parameter("delta", "System.TimeSpan"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Timer_Fired",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Timer },
+        Message = "Timer {0} for subscription '{1}' fired '{2}' at {3}, was due at {4} (delta = {5}).",
+        Parameters = new Parameter[]
+        {
+            new Parameter("timerId", ParameterType.Int32),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("tick", ParameterType.Int64),
+            new Parameter("now", "System.DateTimeOffset"),
+            new Parameter("due", "System.DateTimeOffset"),
+            new Parameter("delta", "System.TimeSpan"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Timer_CatchUp",
+        Version = 2,
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Timer },
+        Message = "Timer {0} for subscription '{1}' running with catch-up tick skip behavior; first due time shifted to {2}.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("timerId", ParameterType.Int32),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("due", "System.DateTimeOffset"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Invalid_Setting",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.Setting },
+        Message = "Setting '{0}' has an invalid value of '{1}' for artifact '{2}'. Using default value '{3}' instead. {4}",
+        Parameters = new Parameter[]
+        {
+            new Parameter("settingId", ParameterType.String),
+            new Parameter("settingValue", ParameterType.String),
+            new Parameter("instanceId", "System.Uri"),
+            new Parameter("defaultSettingValue", ParameterType.String),
+            new Parameter("message", ParameterType.String),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Timer_Single_Absolute_Created",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Timer },
+        Message = "Timer {0} for subscription '{1}' created with initial absolute due time {2}.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("timerId", ParameterType.Int32),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("due", "System.DateTimeOffset"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Timer_Single_Relative_Created",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Timer },
+        Message = "Timer {0} for subscription '{1}' created with initial relative due time {2}.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("timerId", ParameterType.Int32),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("due", "System.TimeSpan"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Timer_Periodic_Absolute_Created",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Timer },
+        Message = "Timer {0} for subscription '{1}' created with initial absolute due time {2} and period {3}.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("timerId", ParameterType.Int32),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("due", "System.DateTimeOffset"),
+            new Parameter("period", "System.TimeSpan"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Timer_Periodic_Relative_Created",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Timer },
+        Message = "Timer {0} for subscription '{1}' created with initial relative due time {2} and period {3}.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("timerId", ParameterType.Int32),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("due", "System.TimeSpan"),
+            new Parameter("period", "System.TimeSpan"),
+        }
+    },
+};
+#>

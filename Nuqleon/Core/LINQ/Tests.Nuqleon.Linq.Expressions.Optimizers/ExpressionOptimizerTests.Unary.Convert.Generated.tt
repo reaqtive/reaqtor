@@ -1,0 +1,167 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - January 2017 - Created this file.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Linq.Expressions" #>
+<#@ import namespace="System.Reflection" #>
+<#@ import namespace="System.Text" #>
+<#@ output extension=".cs" #>
+
+using System;
+using System.Linq.Expressions;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace Tests.System.Linq.Expressions.Optimizers
+{
+    partial class ExpressionOptimizerTests
+    {
+<#
+var alias = new Dictionary<Type, string>
+{
+    { typeof(bool), "bool" },
+    { typeof(sbyte), "sbyte" },
+    { typeof(byte), "byte" },
+    { typeof(short), "short" },
+    { typeof(ushort), "ushort" },
+    { typeof(int), "int" },
+    { typeof(uint), "uint" },
+    { typeof(long), "long" },
+    { typeof(ulong), "ulong" },
+    { typeof(float), "float" },
+    { typeof(double), "double" },
+};
+
+var values = new Dictionary<Type, object[]>
+{
+    { typeof(bool), new object[] { false, true } },
+    { typeof(sbyte), new object[] { sbyte.MinValue, (sbyte)-1, (sbyte)0, (sbyte)1, (sbyte)42, sbyte.MaxValue } },
+    { typeof(short), new object[] { short.MinValue, (short)-1, (short)0, (short)1, (short)42, short.MaxValue } },
+    { typeof(int), new object[] { int.MinValue, (int)-1, (int)0, (int)1, (int)42, int.MaxValue } },
+    { typeof(long), new object[] { long.MinValue, (long)-1, (long)0, (long)1, (long)42, long.MaxValue } },
+    { typeof(byte), new object[] { (byte)0, (byte)1, (byte)42, byte.MaxValue } },
+    { typeof(ushort), new object[] { (ushort)0, (ushort)1, (ushort)42, ushort.MaxValue } },
+    { typeof(uint), new object[] { (uint)0, (uint)1, (uint)42, uint.MaxValue } },
+    { typeof(ulong), new object[] { (ulong)0, (ulong)1, (ulong)42, ulong.MaxValue } },
+    { typeof(float), new object[] { (float)0.0, (float)1.0, (float)3.14 } },
+    { typeof(double), new object[] { (double)0.0, (double)1.0, (double)3.14 } },
+};
+
+var ts = new[] { typeof(bool), typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong), typeof(float), typeof(double) };
+ts = ts.Concat(ts.Select(t => typeof(Nullable<>).MakeGenericType(t))).ToArray();
+
+var ops = new[] { ExpressionType.Convert, ExpressionType.ConvertChecked };
+
+Func<Type, string> getName = t =>
+{
+    if (t.IsGenericType)
+    {
+        return "Nullable" + t.GetGenericArguments()[0].Name;
+    }
+
+    return t.Name;
+};
+
+Func<Type, string> getCSharp = t =>
+{
+    if (t.IsGenericType)
+    {
+        return alias[t.GetGenericArguments()[0]] + "?";
+    }
+
+    return alias[t];
+};
+
+foreach (var op in ops)
+{
+    foreach (var fromType in ts)
+    {
+        var aFrom = getName(fromType);
+        var cFrom = getCSharp(fromType);
+
+        foreach (var toType in ts)
+        {
+            var aTo = getName(toType);
+            var cTo = getCSharp(toType);
+
+            var has = false;
+
+            var p = Expression.Parameter(fromType);
+            var f = default(Delegate);
+            try
+            {
+                var e = Expression.MakeUnary(op, p, toType, method: null);
+                if (e.Method == null)
+                {
+                    f = Expression.Lambda(e, p).Compile();
+                    has = true;
+                }
+            }
+            catch {}
+
+            if (has)
+            {
+#>
+        [TestMethod]
+        public void <#=op#>_<#=aFrom#>_<#=aTo#>()
+        {
+<#
+            var fromTypeNonNull = fromType;
+            if (fromType.IsGenericType)
+            {
+                fromTypeNonNull = fromType.GetGenericArguments()[0];
+#>
+            AssertEval(
+                Expression.<#=op#>(Expression.Constant(value: null, typeof(<#=cFrom#>)), typeof(<#=cTo#>))
+            );
+<#
+            }
+
+            foreach (var val in values[fromTypeNonNull])
+            {
+#>
+            AssertEval(
+                Expression.<#=op#>(Expression.Constant((<#=cFrom#>)<#=val.ToString().ToLower()#>, typeof(<#=cFrom#>)), typeof(<#=cTo#>))
+<#
+                var res = default(object);
+                try
+                {
+                    res = f.DynamicInvoke(new object[] { val });
+                }
+                catch (TargetInvocationException ex)
+                {
+#>
+                /* typeof(global::<#=ex.InnerException.GetType().FullName#> */
+<#
+                }
+
+                if (res != null)
+                {
+#>
+                /* <#=res.ToString().ToLower()#> */
+<#
+                }
+#>
+            );
+<#
+            }
+#>
+        }
+
+<#
+            }
+        }
+    }
+}
+#>
+    }
+}

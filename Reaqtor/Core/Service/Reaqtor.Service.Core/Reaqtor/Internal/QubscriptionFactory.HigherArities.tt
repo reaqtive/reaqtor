@@ -1,0 +1,79 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 15;#>
+//
+// Revision history:
+//
+// BD - February 2016 - Created this file.
+// Auto-generated file, changes to source may be lost
+//
+
+using System;
+using System.Linq.Expressions;
+
+namespace Reaqtor
+{
+<#/*
+
+generating the code for:
+
+    internal class QubscriptionFactory<TArg1, TArg2> : ReactiveQubscriptionFactoryBase<TArg1, TArg2>
+    {
+        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
+
+        protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state)
+        {
+            return ((ReactiveQueryProviderBase)base.Provider).CreateSubscription(this, arg1, arg2, subscriptionUri, state);
+        }
+    }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var paramsList = new List<string>();
+    var argsList = new List<string>();
+    for (int j = 1; j <= i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        paramsList.Add(string.Format("TArg{0} arg{0}", j));
+        argsList.Add(string.Format("arg{0}", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var parameters = string.Join(", ", paramsList.ToArray());
+    var arguments = string.Join(", ", argsList.ToArray());
+
+#>
+    internal class QubscriptionFactory<<#=typeArgs#>> : ReactiveQubscriptionFactoryBase<<#=typeArgs#>>
+    {
+        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
+
+        protected override IReactiveQubscription CreateCore(Uri subscriptionUri, <#=parameters#>, object state)
+        {
+            return ((ReactiveQueryProviderBase)base.Provider).CreateSubscription(this, <#=arguments#>, subscriptionUri, state);
+        }
+    }
+
+<# } #>
+}

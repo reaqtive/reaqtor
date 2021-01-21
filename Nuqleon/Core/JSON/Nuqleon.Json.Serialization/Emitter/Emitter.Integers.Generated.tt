@@ -1,0 +1,307 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+//   BD - 04/16/2016 - Created fast JSON serializer functionality.
+//   BD - 05/08/2016 - Added support for serialization to text writers.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Text;
+
+namespace Nuqleon.Json.Serialization
+{
+    internal partial class Emitter
+    {
+        //
+        // NB: The use of unsafe code for `itoa` type functionality here pays off mostly on x64 targets where
+        //     printing long.MaxValue is about 40% faster compared to the naive approach of using Append(long)
+        //     which causes a ToString and allocations. When using x86, we see gains for numbers with up to 11
+        //     digits. This is enough to make all 32-bit numbers faster to print, but has up to 60% regression
+        //     for 64-bit numbers of 12 digits and more. For the time being, we won't worry about the x86 case
+        //     with big numbers (which could be deemed rare) and focus on server workloads.
+        //
+        //     For the safe code variants we see up to 40% improvement for x64 with a similar regression on x86
+        //     with numbers containing 12 or more digits.
+        //
+
+<#
+var ts = new[] { typeof(sbyte), typeof(short), typeof(int), typeof(long), typeof(byte), typeof(ushort), typeof(uint), typeof(ulong) };
+
+foreach (var t in ts)
+{
+    var tn = t.Name;
+    var unsigned = t == typeof(byte) || tn.StartsWith("U");
+    var maxValue = t.GetField("MaxValue").GetValue(null).ToString();
+    var minValue = t.GetField("MinValue").GetValue(null).ToString();
+    var hasDivRem = t == typeof(int) || t == typeof(long);
+#>
+        /// <summary>
+        /// Emits a <#=t.FullName#> as a JSON Number to the specified string builder.
+        /// </summary>
+        /// <param name="builder">The string builder to append the <#=t.FullName#> to.</param>
+        /// <param name="value">The <#=t.FullName#> value to emit.</param>
+        /// <param name="context">The emitter context.</param>
+        internal static void Emit<#=tn#>(StringBuilder builder, <#=tn#> value, EmitterContext context)
+        {
+            switch (value)
+            {
+<#
+if (!unsigned)
+{
+#>
+                case <#=tn#>.MinValue:
+                    builder.Append("<#=minValue#>");
+                    return;
+                case -1:
+                    builder.Append("-1");
+                    return;
+<#
+}
+#>
+<#
+for (var i = 0; i < 8; i++)
+{
+#>
+                case <#=i#>:
+                    builder.Append('<#=i#>');
+                    return;
+<#
+}
+#>
+            }
+
+<#
+if (!unsigned)
+{
+#>
+            if (value < 0)
+            {
+                builder.Append('-');
+                value = (<#=tn#>)(-value);
+            }
+<#
+}
+#>
+
+#if ALLOW_UNSAFE && HAS_APPEND_CHARSTAR
+            unsafe
+            {
+                const int len = <#=maxValue.Length#>; // "<#=maxValue#>".Length
+
+                var str = stackalloc char[len];
+
+                var i = 0;
+                while (value != 0)
+                {
+<#
+if (hasDivRem)
+{
+#>
+                    //
+                    // NB: Use of Math.DivRem allows for the JIT to emit a single idiv instruction rather than two.
+                    //
+
+                    var rem = default(<#=t#>);
+                    value = Math.DivRem(value, 10, out rem);
+<#
+}
+else
+{
+#>
+                    //
+                    // NB: Keeping the modulo and division operation adjacent to each other is similar to Math.DivRem which allows for
+                    //     the JIT to emit a single idiv instruction rather than two.
+                    //
+
+                    var rem = value % 10;
+                    value /= 10;
+<#
+}
+#>
+
+                    str[i] = (char)('0' + rem);
+                    i++;
+                }
+
+                var n = i;
+
+                for (int b = 0, e = n - 1; b < e; b++, e--)
+                {
+                    var t = str[b];
+                    str[b] = str[e];
+                    str[e] = t;
+                }
+
+                builder.Append(str, n);
+            }
+#else
+            var str = context.IntegerDigitBuffer;
+
+            var i = 0;
+            while (value != 0)
+            {
+<#
+if (hasDivRem)
+{
+#>
+                //
+                // NB: Use of Math.DivRem allows for the JIT to emit a single idiv instruction rather than two.
+                //
+
+                var rem = default(<#=t#>);
+                value = Math.DivRem(value, 10, out rem);
+<#
+}
+else
+{
+#>
+                //
+                // NB: Keeping the modulo and division operation adjacent to each other is similar to Math.DivRem which allows for
+                //     the JIT to emit a single idiv instruction rather than two.
+                //
+
+                var rem = value % 10;
+                value /= 10;
+<#
+}
+#>
+
+                str[i] = (char)('0' + rem);
+                i++;
+            }
+
+            var n = i;
+
+            for (int b = 0, e = n - 1; b < e; b++, e--)
+            {
+                var t = str[b];
+                str[b] = str[e];
+                str[e] = t;
+            }
+
+            builder.Append(str, 0, n);
+#endif
+        }
+
+#if !NO_IO
+<#
+if (!unsigned)
+{
+#>
+        private static readonly char[] s_minValue<#=tn#> = "<#=minValue#>".ToCharArray();
+
+<#
+}
+#>
+        /// <summary>
+        /// Emits a <#=t.FullName#> as a JSON Number to the specified text writer.
+        /// </summary>
+        /// <param name="writer">The text writer to append the <#=t.FullName#> to.</param>
+        /// <param name="value">The <#=t.FullName#> value to emit.</param>
+        /// <param name="context">The emitter context.</param>
+        internal static void Emit<#=tn#>(System.IO.TextWriter writer, <#=tn#> value, EmitterContext context)
+        {
+            switch (value)
+            {
+<#
+if (!unsigned)
+{
+#>
+                case <#=tn#>.MinValue:
+                    writer.Write(s_minValue<#=tn#>);
+                    return;
+                case -1:
+                    writer.Write('-');
+                    writer.Write('1');
+                    return;
+<#
+}
+#>
+<#
+for (var i = 0; i < 8; i++)
+{
+#>
+                case <#=i#>:
+                    writer.Write('<#=i#>');
+                    return;
+<#
+}
+#>
+            }
+
+<#
+if (!unsigned)
+{
+#>
+            if (value < 0)
+            {
+                writer.Write('-');
+                value = (<#=tn#>)(-value);
+            }
+
+<#
+}
+#>
+            var str = context.IntegerDigitBuffer;
+
+            var i = 0;
+            while (value != 0)
+            {
+<#
+if (hasDivRem)
+{
+#>
+                //
+                // NB: Use of Math.DivRem allows for the JIT to emit a single idiv instruction rather than two.
+                //
+
+                var rem = default(<#=t#>);
+                value = Math.DivRem(value, 10, out rem);
+<#
+}
+else
+{
+#>
+                //
+                // NB: Keeping the modulo and division operation adjacent to each other is similar to Math.DivRem which allows for
+                //     the JIT to emit a single idiv instruction rather than two.
+                //
+
+                var rem = value % 10;
+                value /= 10;
+<#
+}
+#>
+
+                str[i] = (char)('0' + rem);
+                i++;
+            }
+
+            var n = i;
+
+            for (int b = 0, e = n - 1; b < e; b++, e--)
+            {
+                var t = str[b];
+                str[b] = str[e];
+                str[e] = t;
+            }
+
+            writer.Write(str, 0, n);
+        }
+#endif
+
+<#
+}
+#>
+    }
+}

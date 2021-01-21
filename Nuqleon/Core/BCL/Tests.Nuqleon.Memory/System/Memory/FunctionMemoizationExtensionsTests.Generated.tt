@@ -1,0 +1,482 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+using System.Collections.Generic;
+using System.Memory;
+using System.Runtime.CompilerServices;
+
+<#
+var r = new Random(1983);
+#>
+namespace Tests
+{
+    public partial class FunctionMemoizationExtensionsTests
+    {
+        [TestMethod]
+        public void FunctionMemoizationExtensions_Memoize_ArgumentChecking()
+        {
+            var m = Memoizer.Create(MemoizationCacheFactory.Unbounded);
+
+<#
+for (var i = 2; i <= 17; i++)
+{
+    var types = string.Join(", ", Enumerable.Repeat("int", i));
+    var pars = "(" + string.Join(", ", Enumerable.Range(1, i - 1).Select(j => "t" + j)) + ")";
+#>
+            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<<#=types#>>(default(IMemoizer), <#=pars#> => 0));
+            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<<#=types#>>(m, default(Func<<#=types#>>)));
+<#
+}
+#>
+        }
+
+<#
+for (var i = 2; i <= 17; i++)
+{
+    var types = string.Join(", ", Enumerable.Repeat("int", i));
+    var pars = "(" + string.Join(", ", Enumerable.Range(1, i - 1).Select(j => "t" + j)) + ")";
+    var res = string.Join(" + ", Enumerable.Range(1, i - 1).Select(j => "t" + j));
+    var func = pars + " => { n++; return " + res + "; }";
+
+    var N = 4;
+    var vals = new int[N][];
+    var args = new string[N];
+    var sums = new int[N];
+
+    for (var j = 0; j < N; j++)
+    {
+        vals[j] = Enumerable.Range(1, i - 1).Select(_ => r.Next(0, 100)).ToArray();
+        args[j] = string.Join(", ", vals[j]);
+        sums[j] = vals[j].Sum();
+    }
+#>
+        [TestMethod]
+        public void FunctionMemoizationExtensions_Memoize<#=i#>()
+        {
+            var m = Memoizer.Create(MemoizationCacheFactory.Unbounded);
+            var n = 0;
+
+            var res = FunctionMemoizationExtensions.Memoize<<#=types#>>(m, <#=func#>);
+
+<#
+    for (var j = 0; j < N; j++)
+    {
+#>
+            Assert.AreEqual(<#=sums[j]#>, res.Delegate(<#=args[j]#>));
+            Assert.AreEqual(<#=j + 1#>, n);
+
+<#
+    }
+
+    for (var j = 0; j < N; j++)
+    {
+#>
+            Assert.AreEqual(<#=sums[j]#>, res.Delegate(<#=args[j]#>));
+            Assert.AreEqual(<#=N#>, n);
+
+<#
+    }
+#>
+            res.Cache.Clear();
+            Assert.AreEqual(<#=N#>, n);
+
+<#
+    for (var j = 0; j < N; j++)
+    {
+#>
+            Assert.AreEqual(<#=sums[j]#>, res.Delegate(<#=args[j]#>));
+            Assert.AreEqual(<#=N + j + 1#>, n);
+
+<#
+    }
+#>
+        }
+
+<#
+}
+#>
+
+        [TestMethod]
+        public void FunctionMemoizationExtensions_Memoize_EqualityComparer_ArgumentChecking()
+        {
+            var m = Memoizer.Create(MemoizationCacheFactory.Unbounded);
+            var c = EqualityComparer<int>.Default;
+
+<#
+for (var i = 3; i <= 17; i++)
+{
+    var types = string.Join(", ", Enumerable.Repeat("int", i));
+    var func = "(" + string.Join(", ", Enumerable.Range(1, i - 1).Select(j => "t" + j)) + ")" + " => 0";
+    var comps = Enumerable.Repeat("c", i - 1);
+    var defcs = Enumerable.Repeat("default(IEqualityComparer<int>)", i - 1);
+
+    var vals = new[] { "m", func, "MemoizationOptions.None" }.Concat(comps).ToArray();
+    var defs = new[] { "default(IMemoizer)", "default(Func<" + types + ">)", "default(MemoizationOptions)" }.Concat(defcs).ToArray();
+
+    for (var j = 0; j < vals.Length; j++)
+    {
+        if (j == 2)
+            continue;
+
+        var args = string.Join(", ", vals.Select((v, k) => k == j ? defs[k] : v));
+#>
+            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<<#=types#>>(<#=args#>));
+<#
+    }
+}
+#>
+        }
+
+<#
+for (var i = 3; i <= 17; i++)
+{
+    var types = string.Join(", ", Enumerable.Repeat("int", i));
+    var pars = "(" + string.Join(", ", Enumerable.Range(1, i - 1).Select(j => "t" + j)) + ")";
+    var res = string.Join(" + ", Enumerable.Range(1, i - 1).Select(j => "t" + j));
+    var func = pars + " => { n++; return " + res + "; }";
+
+    var N = 4;
+    var vals = new int[N][];
+    var args = new string[N];
+    var sums = new int[N];
+
+    for (var j = 0; j < N; j++)
+    {
+        vals[j] = Enumerable.Range(1, i - 1).Select(_ => r.Next(0, 100)).ToArray();
+        args[j] = string.Join(", ", vals[j]);
+        sums[j] = vals[j].Sum();
+    }
+#>
+        [TestMethod]
+        public void FunctionMemoizationExtensions_Memoize_EqualityComparer<#=i#>()
+        {
+            var m = Memoizer.Create(MemoizationCacheFactory.Unbounded);
+            var c = EqualityComparer<int>.Default;
+            var n = 0;
+
+            var res = FunctionMemoizationExtensions.Memoize<<#=types#>>(m, <#=func#>, MemoizationOptions.None, <#=string.Join(", ", Enumerable.Repeat("c", i - 1))#>);
+
+<#
+    for (var j = 0; j < N; j++)
+    {
+#>
+            Assert.AreEqual(<#=sums[j]#>, res.Delegate(<#=args[j]#>));
+            Assert.AreEqual(<#=j + 1#>, n);
+
+<#
+    }
+
+    for (var j = 0; j < N; j++)
+    {
+#>
+            Assert.AreEqual(<#=sums[j]#>, res.Delegate(<#=args[j]#>));
+            Assert.AreEqual(<#=N#>, n);
+
+<#
+    }
+#>
+            res.Cache.Clear();
+            Assert.AreEqual(<#=N#>, n);
+
+<#
+    for (var j = 0; j < N; j++)
+    {
+#>
+            Assert.AreEqual(<#=sums[j]#>, res.Delegate(<#=args[j]#>));
+            Assert.AreEqual(<#=N + j + 1#>, n);
+
+<#
+    }
+#>
+        }
+
+<#
+}
+#>
+
+        [TestMethod]
+        public void FunctionMemoizationExtensions_MemoizeWeak_ArgumentChecking()
+        {
+            var m = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+
+<#
+for (var i = 1; i <= 17; i++)
+{
+    var types = string.Join(", ", Enumerable.Repeat("string", i));
+    var pars = "(" + string.Join(", ", Enumerable.Range(1, i - 1).Select(j => "t" + j)) + ")";
+#>
+            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<<#=types#>>(default(IWeakMemoizer), <#=pars#> => ""));
+            Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<<#=types#>>(m, default(Func<<#=types#>>)));
+<#
+}
+#>
+        }
+
+<#
+for (var i = 3; i <= 17; i++)
+{
+    var types = string.Join(", ", Enumerable.Repeat("string", i));
+    var pars = "(" + string.Join(", ", Enumerable.Range(1, i - 1).Select(j => "t" + j)) + ")";
+    var res = string.Join(" + ", Enumerable.Range(1, i - 1).Select(j => "t" + j));
+    var func = pars + " => { n++; return " + res + "; }";
+
+    var N = 4;
+    var vals = new string[N][];
+    var args = new string[N];
+    var sums = new string[N];
+
+    var msvs = new[] { "bar", "foo", "qux", "baz" };
+
+    for (var j = 0; j < N; j++)
+    {
+        vals[j] = Enumerable.Range(1, i - 1).Select(_ => msvs[r.Next(0, msvs.Length)]).ToArray();
+        args[j] = string.Join(", ", vals[j].Select(v => "\"" + v + "\""));
+        sums[j] = "\"" + vals[j].Aggregate("", (s, t) => s + t) + "\"";
+    }
+#>
+        [TestMethod]
+        public void FunctionMemoizationExtensions_MemoizeWeak<#=i#>()
+        {
+            var m = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+            var n = 0;
+
+            var res = FunctionMemoizationExtensions.MemoizeWeak<<#=types#>>(m, <#=func#>);
+
+<#
+    for (var j = 0; j < N; j++)
+    {
+#>
+            Assert.AreEqual(<#=sums[j]#>, res.Delegate(<#=args[j]#>));
+            Assert.AreEqual(<#=j + 1#>, n);
+
+<#
+    }
+
+    for (var j = 0; j < N; j++)
+    {
+#>
+            Assert.AreEqual(<#=sums[j]#>, res.Delegate(<#=args[j]#>));
+            Assert.AreEqual(<#=N#>, n);
+
+<#
+    }
+#>
+            res.Cache.Clear();
+            Assert.AreEqual(<#=N#>, n);
+
+<#
+    for (var j = 0; j < N; j++)
+    {
+#>
+            Assert.AreEqual(<#=sums[j]#>, res.Delegate(<#=args[j]#>));
+            Assert.AreEqual(<#=N + j + 1#>, n);
+
+<#
+    }
+#>
+        }
+
+<#
+}
+#>
+<#
+for (var i = 0; i <= 33; i++)
+{
+    var args = Enumerable.Repeat("int", i + 1).ToArray();
+    var func = "Func<" + string.Join(", ", args) + ">";
+    var pars = Enumerable.Range(0, i).Select(j => "p" + j).ToArray();
+    var sumr = new[] { "42" }.Concat(Enumerable.Range(0, i).Select(j => "p" + j)).ToArray();
+    var vals = Enumerable.Range(0, i).Select(_ => r.Next(100)).ToArray();
+    var suma = vals.Sum() + 42;
+#>
+        [TestMethod]
+        public void FunctionMemoizationExtensions_Memoize_TDelegate_Func<#=i#>()
+        {
+            var n = 0;
+
+            var mem = Memoizer.Create(MemoizationCacheFactory.Unbounded);
+            var f = new <#=func#>((<#=string.Join(", ", pars)#>) => { n++; return <#=string.Join(" + ", sumr)#>; });
+
+            var res = mem.Memoize<<#=func#>>(f, MemoizationOptions.None);
+
+            Assert.AreEqual(0, n);
+
+            Assert.AreEqual(<#=suma#>, res.Delegate(<#=string.Join(", ", vals)#>));
+            Assert.AreEqual(1, n);
+
+            Assert.AreEqual(<#=suma#>, res.Delegate(<#=string.Join(", ", vals)#>));
+            Assert.AreEqual(1, n);
+        }
+
+<#
+}
+#>
+<#
+for (var i = 0; i <= 33; i++)
+{
+    var pars = Enumerable.Range(0, i).Select(j => "p" + j).ToArray();
+    var sumr = new[] { "\"\"" }.Concat(Enumerable.Range(0, i).Select(j => "p" + j)).ToArray();
+
+    {
+        var args = Enumerable.Repeat("string", i + 1).ToArray();
+        var func = "Func<" + string.Join(", ", args) + ">";
+        var vals = Enumerable.Range(0, i).Select(_ => r.Next(100).ToString()).ToArray();
+        var suma = "\"" + vals.Aggregate("", (s, x) => s + x) + "\"";
+#>
+        [TestMethod]
+        public void FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Func<#=i#>()
+        {
+            var n = 0;
+
+            var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+            var f = new <#=func#>((<#=string.Join(", ", pars)#>) => { n++; return <#=string.Join(" + ", sumr)#>; });
+
+            var res = mem.MemoizeWeak<<#=func#>>(f, MemoizationOptions.None);
+
+            Assert.AreEqual(0, n);
+
+            Assert.AreEqual(<#=suma#>, res.Delegate(<#=string.Join(", ", vals.Select(v => "\"" + v + "\""))#>));
+            Assert.AreEqual(1, n);
+
+            Assert.AreEqual(<#=suma#>, res.Delegate(<#=string.Join(", ", vals.Select(v => "\"" + v + "\""))#>));
+            Assert.AreEqual(1, n);
+        }
+
+<#
+    }
+    {
+        var args = Enumerable.Repeat("Obj", i).Concat(new[] { "string" }).ToArray();
+        var func = "Func<" + string.Join(", ", args) + ">";
+        var vals = Enumerable.Range(0, i).Select(_ => r.Next(100).ToString()).ToArray();
+#>
+        [TestMethod]
+        public void FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func<#=i#>()
+        {
+            lock (typeof(Obj))
+            {
+                Obj.Reset();
+                try
+                {
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
+                    {
+                        var n = 0;
+
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new <#=func#>((<#=string.Join(", ", pars)#>) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<<#=func#>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
+                    }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(<#=func#> f)
+                    {
+                        return f(<#=string.Join(", ", Enumerable.Repeat("new Obj()", i))#>);
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(<#=i#>);
+                }
+                finally
+                {
+                    Obj.Reset();
+                }
+            }
+        }
+
+<#
+    }
+
+    for (var m = 1; m <= 3; m++)
+    {
+        var types = Enumerable.Range(0, i).Select(_ => r.Next() % (m + 1) == 0 ? "string" : "int").Concat(new[] { "string" }).ToArray();
+        var argsm = Enumerable.Range(0, i + 1).Select(j => types[j]).ToArray();
+        var funcm = "Func<" + string.Join(", ", argsm) + ">";
+        var valsj = Enumerable.Range(0, i).Select(_ => r.Next(100).ToString()).ToArray();
+        var valsm = valsj.Select((x, j) => types[j] == "int" ? x : "\"" + x + "\"").ToArray();
+        var sumam = "\"" + valsj.Aggregate("", (s, x) => s + x) + "\"";;
+
+        var stats = string.Join("; ", types.GroupBy(t => t).Select(g => g.Count() + " " + g.Key));
+#>
+        [TestMethod]
+        public void FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Mixed<#=m#>_Func<#=i#>()
+        {
+            // <#=stats#>
+
+            var n = 0;
+
+            var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+            var f = new <#=funcm#>((<#=string.Join(", ", pars)#>) => { n++; return <#=string.Join(" + ", sumr)#>; });
+
+            var res = mem.MemoizeWeak<<#=funcm#>>(f, MemoizationOptions.None, Memoizer.Create(MemoizationCacheFactory.Unbounded));
+
+            Assert.AreEqual(0, n);
+
+            Assert.AreEqual(<#=sumam#>, res.Delegate(<#=string.Join(", ", valsm)#>));
+            Assert.AreEqual(1, n);
+
+            Assert.AreEqual(<#=sumam#>, res.Delegate(<#=string.Join(", ", valsm)#>));
+            Assert.AreEqual(1, n);
+        }
+
+<#
+    }
+}
+#>
+        private static void CollectAndCheckFinalizeCount(int count)
+        {
+            // NB: This has shown to be flaky on Mono.
+            if (Type.GetType("Mono.Runtime") == null)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                Assert.AreEqual(count, Obj.FinalizeCount);
+            }
+        }
+    }
+
+<#
+for (var i = 17; i <= 33; i++)
+{
+    var types = string.Join(", ", Enumerable.Range(1, i).Select(j => "T" + j));
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "T" + j + " arg" + j));
+#>
+    internal delegate R Func<<#=types#>, R>(<#=args#>);
+<#
+}
+#>
+
+    internal sealed class Obj
+    {
+        public static int FinalizeCount;
+
+        public static void Reset()
+        {
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
+
+            FinalizeCount = 0;
+        }
+
+        ~Obj()
+        {
+            FinalizeCount++;
+        }
+    }
+}

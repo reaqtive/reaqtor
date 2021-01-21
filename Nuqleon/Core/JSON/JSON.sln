@@ -1,0 +1,92 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.30523.141
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "deps", "deps", "{F8DC4A92-FCC3-483B-9C2F-5D06DEC61667}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{B0287AF5-1977-4F2D-B372-200D9C5858A0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9F6076C5-9472-4758-92D6-D1DE36777428}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Memory", "..\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj", "{B61D96E7-50C0-4F3A-86F2-6148259577A8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Time", "..\BCL\Nuqleon.Time\Nuqleon.Time.csproj", "{3AD2F144-0D37-4C1B-AD8F-544220CF8BDA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Json", "Nuqleon.Json\Nuqleon.Json.csproj", "{2A75564C-0DA8-4B8F-B183-F6DBB76E9AD8}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Json.Interop.Newtonsoft", "Nuqleon.Json.Interop.Newtonsoft\Nuqleon.Json.Interop.Newtonsoft.csproj", "{416A0E57-9E1D-48D2-99DF-C29787F68A37}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Json.Serialization", "Nuqleon.Json.Serialization\Nuqleon.Json.Serialization.csproj", "{8C65F890-F155-490E-AFAB-4370BE87336D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Perf.Nuqleon.Json.Serialization", "Perf.Nuqleon.Json.Serialization\Perf.Nuqleon.Json.Serialization.csproj", "{D7CBDCB8-5197-40D1-B5A8-44100EB0A040}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Nuqleon.Json", "Tests.Nuqleon.Json\Tests.Nuqleon.Json.csproj", "{34E4FD84-ABD6-4FD0-86C4-2D61183D2FAB}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Nuqleon.Json.Interop.Newtonsoft", "Tests.Nuqleon.Json.Interop.Newtonsoft\Tests.Nuqleon.Json.Interop.Newtonsoft.csproj", "{1C437E25-2293-4817-B50B-19B2D2AE006A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Nuqleon.Json.Serialization", "Tests.Nuqleon.Json.Serialization\Tests.Nuqleon.Json.Serialization.csproj", "{CBAC0259-C9C2-47E1-9A65-06EC20F001BE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "BCL", "BCL", "{FC57FDA1-DDD2-4BC9-BDE1-33975EB7EA5D}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B61D96E7-50C0-4F3A-86F2-6148259577A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B61D96E7-50C0-4F3A-86F2-6148259577A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B61D96E7-50C0-4F3A-86F2-6148259577A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B61D96E7-50C0-4F3A-86F2-6148259577A8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AD2F144-0D37-4C1B-AD8F-544220CF8BDA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AD2F144-0D37-4C1B-AD8F-544220CF8BDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AD2F144-0D37-4C1B-AD8F-544220CF8BDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AD2F144-0D37-4C1B-AD8F-544220CF8BDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2A75564C-0DA8-4B8F-B183-F6DBB76E9AD8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2A75564C-0DA8-4B8F-B183-F6DBB76E9AD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2A75564C-0DA8-4B8F-B183-F6DBB76E9AD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2A75564C-0DA8-4B8F-B183-F6DBB76E9AD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{416A0E57-9E1D-48D2-99DF-C29787F68A37}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{416A0E57-9E1D-48D2-99DF-C29787F68A37}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{416A0E57-9E1D-48D2-99DF-C29787F68A37}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{416A0E57-9E1D-48D2-99DF-C29787F68A37}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8C65F890-F155-490E-AFAB-4370BE87336D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8C65F890-F155-490E-AFAB-4370BE87336D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8C65F890-F155-490E-AFAB-4370BE87336D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8C65F890-F155-490E-AFAB-4370BE87336D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D7CBDCB8-5197-40D1-B5A8-44100EB0A040}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D7CBDCB8-5197-40D1-B5A8-44100EB0A040}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D7CBDCB8-5197-40D1-B5A8-44100EB0A040}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D7CBDCB8-5197-40D1-B5A8-44100EB0A040}.Release|Any CPU.Build.0 = Release|Any CPU
+		{34E4FD84-ABD6-4FD0-86C4-2D61183D2FAB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{34E4FD84-ABD6-4FD0-86C4-2D61183D2FAB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{34E4FD84-ABD6-4FD0-86C4-2D61183D2FAB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{34E4FD84-ABD6-4FD0-86C4-2D61183D2FAB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1C437E25-2293-4817-B50B-19B2D2AE006A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1C437E25-2293-4817-B50B-19B2D2AE006A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1C437E25-2293-4817-B50B-19B2D2AE006A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1C437E25-2293-4817-B50B-19B2D2AE006A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CBAC0259-C9C2-47E1-9A65-06EC20F001BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CBAC0259-C9C2-47E1-9A65-06EC20F001BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CBAC0259-C9C2-47E1-9A65-06EC20F001BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CBAC0259-C9C2-47E1-9A65-06EC20F001BE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B61D96E7-50C0-4F3A-86F2-6148259577A8} = {FC57FDA1-DDD2-4BC9-BDE1-33975EB7EA5D}
+		{3AD2F144-0D37-4C1B-AD8F-544220CF8BDA} = {FC57FDA1-DDD2-4BC9-BDE1-33975EB7EA5D}
+		{2A75564C-0DA8-4B8F-B183-F6DBB76E9AD8} = {B0287AF5-1977-4F2D-B372-200D9C5858A0}
+		{416A0E57-9E1D-48D2-99DF-C29787F68A37} = {B0287AF5-1977-4F2D-B372-200D9C5858A0}
+		{8C65F890-F155-490E-AFAB-4370BE87336D} = {B0287AF5-1977-4F2D-B372-200D9C5858A0}
+		{D7CBDCB8-5197-40D1-B5A8-44100EB0A040} = {B0287AF5-1977-4F2D-B372-200D9C5858A0}
+		{34E4FD84-ABD6-4FD0-86C4-2D61183D2FAB} = {9F6076C5-9472-4758-92D6-D1DE36777428}
+		{1C437E25-2293-4817-B50B-19B2D2AE006A} = {9F6076C5-9472-4758-92D6-D1DE36777428}
+		{CBAC0259-C9C2-47E1-9A65-06EC20F001BE} = {9F6076C5-9472-4758-92D6-D1DE36777428}
+		{FC57FDA1-DDD2-4BC9-BDE1-33975EB7EA5D} = {F8DC4A92-FCC3-483B-9C2F-5D06DEC61667}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {A717D85D-569B-4A26-ABD0-B138863DE44A}
+	EndGlobalSection
+EndGlobal

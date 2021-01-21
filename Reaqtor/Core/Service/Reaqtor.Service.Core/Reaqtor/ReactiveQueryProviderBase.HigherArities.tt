@@ -1,0 +1,409 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="true" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#var highestSupportedArity = 15;#>
+<#var ordinals = new string[] { "zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth" };#>
+//
+// Revision history:
+//
+// BD, ER - August 2013 - Created this file.
+// Auto-generated file, changes to source may be lost
+//
+
+using System;
+using System.Linq.Expressions;
+
+namespace Reaqtor
+{
+    public abstract partial class ReactiveQueryProviderBase
+    {
+        #region CreateQbservable
+
+<#/*
+
+generating the code for:
+
+        /// <summary>
+        /// Creates a parameterized observable based on the given expression that will be executed by the current provider.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observable.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observable.</typeparam>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="expression">Expression representing the observable.</param>
+        /// <returns>Parameterized observable represented by the given expression.</returns>
+        public Func<TArg1, TArg2, IReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TResult>(Expression<Func<TArg1, TArg2, IReactiveQbservable<TResult>>> expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
+            var res = new Func<TArg1, TArg2, IReactiveQbservable<TResult>>((arg1, arg2) =>
+            {
+                return CreateQbservable<TResult>(Expression.Invoke(expression, Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2))));
+            });
+
+            ExpressionServices.RegisterObject(res, expression);
+
+            return res;
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var inputList = new List<string>();
+    var constantList = new List<string>();
+
+    for (int j = 1; j <= i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        inputList.Add(string.Format("arg{0}", j));
+        constantList.Add(string.Format("Expression.Constant(arg{0}, typeof(TArg{0}))", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var inputs = string.Join(", ", inputList.ToArray());
+    var constants = string.Join(", ", constantList.ToArray());
+#>
+        /// <summary>
+        /// Creates a parameterized observable based on the given expression that will be executed by the current provider.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+{
+#>
+        <#=string.Format("/// <typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observable.</typeparam>", j, ordinals[j])#>
+<#}#>
+        /// <typeparam name="TResult">Type of the data produced by the observable.</typeparam>
+        /// <param name="expression">Expression representing the observable.</param>
+        /// <returns>Parameterized observable represented by the given expression.</returns>
+        public Func<<#=typeArgs#>, IReactiveQbservable<TResult>> CreateQbservable<<#=typeArgs#>, TResult>(Expression<Func<<#=typeArgs#>, IReactiveQbservable<TResult>>> expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
+            var res = new Func<<#=typeArgs#>, IReactiveQbservable<TResult>>((<#=inputs#>) =>
+            {
+                return CreateQbservable<TResult>(Expression.Invoke(expression, <#=constants#>));
+            });
+
+            ExpressionServices.RegisterObject(res, expression);
+
+            return res;
+        }
+
+<#
+}
+#>
+        #endregion
+
+        #region CreateQbserver
+
+<#/*
+
+generating the code for:
+
+        /// <summary>
+        /// Creates a parameterized observer based on the given expression that will be executed by the current provider.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the observer.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the observer.</typeparam>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="expression">Expression representing the observer.</param>
+        /// <returns>Parameterized observer represented by the given expression.</returns>
+        public Func<TArg1, TArg2, IReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TResult>(Expression<Func<TArg1, TArg2, IReactiveQbserver<TResult>>> expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
+            var res = new Func<TArg1, TArg2, IReactiveQbserver<TResult>>((arg1, arg2) =>
+            {
+                return CreateQbserver<TResult>(Expression.Invoke(expression, Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2))));
+            });
+
+            ExpressionServices.RegisterObject(res, expression);
+
+            return res;
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var inputList = new List<string>();
+    var constantList = new List<string>();
+
+    for (int j = 1; j <= i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        inputList.Add(string.Format("arg{0}", j));
+        constantList.Add(string.Format("Expression.Constant(arg{0}, typeof(TArg{0}))", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var inputs = string.Join(", ", inputList.ToArray());
+    var constants = string.Join(", ", constantList.ToArray());
+#>
+        /// <summary>
+        /// Creates a parameterized observer based on the given expression that will be executed by the current provider.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+{
+#>
+        <#=string.Format("/// <typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the observer.</typeparam>", j, ordinals[j])#>
+<#}#>
+        /// <typeparam name="TResult">Type of the data received by the observer.</typeparam>
+        /// <param name="expression">Expression representing the observer.</param>
+        /// <returns>Parameterized observer represented by the given expression.</returns>
+        public Func<<#=typeArgs#>, IReactiveQbserver<TResult>> CreateQbserver<<#=typeArgs#>, TResult>(Expression<Func<<#=typeArgs#>, IReactiveQbserver<TResult>>> expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
+            var res = (Func<<#=typeArgs#>, IReactiveQbserver<TResult>>)((<#=inputs#>) =>
+            {
+                return CreateQbserver<TResult>(Expression.Invoke(expression, <#=constants#>));
+            });
+
+            ExpressionServices.RegisterObject(res, expression);
+
+            return res;
+        }
+
+<#
+}
+#>
+        #endregion
+
+        #region CreateQubjectFactory
+
+<#/*
+
+generating the code for:
+
+        /// <summary>
+        /// Creates a parameterized subject factory based on the given expression.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subject factory.</typeparam>
+        /// <typeparam name="TInput">Type of the data received by the subject created by the factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subject created by the factory.</typeparam>
+        /// <param name="expression">Expression representing the subject factory.</param>
+        /// <returns>Parameterized subject factory represented by the given expression.</returns>
+        public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> CreateQubjectFactory<TArg1, TArg2, TInput, TOutput>(Expression expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
+            if (ExpressionServices.TryGetName(expression, out var uri))
+            {
+                return new KnownQubjectFactory<TInput, TOutput, TArg1, TArg2>(expression, uri, this);
+            }
+
+            return new QubjectFactory<TInput, TOutput, TArg1, TArg2>(expression, this);
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var inputList = new List<string>();
+    var constantList = new List<string>();
+
+    for (int j = 1; j <= i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        inputList.Add(string.Format("arg{0}", j));
+        constantList.Add(string.Format("Expression.Constant(arg{0}, typeof(TArg{0}))", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var inputs = string.Join(", ", inputList.ToArray());
+    var constants = string.Join(", ", constantList.ToArray());
+#>
+        /// <summary>
+        /// Creates a parameterized subject factory based on the given expression.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        <#=string.Format("/// <typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subject factory.</typeparam>", j, ordinals[j])#>
+<#}#>
+        /// <typeparam name="TInput">Type of the data received by the subject created by the factory.</typeparam>
+        /// <typeparam name="TOutput">Type of the data produced by the subject created by the factory.</typeparam>
+        /// <param name="expression">Expression representing the subject factory.</param>
+        /// <returns>Parameterized subject factory represented by the given expression.</returns>
+        public IReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> CreateQubjectFactory<<#=typeArgs#>, TInput, TOutput>(Expression expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
+            if (ExpressionServices.TryGetName(expression, out var uri))
+            {
+                return new KnownQubjectFactory<TInput, TOutput, <#=typeArgs#>>(expression, uri, this);
+            }
+
+            return new QubjectFactory<TInput, TOutput, <#=typeArgs#>>(expression, this);
+        }
+
+<#
+}
+#>
+        #endregion
+
+        #region CreateQubscriptionFactory
+
+<#/*
+
+generating the code for:
+
+        /// <summary>
+        /// Creates a parameterized subscription factory based on the given expression.
+        /// </summary>
+        /// <typeparam name="TArg1">Type of the first parameter passed to the subscription factory.</typeparam>
+        /// <typeparam name="TArg2">Type of the second parameter passed to the subscription factory.</typeparam>
+        /// <param name="expression">Expression representing the subscription factory.</param>
+        /// <returns>Parameterized subscription factory represented by the given expression.</returns>
+        public IReactiveQubscriptionFactory<TArg1, TArg2> CreateQubscriptionFactory<TArg1, TArg2>(Expression expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
+            if (ExpressionServices.TryGetName(expression, out var uri))
+            {
+                return new KnownQubscriptionFactory<TArg1, TArg2>(expression, uri, this);
+            }
+
+            return new QubscriptionFactory<TArg1, TArg2>(expression, this);
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var inputList = new List<string>();
+    var constantList = new List<string>();
+
+    for (int j = 1; j <= i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        inputList.Add(string.Format("arg{0}", j));
+        constantList.Add(string.Format("Expression.Constant(arg{0}, typeof(TArg{0}))", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var inputs = string.Join(", ", inputList.ToArray());
+    var constants = string.Join(", ", constantList.ToArray());
+#>
+        /// <summary>
+        /// Creates a parameterized subscription factory based on the given expression.
+        /// </summary>
+<#
+for (int j = 1; j <= i; j++)
+    {
+#>
+        <#=string.Format("/// <typeparam name=\"TArg{0}\">Type of the {1} parameter passed to the subscription factory.</typeparam>", j, ordinals[j])#>
+<#}#>
+        /// <param name="expression">Expression representing the subscription factory.</param>
+        /// <returns>Parameterized subscription factory represented by the given expression.</returns>
+        public IReactiveQubscriptionFactory<<#=typeArgs#>> CreateQubscriptionFactory<<#=typeArgs#>>(Expression expression)
+        {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
+            if (ExpressionServices.TryGetName(expression, out var uri))
+            {
+                return new KnownQubscriptionFactory<<#=typeArgs#>>(expression, uri, this);
+            }
+
+            return new QubscriptionFactory<<#=typeArgs#>>(expression, this);
+        }
+
+<#
+}
+#>
+        #endregion
+
+        #region Stream operations
+
+<#/*
+
+generating the code for:
+
+        internal IReactiveQubject<TInput, TOutput> CreateStream<TArg1, TArg2, TInput, TOutput>(IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> factory, TArg1 arg1, TArg2 arg2, Uri streamUri, object state)
+        {
+            return CreateStream<TInput, TOutput>(factory, new Expression[] { Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2)) }, streamUri, state);
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var paramsList = new List<string>();
+    var constantList = new List<string>();
+
+    for (int j = 1; j <= i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        paramsList.Add(string.Format("TArg{0} arg{0}", j));
+        constantList.Add(string.Format("Expression.Constant(arg{0}, typeof(TArg{0}))", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var parameters = string.Join(", ", paramsList.ToArray());
+    var constants = string.Join(", ", constantList.ToArray());
+#>
+        internal IReactiveQubject<TInput, TOutput> CreateStream<<#=typeArgs#>, TInput, TOutput>(IReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> factory, <#=parameters#>, Uri streamUri, object state)
+        {
+            return CreateStream<TInput, TOutput>(factory, new Expression[] { <#=constants#> }, streamUri, state);
+        }
+
+<#}#>
+        #endregion
+
+        #region Subscription operations
+
+<#/*
+
+generating the code for:
+
+        internal IReactiveQubscription CreateSubscription<TArg1, TArg2>(IReactiveQubscriptionFactory<TArg1, TArg2> factory, TArg1 arg1, TArg2 arg2, Uri subscriptionUri, object state)
+        {
+            return CreateSubscription(factory, new Expression[] { Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2)) }, subscriptionUri, state);
+        }
+
+*/#>
+<#
+for (int i = 2; i <= highestSupportedArity; i++) {
+    var typeArgsList = new List<string>();
+    var paramsList = new List<string>();
+    var constantList = new List<string>();
+
+    for (int j = 1; j <= i; j++)
+    {
+        typeArgsList.Add(string.Format("TArg{0}", j));
+        paramsList.Add(string.Format("TArg{0} arg{0}", j));
+        constantList.Add(string.Format("Expression.Constant(arg{0}, typeof(TArg{0}))", j));
+    }
+
+    var typeArgs = string.Join(", ", typeArgsList.ToArray());
+    var parameters = string.Join(", ", paramsList.ToArray());
+    var constants = string.Join(", ", constantList.ToArray());
+#>
+        internal IReactiveQubscription CreateSubscription<<#=typeArgs#>>(IReactiveQubscriptionFactory<<#=typeArgs#>> factory, <#=parameters#>, Uri subscriptionUri, object state)
+        {
+            return CreateSubscription(factory, new Expression[] { <#=constants#> }, subscriptionUri, state);
+        }
+
+<#}#>
+        #endregion
+    }
+}

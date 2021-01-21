@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>Isomorphic object models for a subset of the LINQ Expressions API that can be constructed and modified without type safety limitations.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Linq.Expressions.Bonsai\Nuqleon.Linq.Expressions.Bonsai.csproj" />
+    <ProjectReference Include="..\..\JSON\Nuqleon.Json\Nuqleon.Json.csproj" />
+  </ItemGroup>
+
+</Project>

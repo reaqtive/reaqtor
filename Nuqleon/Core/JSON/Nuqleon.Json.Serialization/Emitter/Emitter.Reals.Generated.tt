@@ -1,0 +1,57 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+//   BD - 04/16/2016 - Created fast JSON serializer functionality.
+//   BD - 05/08/2016 - Added support for serialization to text writers.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using System;
+using System.Globalization;
+using System.Text;
+
+namespace Nuqleon.Json.Serialization
+{
+    internal partial class Emitter
+    {
+        // TODO: Add support for NaN, -Infinity, Infinity
+
+<#
+var ts = new[] { typeof(float), typeof(double), typeof(decimal) };
+
+foreach (var t in ts)
+{
+    var tn = t.Name;
+#>
+        /// <summary>
+        /// Emits a <#=t.FullName#> as a JSON Number to the specified string builder.
+        /// </summary>
+        /// <param name="builder">The string builder to append the <#=t.FullName#> to.</param>
+        /// <param name="value">The <#=t.FullName#> value to emit.</param>
+        /// <param name="_">The emitter context.</param>
+        internal static void Emit<#=tn#>(StringBuilder builder, <#=tn#> value, EmitterContext _ = null) => builder.Append(value.ToString(CultureInfo.InvariantCulture));
+
+#if !NO_IO
+        /// <summary>
+        /// Emits a <#=t.FullName#> as a JSON Number to the specified text writer.
+        /// </summary>
+        /// <param name="writer">The text writer to append the <#=t.FullName#> to.</param>
+        /// <param name="value">The <#=t.FullName#> value to emit.</param>
+        /// <param name="_">The emitter context.</param>
+        internal static void Emit<#=tn#>(System.IO.TextWriter writer, <#=tn#> value, EmitterContext _ = null) => writer.Write(value.ToString(CultureInfo.InvariantCulture));
+#endif
+
+<#
+}
+#>
+    }
+}

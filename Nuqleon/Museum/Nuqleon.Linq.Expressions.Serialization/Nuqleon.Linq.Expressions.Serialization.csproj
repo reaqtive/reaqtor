@@ -1,0 +1,15 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <!-- NB: Uses System.Reflection.Emit APIs that aren't in .NET Standard 2.0. -->
+    <TargetFrameworks>net472</TargetFrameworks>
+    <Description>Legacy serialization for the LINQ expressions API.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Serialization\Nuqleon.Serialization.csproj" />
+    <ProjectReference Include="..\..\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <ProjectReference Include="..\..\Core\JSON\Nuqleon.Json\Nuqleon.Json.csproj" />
+  </ItemGroup>
+
+</Project>

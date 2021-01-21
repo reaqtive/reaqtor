@@ -1,0 +1,86 @@
+<#@include file="..\..\..\..\Common\IrpEventSource.tt" #>
+
+<#+
+/***********************************************************************
+ *                                                                     *
+ *  USER DEFINED VARIABLES - MODIFY THESE FOR EACH EVENT YOU GENERATE  *
+ *                                                                     *
+ ***********************************************************************/
+
+enum EventKeyword : ulong
+{
+    // Sub-systems
+    HigherOrderOperator =        (ulong)1 << 1,
+}
+
+// Values must be in the range from 1 through 65534
+enum EventTask
+{
+    //Need our own `None`, because EventSource is trying to be "helpful"
+    //and generates a task for us if we use EventTask.None,
+    //which is not desirable from the backward compatibility standpoint
+    None = 1,
+}
+
+// Values must be in the range from 11 through 239
+enum EventOpcode
+{
+}
+
+string Namespace = "Reaqtor";
+string EventSourceName = "Nuqleon-Reactive-HigherOrder";
+
+// It's better not to reorder event definitions
+List<EventMetadata> EventRegistry = new List<EventMetadata>
+{
+    new EventMetadata
+    {
+        Name = "HigherOrderOperator_CreatingBridge",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.HigherOrderOperator },
+        Message = "Creating bridge '{0}' for subscription '{1}'. Definition = '{2}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("bridgeId", "System.Uri"),
+            new Parameter("subscriptionId", "System.Uri"),
+            new Parameter("definition", "System.Linq.Expressions.Expression"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "HigherOrderOperator_StartingInnerSubscription",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.HigherOrderOperator },
+        Message = "Starting inner subscription to bridge '{0}' for higher order subscription '{1}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("bridgeId", "System.Uri"),
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "HigherOrderOperator_DisposingInnerSubscription",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.HigherOrderOperator },
+        Message = "Disposing inner subscription to bridge '{0}' for higher order subscription '{1}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("bridgeId", "System.Uri"),
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "HigherOrderOperator_DeletingBridge",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.HigherOrderOperator },
+        Message = "Removing stream for bridge '{0}' for higher order subscription '{1}'.",
+        Parameters = new Parameter[]
+        {
+            new Parameter("bridgeId", "System.Uri"),
+            new Parameter("subscriptionId", "System.Uri"),
+        }
+    },
+};
+#>

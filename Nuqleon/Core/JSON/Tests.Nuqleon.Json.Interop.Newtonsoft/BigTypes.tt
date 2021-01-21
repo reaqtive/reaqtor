@@ -1,0 +1,91 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+//
+// Revision history:
+//
+// BD - December 2016 - Created this file.
+//
+
+namespace Tests.Nuqleon.Json.Interop.Newtonsoft
+{
+<#
+var N = 8;
+
+var rand = new Random(1983);
+var values = new Dictionary<string, string[]>
+{
+    { "bool", new[] { "true", "false" } },
+    { "int", new[] { "0", "-1", "42" } },
+    { "double", new[] { "0.0", "1.0", "-1.5", "2.25" } },
+    { "string", new[] { "\"\"", "\"bar\"", "null", "\"foobar\"" } },
+};
+
+var getVal = new Func<string, string>(t =>
+{
+    if (t.EndsWith("[]"))
+    {
+        t = t.Substring(0, t.Length - 2);
+        var insts = values[t];
+        var count = rand.Next(1, 4);
+        var elems = Enumerable.Range(0, count).Select(i => insts[rand.Next(0, insts.Length)]).ToArray();
+        return "new " + t + "[] { " + string.Join(", ", elems) + " }";
+    }
+    else
+    {
+        var insts = values[t];
+        return insts[rand.Next(0, insts.Length)];
+    }
+});
+
+for (var i = 1; i <= N; i++)
+{
+#>
+    internal sealed class Big<#=i#>
+    {
+<#
+    var types = (from s in new[] { "", "[]" }
+                 from t in new[] { "int", "bool", "string", "double" }.Concat(Enumerable.Range(1, i - 1).Select(j => "Big" + j)).ToArray()
+                 select t + s)
+                .ToArray();
+
+    var propTypes = Enumerable.Range(1, i).Select(j => types[rand.Next(0, types.Length)]).ToArray();
+
+    for (var j = 1; j <= i; j++)
+    {
+#>
+        public <#=propTypes[j - 1]#> Item<#=j#> { get; set; }
+<#
+    }
+
+    var instFormat = "new Big" + i + " {{ " + string.Join(", ", Enumerable.Range(1, i).Select(j => "Item" + j + " = {" + (j - 1) + "}")) + " }}";
+    var inst = string.Format(instFormat, Enumerable.Repeat("", i).ToArray());
+
+    var insts = Enumerable.Range(0, 4).Select(j => string.Format(instFormat, Enumerable.Range(0, i).Select(k => getVal(propTypes[k])).ToArray())).ToArray();
+    values["Big" + i] = insts;
+#>
+
+        public static readonly Big<#=i#>[] Values = new[]
+        {
+<#
+foreach (var x in insts)
+{
+#>
+            <#=x#>,
+<#
+}
+#>
+        };
+    }
+
+<#
+}
+#>
+}

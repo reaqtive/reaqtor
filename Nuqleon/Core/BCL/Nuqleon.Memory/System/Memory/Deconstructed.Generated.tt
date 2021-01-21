@@ -1,0 +1,197 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+const int N = 4;
+var ords = new[]
+{
+    "first", "second", "third", "fourth"
+};
+#>
+using System.Collections.Generic;
+
+namespace System.Memory
+{
+    /// <summary>
+    /// Static helpers for creating deconstructed containers.
+    /// </summary>
+    public static class Deconstructed
+    {
+        /// <summary>
+        /// Creates a deconstructed instance from cached and non-cached components.
+        /// </summary>
+        /// <typeparam name="TCached">Type of the cached component.</typeparam>
+        /// <typeparam name="TNonCached">Type of the non-cached component.</typeparam>
+        /// <param name="cached">The cached component.</param>
+        /// <param name="nonCached">The non-cached component.</param>
+        /// <returns>The deconstructed instance.</returns>
+        public static Deconstructed<TCached, TNonCached> Create<TCached, TNonCached>(TCached cached, TNonCached nonCached) => new Deconstructed<TCached, TNonCached>(cached, nonCached);
+
+<#
+for (var i = 2; i <= N; i++)
+{
+    var tparams = string.Join(", ", Enumerable.Range(1, i).Select(j => "TCached" + j));
+    var pars = string.Join(", ", Enumerable.Range(1, i).Select(j => "TCached" + j + " cached" + j));
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "cached" + j));
+#>
+        /// <summary>
+        /// Creates a deconstructed instance from cached and non-cached components.
+        /// </summary>
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+        /// <typeparam name="TCached<#=j+1#>">Type of the <#=ords[j]#> cached component.</typeparam>
+<#
+}
+#>
+        /// <typeparam name="TNonCached">Type of the non-cached component.</typeparam>
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+        /// <param name="cached<#=j+1#>">The <#=ords[j]#> cached component.</param>
+<#
+}
+#>
+        /// <param name="nonCached">The non-cached component.</param>
+        /// <returns>The deconstructed instance.</returns>
+        public static Deconstructed<<#=tparams#>, TNonCached> Create<<#=tparams#>, TNonCached>(<#=pars#>, TNonCached nonCached) => new Deconstructed<<#=tparams#>, TNonCached>(<#=args#>, nonCached);
+
+<#
+}
+#>
+    }
+
+<#
+for (var i = 2; i <= N; i++)
+{
+    var tparams = string.Join(", ", Enumerable.Range(1, i).Select(j => "TCached" + j));
+#>
+    /// <summary>
+    /// A struct container for a deconstructed cached value.
+    /// </summary>
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+    /// <typeparam name="TCached<#=j+1#>">Type of the <#=ords[j]#> cached component.</typeparam>
+<#
+}
+#>
+    /// <typeparam name="TNonCached">Type of the non-cached component.</typeparam>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "The point is to bundle a set of arbitrary types.")]
+    public struct Deconstructed<<#=tparams#>, TNonCached> : IEquatable<Deconstructed<<#=tparams#>, TNonCached>>
+    {
+        /// <summary>
+        /// Creates the deconstructed cached value;
+        /// </summary>
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+        /// <param name="cached<#=j+1#>">The <#=ords[j]#> cached component.</param>
+<#
+}
+#>
+        /// <param name="nonCached">The non-cached component.</param>
+        public Deconstructed(<#=string.Join(", ", Enumerable.Range(1, i).Select(j => "TCached" + j + " cached" + j))#>, TNonCached nonCached)
+        {
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+            Cached<#=j#> = cached<#=j#>;
+<#
+}
+#>
+            NonCached = nonCached;
+        }
+
+<#
+for (var j = 0; j < i; j++)
+{
+#>
+        /// <summary>
+        /// The <#=ords[j]#> cached component.
+        /// </summary>
+        public TCached<#=j+1#> Cached<#=j+1#> { get; }
+
+<#
+}
+#>
+        /// <summary>
+        /// The non-cached component.
+        /// </summary>
+        public TNonCached NonCached { get; }
+
+        /// <summary>
+        /// Checks if two instances are equal.
+        /// </summary>
+        /// <param name="obj">The other instance.</param>
+        /// <returns><b>true</b> if equal, <b>false</b> otherwise.</returns>
+        public override bool Equals(object obj) =>
+               obj is Deconstructed<<#=tparams#>, TNonCached>
+            && Equals((Deconstructed<<#=tparams#>, TNonCached>)obj);
+
+        /// <summary>
+        /// Checks if two instances are equal.
+        /// </summary>
+        /// <param name="other">The other instance.</param>
+        /// <returns><b>true</b> if equal, <b>false</b> otherwise.</returns>
+        public bool Equals(Deconstructed<<#=tparams#>, TNonCached> other) =>
+               FastEqualityComparer<TNonCached>.Default.Equals(NonCached, other.NonCached)
+<#
+for (var j = 1; j <= i; j++)
+{
+    var sc = j == i ? ";" : "";
+#>
+            && FastEqualityComparer<TCached<#=j#>>.Default.Equals(Cached<#=j#>, other.Cached<#=j#>)<#=sc#>
+<#
+}
+#>
+
+        /// <summary>
+        /// Gets a hash code for the instance.
+        /// </summary>
+        /// <returns>The hash code.</returns>
+        public override int GetHashCode() =>
+            HashHelpers.Combine(
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+                FastEqualityComparer<TCached<#=j#>>.Default.GetHashCode(Cached<#=j#>)<#=j != i ? "," : ""#>
+<#
+}
+#>
+            );
+
+        /// <summary>
+        /// Checks if two instances are equal.
+        /// </summary>
+        /// <param name="left">The left instance.</param>
+        /// <param name="right">The right instance.</param>
+        /// <returns><b>true</b> if equal, <b>false</b> otherwise.</returns>
+        public static bool operator ==(Deconstructed<<#=tparams#>, TNonCached> left, Deconstructed<<#=tparams#>, TNonCached> right) => left.Equals(right);
+
+        /// <summary>
+        /// Checks if two instances are not equal.
+        /// </summary>
+        /// <param name="left">The left instance.</param>
+        /// <param name="right">The right instance.</param>
+        /// <returns><b>true</b> if not equal, <b>false</b> otherwise.</returns>
+        public static bool operator !=(Deconstructed<<#=tparams#>, TNonCached> left, Deconstructed<<#=tparams#>, TNonCached> right) => !left.Equals(right);
+    }
+
+<#
+}
+#>
+}

@@ -1,0 +1,75 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - January 2017 - Created this file.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var ordinals = new string[] { "zeroth", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth" };
+#>
+namespace System.Linq.Expressions
+{
+    partial class MemberTable
+    {
+        /// <summary>
+        /// Adds an entry to the member table using the <see cref="System.Reflection.MemberInfo" /> object occurring in the body of the specified <paramref name="expression" />.
+        /// </summary>
+        /// <param name="expression">The expression to obtain the member to add from.</param>
+        public void Add(Expression<Action> expression) => Add((LambdaExpression)expression);
+
+<#
+for (var i = 1; i <= 16; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "T" + j).ToArray());
+#>
+        /// <summary>
+        /// Adds an entry to the member table using the <see cref="System.Reflection.MemberInfo" /> object occurring in the body of the specified <paramref name="expression" />.
+        /// </summary>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+        /// <typeparam name="T<#=j#>">The <#=ordinals[j]#> type parameter of the action passed in <paramref name="expression" />.</typeparam>
+<#
+}
+#>
+        /// <param name="expression">The expression to obtain the member to add from.</param>
+        public void Add<<#=args#>>(Expression<Action<<#=args#>>> expression) => Add((LambdaExpression)expression);
+
+<#
+}
+
+for (var i = 0; i <= 16; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "T" + j).Concat(new[] { "R" }).ToArray());
+#>
+        /// <summary>
+        /// Adds an entry to the member table using the <see cref="System.Reflection.MemberInfo" /> object occurring in the body of the specified <paramref name="expression" />.
+        /// </summary>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+        /// <typeparam name="T<#=j#>">The <#=ordinals[j]#> type parameter of the function passed in <paramref name="expression" />.</typeparam>
+<#
+}
+#>
+        /// <typeparam name="R">The result type parameter of the function passed in <paramref name="expression" />.</typeparam>
+        /// <param name="expression">The expression to obtain the member to add from.</param>
+        public void Add<<#=args#>>(Expression<Func<<#=args#>>> expression) => Add((LambdaExpression)expression);
+
+<#
+}
+#>
+    }
+}

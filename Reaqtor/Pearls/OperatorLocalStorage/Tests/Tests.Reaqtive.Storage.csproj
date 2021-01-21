@@ -1,0 +1,12 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>net472</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Library\Reaqtive.Storage.csproj" />
+    <ProjectReference Include="..\Utilities\Reaqtive.Storage.Utils.csproj" />
+  </ItemGroup>
+
+</Project>

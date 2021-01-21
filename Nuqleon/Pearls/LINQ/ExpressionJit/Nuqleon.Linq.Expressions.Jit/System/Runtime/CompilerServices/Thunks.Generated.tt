@@ -1,0 +1,839 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+// BD - May 2017 - Initial prototype of JIT.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+var ordinals = new[] { "", "first", "second", "third", "fourth", "fifth", "sixth", "seventh", "eighth", "ninth", "tenth", "eleventh", "twelfth", "thirteenth", "fourteenth", "fifteenth", "sixteenth" };
+const int FuncCount = 16;
+const int ActionCount = 16;
+#>
+using System.Collections.Generic;
+using System.Linq.Expressions;
+using System.Threading;
+
+namespace System.Runtime.CompilerServices
+{
+    /// <summary>
+    /// Provides a table with built-in precompiled thunk types that will compile expression trees using dynamic IL code generation.
+    /// </summary>
+    internal static class CompilingThunks
+    {
+        /// <summary>
+        /// A map of built-in precompiled thunk types. The key represents the type of the delegate; the value represents the thunk type.
+        /// For generic delegate types, the key and value are generic type definitions. In order to close the open generic thunk type
+        /// using the type arguments of the generic delegate type, the closure type parameter has to be prepended.
+        /// </summary>
+        /// <remarks>
+        /// This field should be used in a read-only manner; we don't put a read-only wrapper or use a read-only interface to avoid any
+        /// overheads in accessing it (considering that this field is only used internally).
+        /// </remarks>
+        public static readonly Dictionary<Type, Type> TypeMap = new Dictionary<Type, Type>(<#=FuncCount + ActionCount#>)
+        {
+<#
+for (var i = 0; i < FuncCount; i++)
+{
+    var commas = new string(',', i);
+#>
+            { typeof(Func<<#=commas#>>), typeof(CompilingFuncThunk<<#=commas#>,>) },
+<#
+}
+#>
+            { typeof(Action), typeof(CompilingActionThunk<>) },
+<#
+for (var i = 0; i < ActionCount - 1; i++)
+{
+    var commas = new string(',', i);
+#>
+            { typeof(Action<<#=commas#>>), typeof(CompilingActionThunk<<#=commas#>,>) },
+<#
+}
+#>
+        };
+    }
+
+    /// <summary>
+    /// Provides a table with built-in precompiled thunk types that will compile expression trees using an interpreter execution target.
+    /// </summary>
+    internal static class InterpretingThunks
+    {
+        /// <summary>
+        /// A map of built-in precompiled thunk types. The key represents the type of the delegate; the value represents the thunk type.
+        /// For generic delegate types, the key and value are generic type definitions. In order to close the open generic thunk type
+        /// using the type arguments of the generic delegate type, the closure type parameter has to be prepended.
+        /// </summary>
+        /// <remarks>
+        /// This field should be used in a read-only manner; we don't put a read-only wrapper or use a read-only interface to avoid any
+        /// overheads in accessing it (considering that this field is only used internally).
+        /// </remarks>
+        public static readonly Dictionary<Type, Type> TypeMap = new Dictionary<Type, Type>(<#=FuncCount + ActionCount#>)
+        {
+<#
+for (var i = 0; i < FuncCount; i++)
+{
+    var commas = new string(',', i);
+#>
+            { typeof(Func<<#=commas#>>), typeof(InterpretingFuncThunk<<#=commas#>,>) },
+<#
+}
+#>
+            { typeof(Action), typeof(InterpretingActionThunk<>) },
+<#
+for (var i = 0; i < ActionCount - 1; i++)
+{
+    var commas = new string(',', i);
+#>
+            { typeof(Action<<#=commas#>>), typeof(InterpretingActionThunk<<#=commas#>,>) },
+<#
+}
+#>
+        };
+    }
+
+    /// <summary>
+    /// Provides a table with built-in precompiled thunk types that will first compile expression trees using an interpreter execution
+    /// target, and recompile expression trees using dynamic IL code generation if sufficient invocations are made.
+    /// </summary>
+    internal static class TieredCompliationThunks
+    {
+        /// <summary>
+        /// A map of built-in precompiled thunk types. The key represents the type of the delegate; the value represents the thunk type.
+        /// For generic delegate types, the key and value are generic type definitions. In order to close the open generic thunk type
+        /// using the type arguments of the generic delegate type, the closure type parameter has to be prepended.
+        /// </summary>
+        /// <remarks>
+        /// This field should be used in a read-only manner; we don't put a read-only wrapper or use a read-only interface to avoid any
+        /// overheads in accessing it (considering that this field is only used internally).
+        /// </remarks>
+        public static readonly Dictionary<Type, Type> TypeMap = new Dictionary<Type, Type>(<#=FuncCount + ActionCount#>)
+        {
+<#
+for (var i = 0; i < FuncCount; i++)
+{
+    var commas = new string(',', i);
+#>
+            { typeof(Func<<#=commas#>>), typeof(TieredCompilationFuncThunk<<#=commas#>,>) },
+<#
+}
+#>
+            { typeof(Action), typeof(TieredCompilationActionThunk<>) },
+<#
+for (var i = 0; i < ActionCount - 1; i++)
+{
+    var commas = new string(',', i);
+#>
+            { typeof(Action<<#=commas#>>), typeof(TieredCompilationActionThunk<<#=commas#>,>) },
+<#
+}
+#>
+        };
+    }
+
+<#
+for (var i = 0; i < FuncCount; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "T" + (j + 1)).Concat(new[] { "TResult" }));
+    var pars = string.Join(", ", new[] { "closure" }.Concat(Enumerable.Range(0, i).Select(j => "p" + (j + 1))));
+    var ipgs = string.Join(", ", Enumerable.Range(0, i).Select(j => "T" + (j + 1) + " p" + (j + 1)));
+    var iags = string.Join(", ", new[] { "Closure" }.Concat(Enumerable.Range(0, i).Select(j => "p" + (j + 1))));
+#>
+    /// <summary>
+    /// Thunk for a <see cref="System.Func{<#=args#>}"/> delegate.
+    /// </summary>
+    /// <typeparam name="TClosure">Type of the closure.</typeparam>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+    /// <typeparam name="T<#=j#>">Type of the <#=ordinals[j]#> parameter of the function.</typeparam>
+<#
+}
+#>
+    /// <typeparam name="TResult">Type returned by the function.</typeparam>
+    internal abstract class FuncThunk<TClosure, <#=args#>> : Thunk<Func<<#=args#>>, TClosure, Func<TClosure, <#=args#>>>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public FuncThunk(Expression<Func<TClosure, <#=args#>>> expression)
+            : base(expression)
+        {
+            //
+            // NB: We use a non-virtual property in the derived class rather than reading from the
+            //     virtual Compiler property in the base class constructor. This avoids trickiness
+            //     around calling virtual overridable members from a constructor (cf. CA2214).
+            //
+            Target = CompilerCore;
+        }
+
+        /// <summary>
+        /// Gets the compilation function used to convert the expression to a delegate.
+        /// </summary>
+        public sealed override Func<TClosure, <#=args#>> Compiler => CompilerCore;
+
+        /// <summary>
+        /// Property returning the compilation function.
+        /// </summary>
+        /// <remarks>
+        /// Note we use a property to avoid having to store the compiler in a field. Access to this
+        /// property should be rare: once during construction of the thunk and once every time the
+        /// thunk gets invalidated when replacing the expression.
+        /// </remarks>
+        private Func<TClosure, <#=args#>> CompilerCore => (<#=pars#>) =>
+        {
+            Compile();
+
+            return Target(<#=pars#>);
+        };
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected abstract void Compile();
+
+        /// <summary>
+        /// Creates an instance of the delegate represented by the thunk using the specified closure object.
+        /// When invoked, delegates returned by this method will invoke the thunk's <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate.
+        /// </summary>
+        /// <param name="closure">The closure object to pass to the <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate as the first parameter.</param>
+        /// <returns>A delegate instance of type <see cref="System.Func{<#=args#>}"/> using the specified closure as the first parameter for the <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.</returns>
+        public Func<<#=args#>> CreateDelegate(TClosure closure) => new Dispatcher(this, closure).Invoke;
+
+        /// <summary>
+        /// Dispatcher implementation used to hand out delegates of type <see cref="System.Func{<#=args#>}"/> that route invocations through the parent thunk's <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate.
+        /// </summary>
+        private sealed class Dispatcher : Dispatcher<Func<<#=args#>>, TClosure, Func<TClosure, <#=args#>>>
+        {
+            /// <summary>
+            /// Creates a new instance of the dispatcher using the specified parent thunk and closure object.
+            /// </summary>
+            /// <param name="parent">The parent thunk to route delegate invocations through.</param>
+            /// <param name="closure">The closure object to pass to the <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate as the first parameter.</param>
+            public Dispatcher(FuncThunk<TClosure, <#=args#>> parent, TClosure closure)
+            {
+                Parent = parent;
+                Closure = closure;
+            }
+
+            /// <summary>
+            /// Invokes the parent thunk's <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate using the specified parameters.
+            /// This method matches the signature of the <see cref="System.Func{<#=args#>}"/> delegate type in order to use it as the target method when creating such a delegate through <see cref="CreateDelegate"/>.
+            /// </summary>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+            /// <param name="p<#=j#>">The <#=ordinals[j]#> caller's parameter passed to the target delegate.</param>
+<#
+}
+#>
+            /// <returns>The result of invoking the target delegate.</returns>
+            public TResult Invoke(<#=ipgs#>) => Parent.Target(<#=iags#>);
+        }
+    }
+
+    /// <summary>
+    /// Thunk for a <see cref="System.Func{<#=args#>}"/> delegate. A thunk of this type compiles expression trees using dynamic IL code generation.
+    /// </summary>
+    /// <typeparam name="TClosure">Type of the closure.</typeparam>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+    /// <typeparam name="T<#=j#>">Type of the <#=ordinals[j]#> parameter of the function.</typeparam>
+<#
+}
+#>
+    /// <typeparam name="TResult">Type returned by the function.</typeparam>
+    internal sealed class CompilingFuncThunk<TClosure, <#=args#>> : FuncThunk<TClosure, <#=args#>>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public CompilingFuncThunk(Expression<Func<TClosure, <#=args#>>> expression)
+            : base(expression)
+        {
+        }
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected override void Compile()
+        {
+            //
+            // Avoid concurrent compilations which are expensive and can bloat the code heap.
+            //
+            // NB: We lock on `this` in order to avoid having to allocate another object; users of the
+            //     thunk reaching into the guts of the JIT compiler shall not lock on it as well.
+            //
+            lock (this)
+            {
+                if (Expression != null)
+                {
+                    Target = Expression.Compile();
+                    Expression = null;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Thunk for a <see cref="System.Func{<#=args#>}"/> delegate. A thunk of this type compiles expression trees using an interpreter execution target.
+    /// </summary>
+    /// <typeparam name="TClosure">Type of the closure.</typeparam>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+    /// <typeparam name="T<#=j#>">Type of the <#=ordinals[j]#> parameter of the function.</typeparam>
+<#
+}
+#>
+    /// <typeparam name="TResult">Type returned by the function.</typeparam>
+    internal sealed class InterpretingFuncThunk<TClosure, <#=args#>> : FuncThunk<TClosure, <#=args#>>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public InterpretingFuncThunk(Expression<Func<TClosure, <#=args#>>> expression)
+            : base(expression)
+        {
+        }
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected override void Compile()
+        {
+            var expression = Expression;
+
+            if (expression != null)
+            {
+                Target = expression.Compile(preferInterpretation: true);
+                Expression = null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Thunk for a <see cref="System.Func{<#=args#>}"/> delegate. A thunk of this type first compiles expression trees using an interpreter execution target,
+    /// and recompiles expression trees using dynamic IL code generation if sufficient invocations are made.
+    /// </summary>
+    /// <typeparam name="TClosure">Type of the closure.</typeparam>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+    /// <typeparam name="T<#=j#>">Type of the <#=ordinals[j]#> parameter of the function.</typeparam>
+<#
+}
+#>
+    /// <typeparam name="TResult">Type returned by the function.</typeparam>
+    internal sealed class TieredCompilationFuncThunk<TClosure, <#=args#>> : FuncThunk<TClosure, <#=args#>>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public TieredCompilationFuncThunk(Expression<Func<TClosure, <#=args#>>> expression)
+            : base(expression)
+        {
+        }
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected override void Compile()
+        {
+            var expression = Expression;
+
+            if (expression != null)
+            {
+                var target = expression.Compile(preferInterpretation: true);
+
+                int hitCount = 0;
+
+<#
+var parsi = string.Join(", ", new[] { "TClosure closure" }.Concat(Enumerable.Range(1, i).Select(j => "T" + j + " arg" + j)));
+var argsi = string.Join(", ", new[] { "closure" }.Concat(Enumerable.Range(1, i).Select(j => "arg" + j)));
+#>
+                Target = (<#=parsi#>) =>
+                {
+                    //
+                    // NB: We use Interlocked.Increment to avoid compiling more than once, which can be costly.
+                    //     On the flip side, it makes interpretation a tiny bit slower, and more invocations
+                    //     may be running the interpreted code while the compilation is ongoing and Target has
+                    //     not yet been reassigned.
+                    //
+                    if (Interlocked.Increment(ref hitCount) == JitConstants.TieredCompilationThreshold)
+                    {
+                        Target = target = expression.Compile();
+                    }
+
+                    return target(<#=argsi#>);
+                };
+
+                Expression = null;
+            }
+        }
+    }
+
+<#
+}
+#>
+    /// <summary>
+    /// Thunk for a <see cref="System.Action"/> delegate.
+    /// </summary>
+    internal abstract class ActionThunk<TClosure> : Thunk<Action, TClosure, Action<TClosure>>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public ActionThunk(Expression<Action<TClosure>> expression)
+            : base(expression)
+        {
+            //
+            // NB: We use a non-virtual property in the derived class rather than reading from the
+            //     virtual Compiler property in the base class constructor. This avoids trickiness
+            //     around calling virtual overridable members from a constructor (cf. CA2214).
+            //
+            Target = CompilerCore;
+        }
+
+        /// <summary>
+        /// Gets the compilation function used to convert the expression to a delegate.
+        /// </summary>
+        public sealed override Action<TClosure> Compiler => CompilerCore;
+
+        /// <summary>
+        /// Property returning the compilation function.
+        /// </summary>
+        /// <remarks>
+        /// Note we use a property to avoid having to store the compiler in a field. Access to this
+        /// property should be rare: once during construction of the thunk and once every time the
+        /// thunk gets invalidated when replacing the expression.
+        /// </remarks>
+        private Action<TClosure> CompilerCore => closure =>
+        {
+            Compile();
+
+            Target(closure);
+        };
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected abstract void Compile();
+
+        /// <summary>
+        /// Creates an instance of the delegate represented by the thunk using the specified closure object.
+        /// When invoked, delegates returned by this method will invoke the thunk's <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate.
+        /// </summary>
+        /// <param name="closure">The closure object to pass to the <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate as the first parameter.</param>
+        /// <returns>A delegate instance of type <see cref="System.Action"/> using the specified closure as the first parameter for the <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.</returns>
+        public Action CreateDelegate(TClosure closure) => new Dispatcher(this, closure).Invoke;
+
+        /// <summary>
+        /// Dispatcher implementation used to hand out delegates of type <see cref="System.Action"/> that route invocations through the parent thunk's <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate.
+        /// </summary>
+        private sealed class Dispatcher : Dispatcher<Action, TClosure, Action<TClosure>>
+        {
+            /// <summary>
+            /// Creates a new instance of the dispatcher using the specified parent thunk and closure object.
+            /// </summary>
+            /// <param name="parent">The parent thunk to route delegate invocations through.</param>
+            /// <param name="closure">The closure object to pass to the <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate as the first parameter.</param>
+            public Dispatcher(ActionThunk<TClosure> parent, TClosure closure)
+            {
+                Parent = parent;
+                Closure = closure;
+            }
+
+            /// <summary>
+            /// Invokes the parent thunk's <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate using the specified parameters.
+            /// This method matches the signature of the <see cref="System.Action"/> delegate type in order to use it as the target method when creating such a delegate through <see cref="CreateDelegate"/>.
+            /// </summary>
+            public void Invoke() => Parent.Target(Closure);
+        }
+    }
+
+    /// <summary>
+    /// Thunk for a <see cref="System.Action"/> delegate. A thunk of this type compiles expression trees using dynamic IL code generation.
+    /// </summary>
+    internal sealed class CompilingActionThunk<TClosure> : ActionThunk<TClosure>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public CompilingActionThunk(Expression<Action<TClosure>> expression)
+            : base(expression)
+        {
+        }
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected override void Compile()
+        {
+            //
+            // Avoid concurrent compilations which are expensive and can bloat the code heap.
+            //
+            // NB: We lock on `this` in order to avoid having to allocate another object; users of the
+            //     thunk reaching into the guts of the JIT compiler shall not lock on it as well.
+            //
+            lock (this)
+            {
+                if (Expression != null)
+                {
+                    Target = Expression.Compile();
+                    Expression = null;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Thunk for a <see cref="System.Action"/> delegate. A thunk of this type compiles expression trees using an interpreter execution target.
+    /// </summary>
+    internal sealed class InterpretingActionThunk<TClosure> : ActionThunk<TClosure>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public InterpretingActionThunk(Expression<Action<TClosure>> expression)
+            : base(expression)
+        {
+        }
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected override void Compile()
+        {
+            var expression = Expression;
+
+            if (expression != null)
+            {
+                Target = expression.Compile(preferInterpretation: true);
+                Expression = null;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Thunk for a <see cref="System.Action"/> delegate. A thunk of this type first compiles expression trees using an interpreter execution target,
+    /// and recompiles expression trees using dynamic IL code generation if sufficient invocations are made.
+    /// </summary>
+    internal sealed class TieredCompilationActionThunk<TClosure> : ActionThunk<TClosure>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public TieredCompilationActionThunk(Expression<Action<TClosure>> expression)
+            : base(expression)
+        {
+        }
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected override void Compile()
+        {
+            var expression = Expression;
+
+            if (expression != null)
+            {
+                var target = expression.Compile(preferInterpretation: true);
+
+                int hitCount = 0;
+
+                Target = (TClosure closure) =>
+                {
+                    //
+                    // NB: We use Interlocked.Increment to avoid compiling more than once, which can be costly.
+                    //     On the flip side, it makes interpretation a tiny bit slower, and more invocations
+                    //     may be running the interpreted code while the compilation is ongoing and Target has
+                    //     not yet been reassigned.
+                    //
+                    if (Interlocked.Increment(ref hitCount) == JitConstants.TieredCompilationThreshold)
+                    {
+                        Target = target = expression.Compile();
+                    }
+
+                    target(closure);
+                };
+
+                Expression = null;
+            }
+        }
+    }
+
+<#
+for (var i = 1; i < ActionCount; i++)
+{
+    var args = string.Join(", ", Enumerable.Range(0, i).Select(j => "T" + (j + 1)));
+    var pars = string.Join(", ", new[] { "closure" }.Concat(Enumerable.Range(0, i).Select(j => "p" + (j + 1))));
+    var ipgs = string.Join(", ", Enumerable.Range(0, i).Select(j => "T" + (j + 1) + " p" + (j + 1)));
+    var iags = string.Join(", ", new[] { "Closure" }.Concat(Enumerable.Range(0, i).Select(j => "p" + (j + 1))));
+#>
+    /// <summary>
+    /// Thunk for a <see cref="System.Action{<#=args#>}"/> delegate.
+    /// </summary>
+    /// <typeparam name="TClosure">Type of the closure.</typeparam>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+    /// <typeparam name="T<#=j#>">Type of the <#=ordinals[j]#> parameter of the function.</typeparam>
+<#
+}
+#>
+    internal abstract class ActionThunk<TClosure, <#=args#>> : Thunk<Action<<#=args#>>, TClosure, Action<TClosure, <#=args#>>>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public ActionThunk(Expression<Action<TClosure, <#=args#>>> expression)
+            : base(expression)
+        {
+            //
+            // NB: We use a non-virtual property in the derived class rather than reading from the
+            //     virtual Compiler property in the base class constructor. This avoids trickiness
+            //     around calling virtual overridable members from a constructor (cf. CA2214).
+            //
+            Target = CompilerCore;
+        }
+
+        /// <summary>
+        /// Gets the compilation function used to convert the expression to a delegate.
+        /// </summary>
+        public sealed override Action<TClosure, <#=args#>> Compiler => CompilerCore;
+
+        /// <summary>
+        /// Property returning the compilation function.
+        /// </summary>
+        /// <remarks>
+        /// Note we use a property to avoid having to store the compiler in a field. Access to this
+        /// property should be rare: once during construction of the thunk and once every time the
+        /// thunk gets invalidated when replacing the expression.
+        /// </remarks>
+        private Action<TClosure, <#=args#>> CompilerCore => (<#=pars#>) =>
+        {
+            Compile();
+
+            Target(<#=pars#>);
+        };
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected abstract void Compile();
+
+        /// <summary>
+        /// Creates an instance of the delegate represented by the thunk using the specified closure object.
+        /// When invoked, delegates returned by this method will invoke the thunk's <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate.
+        /// </summary>
+        /// <param name="closure">The closure object to pass to the <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate as the first parameter.</param>
+        /// <returns>A delegate instance of type <see cref="System.Action{<#=args#>}"/> using the specified closure as the first parameter for the <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.</returns>
+        public Action<<#=args#>> CreateDelegate(TClosure closure) => new Dispatcher(this, closure).Invoke;
+
+        /// <summary>
+        /// Dispatcher implementation used to hand out delegates of type <see cref="System.Action{<#=args#>}"/> that route invocations through the parent thunk's <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate.
+        /// </summary>
+        private sealed class Dispatcher : Dispatcher<Action<<#=args#>>, TClosure, Action<TClosure, <#=args#>>>
+        {
+            /// <summary>
+            /// Creates a new instance of the dispatcher using the specified parent thunk and closure object.
+            /// </summary>
+            /// <param name="parent">The parent thunk to route delegate invocations through.</param>
+            /// <param name="closure">The closure object to pass to the <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate as the first parameter.</param>
+            public Dispatcher(ActionThunk<TClosure, <#=args#>> parent, TClosure closure)
+            {
+                Parent = parent;
+                Closure = closure;
+            }
+
+            /// <summary>
+            /// Invokes the parent thunk's <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/> delegate using the specified parameters.
+            /// This method matches the signature of the <see cref="System.Action{<#=args#>}"/> delegate type in order to use it as the target method when creating such a delegate through <see cref="CreateDelegate"/>.
+            /// </summary>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+            /// <param name="p<#=j#>">The <#=ordinals[j]#> caller's parameter passed to the target delegate.</param>
+<#
+}
+#>
+            public void Invoke(<#=ipgs#>) => Parent.Target(<#=iags#>);
+        }
+    }
+
+    /// <summary>
+    /// Thunk for a <see cref="System.Action{<#=args#>}"/> delegate. A thunk of this type compiles expression trees using dynamic IL code generation.
+    /// </summary>
+    /// <typeparam name="TClosure">Type of the closure.</typeparam>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+    /// <typeparam name="T<#=j#>">Type of the <#=ordinals[j]#> parameter of the function.</typeparam>
+<#
+}
+#>
+    internal sealed class CompilingActionThunk<TClosure, <#=args#>> : ActionThunk<TClosure, <#=args#>>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public CompilingActionThunk(Expression<Action<TClosure, <#=args#>>> expression)
+            : base(expression)
+        {
+        }
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected override void Compile()
+        {
+            //
+            // Avoid concurrent compilations which are expensive and can bloat the code heap.
+            //
+            // NB: We lock on `this` in order to avoid having to allocate another object; users of the
+            //     thunk reaching into the guts of the JIT compiler shall not lock on it as well.
+            //
+            lock (this)
+            {
+                if (Expression != null)
+                {
+                    Target = Expression.Compile();
+                    Expression = null;
+                }
+            }
+        }
+    }
+
+    /// <summary>
+    /// Thunk for a <see cref="System.Action{<#=args#>}"/> delegate. A thunk of this type compiles expression trees using an interpreter execution target.
+    /// </summary>
+    /// <typeparam name="TClosure">Type of the closure.</typeparam>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+    /// <typeparam name="T<#=j#>">Type of the <#=ordinals[j]#> parameter of the function.</typeparam>
+<#
+}
+#>
+    internal sealed class InterpretingActionThunk<TClosure, <#=args#>> : ActionThunk<TClosure, <#=args#>>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public InterpretingActionThunk(Expression<Action<TClosure, <#=args#>>> expression)
+            : base(expression)
+        {
+        }
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected override void Compile()
+        {
+            var expression = Expression;
+
+            if (expression != null)
+            {
+                Target = expression.Compile(preferInterpretation: true);
+                Expression = null;
+            }
+        }
+    }
+
+        /// <summary>
+    /// Thunk for a <see cref="System.Action{<#=args#>}"/> delegate. A thunk of this type first compiles expression trees using an interpreter execution target,
+    /// and recompiles expression trees using dynamic IL code generation if sufficient invocations are made.
+    /// </summary>
+    /// <typeparam name="TClosure">Type of the closure.</typeparam>
+<#
+for (var j = 1; j <= i; j++)
+{
+#>
+    /// <typeparam name="T<#=j#>">Type of the <#=ordinals[j]#> parameter of the function.</typeparam>
+<#
+}
+#>
+    internal sealed class TieredCompilationActionThunk<TClosure, <#=args#>> : ActionThunk<TClosure, <#=args#>>
+    {
+        /// <summary>
+        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+        /// </summary>
+        /// <param name="expression">Expression representing the implementation of the delegate.</param>
+        public TieredCompilationActionThunk(Expression<Action<TClosure, <#=args#>>> expression)
+            : base(expression)
+        {
+        }
+
+        /// <summary>
+        /// Compiles the expression tree and stores it in <see cref="Thunk{TDelegate, TClosure, TInner}.Target"/>.
+        /// </summary>
+        protected override void Compile()
+        {
+            var expression = Expression;
+
+            if (expression != null)
+            {
+                var target = expression.Compile(preferInterpretation: true);
+
+                int hitCount = 0;
+
+<#
+var parsi = string.Join(", ", new[] { "TClosure closure" }.Concat(Enumerable.Range(1, i).Select(j => "T" + j + " arg" + j)));
+var argsi = string.Join(", ", new[] { "closure" }.Concat(Enumerable.Range(1, i).Select(j => "arg" + j)));
+#>
+                Target = (<#=parsi#>) =>
+                {
+                    //
+                    // NB: We use Interlocked.Increment to avoid compiling more than once, which can be costly.
+                    //     On the flip side, it makes interpretation a tiny bit slower, and more invocations
+                    //     may be running the interpreted code while the compilation is ongoing and Target has
+                    //     not yet been reassigned.
+                    //
+                    if (Interlocked.Increment(ref hitCount) == JitConstants.TieredCompilationThreshold)
+                    {
+                        Target = target = expression.Compile();
+                    }
+
+                    target(<#=argsi#>);
+                };
+
+                Expression = null;
+            }
+        }
+    }
+
+<#
+}
+#>
+}

@@ -1,0 +1,30 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Data\storewithmissingbridge.txt" />
+    <None Remove="Data\storewithorphanedbridges.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="Data\storewithmissingbridge.txt" LogicalName="$(AssemblyName).Data.storewithmissingbridge.txt" />
+    <EmbeddedResource Include="Data\storewithorphanedbridges.txt" LogicalName="$(AssemblyName).Data.storewithorphanedbridges.txt" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="System.Collections.Immutable" Version="5.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />
+    <ProjectReference Include="..\Reaqtor.QueryEngine.KeyValueStore.InMemory\Reaqtor.QueryEngine.KeyValueStore.InMemory.csproj" />
+    <ProjectReference Include="..\Reaqtor.QueryEngine.Mocks\Reaqtor.QueryEngine.Mocks.csproj" />
+    <ProjectReference Include="..\Reaqtor.QueryEngine.Serialization.DataModel\Reaqtor.QueryEngine.Serialization.DataModel.csproj" />
+    <ProjectReference Include="..\..\Client\Reaqtor.Client\Reaqtor.Client.csproj" />
+    <ProjectReference Include="..\..\..\..\Reaqtive\Core\Reaqtive.Linq\Reaqtive.Linq.csproj" />
+  </ItemGroup>
+
+</Project>

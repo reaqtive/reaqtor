@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472</TargetFrameworks>
+    <Description>Prototype of binary expression tree serialization.</Description>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- NB: Also supports non-slim expressions. Currently not enabled in build. -->
+    <DefineConstants>$(DefineConstants);USE_SLIM</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\..\Core\LINQ\Nuqleon.Linq.CompilerServices\Nuqleon.Linq.CompilerServices.csproj" />
+    <ProjectReference Include="..\..\..\..\Core\LINQ\Nuqleon.Linq.Expressions.Bonsai\Nuqleon.Linq.Expressions.Bonsai.csproj" />
+  </ItemGroup>
+
+</Project>

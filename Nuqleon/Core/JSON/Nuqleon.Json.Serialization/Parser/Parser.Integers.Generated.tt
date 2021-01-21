@@ -1,0 +1,240 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+//
+// Revision history:
+//
+//   BD - 04/05/2016 - Created fast JSON deserializer functionality.
+//   BD - 05/08/2016 - Added support for deserialization from text readers.
+//
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+using Nuqleon.Json.Parser;
+using System;
+using System.Globalization;
+
+namespace Nuqleon.Json.Serialization
+{
+    internal partial class Parser
+    {
+        //
+        // CONSIDER: Allow integral values to be specified using exponents, e.g. 123.4e1 can be turned into an integer with value 1234.
+        // CONSIDER: Add support for BigInteger.
+        //
+
+<#
+var ts = new[] { typeof(sbyte), typeof(short), typeof(int), typeof(long), typeof(byte), typeof(ushort), typeof(uint), typeof(ulong) };
+
+foreach (var t in ts)
+{
+    var tn = t.Name;
+    var unsigned = t == typeof(byte) || tn.StartsWith("U");
+#>
+        /// <summary>
+        /// Lexes and parses a JSON Number as a <#=t.FullName#> in the specified string starting from the specified index.
+        /// </summary>
+        /// <param name="str">The string to lex and parse a Number from.</param>
+        /// <param name="len">The length of the string.</param>
+        /// <param name="i">The index in the string to start lexing from. This value gets updated to the first index position after the Number, if found.</param>
+        /// <param name="context">The parser context.</param>
+        /// <returns>A <#=t.FullName#> value, if found; otherwise, a ParseException is thrown.</returns>
+        /// <remarks>
+        /// This method does not consume whitespace; the character at the specified start index in the string is expected to be the start of a valid JSON Number.
+        /// </remarks>
+        internal static <#=tn#> Parse<#=tn#>(string str, int len, ref int i, ParserContext context)
+        {
+            var res = default(<#=tn#>);
+
+            var b = i;
+
+            if (i >= len)
+                throw new ParseException(string.Format(CultureInfo.InvariantCulture, "Expected {0} at position '{1}'. Unexpected string termination found.", typeof(<#=tn#>).Name, b), i, ParseError.PrematureEndOfInput);
+
+            var c = str[i];
+
+<#
+if (!unsigned)
+{
+#>
+            var neg = false;
+
+            if (c == '-')
+            {
+                if (++i >= len)
+                    throw new ParseException(string.Format(CultureInfo.InvariantCulture, "Expected {0} at position '{1}'. Unexpected string termination found after '-' sign.", typeof(<#=tn#>).Name, b), i, ParseError.PrematureEndOfInput);
+
+                neg = true;
+                c = str[i];
+            }
+
+<#
+}
+#>
+            if (c == '0')
+            {
+                i++;
+                return res;
+            }
+            else if (c >= '1' && c <= '9')
+            {
+                res = (<#=tn#>)(c - '0');
+                i++;
+            }
+            else
+            {
+                throw new ParseException(string.Format(CultureInfo.InvariantCulture, "Expected {0} at position '{1}'. Unexpected character '{2}' found at start of number.", typeof(<#=tn#>).Name, b, c), i, ParseError.UnexpectedToken);
+            }
+
+            while (i < len && ((c = str[i]) >= '0') && c <= '9')
+            {
+                var next = (<#=tn#>)(res * 10 + (<#=tn#>)(c - '0'));
+
+                if (next < res)
+                {
+<#
+if (!unsigned)
+{
+#>
+                    if (next == <#=tn#>.MinValue && neg)
+                    {
+                        res = next;
+                        i++;
+                        continue;
+                    }
+
+<#
+}
+#>
+                    throw new ParseException(string.Format(CultureInfo.InvariantCulture, "Expected {0} at position '{1}'. The JSON number does not fit in a value of type {0}.", typeof(<#=tn#>).Name, b), i, ParseError.UnexpectedToken);
+                }
+                else
+                {
+                    res = next;
+                }
+
+                i++;
+            }
+
+<#
+if (!unsigned)
+{
+#>
+            return neg ? (<#=tn#>)(-res) : res;
+<#
+}
+else
+{
+#>
+            return res;
+<#
+}
+#>
+        }
+
+#if !NO_IO
+        /// <summary>
+        /// Lexes and parses a JSON Number as a <#=t.FullName#> in the specified text reader.
+        /// </summary>
+        /// <param name="reader">The text reader to lex and parse a <#=t.FullName#> from.</param>
+        /// <param name="context">The parser context.</param>
+        /// <returns>A <#=t.FullName#> value, if found; otherwise, a ParseException is thrown.</returns>
+        /// <remarks>
+        /// This method does not consume whitespace; the character at the specified start index in the string is expected to be the start of a valid JSON Number.
+        /// </remarks>
+        internal static <#=tn#> Parse<#=tn#>(System.IO.TextReader reader, ParserContext context)
+        {
+            var res = default(<#=tn#>);
+
+            var c = reader.Read();
+
+            if (c < 0)
+                throw new ParseException(string.Format(CultureInfo.InvariantCulture, "Expected {0}. Unexpected string termination found.", typeof(<#=tn#>).Name), -1, ParseError.PrematureEndOfInput);
+<#
+if (!unsigned)
+{
+#>
+
+            var neg = false;
+
+            if (c == '-')
+            {
+                neg = true;
+                c = reader.Read();
+
+                if (c < 0)
+                    throw new ParseException(string.Format(CultureInfo.InvariantCulture, "Expected {0}. Unexpected string termination found after '-' sign.", typeof(<#=tn#>).Name), -1, ParseError.PrematureEndOfInput);
+            }
+<#
+}
+#>
+
+            if (c == '0')
+            {
+                return res;
+            }
+            else if (c >= '1' && c <= '9')
+            {
+                res = (<#=tn#>)(c - '0');
+            }
+            else
+            {
+                throw new ParseException(string.Format(CultureInfo.InvariantCulture, "Expected {0}. Unexpected character '{1}' found at start of number.", typeof(<#=tn#>).Name, c), -1, ParseError.UnexpectedToken);
+            }
+
+            while (((c = reader.Peek()) >= '0') && c <= '9')
+            {
+                reader.Read();
+
+                var next = (<#=tn#>)(res * 10 + (<#=tn#>)(c - '0'));
+
+                if (next < res)
+                {
+<#
+if (!unsigned)
+{
+#>
+                    if (next == <#=tn#>.MinValue && neg)
+                    {
+                        res = next;
+                        continue;
+                    }
+
+<#
+}
+#>
+                    throw new ParseException(string.Format(CultureInfo.InvariantCulture, "Expected {0}. The JSON number does not fit in a value of type {0}.", typeof(<#=tn#>).Name), -1, ParseError.UnexpectedToken);
+                }
+                else
+                {
+                    res = next;
+                }
+            }
+
+<#
+if (!unsigned)
+{
+#>
+            return neg ? (<#=tn#>)(-res) : res;
+<#
+}
+else
+{
+#>
+            return res;
+<#
+}
+#>
+        }
+#endif
+
+<#
+}
+#>
+    }
+}

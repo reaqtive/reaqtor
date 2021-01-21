@@ -1,0 +1,66 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Nuqleon.Memory\Nuqleon.Memory.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="System\Memory\CacheTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>CacheTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Memory\DeconstructedTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>DeconstructedTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Memory\EqualityComparerExtensionTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>EqualityComparerExtensionTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\Memory\FunctionMemoizationExtensionsTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>FunctionMemoizationExtensionsTests.Generated.cs</LastGenOutput>
+    </None>
+    <None Update="System\TupletTests.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>TupletTests.Generated.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="System\Memory\CacheTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>CacheTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Memory\DeconstructedTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>DeconstructedTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Memory\EqualityComparerExtensionTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>EqualityComparerExtensionTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\Memory\FunctionMemoizationExtensionsTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>FunctionMemoizationExtensionsTests.Generated.tt</DependentUpon>
+    </Compile>
+    <Compile Update="System\TupletTests.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>TupletTests.Generated.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

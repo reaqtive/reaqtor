@@ -1,0 +1,67 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+#if FALSE // NB: Disabled until reification framework host is ported and artifacts are refactored out of remoting into separate libraries.
+
+using System;
+using System.Linq.CompilerServices.TypeSystem;
+using System.Linq.Expressions;
+
+using Reaqtor.Expressions.Core;
+
+using ReactiveConstants = Reaqtor.Remoting.Client.Constants;
+using PlatformConstants = Reaqtor.Remoting.Platform.Constants;
+
+namespace Reaqtor.QueryEngine.ReificationFramework
+{
+	static partial class Deployable
+	{
+		private static void DefineOperatorsExtension(ReactiveServiceContext context)
+		{
+			#region Aggregates
+
+<#
+foreach (var op in new[] { "Average", "Min", "Max", "Sum" })
+{
+#>
+			#region <#=op#>
+<#
+	foreach (var nullable in new[] { false, true })
+	{
+		foreach (var t in new[] { typeof(int), typeof(long), typeof(float), typeof(double), typeof(decimal) })
+		{
+            var tn = t.Name;
+            var tc = t.Name;
+            var tr = op == "Average" && (t == typeof(int) || t == typeof(long)) ? typeof(double).Name : tc;
+
+            if (nullable)
+            {
+                tn = "Nullable" + tn;
+                tc += "?";
+                tr += "?";
+            }
+#>
+			context.DefineObservable<IReactiveQbservable<<#=tc#>>, <#=tr#>>(new Uri(ReactiveConstants.Observable.<#=op#>.NoSelector.<#=tn#>), source => source.<#=op#>(), null);
+			context.DefineObservable<IReactiveQbservable<T>, Expression<Func<T, <#=tc#>>>, <#=tr#>>(new Uri(ReactiveConstants.Observable.<#=op#>.Selector.<#=tn#>), (source, selector) => source.<#=op#>(selector), null);
+<#
+		}
+	}
+#>
+			#endregion
+
+<#
+}
+#>
+			#endregion
+		}
+	}
+}
+
+#endif

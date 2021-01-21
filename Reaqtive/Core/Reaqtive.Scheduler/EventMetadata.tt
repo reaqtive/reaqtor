@@ -1,0 +1,75 @@
+<#@include file="..\..\..\Common\IrpEventSource.tt" #>
+
+<#+
+/***********************************************************************
+ *                                                                     *
+ *  USER DEFINED VARIABLES - MODIFY THESE FOR EACH EVENT YOU GENERATE  *
+ *                                                                     *
+ ***********************************************************************/
+
+enum EventKeyword : ulong
+{
+    // Sub-systems
+    Worker       = (ulong)1 << 0,
+    WorkItemBase = (ulong)1 << 1,
+}
+
+// Values must be in the range from 1 through 65534
+enum EventTask
+{
+    //Need our own `None`, because EventSource is trying to be "helpful"
+    //and generates a task for us if we use EventTask.None,
+    //which is not desirable from the backward compatibility standpoint
+    None = 1,
+}
+
+// Values must be in the range from 11 through 239
+enum EventOpcode
+{
+}
+
+string Namespace = "Reaqtive.Scheduler";
+string EventSourceName = "Reaqtive-Scheduler";
+
+// It's better not to reorder event definitions
+List<EventMetadata> EventRegistry = new List<EventMetadata>
+{
+    new EventMetadata
+    {
+        Name = "Worker_Heartbeat",
+        Level = EventLevel.Informational,
+        Keywords = new [] { EventKeyword.Worker },
+        Message = "Worker '{0}' received heartbeat. Ready queue size = '{1}'. Not ready queue size = '{2}'. Time scheduled queue size = '{3}'.",
+        Parameters = new[]
+        {
+            new Parameter("workerName", "System.String"),
+            new Parameter("readyTasks", "System.Int32"),
+            new Parameter("notReadyTasks", "System.Int32"),
+            new Parameter("timeScheduledItems", "System.Int32"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "Worker_NextTimeScheduledItem",
+        Level = EventLevel.Verbose,
+        Keywords = new [] { EventKeyword.Worker },
+        Message = "Worker '{0}' next time scheduled item due at '{1}'.",
+        Parameters = new[]
+        {
+            new Parameter("workerName", "System.String"),
+            new Parameter("dueTime", "System.DateTimeOffset"),
+        }
+    },
+    new EventMetadata
+    {
+        Name = "WorkItemBase_ExecutionException",
+        Level = EventLevel.Error,
+        Keywords = new [] { EventKeyword.WorkItemBase },
+        Message = "Work item disposing because of exception {0}.",
+        Parameters = new[]
+        {
+            new Parameter("error", "System.Exception"),
+        }
+    },
+};
+#>

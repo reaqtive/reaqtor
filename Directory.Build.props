@@ -1,0 +1,71 @@
+<Project>
+  <PropertyGroup>
+    <Deterministic>true</Deterministic>
+    <LangVersion>latest</LangVersion>
+
+    <EnableNETAnalyzers>true</EnableNETAnalyzers>
+    <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <IncludeSymbols>true</IncludeSymbols>
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true' Or '$(GITHUB_ACTIONS)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsTestProject Condition="'$(IsTestProject)' == ''">false</IsTestProject>
+    <IsTestProject Condition="$(MSBuildProjectName.StartsWith('Tests.'))">true</IsTestProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPerfProject Condition="'$(IsPerfProject)' == ''">false</IsPerfProject>
+    <IsPerfProject Condition="$(MSBuildProjectName.StartsWith('Perf.')) Or $(MSBuildProjectName.EndsWith('.Perf'))">true</IsPerfProject>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <IsPlaygroundProject Condition="'$(IsPlaygroundProject)' == ''">false</IsPlaygroundProject>
+    <IsPlaygroundProject Condition="$(MSBuildProjectName.Contains('Playground'))">true</IsPlaygroundProject>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' == 'false' And '$(IsPerfProject)' == 'false' And '$(IsPlaygroundProject)' == 'false'">
+    <AnalysisMode>AllEnabledByDefault</AnalysisMode>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true' Or '$(IsPerfProject)' == 'true' Or '$(IsPlaygroundProject)' == 'true'">
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(IsPlaygroundProject)' == 'false'">
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+  </ItemGroup>
+
+  <ItemGroup Condition="'$(IsTestProject)' == 'true'">
+    <!--
+      NB: Trying to put these in a .csproj included through RrojectReference results in errors at runtime:
+
+            Testhost process exited with error: A fatal error was encountered. The library 'hostpolicy.dll'
+            required to execute the application was not found in 'C:\Program Files\dotnet'.
+
+          Apparently cross-referencing test projects causes 'testhost.runtimeconfig.json' to not get copied
+          properly to the test project output folder, which then causes the test runner to treat the project
+          as a "self-contained app".
+    -->
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
+    <Compile Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\AssertEx.cs" Link="AssertEx.cs" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+</Project>

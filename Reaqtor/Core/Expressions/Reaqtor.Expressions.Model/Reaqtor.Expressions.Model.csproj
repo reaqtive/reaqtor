@@ -1,0 +1,59 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
+    <Description>IRP interfaces for quoted reactive artifacts.</Description>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Local\Reaqtor.Local.Model\Reaqtor.Local.Model.csproj" />
+    <ProjectReference Include="..\..\Shared\Reaqtor.Shared.Model\Reaqtor.Shared.Model.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Reaqtor\IReactiveQubjectFactory.Generic.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IReactiveQubjectFactory.Generic.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\IReactiveQubscriptionFactory.Generic.HigherArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IReactiveQubscriptionFactory.Generic.HigherArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\Async\IAsyncReactiveQubjectFactory.Generic.HighArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IAsyncReactiveQubjectFactory.Generic.HighArities.cs</LastGenOutput>
+    </None>
+    <None Update="Reaqtor\Async\IAsyncReactiveQubscriptionFactory.Generic.HighArities.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>IAsyncReactiveQubscriptionFactory.Generic.HighArities.cs</LastGenOutput>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Update="Reaqtor\IReactiveQubjectFactory.Generic.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IReactiveQubjectFactory.Generic.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\IReactiveQubscriptionFactory.Generic.HigherArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IReactiveQubscriptionFactory.Generic.HigherArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\Async\IAsyncReactiveQubjectFactory.Generic.HighArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IAsyncReactiveQubjectFactory.Generic.HighArities.tt</DependentUpon>
+    </Compile>
+    <Compile Update="Reaqtor\Async\IAsyncReactiveQubscriptionFactory.Generic.HighArities.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>IAsyncReactiveQubscriptionFactory.Generic.HighArities.tt</DependentUpon>
+    </Compile>
+  </ItemGroup>
+
+</Project>

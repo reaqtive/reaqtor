@@ -1,0 +1,242 @@
+// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT License.
+// See the LICENSE file in the project root for more information.
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ assembly name="System.Core" #>
+<#@ import namespace="System.Linq" #>
+<#@ import namespace="System.Text" #>
+<#@ import namespace="System.Collections.Generic" #>
+<#@ output extension=".cs" #>
+<#
+const int N = 4;
+var ords = new[]
+{
+    "first", "second", "third", "fourth"
+};
+#>
+using System.Threading;
+
+namespace System.Memory
+{
+<#
+for (var i = 2; i <= N; i++)
+{
+    var targs = string.Join(", ", Enumerable.Range(1, i).Select(j => "TCached" + j));
+    var pars = string.Join(", ", Enumerable.Range(1, i).Select(j => "new Cache<TCached" + j + ">()"));
+    var args = string.Join(", ", Enumerable.Range(1, i).Select(j => "ICache<TCached" + j + "> innerCache" + j));
+#>
+    /// <summary>
+    /// Utility for deconstructing objects into cacheable and non-cacheable
+    /// components and sharing the parts that are cacheable.
+    /// </summary>
+    /// <typeparam name="T">Type of the objects kept in the cache.</typeparam>
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+    /// <typeparam name="TCached<#=j#>">Type of the <#=ords[j-1]#> cacheable component of the cached type.</typeparam>
+<#
+}
+#>
+    /// <typeparam name="TNonCached">Type of the non-cacheable component of the cached type.</typeparam>
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "By design to support arbitrary breakdowns of types for caching.")]
+    public abstract class Cache<T, <#=targs#>, TNonCached> : ICache<T>
+    {
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+        private readonly ICache<TCached<#=j#>> _innerCache<#=j#>;
+<#
+}
+#>
+
+        /// <summary>
+        /// Instantiates the cache with a default cache policies and equality comparers.
+        /// </summary>
+        protected Cache()
+            : this(<#=pars#>)
+        {
+        }
+
+        /// <summary>
+        /// Instantiates the cache with the caches to use for cached components.
+        /// </summary>
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+        /// <param name="innerCache<#=j#>">The <#=ords[j-1]#> inner cache.</param>
+<#
+}
+#>
+        protected Cache(<#=args#>)
+        {
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+            if (innerCache<#=j#> == null)
+            {
+                throw new ArgumentNullException(nameof(innerCache<#=j#>));
+            }
+<#
+if (j < i)
+{
+#>
+
+<#
+}
+#>
+<#
+}
+#>
+
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+            _innerCache<#=j#> = innerCache<#=j#>;
+<#
+}
+#>
+        }
+
+        /// <summary>
+        /// Deconstructs the instance into cacheable and non-cacheable
+        /// components, caches the cacheable component, and returns a handle
+        /// that can be used to reconstruct the original instance.
+        /// </summary>
+        /// <param name="value">The instance to cache.</param>
+        /// <returns>A handle to reconstruct the original instance.</returns>
+        public IDiscardable<T> Create(T value)
+        {
+            if (value == null)
+            {
+                return DefaultDiscardable<T>.Instance;
+            }
+
+            var deconstructed = Deconstruct(value);
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+            var entry<#=j#> = _innerCache<#=j#>.CreateOrGetEntry(deconstructed.Cached<#=j#>);
+<#
+}
+#>
+
+            return new CacheReference(<#=string.Join(", ", Enumerable.Range(1, i).Select(j => "entry" + j))#>, deconstructed.NonCached, this);
+        }
+
+        /// <summary>
+        /// Deconstructs an instance of the cached type into its cacheable and non-cacheable components.
+        /// </summary>
+        /// <param name="value">The instance to cache.</param>
+        /// <returns>The deconstructed instance.</returns>
+        protected abstract Deconstructed<<#=string.Join(", ", Enumerable.Range(1, i).Select(j => "TCached" + j))#>, TNonCached> Deconstruct(T value);
+
+        /// <summary>
+        /// Reconstructs an instance of the cached type from its cacheable and non-cacheable components.
+        /// </summary>
+        /// <param name="deconstructed">The deconstructed instance.</param>
+        /// <returns>The reconstructed instance.</returns>
+        protected abstract T Reconstruct(Deconstructed<<#=string.Join(", ", Enumerable.Range(1, i).Select(j => "TCached" + j))#>, TNonCached> deconstructed);
+
+        private sealed class CacheReference : DiscardableBase<T>
+        {
+            private readonly TNonCached _nonCached;
+            private readonly Cache<T, <#=targs#>, TNonCached> _cache;
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+            private IReference<TCached<#=j#>> _cached<#=j#>;
+<#
+}
+#>
+
+            public CacheReference(
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+                IReference<TCached<#=j#>> cached<#=j#>,
+<#
+}
+#>
+                TNonCached nonCached,
+                Cache<T, <#=targs#>, TNonCached> cache)
+            {
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+                _cached<#=j#> = cached<#=j#>;
+<#
+}
+#>
+                _nonCached = nonCached;
+                _cache = cache;
+            }
+
+            public override T Value
+            {
+                get
+                {
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+                    var cached<#=j#> = _cached<#=j#>;
+<#
+}
+#>
+                    if (<#=string.Join(" || ", Enumerable.Range(1, i).Select(j => "cached" + j + " == null"))#>)
+                    {
+                        throw new ObjectDisposedException("this");
+                    }
+
+                    var deconstructed = Deconstructed.Create(<#=string.Join(", ", Enumerable.Range(1, i).Select(j => "cached" + j + ".Value"))#>, _nonCached);
+                    return _cache.Reconstruct(deconstructed);
+                }
+            }
+
+            protected override void Dispose(bool disposing)
+            {
+<#
+for (var j = 1; j <= i; ++j)
+{
+#>
+                var cached<#=j#> = Interlocked.Exchange(ref _cached<#=j#>, null);
+                if (cached<#=j#> != null)
+                {
+                    if (disposing)
+                    {
+                        _cache._innerCache<#=j#>.ReleaseOrDispose(cached<#=j#>);
+                    }
+                    else
+                    {
+                        _cache._innerCache<#=j#>.ReleaseIfEntry(cached<#=j#>);
+                    }
+                }
+<#
+if (j < i)
+{
+#>
+
+<#
+}
+#>
+<#
+}
+#>
+            }
+        }
+    }
+
+<#
+}
+#>
+}
