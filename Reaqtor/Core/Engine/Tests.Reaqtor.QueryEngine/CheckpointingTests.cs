@@ -1212,7 +1212,7 @@ namespace Tests.Reaqtor.QueryEngine
             }
         }
 
-#if !NETSTD
+#if NETFRAMEWORK
         [TestMethod]
         public void RestoreInDifferentDomains()
         {
@@ -1224,7 +1224,7 @@ namespace Tests.Reaqtor.QueryEngine
                     var subscriptionUri = new Uri("reactor:/subscription");
 
                     var engine = test.CreateQueryEngine();
-                    var reactive = test.GetQueryEngineReactiveService(engine);
+                    var reactive = GetQueryEngineReactiveService(engine);
 
                     var sourceStream = reactive.CreateStream<int>(sourceUri);
                     Assert.IsNotNull(sourceStream);
@@ -1259,7 +1259,7 @@ namespace Tests.Reaqtor.QueryEngine
                     var sourceUri = new Uri("reactor:/source");
 
                     var engine = test.CreateQueryEngine();
-                    var reactive = test.GetQueryEngineReactiveService(engine);
+                    var reactive = GetQueryEngineReactiveService(engine);
 
                     using (var stateReader = new InMemoryStateReader(store))
                     {
@@ -1281,7 +1281,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                     // Resulting observer does not preserve the state, but take operator does.
                     // Only the last one should arrive.
-                    test.AssertResult(res, 1, (i, v) => Assert.AreEqual(i + 1, v));
+                    AssertResult(res, 1, (i, v) => Assert.AreEqual(i + 1, v));
                 },
                 checkpoint);
         }
@@ -4973,7 +4973,7 @@ namespace Tests.Reaqtor.QueryEngine
 
         #region Helper methods
 
-#if !NETSTD
+#if NETFRAMEWORK
         private static TReturn RunInDifferentDomain<TTestClass, TState, TReturn>(Func<TTestClass, TState, TReturn> func, TState state)
         {
             AppDomain domain = AppDomain.CreateDomain(
@@ -4997,7 +4997,7 @@ namespace Tests.Reaqtor.QueryEngine
                         typeof(TTestClass)
                             .GetMethods()
                             .Single(m => m.GetCustomAttribute<ClassInitializeAttribute>() != null);
-                    private sealed classInitialization.Invoke(null, new object[] { null });
+                    classInitialization.Invoke(null, new object[] { null });
 
                     var testInitialization = typeof(TTestClass)
                             .GetMethods()
@@ -5032,7 +5032,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             public Func<TTestClass, TReturn> Function { get; set; }
 
-            public TReturn Invoke(TTestClass testClass, object state)
+            public TReturn Invoke(TTestClass testClass, object _)
             {
                 return Function(testClass);
             }

@@ -140,11 +140,7 @@ namespace Tests
             Assert.IsTrue(o.NodeType == Json.ExpressionType.Object);
             var obj = (Json.ObjectExpression)o;
 
-#if NETSTD
             Assert.IsTrue(obj.Members.Keys.Count() == 3);
-#else
-            Assert.IsTrue(obj.Members.Keys.Count == 3);
-#endif
             Assert.IsTrue((string)((Json.ConstantExpression)obj.Members["Name"]).Value == "Bart");
             Assert.IsTrue((string)((Json.ConstantExpression)obj.Members["Age"]).Value == "21");
             Assert.IsTrue((bool)((Json.ConstantExpression)obj.Members["Weird \"Property\" \t\r\n"]).Value == true);

@@ -1080,7 +1080,7 @@ namespace Tests
             Assert.IsTrue(true);
         }
 
-#if !NETSTD
+#if NETFRAMEWORK
         [TestMethod]
         public void StringSegment_Concat_Object_Object_Object_Object_ArgIterator()
         {
@@ -2314,7 +2314,7 @@ namespace Tests
         {
             var xs = new object[] { "bar", "foo", "", null, "qux" };
 
-#if !NETSTD
+#if NETFRAMEWORK
             var ys = new object[] { null, "", "baz" }; // COMPAT: Interesting quirk in behavior here due to the use of null in the first position. Quirk compatible.
 #else
             var ys = new object[] { "", "baz" }; // NB: The quirk on .NET Framework has been removed in .NET Core. Our .NET Standard library implements .NET Core semantics.

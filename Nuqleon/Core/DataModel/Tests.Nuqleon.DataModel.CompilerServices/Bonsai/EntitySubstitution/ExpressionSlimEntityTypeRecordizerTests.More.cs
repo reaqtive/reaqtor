@@ -20,6 +20,12 @@ using Nuqleon.DataModel.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
+#if NETFRAMEWORK
+using System.IO;
+using System.Reflection.Emit;
+using Nuqleon.DataModel.CompilerServices.Bonsai;
+#endif
+
 namespace Tests.Nuqleon.DataModel.CompilerServices
 {
     public partial class ExpressionSlimEntityTypeRecordizerTests
@@ -523,7 +529,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
         #region Regression Tests
 
-#if !NETSTD
+#if NETFRAMEWORK
         [TestMethod]
         public void RecordizeSlim_UsingTypesFromLoadedAssembly()
         {
@@ -535,7 +541,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 Directory.CreateDirectory(assemblyBase);
 
-                //Emit dynamic assembly
+                // Emit dynamic assembly.
                 var dynamicAssembly = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(assemblyName)), AssemblyBuilderAccess.RunAndSave, assemblyBase);
                 var module = dynamicAssembly.DefineDynamicModule("Test", assemblyName);
                 var type = module.DefineType("Test", TypeAttributes.Class | TypeAttributes.Public);

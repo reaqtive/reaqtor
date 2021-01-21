@@ -65,7 +65,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             });
         }
 
-#if !NETSTD
+#if FALSE
         [TestMethod]
         public void GetStableHashCode_All_CrossProc()
         {
@@ -79,24 +79,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
                 AssertEqual(hs1, hs2);
             });
         }
-#endif
 
-        private static void RepeatTest(Action test)
-        {
-            var sw = Stopwatch.StartNew();
-
-            for (var i = 0; i < minimumIterationCount || sw.Elapsed < maximumTestDuration; i++)
-            {
-                test();
-            }
-        }
-
-        private static void AssertEqual(IEnumerable<int> h1, IEnumerable<int> h2)
-        {
-            Assert.IsTrue(h1.SequenceEqual(h2));
-        }
-
-#if !NETSTD
         private static IEnumerable<int> GetHashesOutOfProc()
         {
             var location = new Uri(typeof(Program).Assembly.CodeBase).LocalPath;
@@ -120,5 +103,20 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             return res.Split('\r', '\n').Where(s => !string.IsNullOrEmpty(s)).Select(int.Parse).ToArray();
         }
 #endif
+
+        private static void RepeatTest(Action test)
+        {
+            var sw = Stopwatch.StartNew();
+
+            for (var i = 0; i < minimumIterationCount || sw.Elapsed < maximumTestDuration; i++)
+            {
+                test();
+            }
+        }
+
+        private static void AssertEqual(IEnumerable<int> h1, IEnumerable<int> h2)
+        {
+            Assert.IsTrue(h1.SequenceEqual(h2));
+        }
     }
 }

@@ -2,7 +2,6 @@
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
-    <DefineConstants>$(DefineConstants);NETSTD</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>

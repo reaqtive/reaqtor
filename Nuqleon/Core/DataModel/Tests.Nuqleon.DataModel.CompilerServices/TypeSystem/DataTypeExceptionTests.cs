@@ -11,6 +11,11 @@
 using System;
 using System.Collections.Generic;
 
+#if NETFRAMEWORK
+using System.IO;
+using System.Runtime.Serialization.Formatters.Binary;
+#endif
+
 using Nuqleon.DataModel.TypeSystem;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -45,7 +50,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             Assert.IsTrue(ex4.ToString().Contains("bar"));
         }
 
-#if !NETSTD
+#if NETFRAMEWORK
         [TestMethod]
         public void DataTypeException_Serialize()
         {
@@ -60,7 +65,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
 
             Assert.AreEqual(err.Message, res.Error.Message);
             Assert.AreEqual(err.Type, res.Error.Type);
-            Assert.IsTrue(err.Stack.SequenceEqual(res.Error.Stack));
+            AssertEx.AreSequenceEqual(err.Stack, res.Error.Stack);
         }
 #endif
     }
