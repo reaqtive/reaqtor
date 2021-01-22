@@ -465,7 +465,7 @@ namespace Tests
                 N = 15;
             }
 
-            var ps = Enumerable.Range(0, 20).Select(i => Expression.Parameter(typeof(int), "p" + i)).ToArray();
+            var ps = Enumerable.Range(0, N).Select(i => Expression.Parameter(typeof(int), "p" + i)).ToArray();
 
             AssertRoundtrip(new Expression[]
             {
