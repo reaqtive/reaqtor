@@ -20,6 +20,10 @@ namespace Tests
     [TestClass]
     public class Tests
     {
+        // NB: This assembly is only supported on .NET Framework because it relies on finding reference assemblies in a certain location.
+
+        private static bool RunningOnMono => Type.GetType("Mono.Runtime") != null;
+
         [TestMethod]
         public void XmlDocs_ArgumentChecking()
         {
@@ -30,6 +34,11 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateTypes()
         {
+            if (RunningOnMono)
+            {
+                return;
+            }
+
             foreach (var t in GetTypes())
             {
                 var d = XmlDocumentation.GetXmlDoc(t);
@@ -40,6 +49,11 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateMethods()
         {
+            if (RunningOnMono)
+            {
+                return;
+            }
+
             var forbiddenPrefixes = new[] { "get_", "set_", "add_", "remove_" };
 
             var res = from t in GetTypes()
@@ -79,6 +93,11 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateProperties()
         {
+            if (RunningOnMono)
+            {
+                return;
+            }
+
             var res = from t in GetTypes()
                       from p in t.GetProperties()
                       where !(t == typeof(string) && p.Name == "Chars")
@@ -101,6 +120,11 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateFields()
         {
+            if (RunningOnMono)
+            {
+                return;
+            }
+
             var res = from t in GetTypes()
                       from f in t.GetFields()
                       where f.Name != "value__" // enums
@@ -116,6 +140,11 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateEvents()
         {
+            if (RunningOnMono)
+            {
+                return;
+            }
+
             var res = from t in GetTypes()
                       from e in t.GetEvents()
                       select e;
@@ -130,6 +159,11 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateConstructors()
         {
+            if (RunningOnMono)
+            {
+                return;
+            }
+
             var res = from t in GetTypes()
                       where !typeof(Delegate).IsAssignableFrom(t)
                       from c in t.GetConstructors()
