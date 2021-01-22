@@ -38,17 +38,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// A default instance of the equality comparer.
         /// </summary>
-        public static StructuralTypeEqualityComparer Default
-        {
-            get
-            {
-                if (_instance == null)
-                {
-                    _instance = new StructuralTypeEqualityComparer();
-                }
-                return _instance;
-            }
-        }
+        public static StructuralTypeEqualityComparer Default => _instance ??= new StructuralTypeEqualityComparer();
 
         /// <summary>
         /// Checks whether two given types are equal.
