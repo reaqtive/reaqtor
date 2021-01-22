@@ -85,10 +85,14 @@ namespace Tests
             {
                 Assert.IsTrue(GetOrAdd(cd).Contains("Obj"));
 
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+                // NB: This has shown to be flaky on Mono.
+                if (Type.GetType("Mono.Runtime") == null)
+                {
+                    GC.Collect();
+                    GC.WaitForPendingFinalizers();
 
-                Assert.AreEqual(i, Obj.FinalizeCount - initial);
+                    Assert.AreEqual(i, Obj.FinalizeCount - initial);
+                }
             }
         }
 

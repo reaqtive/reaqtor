@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -59,26 +59,30 @@ namespace Tests
         [TestMethod]
         public void WeakReferenceExtensions_Create_Dead()
         {
-            var w = CreateWeakString();
+            // NB: This has shown to be flaky on Mono.
+            if (Type.GetType("Mono.Runtime") == null)
+            {
+                var w = CreateWeakString();
 
-            GC.Collect();
-            GC.WaitForPendingFinalizers();
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
 
-            Assert.IsFalse(w.TryGetTarget(out string ignored));
+                Assert.IsFalse(w.TryGetTarget(out string ignored));
 
-            Assert.ThrowsException<InvalidOperationException>(() => w.GetTarget());
+                Assert.ThrowsException<InvalidOperationException>(() => w.GetTarget());
 
-            var s = w.GetOrSetTarget(() => { return "qux".ToUpper(); });
-            Assert.AreEqual("QUX", s);
+                var s = w.GetOrSetTarget(() => { return "qux".ToUpper(); });
+                Assert.AreEqual("QUX", s);
 
-            Assert.IsTrue(w.TryGetTarget(out string target));
-            Assert.AreSame(s, target);
+                Assert.IsTrue(w.TryGetTarget(out string target));
+                Assert.AreSame(s, target);
 
-            Assert.AreSame(s, w.GetTarget());
+                Assert.AreSame(s, w.GetTarget());
 
-            Assert.AreSame(s, w.GetOrSetTarget(() => { Assert.Fail(); return ""; }));
+                Assert.AreSame(s, w.GetOrSetTarget(() => { Assert.Fail(); return ""; }));
 
-            GC.KeepAlive(s);
+                GC.KeepAlive(s);
+            }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]

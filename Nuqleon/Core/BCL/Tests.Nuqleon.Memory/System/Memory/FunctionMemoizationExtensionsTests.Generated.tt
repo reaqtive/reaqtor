@@ -378,10 +378,14 @@ for (var i = 0; i <= 33; i++)
                     Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func<#=i#>_Apply(res.Delegate));
                     Assert.AreEqual(1, n);
 
-                    GC.Collect();
-                    GC.WaitForPendingFinalizers();
+                    // NB: This has shown to be flaky on Mono.
+                    if (Type.GetType("Mono.Runtime") == null)
+                    {
+                        GC.Collect();
+                        GC.WaitForPendingFinalizers();
 
-                    Assert.AreEqual(<#=i#>, Obj.FinalizeCount);
+                        Assert.AreEqual(<#=i#>, Obj.FinalizeCount);
+                    }
                 }
                 finally
                 {
