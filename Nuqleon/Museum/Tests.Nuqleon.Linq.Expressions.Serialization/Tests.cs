@@ -1264,9 +1264,22 @@ namespace Tests
 
         #region Dynamic
 
+        //
+        // NB: Support for C# binder objects relies on private reflection which differs in Mono's Microsoft.CSharp implementation,
+        //     so we skip these tests. Note that this is a Museum project, so we don't really care about fixing this on Mono. The
+        //     real fix would be for binder objects to be serializable or expose more of their properties publicly.
+        //
+
+        private static bool IsRunningOnMono => Type.GetType("Mono.Runtime") != null;
+
         [TestMethod]
         public void Dynamic_BinaryOperation()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.BinaryOperation(CSharpDynamic.CSharpBinderFlags.None, ExpressionType.Add, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1286,6 +1299,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_BinaryOperation_Logical()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.BinaryOperation(CSharpDynamic.CSharpBinderFlags.BinaryOperationLogical, ExpressionType.And, typeof(Tests) /* Convertible visibility */, new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1318,6 +1336,11 @@ namespace Tests
         [TestMethod, ExpectedException(typeof(OverflowException))]
         public void Dynamic_BinaryOperation_Checked()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.BinaryOperation(CSharpDynamic.CSharpBinderFlags.CheckedContext, ExpressionType.Add, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1337,6 +1360,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_Convert_Explicit_BuiltIn()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.Convert(CSharpDynamic.CSharpBinderFlags.ConvertExplicit, typeof(Guid), typeof(object));
 
             var guid = Guid.NewGuid();
@@ -1351,6 +1379,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_Convert_Explicit_Custom()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.Convert(CSharpDynamic.CSharpBinderFlags.ConvertExplicit, typeof(string), typeof(Tests) /* Convertible visibility */);
 
             var p = Expression.Parameter(typeof(Convertible));
@@ -1365,6 +1398,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_Convert_Implicit_BuiltIn()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.Convert(CSharpDynamic.CSharpBinderFlags.None, typeof(long), typeof(object));
 
             var value = 42;
@@ -1379,6 +1417,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_Convert_Implicit_Custom()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.Convert(CSharpDynamic.CSharpBinderFlags.None, typeof(int), typeof(Tests) /* Convertible visibility */);
 
             var p = Expression.Parameter(typeof(Convertible));
@@ -1399,6 +1442,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_GetIndex()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.GetIndex(CSharpDynamic.CSharpBinderFlags.None, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1424,6 +1472,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_GetMember()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.GetMember(CSharpDynamic.CSharpBinderFlags.None, "FullName", typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1441,6 +1494,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_Invoke()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.Invoke(CSharpDynamic.CSharpBinderFlags.None, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1462,6 +1520,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_InvokeConstructor()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.InvokeConstructor(CSharpDynamic.CSharpBinderFlags.None, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1482,6 +1545,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_InvokeMember()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.InvokeMember(CSharpDynamic.CSharpBinderFlags.None, "Substring", Type.EmptyTypes, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1503,6 +1571,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_InvokeMember_NamedArguments()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.InvokeMember(CSharpDynamic.CSharpBinderFlags.None, "Substring", Type.EmptyTypes, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1524,6 +1597,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_IsEvent()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.IsEvent(CSharpDynamic.CSharpBinderFlags.None, "TypeResolve", typeof(object));
 
             var o = Expression.Parameter(typeof(object));
@@ -1543,6 +1621,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_SetIndex()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.SetIndex(CSharpDynamic.CSharpBinderFlags.None, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1572,6 +1655,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_SetMember()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.SetMember(CSharpDynamic.CSharpBinderFlags.None, "Foo", typeof(Tests) /* MyMemberish visibility */, new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1597,6 +1685,11 @@ namespace Tests
         [TestMethod]
         public void Dynamic_UnaryOperation()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.UnaryOperation(CSharpDynamic.CSharpBinderFlags.None, ExpressionType.Negate, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
@@ -1615,6 +1708,11 @@ namespace Tests
         [TestMethod, ExpectedException(typeof(OverflowException))]
         public void Dynamic_UnaryOperation_Checked()
         {
+            if (IsRunningOnMono)
+            {
+                return;
+            }
+
             var op = CSharpDynamic.Binder.UnaryOperation(CSharpDynamic.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(object), new[]
             {
                 CSharpDynamic.CSharpArgumentInfo.Create(CSharpDynamic.CSharpArgumentInfoFlags.None, name: null),
