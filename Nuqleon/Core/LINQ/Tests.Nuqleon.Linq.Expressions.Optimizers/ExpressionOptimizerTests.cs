@@ -100,6 +100,17 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
                 return;
             }
+            catch (Exception ex) when (Type.GetType("Mono.Runtime") != null) // NB: No TargetInvocationException on Mono when using DynamicInvoke.
+            {
+                Assert.AreEqual(ExpressionType.Throw, res.NodeType);
+
+                var @throw = (UnaryExpression)res;
+                Assert.IsNotNull(@throw.Operand);
+
+                Assert.AreEqual(ex.GetType(), @throw.Operand.Type);
+
+                return;
+            }
 
             var expected = Expression.Constant(val, original.Type);
 
