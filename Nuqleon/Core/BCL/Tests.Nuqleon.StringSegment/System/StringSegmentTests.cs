@@ -1084,20 +1084,24 @@ namespace Tests
         [TestMethod]
         public void StringSegment_Concat_Object_Object_Object_Object_ArgIterator()
         {
-            Assert.AreEqual(
-                string.Concat(null, 1, "foo", new StringSegment("bar"), __arglist()),
-                (string)StringSegment.Concat(null, 1, "foo", new StringSegment("bar"), __arglist())
-            );
+            // NB: Throws NotSupportedException on Mono.
+            if (Type.GetType("Mono.Runtime") == null)
+            {
+                Assert.AreEqual(
+                    string.Concat(null, 1, "foo", new StringSegment("bar"), __arglist()),
+                    (string)StringSegment.Concat(null, 1, "foo", new StringSegment("bar"), __arglist())
+                );
 
-            Assert.AreEqual(
-                string.Concat(null, 1, "foo", new StringSegment("bar"), __arglist(42)),
-                (string)StringSegment.Concat(null, 1, "foo", new StringSegment("bar"), __arglist(42))
-            );
+                Assert.AreEqual(
+                    string.Concat(null, 1, "foo", new StringSegment("bar"), __arglist(42)),
+                    (string)StringSegment.Concat(null, 1, "foo", new StringSegment("bar"), __arglist(42))
+                );
 
-            Assert.AreEqual(
-                string.Concat(null, 1, "foo", new StringSegment("bar"), __arglist(42, "qux")),
-                (string)StringSegment.Concat(null, 1, "foo", new StringSegment("bar"), __arglist(42, "qux"))
-            );
+                Assert.AreEqual(
+                    string.Concat(null, 1, "foo", new StringSegment("bar"), __arglist(42, "qux")),
+                    (string)StringSegment.Concat(null, 1, "foo", new StringSegment("bar"), __arglist(42, "qux"))
+                );
+            }
         }
 #endif
 
