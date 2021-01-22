@@ -1047,8 +1047,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionTree_Unary_Convert_CustomOperator()
         {
-            var ue1 = Expression.Convert(Expression.Constant(new DateTime(2013, 5, 29)), typeof(DateTimeOffset));
-            var ue2 = Expression.Convert(Expression.Constant(new DateTime(2013, 5, 29)), typeof(DateTimeOffset));
+            var dt = new DateTime(2013, 5, 29);
+
+            var ue1 = Expression.Convert(Expression.Constant(dt), typeof(DateTimeOffset));
+            var ue2 = Expression.Convert(Expression.Constant(dt), typeof(DateTimeOffset));
 
             var et1 = (ExpressionTree<UnaryExpression>)ue1.ToExpressionTree();
             var et2 = (ExpressionTree<UnaryExpression>)ue2.ToExpressionTree();
@@ -1063,7 +1065,7 @@ namespace Tests.System.Linq.CompilerServices
 
             Assert.AreEqual(et1.GetHashCode(), et2.GetHashCode());
 
-            Assert.AreEqual("Convert[DateTimeOffset DateTimeOffset::op_Implicit(DateTime dateTime)](Constant[(DateTime)5/29/2013 12:00:00 AM]())", et1.ToString());
+            Assert.AreEqual("Convert[DateTimeOffset DateTimeOffset::op_Implicit(DateTime dateTime)](Constant[(DateTime)" + dt.ToString() + "]())", et1.ToString());
         }
 
         [TestMethod]
