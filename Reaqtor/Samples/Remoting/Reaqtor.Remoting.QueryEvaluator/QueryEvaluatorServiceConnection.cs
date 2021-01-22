@@ -6,8 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Linq;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;
+using System.Reflection;
 
 using Reaqtive.Scheduler;
 using Reaqtive.TestingFramework;
@@ -251,7 +253,13 @@ namespace Reaqtor.Remoting.QueryEvaluator
                     }
                     else if (property != null)
                     {
-                        var parser = property.PropertyType.GetMethod("TryParse");
+                        var parser = (from m in property.PropertyType.GetMethods(BindingFlags.Public | BindingFlags.Static)
+                                      where m.Name == "TryParse"
+                                      let p = m.GetParameters()
+                                      where p.Length == 2 && p[0].ParameterType == typeof(string)
+                                      select m)
+                                    .SingleOrDefault();
+
                         if (parser != null)
                         {
                             var args = new object[] { kv.Value, null };
