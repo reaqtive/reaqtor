@@ -15,11 +15,119 @@
 
 #pragma warning disable CA1303 // No localization in sample.
 
+#if NO_UI
+
+using System;
+using System.Globalization;
+using System.Linq;
+using System.Threading;
+
+namespace Rxcel
+{
+    public static partial class Program
+    {
+        public static void Main()
+        {
+            //     |    A    |    B    |
+            // ----+---------+---------+
+            //   1 |         |         |
+            // ----+---------+---------+
+            //   2 |         |         |
+            // ----+---------+---------+
+            //
+
+            const string LeftColLine = "----+";
+            const string CellColLine = "---------+";
+
+            var C = Math.Min((Console.WindowWidth - LeftColLine.Length) / CellColLine.Length, 26);
+            var R = Math.Min((Console.WindowHeight - 2 /* header */ - 5 /* prompts while editing and avoid scroll */) / 2 /* lines per row */, 32);
+
+            var sheet = new Sheet(R, C);
+
+            void Draw()
+            {
+                Console.Clear();
+
+                Console.Write(new string(' ', LeftColLine.Length - 1) + "|");
+
+                for (var c = 'A'; c < 'A' + C; c++)
+                {
+                    Console.Write(Center(c.ToString(), CellColLine.Length - 1) + "|");
+                }
+
+                Console.WriteLine();
+
+                var line = LeftColLine + string.Join("", Enumerable.Repeat(CellColLine, C));
+                Console.WriteLine(line);
+
+                var maxCellWidth = CellColLine.Length - 3 /* spaces and + */;
+
+                for (var r = 1; r <= R; r++)
+                {
+                    Console.Write(" " + string.Format(CultureInfo.CurrentCulture, "{0,-" + (LeftColLine.Length - 2 /* space and + */) + "}", r) + "|");
+
+                    for (int c = 0; c < C; c++)
+                    {
+                        Console.Write(" {0," + maxCellWidth + "} |", sheet[r - 1, c].ToString());
+                    }
+
+                    Console.WriteLine();
+                    Console.WriteLine(line);
+                }
+            }
+
+            while (true)
+            {
+                Draw();
+
+                Console.Write("Enter cell: ");
+                var cell = Console.ReadLine().Trim();
+
+                if (!Parser.TryParseCell(cell, out var row, out var col) || row <= 0 || row > R || col <= 0 || col > C)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine("Invalid cell. Press ENTER to retry.");
+                    Console.ResetColor();
+                    Console.ReadLine();
+                    continue;
+                }
+
+                Draw();
+
+                Console.WriteLine("Current formula or value: " + sheet[row - 1, col - 1].Value);
+
+                Console.Write("Enter formula or value (use _ to cancel edit): ");
+                var formula = Console.ReadLine().Trim();
+
+                if (formula == "_")
+                {
+                    continue;
+                }
+
+                sheet[row - 1, col - 1].Value = formula;
+            }
+
+            static string Center(string s, int width)
+            {
+                if (s.Length >= width)
+                {
+                    return s;
+                }
+
+                int leftPadding = (width - s.Length) / 2;
+                int rightPadding = width - s.Length - leftPadding;
+
+                return new string(' ', leftPadding) + s + new string(' ', rightPadding);
+            }
+        }
+    }
+}
+
+#else
+
 using System;
 using System.Globalization;
 using System.Windows.Forms;
-
-[assembly: CLSCompliant(true)]
 
 namespace Rxcel
 {
@@ -138,3 +246,5 @@ namespace Rxcel
         }
     }
 }
+
+#endif

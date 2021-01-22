@@ -19,7 +19,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
-using System.Windows.Forms;
 
 namespace Rxcel
 {
@@ -67,6 +66,7 @@ namespace Rxcel
                         text = text[1..];
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
+#pragma warning disable CA1303 // Retrieve the following string(s) from a resource table instead. (No globalization in sample.)
 #pragma warning disable CA1031 // Do not catch general exception types. (By design to show errors to the user.)
 
                         try
@@ -78,19 +78,33 @@ namespace Rxcel
                         }
                         catch (Exception ex)
                         {
-                            MessageBox.Show("Invalid formula: " + ex.Message);
+#if NO_UI
+                            Console.WriteLine(
+#else
+                            System.Windows.Forms.MessageBox.Show(
+#endif
+                                "Invalid formula: " + ex.Message
+                            );
                             return;
                         }
 
 #pragma warning restore CA1031
-#pragma warning restore IDE0079
 
                         _formula = value;
                     }
                     else
                     {
-                        MessageBox.Show("Text input not supported. Did you mean to write a formula that starts with =?");
+#if NO_UI
+                        Console.WriteLine(
+#else
+                        System.Windows.Forms.MessageBox.Show(
+#endif
+                            "Text input not supported. Did you mean to write a formula that starts with =?"
+                        );
                     }
+
+#pragma warning restore CA1303
+#pragma warning restore IDE0079
                 }
             }
         }
