@@ -65,7 +65,15 @@ namespace Tests.System.Reflection
         {
             var visitor = new TypeSlimToTypeConverter(DefaultReflectionProvider.Instance);
             var simple = TypeSlim.Simple(new AssemblySlim("MyFakeAssembly"), "MyFakeType");
-            Assert.ThrowsException<FileNotFoundException>(() => visitor.Visit(simple));
+
+            if (Type.GetType("Mono.Runtime") == null)
+            {
+                Assert.ThrowsException<FileNotFoundException>(() => visitor.Visit(simple));
+            }
+            else
+            {
+                Assert.ThrowsException<TypeLoadException>(() => visitor.Visit(simple));
+            }
         }
     }
 }

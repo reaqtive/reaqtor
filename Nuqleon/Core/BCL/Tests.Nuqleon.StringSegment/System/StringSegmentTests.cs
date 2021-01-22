@@ -2318,10 +2318,13 @@ namespace Tests
         {
             var xs = new object[] { "bar", "foo", "", null, "qux" };
 
-#if NETFRAMEWORK
-            var ys = new object[] { null, "", "baz" }; // COMPAT: Interesting quirk in behavior here due to the use of null in the first position. Quirk compatible.
-#else
             var ys = new object[] { "", "baz" }; // NB: The quirk on .NET Framework has been removed in .NET Core. Our .NET Standard library implements .NET Core semantics.
+
+#if NETFRAMEWORK
+            if (Type.GetType("Mono.Runtime") == null)
+            {
+                ys = new object[] { null, "", "baz" }; // COMPAT: Interesting quirk in behavior here due to the use of null in the first position. Quirk compatible.
+            }
 #endif
 
             foreach (var col in new[] { xs, ys })

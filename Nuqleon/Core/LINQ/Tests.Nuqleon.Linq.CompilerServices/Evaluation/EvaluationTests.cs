@@ -289,11 +289,14 @@ namespace Tests.System.Linq.CompilerServices
 
             var rnd = new Random(1983);
 
-            for (var n = 0; n < 24; n++)
+            const int N = 24;
+            const int M = 4;
+
+            for (var n = 0; n < N; n++)
             {
                 var ps = Enumerable.Range(0, n).Select(i => Expression.Parameter(typeof(int))).ToArray();
 
-                for (var j = 0; j < 4; j++)
+                for (var j = 0; j < M; j++)
                 {
                     var cs = Enumerable.Range(0, n).Select(i => Expression.Constant(rnd.Next(0, 100))).ToArray();
                     var ex = ps.Zip(cs, (p, c) => (p, c)).Aggregate((Expression)Expression.Constant(42), (a, pc) => Expression.Add(a, Expression.Multiply(pc.p, pc.c)));
@@ -312,7 +315,23 @@ namespace Tests.System.Linq.CompilerServices
                 }
             }
 
-            Assert.AreEqual(24, added);
+            if (Type.GetType("Mono.Runtime") == null)
+            {
+                Assert.AreEqual(24, added);
+            }
+            else
+            {
+                //
+                // NB: Delegate caching for arities > 16 does not work on Mono. We get fresh runtime-generated delegate
+                //     types every time we construct a new LambdaExpression of high arity.
+                //
+                //     We'll just check on upper and lower bounds for caching. In practice we've seen values of 45, but
+                //     it's flaky to rely on that exact number. (45 = 17 + 4 * 7 where the latter product illustrates
+                //     the lack of caching for higher arity delegates.)
+                //
+
+                Assert.IsTrue(added is >= N and < N * M);
+            }
         }
 
         [TestMethod]
