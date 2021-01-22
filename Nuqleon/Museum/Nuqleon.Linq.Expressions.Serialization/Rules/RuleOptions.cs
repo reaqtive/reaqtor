@@ -33,7 +33,6 @@ namespace Nuqleon.Linq.Expressions.Serialization
         /// </summary>
         CaptureClosures = 2,
 
-#if !BACKPORT35
         /// <summary>
         /// Include support for statement trees.
         /// </summary>
@@ -43,15 +42,12 @@ namespace Nuqleon.Linq.Expressions.Serialization
         /// Include support for C# dynamic expressions.
         /// </summary>
         CSharpDynamic = 8,
-#endif
 
         /// <summary>
         /// Default configuration options, without read-only flag.
         /// </summary>
         Default = CaptureClosures
-#if !BACKPORT35
                 | StatementTrees
                 | CSharpDynamic
-#endif
     }
 }

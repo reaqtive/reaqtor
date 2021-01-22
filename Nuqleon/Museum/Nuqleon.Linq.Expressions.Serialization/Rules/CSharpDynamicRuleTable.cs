@@ -19,8 +19,6 @@ using System.Runtime.CompilerServices;
 namespace Nuqleon.Linq.Expressions.Serialization
 {
     using Json = Nuqleon.Json.Expressions;
-
-#if !BACKPORT35
     using CSharp = Microsoft.CSharp.RuntimeBinder;
 
     /// <summary>
@@ -476,5 +474,4 @@ namespace Nuqleon.Linq.Expressions.Serialization
 
         #endregion
     }
-#endif
 }

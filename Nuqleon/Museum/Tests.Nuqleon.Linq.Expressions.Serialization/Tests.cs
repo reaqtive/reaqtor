@@ -86,7 +86,6 @@ namespace Tests
             }
         }
 
-#if !BACKPORT35
         [TestMethod]
         public void Constant_Tuple()
         {
@@ -109,7 +108,6 @@ namespace Tests
                 RoundtripAndAssert(c);
             }
         }
-#endif
 
         [TestMethod]
         public void Constant_Collections()
@@ -151,17 +149,10 @@ namespace Tests
             {
                 Expression.Negate(p),
                 Expression.NegateChecked(p),
-
-#if !BACKPORT35 // Known omission in .NET 3.5, leading to an ArgumentException with message "Unhandled unary".
                 Expression.UnaryPlus(p),
-#endif
-
-#if !BACKPORT35
                 Expression.OnesComplement(p),
-
                 Expression.Decrement(p),
                 Expression.Increment(p),
-#endif
             };
 
             foreach (var a in us)
@@ -178,11 +169,8 @@ namespace Tests
             var us = new[]
             {
                 Expression.Not(p),
-
-#if !BACKPORT35
                 Expression.IsFalse(p),
                 Expression.IsTrue(p),
-#endif
             };
 
             foreach (var a in us)
@@ -191,7 +179,6 @@ namespace Tests
             }
         }
 
-#if !BACKPORT35
         [TestMethod]
         public void Unary_Compound()
         {
@@ -210,7 +197,6 @@ namespace Tests
                 RoundtripAndAssert(a);
             }
         }
-#endif
 
         private static void RoundtripAndAssert(UnaryExpression a)
         {
@@ -269,10 +255,7 @@ namespace Tests
             var bs = new[]
             {
                 Expression.Power(p1, p2),
-
-#if !BACKPORT35
                 Expression.PowerAssign(p1, p2),
-#endif
             };
 
             foreach (var a in bs)
@@ -397,7 +380,6 @@ namespace Tests
             Assert.AreEqual(f("Bar"), h("Bar"));
         }
 
-#if !BACKPORT35
         [TestMethod]
         public void Binary_CompoundAssignment()
         {
@@ -428,7 +410,6 @@ namespace Tests
                 RoundtripAndAssert(a);
             }
         }
-#endif
 
         private static void RoundtripAndAssert(BinaryExpression a)
         {
@@ -1075,7 +1056,6 @@ namespace Tests
 
         #region Exceptions
 
-#if !BACKPORT35
         [TestMethod]
         public void Exceptions_Handling()
         {
@@ -1171,7 +1151,6 @@ namespace Tests
                 Assert.IsTrue(Enumerable.SequenceEqual(logo, logr));
             }
         }
-#endif
 
         #endregion
 
@@ -1285,7 +1264,6 @@ namespace Tests
 
         #region Dynamic
 
-#if !BACKPORT35
         [TestMethod]
         public void Dynamic_BinaryOperation()
         {
@@ -1650,7 +1628,6 @@ namespace Tests
             var f = Expression.Lambda<Func<int>>(Expression.Convert(d, typeof(int)));
             _ = f.Compile()();
         }
-#endif
 
         #endregion
 
@@ -1791,7 +1768,6 @@ namespace Tests
             Assert.IsTrue(new ExpressionEquality().Equals(f, e));
         }
 
-#if !BACKPORT35
         [TestMethod]
         public void E2E_Statements()
         {
@@ -1953,13 +1929,11 @@ namespace Tests
 
             Assert.IsTrue(xs.SequenceEqual(ys));
         }
-#endif
 
         #endregion
 
         #region Regression tests
 
-#if !BACKPORT35
         [TestMethod]
         public void Regression_Task()
         {
@@ -1971,7 +1945,6 @@ namespace Tests
             // Just the mere fact of getting here is what's of interest to us.
             Assert.IsTrue(true);
         }
-#endif
 
         #endregion
 

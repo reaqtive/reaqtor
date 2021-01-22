@@ -19,7 +19,6 @@ namespace Nuqleon.Linq.Expressions.Serialization
 {
     using Json = Json.Expressions;
 
-#if !BACKPORT35
     /// <summary>
     /// Rule table for serialization of statement trees.
     /// </summary>
@@ -156,5 +155,4 @@ namespace Nuqleon.Linq.Expressions.Serialization
 
         #endregion
     }
-#endif
 }

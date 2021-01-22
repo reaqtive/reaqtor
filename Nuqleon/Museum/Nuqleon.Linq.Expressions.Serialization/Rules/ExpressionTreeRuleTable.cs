@@ -113,13 +113,11 @@ namespace Nuqleon.Linq.Expressions.Serialization
             Add((MethodCallExpression mc) => Expression.Call(mc.Object, mc.Method, mc.Arguments));
             Add((InvocationExpression ie) => Expression.Invoke(ie.Expression, ie.Arguments));
 
-#if !BACKPORT35
             Add((DefaultExpression de) => Expression.Default(de.Type));
             Add((IndexExpression ie) => Expression.MakeIndex(ie.Object, ie.Indexer, ie.Arguments));
             Add((DynamicExpression de) => Expression.MakeDynamic(de.DelegateType, de.Binder, de.Arguments));
             Add((DebugInfoExpression die) => Expression.DebugInfo(die.Document, die.StartLine, die.StartColumn, die.EndLine, die.EndColumn));
             Add((SymbolDocumentInfo sdi) => Expression.SymbolDocument(sdi.FileName, sdi.Language, sdi.LanguageVendor, sdi.DocumentType));
-#endif
 
             AddObjectCreationRules();
             AddLambdaAndParameterRules();

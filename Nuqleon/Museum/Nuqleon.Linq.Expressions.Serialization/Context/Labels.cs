@@ -19,7 +19,6 @@ namespace Nuqleon.Linq.Expressions.Serialization
     using Json = Nuqleon.Json.Expressions;
     using TypeSystem;
 
-#if !BACKPORT35
     /// <summary>
     /// Tracking facility for labels in statement blocks.
     /// </summary>
@@ -203,5 +202,4 @@ namespace Nuqleon.Linq.Expressions.Serialization
             #endregion
         }
     }
-#endif
 }

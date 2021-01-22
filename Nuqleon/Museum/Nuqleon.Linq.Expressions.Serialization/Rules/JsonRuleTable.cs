@@ -201,7 +201,6 @@ namespace Nuqleon.Linq.Expressions.Serialization
                 (g, rec, ctx) => rec(g.ToString("D"), ctx),
                 (j, rec, ctx) => new Guid((string)rec(j, ctx))
             );
-#if !BACKPORT35
             Add(
                 "Tuple", default(object), // Could be interned through our heap serializer (used for closures now).
                 o =>
@@ -249,7 +248,6 @@ namespace Nuqleon.Linq.Expressions.Serialization
                         })
                     )
             );
-#endif
         }
 
         /// <summary>
