@@ -453,6 +453,18 @@ namespace Tests
             var x = Expression.Parameter(typeof(int));
             var y = Expression.Parameter(typeof(int));
 
+            int N = 20;
+
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                //
+                // NB: On Mono, creating a LambdaExpression of an arity >= 16 causes creation of new delegate types
+                //     that are not cached and reused. As such, the resulting delegate type differs upon roundtripping.
+                //
+
+                N = 15;
+            }
+
             var ps = Enumerable.Range(0, 20).Select(i => Expression.Parameter(typeof(int), "p" + i)).ToArray();
 
             AssertRoundtrip(new Expression[]
