@@ -31,6 +31,10 @@ namespace Reaqtive.Scheduler
                 {
                     s_failedToLoadKernel32 = true;
                 }
+                catch (EntryPointNotFoundException)
+                {
+                    s_failedToLoadKernel32 = true;
+                }
             }
 
             cycleTime = 0UL;
