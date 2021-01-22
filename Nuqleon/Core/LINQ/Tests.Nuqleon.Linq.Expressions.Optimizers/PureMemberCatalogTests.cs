@@ -328,6 +328,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
             {
                 return Expression.Throw(Expression.Constant(tie.InnerException), property.PropertyType);
             }
+            catch (Exception ex) when (Type.GetType("Mono.Runtime") != null) // NB: Reflection APIs don't seem to always throw TargetInvocationException on Mono.
+            {
+                return Expression.Throw(Expression.Constant(ex), property.PropertyType);
+            }
 
             return Expected(property.PropertyType, obj);
         }
@@ -344,6 +348,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
             {
                 return Expression.Throw(Expression.Constant(tie.InnerException), method.ReturnType);
             }
+            catch (Exception ex) when (Type.GetType("Mono.Runtime") != null) // NB: Reflection APIs don't seem to always throw TargetInvocationException on Mono.
+            {
+                return Expression.Throw(Expression.Constant(ex), method.ReturnType);
+            }
 
             return Expected(method.ReturnType, obj);
         }
@@ -359,6 +367,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
             catch (TargetInvocationException tie)
             {
                 return Expression.Throw(Expression.Constant(tie.InnerException), constructor.DeclaringType);
+            }
+            catch (Exception ex) when (Type.GetType("Mono.Runtime") != null) // NB: Reflection APIs don't seem to always throw TargetInvocationException on Mono.
+            {
+                return Expression.Throw(Expression.Constant(ex), constructor.DeclaringType);
             }
 
             return Expected(constructor.DeclaringType, obj);
