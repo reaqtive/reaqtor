@@ -179,7 +179,7 @@ namespace Tests
             Assert.AreSame(sb, sb.AppendLine(new StringSegment("zzbarzz", 2, 3)));
             Assert.AreSame(sb, sb.AppendLine("qux"));
 
-            Assert.AreEqual("foo\r\nbar\r\nqux\r\n", sb.ToString());
+            Assert.AreEqual("foo" + Environment.NewLine + "bar" + Environment.NewLine + "qux" + Environment.NewLine, sb.ToString());
         }
     }
 }
