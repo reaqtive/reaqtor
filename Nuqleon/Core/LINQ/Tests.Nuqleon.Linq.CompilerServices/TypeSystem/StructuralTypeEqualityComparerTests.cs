@@ -168,18 +168,18 @@ namespace Tests.System.Linq.CompilerServices.TypeSystem
                 },
                 null);
 
-            rt1.CreateType();
-            rt2.CreateType();
-            at1.CreateType();
-            at2.CreateType();
+            var rt1c = rt1.CreateType();
+            var rt2c = rt2.CreateType();
+            var at1c = at1.CreateType();
+            var at2c = at2.CreateType();
 
             var eq = new StructuralTypeEqualityComparer();
             var orig = new TypeEqualityComparer();
 
-            Assert.IsFalse(orig.Equals(rt1, rt2));
-            Assert.IsTrue(eq.Equals(rt1, rt2));
-            Assert.IsFalse(orig.Equals(at1, at2));
-            Assert.IsTrue(eq.Equals(at1, at2));
+            Assert.IsFalse(orig.Equals(rt1c, rt2c));
+            Assert.IsTrue(eq.Equals(rt1c, rt2c));
+            Assert.IsFalse(orig.Equals(at1c, at2c));
+            Assert.IsTrue(eq.Equals(at1c, at2c));
         }
 
         [TestMethod]
@@ -231,18 +231,18 @@ namespace Tests.System.Linq.CompilerServices.TypeSystem
                 },
                 null);
 
-            rt1.CreateType();
-            rt2.CreateType();
-            at1.CreateType();
-            at2.CreateType();
+            var rt1c = rt1.CreateType();
+            var rt2c = rt2.CreateType();
+            var at1c = at1.CreateType();
+            var at2c = at2.CreateType();
 
             var eq = new StructuralTypeEqualityComparer();
             var orig = new TypeEqualityComparer();
 
-            Assert.IsFalse(orig.Equals(rt1, rt2));
-            Assert.IsTrue(eq.Equals(rt1, rt2));
-            Assert.IsFalse(orig.Equals(at1, at2));
-            Assert.IsTrue(eq.Equals(at1, at2));
+            Assert.IsFalse(orig.Equals(rt1c, rt2c));
+            Assert.IsTrue(eq.Equals(rt1c, rt2c));
+            Assert.IsFalse(orig.Equals(at1c, at2c));
+            Assert.IsTrue(eq.Equals(at1c, at2c));
         }
 
         [TestMethod]
