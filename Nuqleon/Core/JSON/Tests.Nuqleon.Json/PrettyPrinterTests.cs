@@ -48,7 +48,7 @@ namespace Tests
         [TestMethod]
         public void PrettyPrinter_Array()
         {
-            AssertPretty(Expression.Array(Expression.Number("1"), Expression.Number("2")), "[\r\n  1,\r\n  2\r\n]");
+            AssertPretty(Expression.Array(Expression.Number("1"), Expression.Number("2")), "[" + Environment.NewLine + "  1," + Environment.NewLine + "  2" + Environment.NewLine + "]");
         }
 
         [TestMethod]
@@ -60,7 +60,7 @@ namespace Tests
                 { "foo", Expression.Number("2") },
             };
 
-            AssertPretty(Expression.Object(d), "{\r\n  \"bar\": 1,\r\n  \"foo\": 2\r\n}");
+            AssertPretty(Expression.Object(d), "{" + Environment.NewLine + "  \"bar\": 1," + Environment.NewLine + "  \"foo\": 2" + Environment.NewLine + "}");
         }
 
         private static void AssertPretty(Expression e, string s)
