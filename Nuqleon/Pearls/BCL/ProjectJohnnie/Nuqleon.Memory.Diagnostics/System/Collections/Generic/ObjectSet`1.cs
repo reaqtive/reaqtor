@@ -34,6 +34,11 @@ namespace System.Collections.Generic
         where T : class
     {
         /// <summary>
+        /// Used to obtain lower 31 bits of hash code.
+        /// </summary>
+        private const int Lower31BitMask = 0x7FFFFFFF;
+
+        /// <summary>
         /// Cutoff point, above which we won't do stackallocs. This corresponds to 100 integers.
         /// </summary>
         private const int StackAllocThreshold = 100;
@@ -1407,7 +1412,7 @@ namespace System.Collections.Generic
         /// </summary>
         /// <param name="item">The item to get a hash code for.</param>
         /// <returns>The hash code for the specified <paramref name="item"/>.</returns>
-        private static int InternalGetHashCode(T item) => RuntimeHelpers.GetHashCode(item);
+        private static int InternalGetHashCode(T item) => RuntimeHelpers.GetHashCode(item) & Lower31BitMask;
 
         #endregion
 
