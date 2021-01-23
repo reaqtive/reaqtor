@@ -464,7 +464,14 @@ namespace System.Runtime.CompilerServices
                     // First, copy special constraints, i.e. class, struct, or new().
                     //
                     var constraints = genericArgument.GenericParameterAttributes & GenericParameterAttributes.SpecialConstraintMask;
-                    var attributes = genericParameter.GenericParameterAttributes | constraints;
+                    var attributes = constraints;
+
+                    if (Type.GetType("Mono.Runtime") == null)
+                    {
+                        // NB: The following throws on Mono.
+                        attributes |= genericParameter.GenericParameterAttributes;
+                    }
+
                     genericParameter.SetGenericParameterAttributes(attributes);
 
                     //
@@ -536,11 +543,7 @@ namespace System.Runtime.CompilerServices
                                 // Lazily allocate the interface constraints list,
                                 // which we'll turn into an array later.
                                 //
-                                if (interfaceConstraints == null)
-                                {
-                                    interfaceConstraints = new List<Type>(typeConstraints.Length);
-                                }
-
+                                interfaceConstraints ??= new List<Type>(typeConstraints.Length);
                                 interfaceConstraints.Add(rewrittenTypeConstraint);
                             }
                         }
