@@ -1333,7 +1333,7 @@ namespace Tests
             public static Logi operator |(Logi _1, Logi _2) => new Logi();
         }
 
-        [TestMethod, ExpectedException(typeof(OverflowException))]
+        [TestMethod]
         public void Dynamic_BinaryOperation_Checked()
         {
             if (IsRunningOnMono)
@@ -1354,7 +1354,9 @@ namespace Tests
             var d = (DynamicExpression)Roundtrip(e);
 
             var f = Expression.Lambda<Func<int>>(Expression.Convert(d, typeof(int)));
-            _ = f.Compile()();
+            var g = f.Compile();
+
+            Assert.ThrowsException<OverflowException>(() => _ = g());
         }
 
         [TestMethod]
@@ -1705,7 +1707,7 @@ namespace Tests
             Assert.AreEqual(-bigOne, f.Compile()());
         }
 
-        [TestMethod, ExpectedException(typeof(OverflowException))]
+        [TestMethod]
         public void Dynamic_UnaryOperation_Checked()
         {
             if (IsRunningOnMono)
@@ -1724,7 +1726,9 @@ namespace Tests
             var d = (DynamicExpression)Roundtrip(e);
 
             var f = Expression.Lambda<Func<int>>(Expression.Convert(d, typeof(int)));
-            _ = f.Compile()();
+            var g = f.Compile();
+
+            Assert.ThrowsException<OverflowException>(() => _ = g());
         }
 
         #endregion
