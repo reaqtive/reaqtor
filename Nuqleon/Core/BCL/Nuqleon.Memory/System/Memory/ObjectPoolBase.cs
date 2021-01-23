@@ -3,6 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 //
+// The contents of this file are adapted from ObjectPool`1.cs in Roslyn, see
+//
+//   https://github.com/dotnet/roslyn/blob/release/dev16.10/src/Dependencies/PooledObjects/ObjectPool%601.cs
+//
+
+//
 // Revision history:
 //
 //   BD - 07/02/2014 - Created this type.
