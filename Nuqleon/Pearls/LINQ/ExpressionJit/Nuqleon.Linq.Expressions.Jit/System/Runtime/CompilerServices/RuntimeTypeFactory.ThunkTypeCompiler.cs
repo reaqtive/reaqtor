@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -320,10 +320,10 @@ namespace System.Runtime.CompilerServices
                 // Build all the types; we only need the thunk type to return to our
                 // caller.
                 //
-                info.InnerDelegateType.CreateTypeInfo();
-                info.DispatcherType.CreateTypeInfo();
-                info.TieredRecompilationType?.CreateTypeInfo();
-                var result = info.ThunkType.CreateTypeInfo().AsType();
+                info.InnerDelegateType.CreateType();
+                info.DispatcherType.CreateType();
+                info.TieredRecompilationType?.CreateType();
+                var result = info.ThunkType.CreateType();
 
                 //
                 // Return the thunk type. Note that open generic types are expected in
@@ -1218,7 +1218,7 @@ namespace System.Runtime.CompilerServices
                 //
                 // 1. The constructor `.ctor(<Bar>__Thunk<TInner>, TClosure)`
                 //
-                var parentThunkType = thunkType.MakeGenericType(genericArguments);
+                var parentThunkType = thunkType.MakeGenericType(genericParameters);
                 var ctorParameterTypes = new[] { parentThunkType, closureType };
                 var ctor = builder.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, CallingConventions.Standard, ctorParameterTypes);
 
