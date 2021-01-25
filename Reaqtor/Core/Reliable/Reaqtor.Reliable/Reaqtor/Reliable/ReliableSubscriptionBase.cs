@@ -84,10 +84,7 @@ namespace Reaqtor.Reliable
             {
                 AcknowledgeRange(sequenceId);
 
-                if (_context != null)
-                {
-                    _context.TraceSource.ReliableSubscriptionBase_OnStateSaved(_context.InstanceId, sequenceId);
-                }
+                _context?.TraceSource.ReliableSubscriptionBase_OnStateSaved(_context.InstanceId, sequenceId);
             }
             // Otherwise, assuming the subscription is in the "stopped" state
             //
@@ -97,17 +94,11 @@ namespace Reaqtor.Reliable
                 _disposeAcknowledged = true;
                 DisposeCore();
 
-                if (_context != null)
-                {
-                    _context.TraceSource.ReliableSubscriptionBase_OnStateSavedDispose(_context.InstanceId, sequenceId);
-                }
+                _context?.TraceSource.ReliableSubscriptionBase_OnStateSavedDispose(_context.InstanceId, sequenceId);
             }
             else
             {
-                if (_context != null)
-                {
-                    _context.TraceSource.ReliableSubscriptionBase_OnStateSavedMuted(_context.InstanceId, sequenceId);
-                }
+                _context?.TraceSource.ReliableSubscriptionBase_OnStateSavedMuted(_context.InstanceId, sequenceId);
             }
         }
 
