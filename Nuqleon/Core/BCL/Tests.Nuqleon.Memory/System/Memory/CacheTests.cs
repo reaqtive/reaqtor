@@ -66,27 +66,41 @@ namespace Tests.System.Memory
             Assert.AreSame(unshared2, rc2.Unshared);
         }
 
-        [TestMethod]
+        [FlakyTestMethod(1000)]
         public void Cache_GarbageCollected()
         {
             var cache = new TestCache();
             var shared = "The quick brown fox jumped over the lazy dog.";
-            var foo1 = new Foo { Shared = shared };
-            var foo2 = new Foo { Shared = Copy(shared) };
 
-            var rt1 = RoundtripCache(cache, foo1);
-            Assert.AreNotSame(foo1, rt1);
-            Assert.AreSame(shared, rt1.Shared);
-            Assert.AreSame(foo1.Shared, rt1.Shared);
+            DoFirst(cache, shared);
 
             GC.Collect();
             GC.WaitForPendingFinalizers();
             GC.Collect();
 
-            var rt2 = RoundtripCache(cache, foo2);
-            Assert.AreNotSame(foo2, rt2);
-            Assert.AreNotSame(shared, rt2.Shared);
-            Assert.AreSame(foo2.Shared, rt2.Shared);
+            DoSecond(cache, shared);
+
+            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+            static void DoFirst(TestCache cache, string shared)
+            {
+                var foo1 = new Foo { Shared = shared };
+
+                var rt1 = RoundtripCache(cache, foo1);
+                Assert.AreNotSame(foo1, rt1);
+                Assert.AreSame(shared, rt1.Shared);
+                Assert.AreSame(foo1.Shared, rt1.Shared);
+            }
+
+            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+            static void DoSecond(TestCache cache, string shared)
+            {
+                var foo2 = new Foo { Shared = Copy(shared) };
+
+                var rt2 = RoundtripCache(cache, foo2);
+                Assert.AreNotSame(foo2, rt2);
+                Assert.AreNotSame(shared, rt2.Shared);
+                Assert.AreSame(foo2.Shared, rt2.Shared);
+            }
         }
 
         [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]

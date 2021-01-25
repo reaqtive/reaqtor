@@ -8,6 +8,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 using Nuqleon.DataModel.Serialization.Binary;
@@ -322,10 +323,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             var stream = new MemoryStream();
 
             {
-                var factory = new MySerializer();
-                factory.Serialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream, null);
-
-                Drop(ref factory);
+                Do1();
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -337,10 +335,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             stream.Position = 0;
 
             {
-                var factory2 = new MySerializer();
-                factory2.Deserialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream);
-
-                Drop(ref factory2);
+                Do2();
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -349,9 +344,20 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
             Assert.AreEqual(2, Volatile.Read(ref MySerializer.Finalized));
 
-            static void Drop(ref MySerializer s)
+            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+            static void Do1()
             {
-                s = null;
+                var factory = new MySerializer();
+                factory.Serialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream, null);
+                factory = null;
+            }
+
+            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+            static void Do2()
+            {
+                var factory = new MySerializer();
+                factory.Deserialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream);
+                factory = null;
             }
         }
 #endif

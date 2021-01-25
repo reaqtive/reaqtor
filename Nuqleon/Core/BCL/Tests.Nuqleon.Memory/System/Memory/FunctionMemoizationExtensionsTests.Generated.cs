@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -3209,38 +3209,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<string>(() => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func0_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(0, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<string>(() => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<string> f)
+                    {
+                        return f();
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(0);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func0_Apply(Func<string> f)
-        {
-            return f();
         }
 
         [TestMethod]
@@ -3333,38 +3332,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, string>((p0) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func1_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(1, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, string>((p0) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, string> f)
+                    {
+                        return f(new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(1);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func1_Apply(Func<Obj, string> f)
-        {
-            return f(new Obj());
         }
 
         [TestMethod]
@@ -3457,38 +3455,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, string>((p0, p1) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func2_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(2, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, string>((p0, p1) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(2);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func2_Apply(Func<Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -3581,38 +3578,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, string>((p0, p1, p2) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func3_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(3, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, string>((p0, p1, p2) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(3);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func3_Apply(Func<Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -3705,38 +3701,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func4_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(4, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(4);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func4_Apply(Func<Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -3829,38 +3824,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func5_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(5, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(5);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func5_Apply(Func<Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -3953,38 +3947,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func6_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(6, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(6);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func6_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -4077,38 +4070,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func7_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(7, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(7);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func7_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -4201,38 +4193,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func8_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(8, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(8);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func8_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -4325,38 +4316,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func9_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(9, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(9);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func9_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -4449,38 +4439,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func10_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(10, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(10);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func10_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -4573,38 +4562,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func11_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(11, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(11);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func11_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -4697,38 +4685,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func12_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(12, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(12);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func12_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -4821,38 +4808,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func13_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(13, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(13);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func13_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -4945,38 +4931,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func14_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(14, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(14);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func14_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -5069,38 +5054,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func15_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(15, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(15);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func15_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -5193,38 +5177,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func16_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(16, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(16);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func16_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -5317,38 +5300,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func17_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(17, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(17);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func17_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -5441,38 +5423,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func18_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(18, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(18);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func18_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -5565,38 +5546,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func19_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(19, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(19);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func19_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -5689,38 +5669,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func20_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(20, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(20);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func20_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -5813,38 +5792,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func21_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(21, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(21);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func21_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -5937,38 +5915,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func22_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(22, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(22);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func22_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -6061,38 +6038,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func23_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(23, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(23);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func23_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -6185,38 +6161,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func24_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(24, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(24);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func24_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -6309,38 +6284,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func25_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(25, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(25);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func25_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -6433,38 +6407,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func26_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(26, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(26);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func26_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -6557,38 +6530,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func27_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(27, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(27);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func27_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -6681,38 +6653,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func28_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(28, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(28);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func28_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -6805,38 +6776,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func29_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(29, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(29);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func29_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -6929,38 +6899,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func30_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(30, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(30);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func30_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -7053,38 +7022,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func31_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(31, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(31);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func31_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -7177,38 +7145,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func32_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(32, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(32);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func32_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -7301,38 +7268,37 @@ namespace Tests
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p32) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func33_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(33, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>((p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20, p21, p22, p23, p24, p25, p26, p27, p28, p29, p30, p31, p32) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
+                    {
+                        return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(33);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func33_Apply(Func<Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, Obj, string> f)
-        {
-            return f(new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj(), new Obj());
         }
 
         [TestMethod]
@@ -7398,6 +7364,17 @@ namespace Tests
             Assert.AreEqual(1, n);
         }
 
+        private static void CollectAndCheckFinalizeCount(int count)
+        {
+            // NB: This has shown to be flaky on Mono.
+            if (Type.GetType("Mono.Runtime") == null)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                Assert.AreEqual(count, Obj.FinalizeCount);
+            }
+        }
     }
 
     internal delegate R Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, T17, R>(T1 arg1, T2 arg2, T3 arg3, T4 arg4, T5 arg5, T6 arg6, T7 arg7, T8 arg8, T9 arg9, T10 arg10, T11 arg11, T12 arg12, T13 arg13, T14 arg14, T15 arg15, T16 arg16, T17 arg17);

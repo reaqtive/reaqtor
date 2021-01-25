@@ -366,38 +366,37 @@ for (var i = 0; i <= 33; i++)
                 Obj.Reset();
                 try
                 {
-                    var n = 0;
-
-                    var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
-                    var f = new <#=func#>((<#=string.Join(", ", pars)#>) => { n++; return ""; });
-
-                    var res = mem.MemoizeWeak<<#=func#>>(f, MemoizationOptions.None);
-
-                    Assert.AreEqual(0, n);
-
-                    Assert.AreEqual("", FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func<#=i#>_Apply(res.Delegate));
-                    Assert.AreEqual(1, n);
-
-                    // NB: This has shown to be flaky on Mono.
-                    if (Type.GetType("Mono.Runtime") == null)
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static void Do()
                     {
-                        GC.Collect();
-                        GC.WaitForPendingFinalizers();
+                        var n = 0;
 
-                        Assert.AreEqual(<#=i#>, Obj.FinalizeCount);
+                        var mem = Memoizer.CreateWeak(WeakMemoizationCacheFactory.Unbounded);
+                        var f = new <#=func#>((<#=string.Join(", ", pars)#>) => { n++; return ""; });
+
+                        var res = mem.MemoizeWeak<<#=func#>>(f, MemoizationOptions.None);
+
+                        Assert.AreEqual(0, n);
+
+                        Assert.AreEqual("", Apply(res.Delegate));
+                        Assert.AreEqual(1, n);
                     }
+
+                    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+                    static string Apply(<#=func#> f)
+                    {
+                        return f(<#=string.Join(", ", Enumerable.Repeat("new Obj()", i))#>);
+                    }
+
+                    Do();
+
+                    CollectAndCheckFinalizeCount(<#=i#>);
                 }
                 finally
                 {
                     Obj.Reset();
                 }
             }
-        }
-
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private string FunctionMemoizationExtensions_MemoizeWeak_TDelegate_Lifetime_Func<#=i#>_Apply(<#=func#> f)
-        {
-            return f(<#=string.Join(", ", Enumerable.Repeat("new Obj()", i))#>);
         }
 
 <#
@@ -439,6 +438,17 @@ for (var i = 0; i <= 33; i++)
     }
 }
 #>
+        private static void CollectAndCheckFinalizeCount(int count)
+        {
+            // NB: This has shown to be flaky on Mono.
+            if (Type.GetType("Mono.Runtime") == null)
+            {
+                GC.Collect();
+                GC.WaitForPendingFinalizers();
+
+                Assert.AreEqual(count, Obj.FinalizeCount);
+            }
+        }
     }
 
 <#
