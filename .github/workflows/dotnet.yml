@@ -31,10 +31,3 @@ jobs:
       run: dotnet build --no-restore
     - name: Test
       run: dotnet test --no-build --verbosity normal --logger trx --collect:"XPlat Code Coverage" --results-directory ./TestResults
-      continue-on-error: true
-    - name: Process test results
-      uses: NasAmin/trx-parser@v0.0.3
-      id: trx-parser
-      with:
-        TRX_PATH: ${{ github.workspace }}/TestResults
-        REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
