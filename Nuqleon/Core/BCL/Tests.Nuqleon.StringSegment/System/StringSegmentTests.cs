@@ -14,6 +14,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Tests
 {
@@ -474,9 +475,9 @@ namespace Tests
         [TestMethod]
         public void StringSegment_Compare_StringSegment_Int32_StringSegment_Int32_Int32()
         {
-            foreach (var startIndexA in new[] { 0, 1, 3 })
+            Parallel.ForEach(new[] { 0, 1, 3 }, startIndexA =>
             {
-                foreach (var startIndexB in new[] { 0, 1, 3 })
+                Parallel.ForEach(new[] { 0, 1, 3 }, startIndexB =>
                 {
                     foreach (var length in new[] { 0, 1, 3, 4, 6, 7 })
                     {
@@ -488,8 +489,8 @@ namespace Tests
                             (e, a) => Math.Sign(e) == Math.Sign(a) // TODO: Do we need to guarantee an exact output, e.g. ("", "bar") -> -98 due to use of '\0'.
                         );
                     }
-                }
-            }
+                });
+            });
         }
 
         [TestMethod]
@@ -512,9 +513,9 @@ namespace Tests
         [TestMethod]
         public void StringSegment_Compare_StringSegment_Int32_StringSegment_Int32_Int32_Boolean()
         {
-            foreach (var startIndexA in new[] { 0, 1, 3 })
+            Parallel.ForEach(new[] { 0, 1, 3 }, startIndexA =>
             {
-                foreach (var startIndexB in new[] { 0, 1, 3 })
+                Parallel.ForEach(new[] { 0, 1, 3 }, startIndexB =>
                 {
                     foreach (var length in new[] { 0, 1, 3, 4, 6, 7 })
                     {
@@ -529,8 +530,8 @@ namespace Tests
                             );
                         }
                     }
-                }
-            }
+                });
+            });
         }
 
         [TestMethod]
@@ -553,9 +554,9 @@ namespace Tests
         [TestMethod]
         public void StringSegment_Compare_StringSegment_Int32_StringSegment_Int32_Int32_StringComparison()
         {
-            foreach (var startIndexA in new[] { 0, 1, 3 })
+            Parallel.ForEach(new[] { 0, 1, 3 }, startIndexA =>
             {
-                foreach (var startIndexB in new[] { 0, 1, 3 })
+                Parallel.ForEach(new[] { 0, 1, 3 }, startIndexB =>
                 {
                     foreach (var length in new[] { 0, 1, 3, 4, 6, 7 })
                     {
@@ -570,8 +571,8 @@ namespace Tests
                             );
                         }
                     }
-                }
-            }
+                });
+            });
         }
 
         [TestMethod]
@@ -596,9 +597,9 @@ namespace Tests
         [TestMethod]
         public void StringSegment_Compare_StringSegment_Int32_StringSegment_Int32_Int32_Boolean_CultureInfo()
         {
-            foreach (var startIndexA in new[] { 0, 1, 3 })
+            Parallel.ForEach(new[] { 0, 1, 3 }, startIndexA =>
             {
-                foreach (var startIndexB in new[] { 0, 1, 3 })
+                Parallel.ForEach(new[] { 0, 1, 3 }, startIndexB =>
                 {
                     foreach (var length in new[] { 0, 1, 3, 4, 6, 7 })
                     {
@@ -613,8 +614,8 @@ namespace Tests
                             );
                         }
                     }
-                }
-            }
+                });
+            });
         }
 
         [TestMethod]
@@ -639,9 +640,9 @@ namespace Tests
         [TestMethod]
         public void StringSegment_Compare_StringSegment_Int32_StringSegment_Int32_Int32_CultureInfo_CompareOptions()
         {
-            foreach (var startIndexA in new[] { 0, 1, 3 })
+            Parallel.ForEach(new[] { 0, 1, 3 }, startIndexA =>
             {
-                foreach (var startIndexB in new[] { 0, 1, 3 })
+                Parallel.ForEach(new[] { 0, 1, 3 }, startIndexB =>
                 {
                     foreach (var length in new[] { 0, 1, 3, 4, 6, 7 })
                     {
@@ -656,8 +657,8 @@ namespace Tests
                             );
                         }
                     }
-                }
-            }
+                });
+            });
         }
 
         [TestMethod]
@@ -702,9 +703,9 @@ namespace Tests
         [TestMethod]
         public void StringSegment_CompareOrdinal_StringSegment_Int32_StringSegment_Int32_Int32()
         {
-            foreach (var startIndexA in new[] { 0, 1, 3 })
+            Parallel.ForEach(new[] { 0, 1, 3 }, startIndexA =>
             {
-                foreach (var startIndexB in new[] { 0, 1, 3 })
+                Parallel.ForEach(new[] { 0, 1, 3 }, startIndexB =>
                 {
                     foreach (var length in new[] { 0, 1, 3, 4, 6, 7 })
                     {
@@ -716,8 +717,8 @@ namespace Tests
                             (e, a) => Math.Sign(e) == Math.Sign(a) // TODO: Do we need to guarantee an exact output, e.g. ("", "bar") -> -98 due to use of '\0'.
                         );
                     }
-                }
-            }
+                });
+            });
         }
 
         [TestMethod]
