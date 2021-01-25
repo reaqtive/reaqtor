@@ -7,27 +7,74 @@ on:
     branches: [ main ]
 
 jobs:
-  build:
+  build-and-test:
+    strategy:
+      matrix:
+        os: [ubuntu-latest]
+        configuration: [Debug]
 
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
 
     steps:
     - uses: actions/checkout@v2
+
     - name: Setup .NET (2.1)
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 2.1.x
+
     - name: Setup .NET (3.1)
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.x
+
     - name: Setup .NET (5.0)
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 5.0.x
+
     - name: Restore dependencies
       run: dotnet restore
+
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore --configuration ${{ matrix.configuration }}
+
     - name: Test
-      run: dotnet test --no-build --verbosity normal --logger trx --collect:"XPlat Code Coverage" --results-directory ./TestResults
+      run: dotnet test --no-build --configuration ${{ matrix.configuration }} --verbosity normal --logger trx --results-directory ./TestResults --collect:"XPlat Code Coverage"
+
+    - name: Upload Unit Test Results
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: TestResults
+        path: TestResults/*.trx
+
+  publish-test-results:
+    name: "Publish Unit Test Results"
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: success() || failure()
+    steps:
+      - name: Download Artifacts
+        uses: actions/download-artifact@v2
+        with:
+          path: artifacts
+
+      - name: Setup .NET 5.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Convert TRX to JUnit format
+        run: |
+          dotnet tool install -g trx2junit
+          export PATH="$PATH:/root/.dotnet/tools"
+          trx2junit artifacts/TestResults/*.trx
+
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1.7
+        if: always()
+        with:
+          check_name: Unit Test Results
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          files: artifacts/TestResults/*.xml
