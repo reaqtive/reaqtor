@@ -17,8 +17,8 @@ namespace Tests.Reaqtor.QueryEngine
     [TestClass]
     public class ConcurrencyTests : PhysicalTimeEngineTest
     {
-        private const int SubCount = 1000;
-        private const int AddedSubCount = 100;
+        private const int SubCount = 500;
+        private const int AddedSubCount = 50;
         private const int QeCount = 10;
         private const int Parallelism = 8;
 
