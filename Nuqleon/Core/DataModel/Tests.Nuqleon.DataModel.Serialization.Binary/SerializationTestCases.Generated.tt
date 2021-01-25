@@ -12,7 +12,7 @@
 
 using System;
 using System.Linq;
-    
+
 using Nuqleon.DataModel;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -26,7 +26,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
     public partial class DataModelSerializerFactoryTests
     {
-        private SerializationTestCases generatedTests = new SerializationTestCases();
+        private SerializationTestCases generatedTests = new();
 
 <# foreach (var type in DataTypes) { #>
         [TestMethod]
@@ -95,14 +95,13 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
                 { "(<#= type.CodeStr #>[])new <#= type.CodeStr #>[0], ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), new <#= type.CodeStr #>[0], ArrayComparer.Instance },
                 { "(<#= type.CodeStr #>[])new <#= type.CodeStr #>[] {<#= type.RandValue #>}, ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), new <#= type.CodeStr #>[] {<#= type.RandValue #>}, ArrayComparer.Instance },
 <# if (type.IsNullableType) { #>
-                { "(<#= type.CodeStr #>[])Enumerable.Range(0, 10).Select(i => i % 2 == 0? (<#= type.CodeStr #>)<#= type.RandValue #> : null).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Range(0, 10).Select(i => i % 2 == 0? (<#= type.CodeStr #>)<#= type.RandValue #> : null).ToArray(), ArrayComparer.Instance },
+                { "(<#= type.CodeStr #>[])Enumerable.Range(0, 8).Select(i => i % 2 == 0? (<#= type.CodeStr #>)<#= type.RandValue #> : null).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Range(0, 8).Select(i => i % 2 == 0? (<#= type.CodeStr #>)<#= type.RandValue #> : null).ToArray(), ArrayComparer.Instance },
 <# } #>
 <# foreach (var value in type.SpecialValues) { #>
                 { "(<#= type.CodeStr #>[])Enumerable.Repeat(<#= value.Replace("\"", "\\\"") #>, 2).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Repeat<<#= type.CodeStr #>>(<#= value #>, 2).ToArray(), ArrayComparer.Instance },
                 { "(<#= type.CodeStr #>[])Enumerable.Repeat(<#= value.Replace("\"", "\\\"") #>, 4).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Repeat<<#= type.CodeStr #>>(<#= value #>, 4).ToArray(), ArrayComparer.Instance },
                 { "(<#= type.CodeStr #>[])Enumerable.Repeat(<#= value.Replace("\"", "\\\"") #>, 16).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Repeat<<#= type.CodeStr #>>(<#= value #>, 16).ToArray(), ArrayComparer.Instance },
                 { "(<#= type.CodeStr #>[])Enumerable.Repeat(<#= value.Replace("\"", "\\\"") #>, 256).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Repeat<<#= type.CodeStr #>>(<#= value #>, 256).ToArray(), ArrayComparer.Instance },
-                { "(<#= type.CodeStr #>[])Enumerable.Repeat(<#= value.Replace("\"", "\\\"") #>, 1024).ToArray(), ArrayComparer.Instance", typeof(<#= type.CodeStr #> []), Enumerable.Repeat<<#= type.CodeStr #>>(<#= value #>, 1024).ToArray(), ArrayComparer.Instance },
 <# } #>
             };
 
