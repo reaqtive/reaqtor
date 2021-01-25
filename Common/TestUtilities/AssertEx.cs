@@ -97,7 +97,7 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
             {
                 foreach (var x in base.Execute(testMethod))
                 {
-                    x.DisplayName = "Iteration " + (i + 1);
+                    x.DisplayName = testMethod.TestMethodName + " - Iteration " + (i + 1);
                     res.Add(x);
                 }
             }
