@@ -401,7 +401,7 @@ namespace Reaqtive
                 {
                     lock (_queue)
                     {
-                        _queue.InsertRange(0, _eventBuffer.Skip(i));
+                        _queue.InsertRange(0, _eventBuffer.Take(eventCount).Skip(i));
                     }
 
                     return;
