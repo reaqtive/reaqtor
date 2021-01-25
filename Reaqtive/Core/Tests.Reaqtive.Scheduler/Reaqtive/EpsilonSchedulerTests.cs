@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
@@ -52,6 +53,12 @@ namespace Test.Reaqtive.Scheduler
         private static readonly TimeSpan NotExpected = TimeSpan.FromSeconds(0.1);
 
         /// <summary>
+        /// A TimeSpan value for <see cref="WaitHandle.WaitOne(TimeSpan)"/> operations that are expected to be
+        /// completed eventually, but allowing for the test to not hang indefinitely.
+        /// </summary>
+        private static readonly TimeSpan Timeout = TimeSpan.FromMinutes(2);
+
+        /// <summary>
         /// The physical scheduler.
         /// </summary>
         private PhysicalScheduler _physicalScheduler;
@@ -85,7 +92,7 @@ namespace Test.Reaqtive.Scheduler
         /// Schedules a simple task and waits for its completion.
         /// </summary>
         /// <remarks>
-        /// This test is non-deterministic due to physical time dependency with <see cref="ExpectedSoon"/>.
+        /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/>.
         /// </remarks>
         [TestMethod]
         [TestCategory("Scheduler_NonDeterministic")]
@@ -103,15 +110,15 @@ namespace Test.Reaqtive.Scheduler
                 },
                 0));
 
-            Assert.IsTrue(worked.WaitOne(ExpectedSoon)); // NB: This is non-deterministic.
+            WaitForSoon(worked); // NB: This is non-deterministic.
         }
 
         /// <summary>
         /// Pauses the scheduler, schedules a new task, continues and waits its completion.
         /// </summary>
         /// <remarks>
-        /// This test is non-deterministic due to physical time dependency with <see cref="ExpectedSoon"/> and
-        /// <see cref="NotExpected"/>.
+        /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/> and
+        /// <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
         [TestCategory("Scheduler_NonDeterministic")]
@@ -131,11 +138,11 @@ namespace Test.Reaqtive.Scheduler
                 },
                 0));
 
-            Assert.IsFalse(worked.WaitOne(NotExpected)); // NB: This is non-deterministic.
+            WaitForNever(worked); // NB: This is non-deterministic, but should not be flaky in the happy case.
 
             scheduler.Continue();
 
-            Assert.IsTrue(worked.WaitOne(ExpectedSoon)); // NB: This is non-deterministic.
+            WaitForSoon(worked); // NB: This is non-deterministic.
         }
 
         /// <summary>
@@ -177,7 +184,7 @@ namespace Test.Reaqtive.Scheduler
                     0));
             }
 
-            Assert.IsTrue(worked.WaitOne());
+            WaitWithTimeout(worked);
 
             Assert.AreEqual(NumberOfTasks, counter);
             Assert.AreEqual(Environment.ProcessorCount, threadIds.Count); // NB: This is non-deterministic.
@@ -187,8 +194,8 @@ namespace Test.Reaqtive.Scheduler
         /// Schedules 100 tasks, pauses the scheduler, checks that tasks were pause and continues.
         /// </summary>
         /// <remarks>
-        /// This test is non-deterministic due to physical time dependency with <see cref="ExpectedSoon"/> and
-        /// <see cref="NotExpected"/>.
+        /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/> and
+        /// <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
         [TestCategory("Scheduler_NonDeterministic")]
@@ -215,14 +222,14 @@ namespace Test.Reaqtive.Scheduler
                             worked.Set();
                         }
 
-                        @continue.WaitOne();
+                        WaitWithTimeout(@continue);
 
                         return true;
                     },
                     0));
             }
 
-            Assert.IsTrue(started.WaitOne(ExpectedSoon)); // NB: This is non-deterministic.
+            WaitForSoon(started); // NB: This is non-deterministic.
 
             var pauseTask = scheduler.PauseAsync();
             @continue.Set();
@@ -235,20 +242,20 @@ namespace Test.Reaqtive.Scheduler
 
             started.Reset();
 
-            Assert.IsFalse(started.WaitOne(NotExpected)); // NB: This is non-deterministic.
+            WaitForNever(started); // NB: This is non-deterministic, but should not be flaky in the happy case.
             Assert.AreEqual(intermediateValue, counter);
 
             scheduler.Continue();
 
-            Assert.IsTrue(worked.WaitOne());
+            WaitWithTimeout(worked);
         }
 
         /// <summary>
         /// Schedules the non runnable task and checks that it is not executed.
         /// </summary>
         /// <remarks>
-        /// This test is non-deterministic due to physical time dependency with <see cref="ExpectedSoon"/> and
-        /// <see cref="NotExpected"/>.
+        /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/> and
+        /// <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
         [TestCategory("Scheduler_NonDeterministic")]
@@ -270,19 +277,19 @@ namespace Test.Reaqtive.Scheduler
 
             scheduler.Schedule(task);
 
-            Assert.IsFalse(worked.WaitOne(NotExpected)); // NB: This is non-deterministic.
+            WaitForNever(worked); // NB: This is non-deterministic, but should not be flaky in the happy case.
 
             task.IsRunnable = true;
             scheduler.RecalculatePriority();
 
-            Assert.IsTrue(worked.WaitOne(ExpectedSoon)); // NB: This is non-deterministic.
+            WaitForSoon(worked); // NB: This is non-deterministic.
         }
 
         /// <summary>
         /// Schedules tasks on several logical schedulers and waits for their completion.
         /// </summary>
         /// <remarks>
-        /// This test is non-deterministic due to physical time dependency with <see cref="NotExpected"/>.
+        /// This test is non-deterministic due to physical time dependency in <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
         [TestCategory("Scheduler_NonDeterministic")]
@@ -325,7 +332,7 @@ namespace Test.Reaqtive.Scheduler
                     0));
             }
 
-            started.WaitOne();
+            WaitWithTimeout(started);
             scheduler.PauseAsync().Wait();
 
             int intermediateCounter = counter;
@@ -335,12 +342,12 @@ namespace Test.Reaqtive.Scheduler
 
             started.Reset();
 
-            Assert.IsFalse(started.WaitOne(NotExpected)); // NB: This is non-deterministic.
+            WaitForNever(started); // NB: This is non-deterministic, but should not be flaky in the happy case.
             Assert.AreEqual(intermediateCounter, counter);
 
             scheduler.Continue();
 
-            Assert.IsTrue(worked.WaitOne());
+            WaitWithTimeout(worked);
         }
 
         /// <summary>
@@ -452,8 +459,8 @@ namespace Test.Reaqtive.Scheduler
         /// Schedules long running tasks and checks its runnable/not runnable states.
         /// </summary>
         /// <remarks>
-        /// This test is non-deterministic due to physical time dependency with <see cref="ExpectedSoon"/> and
-        /// <see cref="NotExpected"/>.
+        /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/> and
+        /// <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
         [TestCategory("Scheduler_NonDeterministic")]
@@ -500,7 +507,7 @@ namespace Test.Reaqtive.Scheduler
 
             scheduler.RecalculatePriority();
 
-            countdown.Wait(ExpectedSoon); // NB: This is non-deterministic.
+            WaitForSoon(countdown.WaitHandle); // NB: This is non-deterministic.
         }
 
         /// <summary>
@@ -549,7 +556,7 @@ namespace Test.Reaqtive.Scheduler
         /// Schedules timer with negative time.
         /// </summary>
         /// <remarks>
-        /// This test is non-deterministic due to physical time dependency with <see cref="ExpectedVerySoon"/>.
+        /// This test is non-deterministic due to physical time dependency in <see cref="WaitForVerySoon"/>.
         /// </remarks>
         [TestMethod]
         [TestCategory("Scheduler_NonDeterministic")]
@@ -567,7 +574,7 @@ namespace Test.Reaqtive.Scheduler
                 },
                 0));
 
-            Assert.IsTrue(worked.WaitOne(ExpectedVerySoon)); // NB: This is non-deterministic.
+            WaitForVerySoon(worked); // NB: This is non-deterministic.
         }
 
         /// <summary>
@@ -631,7 +638,7 @@ namespace Test.Reaqtive.Scheduler
         /// Schedules 1000 timer tasks.
         /// </summary>
         /// <remarks>
-        /// This test is non-deterministic due to physical time dependency with <see cref="ExpectedSoon"/>.
+        /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/>.
         /// </remarks>
         [TestMethod]
         [TestCategory("Scheduler_NonDeterministic")]
@@ -663,7 +670,7 @@ namespace Test.Reaqtive.Scheduler
                 scheduler.Schedule(TimeSpan.FromMilliseconds(random.Next(5, 900)), task);
             }
 
-            Assert.IsTrue(worked.WaitOne(ExpectedSoon)); // NB: This is non-deterministic.
+            WaitForSoon(worked); // NB: This is non-deterministic.
         }
 
         /// <summary>
@@ -716,7 +723,7 @@ namespace Test.Reaqtive.Scheduler
 
             scheduler.RecalculatePriority();
 
-            Assert.IsTrue(worked.WaitOne());
+            WaitWithTimeout(worked);
         }
 
         /// <summary>
@@ -786,7 +793,7 @@ namespace Test.Reaqtive.Scheduler
         /// Checks pausing a container from a task within the container.
         /// </summary>
         /// <remarks>
-        /// This test is non-deterministic due to physical time dependency with <see cref="ExpectedSoon"/>.
+        /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/>.
         /// </remarks>
         [TestMethod]
         [TestCategory("Scheduler_NonDeterministic")]
@@ -804,7 +811,7 @@ namespace Test.Reaqtive.Scheduler
                 },
                 0));
 
-            Assert.IsTrue(worked.WaitOne(ExpectedSoon)); // NB: This is non-deterministic.
+            WaitForSoon(worked); // NB: This is non-deterministic.
         }
 
         /// <summary>
@@ -916,7 +923,7 @@ namespace Test.Reaqtive.Scheduler
                     0));
             }
 
-            Assert.IsTrue(worked.WaitOne());
+            WaitWithTimeout(worked);
         }
 
         /// <summary>
@@ -991,6 +998,48 @@ namespace Test.Reaqtive.Scheduler
             }
 
             Assert.IsTrue(!ev.WaitOne(1000));
+        }
+
+        private static void WaitForVerySoon(WaitHandle e) => WaitForExpected(e, ExpectedVerySoon);
+
+        private static void WaitForSoon(WaitHandle e) => WaitForExpected(e, ExpectedSoon);
+
+        private static void WaitForExpected(WaitHandle e, TimeSpan t)
+        {
+            var sw = Stopwatch.StartNew();
+
+            var b = e.WaitOne(t);
+
+            if (!b)
+            {
+                if (!e.WaitOne(Timeout))
+                {
+                    Assert.Fail($"Test timed out ({Timeout}) which could be caused by a hang. Elapsed time = {sw.Elapsed}");
+                }
+                else
+                {
+                    Assert.Inconclusive($"Event expected to be signaled within {t} but took longer than expected. Elapsed time = {sw.Elapsed}");
+                }
+            }
+            else
+            {
+                Assert.IsTrue(b);
+            }
+        }
+
+        private static void WaitWithTimeout(WaitHandle e)
+        {
+            var sw = Stopwatch.StartNew();
+
+            if (!e.WaitOne(Timeout))
+            {
+                Assert.Fail($"Test timed out ({Timeout}) which could be caused by a hang. Elapsed time = {sw.Elapsed}");
+            }
+        }
+
+        private static void WaitForNever(WaitHandle e)
+        {
+            Assert.IsFalse(e.WaitOne(NotExpected), "Unexpected signaling of event.");
         }
     }
 }
