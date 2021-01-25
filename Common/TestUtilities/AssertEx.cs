@@ -81,4 +81,28 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
             Assert.Fail();
         }
     }
+
+    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
+    public sealed class FlakyTestMethodAttribute : TestMethodAttribute
+    {
+        private readonly int _repeatCount;
+
+        public FlakyTestMethodAttribute(int repeatCount) => _repeatCount = repeatCount;
+
+        public override TestResult[] Execute(ITestMethod testMethod)
+        {
+            var res = new List<TestResult>();
+
+            for (int i = 0; i < _repeatCount; i++)
+            {
+                foreach (var x in base.Execute(testMethod))
+                {
+                    x.DisplayName = "Iteration " + (i + 1);
+                    res.Add(x);
+                }
+            }
+
+            return res.ToArray();
+        }
+    }
 }
