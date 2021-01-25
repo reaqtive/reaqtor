@@ -66,7 +66,7 @@ namespace Tests.System.Memory
             Assert.AreSame(unshared2, rc2.Unshared);
         }
 
-        [FlakyTestMethod(1000)]
+        [TestMethod]
         public void Cache_GarbageCollected()
         {
             var cache = new TestCache();
