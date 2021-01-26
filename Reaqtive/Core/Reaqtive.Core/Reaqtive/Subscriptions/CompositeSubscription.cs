@@ -200,11 +200,14 @@ namespace Reaqtive
 
         private ISubscription[] TakeSnapshot()
         {
-            ISubscription[] snapshot;
-
             lock (_syncLock)
             {
-                snapshot = new ISubscription[_activeSubscriptionsCount];
+                if (_activeSubscriptionsCount == 0)
+                {
+                    return Array.Empty<ISubscription>();
+                }
+
+                var snapshot = new ISubscription[_activeSubscriptionsCount];
 
                 var i = 0;
 
@@ -217,9 +220,9 @@ namespace Reaqtive
                 }
 
                 Debug.Assert(i == snapshot.Length);
-            }
 
-            return snapshot;
+                return snapshot;
+            }
         }
 
         /// <summary>
