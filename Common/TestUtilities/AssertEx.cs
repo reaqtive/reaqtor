@@ -105,4 +105,17 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
             return res.ToArray();
         }
     }
+
+    [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
+    public sealed class FlakyTestClassAttribute : TestClassAttribute
+    {
+        private readonly int _repeatCount;
+
+        public FlakyTestClassAttribute(int repeatCount) => _repeatCount = repeatCount;
+
+        public override TestMethodAttribute GetTestMethodAttribute(TestMethodAttribute testMethodAttribute)
+        {
+            return new FlakyTestMethodAttribute(_repeatCount);
+        }
+    }
 }
