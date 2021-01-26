@@ -323,7 +323,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             var stream = new MemoryStream();
 
             {
-                Do1();
+                Do1(stream);
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -335,7 +335,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             stream.Position = 0;
 
             {
-                Do2();
+                Do2(stream);
 
                 GC.Collect();
                 GC.WaitForPendingFinalizers();
@@ -345,19 +345,17 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             Assert.AreEqual(2, Volatile.Read(ref MySerializer.Finalized));
 
             [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-            static void Do1()
+            static void Do1(MemoryStream stream)
             {
                 var factory = new MySerializer();
                 factory.Serialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream, null);
-                factory = null;
             }
 
             [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-            static void Do2()
+            static void Do2(MemoryStream stream)
             {
                 var factory = new MySerializer();
                 factory.Deserialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream);
-                factory = null;
             }
         }
 #endif
