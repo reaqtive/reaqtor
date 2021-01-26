@@ -41,6 +41,7 @@ jobs:
 
     - name: Test
       run: dotnet test --no-build --configuration ${{ matrix.configuration }} --verbosity normal --logger trx --results-directory ./TestResults --collect:"XPlat Code Coverage"
+      continue-on-error: true
 
     - name: Upload Unit Test Results
       if: always()
