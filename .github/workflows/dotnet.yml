@@ -33,6 +33,9 @@ jobs:
       with:
         dotnet-version: 5.0.x
 
+    - name: Clean
+      run: dotnet clean --configuration ${{ matrix.configuration }} && dotnet nuget locals all --clear
+
     - name: Restore dependencies
       run: dotnet restore
 
