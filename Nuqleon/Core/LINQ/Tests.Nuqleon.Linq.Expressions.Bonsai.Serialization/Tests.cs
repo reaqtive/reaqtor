@@ -3693,7 +3693,7 @@ namespace Tests
         private sealed class SimpleExpressionSerializer : BonsaiExpressionSerializer
         {
             private static readonly ObjectSerializer s_objectSerializer = new();
-            private readony object _gate = new();
+            private readonly object _gate = new();
 
             public SimpleExpressionSerializer() { }
 
