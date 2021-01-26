@@ -4545,7 +4545,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
 
-            for (var i = 0; i < 100; ++i)
+            for (var i = 0; i < 32; ++i)
             {
                 var subUri = new Uri(subIdBase + "/" + i);
                 subUris.Add(subUri);
@@ -4581,7 +4581,36 @@ namespace Tests.Reaqtor.QueryEngine
                 var blobLog = Directory.EnumerateFiles(qePath).SingleOrDefault(f => blobLogPattern.IsMatch(f));
                 Assert.IsNotNull(blobLog);
 
-                var blobLogData = File.ReadAllText(blobLog);
+                static string ReadBlobLog(string path)
+                {
+                    //
+                    // NB: Blob logging is fire-and-forget async so the file may not be  closed by the time we want to read it.
+                    //     To reduce flakiness in the test suite, we have a little retry loop below.
+                    //
+                    //     By setting the maximum number of attempts to 12, the maximum run duration is 40950 ms, which should
+                    //     be plenty of time for the file to get written to disk.
+                    //
+
+                    int delay = 10;
+                    int maxAttempts = 12;
+                    int attempt = 0;
+
+                    while (true)
+                    {
+                        try
+                        {
+                            return File.ReadAllText(path);
+                        }
+                        catch (IOException) when (attempt++ < maxAttempts)
+                        {
+                            Thread.Sleep(delay);
+
+                            delay *= 2;
+                        }
+                    }
+                }
+
+                var blobLogData = ReadBlobLog(blobLog);
 
                 foreach (var subUri in subUris)
                 {
