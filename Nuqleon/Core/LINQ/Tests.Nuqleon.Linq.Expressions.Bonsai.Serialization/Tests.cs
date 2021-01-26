@@ -3693,6 +3693,7 @@ namespace Tests
         private sealed class SimpleExpressionSerializer : BonsaiExpressionSerializer
         {
             private static readonly ObjectSerializer s_objectSerializer = new();
+            private readony object _gate = new();
 
             public SimpleExpressionSerializer() { }
 
@@ -3705,14 +3706,20 @@ namespace Tests
 
             protected override Func<object, Json.Expression> GetConstantSerializer(Type type)
             {
-                GetConstantSerializerHitCount[type] = GetConstantSerializerHitCount.TryGetValue(type, out var count) ? count + 1 : 1;
+                lock (_gate)
+                {
+                    GetConstantSerializerHitCount[type] = GetConstantSerializerHitCount.TryGetValue(type, out var count) ? count + 1 : 1;
+                }
 
                 return s_objectSerializer.GetSerializer(type);
             }
 
             protected override Func<Json.Expression, object> GetConstantDeserializer(Type type)
             {
-                GetConstantDeserializerHitCount[type] = GetConstantDeserializerHitCount.TryGetValue(type, out var count) ? count + 1 : 1;
+                lock (_gate)
+                {
+                    GetConstantDeserializerHitCount[type] = GetConstantDeserializerHitCount.TryGetValue(type, out var count) ? count + 1 : 1;
+                }
 
                 return s_objectSerializer.GetDeserializer(type);
             }
