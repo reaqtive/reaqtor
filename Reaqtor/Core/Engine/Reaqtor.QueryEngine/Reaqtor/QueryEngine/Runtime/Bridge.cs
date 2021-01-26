@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -263,7 +263,14 @@ namespace Reaqtor.QueryEngine
             return subscription;
         }
 
-        ISubscription ISubscribable<T>.Subscribe(IObserver<T> observer) => Subscribe(new ObserverWrapper(observer));
+        ISubscription ISubscribable<T>.Subscribe(IObserver<T> observer) => new SingleAssignmentSubscription
+        {
+            //
+            // NB: Use of SingleAssignmentSubscription hardens against the case where the subscription is disposed,
+            //     avoiding subsequent visitor calls from making further calls (e.g. Start).
+            //
+            Subscription = Subscribe(new ObserverWrapper(observer))
+        };
 
         IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => ((IMultiSubject<T>)this).Subscribe(observer);
 
