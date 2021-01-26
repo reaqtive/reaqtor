@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -122,7 +122,8 @@ namespace Reaqtive.Operators
                     var subscription = SubscribeInner<TCollection>(collection, observer);
                     observer.Subscription = subscription;
 
-                    SubscriptionInitializeVisitor.Initialize(subscription, _context);
+                    SubscriptionInitializeVisitor.Subscribe(subscription);
+                    SubscriptionInitializeVisitor.SetContext(subscription, _context);
 
                     lock (_lock)
                     {
@@ -130,6 +131,8 @@ namespace Reaqtive.Operators
                         // an operator with the dirty flag set to true.
                         _innerSubscriptions.Add(subscription);
                     }
+
+                    SubscriptionInitializeVisitor.Start(subscription);
 
 #pragma warning restore CA2000
 #pragma warning restore IDE0079
