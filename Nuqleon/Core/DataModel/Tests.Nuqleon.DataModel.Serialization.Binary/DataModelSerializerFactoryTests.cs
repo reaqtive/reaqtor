@@ -320,6 +320,12 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         [TestMethod]
         public void DataModelSerializerFactory_GarbageCollectibleSerializerWithCycles()
         {
+            // NB: Test is flaky on Mono.
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                return;
+            }
+
             var stream = new MemoryStream();
 
             {

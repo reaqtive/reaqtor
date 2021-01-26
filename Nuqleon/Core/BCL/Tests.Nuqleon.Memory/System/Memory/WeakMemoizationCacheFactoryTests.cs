@@ -163,6 +163,12 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Unbounded_Lifetime()
         {
+            // NB: Test is flaky on Mono.
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                return;
+            }
+
             lock (typeof(Obj)) // ensuring no concurrent tests are run
             {
                 Obj.Reset();
@@ -559,6 +565,12 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Lru_Lifetime()
         {
+            // NB: Test is flaky on Mono.
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                return;
+            }
+
             lock (typeof(Obj)) // ensuring no concurrent tests are run
             {
                 Obj.Reset();
@@ -596,6 +608,12 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Lru_Lifetime_Trim()
         {
+            // NB: Test is flaky on Mono.
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                return;
+            }
+
             lock (typeof(Obj)) // ensuring no concurrent tests are run
             {
                 Obj.Reset();
@@ -1027,6 +1045,12 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactory_Evict_Lifetime_Trim()
         {
+            // NB: Test is flaky on Mono.
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                return;
+            }
+
             lock (typeof(Obj)) // ensuring no concurrent tests are run
             {
                 Obj.Reset();
