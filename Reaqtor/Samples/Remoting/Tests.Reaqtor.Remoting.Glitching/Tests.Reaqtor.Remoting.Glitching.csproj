@@ -19,7 +19,11 @@
     <DefineConstants>$(DefineConstants);GLITCHING</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup>
+  <PropertyGroup Condition="'$(ContinuousIntegrationBuild)' == 'true'">
+    <EnableDefaultCompileItems>false</EnableDefaultCompileItems>
+  </PropertyGroup>
+
+  <ItemGroup Condition="'$(ContinuousIntegrationBuild)' != 'true'">
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Aggregate.Declarative.cs">
       <Link>Operators\Aggregate.Declarative.cs</Link>
     </Compile>
