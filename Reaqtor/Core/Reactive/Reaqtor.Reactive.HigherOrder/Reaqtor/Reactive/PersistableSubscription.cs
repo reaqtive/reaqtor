@@ -147,6 +147,9 @@ namespace Reaqtor.Reactive
 #pragma warning restore IDE0079
 
                         var msg = string.Format(CultureInfo.InvariantCulture, "Higher order operator '{0}' failed to set up a subscription to a received inner sequence using bridge URI '{1}'. Please refer to the inner exception for more information.", GetType().FullName, _bridgeUri);
+
+                        _bridgeUri = null;
+
                         throw new HigherOrderSubscriptionFailedException(msg, ex);
                     }
                 }
