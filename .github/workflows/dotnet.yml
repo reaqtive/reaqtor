@@ -11,7 +11,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest]
-        configuration: [Debug]
+        configuration: [Debug, Release]
 
     runs-on: ${{ matrix.os }}
 
