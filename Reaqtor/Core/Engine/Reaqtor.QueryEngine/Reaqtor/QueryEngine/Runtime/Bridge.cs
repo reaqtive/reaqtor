@@ -544,13 +544,6 @@ namespace Reaqtor.QueryEngine
                 return;
             }
 
-            DisposeCore();
-        }
-
-        void IDisposable.Dispose() => Dispose();
-
-        private void DisposeCore()
-        {
             var errors = new List<Exception>();
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
