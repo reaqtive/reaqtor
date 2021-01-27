@@ -46,12 +46,33 @@ jobs:
       run: dotnet test --no-build --configuration ${{ matrix.configuration }} --verbosity normal --logger trx --results-directory ./TestResults --collect:"XPlat Code Coverage"
       continue-on-error: true
 
+    - name: Generate Code Coverage Report
+      uses: danielpalme/ReportGenerator-GitHub-Action@4.8.4
+      with:
+        reports: 'TestResults/**/coverage.cobertura.xml'
+        targetdir: 'CoverageReport'
+        reporttypes: 'HtmlSummary;HtmlInline;Cobertura;Badges;lcov'
+        tag: '${{ github.run_number }}_${{ github.run_id }}'
+
     - name: Upload Unit Test Results
       if: always()
       uses: actions/upload-artifact@v2
       with:
-        name: TestResults
+        name: TestResults_${{ matrix.os }}_${{ matrix.configuration }}
         path: TestResults/*.trx
+
+    - name: Upload Code Coverage Report
+      if: always()
+      uses: actions/upload-artifact@v2
+      with:
+        name: CoverageReport_${{ matrix.os }}_${{ matrix.configuration }}
+        path: CoverageReport/*
+
+    - name: Publish Code Coverage Report to Codecov
+      uses: codecov/codecov-action@v1
+      with:
+        token: ${{ secrets.CODECOV_TOKEN }}
+        directory: CoverageReport
 
   publish-test-results:
     name: "Publish Unit Test Results"
@@ -73,7 +94,7 @@ jobs:
         run: |
           dotnet tool install -g trx2junit
           export PATH="$PATH:/root/.dotnet/tools"
-          trx2junit artifacts/TestResults/*.trx
+          trx2junit artifacts/TestResults*/*.trx
 
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v1.7
@@ -81,4 +102,4 @@ jobs:
         with:
           check_name: Unit Test Results
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          files: artifacts/TestResults/*.xml
+          files: artifacts/TestResults*/*.xml
