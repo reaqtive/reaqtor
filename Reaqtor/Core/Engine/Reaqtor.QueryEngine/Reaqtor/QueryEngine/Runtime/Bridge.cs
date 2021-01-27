@@ -98,7 +98,7 @@ namespace Reaqtor.QueryEngine
         private long _lowWatermark = 0;
 
         private readonly object _lock = new();
-        private long _disposed = 0;
+        private int _disposed = 0;
         private StateChangedManager _stateful;
 
         public Bridge(IDiscardable<Expression> source)
@@ -133,7 +133,7 @@ namespace Reaqtor.QueryEngine
 
         public IReliableObserver<T> CreateObserver()
         {
-            if (Interlocked.Read(ref _disposed) != 0)
+            if (Volatile.Read(ref _disposed) != 0)
             {
                 return ReliableSentinels<T>.Disposed;
             }
@@ -248,7 +248,7 @@ namespace Reaqtor.QueryEngine
 
         public IReliableSubscription Subscribe(IReliableObserver<T> observer)
         {
-            if (Interlocked.Read(ref _disposed) != 0)
+            if (Volatile.Read(ref _disposed) != 0)
             {
                 throw new ObjectDisposedException(Id.ToCanonicalString());
             }
@@ -403,7 +403,7 @@ namespace Reaqtor.QueryEngine
             private readonly Bridge<T> _parent;
             private readonly IReliableObserver<T> _observer;
             private long _lastAck;
-            private long _disposed = 1;
+            private int _disposed = 1;
 
             public Subscription(Bridge<T> parent, IReliableObserver<T> observer, long lastAck)
             {
@@ -446,7 +446,7 @@ namespace Reaqtor.QueryEngine
 
             public void AcknowledgeRange(long sequenceId)
             {
-                if (Interlocked.Read(ref _disposed) != 0)
+                if (Volatile.Read(ref _disposed) != 0)
                 {
                     return;
                 }
@@ -471,7 +471,7 @@ namespace Reaqtor.QueryEngine
 
             public void OnNext(T item, long sequenceId)
             {
-                if (Interlocked.Read(ref _disposed) != 0)
+                if (Volatile.Read(ref _disposed) != 0)
                 {
                     return;
                 }
@@ -481,7 +481,7 @@ namespace Reaqtor.QueryEngine
 
             public void OnError(Exception error)
             {
-                if (Interlocked.Read(ref _disposed) != 0)
+                if (Volatile.Read(ref _disposed) != 0)
                 {
                     return;
                 }
@@ -492,7 +492,7 @@ namespace Reaqtor.QueryEngine
 
             public void OnCompleted()
             {
-                if (Interlocked.Read(ref _disposed) != 0)
+                if (Volatile.Read(ref _disposed) != 0)
                 {
                     return;
                 }
