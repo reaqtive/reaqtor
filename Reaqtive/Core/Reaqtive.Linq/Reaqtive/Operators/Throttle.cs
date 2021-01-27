@@ -136,9 +136,12 @@ namespace Reaqtive.Operators
                     var subscription = SubscribeInner<TThrottle>(throttle, observer);
                     observer.Subscription = subscription;
 
-                    SubscriptionInitializeVisitor.Initialize(subscription, _context);
+                    SubscriptionInitializeVisitor.Subscribe(subscription);
+                    SubscriptionInitializeVisitor.SetContext(subscription, _context);
 
                     _cancelable.Subscription = subscription;
+
+                    SubscriptionInitializeVisitor.Start(subscription);
 
 #pragma warning restore CA2000
 #pragma warning restore IDE0079

@@ -141,9 +141,12 @@ namespace Reaqtive.Operators
                     var subscription = SubscribeInner<TSource>(source, observer);
                     observer.Subscription = subscription;
 
-                    SubscriptionInitializeVisitor.Initialize(subscription, _context);
+                    SubscriptionInitializeVisitor.Subscribe(subscription);
+                    SubscriptionInitializeVisitor.SetContext(subscription, _context);
 
                     _innerSubscription.Subscription = subscription;
+
+                    SubscriptionInitializeVisitor.Start(subscription);
                 }
                 catch (Exception ex)
                 {
