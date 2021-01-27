@@ -320,8 +320,6 @@ namespace Reaqtor.QueryEngine
                     }
 
                     StateChanged = true;
-
-                    subscription.StartCompleted();
                 }
 
                 // Eventually we can tease things apart but for now have the bridge manage the upstream subscription, too
@@ -403,7 +401,46 @@ namespace Reaqtor.QueryEngine
             private readonly Bridge<T> _parent;
             private readonly IReliableObserver<T> _observer;
             private long _lastAck;
-            private int _disposed = 1;
+
+            //
+            // NB: We harden the code against invalid state transitions which can happen in concurrent scenarios. For example,
+            //     consider a query like this:
+            //
+            //       Return<int>(42).SelectMany(x => f(x))
+            //
+            //     First, note that Return<T> uses the scheduler to emit an OnNext call, which can happen any time after
+            //     the operator gets a call to Start.
+            //
+            //     Second, consider the ISubscription structure returned by Inputs for SelectMany. This contains two objects,
+            //     one to represent the source subscription, and a CompositeSubscription for the inner subscriptions.
+            //
+            //     When SelectMany gets Start'ed, it first starts itself (which is a no-op), and then its inputs. The source
+            //     subscription to Return<T> is first, and we end up with concurrency:
+            //
+            //       1. The current thread that's working on Start'ing the subscription.
+            //       2. A scheduler thread that can will invoke OnNext, causing SelectMany to make an inner subscription.
+            //
+            //     In case 2 happens first, SelectMany's OnNext ends up creating an inner subscription consisting of a bridge
+            //     and using a persisted subscription, which it will then also initialize and start, after publishing the
+            //     newly created inner subscription into SelectMany's CompositeSubscription.
+            //
+            //     When 1 runs later, it also sees the newly created inner subscription, and it goes ahead calling Start on
+            //     that one as well, so we end up with potential double-start.
+            //
+            //     In between these two steps, it's even possible for the bridge to get disposed, e.g. if Return also emits
+            //     the OnCompleted notification, causing the bridge to get dropped.
+            //
+            //     To guard against invalid state transitions, we harden the bridge and persisted subscriptions to have a
+            //     little state machine, shown below, guaranteeing that Start and Dispose cna only be called once.
+            //
+
+            private const int Created = 0;
+            private const int Started = 1;
+            private const int Starting = 2;
+            private const int StartFailed = 3;
+            private const int Disposed = 4;
+
+            private int _state = Created;
 
             public Subscription(Bridge<T> parent, IReliableObserver<T> observer, long lastAck)
             {
@@ -411,6 +448,8 @@ namespace Reaqtor.QueryEngine
                 _observer = observer;
                 _lastAck = lastAck;
             }
+
+            private bool IsStarted => Volatile.Read(ref _state) == Started;
 
             public IOperatorContext Context { get; private set; }
 
@@ -432,6 +471,37 @@ namespace Reaqtor.QueryEngine
 
             public void Start(long sequenceId)
             {
+                try { } // NB: Ensure no ThreadAbortException can leave a thread spinning in its check for Starting.
+                finally
+                {
+                    Core();
+                }
+
+                void Core()
+                {
+                    if (Interlocked.CompareExchange(ref _state, Starting, Created) != Created)
+                    {
+                        return;
+                    }
+
+                    var success = false;
+
+                    try
+                    {
+                        StartCore(sequenceId);
+
+                        success = true;
+                    }
+                    finally
+                    {
+                        var oldState = Interlocked.CompareExchange(ref _state, success ? Started : StartFailed, Starting);
+                        Debug.Assert(oldState == Starting);
+                    }
+                }
+            }
+
+            private void StartCore(long sequenceId)
+            {
                 //
                 // Sequence IDs are inclusive and start from 0. Start replays from the
                 // given sequence ID (included).
@@ -442,11 +512,9 @@ namespace Reaqtor.QueryEngine
                 _parent.SubscriptionStart(sequenceId, this);
             }
 
-            public void StartCompleted() => Interlocked.Exchange(ref _disposed, 0);
-
             public void AcknowledgeRange(long sequenceId)
             {
-                if (Volatile.Read(ref _disposed) != 0)
+                if (!IsStarted)
                 {
                     return;
                 }
@@ -461,17 +529,39 @@ namespace Reaqtor.QueryEngine
 
             public void Dispose()
             {
-                if (Interlocked.CompareExchange(ref _disposed, 1, 0) != 0)
+                while (true)
                 {
-                    return;
-                }
+                    var state = Volatile.Read(ref _state);
 
-                _parent.SubscriptionDispose(this);
+                    if (state == Disposed)
+                    {
+                        // Already disposed; no-op.
+                        return;
+                    }
+
+                    if (state == Starting)
+                    {
+                        // Transient state; try again.
+                        Thread.Yield();
+                        continue;
+                    }
+
+                    if (Interlocked.CompareExchange(ref _state, Disposed, state) == state)
+                    {
+                        // We need to dispose the subscription only if original state was started.
+                        if (state == Started)
+                        {
+                            _parent.SubscriptionDispose(this);
+                        }
+
+                        return;
+                    }
+                }
             }
 
             public void OnNext(T item, long sequenceId)
             {
-                if (Volatile.Read(ref _disposed) != 0)
+                if (!IsStarted)
                 {
                     return;
                 }
@@ -481,7 +571,7 @@ namespace Reaqtor.QueryEngine
 
             public void OnError(Exception error)
             {
-                if (Volatile.Read(ref _disposed) != 0)
+                if (!IsStarted)
                 {
                     return;
                 }
@@ -492,7 +582,7 @@ namespace Reaqtor.QueryEngine
 
             public void OnCompleted()
             {
-                if (Volatile.Read(ref _disposed) != 0)
+                if (!IsStarted)
                 {
                     return;
                 }

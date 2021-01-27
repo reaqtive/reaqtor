@@ -6,6 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading;
 
 using Reaqtive;
 
@@ -23,6 +24,18 @@ namespace Reaqtor.Reactive
             private IOperatorContext _context;
 
             private StateChangedManager _stateful;
+
+            //
+            // NB: See remarks in Bridge.cs on the state transitions enforced here.
+            //
+
+            private const int Created = 0;
+            private const int Started = 1;
+            private const int Starting = 2;
+            private const int StartFailed = 3;
+            private const int Disposed = 4;
+
+            private int _state = Created;
 
             public PersistableSubscription(Uri bridgeUri, IObserver<TInner> observer)
             {
@@ -91,6 +104,37 @@ namespace Reaqtor.Reactive
 
             public void Start()
             {
+                try { } // NB: Ensure no ThreadAbortException can leave a thread spinning in its check for Starting.
+                finally
+                {
+                    Core();
+                }
+
+                void Core()
+                {
+                    if (Interlocked.CompareExchange(ref _state, Starting, Created) != Created)
+                    {
+                        return;
+                    }
+
+                    var success = false;
+
+                    try
+                    {
+                        StartCore();
+
+                        success = true;
+                    }
+                    finally
+                    {
+                        var oldState = Interlocked.CompareExchange(ref _state, success ? Started : StartFailed, Starting);
+                        Debug.Assert(oldState == Starting);
+                    }
+                }
+            }
+
+            private void StartCore()
+            {
                 if (_bridgeUri != null)
                 {
                     var bridge = _context.ExecutionEnvironment.GetSubject<TInner, TInner>(_bridgeUri);
@@ -158,6 +202,37 @@ namespace Reaqtor.Reactive
             public void Accept(ISubscriptionVisitor visitor) => visitor.Visit(this);
 
             public void Dispose()
+            {
+                while (true)
+                {
+                    var state = Volatile.Read(ref _state);
+
+                    if (state == Disposed)
+                    {
+                        // Already disposed; no-op.
+                        return;
+                    }
+
+                    if (state == Starting)
+                    {
+                        // Transient state; try again.
+                        Thread.Yield();
+                        continue;
+                    }
+
+                    if (Interlocked.CompareExchange(ref _state, Disposed, state) == state)
+                    {
+                        if (state == Started)
+                        {
+                            DisposeCore();
+                        }
+
+                        return;
+                    }
+                }
+            }
+
+            private void DisposeCore()
             {
                 if (_bridgeUri != null)
                 {
