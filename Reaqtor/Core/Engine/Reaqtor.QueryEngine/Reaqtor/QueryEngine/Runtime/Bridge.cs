@@ -79,7 +79,7 @@ namespace Reaqtor.QueryEngine
     /// IDs), e.g. when inner subscriptions cross engine boundaries. To support this, a low watermark is persisted, such that replay can be
     /// requested.
     /// </remarks>
-    internal class Bridge<T> : IReliableMultiSubject<T>, IMultiSubject<T>, IStatefulOperator, IDependencyOperator
+    internal sealed class Bridge<T> : IReliableMultiSubject<T>, IMultiSubject<T>, IStatefulOperator, IDependencyOperator
     {
         // Only needed for upstream subscription lifetime management
         private readonly IDiscardable<Expression> _source;
@@ -211,7 +211,7 @@ namespace Reaqtor.QueryEngine
             }
         }
 
-        private class Observer : IReliableObserver<T>, IObserver<T>
+        private sealed class Observer : IReliableObserver<T>, IObserver<T>
         {
             private readonly Bridge<T> _parent;
             private long _lastSequenceId = -1;
@@ -398,7 +398,7 @@ namespace Reaqtor.QueryEngine
             qbservableSource.Subscribe(_context.ReactiveService.GetObserver<T>(Id), _upstreamSubscriptionUri, state);
         }
 
-        protected class Subscription : IReliableSubscription, ISubscription, IOperator, IDependencyOperator
+        private sealed class Subscription : IReliableSubscription, ISubscription, IOperator, IDependencyOperator
         {
             private readonly Bridge<T> _parent;
             private readonly IReliableObserver<T> _observer;
@@ -617,11 +617,11 @@ namespace Reaqtor.QueryEngine
 
         public Version Version { get; private set; } = BridgeVersion.Version;
 
-        public virtual bool StateChanged
+        public bool StateChanged
         {
             get => _stateful.StateChanged;
 
-            protected set => _stateful.StateChanged = value;
+            private set => _stateful.StateChanged = value;
         }
 
         public void Subscribe() { }
