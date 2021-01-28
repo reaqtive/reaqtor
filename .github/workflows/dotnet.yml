@@ -51,7 +51,7 @@ jobs:
       with:
         reports: 'TestResults/**/coverage.cobertura.xml'
         targetdir: 'CoverageReport'
-        reporttypes: 'HtmlSummary;HtmlInline;Cobertura;Badges;lcov'
+        reporttypes: 'HtmlSummary;Cobertura;Badges;lcov'
         tag: '${{ github.run_number }}_${{ github.run_id }}'
 
     - name: Upload Unit Test Results
@@ -61,12 +61,12 @@ jobs:
         name: TestResults_${{ matrix.os }}_${{ matrix.configuration }}
         path: TestResults/*.trx
 
-    - name: Upload Code Coverage Report
-      if: always()
-      uses: actions/upload-artifact@v2
-      with:
-        name: CoverageReport_${{ matrix.os }}_${{ matrix.configuration }}
-        path: CoverageReport/*
+#    - name: Upload Code Coverage Report
+#      if: always()
+#      uses: actions/upload-artifact@v2
+#      with:
+#        name: CoverageReport_${{ matrix.os }}_${{ matrix.configuration }}
+#        path: CoverageReport/*
 
     - name: Publish Code Coverage Report to Codecov
       uses: codecov/codecov-action@v1
