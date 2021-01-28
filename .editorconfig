@@ -5,6 +5,19 @@
 # All files 
 [*] 
 indent_style = space 
+
+#yaml
+[*.{yml,yaml}] 
+indent_size = 2
+insert_final_newline = true 
+charset = utf-8-bom 
+
+# project files 
+[*.{props,targets,csproj,vbproj}] 
+indent_size = 2 
+insert_final_newline = true 
+charset = utf-8-bom 
+
 # Code files 
 [*.{cs,csx,vb,vbx}] 
 indent_size = 4 

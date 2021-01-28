@@ -43,20 +43,20 @@ jobs:
     displayName: Restore
 
     # We only want to build and publish the packages once: Windows Release
-    - ${{ if eq(parameters.name, 'Windows') }}:
-      - task: DotNetCoreCLI@2
-      inputs:
-        command: build
-        projects: |
-          **/*.csproj
-          !**/Tests.*.csproj
-          !**/Perf.*.csproj
-          !**/Reaqtor.Remoting.VersioningTests.csproj
-        configuration: $(BuildConfiguration)
-        verbosity: Minimal        
-        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
-      displayName: Build and Pack
-      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release')) # we only pack release; test will build what it needs
+  - ${{ if eq(parameters.name, 'Windows') }}:
+    - task: DotNetCoreCLI@2
+    inputs:
+      command: build
+      projects: |
+        **/*.csproj
+        !**/Tests.*.csproj
+        !**/Perf.*.csproj
+        !**/Reaqtor.Remoting.VersioningTests.csproj
+      configuration: $(BuildConfiguration)
+      verbosity: Minimal        
+      arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
+    displayName: Build and Pack
+    condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release')) # we only pack release; test will build what it needs
 
   - task: DotNetCoreCLI@2
     inputs:
