@@ -26,6 +26,16 @@ jobs:
       version: 5.0.x
       performMultiLevelLookup: true
 
+  - task: UseDotNet@2
+    inputs:
+      version: '3.1.x'
+      packageType: runtime
+   
+  - task: UseDotNet@2
+    inputs:
+      version: '2.1.x'
+      packageType: runtime
+
   - task: DotNetCoreCLI@2
     inputs:
       command: custom
