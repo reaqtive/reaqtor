@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -41,29 +41,17 @@ namespace Tests.Reaqtor.QueryEngine
     {
 #pragma warning disable IDE0060 // Remove unused parameter (MSTest)
         [ClassInitialize]
-        public static void ClassSetup(TestContext ignored)
-        {
-            PhysicalTimeEngineTest.ClassSetup();
-        }
+        public static void ClassSetup(TestContext ignored) => PhysicalTimeEngineTest.ClassSetup();
 #pragma warning restore IDE0060 // Remove unused parameter
 
         [ClassCleanup]
-        public static new void ClassCleanup()
-        {
-            PhysicalTimeEngineTest.ClassCleanup();
-        }
+        public static new void ClassCleanup() => PhysicalTimeEngineTest.ClassCleanup();
 
         [TestInitialize]
-        public new void TestInitialize()
-        {
-            base.Setup();
-        }
+        public new void TestInitialize() => base.Setup();
 
         [TestCleanup]
-        public new void TestCleanup()
-        {
-            base.Cleanup();
-        }
+        public new void TestCleanup() => base.Cleanup();
 
         [TestMethod]
         public void InvalidParametersForCheckpointing()
@@ -164,7 +152,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var source = reactive.GetStream<int, int>(sourceUri);
                 var srcs = source.Synchronize(engine.Scheduler);
-                bool noStream = false;
+                var noStream = false;
                 try
                 {
                     srcs.OnNext(2);
@@ -177,7 +165,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Assert.IsTrue(noStream);
                 AssertResult(GetObserver<int>("result"), 2, Assert.AreEqual);
 
-                bool noDefinitions = false;
+                var noDefinitions = false;
                 try
                 {
                     reactive.GetObservable<int, int>(observableUri)(1)
@@ -200,7 +188,7 @@ namespace Tests.Reaqtor.QueryEngine
             var qe = CreateQueryEngine();
             var ctx = GetQueryEngineReactiveService(qe);
 
-            Uri str1 = new Uri("str:/s1");
+            var str1 = new Uri("str:/s1");
 
             var s1 = ctx.CreateStream<int>(str1);
             Assert.IsNotNull(s1);
@@ -220,7 +208,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var s1vs = s1v.Synchronize(qe.Scheduler);
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 s1vs.OnNext(i);
             }
@@ -239,7 +227,7 @@ namespace Tests.Reaqtor.QueryEngine
             s1v = ctx2.GetObserver<int>(str1);
             s1vs = s1v.Synchronize(qe2.Scheduler);
 
-            for (int i = 5; i < 10; i++)
+            for (var i = 5; i < 10; i++)
             {
                 s1vs.OnNext(i);
             }
@@ -255,7 +243,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var ctx = GetQueryEngineReactiveService(qe);
 
-            Uri str1 = new Uri("str:/s1");
+            var str1 = new Uri("str:/s1");
 
             var s1 = ctx.CreateStream<int>(str1);
             Assert.IsNotNull(s1);
@@ -275,7 +263,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var s1vs = s1v.Synchronize(qe.Scheduler);
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 s1vs.OnNext(i);
             }
@@ -294,7 +282,7 @@ namespace Tests.Reaqtor.QueryEngine
             s1v = ctx2.GetObserver<int>(str1);
             s1vs = s1v.Synchronize(qe2.Scheduler);
 
-            for (int i = 5; i < 10; i++)
+            for (var i = 5; i < 10; i++)
             {
                 s1vs.OnNext(i);
             }
@@ -309,7 +297,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var ctx = GetQueryEngineReactiveService(qe);
 
-            Uri str1 = new Uri("str:/s1");
+            var str1 = new Uri("str:/s1");
 
             var s1 = ctx.CreateStream<int>(str1);
             Assert.IsNotNull(s1);
@@ -329,7 +317,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var s1vs = s1v.Synchronize(qe.Scheduler);
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 s1vs.OnNext(i);
             }
@@ -348,7 +336,7 @@ namespace Tests.Reaqtor.QueryEngine
             s1v = ctx2.GetObserver<int>(str1);
             s1vs = s1v.Synchronize(qe2.Scheduler);
 
-            for (int i = 5; i < 10; i++)
+            for (var i = 5; i < 10; i++)
             {
                 s1vs.OnNext(i);
             }
@@ -540,7 +528,7 @@ namespace Tests.Reaqtor.QueryEngine
                 .Switch()
                 .Subscribe(v1, sub1uri, null);
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             var out1 = GetMockObserver<int>("v1");
 
@@ -573,7 +561,7 @@ namespace Tests.Reaqtor.QueryEngine
             sub1 = ctx2.GetSubscription(sub1uri);
             Assert.IsNotNull(sub1);
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             out1 = GetMockObserver<int>("v1");
 
@@ -616,7 +604,7 @@ namespace Tests.Reaqtor.QueryEngine
             sub1 = ctx3.GetSubscription(sub1uri);
             Assert.IsNotNull(sub1);
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             out1 = GetMockObserver<int>("v1");
 
@@ -839,7 +827,7 @@ namespace Tests.Reaqtor.QueryEngine
                 .SelectMany(w => w.Sum(), (x, y) => y)
                 .Subscribe(v1, sub1uri, null);
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             var out1 = GetMockObserver<int>("v1");
 
@@ -882,7 +870,7 @@ namespace Tests.Reaqtor.QueryEngine
             sub1 = ctx2.GetSubscription(sub1uri);
             Assert.IsNotNull(sub1);
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             out1 = GetMockObserver<int>("v1");
 
@@ -923,7 +911,7 @@ namespace Tests.Reaqtor.QueryEngine
             sub1 = ctx3.GetSubscription(sub1uri);
             Assert.IsNotNull(sub1);
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             out1 = GetMockObserver<int>("v1");
 
@@ -1070,9 +1058,9 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void FullAndDifferentialCheckpoint()
         {
-            InMemoryStateStore store = new InMemoryStateStore("someId");
-            Uri str1 = new Uri("str:/s1");
-            Uri sub1 = new Uri("s:/sub1");
+            var store = new InMemoryStateStore("someId");
+            var str1 = new Uri("str:/s1");
+            var sub1 = new Uri("s:/sub1");
             MockObserver<int> result;
             {
                 // Define some entities before crash.
@@ -1124,7 +1112,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var s2vs = s2v.Synchronize(qe2.Scheduler);
 
-                for (int i = 1; i < 3; i++)
+                for (var i = 1; i < 3; i++)
                 {
                     s2vs.OnNext(i);
                 }
@@ -1139,8 +1127,8 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var store = new InMemoryStateStore("someId");
 
-            Uri sourceUri = new Uri("str:/s1");
-            Uri subUri = new Uri("s:/sub1");
+            var sourceUri = new Uri("str:/s1");
+            var subUri = new Uri("s:/sub1");
             {
                 var qe = CreateQueryEngine();
                 var ctx = GetQueryEngineReactiveService(qe);
@@ -1168,7 +1156,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Take full and fail.
 
-                bool hasCheckpointFailed = false;
+                var hasCheckpointFailed = false;
 
                 using (var stateWriter = new InMemoryStateWriter(store, CheckpointKind.Full, onCommit: () =>
                 {
@@ -1338,7 +1326,7 @@ namespace Tests.Reaqtor.QueryEngine
                         reactive.GetObserver<object, int>(observerUri)(null),
                         anotherSubscriptionUri, null);
 
-                bool subscriptionExists = false;
+                var subscriptionExists = false;
                 try
                 {
                     reactive.GetObservable<int, int>(observableUri)(1)
@@ -1452,7 +1440,7 @@ namespace Tests.Reaqtor.QueryEngine
             var qe = CreateQueryEngine();
             var ctx = GetQueryEngineReactiveService(qe);
 
-            Uri str1 = new Uri("str:/s1");
+            var str1 = new Uri("str:/s1");
 
             var s1 = ctx.CreateStream<int>(str1);
             Assert.IsNotNull(s1);
@@ -1472,12 +1460,12 @@ namespace Tests.Reaqtor.QueryEngine
 
             var s1vs = s1v.Synchronize(qe.Scheduler);
 
-            for (int i = 0; i < 5; i++)
+            for (var i = 0; i < 5; i++)
             {
                 s1vs.OnNext(i);
             }
 
-            InMemoryStateStore store = new InMemoryStateStore("someId");
+            var store = new InMemoryStateStore("someId");
 
             using (var stateWriter = new MyStateWriter(store, CheckpointKind.Full))
             {
@@ -1502,7 +1490,7 @@ namespace Tests.Reaqtor.QueryEngine
             s1v = ctx2.GetObserver<int>(str1);
             s1vs = s1v.Synchronize(qe2.Scheduler);
 
-            for (int i = 5; i < 10; i++)
+            for (var i = 5; i < 10; i++)
             {
                 s1vs.OnNext(i);
             }
@@ -1602,8 +1590,8 @@ namespace Tests.Reaqtor.QueryEngine
                 .Take(1)
                 .Subscribe(v1, sub1uri, null);
 
-            LockManager.Wait(s);
-            LockManager.Wait(d);
+            Assert.IsTrue(LockManager.Wait(s));
+            Assert.IsTrue(LockManager.Wait(d));
 
             var out1 = GetMockObserver<int>("v1", validate: false);
 
@@ -1729,10 +1717,7 @@ namespace Tests.Reaqtor.QueryEngine
                 }
             }
 
-            protected override ISubscription SubscribeCore(IObserver<int> observer)
-            {
-                return new _(this, observer);
-            }
+            protected override ISubscription SubscribeCore(IObserver<int> observer) => new _(this, observer);
 
             private sealed class _ : StatefulUnaryOperator<MySubscribable, int>
             {
@@ -3087,20 +3072,11 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 private readonly Action _onDispose;
 
-                public Disposable(Action onDispose)
-                {
-                    _onDispose = onDispose;
-                }
+                public Disposable(Action onDispose) => _onDispose = onDispose;
 
-                public void Dispose()
-                {
-                    _onDispose();
-                }
+                public void Dispose() => _onDispose();
 
-                public abstract EventWaitHandle OnSubscribe
-                {
-                    get;
-                }
+                public abstract EventWaitHandle OnSubscribe { get; }
             }
 
             private sealed class R<T> : Disposable, IReliableMultiSubject<T>
@@ -3115,45 +3091,25 @@ namespace Tests.Reaqtor.QueryEngine
 
                 public override EventWaitHandle OnSubscribe => _onSubscribe;
 
-                public IReliableObserver<T> CreateObserver()
-                {
-                    return new Observer(this);
-                }
+                public IReliableObserver<T> CreateObserver() => new Observer(this);
 
-                public IReliableSubscription Subscribe(IReliableObserver<T> observer)
-                {
-                    return new Sub(this, observer);
-                }
+                public IReliableSubscription Subscribe(IReliableObserver<T> observer) => new Sub(this, observer);
 
                 private sealed class Observer : IReliableObserver<T>
                 {
                     private readonly R<T> _parent;
 
-                    public Observer(R<T> parent)
-                    {
-                        _parent = parent;
-                    }
+                    public Observer(R<T> parent) => _parent = parent;
 
                     public Uri ResubscribeUri => throw new NotImplementedException();
 
-                    public void OnNext(T item, long sequenceId)
-                    {
-                        _parent._subject.OnNext(Tuple.Create(item, sequenceId));
-                    }
+                    public void OnNext(T item, long sequenceId) => _parent._subject.OnNext(Tuple.Create(item, sequenceId));
 
-                    public void OnStarted()
-                    {
-                    }
+                    public void OnStarted() { }
 
-                    public void OnError(Exception error)
-                    {
-                        _parent._subject.OnError(error);
-                    }
+                    public void OnError(Exception error) => _parent._subject.OnError(error);
 
-                    public void OnCompleted()
-                    {
-                        _parent._subject.OnCompleted();
-                    }
+                    public void OnCompleted() => _parent._subject.OnCompleted();
                 }
 
                 private sealed class Sub : ReliableSubscriptionBase
@@ -3204,20 +3160,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 public override EventWaitHandle OnSubscribe => _onSubscribe;
 
-                public IObserver<T> CreateObserver()
-                {
-                    return _subject;
-                }
+                public IObserver<T> CreateObserver() => _subject;
 
-                public ISubscription Subscribe(IObserver<T> observer)
-                {
-                    return new Sub(this, observer);
-                }
+                public ISubscription Subscribe(IObserver<T> observer) => new Sub(this, observer);
 
-                IDisposable IObservable<T>.Subscribe(IObserver<T> observer)
-                {
-                    return Subscribe(observer);
-                }
+                IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => Subscribe(observer);
 
                 private sealed class Sub : Operator<S<T>, T>
                 {
@@ -3259,15 +3206,9 @@ namespace Tests.Reaqtor.QueryEngine
 
                 public override EventWaitHandle OnSubscribe => _onSubscribe;
 
-                public IObserver<T> GetObserver<T>()
-                {
-                    return Get<T>();
-                }
+                public IObserver<T> GetObserver<T>() => Get<T>();
 
-                public ISubscribable<T> GetObservable<T>()
-                {
-                    return new IO<T>(this);
-                }
+                public ISubscribable<T> GetObservable<T>() => new IO<T>(this);
 
                 private Subject<T> Get<T>()
                 {
@@ -3289,15 +3230,9 @@ namespace Tests.Reaqtor.QueryEngine
                 {
                     private readonly U _parent;
 
-                    public IO(U parent)
-                    {
-                        _parent = parent;
-                    }
+                    public IO(U parent) => _parent = parent;
 
-                    protected override ISubscription SubscribeCore(IObserver<T> observer)
-                    {
-                        return new _(this, observer);
-                    }
+                    protected override ISubscription SubscribeCore(IObserver<T> observer) => new _(this, observer);
 
                     private sealed class _ : Operator<IO<T>, T>
                     {
@@ -3454,7 +3389,7 @@ namespace Tests.Reaqtor.QueryEngine
             Recover(qe3, newState);
 
             // Finally, after recovering from the checkpoint with the stateful variant, values are pushed
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
         }
 
         [TestMethod]
@@ -3503,7 +3438,7 @@ namespace Tests.Reaqtor.QueryEngine
             Recover(qe3, newState);
 
             // Finally, after recovering from the checkpoint with the stateful variant, values are pushed
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
         }
 
         [TestMethod]
@@ -3529,7 +3464,7 @@ namespace Tests.Reaqtor.QueryEngine
             ctx1.Never<int>().AwaitSubscribe(l).Subscribe(observer(v1), testSubscriptionUri, null);
 
             // No values pushed in stateless observable
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             var mv1 = GetMockObserver<int>("v1");
             Assert.AreEqual(0, mv1.Values.Count);
@@ -3856,7 +3791,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var sub = ctx.Never<int>().StartWith(1).AwaitDo(l).Subscribe(v1, subId, null);
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             var store = Checkpoint(qe);
 
@@ -3884,7 +3819,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsTrue(ctx.Subscriptions.ContainsKey(subId));
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
             var mv1 = GetObserver<int>("v1");
             Assert.IsTrue(mv1.Values.SequenceEqual(new[] { 1, 1 }));
         }
@@ -3903,7 +3838,7 @@ namespace Tests.Reaqtor.QueryEngine
             var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
             var sub = ctx.Return(1).SelectMany(x => ctx.Never<int>().StartWith(1), (_, x) => x).AwaitDo(l).Subscribe(v1, subId, null);
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             var store = Checkpoint(qe);
 
@@ -4027,7 +3962,7 @@ namespace Tests.Reaqtor.QueryEngine
             var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
             var sub = ctx.Return(1).SelectMany(x => ctx.Never<int>().StartWith(1), (_, x) => x).AwaitDo(l).Subscribe(v1, subId, null);
 
-            LockManager.Wait(l);
+            Assert.IsTrue(LockManager.Wait(l));
 
             var store = Checkpoint(qe);
             RemoveQueryEngine(qe);
@@ -4601,9 +4536,9 @@ namespace Tests.Reaqtor.QueryEngine
                     //     be plenty of time for the file to get written to disk.
                     //
 
-                    int delay = 10;
-                    int maxAttempts = 12;
-                    int attempt = 0;
+                    var delay = 10;
+                    var maxAttempts = 12;
+                    var attempt = 0;
 
                     while (true)
                     {
