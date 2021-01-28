@@ -43,7 +43,7 @@ jobs:
       run: dotnet build --no-restore --configuration ${{ matrix.configuration }}
 
     - name: Test
-      run: dotnet test --no-build --configuration ${{ matrix.configuration }} --verbosity normal --logger trx --results-directory ./TestResults --collect:"XPlat Code Coverage" --settings coverlet.runsettings
+      run: dotnet test --no-build --configuration ${{ matrix.configuration }} --verbosity normal --logger trx --results-directory ./TestResults --collect:"XPlat Code Coverage" --settings coverlet.runsettings --blame --blame-hang-timeout 5m
       continue-on-error: true
 
     - name: Generate Code Coverage Report
