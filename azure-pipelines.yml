@@ -90,10 +90,12 @@ stages:
     - publish:  config
       artifact: config
       displayName: Publish signing config
+      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
 
     - publish: $(Build.ArtifactStagingDirectory)/artifacts
       displayName: Publish artifacts
       artifact: BuildPackages
+      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
 
     - task: PublishBuildArtifacts@1
       inputs:
