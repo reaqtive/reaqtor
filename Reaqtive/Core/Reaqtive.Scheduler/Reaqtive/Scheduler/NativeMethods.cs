@@ -21,19 +21,22 @@ namespace Reaqtive.Scheduler
         /// <returns><c>true</c> if the function succeeds; otherwise, <c>false</c>.</returns>
         public static bool TryGetThreadCycleTime(out ulong cycleTime)
         {
-            if (!s_failedToLoadKernel32)
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
             {
-                try
+                if (!s_failedToLoadKernel32)
                 {
-                    return QueryThreadCycleTime(CurrentThreadHandle, out cycleTime);
-                }
-                catch (DllNotFoundException)
-                {
-                    s_failedToLoadKernel32 = true;
-                }
-                catch (EntryPointNotFoundException)
-                {
-                    s_failedToLoadKernel32 = true;
+                    try
+                    {
+                        return QueryThreadCycleTime(CurrentThreadHandle, out cycleTime);
+                    }
+                    catch (DllNotFoundException)
+                    {
+                        s_failedToLoadKernel32 = true;
+                    }
+                    catch (EntryPointNotFoundException)
+                    {
+                        s_failedToLoadKernel32 = true;
+                    }
                 }
             }
 
