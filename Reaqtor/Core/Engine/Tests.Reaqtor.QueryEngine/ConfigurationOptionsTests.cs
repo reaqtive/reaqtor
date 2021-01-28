@@ -21,7 +21,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreEqual(1, options.CheckpointDegreeOfParallelism);
             Assert.IsFalse(options.DumpRecoveryStateBlobs);
             Assert.IsNull(options.DumpRecoveryStatePath);
-            Assert.AreEqual(Environment.ProcessorCount / 2, options.RecoveryDegreeOfParallelism);
+            Assert.AreEqual(Math.Max(1, Environment.ProcessorCount / 2), options.RecoveryDegreeOfParallelism);
             //Assert.IsNull(options.SerializationPolicyVersion);
             Assert.IsFalse(options.TemplatizeExpressions);
         }
