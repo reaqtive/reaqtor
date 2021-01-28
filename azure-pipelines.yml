@@ -48,6 +48,8 @@ stages:
       inputs:
         command: restore
         projects: All.sln
+        verbosity: Minimal
+        arguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Restore.binlog
       displayName: Restore
 
     - task: DotNetCoreCLI@2
@@ -57,7 +59,7 @@ stages:
         configuration: $(BuildConfiguration)
         packDirectory: $(Build.ArtifactStagingDirectory)/artifacts
         verbosityPack: Minimal
-        arguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).binlog
+        arguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog
       displayName: Pack
 
     - task: DotNetCoreCLI@2
@@ -71,7 +73,7 @@ stages:
       inputs:
         command: test
         projects: '**/Tests.*.csproj'
-        arguments: -c $(BuildConfiguration) --settings coverlet.runsettings --collect:"XPlat Code Coverage"
+        arguments: -c $(BuildConfiguration) /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Test.binlog --settings coverlet.runsettings --collect:"XPlat Code Coverage"
       displayName: Run Unit Tests
       continueOnError: true
 
