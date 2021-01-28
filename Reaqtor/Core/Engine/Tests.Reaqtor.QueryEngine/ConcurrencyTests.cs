@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -54,26 +54,6 @@ namespace Tests.Reaqtor.QueryEngine
 
         [TestMethod]
         public void SingleQueryEngine_Concurrency_CreateSubscription()
-        {
-            var qe = CreateQueryEngine();
-            var ctx = GetQueryEngineReactiveService(qe);
-            var subBase = "test://sub/";
-
-            var subUris = Enumerable.Range(0, SubCount).Select(i => new Uri(subBase + i)).ToList();
-
-            Parallel.ForEach(
-                subUris,
-                uri => ctx.Never<int>().Where(x => x > 0).Select(x => x * x)
-                    .Subscribe(ctx.GetObserver<int>(NopUri), uri, null));
-
-            foreach (var uri in subUris)
-            {
-                Assert.IsTrue(qe.ReactiveService.Subscriptions.TryGetValue(uri, out _));
-            }
-        }
-
-        [TestMethod]
-        public void SingleQueryEngine_Concurrency_CreateSubscription_HigherOrder()
         {
             var qe = CreateQueryEngine();
             var ctx = GetQueryEngineReactiveService(qe);
