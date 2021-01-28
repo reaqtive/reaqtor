@@ -91,13 +91,13 @@ stages:
       artifact: config
       displayName: Publish signing config
 
-    - publish: $(Build.ArtifactStagingDirectory)\artifacts
+    - publish: $(Build.ArtifactStagingDirectory)/artifacts
       displayName: Publish artifacts
       artifact: BuildPackages
 
     - task: PublishBuildArtifacts@1
       inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)\Logs
+        pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
         artifactName: Logs    
       displayName: Publish Build Logs      
       condition: always()
