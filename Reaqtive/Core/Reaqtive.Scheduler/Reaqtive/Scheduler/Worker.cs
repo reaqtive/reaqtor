@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -101,12 +101,13 @@ namespace Reaqtive.Scheduler
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="scheduler">Physical scheduler the worker is associated with.</param>
-        public Worker(string name, PhysicalScheduler scheduler)
+        /// <param name="priority">The thread priority for the worker thread.</param>
+        public Worker(string name, PhysicalScheduler scheduler, ThreadPriority priority)
         {
             _name = name;
             _scheduler = scheduler;
 
-            _thread = new WorkerThread(WorkLoop, name);
+            _thread = new WorkerThread(WorkLoop, priority, name);
             _commands = new SnapshotCollection<List<Command>, Command>();
             _priorityRecalculations = new SnapshotCollection<HashSet<WorkItem>, WorkItem>();
             _readyTasks = new HeapBasedPriorityQueue<WorkItem>(Comparer<WorkItem>.Create((a, b) => a.Priority.CompareTo(b.Priority)));

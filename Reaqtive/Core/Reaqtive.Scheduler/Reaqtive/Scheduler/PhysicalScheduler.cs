@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -34,7 +34,8 @@ namespace Reaqtive.Scheduler
         /// Initializes a new instance of the <see cref="PhysicalScheduler"/> class.
         /// </summary>
         /// <param name="numberOfWorkers">The number of workers.</param>
-        private PhysicalScheduler(int numberOfWorkers)
+        /// <param name="priority">The thread priority for the worker threads.</param>
+        private PhysicalScheduler(int numberOfWorkers, ThreadPriority priority)
         {
             Debug.Assert(numberOfWorkers > 0, "Number of workers should be greater than zero.");
 
@@ -43,7 +44,7 @@ namespace Reaqtive.Scheduler
 
             for (int i = 0; i < numberOfWorkers; ++i)
             {
-                _workers.Add(new Worker("Reaqtive.Scheduler.Worker" + i, this));
+                _workers.Add(new Worker("Reaqtive.Scheduler.Worker" + i, this, priority));
             }
 
             StartHeartbeat();
@@ -69,13 +70,14 @@ namespace Reaqtive.Scheduler
         /// Creates a physical scheduler with the specified number of workers.
         /// </summary>
         /// <param name="numberOfWorkers">The number of workers.</param>
+        /// <param name="priority">The thread priority for the worker threads.</param>
         /// <returns>A scheduler.</returns>
-        public static PhysicalScheduler Create(int numberOfWorkers)
+        public static PhysicalScheduler Create(int numberOfWorkers, ThreadPriority priority = ThreadPriority.Normal)
         {
             if (numberOfWorkers <= 0)
                 throw new ArgumentOutOfRangeException(nameof(numberOfWorkers));
 
-            return new PhysicalScheduler(numberOfWorkers);
+            return new PhysicalScheduler(numberOfWorkers, priority);
         }
 
         /// <summary>

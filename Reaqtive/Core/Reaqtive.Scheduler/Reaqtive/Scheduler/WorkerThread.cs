@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -42,8 +42,9 @@ namespace Reaqtive.Scheduler
         /// Initializes a new instance of the <see cref="WorkerThread" /> class.
         /// </summary>
         /// <param name="workProcessingFunction">The work processing function.</param>
+        /// <param name="priority">The thread priority for the worker.</param>
         /// <param name="name">The name.</param>
-        public WorkerThread(Action workProcessingFunction, string name)
+        public WorkerThread(Action workProcessingFunction, ThreadPriority priority, string name)
         {
             Debug.Assert(workProcessingFunction != null, "Worker thread should have a worker delegate.");
             Debug.Assert(!string.IsNullOrEmpty(name), "Worker thread should have a name.");
@@ -51,7 +52,7 @@ namespace Reaqtive.Scheduler
             _shouldStop = false;
             _canary = new ThreadLocal<bool>();
             _workProcessingFunction = workProcessingFunction;
-            _workerThread = new Thread(WorkLoop) { Name = name };
+            _workerThread = new Thread(WorkLoop) { Name = name, Priority = priority };
             _workExists = new MonitorAutoResetEvent();
             _workerThread.Start();
         }
