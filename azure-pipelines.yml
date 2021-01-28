@@ -49,7 +49,7 @@ stages:
         command: restore
         projects: All.sln
         verbosityRestore: Minimal
-        arguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Restore.binlog
+        restoreArguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Restore.binlog
       displayName: Restore
 
     - task: DotNetCoreCLI@2
