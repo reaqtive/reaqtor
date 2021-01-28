@@ -74,6 +74,9 @@ stages:
       artifact: config
       displayName: Publish signing config
 
+    - script: del $(Build.ArtifactStagingDirectory)/artifacts/*.symbols.nupkg
+      displayName: Remove redundant packages from upload
+
     - publish: $(Build.ArtifactStagingDirectory)/artifacts
       displayName: Publish artifacts
       artifact: BuildPackages
