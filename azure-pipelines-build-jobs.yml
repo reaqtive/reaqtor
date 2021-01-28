@@ -1,0 +1,101 @@
+
+parameters:
+- name: pool
+  type: object
+  default: {}
+- name: name
+
+- job: ${{ parameters.name }}
+  timeoutInMinutes: 120
+  pool: ${{ parameters.pool }}
+  
+  strategy:
+    matrix:
+      Release:
+        BuildConfiguration: Release
+      Debug:
+        BuildConfiguration: Debug
+
+  steps:
+  - task: UseDotNet@2
+    displayName: Use .NET Core 5.0.x SDK
+    inputs:
+      version: 5.0.x
+      performMultiLevelLookup: true
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: custom
+      custom: tool
+      arguments: install --tool-path . nbgv
+    displayName: Install NBGV tool
+
+  - script: nbgv cloud -a
+    displayName: Set Version
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: restore
+      projects: All.sln
+      verbosityRestore: Minimal
+      restoreArguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ parameters.name }}.$(BuildConfiguration).Restore.binlog
+    displayName: Restore
+
+    # We only want to build and publish the packages once: Windows Release
+    - ${{ if eq(parameters.name, 'Windows') }}:
+      - task: DotNetCoreCLI@2
+      inputs:
+        command: build
+        projects: |
+          **/*.csproj
+          !**/Tests.*.csproj
+          !**/Perf.*.csproj
+          !**/Reaqtor.Remoting.VersioningTests.csproj
+        configuration: $(BuildConfiguration)
+        verbosity: Minimal        
+        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
+      displayName: Build and Pack
+      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release')) # we only pack release; test will build what it needs
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: custom
+      custom: tool
+      arguments: install --tool-path . dotnet-reportgenerator-globaltool
+    displayName: Install ReportGenerator tool
+
+  - task: DotNetCoreCLI@2
+    inputs:
+      command: test
+      projects: '**/Tests.*.csproj'
+      arguments: -c $(BuildConfiguration) /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ parameters.name }}.$(BuildConfiguration).Test.binlog --settings coverlet.runsettings --collect:"XPlat Code Coverage" --no-restore --blame --blame-hang-timeout 5m 
+    displayName: Run Unit Tests
+    continueOnError: true
+
+  - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
+    displayName: Create reports
+
+  - task: PublishCodeCoverageResults@1
+    displayName: 'Publish code coverage'
+    inputs:
+      codeCoverageTool: Cobertura
+      summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
+
+  - publish:  config
+    artifact: config
+    displayName: Publish signing config
+    condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
+
+    # We only want to build and publish the packages once: Windows Release
+  - ${{ if eq(parameters.name, 'Windows') }}:
+    - publish: $(Build.ArtifactStagingDirectory)/artifacts
+      displayName: Publish artifacts
+      artifact: BuildPackages
+      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
+      artifactName: Logs    
+    displayName: Publish Build Logs      
+    condition: always()

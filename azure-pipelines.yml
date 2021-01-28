@@ -10,102 +10,23 @@ pr:
     - main
     - rel/*
 
+variables:      
+  BuildPlatform: Any CPU
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
 stages:
 - stage: Build
   jobs:
-  - job: Build
-    pool: vs2019-preview
-    
-    strategy:
-      matrix:
-        Release:
-          BuildConfiguration: Release
-        Debug:
-          BuildConfiguration: Debug
+  - template: azure-pipelines-build-jobs.yml
+    parameters:
+      name: Windows
+      pool: vs2019-preview
 
-    variables:      
-      BuildPlatform: Any CPU
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
-    steps:
-    - task: UseDotNet@2
-      displayName: Use .NET Core 5.0.x SDK
-      inputs:
-        version: 5.0.x
-        performMultiLevelLookup: true
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: custom
-        custom: tool
-        arguments: install --tool-path . nbgv
-      displayName: Install NBGV tool
-
-    - script: nbgv cloud -a
-      displayName: Set Version
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: restore
-        projects: All.sln
-        verbosityRestore: Minimal
-        restoreArguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Restore.binlog
-      displayName: Restore
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: build
-        projects: |
-         **/*.csproj
-         !**/Tests.*.csproj
-         !**/Perf.*.csproj
-         !**/Reaqtor.Remoting.VersioningTests.csproj
-        configuration: $(BuildConfiguration)
-        verbosity: Minimal        
-        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
-      displayName: Build and Pack
-      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release')) # we only pack release; test will build what it needs
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: custom
-        custom: tool
-        arguments: install --tool-path . dotnet-reportgenerator-globaltool
-      displayName: Install ReportGenerator tool
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: '**/Tests.*.csproj'
-        arguments: -c $(BuildConfiguration) /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Test.binlog --settings coverlet.runsettings --collect:"XPlat Code Coverage" --no-restore --blame --blame-hang-timeout 5m 
-      displayName: Run Unit Tests
-      continueOnError: true
-
-    - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
-      displayName: Create reports
-
-    - task: PublishCodeCoverageResults@1
-      displayName: 'Publish code coverage'
-      inputs:
-        codeCoverageTool: Cobertura
-        summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
-
-    - publish:  config
-      artifact: config
-      displayName: Publish signing config
-      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
-
-    - publish: $(Build.ArtifactStagingDirectory)/artifacts
-      displayName: Publish artifacts
-      artifact: BuildPackages
-      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
-
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-        artifactName: Logs    
-      displayName: Publish Build Logs      
-      condition: always()
+  - template: azure-pipelines-build-jobs.yml
+    parameters:
+      name: Linux
+      pool: 
+        vmImage: ubuntu-latest
 
 - stage: CodeSign
   condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
