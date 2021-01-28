@@ -30,7 +30,7 @@ jobs:
     inputs:
       command: custom
       custom: tool
-      arguments: install --tool-path . nbgv
+      arguments: install -g nbgv
     displayName: Install NBGV tool
 
   - script: nbgv cloud -a
@@ -62,7 +62,7 @@ jobs:
     inputs:
       command: custom
       custom: tool
-      arguments: install --tool-path . dotnet-reportgenerator-globaltool
+      arguments: install -g dotnet-reportgenerator-globaltool
     displayName: Install ReportGenerator tool
 
   - task: DotNetCoreCLI@2
