@@ -55,7 +55,11 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: build
-        projects: '**/*.csproj;!**/Tests.*.csproj;!**/Perf.*.csproj;!**/Reaqtor.Remoting.VersioningTests.csproj'
+        projects: |
+         **/*.csproj
+         !**/Tests.*.csproj
+         !**/Perf.*.csproj
+         !**/Reaqtor.Remoting.VersioningTests.csproj
         configuration: $(BuildConfiguration)
         verbosity: Minimal        
         arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
