@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -30,10 +30,11 @@ namespace Reaqtor.Reactive
             //
 
             private const int Created = 0;
-            private const int Started = 1;
-            private const int Starting = 2;
+            private const int Starting = 1;
+            private const int Started = 2;
             private const int StartFailed = 3;
-            private const int Disposed = 4;
+            private const int DisposeRequested = 4;
+            private const int Disposed = 5;
 
             private int _state = Created;
 
@@ -112,7 +113,15 @@ namespace Reaqtor.Reactive
 
                 void Core()
                 {
-                    if (Interlocked.CompareExchange(ref _state, Starting, Created) != Created)
+                    var oldState = Interlocked.CompareExchange(ref _state, Starting, Created);
+
+                    if (oldState == Starting)
+                    {
+                        SpinWait.SpinUntil(() => Volatile.Read(ref _state) != Starting);
+                        return;
+                    }
+
+                    if (oldState != Created)
                     {
                         return;
                     }
@@ -127,8 +136,21 @@ namespace Reaqtor.Reactive
                     }
                     finally
                     {
-                        var oldState = Interlocked.CompareExchange(ref _state, success ? Started : StartFailed, Starting);
-                        Debug.Assert(oldState == Starting);
+                        oldState = Interlocked.CompareExchange(ref _state, success ? Started : StartFailed, Starting);
+
+                        if (oldState == DisposeRequested)
+                        {
+                            Volatile.Write(ref _state, Disposed);
+
+                            if (success)
+                            {
+                                DisposeCore();
+                            }
+                        }
+                        else
+                        {
+                            Debug.Assert(oldState == Starting);
+                        }
                     }
                 }
             }
@@ -207,7 +229,7 @@ namespace Reaqtor.Reactive
                 {
                     var state = Volatile.Read(ref _state);
 
-                    if (state == Disposed)
+                    if (state is Disposed or DisposeRequested)
                     {
                         // Already disposed; no-op.
                         return;
@@ -215,8 +237,12 @@ namespace Reaqtor.Reactive
 
                     if (state == Starting)
                     {
-                        // Transient state; try again.
-                        Thread.Yield();
+                        // Let the starting thread take care of Dispose, so we don't spin here.
+                        if (Interlocked.CompareExchange(ref _state, DisposeRequested, state) == state)
+                        {
+                            return;
+                        }
+
                         continue;
                     }
 

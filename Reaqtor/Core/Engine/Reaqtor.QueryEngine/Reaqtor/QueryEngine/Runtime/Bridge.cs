@@ -435,10 +435,11 @@ namespace Reaqtor.QueryEngine
             //
 
             private const int Created = 0;
-            private const int Started = 1;
-            private const int Starting = 2;
+            private const int Starting = 1;
+            private const int Started = 2;
             private const int StartFailed = 3;
-            private const int Disposed = 4;
+            private const int DisposeRequested = 4;
+            private const int Disposed = 5;
 
             private int _state = Created;
 
@@ -449,7 +450,7 @@ namespace Reaqtor.QueryEngine
                 _lastAck = lastAck;
             }
 
-            private bool IsStarted => Volatile.Read(ref _state) == Started;
+            private bool IsStarted => Volatile.Read(ref _state) is Starting or Started;
 
             public IOperatorContext Context { get; private set; }
 
@@ -479,7 +480,15 @@ namespace Reaqtor.QueryEngine
 
                 void Core()
                 {
-                    if (Interlocked.CompareExchange(ref _state, Starting, Created) != Created)
+                    var oldState = Interlocked.CompareExchange(ref _state, Starting, Created);
+
+                    if (oldState == Starting)
+                    {
+                        SpinWait.SpinUntil(() => Volatile.Read(ref _state) != Starting);
+                        return;
+                    }
+
+                    if (oldState != Created)
                     {
                         return;
                     }
@@ -494,8 +503,21 @@ namespace Reaqtor.QueryEngine
                     }
                     finally
                     {
-                        var oldState = Interlocked.CompareExchange(ref _state, success ? Started : StartFailed, Starting);
-                        Debug.Assert(oldState == Starting);
+                        oldState = Interlocked.CompareExchange(ref _state, success ? Started : StartFailed, Starting);
+
+                        if (oldState == DisposeRequested)
+                        {
+                            Volatile.Write(ref _state, Disposed);
+
+                            if (success)
+                            {
+                                DisposeCore();
+                            }
+                        }
+                        else
+                        {
+                            Debug.Assert(oldState == Starting);
+                        }
                     }
                 }
             }
@@ -533,7 +555,7 @@ namespace Reaqtor.QueryEngine
                 {
                     var state = Volatile.Read(ref _state);
 
-                    if (state == Disposed)
+                    if (state is Disposed or DisposeRequested)
                     {
                         // Already disposed; no-op.
                         return;
@@ -541,8 +563,12 @@ namespace Reaqtor.QueryEngine
 
                     if (state == Starting)
                     {
-                        // Transient state; try again.
-                        Thread.Yield();
+                        // Let the starting thread take care of Dispose, so we don't spin here.
+                        if (Interlocked.CompareExchange(ref _state, DisposeRequested, state) == state)
+                        {
+                            return;
+                        }
+
                         continue;
                     }
 
@@ -551,12 +577,17 @@ namespace Reaqtor.QueryEngine
                         // We need to dispose the subscription only if original state was started.
                         if (state == Started)
                         {
-                            _parent.SubscriptionDispose(this);
+                            DisposeCore();
                         }
 
                         return;
                     }
                 }
+            }
+
+            private void DisposeCore()
+            {
+                _parent.SubscriptionDispose(this);
             }
 
             public void OnNext(T item, long sequenceId)
@@ -775,9 +806,7 @@ namespace Reaqtor.QueryEngine
 
         public void OnStateSaved() => _stateful.OnStateSaved();
 
-        public void Start()
-        {
-        }
+        public void Start() { }
 
         #endregion
     }
