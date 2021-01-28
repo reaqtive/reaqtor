@@ -48,7 +48,7 @@ stages:
       inputs:
         command: restore
         projects: All.sln
-        verbosity: Minimal
+        verbosityRestore: Minimal
         arguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Restore.binlog
       displayName: Restore
 
@@ -61,6 +61,7 @@ stages:
         verbosityPack: Minimal
         arguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
       displayName: Pack
+      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release')) # we only pack release; test will build what it needs
 
     - task: DotNetCoreCLI@2
       inputs:
