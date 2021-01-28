@@ -21,20 +21,22 @@ jobs:
 
   steps:
   - task: UseDotNet@2
-    displayName: Use .NET Core 5.0.x SDK
+    displayName: Use .NET Core 5.x SDK
     inputs:
-      version: 5.0.x
+      version: 5.x
       performMultiLevelLookup: true
 
   - task: UseDotNet@2
     inputs:
       version: '3.1.x'
       packageType: runtime
-   
+   displayName: Install .NET Core 3.1 runtime
+
   - task: UseDotNet@2
     inputs:
       version: '2.1.x'
       packageType: runtime
+    displayName: Install .NET Core 2.1 runtime
 
   - task: DotNetCoreCLI@2
     inputs:
