@@ -21,6 +21,7 @@ stages:
     parameters:
       name: Windows
       pool: vs2019-preview
+      shouldPack: true
 
   - template: azure-pipelines-build-jobs.yml
     parameters:

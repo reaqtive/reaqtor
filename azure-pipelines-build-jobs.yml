@@ -4,6 +4,8 @@ parameters:
   type: object
   default: {}
 - name: name
+- name: shouldPack
+  default: false
 
 jobs:
 - job: ${{ parameters.name }}
@@ -42,8 +44,6 @@ jobs:
       restoreArguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ parameters.name }}.$(BuildConfiguration).Restore.binlog
     displayName: Restore
 
-# We only want to build and publish the packages once: Windows Release
-- ${{ if eq(parameters.name, 'Windows') }}:
   - task: DotNetCoreCLI@2
     inputs:
       command: build
@@ -56,7 +56,7 @@ jobs:
       verbosity: Minimal        
       arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
     displayName: Build and Pack
-    condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release')) # we only pack release; test will build what it needs
+    condition: and(succeeded(), ${{ parameters.shouldPack }}, eq(variables['BuildConfiguration'], 'Release')) # we only pack release; test will build what it needs
 
   - task: DotNetCoreCLI@2
     inputs:
@@ -87,12 +87,10 @@ jobs:
     displayName: Publish signing config
     condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
 
-  # We only want to build and publish the packages once: Windows Release
-  - ${{ if eq(parameters.name, 'Windows') }}:
-    - publish: $(Build.ArtifactStagingDirectory)/artifacts
-      displayName: Publish artifacts
-      artifact: BuildPackages
-      condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
+  - publish: $(Build.ArtifactStagingDirectory)/artifacts
+    displayName: Publish artifacts
+    artifact: BuildPackages
+    condition: and(succeeded(), ${{ parameters.shouldPack }}, eq(variables['BuildConfiguration'], 'Release'))
 
   - task: PublishBuildArtifacts@1
     inputs:
