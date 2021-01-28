@@ -12,6 +12,7 @@ using System.Linq;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading;
@@ -4580,6 +4581,15 @@ namespace Tests.Reaqtor.QueryEngine
                 var blobLogPattern = new Regex(@"blobs_.*\.log", RegexOptions.Compiled);
                 var blobLog = Directory.EnumerateFiles(qePath).SingleOrDefault(f => blobLogPattern.IsMatch(f));
                 Assert.IsNotNull(blobLog);
+
+                //
+                // NB: This test is flaky on Linux where the file can be read before its fully written.
+                //
+
+                if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                {
+                    return;
+                }
 
                 static string ReadBlobLog(string path)
                 {
