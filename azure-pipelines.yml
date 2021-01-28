@@ -41,7 +41,7 @@ stages:
         arguments: install --tool-path . nbgv
       displayName: Install NBGV tool
 
-    - pwsh: ./nbgv cloud -a
+    - script: nbgv cloud -a
       displayName: Set Version
 
     - task: DotNetCoreCLI@2
