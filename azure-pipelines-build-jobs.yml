@@ -50,6 +50,14 @@ jobs:
 
   - task: DotNetCoreCLI@2
     inputs:
+      command: restore
+      projects: All.sln
+      verbosityRestore: Minimal
+      restoreArguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/Test_${{ parameters.name }}.$(BuildConfiguration).Restore.binlog
+    displayName: Restore
+
+  - task: DotNetCoreCLI@2
+    inputs:
       command: custom
       custom: tool
       arguments: install -g dotnet-reportgenerator-globaltool
