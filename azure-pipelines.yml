@@ -28,6 +28,62 @@ stages:
       name: Linux
       pool: 
         vmImage: ubuntu-latest
+  
+  - job: Build and Pack
+    pool: vs2019-preview
+
+    steps:
+    - task: UseDotNet@2
+      displayName: Use .NET Core 5.x SDK
+      inputs:
+        version: 5.x
+        performMultiLevelLookup: true
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: custom
+        custom: tool
+        arguments: install -g nbgv
+      displayName: Install NBGV tool
+
+    - script: nbgv cloud -a
+      displayName: Set Version
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: restore
+        projects: All.sln
+        verbosityRestore: Minimal
+        restoreArguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/Pack.Restore.binlog
+      displayName: Restore
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: build
+        projects: |
+          **/*.csproj
+          !**/Tests.*.csproj
+          !**/Perf.*.csproj
+          !**/Reaqtor.Remoting.VersioningTests.csproj
+        configuration: Release
+        verbosity: Minimal        
+        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Pack.binlog --no-restore
+      displayName: Build and Pack
+
+    - publish:  config
+      artifact: config
+      displayName: Publish signing config
+
+    - publish: $(Build.ArtifactStagingDirectory)/artifacts
+      displayName: Publish artifacts
+      artifact: BuildPackages
+
+    - task: PublishBuildArtifacts@1
+      inputs:
+        pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
+        artifactName: Logs    
+      displayName: Publish Build Logs      
+      condition: always()      
 
 - stage: CodeSign
   condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))

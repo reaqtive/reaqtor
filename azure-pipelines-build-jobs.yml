@@ -50,28 +50,6 @@ jobs:
 
   - task: DotNetCoreCLI@2
     inputs:
-      command: restore
-      projects: All.sln
-      verbosityRestore: Minimal
-      restoreArguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ parameters.name }}.$(BuildConfiguration).Restore.binlog
-    displayName: Restore
-
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: build
-      projects: |
-        **/*.csproj
-        !**/Tests.*.csproj
-        !**/Perf.*.csproj
-        !**/Reaqtor.Remoting.VersioningTests.csproj
-      configuration: $(BuildConfiguration)
-      verbosity: Minimal        
-      arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
-    displayName: Build and Pack
-    condition: and(succeeded(), ${{ parameters.shouldPack }}, eq(variables['BuildConfiguration'], 'Release')) # we only pack release; test will build what it needs
-
-  - task: DotNetCoreCLI@2
-    inputs:
       command: custom
       custom: tool
       arguments: install -g dotnet-reportgenerator-globaltool
@@ -93,16 +71,6 @@ jobs:
     inputs:
       codeCoverageTool: Cobertura
       summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
-
-  - publish:  config
-    artifact: config
-    displayName: Publish signing config
-    condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release'))
-
-  - publish: $(Build.ArtifactStagingDirectory)/artifacts
-    displayName: Publish artifacts
-    artifact: BuildPackages
-    condition: and(succeeded(), ${{ parameters.shouldPack }}, eq(variables['BuildConfiguration'], 'Release'))
 
   - task: PublishBuildArtifacts@1
     inputs:
