@@ -43,7 +43,7 @@ jobs:
     displayName: Restore
 
 # We only want to build and publish the packages once: Windows Release
-${{ if eq(parameters.name, 'Windows') }}:
+- ${{ if eq(parameters.name, 'Windows') }}:
   - task: DotNetCoreCLI@2
     inputs:
       command: build
