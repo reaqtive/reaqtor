@@ -1,6 +1,5 @@
 <Project>
-  <PropertyGroup>
-    <Deterministic>true</Deterministic>
+  <PropertyGroup>    
     <LangVersion>latest</LangVersion>
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -10,6 +9,7 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' Or '$(GITHUB_ACTIONS)' == 'true'">
