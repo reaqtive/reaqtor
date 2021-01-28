@@ -29,7 +29,7 @@ stages:
       pool: 
         vmImage: ubuntu-latest
   
-  - job: Build and Pack
+  - job: Build_and_Pack
     pool: vs2019-preview
 
     steps:
