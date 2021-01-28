@@ -8,7 +8,7 @@ parameters:
   default: false
 
 jobs:
-- job: ${{ parameters.name }}
+- job: Test_${{ parameters.name }}
   timeoutInMinutes: 120
   pool: ${{ parameters.pool }}
   
