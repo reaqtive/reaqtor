@@ -40,10 +40,11 @@
   <PropertyGroup Condition="'$(IsTestProject)' == 'false' And '$(IsPerfProject)' == 'false' And '$(IsPlaygroundProject)' == 'false'">
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild Condition=" '$(CreatePackage)' == 'true' ">true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' Or '$(IsPerfProject)' == 'true' Or '$(IsPlaygroundProject)' == 'true'">
-    <IsPackable>false</IsPackable>
+    <IsPackable>false</IsPackable>    
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsPlaygroundProject)' == 'false'">

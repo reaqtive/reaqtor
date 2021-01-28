@@ -54,13 +54,12 @@ stages:
 
     - task: DotNetCoreCLI@2
       inputs:
-        command: pack
-        packagesToPack: '**/*.csproj;!**/Tests.*.csproj;!**/Perf.*.csproj'
+        command: build
+        projects: '**/*.csproj;!**/Tests.*.csproj;!**/Perf.*.csproj'
         configuration: $(BuildConfiguration)
-        packDirectory: $(Build.ArtifactStagingDirectory)/artifacts
-        verbosityPack: Minimal
-        arguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
-      displayName: Pack
+        verbosity: Minimal        
+        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/$(BuildConfiguration).Pack.binlog --no-restore
+      displayName: Build and Pack
       condition: and(succeeded(), eq(variables['BuildConfiguration'], 'Release')) # we only pack release; test will build what it needs
 
     - task: DotNetCoreCLI@2
