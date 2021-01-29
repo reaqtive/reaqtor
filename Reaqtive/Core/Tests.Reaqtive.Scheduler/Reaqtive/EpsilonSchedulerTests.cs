@@ -95,7 +95,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/>.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_TestSimpleTask()
         {
             using var scheduler = _root.CreateChildScheduler();
@@ -121,7 +121,7 @@ namespace Test.Reaqtive.Scheduler
         /// <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_TestPausedScheduler()
         {
             using var scheduler = _root.CreateChildScheduler();
@@ -152,10 +152,10 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to an assumption that all CPUs will run work.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_MillionTasks()
         {
-            const int NumberOfTasks = 1000000;
+            const int NumberOfTasks = 1_000_000;
 
             using var scheduler = _root.CreateChildScheduler();
 
@@ -187,7 +187,11 @@ namespace Test.Reaqtive.Scheduler
             WaitWithTimeout(worked);
 
             Assert.AreEqual(NumberOfTasks, counter);
-            Assert.AreEqual(Environment.ProcessorCount, threadIds.Count); // NB: This is non-deterministic.
+
+            if (Environment.ProcessorCount != threadIds.Count)
+            {
+                Assert.Inconclusive($"Not all CPUs did perform scheduled work; please review if this is a glitch. CPU count = {Environment.ProcessorCount}, Unique thread IDs = {threadIds.Count}.");
+            }
         }
 
         /// <summary>
@@ -198,7 +202,7 @@ namespace Test.Reaqtive.Scheduler
         /// <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_TestPauseContinue()
         {
             const int NumberOfTasks = 100;
@@ -258,7 +262,7 @@ namespace Test.Reaqtive.Scheduler
         /// <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_TestRunnableStateChange()
         {
             using var scheduler = _root.CreateChildScheduler();
@@ -292,7 +296,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependency in <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_TestMultipleLogicalSchedulers()
         {
             const int NumberOfTasks = 100;
@@ -357,7 +361,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependencies.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Strong")] // Tests timing.
         public void Scheduler_SingleTimerEvent()
         {
             var ltDueTime = TimeSpan.FromSeconds(0.1);
@@ -387,7 +391,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependencies.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Strong")] // Tests timing.
         public void Scheduler_RecursiveTimerEvent()
         {
             const int Count = 3;
@@ -430,7 +434,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependencies.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Strong")] // Tests timing.
         public void Scheduler_TestAbsoluteTimer()
         {
             var ltDueTime = TimeSpan.FromSeconds(0.1);
@@ -463,7 +467,7 @@ namespace Test.Reaqtive.Scheduler
         /// <see cref="WaitForNever"/>.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_TestSimpleLongRunningTask()
         {
             const int IterationCount = 10;
@@ -491,7 +495,7 @@ namespace Test.Reaqtive.Scheduler
             var task = new MessageQueueBasedTask<int>(queue, BatchSize, 0, action);
             scheduler.Schedule(task);
 
-            Thread.Sleep(/* no work is expected */ NotExpected); // NB: This is non-deterministic.
+            Thread.Sleep(/* no work is expected */ NotExpected);
 
             //
             // NB: No messages have been enqueued yet, so the task is not runnable, so it
@@ -517,7 +521,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependencies.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Strong")] // Tests timing.
         public void Scheduler_TwoTimerEventsInReverseOrder()
         {
             var task1Due = TimeSpan.FromSeconds(0.3);
@@ -550,6 +554,8 @@ namespace Test.Reaqtive.Scheduler
 
             Assert.AreEqual(1, WaitHandle.WaitAny(new[] { worked1, worked2 }));
             worked1.WaitOne();
+
+            // REVIEW: We don't really test the order the tasks executed in.
         }
 
         /// <summary>
@@ -559,7 +565,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependency in <see cref="WaitForVerySoon"/>.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_NegativeTimer()
         {
             using var scheduler = _root.CreateChildScheduler();
@@ -599,11 +605,11 @@ namespace Test.Reaqtive.Scheduler
             {
                 if (state == 0)
                 {
-                    firstHasCalled = true;
+                    Volatile.Write(ref firstHasCalled, true);
                 }
                 else
                 {
-                    Assert.AreEqual(true, firstHasCalled);
+                    Assert.AreEqual(true, Volatile.Read(ref firstHasCalled));
                 }
 
                 while (!q.IsEmpty)
@@ -641,7 +647,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/>.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_1000TimerTasks()
         {
             const int NumberOfTasks = 1000;
@@ -746,7 +752,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependencies.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Strong")] // Relies on small delay timing.
         public void Scheduler_PauseWithAsyncContinue()
         {
             //
@@ -796,7 +802,7 @@ namespace Test.Reaqtive.Scheduler
         /// This test is non-deterministic due to physical time dependency in <see cref="WaitForSoon"/>.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Weak")] // May time-out and be inconclusive.
         public void Scheduler_PauseFromWithinATask()
         {
             using var scheduler = _root.CreateChildScheduler();
@@ -969,13 +975,13 @@ namespace Test.Reaqtive.Scheduler
         }
 
         /// <summary>
-        /// Disposing a logical scheduler disposes its internal children and all of their scheduled work items
+        /// Disposing a logical scheduler disposes its internal children and all of their scheduled work items.
         /// </summary>
         /// <remarks>
         /// This test is non-deterministic.
         /// </remarks>
         [TestMethod]
-        [TestCategory("Scheduler_NonDeterministic")]
+        [TestCategory("Scheduler_NonDeterministic_Strong")] // Relies on timing.
         public void Scheduler_DisposeChildSchedulers()
         {
             IScheduler parent, child;
