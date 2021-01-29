@@ -10,242 +10,103 @@ pr:
     - main
     - rel/*
 
+variables:      
+  BuildPlatform: Any CPU
+  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+
 stages:
 - stage: Build
   jobs:
-  - job: Build
-    pool: vs2019-preview
+  - template: azure-pipelines-build-jobs.yml
+    parameters:
+      name: Windows
+      pool: vs2019-preview
 
-    variables:
-      BuildConfiguration: Release
-      BuildPlatform: Any CPU
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
+  - template: azure-pipelines-build-jobs.yml
+    parameters:
+      name: Linux
+      pool: 
+        vmImage: ubuntu-latest
+  
+  - job: Build_and_Pack
+    pool: vs2019-preview
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 5.0.x SDK
+      displayName: Use .NET Core 5.x SDK
       inputs:
-        version: 5.0.x
+        version: 5.x
         performMultiLevelLookup: true
 
     - task: DotNetCoreCLI@2
       inputs:
         command: custom
         custom: tool
-        arguments: install --tool-path . nbgv
+        arguments: install -g nbgv
       displayName: Install NBGV tool
 
-    - script: nbgv cloud -a -p Rx.NET/Source
+    - script: nbgv cloud -a
       displayName: Set Version
 
-    - task: MSBuild@1
-      displayName: Build System.Reactive.sln
-      inputs:
-        solution: Rx.NET/Source/System.Reactive.sln
-        msbuildArguments: /restore /t:build /p:CreatePackage=true /p:NoPackageAnalysis=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)\artifacts
-        configuration: $(BuildConfiguration)
-        maximumCpuCount: false
-
-    - task: NuGetCommand@2
-      displayName: Pack compatibility package
-      inputs:
-        command: custom
-        arguments: pack Rx.NET/Source/facades/System.Reactive.Compatibility.nuspec -Version $(NBGV_NuGetPackageVersion) -MinClientVersion 2.12 -NoPackageAnalysis -outputdirectory $(Build.ArtifactStagingDirectory)\artifacts
-
     - task: DotNetCoreCLI@2
       inputs:
-        command: custom
-        custom: tool
-        arguments: install --tool-path . dotnet-reportgenerator-globaltool
-      displayName: Install ReportGenerator tool
+        command: build
+        projects: All.sln
+        configuration: Release
+        verbosity: Minimal        
+        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog
+      displayName: Build and Pack
 
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: Rx.NET/Source/tests/Tests.System.Reactive/*.csproj
-        arguments: -c $(BuildConfiguration) --filter "SkipCI!=true" --settings Rx.NET/Source/CodeCoverage.runsettings --collect:"XPlat Code Coverage" -- RunConfiguration.DisableAppDomain=true
-      displayName: Run Unit Tests
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: Rx.NET/Source/tests/Tests.System.Reactive.ApiApprovals/Tests.System.Reactive.ApiApprovals.csproj
-        arguments: -c $(BuildConfiguration) 
-      displayName: Run Api Approvals Tests
-
-    - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/Rx.NET/Source/coverlet/reports -reporttypes:"Cobertura"
-      displayName: Create reports
-
-    - task: PublishCodeCoverageResults@1
-      displayName: 'Publish code coverage'
-      inputs:
-        codeCoverageTool: Cobertura
-        summaryFileLocation: $(Build.SourcesDirectory)/Rx.NET/Source/coverlet/reports/Cobertura.xml
-
-    - publish:  Rx.NET/Source/build
+    - publish:  config
       artifact: config
       displayName: Publish signing config
 
-    - publish: $(Build.ArtifactStagingDirectory)\artifacts
+    - script: del $(Build.ArtifactStagingDirectory)\artifacts\*.symbols.nupkg
+      displayName: Remove redundant packages from upload
+
+    - publish: $(Build.ArtifactStagingDirectory)/artifacts
       displayName: Publish artifacts
       artifact: BuildPackages
-    
-    - publish: Rx.NET/Source/tests/Tests.System.Reactive.ApiApprovals/Api
-      displayName: Publish test artifiacts
-      artifact: ApprovalsTests
-      condition: always()
 
-- stage: IntegrationTests
-  jobs:
-  - job: Linux
-    pool:
-      vmImage: ubuntu-latest
-
-    variables:
-      BuildConfiguration: Release
-      BuildPlatform: Any CPU
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
-    steps:
-    - task: UseDotNet@2
+    - task: PublishBuildArtifacts@1
       inputs:
-        version: 5.0.x
+        pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
+        artifactName: Logs    
+      displayName: Publish Build Logs      
+      condition: always()      
 
-    - task: UseDotNet@2
-      inputs:
-        version: '3.1.x'
-        packageType: runtime
-
-    - task: UseDotNet@2
-      inputs:
-        version: '2.2.x'
-        packageType: runtime
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: custom
-        custom: tool
-        arguments: install --tool-path . nbgv
-      displayName: Install NBGV tool
-
-    - script: ./nbgv cloud -a -p Rx.NET/Source
-      displayName: Set Version
-
-    - task: DownloadPipelineArtifact@2
-      displayName: Download Build Artifacts
-      inputs:
-        artifactName: BuildPackages
-        targetPath: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LocalPackages
-
-    - task: DotNetCoreCLI@2
-      displayName: Update Rx
-      inputs:
-        command: custom
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LinuxTests/LinuxTests.csproj
-        custom: add
-        arguments: package System.Reactive -v $(NBGV_NuGetPackageVersion) -s $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LocalPackages
-
-    - task: DotNetCoreCLI@2
-      displayName: Update Aliases
-      inputs:
-        command: custom
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LinuxTests/LinuxTests.csproj
-        custom: add
-        arguments: package System.Reactive.Observable.Aliases -v $(NBGV_NuGetPackageVersion) -s $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LocalPackages
-
-    - task: DotNetCoreCLI@2
-      displayName: Update Testing
-      inputs:
-        command: custom
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LinuxTests/LinuxTests.csproj
-        custom: add
-        arguments: package Microsoft.Reactive.Testing -v $(NBGV_NuGetPackageVersion) -s $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LocalPackages
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LinuxTests/LinuxTests.csproj
-        arguments: -c $(BuildConfiguration) -f net5.0 --filter "SkipCI!=true"
-      displayName: Run 5.0 Tests on Linux
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LinuxTests/LinuxTests.csproj
-        arguments: -c $(BuildConfiguration) -f netcoreapp3.1 --filter "SkipCI!=true"
-      displayName: Run 3.1 Tests on Linux
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LinuxTests/LinuxTests.csproj
-        arguments: -c $(BuildConfiguration) -f netcoreapp2.1 --filter "SkipCI!=true" 
-      displayName: Run 2.1 Tests on Linux
-
-  - job: WindowsDesktop    
+- stage: ProcessCodeCoverage
+  dependsOn: Build
+  condition: succeededOrFailed()
+  jobs: 
+  - job: ProcessCoverage
     pool:
       vmImage: windows-latest
-
-    variables:
-      BuildConfiguration: Release
-      BuildPlatform: Any CPU
-      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-
     steps:
-    - task: UseDotNet@2
-      inputs:
-        version: 5.0.x
-        performMultiLevelLookup: true
+    - checkout: none
+      
+    - download: current
+      artifact: RawCoverage     
 
     - task: DotNetCoreCLI@2
       inputs:
         command: custom
         custom: tool
-        arguments: install --tool-path . nbgv
-      displayName: Install NBGV tool
+        arguments: install -g dotnet-reportgenerator-globaltool
+      displayName: Install ReportGenerator tool
 
-    - script: nbgv cloud -a -p Rx.NET/Source
-      displayName: Set Version
+    - script: reportgenerator -reports:$(Pipeline.Workspace)/RawCoverage/**/*.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
+      displayName: Consolidate Reports from Jobs
 
-    - task: DownloadPipelineArtifact@2
-      displayName: Download Build Artifacts
+    - task: PublishCodeCoverageResults@1
+      displayName: Publish code coverage
       inputs:
-        artifactName: BuildPackages
-        targetPath: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LocalPackages
-
-    - task: DotNetCoreCLI@2
-      displayName: Update Rx
-      inputs:
-        command: custom
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/WindowsDesktopTests/WindowsDesktopTests.csproj
-        custom: add
-        arguments: package System.Reactive -v $(NBGV_NuGetPackageVersion) -s $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LocalPackages
-
-    - task: DotNetCoreCLI@2
-      displayName: Update Aliases
-      inputs:
-        command: custom
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/WindowsDesktopTests/WindowsDesktopTests.csproj
-        custom: add
-        arguments: package System.Reactive.Observable.Aliases -v $(NBGV_NuGetPackageVersion) -s $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LocalPackages
-
-    - task: DotNetCoreCLI@2
-      displayName: Update Testing
-      inputs:
-        command: custom
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/WindowsDesktopTests/WindowsDesktopTests.csproj
-        custom: add
-        arguments: package Microsoft.Reactive.Testing -v $(NBGV_NuGetPackageVersion) -s $(System.DefaultWorkingDirectory)/Rx.NET/Integration/LocalPackages
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        projects: $(System.DefaultWorkingDirectory)/Rx.NET/Integration/WindowsDesktopTests/WindowsDesktopTests.csproj
-        arguments: -c $(BuildConfiguration) --filter "SkipCI!=true"
-      displayName: Run Tests on Window Desktop
+        codeCoverageTool: Cobertura
+        summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
 
 - stage: CodeSign
-  condition: and(succeeded('IntegrationTests'), not(eq(variables['build.reason'], 'PullRequest')))
+  dependsOn: Build
+  condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
   jobs:
   - deployment: CodeSign
     displayName: Code Signing
@@ -258,6 +119,13 @@ stages:
       runOnce:
         deploy:
           steps:
+
+          - download: current
+            artifact: SigningScripts
+
+          - download: current
+            artifact: BuildPackages            
+
           - task: DotNetCoreCLI@2
             inputs:
               command: custom
@@ -269,13 +137,14 @@ stages:
               .\SignClient "Sign" `
               --baseDirectory "$(Pipeline.Workspace)\BuildPackages" `
               --input "**/*.nupkg" `
-              --config "$(Pipeline.Workspace)\config\signclient.json" `
+              --config "$(Pipeline.Workspace)\SigningScripts\signclient.json" `
               --user "$(SignClientUser)" `
               --secret "$(SignClientSecret)" `
-              --name "Rx.NET" `
-              --description "Rx.NET" `
-              --descriptionUrl "https://github.com/dotnet/reactive"
+              --name "Reaqtive" `
+              --description "Reaqtive" `
+              --descriptionUrl "https://github.com/reaqtive/reaqtor"
             displayName: Sign packages
+
           - publish: $(Pipeline.Workspace)/BuildPackages
             displayName: Publish Signed Packages
             artifact: SignedPackages
