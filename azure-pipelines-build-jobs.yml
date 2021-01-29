@@ -53,11 +53,12 @@ jobs:
       arguments: -c $(BuildConfiguration) /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ parameters.name }}.$(BuildConfiguration).Test.binlog --settings coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m 
     displayName: Run Unit Tests
 
-  - task: CopyFiles@2
+  - task: ArchiveFiles@2
     inputs:
-      contents: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
-      targetFolder: $(Build.ArtifactStagingDirectory)/coverage
-    displayName: Copy raw coverage files to staging
+      rootFolderOrFile: '$(Agent.TempDirectory)' 
+      archiveFile: '$(Build.ArtifactStagingDirectory)/coverage/${{ parameters.name }}.$(BuildConfiguration).zip'
+    displayName: Zip Test Results
+    condition: succeededOrFailed()
 
   - task: PublishBuildArtifacts@1
     inputs:
@@ -66,11 +67,12 @@ jobs:
       parallel: true
       parallelCount: 8
     displayName: Publish Raw Coverage Output    
-    condition: always()
 
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
       artifactName: Logs    
+      parallel: true
+      parallelCount: 8      
     displayName: Publish Build Logs      
     condition: always()

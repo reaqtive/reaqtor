@@ -75,7 +75,9 @@ stages:
       displayName: Publish Build Logs      
       condition: always()      
 
-- stage: ProcessCodeCoverage  
+- stage: ProcessCodeCoverage
+  dependsOn: Build
+  condition: succeededOrFailed()
   jobs: 
   - job: ProcessCoverage
     pool:
@@ -83,13 +85,14 @@ stages:
     steps:
     - checkout: none
       
-    - task: DownloadBuildArtifacts@0
+    - download: current
+      artifact: RawCoverage     
+
+    - task: ExtractFiles@1
       inputs:
-        buildType: current
-        downloadType: single
-        artifactName: RawCoverage
-        downloadPath: '$(System.ArtifactsDirectory)' 
-        allowPartiallySucceededBuilds: true
+        archiveFilePatterns: '$(Pipeline.Workspace)/**/*.zip'
+        destinationFolder: coverageFiles
+      displayName: Extract raw coverage files
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -98,7 +101,7 @@ stages:
         arguments: install -g dotnet-reportgenerator-globaltool
       displayName: Install ReportGenerator tool
 
-    - script: reportgenerator -reports:$(System.ArtifactsDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
+    - script: reportgenerator -reports:$(Build.SourcesDirectory)/coverageFiles/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
       displayName: Create reports
 
     - task: PublishCodeCoverageResults@1
@@ -109,6 +112,7 @@ stages:
 
 
 - stage: CodeSign
+  dependsOn: Build
   condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
   jobs:
   - deployment: CodeSign
