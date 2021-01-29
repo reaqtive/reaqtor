@@ -4,8 +4,6 @@ parameters:
   type: object
   default: {}
 - name: name
-- name: shouldPack
-  default: false
 
 jobs:
 - job: Test_${{ parameters.name }}
