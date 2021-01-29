@@ -60,14 +60,10 @@ stages:
     - task: DotNetCoreCLI@2
       inputs:
         command: build
-        projects: |
-          **/*.csproj
-          !**/Tests.*.csproj
-          !**/Perf.*.csproj
-          !**/Reaqtor.Remoting.VersioningTests.csproj
+        projects: All.sln
         configuration: Release
         verbosity: Minimal        
-        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Pack.binlog --no-restore
+        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog --no-restore
       displayName: Build and Pack
 
     - publish:  config
