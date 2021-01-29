@@ -71,7 +71,8 @@ jobs:
       artifactName: RawCoverage
       parallel: true
       parallelCount: 8
-    displayName: Publish Raw Coverage Output    
+    displayName: Publish Raw Coverage Output
+    condition: succeededOrFailed()
 
   - task: PublishBuildArtifacts@1
     inputs:
