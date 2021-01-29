@@ -88,12 +88,6 @@ stages:
     - download: current
       artifact: RawCoverage     
 
-    - task: ExtractFiles@1
-      inputs:
-        archiveFilePatterns: '$(Pipeline.Workspace)/**/*.zip'
-        destinationFolder: coverageFiles
-      displayName: Extract raw coverage files
-
     - task: DotNetCoreCLI@2
       inputs:
         command: custom
@@ -101,15 +95,14 @@ stages:
         arguments: install -g dotnet-reportgenerator-globaltool
       displayName: Install ReportGenerator tool
 
-    - script: reportgenerator -reports:$(Build.SourcesDirectory)/coverageFiles/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
-      displayName: Create reports
+    - script: reportgenerator -reports:$(Pipeline.Workspace)/RawCoverage/**/*.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
+      displayName: Consolidate Reports from Jobs
 
     - task: PublishCodeCoverageResults@1
-      displayName: 'Publish code coverage'
+      displayName: Publish code coverage
       inputs:
         codeCoverageTool: Cobertura
         summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
-
 
 - stage: CodeSign
   dependsOn: Build
