@@ -57,7 +57,7 @@ jobs:
     inputs:
       command: test
       projects: All.sln
-      arguments: -c $(BuildConfiguration) /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ parameters.name }}.$(BuildConfiguration).Test.binlog --settings coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m
+      arguments: -c $(BuildConfiguration) /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ parameters.name }}.$(BuildConfiguration).Test.binlog --settings coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m --filter "TestCategory!~NonDeterministic_Strong"
       testRunTitle: ${{ parameters.name }} $(BuildConfiguration)
     displayName: Run Unit Tests
 
