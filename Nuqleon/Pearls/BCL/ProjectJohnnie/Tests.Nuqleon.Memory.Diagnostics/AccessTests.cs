@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -14,6 +14,12 @@ namespace Tests
     [TestClass]
     public class AccessTests
     {
+        [TestMethod]
+        public void Access_Field_ArgumentChecking()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => Access.Field(null));
+        }
+
         [TestMethod]
         public void Access_Field_Private()
         {
@@ -49,6 +55,12 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Access_VectorElement_ArgumentChecking()
+        {
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Access.VectorElement(-1));
+        }
+
+        [TestMethod]
         public void Access_VectorElement()
         {
             var x0 = Access.VectorElement(0);
@@ -72,6 +84,14 @@ namespace Tests
         }
 
         [TestMethod]
+        public void Access_MultidimensionalArrayElement_ArgumentChecking()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => Access.MultidimensionalArrayElement(default));
+            Assert.ThrowsException<ArgumentException>(() => Access.MultidimensionalArrayElement(Array.Empty<int>()));
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Access.MultidimensionalArrayElement(-1));
+        }
+
+        [TestMethod]
         public void Access_MultidimensionalArrayElement()
         {
             var x00 = Access.MultidimensionalArrayElement(0, 0);
@@ -92,6 +112,14 @@ namespace Tests
             var p = Expression.Parameter(typeof(int[,]));
             Assert.AreEqual(1, Expression.Lambda<Func<int[,], int>>(x00.ToExpression(p), p).Compile()(new int[2, 3] { { 1, 2, 3 }, { 4, 5, 6 } }));
             Assert.AreEqual(6, Expression.Lambda<Func<int[,], int>>(x12.ToExpression(p), p).Compile()(new int[2, 3] { { 1, 2, 3 }, { 4, 5, 6 } }));
+        }
+
+        [TestMethod]
+        public void Access_Composite_ArgumentChecking()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => Access.Composite(default));
+            Assert.ThrowsException<ArgumentException>(() => Access.Composite(Array.Empty<Access>()));
+            Assert.ThrowsException<ArgumentNullException>(() => Access.Composite(new Access[] { null }));
         }
 
         [TestMethod]
