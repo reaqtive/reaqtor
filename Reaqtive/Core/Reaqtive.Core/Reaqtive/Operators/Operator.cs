@@ -42,7 +42,7 @@ namespace Reaqtive
         /// Gets the parameters used by the operator. These parameters may include
         /// subscribable objects representing input sequences for the operator.
         /// </summary>
-        protected TParam Params { get; private set; }
+        protected TParam Params { get; }
 
         /// <summary>
         /// The observer that is subscribed to the operator. Is set when the object
@@ -84,7 +84,7 @@ namespace Reaqtive
 
         /// <summary>
         /// Sets the operator's context in which it operates. The context contains things
-        /// like the reactive service, scheduler, and so on.
+        /// like the scheduler and provides access to the hosting environment, if any.
         /// </summary>
         /// <param name="context">Context in which the operator operates.</param>
         public virtual void SetContext(IOperatorContext context)
