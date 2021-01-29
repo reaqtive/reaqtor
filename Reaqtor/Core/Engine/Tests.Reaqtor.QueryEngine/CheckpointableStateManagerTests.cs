@@ -450,8 +450,7 @@ namespace Tests.Reaqtor.QueryEngine
                 {
                     if (Volatile.Read(ref fail))
                     {
-                        var j = i;
-                        Interlocked.Increment(ref i);
+                        var j = Interlocked.Increment(ref i) - 1;
                         throw new Exception("Oops! " + j);
                     }
 

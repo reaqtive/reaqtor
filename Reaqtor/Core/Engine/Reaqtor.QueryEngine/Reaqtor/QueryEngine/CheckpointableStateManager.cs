@@ -27,12 +27,12 @@ namespace Reaqtor.QueryEngine
         private readonly TraceSource _traceSource;
 
         private readonly object _statusLock = new();
-        private QueryEngineStatus _status;
-        private TaskCompletionSource<bool> _pendingUnload;
-        private IProgress<int> _cancelProgress;
-        private IProgress<int> _unloadProgress;
-        private CancellationTokenSource _activeOperation;
-        private IUnloadable _activeResource;
+        private volatile QueryEngineStatus _status;
+        private volatile TaskCompletionSource<bool> _pendingUnload;
+        private volatile IProgress<int> _cancelProgress;
+        private volatile IProgress<int> _unloadProgress;
+        private volatile CancellationTokenSource _activeOperation;
+        private volatile IUnloadable _activeResource;
 
         /// <summary>
         /// Creates a new checkpointable object state transition manager encapsulating the given engine.
@@ -103,7 +103,7 @@ namespace Reaqtor.QueryEngine
                 {
                     await _engine.CheckpointAsync(unloadableWriter, _activeOperation.Token, progress).ConfigureAwait(false);
                 }
-                catch (OperationCanceledException ex) when (!token.IsCancellationRequested && Volatile.Read(ref _pendingUnload) != null)
+                catch (OperationCanceledException ex) when (!token.IsCancellationRequested && _pendingUnload != null)
                 {
                     // User didn't cancel and unload pending indicates we're responsible for triggering cancellation.
                     throw new EngineUnloadedException(ex);
@@ -208,7 +208,7 @@ namespace Reaqtor.QueryEngine
                 {
                     await _engine.RecoverAsync(unloadableReader, _activeOperation.Token, progress).ConfigureAwait(false);
                 }
-                catch (OperationCanceledException ex) when (!token.IsCancellationRequested && Volatile.Read(ref _pendingUnload) != null)
+                catch (OperationCanceledException ex) when (!token.IsCancellationRequested && _pendingUnload != null)
                 {
                     // User didn't cancel and unload pending indicates we're responsible for triggering cancellation.
                     throw new EngineUnloadedException(ex);
@@ -388,7 +388,9 @@ namespace Reaqtor.QueryEngine
                             case QueryEngineStatus.Checkpointing:
                                 _status |= QueryEngineStatus.UnloadRequested;
                                 _pendingUnload = new TaskCompletionSource<bool>();
-                                SplitUnloadProgress(progress, out _cancelProgress, out _unloadProgress);
+                                SplitUnloadProgress(progress, out var cancelProgress, out var unloadProgress);
+                                _cancelProgress = cancelProgress;
+                                _unloadProgress = unloadProgress;
                                 activeOperation = _activeOperation;
                                 activeResource = _activeResource;
                                 return false;
