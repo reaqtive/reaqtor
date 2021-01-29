@@ -50,19 +50,11 @@ stages:
 
     - task: DotNetCoreCLI@2
       inputs:
-        command: restore
-        projects: All.sln
-        verbosityRestore: Minimal
-        restoreArguments: /bl:$(Build.ArtifactStagingDirectory)/Logs/Pack.Restore.binlog
-      displayName: Restore
-
-    - task: DotNetCoreCLI@2
-      inputs:
         command: build
         projects: All.sln
         configuration: Release
         verbosity: Minimal        
-        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog --no-restore
+        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog
       displayName: Build and Pack
 
     - publish:  config
