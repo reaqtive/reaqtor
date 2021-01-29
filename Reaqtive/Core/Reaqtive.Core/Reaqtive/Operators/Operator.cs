@@ -158,8 +158,7 @@ namespace Reaqtive
         /// <summary>
         /// Defines behavior immediately after operator is subscribed to. This
         /// method is generally responsible for subscribe'ing the operator to the
-        /// `Params`, e.g., `Inputs = OnSubscribe();`. It is usually the case
-        /// that this method is called as the last thing the constructor does.
+        /// `Params`, e.g., `Inputs = OnSubscribe();`.
         /// </summary>
         /// <returns>Enumerable containing the subscriptions.</returns>
         protected virtual IEnumerable<ISubscription> OnSubscribe()
