@@ -75,6 +75,39 @@ stages:
       displayName: Publish Build Logs      
       condition: always()      
 
+- stage: ProcessCodeCoverage  
+  jobs: 
+  - job: ProcessCoverage
+    pool:
+      vmImage: windows-latest
+    steps:
+    - checkout: none
+      
+    - task: DownloadBuildArtifacts@0
+      inputs:
+        buildType: current
+        downloadType: single
+        artifactName: RawCoverage
+        downloadPath: '$(System.ArtifactsDirectory)' 
+        allowPartiallySucceededBuilds: true
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: custom
+        custom: tool
+        arguments: install -g dotnet-reportgenerator-globaltool
+      displayName: Install ReportGenerator tool
+
+    - script: reportgenerator -reports:$(System.ArtifactsDirectory)/**/coverage.cobertura.xml -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
+      displayName: Create reports
+
+    - task: PublishCodeCoverageResults@1
+      displayName: 'Publish code coverage'
+      inputs:
+        codeCoverageTool: Cobertura
+        summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
+
+
 - stage: CodeSign
   condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
   jobs:
@@ -89,6 +122,13 @@ stages:
       runOnce:
         deploy:
           steps:
+
+          - download: current
+            artifact: SigningScripts
+
+          - download: current
+            artifact: BuildPackages            
+
           - task: DotNetCoreCLI@2
             inputs:
               command: custom
@@ -100,13 +140,14 @@ stages:
               .\SignClient "Sign" `
               --baseDirectory "$(Pipeline.Workspace)\BuildPackages" `
               --input "**/*.nupkg" `
-              --config "$(Pipeline.Workspace)\config\signclient.json" `
+              --config "$(Pipeline.Workspace)\SigningScripts\signclient.json" `
               --user "$(SignClientUser)" `
               --secret "$(SignClientSecret)" `
               --name "Reaqtive" `
               --description "Reaqtive" `
               --descriptionUrl "https://github.com/reaqtive/reaqtor"
             displayName: Sign packages
+
           - publish: $(Pipeline.Workspace)/BuildPackages
             displayName: Publish Signed Packages
             artifact: SignedPackages
