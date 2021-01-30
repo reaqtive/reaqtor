@@ -384,34 +384,36 @@ namespace Tests.Reaqtor.QueryEngine
 
                 public void OnCompleted()
                 {
+                    Output.OnCompleted();
+
                     if (Params._onCompletedLockName != null)
                     {
                         LockManager.Signal(Params._onCompletedLockName);
                     }
 
-                    Output.OnCompleted();
                     Dispose();
                 }
 
                 public void OnError(Exception error)
                 {
+                    Output.OnError(error);
+
                     if (Params._onErrorLockName != null)
                     {
                         LockManager.Signal(Params._onErrorLockName);
                     }
 
-                    Output.OnError(error);
                     Dispose();
                 }
 
                 public void OnNext(T value)
                 {
+                    Output.OnNext(value);
+
                     if (Params._onNextLockName != null)
                     {
                         LockManager.Signal(Params._onNextLockName);
                     }
-
-                    Output.OnNext(value);
                 }
             }
         }
