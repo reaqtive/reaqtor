@@ -17,7 +17,7 @@ using Reaqtive.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Nuqleon.Reactive.Operators
+namespace Test.Reaqtive.Operators
 {
 	public partial class Sum
 	{
@@ -108,14 +108,14 @@ foreach (var kv in d)
 		[TestMethod]
 		public void Sum<#=tn#>_SaveAndReload()
 		{
-            var state = _scheduler.CreateStateContainer();
+            var state = Scheduler.CreateStateContainer();
 
             var checkpoints = new[] {
                 OnSave(225, state),
                 OnLoad(235, state),
             };
 
-			var xs = _scheduler.CreateHotObservable(
+			var xs = Scheduler.CreateHotObservable(
 <#
 var z = 0;
 foreach (var val in vals)
@@ -130,8 +130,8 @@ foreach (var val in vals)
 				OnCompleted<<#=tncs#>>(<#=end#>)
 			);
 
-			var res = _scheduler.Start(() =>
-				xs.Sum().Apply(_scheduler, checkpoints)
+			var res = Scheduler.Start(() =>
+				xs.Sum().Apply(Scheduler, checkpoints)
 			);
 
 			res.Messages.AssertEqual(
