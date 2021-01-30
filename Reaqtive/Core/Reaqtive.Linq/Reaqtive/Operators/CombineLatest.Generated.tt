@@ -10,6 +10,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -106,19 +107,17 @@ for (int i = 2; i <= highestSupportedArity; i++)
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[<#=i#>];
-
 <#
     for (int j = 1; j <= i; j++)
     {
 #>
                 _observer<#=j#> = new CombineLatestObserver<T<#=j#>>(this, <#=j-1#>);
-                subscriptions[<#=j-1#>] = _observer<#=j#>.Subscription = Params._source<#=j#>.Subscribe(_observer<#=j#>);
+                _observer<#=j#>.Subscription = Params._source<#=j#>.Subscribe(_observer<#=j#>);
 
 <#
     }
 #>
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
 <#
@@ -158,6 +157,56 @@ for (int i = 2; i <= highestSupportedArity; i++)
 <#
     }
 #>
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < <#=i-1#>)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = <#=i#>;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+<#
+    for (int j = 1; j <= i; j++)
+    {
+#>
+                        <#=j-1#> => _parent._observer<#=j#>.Subscription,
+<#
+    }
+#>
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }

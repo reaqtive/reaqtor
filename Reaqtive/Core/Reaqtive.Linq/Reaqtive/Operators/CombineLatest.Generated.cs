@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Diagnostics;
 
@@ -52,15 +53,13 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[2];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue);
@@ -79,6 +78,50 @@ namespace Reaqtive.Operators
 
                 _observer1.LoadState(reader);
                 _observer2.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 1)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 2;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -133,18 +176,16 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[3];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue);
@@ -165,6 +206,51 @@ namespace Reaqtive.Operators
                 _observer1.LoadState(reader);
                 _observer2.LoadState(reader);
                 _observer3.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 2)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 3;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -223,21 +309,19 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[4];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue);
@@ -260,6 +344,52 @@ namespace Reaqtive.Operators
                 _observer2.LoadState(reader);
                 _observer3.LoadState(reader);
                 _observer4.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 3)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 4;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -322,24 +452,22 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[5];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue);
@@ -364,6 +492,53 @@ namespace Reaqtive.Operators
                 _observer3.LoadState(reader);
                 _observer4.LoadState(reader);
                 _observer5.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 4)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 5;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -430,27 +605,25 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[6];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue);
@@ -477,6 +650,54 @@ namespace Reaqtive.Operators
                 _observer4.LoadState(reader);
                 _observer5.LoadState(reader);
                 _observer6.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 5)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 6;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -547,30 +768,28 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[7];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue);
@@ -599,6 +818,55 @@ namespace Reaqtive.Operators
                 _observer5.LoadState(reader);
                 _observer6.LoadState(reader);
                 _observer7.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 6)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 7;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -673,33 +941,31 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[8];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
                 _observer8 = new CombineLatestObserver<T8>(this, 7);
-                subscriptions[7] = _observer8.Subscription = Params._source8.Subscribe(_observer8);
+                _observer8.Subscription = Params._source8.Subscribe(_observer8);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue, _observer8.LastValue);
@@ -730,6 +996,56 @@ namespace Reaqtive.Operators
                 _observer6.LoadState(reader);
                 _observer7.LoadState(reader);
                 _observer8.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 7)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 8;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        7 => _parent._observer8.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -808,36 +1124,34 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[9];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
                 _observer8 = new CombineLatestObserver<T8>(this, 7);
-                subscriptions[7] = _observer8.Subscription = Params._source8.Subscribe(_observer8);
+                _observer8.Subscription = Params._source8.Subscribe(_observer8);
 
                 _observer9 = new CombineLatestObserver<T9>(this, 8);
-                subscriptions[8] = _observer9.Subscription = Params._source9.Subscribe(_observer9);
+                _observer9.Subscription = Params._source9.Subscribe(_observer9);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue, _observer8.LastValue, _observer9.LastValue);
@@ -870,6 +1184,57 @@ namespace Reaqtive.Operators
                 _observer7.LoadState(reader);
                 _observer8.LoadState(reader);
                 _observer9.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 8)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 9;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        7 => _parent._observer8.Subscription,
+                        8 => _parent._observer9.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -952,39 +1317,37 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[10];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
                 _observer8 = new CombineLatestObserver<T8>(this, 7);
-                subscriptions[7] = _observer8.Subscription = Params._source8.Subscribe(_observer8);
+                _observer8.Subscription = Params._source8.Subscribe(_observer8);
 
                 _observer9 = new CombineLatestObserver<T9>(this, 8);
-                subscriptions[8] = _observer9.Subscription = Params._source9.Subscribe(_observer9);
+                _observer9.Subscription = Params._source9.Subscribe(_observer9);
 
                 _observer10 = new CombineLatestObserver<T10>(this, 9);
-                subscriptions[9] = _observer10.Subscription = Params._source10.Subscribe(_observer10);
+                _observer10.Subscription = Params._source10.Subscribe(_observer10);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue, _observer8.LastValue, _observer9.LastValue, _observer10.LastValue);
@@ -1019,6 +1382,58 @@ namespace Reaqtive.Operators
                 _observer8.LoadState(reader);
                 _observer9.LoadState(reader);
                 _observer10.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 9)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 10;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        7 => _parent._observer8.Subscription,
+                        8 => _parent._observer9.Subscription,
+                        9 => _parent._observer10.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -1105,42 +1520,40 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[11];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
                 _observer8 = new CombineLatestObserver<T8>(this, 7);
-                subscriptions[7] = _observer8.Subscription = Params._source8.Subscribe(_observer8);
+                _observer8.Subscription = Params._source8.Subscribe(_observer8);
 
                 _observer9 = new CombineLatestObserver<T9>(this, 8);
-                subscriptions[8] = _observer9.Subscription = Params._source9.Subscribe(_observer9);
+                _observer9.Subscription = Params._source9.Subscribe(_observer9);
 
                 _observer10 = new CombineLatestObserver<T10>(this, 9);
-                subscriptions[9] = _observer10.Subscription = Params._source10.Subscribe(_observer10);
+                _observer10.Subscription = Params._source10.Subscribe(_observer10);
 
                 _observer11 = new CombineLatestObserver<T11>(this, 10);
-                subscriptions[10] = _observer11.Subscription = Params._source11.Subscribe(_observer11);
+                _observer11.Subscription = Params._source11.Subscribe(_observer11);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue, _observer8.LastValue, _observer9.LastValue, _observer10.LastValue, _observer11.LastValue);
@@ -1177,6 +1590,59 @@ namespace Reaqtive.Operators
                 _observer9.LoadState(reader);
                 _observer10.LoadState(reader);
                 _observer11.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 10)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 11;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        7 => _parent._observer8.Subscription,
+                        8 => _parent._observer9.Subscription,
+                        9 => _parent._observer10.Subscription,
+                        10 => _parent._observer11.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -1267,45 +1733,43 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[12];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
                 _observer8 = new CombineLatestObserver<T8>(this, 7);
-                subscriptions[7] = _observer8.Subscription = Params._source8.Subscribe(_observer8);
+                _observer8.Subscription = Params._source8.Subscribe(_observer8);
 
                 _observer9 = new CombineLatestObserver<T9>(this, 8);
-                subscriptions[8] = _observer9.Subscription = Params._source9.Subscribe(_observer9);
+                _observer9.Subscription = Params._source9.Subscribe(_observer9);
 
                 _observer10 = new CombineLatestObserver<T10>(this, 9);
-                subscriptions[9] = _observer10.Subscription = Params._source10.Subscribe(_observer10);
+                _observer10.Subscription = Params._source10.Subscribe(_observer10);
 
                 _observer11 = new CombineLatestObserver<T11>(this, 10);
-                subscriptions[10] = _observer11.Subscription = Params._source11.Subscribe(_observer11);
+                _observer11.Subscription = Params._source11.Subscribe(_observer11);
 
                 _observer12 = new CombineLatestObserver<T12>(this, 11);
-                subscriptions[11] = _observer12.Subscription = Params._source12.Subscribe(_observer12);
+                _observer12.Subscription = Params._source12.Subscribe(_observer12);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue, _observer8.LastValue, _observer9.LastValue, _observer10.LastValue, _observer11.LastValue, _observer12.LastValue);
@@ -1344,6 +1808,60 @@ namespace Reaqtive.Operators
                 _observer10.LoadState(reader);
                 _observer11.LoadState(reader);
                 _observer12.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 11)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 12;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        7 => _parent._observer8.Subscription,
+                        8 => _parent._observer9.Subscription,
+                        9 => _parent._observer10.Subscription,
+                        10 => _parent._observer11.Subscription,
+                        11 => _parent._observer12.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -1438,48 +1956,46 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[13];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
                 _observer8 = new CombineLatestObserver<T8>(this, 7);
-                subscriptions[7] = _observer8.Subscription = Params._source8.Subscribe(_observer8);
+                _observer8.Subscription = Params._source8.Subscribe(_observer8);
 
                 _observer9 = new CombineLatestObserver<T9>(this, 8);
-                subscriptions[8] = _observer9.Subscription = Params._source9.Subscribe(_observer9);
+                _observer9.Subscription = Params._source9.Subscribe(_observer9);
 
                 _observer10 = new CombineLatestObserver<T10>(this, 9);
-                subscriptions[9] = _observer10.Subscription = Params._source10.Subscribe(_observer10);
+                _observer10.Subscription = Params._source10.Subscribe(_observer10);
 
                 _observer11 = new CombineLatestObserver<T11>(this, 10);
-                subscriptions[10] = _observer11.Subscription = Params._source11.Subscribe(_observer11);
+                _observer11.Subscription = Params._source11.Subscribe(_observer11);
 
                 _observer12 = new CombineLatestObserver<T12>(this, 11);
-                subscriptions[11] = _observer12.Subscription = Params._source12.Subscribe(_observer12);
+                _observer12.Subscription = Params._source12.Subscribe(_observer12);
 
                 _observer13 = new CombineLatestObserver<T13>(this, 12);
-                subscriptions[12] = _observer13.Subscription = Params._source13.Subscribe(_observer13);
+                _observer13.Subscription = Params._source13.Subscribe(_observer13);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue, _observer8.LastValue, _observer9.LastValue, _observer10.LastValue, _observer11.LastValue, _observer12.LastValue, _observer13.LastValue);
@@ -1520,6 +2036,61 @@ namespace Reaqtive.Operators
                 _observer11.LoadState(reader);
                 _observer12.LoadState(reader);
                 _observer13.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 12)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 13;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        7 => _parent._observer8.Subscription,
+                        8 => _parent._observer9.Subscription,
+                        9 => _parent._observer10.Subscription,
+                        10 => _parent._observer11.Subscription,
+                        11 => _parent._observer12.Subscription,
+                        12 => _parent._observer13.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -1618,51 +2189,49 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[14];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
                 _observer8 = new CombineLatestObserver<T8>(this, 7);
-                subscriptions[7] = _observer8.Subscription = Params._source8.Subscribe(_observer8);
+                _observer8.Subscription = Params._source8.Subscribe(_observer8);
 
                 _observer9 = new CombineLatestObserver<T9>(this, 8);
-                subscriptions[8] = _observer9.Subscription = Params._source9.Subscribe(_observer9);
+                _observer9.Subscription = Params._source9.Subscribe(_observer9);
 
                 _observer10 = new CombineLatestObserver<T10>(this, 9);
-                subscriptions[9] = _observer10.Subscription = Params._source10.Subscribe(_observer10);
+                _observer10.Subscription = Params._source10.Subscribe(_observer10);
 
                 _observer11 = new CombineLatestObserver<T11>(this, 10);
-                subscriptions[10] = _observer11.Subscription = Params._source11.Subscribe(_observer11);
+                _observer11.Subscription = Params._source11.Subscribe(_observer11);
 
                 _observer12 = new CombineLatestObserver<T12>(this, 11);
-                subscriptions[11] = _observer12.Subscription = Params._source12.Subscribe(_observer12);
+                _observer12.Subscription = Params._source12.Subscribe(_observer12);
 
                 _observer13 = new CombineLatestObserver<T13>(this, 12);
-                subscriptions[12] = _observer13.Subscription = Params._source13.Subscribe(_observer13);
+                _observer13.Subscription = Params._source13.Subscribe(_observer13);
 
                 _observer14 = new CombineLatestObserver<T14>(this, 13);
-                subscriptions[13] = _observer14.Subscription = Params._source14.Subscribe(_observer14);
+                _observer14.Subscription = Params._source14.Subscribe(_observer14);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue, _observer8.LastValue, _observer9.LastValue, _observer10.LastValue, _observer11.LastValue, _observer12.LastValue, _observer13.LastValue, _observer14.LastValue);
@@ -1705,6 +2274,62 @@ namespace Reaqtive.Operators
                 _observer12.LoadState(reader);
                 _observer13.LoadState(reader);
                 _observer14.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 13)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 14;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        7 => _parent._observer8.Subscription,
+                        8 => _parent._observer9.Subscription,
+                        9 => _parent._observer10.Subscription,
+                        10 => _parent._observer11.Subscription,
+                        11 => _parent._observer12.Subscription,
+                        12 => _parent._observer13.Subscription,
+                        13 => _parent._observer14.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -1807,54 +2432,52 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[15];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
                 _observer8 = new CombineLatestObserver<T8>(this, 7);
-                subscriptions[7] = _observer8.Subscription = Params._source8.Subscribe(_observer8);
+                _observer8.Subscription = Params._source8.Subscribe(_observer8);
 
                 _observer9 = new CombineLatestObserver<T9>(this, 8);
-                subscriptions[8] = _observer9.Subscription = Params._source9.Subscribe(_observer9);
+                _observer9.Subscription = Params._source9.Subscribe(_observer9);
 
                 _observer10 = new CombineLatestObserver<T10>(this, 9);
-                subscriptions[9] = _observer10.Subscription = Params._source10.Subscribe(_observer10);
+                _observer10.Subscription = Params._source10.Subscribe(_observer10);
 
                 _observer11 = new CombineLatestObserver<T11>(this, 10);
-                subscriptions[10] = _observer11.Subscription = Params._source11.Subscribe(_observer11);
+                _observer11.Subscription = Params._source11.Subscribe(_observer11);
 
                 _observer12 = new CombineLatestObserver<T12>(this, 11);
-                subscriptions[11] = _observer12.Subscription = Params._source12.Subscribe(_observer12);
+                _observer12.Subscription = Params._source12.Subscribe(_observer12);
 
                 _observer13 = new CombineLatestObserver<T13>(this, 12);
-                subscriptions[12] = _observer13.Subscription = Params._source13.Subscribe(_observer13);
+                _observer13.Subscription = Params._source13.Subscribe(_observer13);
 
                 _observer14 = new CombineLatestObserver<T14>(this, 13);
-                subscriptions[13] = _observer14.Subscription = Params._source14.Subscribe(_observer14);
+                _observer14.Subscription = Params._source14.Subscribe(_observer14);
 
                 _observer15 = new CombineLatestObserver<T15>(this, 14);
-                subscriptions[14] = _observer15.Subscription = Params._source15.Subscribe(_observer15);
+                _observer15.Subscription = Params._source15.Subscribe(_observer15);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue, _observer8.LastValue, _observer9.LastValue, _observer10.LastValue, _observer11.LastValue, _observer12.LastValue, _observer13.LastValue, _observer14.LastValue, _observer15.LastValue);
@@ -1899,6 +2522,63 @@ namespace Reaqtive.Operators
                 _observer13.LoadState(reader);
                 _observer14.LoadState(reader);
                 _observer15.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 14)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 15;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        7 => _parent._observer8.Subscription,
+                        8 => _parent._observer9.Subscription,
+                        9 => _parent._observer10.Subscription,
+                        10 => _parent._observer11.Subscription,
+                        11 => _parent._observer12.Subscription,
+                        12 => _parent._observer13.Subscription,
+                        13 => _parent._observer14.Subscription,
+                        14 => _parent._observer15.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }
@@ -2005,57 +2685,55 @@ namespace Reaqtive.Operators
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                var subscriptions = new ISubscription[16];
-
                 _observer1 = new CombineLatestObserver<T1>(this, 0);
-                subscriptions[0] = _observer1.Subscription = Params._source1.Subscribe(_observer1);
+                _observer1.Subscription = Params._source1.Subscribe(_observer1);
 
                 _observer2 = new CombineLatestObserver<T2>(this, 1);
-                subscriptions[1] = _observer2.Subscription = Params._source2.Subscribe(_observer2);
+                _observer2.Subscription = Params._source2.Subscribe(_observer2);
 
                 _observer3 = new CombineLatestObserver<T3>(this, 2);
-                subscriptions[2] = _observer3.Subscription = Params._source3.Subscribe(_observer3);
+                _observer3.Subscription = Params._source3.Subscribe(_observer3);
 
                 _observer4 = new CombineLatestObserver<T4>(this, 3);
-                subscriptions[3] = _observer4.Subscription = Params._source4.Subscribe(_observer4);
+                _observer4.Subscription = Params._source4.Subscribe(_observer4);
 
                 _observer5 = new CombineLatestObserver<T5>(this, 4);
-                subscriptions[4] = _observer5.Subscription = Params._source5.Subscribe(_observer5);
+                _observer5.Subscription = Params._source5.Subscribe(_observer5);
 
                 _observer6 = new CombineLatestObserver<T6>(this, 5);
-                subscriptions[5] = _observer6.Subscription = Params._source6.Subscribe(_observer6);
+                _observer6.Subscription = Params._source6.Subscribe(_observer6);
 
                 _observer7 = new CombineLatestObserver<T7>(this, 6);
-                subscriptions[6] = _observer7.Subscription = Params._source7.Subscribe(_observer7);
+                _observer7.Subscription = Params._source7.Subscribe(_observer7);
 
                 _observer8 = new CombineLatestObserver<T8>(this, 7);
-                subscriptions[7] = _observer8.Subscription = Params._source8.Subscribe(_observer8);
+                _observer8.Subscription = Params._source8.Subscribe(_observer8);
 
                 _observer9 = new CombineLatestObserver<T9>(this, 8);
-                subscriptions[8] = _observer9.Subscription = Params._source9.Subscribe(_observer9);
+                _observer9.Subscription = Params._source9.Subscribe(_observer9);
 
                 _observer10 = new CombineLatestObserver<T10>(this, 9);
-                subscriptions[9] = _observer10.Subscription = Params._source10.Subscribe(_observer10);
+                _observer10.Subscription = Params._source10.Subscribe(_observer10);
 
                 _observer11 = new CombineLatestObserver<T11>(this, 10);
-                subscriptions[10] = _observer11.Subscription = Params._source11.Subscribe(_observer11);
+                _observer11.Subscription = Params._source11.Subscribe(_observer11);
 
                 _observer12 = new CombineLatestObserver<T12>(this, 11);
-                subscriptions[11] = _observer12.Subscription = Params._source12.Subscribe(_observer12);
+                _observer12.Subscription = Params._source12.Subscribe(_observer12);
 
                 _observer13 = new CombineLatestObserver<T13>(this, 12);
-                subscriptions[12] = _observer13.Subscription = Params._source13.Subscribe(_observer13);
+                _observer13.Subscription = Params._source13.Subscribe(_observer13);
 
                 _observer14 = new CombineLatestObserver<T14>(this, 13);
-                subscriptions[13] = _observer14.Subscription = Params._source14.Subscribe(_observer14);
+                _observer14.Subscription = Params._source14.Subscribe(_observer14);
 
                 _observer15 = new CombineLatestObserver<T15>(this, 14);
-                subscriptions[14] = _observer15.Subscription = Params._source15.Subscribe(_observer15);
+                _observer15.Subscription = Params._source15.Subscribe(_observer15);
 
                 _observer16 = new CombineLatestObserver<T16>(this, 15);
-                subscriptions[15] = _observer16.Subscription = Params._source16.Subscribe(_observer16);
+                _observer16.Subscription = Params._source16.Subscribe(_observer16);
 
-                return subscriptions;
+                return new InputSubscriptions(this);
             }
 
             protected override TResult GetResult() => _parent._selector(_observer1.LastValue, _observer2.LastValue, _observer3.LastValue, _observer4.LastValue, _observer5.LastValue, _observer6.LastValue, _observer7.LastValue, _observer8.LastValue, _observer9.LastValue, _observer10.LastValue, _observer11.LastValue, _observer12.LastValue, _observer13.LastValue, _observer14.LastValue, _observer15.LastValue, _observer16.LastValue);
@@ -2102,6 +2780,64 @@ namespace Reaqtive.Operators
                 _observer14.LoadState(reader);
                 _observer15.LoadState(reader);
                 _observer16.LoadState(reader);
+            }
+
+            private sealed class InputSubscriptions : IEnumerable<ISubscription>
+            {
+                private readonly _ _parent;
+
+                public InputSubscriptions(_ parent) => _parent = parent;
+
+                public IEnumerator<ISubscription> GetEnumerator() => new Enumerator(_parent);
+
+                IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+                private sealed class Enumerator : IEnumerator<ISubscription>
+                {
+                    private readonly _ _parent;
+                    private int _index = -1;
+
+                    public Enumerator(_ parent) => _parent = parent;
+
+                    public bool MoveNext()
+                    {
+                        if (_index < 15)
+                        {
+                            _index++;
+                            return true;
+                        }
+
+                        _index = 16;
+                        return false;
+                    }
+
+                    public ISubscription Current => _index switch
+                    {
+                        0 => _parent._observer1.Subscription,
+                        1 => _parent._observer2.Subscription,
+                        2 => _parent._observer3.Subscription,
+                        3 => _parent._observer4.Subscription,
+                        4 => _parent._observer5.Subscription,
+                        5 => _parent._observer6.Subscription,
+                        6 => _parent._observer7.Subscription,
+                        7 => _parent._observer8.Subscription,
+                        8 => _parent._observer9.Subscription,
+                        9 => _parent._observer10.Subscription,
+                        10 => _parent._observer11.Subscription,
+                        11 => _parent._observer12.Subscription,
+                        12 => _parent._observer13.Subscription,
+                        13 => _parent._observer14.Subscription,
+                        14 => _parent._observer15.Subscription,
+                        15 => _parent._observer16.Subscription,
+                        _ => null
+                    };
+
+                    object IEnumerator.Current => Current;
+
+                    public void Reset() => _index = -1;
+
+                    public void Dispose() { }
+                }
             }
         }
     }

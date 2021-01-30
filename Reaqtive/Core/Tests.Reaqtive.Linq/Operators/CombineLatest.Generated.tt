@@ -11,10 +11,8 @@
 <#var highestSupportedArity = 16;#>
 using System;
 using System.Collections;
-using System.Linq;
 
 using Reaqtive;
-using Reaqtive.Disposables;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
 
@@ -53,6 +51,74 @@ for (var i = 2; i <= highestSupportedArity; i++)
 }
 #>
         }
+
+        #region Optimization
+
+<#
+for (var i = 2; i <= highestSupportedArity; ++i) {
+    var args = string.Join(", ", Enumerable.Repeat("Subscribable.Empty<int>()", i));
+    var f = "(" + string.Join(", ", Enumerable.Range(1, i).Select(j => "_" + j)) + ") => 0";
+#>
+        [TestMethod]
+        public void CombineLatest_Optimization_<#=i#>()
+        {
+            var res = Subscribable.CombineLatest(<#=args#>, <#=f#>);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < <#=i#>; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < <#=i#>; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+<#
+}
+#>
+
+        #endregion
 
         #endregion
 

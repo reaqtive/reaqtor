@@ -4,10 +4,8 @@
 
 using System;
 using System.Collections;
-using System.Linq;
 
 using Reaqtive;
-using Reaqtive.Disposables;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
 
@@ -176,6 +174,836 @@ namespace Test.Reaqtive.Operators
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>)));
         }
+
+        #region Optimization
+
+        [TestMethod]
+        public void CombineLatest_Optimization_2()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 2; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 2; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_3()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 3; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 3; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_4()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 4; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_5()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 5; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 5; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_6()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 6; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 6; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_7()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 7; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 7; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_8()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 8; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 8; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_9()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 9; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 9; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_10()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 10; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_11()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 11; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 11; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_12()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 12; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 12; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_13()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 13; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 13; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_14()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 14; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 14; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_15()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 15; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 15; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+        [TestMethod]
+        public void CombineLatest_Optimization_16()
+        {
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => 0);
+            
+            var sub = res.Subscribe(Observer.Create<int>(_ => { }));
+
+            SubscriptionInitializeVisitor.Subscribe(sub);
+
+            SubscriptionVisitor.Do<IStatefulOperator>(op =>
+            {
+                if (op.Name.Contains("CombineLatest"))
+                {
+                    var inputs = op.Inputs;
+
+                    using (var e = inputs.GetEnumerator())
+                    {
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 16; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+                    }
+
+                    {
+                        var e = ((IEnumerable)inputs).GetEnumerator();
+
+                        for (int n = 0; n < 2; n++)
+                        {
+                            for (int i = 0; i < 16; i++)
+                            {
+                                Assert.IsTrue(e.MoveNext());
+                                Assert.IsNotNull(e.Current);
+                            }
+
+                            Assert.IsFalse(e.MoveNext());
+                            Assert.IsNull(e.Current);
+
+                            e.Reset();
+                        }
+
+                        ((IDisposable)e).Dispose();
+                    }
+                }
+            }).Apply(sub);
+        }
+
+
+        #endregion
 
         #endregion
 
