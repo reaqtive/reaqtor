@@ -23,7 +23,7 @@ using Reaqtor.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Nuqleon.Reactive.Operators
+namespace Test.Reaqtive.Operators
 {
     public partial class Average
     {
