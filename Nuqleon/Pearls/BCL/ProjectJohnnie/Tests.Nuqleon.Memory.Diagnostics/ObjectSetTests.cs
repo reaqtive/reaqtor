@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -15,7 +15,7 @@ namespace Tests.System.Memory.Diagnostics
         [TestMethod]
         public void ObjectSet_Basics()
         {
-            var set = new ObjectSet<object>();
+            var set = new ObjectSet();
 
             var objs = Enumerable.Range(0, 1000).Select(o => new object()).ToArray();
 
@@ -67,8 +67,15 @@ namespace Tests.System.Memory.Diagnostics
                 // Add
                 //
 
-                Assert.IsTrue(set.Add(obj));
-                Assert.IsFalse(set.Add(obj));
+                if (i % 2 == 0)
+                {
+                    Assert.IsTrue(set.Add(obj));
+                    Assert.IsFalse(set.Add(obj));
+                }
+                else
+                {
+                    ((ICollection<object>)set).Add(obj);
+                }
 
                 //
                 // Count
@@ -161,6 +168,15 @@ namespace Tests.System.Memory.Diagnostics
                 var test = new HashSet<object>(objs.Concat(new object[] { null }));
                 test.ExceptWith(remObjs.Take(i + 1));
                 Assert.IsTrue(new HashSet<object>(set).SetEquals(test));
+
+                //
+                // TrimExcess
+                //
+
+                if (i == remObjs.Length / 2)
+                {
+                    set.TrimExcess();
+                }
             }
 
             //
@@ -173,6 +189,158 @@ namespace Tests.System.Memory.Diagnostics
             //
             // Null - Count
             //
+
+            Assert.AreEqual(0, set.Count);
+
+            //
+            // Clear
+            //
+
+            set.Clear();
+
+            //
+            // Clear - Count
+            //
+
+            Assert.AreEqual(0, set.Count);
+
+            //
+            // TrimExcess
+            //
+
+            set.TrimExcess();
+
+            //
+            // TrimExcess - Count
+            //
+
+            Assert.AreEqual(0, set.Count);
+        }
+
+        [TestMethod]
+        public void ObjectSet_Construct_With_Collection_ArgumentChecking()
+        {
+            Assert.ThrowsException<ArgumentNullException>(() => new ObjectSet(collection: null));
+        }
+
+        [TestMethod]
+        public void ObjectSet_Construct_With_Collection_Empty()
+        {
+            var set = new ObjectSet(Array.Empty<object>());
+
+            Assert.AreEqual(0, set.Count);
+        }
+
+        [TestMethod]
+        public void ObjectSet_Construct_With_Collection_Array()
+        {
+            var o1 = new object();
+            var o2 = new object();
+
+            var set = new ObjectSet(new[] { o1, o2 });
+
+            Assert.AreEqual(2, set.Count);
+
+            Assert.IsTrue(set.Contains(o1));
+            Assert.IsTrue(set.Contains(o2));
+        }
+
+        [TestMethod]
+        public void ObjectSet_Construct_With_Collection_Enumerable()
+        {
+            var o1 = new object();
+            var o2 = new object();
+
+            var set = new ObjectSet(new[] { o1, o2 }.Select(x => x));
+
+            Assert.AreEqual(2, set.Count);
+
+            Assert.IsTrue(set.Contains(o1));
+            Assert.IsTrue(set.Contains(o2));
+        }
+
+        [TestMethod]
+        public void ObjectSet_Construct_With_Collection_ObjectSet_Empty()
+        {
+            var set1 = new ObjectSet();
+            var set2 = new ObjectSet(set1);
+
+            Assert.AreEqual(0, set2.Count);
+        }
+
+        [TestMethod]
+        public void ObjectSet_Construct_With_Collection_ObjectSet_NonEmpty()
+        {
+            var o1 = new object();
+            var o2 = new object();
+
+            var set1 = new ObjectSet(new[] { o1, o2 });
+            var set2 = new ObjectSet(set1);
+
+            Assert.AreEqual(2, set2.Count);
+
+            Assert.IsTrue(set2.Contains(o1));
+            Assert.IsTrue(set2.Contains(o2));
+        }
+
+        [TestMethod]
+        public void ObjectSet_UnionWith()
+        {
+            var set = new ObjectSet();
+
+            Assert.ThrowsException<ArgumentNullException>(() => set.UnionWith(other: null));
+
+            var objs = Enumerable.Range(0, 10).Select(_ => new object()).ToArray();
+
+            set.UnionWith(objs);
+
+            Assert.IsTrue(objs.All(obj => set.Contains(obj)));
+        }
+
+        [TestMethod]
+        public void ObjectSet_IntersectWith()
+        {
+            var set = new ObjectSet();
+
+            Assert.ThrowsException<ArgumentNullException>(() => set.IntersectWith(other: null));
+
+            set.IntersectWith(Array.Empty<object>());
+
+            Assert.AreEqual(0, set.Count);
+
+            var objs = Enumerable.Range(0, 10).Select(_ => new object()).ToArray();
+
+            set.IntersectWith(objs);
+
+            Assert.AreEqual(0, set.Count);
+
+            for (int i = 0; i < objs.Length; i++)
+            {
+                if (i % 2 == 0)
+                {
+                    set.Add(objs[i]);
+                }
+            }
+
+            Assert.AreEqual(objs.Length / 2, set.Count);
+
+            set.IntersectWith(objs);
+
+            Assert.AreEqual(objs.Length / 2, set.Count);
+
+            set.IntersectWith(new ObjectSet(objs));
+
+            Assert.AreEqual(objs.Length / 2, set.Count);
+
+            set.IntersectWith(set);
+
+            Assert.AreEqual(objs.Length / 2, set.Count);
+
+            set.IntersectWith(objs.Take(objs.Length - 2));
+
+            Assert.AreEqual(objs.Length / 2 - 1, set.Count);
+
+            set.IntersectWith(Array.Empty<object>());
 
             Assert.AreEqual(0, set.Count);
         }
