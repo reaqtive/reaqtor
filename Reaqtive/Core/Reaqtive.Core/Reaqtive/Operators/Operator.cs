@@ -1,10 +1,11 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 
 #pragma warning disable CA1716 // Operator is a reserved language keyword.
@@ -33,10 +34,15 @@ namespace Reaqtive
             _observer = observer;
         }
 
+        //
+        // NB: Array.Empty<T>().GetEnumerator() allocates new SZArrayEnumerator instances each time.
+        //     Enumerable.Empty<T>() returns a singleton EmptyPartition<T> which implements IEnumerator<T> itself, so we get 0 allocations.
+        //
+
         /// <summary>
         /// Gets a list of upstream subscriptions established by the operator.
         /// </summary>
-        public IEnumerable<ISubscription> Inputs { get; private set; } = Array.Empty<ISubscription>();
+        public IEnumerable<ISubscription> Inputs { get; private set; } = Enumerable.Empty<ISubscription>();
 
         /// <summary>
         /// Gets the parameters used by the operator. These parameters may include
