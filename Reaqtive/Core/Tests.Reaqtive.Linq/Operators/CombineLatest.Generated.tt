@@ -20,7 +20,7 @@ using Reaqtive.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Nuqleon.Reactive.Operators
+namespace Test.Reaqtive.Operators
 {
     public partial class CombineLatest
     {
@@ -72,7 +72,7 @@ for (var i = 2; i <= highestSupportedArity; ++i) {
         [TestMethod]
         public void CombineLatest_SaveAndReload_<#=i#>()
         {
-            var state = _scheduler.CreateStateContainer();
+            var state = Scheduler.CreateStateContainer();
 
             var checkpoints = new[] {
                 OnSave(500, state),
@@ -83,7 +83,7 @@ for (var i = 2; i <= highestSupportedArity; ++i) {
 for (var j = 0; j < i; ++j) {
     var comma = (j == i - 1 || j == i - 2) ? "," : "";
 #>
-            var io<#=j#> = _scheduler.CreateHotObservable(
+            var io<#=j#> = Scheduler.CreateHotObservable(
                 OnNext(210 + <#=(j*10)#>, 1)<#=comma#>
 <#	if (j == i - 2) { #>
                 OnNext(550, 10)
@@ -94,8 +94,8 @@ for (var j = 0; j < i; ++j) {
             );
 
 <#}#>
-            var res = _scheduler.Start(
-                () => io0.CombineLatest(<#=string.Join(", ", paramNames)#>, <#=selector#>).Apply(_scheduler, checkpoints)
+            var res = Scheduler.Start(
+                () => io0.CombineLatest(<#=string.Join(", ", paramNames)#>, <#=selector#>).Apply(Scheduler, checkpoints)
             );
 
             res.Messages.AssertEqual(
