@@ -169,7 +169,11 @@ namespace Reaqtive
         /// <returns>Enumerable containing the subscriptions.</returns>
         protected virtual IEnumerable<ISubscription> OnSubscribe()
         {
-            return Array.Empty<ISubscription>();
+            //
+            // NB: See remarks on Inputs property about use of Enumerable.Empty<T>() versus Array.Empty<T>().
+            //
+
+            return Enumerable.Empty<ISubscription>();
         }
 
         /// <summary>
