@@ -58,7 +58,7 @@ stages:
       displayName: Build and Pack
 
     - publish:  config
-      artifact: config
+      artifact: SigningScripts
       displayName: Publish signing config
 
     - script: del $(Build.ArtifactStagingDirectory)\artifacts\*.symbols.nupkg
