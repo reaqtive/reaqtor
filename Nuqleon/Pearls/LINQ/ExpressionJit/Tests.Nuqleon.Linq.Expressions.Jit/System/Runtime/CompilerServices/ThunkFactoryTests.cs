@@ -115,6 +115,13 @@ namespace Tests
         {
             AssertThunkType(ThunkFactory.Compiled, delegateType, values);
             AssertThunkType(ThunkFactory.Interpreted, delegateType, values);
+
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                // REVIEW: Tiered compilation has issues on Mono.
+                return;
+            }
+
             AssertThunkType(ThunkFactory.TieredCompilation, delegateType, values);
         }
 
