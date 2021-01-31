@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -360,6 +360,7 @@ namespace Tests
             Assert.AreEqual(44, r[0]);
         }
 
+#if !NET5_0 // See RuntimeOps. Some functionality is currently not supported.
         [TestMethod]
         public void Quote_RuntimeVariables_Hoisted3()
         {
@@ -391,6 +392,7 @@ namespace Tests
             Assert.AreEqual(45, r[1]);
             Assert.AreEqual(45, c.Item1.Value);
         }
+#endif
 
         private static HoistedLocals GetEmptyHoistedLocals() => new(parent: null, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), new Dictionary<ParameterExpression, StorageKind>());
     }
