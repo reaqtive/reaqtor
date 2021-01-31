@@ -54,7 +54,7 @@ stages:
         projects: All.sln
         configuration: Release
         verbosity: Minimal        
-        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog
+        arguments: -c Release /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog
       displayName: Build and Pack
 
     - publish:  config
