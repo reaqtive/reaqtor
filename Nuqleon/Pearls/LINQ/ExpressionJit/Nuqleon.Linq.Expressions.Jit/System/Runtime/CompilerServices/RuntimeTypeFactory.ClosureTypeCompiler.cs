@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -20,6 +20,7 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         private static class ClosureTypeCompiler
         {
+#if !NET5_0
             /// <summary>
             /// The lock to protect against double-initialization of the module builder.
             /// </summary>
@@ -54,6 +55,7 @@ namespace System.Runtime.CompilerServices
                     return s_mod;
                 }
             }
+#endif
 
             /// <summary>
             /// The type attributes to use for generated closure types.

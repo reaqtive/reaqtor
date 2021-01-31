@@ -26,6 +26,7 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         private static class ThunkTypeCompiler
         {
+#if !NET5_0
             /// <summary>
             /// The lock to protect against double-initialization of the module builder.
             /// </summary>
@@ -38,6 +39,7 @@ namespace System.Runtime.CompilerServices
             /// The instance of the module builder is lazily created via the <see cref="Module"/> property.
             /// </remarks>
             private static ModuleBuilder s_mod;
+#endif
 
             /// <summary>
             /// Counter to generate unique type names with an integer suffix.
@@ -124,6 +126,7 @@ namespace System.Runtime.CompilerServices
             /// </summary>
             private static readonly MethodInfo s_interlockedIncrement = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), new[] { typeof(int).MakeByRefType() });
 
+#if !NET5_0
             /// <summary>
             /// Gets the module builder used to emit dynamically generated thunk (and related) types.
             /// </summary>
@@ -145,6 +148,7 @@ namespace System.Runtime.CompilerServices
                     return s_mod;
                 }
             }
+#endif
 
             /// <summary>
             /// Creates a custom thunk type (and necessary related dispatcher and delegate types) for the specified delegate type.
@@ -1563,17 +1567,10 @@ namespace System.Runtime.CompilerServices
                 //
                 // We need the generic arguments to close over the parent thunk type.
                 //
-                var closedDelegateType = delegateType;
                 var genericParametersWithoutClosure = genericParameters.RemoveFirst();
-
-                if (genericParametersWithoutClosure.Length > 0)
-                {
-                    closedDelegateType = delegateType.MakeGenericType(genericParametersWithoutClosure);
-                }
 
                 var closureType = genericParameters[0];
                 var closedInnerDelegateType = innerDelegateType.MakeGenericType(genericParameters);
-                var genericArguments = new[] { closedDelegateType, closureType, closedInnerDelegateType };
 
                 //
                 // Next, define all the members upfront so we can refer to them from
