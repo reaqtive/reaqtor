@@ -44,13 +44,7 @@ namespace System.Runtime.CompilerServices
                     {
                         if (s_asm == null)
                         {
-                            s_asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("<>__ExpressionJit"),
-#if NET5_0
-                                AssemblyBuilderAccess.RunAndCollect
-#else
-                                AssemblyBuilderAccess.RunAndSave
-#endif
-                            );
+                            s_asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("<>__ExpressionJit"), AssemblyBuilderAccess.RunAndCollect);
                         }
                     }
                 }
