@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
 using System.Collections.Generic;
 using System.Memory.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -36,7 +37,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void HeapEditor_Basics_MultiDimensionalArray()
+        public void HeapEditor_Basics_MultidimensionalArray()
         {
             var e = new MyEditor();
 
@@ -72,7 +73,7 @@ namespace Tests
         }
 
         [TestMethod]
-        public void HeapEditor_Basics_Struct_MultiDimensionalArray()
+        public void HeapEditor_Basics_Struct_MultidimensionalArray()
         {
             var e = new MyEditor();
 
@@ -99,6 +100,12 @@ namespace Tests
         [TestMethod]
         public void HeapEditor_Basics_Struct_Nested2()
         {
+            if (Type.GetType("Mono.Runtime") != null)
+            {
+                Assert.Inconclusive("Issue on Mono to be investigated.");
+                return;
+            }
+
             var e = new MyEditor();
 
             var p = new StrongBox<KeyValuePair<int, KeyValuePair<string, int>>>(new(0, new("foo", 1)));
