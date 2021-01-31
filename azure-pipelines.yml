@@ -10,7 +10,7 @@ pr:
     - main
     - rel/*
 
-variables:      
+variables:
   BuildPlatform: Any CPU
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
 
@@ -53,12 +53,12 @@ stages:
         command: build
         projects: All.sln
         configuration: Release
-        verbosity: Minimal        
-        arguments: /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog
+        verbosity: Minimal
+        arguments: -c Release /p:CreatePackage=true /p:PackageOutputPath=$(Build.ArtifactStagingDirectory)/artifacts /bl:$(Build.ArtifactStagingDirectory)/Logs/Build.binlog
       displayName: Build and Pack
 
     - publish:  config
-      artifact: config
+      artifact: SigningScripts
       displayName: Publish signing config
 
     - script: del $(Build.ArtifactStagingDirectory)\artifacts\*.symbols.nupkg
@@ -71,9 +71,9 @@ stages:
     - task: PublishBuildArtifacts@1
       inputs:
         pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-        artifactName: Logs    
-      displayName: Publish Build Logs      
-      condition: always()      
+        artifactName: Logs
+      displayName: Publish Build Logs
+      condition: always()
 
 - stage: ProcessCodeCoverage
   dependsOn: Build
@@ -87,7 +87,7 @@ stages:
       fetchDepth: 1
       
     - download: current
-      artifact: RawCoverage     
+      artifact: RawCoverage
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -126,7 +126,7 @@ stages:
             artifact: SigningScripts
 
           - download: current
-            artifact: BuildPackages            
+            artifact: BuildPackages
 
           - task: DotNetCoreCLI@2
             inputs:
