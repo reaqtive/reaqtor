@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -53,13 +53,13 @@ namespace Tests
         [TestMethod]
         public void GetThunkType_Custom()
         {
-            AssertThunkType(typeof(BinOp), Data.Values);
+            AssertThunkTypes(typeof(BinOp), Data.Values);
         }
 
         [TestMethod]
         public void GetThunkType_BuiltIn_NonGeneric()
         {
-            AssertThunkType(typeof(Action), Data.Values);
+            AssertThunkTypes(typeof(Action), Data.Values);
         }
 
         [TestMethod]
@@ -107,11 +107,18 @@ namespace Tests
                 var arity = func.GetGenericArguments().Length;
                 var args = Data.Types.Take(arity).ToArray();
                 var funcType = func.MakeGenericType(args);
-                AssertThunkType(funcType, Data.Values);
+                AssertThunkTypes(funcType, Data.Values);
             }
         }
 
-        private static void AssertThunkType(Type delegateType, Dictionary<Type, object[]> values)
+        private static void AssertThunkTypes(Type delegateType, Dictionary<Type, object[]> values)
+        {
+            AssertThunkType(ThunkFactory.Compiled, delegateType, values);
+            AssertThunkType(ThunkFactory.Interpreted, delegateType, values);
+            AssertThunkType(ThunkFactory.TieredCompilation, delegateType, values);
+        }
+
+        private static void AssertThunkType(IThunkFactory factory, Type delegateType, Dictionary<Type, object[]> values)
         {
             //
             // Get the delegate's Invoke method and infer parameter and return types.
@@ -134,7 +141,7 @@ namespace Tests
             //
             // This is the functionality we're testing.
             //
-            var t = ThunkFactory.Compiled.GetThunkType(delegateType, closureType);
+            var t = factory.GetThunkType(delegateType, closureType);
 
             //
             // Assert we got only one constructor.
@@ -251,6 +258,17 @@ namespace Tests
             res = del.DynamicInvoke(args);
             Assert.AreEqual(ret, res);
             closure.Check(flag: false, args);
+
+            //
+            // Invoke the delegate a couple more times to ensure it keeps working.
+            //
+            // NB: This also tests the tiered compilation logic, which is count-based at the moment.
+            //
+            for (int i = 0; i < 8; i++)
+            {
+                res = del.DynamicInvoke(args);
+                Assert.AreEqual(ret, res);
+            }
 
             //
             // Substitute the expression to assert reinstallation of the JIT.

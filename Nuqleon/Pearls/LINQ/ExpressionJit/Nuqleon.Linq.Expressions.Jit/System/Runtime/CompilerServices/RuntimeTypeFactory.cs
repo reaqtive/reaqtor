@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -34,7 +34,7 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// Gets the assembly builder used to emit dynamically generated types.
         /// </summary>
-        private static AssemblyBuilder Assembly
+        public static AssemblyBuilder Assembly
         {
             get
             {
@@ -44,7 +44,13 @@ namespace System.Runtime.CompilerServices
                     {
                         if (s_asm == null)
                         {
-                            s_asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("<>__ExpressionJit"), AssemblyBuilderAccess.RunAndCollect);
+                            s_asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("<>__ExpressionJit"),
+#if NET5_0
+                                AssemblyBuilderAccess.RunAndCollect
+#else
+                                AssemblyBuilderAccess.RunAndSave
+#endif
+                            );
                         }
                     }
                 }

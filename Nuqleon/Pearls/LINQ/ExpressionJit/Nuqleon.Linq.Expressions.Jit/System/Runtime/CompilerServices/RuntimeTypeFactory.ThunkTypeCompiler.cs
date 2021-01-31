@@ -1581,7 +1581,7 @@ namespace System.Runtime.CompilerServices
                 //
                 // 1. The constructor `.ctor(<Bar>__Thunk<TInner>, Expression<TInner>)`
                 //
-                var parentThunkType = thunkType.MakeGenericType(genericArguments);
+                var parentThunkType = thunkType.MakeGenericType(genericParameters);
                 var expressionOfInnerDelegateType = typeof(Expression<>).MakeGenericType(closedInnerDelegateType);
                 var ctorParameterTypes = new[] { parentThunkType, expressionOfInnerDelegateType };
                 var ctor = builder.DefineConstructor(MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.SpecialName | MethodAttributes.RTSpecialName, CallingConventions.Standard, ctorParameterTypes);
