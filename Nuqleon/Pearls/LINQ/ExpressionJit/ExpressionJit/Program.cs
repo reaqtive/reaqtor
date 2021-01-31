@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -15,9 +15,9 @@ namespace ExpressionJit
     // REVIEW: Runtime generated thunk types require delegate types to be public.
     public delegate TResult F<TInput, TResult>(TInput t);
 
-    class Program
+    public static class Program
     {
-        static void Main()
+        public static void Main()
         {
             {
                 Expression<F<string, int>> f = s => s.Length;
@@ -73,7 +73,7 @@ namespace ExpressionJit
             //Thunks();
         }
 
-        static void Test<T>(Expression<T> expression, Func<T, object> invoke) where T : Delegate
+        private static void Test<T>(Expression<T> expression, Func<T, object> invoke) where T : Delegate
         {
             Console.WriteLine("================================================================================");
             Console.WriteLine(expression);
@@ -111,7 +111,7 @@ namespace ExpressionJit
             Console.WriteLine();
         }
 
-        static void PrintJitInfo(Delegate d, bool preferInterpretation = false)
+        private static void PrintJitInfo(Delegate d, bool preferInterpretation = false)
         {
             var mt = (FunctionContext<MethodTable>)d.Target;
 
@@ -139,7 +139,7 @@ namespace ExpressionJit
 
         private static readonly PropertyInfo s_debugView = typeof(Expression).GetProperty("DebugView", BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.Instance);
 
-        static void PrintDebugView(LambdaExpression e)
+        private static void PrintDebugView(LambdaExpression e)
         {
             PrintTitle("DebugView", ConsoleColor.Green);
             var s = (string)s_debugView.GetValue(e);
@@ -147,14 +147,14 @@ namespace ExpressionJit
             Console.WriteLine();
         }
 
-        static void PrintIL(LambdaExpression e)
+        private static void PrintIL(LambdaExpression e)
         {
             PrintTitle("IL", ConsoleColor.Green);
             Console.WriteLine(ILPrinter.GetIL(e));
             Console.WriteLine();
         }
 
-        static void PrintInterpreterInstructions(LambdaExpression e)
+        private static void PrintInterpreterInstructions(LambdaExpression e)
         {
             PrintTitle("Instructions", ConsoleColor.Green);
             dynamic dt = e.Compile(preferInterpretation: true);
@@ -172,7 +172,7 @@ namespace ExpressionJit
             Console.WriteLine();
         }
 
-        static void PrintTitle(string s, ConsoleColor color)
+        private static void PrintTitle(string s, ConsoleColor color)
         {
             Console.ForegroundColor = color;
             Console.WriteLine(s);
