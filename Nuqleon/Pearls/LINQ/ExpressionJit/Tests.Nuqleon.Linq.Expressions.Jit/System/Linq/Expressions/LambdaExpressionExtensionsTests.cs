@@ -38,7 +38,7 @@ namespace System.Linq.Expressions
 
             var d6 = f.Compile(CompilationOptions.EnableJustInTimeCompilation | CompilationOptions.TieredCompilation);
 
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
                 Assert.AreEqual(42, d6());
             }
@@ -60,7 +60,7 @@ namespace System.Linq.Expressions
 
             var d16 = ((LambdaExpression)f).Compile(CompilationOptions.EnableJustInTimeCompilation | CompilationOptions.TieredCompilation);
 
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
                 Assert.AreEqual(42, d16.DynamicInvoke());
             }
@@ -80,7 +80,7 @@ namespace System.Linq.Expressions
             {
                 var d = f.Compile(options);
 
-                for (int i = 0; i < 8; i++)
+                for (var i = 0; i < 8; i++)
                 {
                     var g1 = d(3);
                     Assert.AreEqual(7, g1(4));
@@ -90,7 +90,7 @@ namespace System.Linq.Expressions
                     Assert.AreEqual(9, g2(4));
                     Assert.AreEqual(7, g2(2));
 
-                    for (int j = 0; j < 8; j++)
+                    for (var j = 0; j < 8; j++)
                     {
                         Assert.AreEqual(6, g2(1));
                         Assert.AreEqual(4, g1(1));

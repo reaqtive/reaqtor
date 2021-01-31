@@ -271,7 +271,7 @@ namespace Tests
             //
             // NB: This also tests the tiered compilation logic, which is count-based at the moment.
             //
-            for (int i = 0; i < 8; i++)
+            for (var i = 0; i < 8; i++)
             {
                 res = del.DynamicInvoke(args);
                 Assert.AreEqual(ret, res);
