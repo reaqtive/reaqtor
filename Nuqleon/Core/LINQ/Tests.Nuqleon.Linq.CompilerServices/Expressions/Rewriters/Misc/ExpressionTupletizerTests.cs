@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -14,11 +14,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
-using System.Reflection;
 
 #if USE_SLIM
 using System.Linq.CompilerServices.Bonsai;
+using System.Reflection;
+#endif
 
+#if USE_SLIM
 namespace Tests.System.Linq.Expressions.Bonsai
 #else
 namespace Tests.System.Linq.CompilerServices
@@ -414,13 +416,13 @@ namespace Tests.System.Linq.CompilerServices
         private static LambdaExpression Pack(LambdaExpression expression, Type voidType)
         {
             var slimLambda = expression != null ? (LambdaExpressionSlim)expression.ToExpressionSlim() : null;
-            var slimVoidType = voidType != null ? voidType.ToTypeSlim() : null;
+            var slimVoidType = voidType?.ToTypeSlim();
             return (LambdaExpression)ExpressionSlimTupletizer.Pack(slimLambda, slimVoidType).ToExpression();
         }
 
         private static Expression Pack(IEnumerable<Expression> expressions)
         {
-            var slimExpressions = expressions != null ? expressions.Select(e => e.ToExpressionSlim()) : null;
+            var slimExpressions = expressions?.Select(e => e.ToExpressionSlim());
             return ExpressionSlimTupletizer.Pack(slimExpressions).ToExpression();
         }
 
@@ -433,22 +435,20 @@ namespace Tests.System.Linq.CompilerServices
         private static LambdaExpression Unpack(LambdaExpression expression, Type voidType)
         {
             var slimLambda = expression != null ? (LambdaExpressionSlim)expression.ToExpressionSlim() : null;
-            var slimVoidType = voidType != null ? voidType.ToTypeSlim() : null;
+            var slimVoidType = voidType?.ToTypeSlim();
             return (LambdaExpression)ExpressionSlimTupletizer.Unpack(slimLambda, slimVoidType).ToExpression();
         }
 
         private static IEnumerable<Expression> Unpack(Expression expression)
         {
-            var slimExpression = expression != null ? expression.ToExpressionSlim() : null;
+            var slimExpression = expression?.ToExpressionSlim();
             return ExpressionSlimTupletizer.Unpack(slimExpression).Select(x => x.ToExpression());
         }
 
         private static void Unpack(LambdaExpression expression, out Expression body, out IEnumerable<ParameterExpression> parameters)
         {
             var slimLambda = expression != null ? (LambdaExpressionSlim)expression.ToExpressionSlim() : null;
-            var slimBody = default(ExpressionSlim);
-            var slimParameters = default(IEnumerable<ParameterExpressionSlim>);
-            ExpressionSlimTupletizer.Unpack(slimLambda, out slimBody, out slimParameters);
+            ExpressionSlimTupletizer.Unpack(slimLambda, out var slimBody, out var slimParameters);
             var fatLambda = (LambdaExpression)ExpressionSlim.Lambda(slimBody, slimParameters).ToExpression();
             body = fatLambda.Body;
             parameters = fatLambda.Parameters;
@@ -457,10 +457,8 @@ namespace Tests.System.Linq.CompilerServices
         private static void Unpack(LambdaExpression expression, Type voidType, out Expression body, out IEnumerable<ParameterExpression> parameters)
         {
             var slimLambda = expression != null ? (LambdaExpressionSlim)expression.ToExpressionSlim() : null;
-            var slimVoidType = voidType != null ? voidType.ToTypeSlim() : null;
-            var slimBody = default(ExpressionSlim);
-            var slimParameters = default(IEnumerable<ParameterExpressionSlim>);
-            ExpressionSlimTupletizer.Unpack(slimLambda, slimVoidType, out slimBody, out slimParameters);
+            var slimVoidType = voidType?.ToTypeSlim();
+            ExpressionSlimTupletizer.Unpack(slimLambda, slimVoidType, out var slimBody, out var slimParameters);
             var fatLambda = (LambdaExpression)ExpressionSlim.Lambda(slimBody, slimParameters).ToExpression();
             body = fatLambda.Body;
             parameters = fatLambda.Parameters;
@@ -473,8 +471,8 @@ namespace Tests.System.Linq.CompilerServices
 
         private static Expression Pack(Expression expression, params ParameterExpression[] parameters)
         {
-            var slimExpression = expression != null ? expression.ToExpressionSlim() : null;
-            var slimParameters = parameters != null ? parameters.Select(p => (ParameterExpressionSlim)p.ToExpressionSlim()).ToArray() : null;
+            var slimExpression = expression?.ToExpressionSlim();
+            var slimParameters = parameters?.Select(p => (ParameterExpressionSlim)p.ToExpressionSlim()).ToArray();
             ExpressionSlimTupletizer.Pack(slimExpression, slimParameters);
 
             // This helper should only be used for argument checks...
@@ -483,9 +481,9 @@ namespace Tests.System.Linq.CompilerServices
 
         private static Expression Pack(Expression expression, IEnumerable<ParameterExpression> parameters, Type voidType)
         {
-            var slimExpression = expression != null ? expression.ToExpressionSlim() : null;
-            var slimParameters = parameters != null ? parameters.Select(p => (ParameterExpressionSlim)p.ToExpressionSlim()).ToArray() : null;
-            var slimVoidType = voidType != null ? voidType.ToTypeSlim() : null;
+            var slimExpression = expression?.ToExpressionSlim();
+            var slimParameters = parameters?.Select(p => (ParameterExpressionSlim)p.ToExpressionSlim()).ToArray();
+            var slimVoidType = voidType?.ToTypeSlim();
             ExpressionSlimTupletizer.Pack(slimExpression, slimParameters, slimVoidType);
 
             // This helper should only be used for argument checks...

@@ -1,11 +1,19 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>netcoreapp2.1;netcoreapp3.1;net472;net50</TargetFrameworks>
+    <DefineConstants>$(DefineConstants);USE_SLIM</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Nuqleon.Linq.Expressions.Bonsai\Nuqleon.Linq.Expressions.Bonsai.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Include="..\Tests.Nuqleon.Linq.CompilerServices\Expressions\UnsafeExpressionTests.cs" Link="CompilerServices\Expressions\UnsafeExpressionTests.cs" />
+    <Compile Include="..\Tests.Nuqleon.Linq.CompilerServices\Expressions\ExpressionEqualityComparerTests.cs" Link="CompilerServices\Expressions\ExpressionEqualityComparerTests.cs" />
+    <Compile Include="..\Tests.Nuqleon.Linq.CompilerServices\Expressions\Visitors\ScopedExpressionVisitorGenericTests.cs" Link="CompilerServices\Expressions\Visitors\ScopedExpressionVisitorGenericTests.cs" />
+    <Compile Include="..\Tests.Nuqleon.Linq.CompilerServices\Expressions\Rewriters\Misc\ExpressionTupletizerTests.cs" Link="CompilerServices\Expressions\Rewriters\Misc\ExpressionTupletizerTests.cs" />
   </ItemGroup>
 
 </Project>

@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -313,6 +313,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var eqc = new ExpressionSlimEqualityComparer(CreateComparator);
 
+#pragma warning disable IDE0034 // Simplify 'default' expression. (Documents signature.)
             Assert.IsFalse(eqc.Equals(default(ExpressionSlim), Expression.Constant(1).ToExpressionSlim()));
             Assert.IsFalse(eqc.Equals(Expression.Constant(1).ToExpressionSlim(), default(ExpressionSlim)));
             Assert.IsTrue(eqc.Equals(default(ExpressionSlim), default(ExpressionSlim)));
@@ -322,6 +323,7 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsFalse(eqr.Equals(default(ExpressionSlim), Expression.Constant(1).ToExpressionSlim()));
             Assert.IsFalse(eqr.Equals(Expression.Constant(1).ToExpressionSlim(), default(ExpressionSlim)));
             Assert.IsTrue(eqr.Equals(default(ExpressionSlim), default(ExpressionSlim)));
+#pragma warning restore IDE0034
         }
 #else
         [TestMethod]
@@ -583,7 +585,7 @@ namespace Tests.System.Linq.CompilerServices
             AssertNotEqual(e1, e4);
 
 #if USE_SLIM
-            AssertProtectedNull((MemberInitExpressionSlim)e1.ToExpressionSlimExt());
+            AssertProtectedNull(e1.ToExpressionSlimExt());
 #else
             AssertProtectedNull(e1);
 #endif

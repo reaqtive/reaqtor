@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -12,12 +12,15 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq.CompilerServices;
-using System.Linq.Expressions;
 #if USE_SLIM
 using System.Linq.CompilerServices.Bonsai;
 using System.Reflection;
+#else
+using System.Linq.CompilerServices;
+using System.Linq.Expressions;
+#endif
 
+#if USE_SLIM
 namespace Tests.System.Linq.Expressions.Bonsai
 #else
 namespace Tests.System.Linq.CompilerServices
@@ -215,8 +218,8 @@ namespace Tests.System.Linq.CompilerServices
                 AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitCatchBlock(node: null), ex => Assert.AreEqual("node", ex.ParamName));
                 AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitCatchBlockCore(node: null), ex => Assert.AreEqual("node", ex.ParamName));
 #if USE_SLIM
-                AssertEx.Throws<ArgumentNullException>(() => base.VisitLambda(node: null), ex => Assert.AreEqual("node", ex.ParamName));
-                AssertEx.Throws<ArgumentNullException>(() => base.VisitLambdaCore(node: null), ex => Assert.AreEqual("node", ex.ParamName));
+                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitLambda(node: null), ex => Assert.AreEqual("node", ex.ParamName));
+                AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitLambdaCore(node: null), ex => Assert.AreEqual("node", ex.ParamName));
 #else
                 AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitLambda<Action>(node: null), ex => Assert.AreEqual("node", ex.ParamName));
                 AssertEx.ThrowsException<ArgumentNullException>(() => base.VisitLambdaCore<Action>(node: null), ex => Assert.AreEqual("node", ex.ParamName));

@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -8,6 +8,9 @@
 // BD - November 2014 - Created this file.
 //
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression.
+#pragma warning disable IDE0049 // Name can be simplified.
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
@@ -16,9 +19,12 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
+
+#if !USE_SLIM
 using System.Runtime.CompilerServices;
 using CS = Microsoft.CSharp.RuntimeBinder;
 using LE = System.Linq.Expressions;
+#endif
 
 namespace Tests.System.Linq.CompilerServices
 {
@@ -1307,7 +1313,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var add = (MethodInfo)GetMember(typeof(List<int>).GetMethod("Add", new[] { typeof(int) }));
 
-            var n = Expression.New((ConstructorInfo)GetMember(typeof(Person).GetConstructor(Type.EmptyTypes)));
+            var n = Expression.New((ConstructorInfo)GetMember(typeof(Person).GetConstructor(global::System.Type.EmptyTypes)));
 
             var b1 = Expression.Bind(pn, Expression.Constant(ObjectOf("Bart")));
             var b2 = Expression.Bind(pa, Expression.Constant(ObjectOf(21)));
@@ -1357,7 +1363,7 @@ namespace Tests.System.Linq.CompilerServices
             var i = (PropertyInfo)GetMember(typeof(Tuple<string, int>).GetProperty("Item1"));
             var j = (PropertyInfo)GetMember(typeof(Tuple<string, int>).GetProperty("Item2"));
 
-            var newObj = (ConstructorInfo)GetMember(typeof(object).GetConstructor(Type.EmptyTypes));
+            var newObj = (ConstructorInfo)GetMember(typeof(object).GetConstructor(global::System.Type.EmptyTypes));
 
             var s = Expression.Constant(ObjectOf("foo"));
             var x = Expression.Constant(ObjectOf(42));
