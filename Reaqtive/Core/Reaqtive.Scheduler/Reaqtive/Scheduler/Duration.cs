@@ -16,7 +16,7 @@ namespace Reaqtive.Scheduler
     public struct Duration : IEquatable<Duration>
     {
         //
-        // NB: This is an *internally* mutable struct, allowing the scheduler instructure to perform efficient
+        // NB: This is an *internally* mutable struct, allowing the scheduler infrastructure to perform efficient
         //     updates to the fields. Upon reporting the value to a caller, a copy is made which will effectively
         //     be immutable because no public setters are made available.
         //
