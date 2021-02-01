@@ -38,7 +38,7 @@ namespace Engine
     //
 
     /// <summary>
-    /// Extension of <see cref="Reaqtive.QueryEngine.CheckpointingQueryEngine"/> to support a persisted object space that can be used by reactive artifacts.
+    /// Extension of <see cref="Reaqtor.QueryEngine.CheckpointingQueryEngine"/> to support a persisted object space that can be used by reactive artifacts.
     /// </summary>
     public class CheckpointingQueryEngine : Reaqtor.QueryEngine.CheckpointingQueryEngine
     {
