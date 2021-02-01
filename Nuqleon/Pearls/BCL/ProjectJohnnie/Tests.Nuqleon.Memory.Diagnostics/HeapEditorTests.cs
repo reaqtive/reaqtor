@@ -97,7 +97,7 @@ namespace Tests
             Assert.AreEqual("FOO", p.Value.t.s);
         }
 
-#if !NET5_0 // REVIEW: Investigate why this doesn't work yet.
+#if !NET5_0 // NB: Broken due to change to KeyValuePair<K, V> where fields are now read-only (where they weren't before). See test case below.
         [TestMethod]
         public void HeapEditor_Basics_Struct_Nested2()
         {
