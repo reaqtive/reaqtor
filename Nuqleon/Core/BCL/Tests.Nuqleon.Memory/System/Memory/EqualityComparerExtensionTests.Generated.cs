@@ -236,5 +236,230 @@ namespace Tests
             Assert.IsFalse(eq.Equals(args2, args1));
         }
 
+        [TestMethod]
+        public void CombineWithValueTuple2()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (1727427484, 1110092341);
+            var args2 = (281507401, 2114675272);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple3()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (1553705995, 513994066, 1070216387);
+            var args2 = (883138676, 958136571, 1935412780);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple4()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (1464955614, 1678525863, 207046843, 1230469058);
+            var args2 = (2027799147, 1274940644, 946507394, 825345078);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple5()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (364923918, 286384412, 1577765978, 31504759, 346689372);
+            var args2 = (2050463638, 1832152018, 1707983479, 1927029866, 1347792191);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple6()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (1051504058, 1725443968, 1774675849, 2116074445, 33777947, 468820735);
+            var args2 = (1533682015, 94985116, 1076057253, 1856287986, 921779016, 790564971);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple7()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (952858318, 1447426099, 1814403642, 1967142841, 275962899, 1885873278, 1126867573);
+            var args2 = (470967506, 2133571579, 2087262944, 293954156, 878499208, 1797096255, 214392927);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple8()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (733707079, 1695922725, 763402969, 378527410, 282523254, 1993206163, 734447847, 1869907843);
+            var args2 = (1979118265, 1380176250, 160736931, 1496364816, 1644747916, 1885709755, 1844270690, 1932814031);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple9()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (198883391, 1237703055, 2051049709, 1721842594, 1481009741, 130339879, 364584764, 527030178, 1774500739);
+            var args2 = (2093762387, 581115906, 1456062360, 1361704259, 1111724761, 1431489812, 896176641, 318978190, 1966868667);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple10()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (1882597303, 1985242937, 1479065794, 697529843, 1573764732, 1076056500, 56117124, 1230434122, 1615791481, 434227392);
+            var args2 = (1806405910, 927081730, 241125362, 1388641465, 774180463, 200757548, 1888379553, 1203734748, 974933146, 75253661);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple11()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (880866833, 603367200, 1331337961, 236372791, 751510318, 336244514, 1412090257, 1425869134, 508203584, 867393504, 2096170085);
+            var args2 = (1412043937, 1177386626, 1825362896, 3112452, 2006511400, 453748237, 1648837195, 1811421970, 974993209, 1665725470, 250575619);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple12()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (662032045, 2077841019, 868107915, 847419009, 1852637025, 1339958088, 681881897, 1160946711, 1370828855, 227755064, 2068727142, 243724529);
+            var args2 = (1086001834, 1279230103, 653904976, 1242693003, 2093503172, 1237520218, 1811449890, 777731637, 722230538, 748397977, 485540954, 394361973);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple13()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (1897178751, 563246113, 1385529013, 915152710, 1894492958, 239542358, 1539796425, 2147423584, 557011838, 630291214, 2088818802, 1400980589, 1515748523);
+            var args2 = (2051574956, 631091136, 72132169, 743987237, 1494740520, 1644048296, 1868415021, 1490800442, 933662097, 739361062, 871365996, 1352606424, 1358538881);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple14()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (1702817670, 573901752, 1311026966, 887993833, 1675828728, 2061117715, 1592300065, 473745942, 1097723905, 1289390912, 2101912722, 1914212834, 1413937400, 1131286497);
+            var args2 = (835442286, 2068787205, 1834196338, 455710620, 1337894948, 1400408034, 1874428127, 41928216, 606429082, 1739317721, 33744400, 1374973665, 1251833328, 764609580);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple15()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (1051045178, 963516654, 1971368698, 514163017, 1710029933, 535954077, 684208335, 965894673, 836396618, 1816501652, 1101946133, 27701087, 1956164171, 1042002581, 953851051);
+            var args2 = (1489183871, 117703094, 977258050, 80803120, 512761799, 1032972735, 1569496884, 1246949406, 283650442, 1680954695, 2099682037, 1631594401, 1660889454, 2114956317, 1719192892);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
+        [TestMethod]
+        public void CombineWithValueTuple16()
+        {
+            var eq = EqualityComparerExtensions.CombineWithValueTuple<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default, EqualityComparer<int>.Default);
+
+            var args1 = (854249433, 300855063, 809284387, 827690485, 1570184411, 134207251, 1465505861, 1587749705, 204182901, 877983323, 447078162, 2017031260, 1232390587, 17694686, 1501248134, 1310193861);
+            var args2 = (1591727510, 832425546, 1235560812, 1264728858, 1621614627, 1203969997, 1294170545, 739071529, 1879120492, 1629031941, 1864050895, 1687718256, 980691969, 1757831543, 1051843323, 1170802528);
+
+            Assert.IsTrue(eq.Equals(args1, args1));
+
+            Assert.AreNotEqual(eq.GetHashCode(args1), eq.GetHashCode(args2));
+            Assert.IsFalse(eq.Equals(args1, args2));
+            Assert.IsFalse(eq.Equals(args2, args1));
+        }
+
     }
 }
