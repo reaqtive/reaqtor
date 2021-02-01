@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -218,10 +218,7 @@ namespace System.Memory
                         // NB: CWT does not call the function under its internal lock.
                         //
                         entry = _cache.GetOrAdd(args, _function);
-#if DEBUG
-                        var keys = _cache.Keys;
-                        Debug.Assert(_count == keys.Count);
-#endif
+
                         MostRecent(entry);
 #if DEBUG
                         var metrics = entry.GetMetrics();
