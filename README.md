@@ -1,6 +1,6 @@
 [![.NET Foundation](https://img.shields.io/badge/.NET%20Foundation-blueviolet.svg)](https://www.dotnetfoundation.org/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-![.NET](https://github.com/reaqtive/reaqtor/workflows/.NET/badge.svg)
+[![Build Status](https://dev.azure.com/dotnet/Reaqtor-private/_apis/build/status/Reaqtor%20CI?branchName=main)](https://dev.azure.com/dotnet/Reaqtor-private/_build/latest?definitionId=147&branchName=main)
 
 # About Reaqtor 
 
