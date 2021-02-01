@@ -185,7 +185,7 @@ namespace Reaqtive.Scheduler
         /// </summary>
         /// <param name="obj">The object to check the current object against for equality.</param>
         /// <returns><c>true</c> if this object is equal to the specified object; otherwise, <c>false</c>.</returns>
-        public override bool Equals(object obj) => obj is Duration duration && Equals(duration);
+        public override bool Equals(object obj) => obj is SchedulerPerformanceCounters c && Equals(c);
 
         /// <summary>
         /// Gets a hash code for the current object.
