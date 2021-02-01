@@ -12,7 +12,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
-using System.Memory;
 
 namespace Tests
 {
@@ -77,8 +76,18 @@ for (var j = 0; j < i; j++)
     var intsp = ints1.Select((x, k) => k == j ? x - 1 : x).ToList();
     var valsp = string.Join(", ", intsp);
 #>
+            Assert.IsTrue(args1 < new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsTrue(args1 <= new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsFalse(args1 > new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsFalse(args1 >= new Tuplet<<#=types#>>(<#=valsn#>));
             Assert.IsTrue(args1.CompareTo(new Tuplet<<#=types#>>(<#=valsn#>)) < 0);
+
+            Assert.IsTrue(args1 > new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsTrue(args1 >= new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsFalse(args1 < new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsFalse(args1 <= new Tuplet<<#=types#>>(<#=valsp#>));
             Assert.IsTrue(args1.CompareTo(new Tuplet<<#=types#>>(<#=valsp#>)) > 0);
+
             Assert.IsTrue(scm1.CompareTo(new Tuplet<<#=types#>>(<#=valsn#>), Comparer<object>.Default) < 0);
             Assert.IsTrue(scm1.CompareTo(new Tuplet<<#=types#>>(<#=valsp#>), Comparer<object>.Default) > 0);
 <#
@@ -169,8 +178,18 @@ for (var j = 0; j < i + 1; j++)
     var intsp = ints1.Select((x, k) => k == j ? x - 1 : x).ToList();
     var valsp = string.Join(", ", intsp.Take(16)) + ", new Tuplet<" + rest + ">(" + string.Join(", ", intsp.Skip(16)) + ")";
 #>
+            Assert.IsTrue(args1 < new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsTrue(args1 <= new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsFalse(args1 > new Tuplet<<#=types#>>(<#=valsn#>));
+            Assert.IsFalse(args1 >= new Tuplet<<#=types#>>(<#=valsn#>));
             Assert.IsTrue(args1.CompareTo(new Tuplet<<#=types#>>(<#=valsn#>)) < 0);
+
+            Assert.IsTrue(args1 > new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsTrue(args1 >= new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsFalse(args1 < new Tuplet<<#=types#>>(<#=valsp#>));
+            Assert.IsFalse(args1 <= new Tuplet<<#=types#>>(<#=valsp#>));
             Assert.IsTrue(args1.CompareTo(new Tuplet<<#=types#>>(<#=valsp#>)) > 0);
+
             Assert.IsTrue(scm1.CompareTo(new Tuplet<<#=types#>>(<#=valsn#>), Comparer<object>.Default) < 0);
             Assert.IsTrue(scm1.CompareTo(new Tuplet<<#=types#>>(<#=valsp#>), Comparer<object>.Default) > 0);
 <#
@@ -192,6 +211,66 @@ for (var j = 0; j < i + 1; j++)
 
             Assert.AreEqual("(<#=string.Join(", ", ints1)#>)", args1.ToString());
             Assert.AreEqual("(<#=string.Join(", ", ints2)#>)", args2.ToString());
+        }
+
+<#
+}
+
+for (var i = 1; i <= 16; i++)
+{
+#>
+        [TestMethod]
+        public void Tuplet<#=i#>_ToString()
+        {
+<#
+    var types = Enumerable.Repeat("string", i).ToArray();
+    var tupleType = "Tuplet<" + string.Join(", ", types) + ">";
+    var vals = Enumerable.Range(0, i).Select(j => "\"" + j.ToString() + "\"").ToArray();
+
+    for (var j = 0; j < i; j++)
+    {
+        var newVals = vals.ToArray();
+        newVals[j] = "null";
+        var exp = string.Join(", ", Enumerable.Range(0, i).Select(k => k == j ? null : k.ToString()));
+
+#>
+            {
+                var t = new <#=tupleType#>(<#=string.Join(", ", newVals)#>);
+                Assert.AreEqual("(<#=exp#>)", t.ToString());
+            }
+<#
+    }
+#>
+        }
+
+<#
+}
+
+for (var i = 1; i <= 16; i++)
+{
+#>
+        [TestMethod]
+        public void Tuplet<#=i+16#>_ToString()
+        {
+<#
+    var types = Enumerable.Repeat("string", i).ToArray();
+    var tupleType = "Tuplet<" + string.Join(", ", types) + ">";
+    var vals = Enumerable.Range(16, i).Select(j => "\"" + j.ToString() + "\"").ToArray();
+
+    for (var j = 0; j < i; j++)
+    {
+        var newVals = vals.ToArray();
+        newVals[j] = "null";
+        var exp = string.Join(", ", Enumerable.Range(0, 16).Select(k => k.ToString()).Concat(Enumerable.Range(0, i).Select(k => k == j ? null : (k + 16).ToString())));
+
+#>
+            {
+                var t = new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, <#=tupleType#>>(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, new <#=tupleType#>(<#=string.Join(", ", newVals)#>));
+                Assert.AreEqual("(<#=exp#>)", t.ToString());
+            }
+<#
+    }
+#>
         }
 
 <#
