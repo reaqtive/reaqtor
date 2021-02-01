@@ -28,10 +28,16 @@ namespace System.Memory.Diagnostics
             Edge = edge;
         }
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression.
+#pragma warning disable CA1720 // Identifier 'Object' contains type name.
+
         /// <summary>
         /// Gets the object being visited.
         /// </summary>
         public TObject Object { get; }
+
+#pragma warning restore CA1720
+#pragma warning restore IDE0079
 
         /// <summary>
         /// Gets the incoming edge that led to the object being visited.

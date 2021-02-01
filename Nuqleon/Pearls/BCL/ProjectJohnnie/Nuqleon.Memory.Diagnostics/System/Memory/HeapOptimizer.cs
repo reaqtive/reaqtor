@@ -76,7 +76,7 @@ namespace System.Memory
         /// <returns><c>true</c> if instances of the type are immutable; otherwise, <c>false</c>.</returns>
         protected virtual bool IsImmutable(Type type)
         {
-            if (type.IsPrimitive || type == typeof(string))
+            if (type != null && (type.IsPrimitive || type == typeof(string)))
             {
                 return true;
             }

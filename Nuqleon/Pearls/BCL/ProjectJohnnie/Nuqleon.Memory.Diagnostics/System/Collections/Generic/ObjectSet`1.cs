@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
@@ -24,6 +24,9 @@ namespace System.Collections.Generic
     //     whether `null` is in the set, various improvements to the comments and documentation, removal
     //     of some unused functionality, and modernization using recent C# language features.
     //
+
+#pragma warning disable IDE0079 // Remove unnecessary suppression.
+#pragma warning disable CA1033 // Make 'ObjectSet' sealed. (Keeping in sync with corefx implementation.)
 
     /// <summary>
     /// Specialized implementation of <see cref="ISet{T}"/> using reference equality comparison

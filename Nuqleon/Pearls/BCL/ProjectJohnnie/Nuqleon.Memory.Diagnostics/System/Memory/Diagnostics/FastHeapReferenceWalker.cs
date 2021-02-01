@@ -467,7 +467,7 @@ namespace System.Memory.Diagnostics
 
                 Debug.Assert(elemWalker.ExpressionFactory != null);
 
-                return GetVectorWalkerInfo(type, elemType, elemWalker.ExpressionFactory);
+                return GetVectorWalkerInfo(type, elemWalker.ExpressionFactory);
             }
             else
             {
@@ -490,10 +490,9 @@ namespace System.Memory.Diagnostics
         /// Gets a walker for a single-dimensional array of the specified <paramref name="type"/>.
         /// </summary>
         /// <param name="type">The type of the single-dimensional array to get a walker for.</param>
-        /// <param name="elemType">The element type of the array.</param>
         /// <param name="elemWalkerFactory">The factory to generate a walker expression to walk elements of the array.</param>
         /// <returns>A walker for a single-dimensional array of the specified <paramref name="type"/>.</returns>
-        private static WalkerInfo GetVectorWalkerInfo(Type type, Type elemType, CreateFastWalker elemWalkerFactory)
+        private static WalkerInfo GetVectorWalkerInfo(Type type, CreateFastWalker elemWalkerFactory)
         {
             //
             // Generate code that's equivalent to this:

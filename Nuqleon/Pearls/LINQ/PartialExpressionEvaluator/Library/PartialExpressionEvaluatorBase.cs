@@ -69,6 +69,9 @@ namespace System.Linq.CompilerServices
         /// <returns>true if an expression tree node using the specified constructor can be evaluated; otherwise, false.</returns>
         protected abstract bool CanEvaluate(ConstructorInfo constructor);
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression.
+#pragma warning disable CA1716 // Reserved language keyword 'property'.
+
         /// <summary>
         /// Checks whether an expression tree node using the specified property can be evaluated.
         /// For example, an implementation can decide to reject evaluation of a node based on side-effects occurring from accessing the specified property.
@@ -76,6 +79,9 @@ namespace System.Linq.CompilerServices
         /// <param name="property">Property to check.</param>
         /// <returns>true if an expression tree node using the specified property can be evaluated; otherwise, false.</returns>
         protected abstract bool CanEvaluate(PropertyInfo property);
+
+#pragma warning restore CA1716
+#pragma warning restore IDE0079
 
         /// <summary>
         /// Checks whether an expression tree node using the specified field can be evaluated.
@@ -96,7 +102,7 @@ namespace System.Linq.CompilerServices
             //       However, in typical usage patterns the number of subtrees that can be partially evaluated
             //       is expected to be low, so the number of times free variables have to be scanned is going
             //       to be relatively small.
-            if (expression.NodeType != ExpressionType.Constant && !FreeVariableScanner.HasFreeVariables(expression))
+            if (expression != null && expression.NodeType != ExpressionType.Constant && !FreeVariableScanner.HasFreeVariables(expression))
             {
                 return EvaluateCore(expression);
             }

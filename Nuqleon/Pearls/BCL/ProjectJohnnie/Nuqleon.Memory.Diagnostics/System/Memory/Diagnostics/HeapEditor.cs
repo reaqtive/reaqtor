@@ -638,7 +638,7 @@ namespace System.Memory.Diagnostics
 
                 Debug.Assert(elemEditor.ExpressionFactory != null);
 
-                return GetVectorEditorInfo(type, elemType, elemEditor.ExpressionFactory);
+                return GetVectorEditorInfo(type, elemEditor.ExpressionFactory);
             }
             else
             {
@@ -673,10 +673,9 @@ namespace System.Memory.Diagnostics
         /// Gets an editor for a single-dimensional array of the specified <paramref name="type"/>.
         /// </summary>
         /// <param name="type">The type of the single-dimensional array to get an editor for.</param>
-        /// <param name="elemType">The element type of the array.</param>
         /// <param name="elemEditorFactory">The factory to generate an editor expression to walk and edit elements of the array.</param>
         /// <returns>An editor for a single-dimensional array of the specified <paramref name="type"/>.</returns>
-        private static EditorInfo GetVectorEditorInfo(Type type, Type elemType, CreateEditor elemEditorFactory)
+        private static EditorInfo GetVectorEditorInfo(Type type, CreateEditor elemEditorFactory)
         {
             //
             // Generate code that's equivalent to this:

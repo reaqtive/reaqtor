@@ -23,12 +23,12 @@ namespace System.Memory.Diagnostics
         /// <summary>
         /// Gets the number of instances per type.
         /// </summary>
-        public Dictionary<Type, long> InstanceCountPerType { get; set; }
+        public IReadOnlyDictionary<Type, long> InstanceCountPerType { get; set; }
 
         /// <summary>
         /// Gets the total number of elements across all instances per array type.
         /// </summary>
-        public Dictionary<Type, long> ElementCountPerArrayType { get; set; }
+        public IReadOnlyDictionary<Type, long> ElementCountPerArrayType { get; set; }
 
         /// <summary>
         /// Gets the total number of boxed values.
