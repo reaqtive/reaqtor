@@ -74,16 +74,11 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -130,18 +125,12 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -197,20 +186,13 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -275,22 +257,14 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -364,24 +338,15 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -464,26 +429,16 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -575,28 +530,17 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -697,30 +641,18 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    case 7:
-                        return Item8;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                7 => Item8,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -830,32 +762,19 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    case 7:
-                        return Item8;
-                    case 8:
-                        return Item9;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                7 => Item8,
+                8 => Item9,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -974,34 +893,20 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    case 7:
-                        return Item8;
-                    case 8:
-                        return Item9;
-                    case 9:
-                        return Item10;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                7 => Item8,
+                8 => Item9,
+                9 => Item10,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -1129,36 +1034,21 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    case 7:
-                        return Item8;
-                    case 8:
-                        return Item9;
-                    case 9:
-                        return Item10;
-                    case 10:
-                        return Item11;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                7 => Item8,
+                8 => Item9,
+                9 => Item10,
+                10 => Item11,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -1295,38 +1185,22 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    case 7:
-                        return Item8;
-                    case 8:
-                        return Item9;
-                    case 9:
-                        return Item10;
-                    case 10:
-                        return Item11;
-                    case 11:
-                        return Item12;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                7 => Item8,
+                8 => Item9,
+                9 => Item10,
+                10 => Item11,
+                11 => Item12,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -1472,40 +1346,23 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    case 7:
-                        return Item8;
-                    case 8:
-                        return Item9;
-                    case 9:
-                        return Item10;
-                    case 10:
-                        return Item11;
-                    case 11:
-                        return Item12;
-                    case 12:
-                        return Item13;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                7 => Item8,
+                8 => Item9,
+                9 => Item10,
+                10 => Item11,
+                11 => Item12,
+                12 => Item13,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -1660,42 +1517,24 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    case 7:
-                        return Item8;
-                    case 8:
-                        return Item9;
-                    case 9:
-                        return Item10;
-                    case 10:
-                        return Item11;
-                    case 11:
-                        return Item12;
-                    case 12:
-                        return Item13;
-                    case 13:
-                        return Item14;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                7 => Item8,
+                8 => Item9,
+                9 => Item10,
+                10 => Item11,
+                11 => Item12,
+                12 => Item13,
+                13 => Item14,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -1859,44 +1698,25 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    case 7:
-                        return Item8;
-                    case 8:
-                        return Item9;
-                    case 9:
-                        return Item10;
-                    case 10:
-                        return Item11;
-                    case 11:
-                        return Item12;
-                    case 12:
-                        return Item13;
-                    case 13:
-                        return Item14;
-                    case 14:
-                        return Item15;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                7 => Item8,
+                8 => Item9,
+                9 => Item10,
+                10 => Item11,
+                11 => Item12,
+                12 => Item13,
+                13 => Item14,
+                14 => Item15,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
@@ -2069,46 +1889,26 @@ namespace System.Runtime.CompilerServices
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
-                    case 0:
-                        return Item1;
-                    case 1:
-                        return Item2;
-                    case 2:
-                        return Item3;
-                    case 3:
-                        return Item4;
-                    case 4:
-                        return Item5;
-                    case 5:
-                        return Item6;
-                    case 6:
-                        return Item7;
-                    case 7:
-                        return Item8;
-                    case 8:
-                        return Item9;
-                    case 9:
-                        return Item10;
-                    case 10:
-                        return Item11;
-                    case 11:
-                        return Item12;
-                    case 12:
-                        return Item13;
-                    case 13:
-                        return Item14;
-                    case 14:
-                        return Item15;
-                    case 15:
-                        return Item16;
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                0 => Item1,
+                1 => Item2,
+                2 => Item3,
+                3 => Item4,
+                4 => Item5,
+                5 => Item6,
+                6 => Item7,
+                7 => Item8,
+                8 => Item9,
+                9 => Item10,
+                10 => Item11,
+                11 => Item12,
+                12 => Item13,
+                13 => Item14,
+                14 => Item15,
+                15 => Item16,
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {

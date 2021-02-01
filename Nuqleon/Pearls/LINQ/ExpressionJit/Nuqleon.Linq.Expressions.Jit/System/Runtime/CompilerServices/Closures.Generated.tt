@@ -89,23 +89,18 @@ for (var j = 1; j <= i; j++)
         /// <returns>The value of the runtime variable.</returns>
         object IRuntimeVariables.this[int index]
         {
-            get
+            get => index switch
             {
-                switch (index)
-                {
 <#
 for (var j = 1; j <= i; j++)
 {
 #>
-                    case <#=j - 1#>:
-                        return Item<#=j#>;
+                <#=j - 1#> => Item<#=j#>,
 <#
 }
 #>
-                    default:
-                        throw new ArgumentOutOfRangeException(nameof(index));
-                }
-            }
+                _ => throw new ArgumentOutOfRangeException(nameof(index))
+            };
 
             set
             {
