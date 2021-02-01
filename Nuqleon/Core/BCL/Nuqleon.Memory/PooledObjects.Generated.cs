@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-#if CODEGEN
-
 using System.Diagnostics.CodeAnalysis;
 using System.Memory;
 
@@ -5542,5 +5540,3 @@ namespace System.Collections.Concurrent
 }
 #endif
 
-
-#endif

@@ -16,8 +16,6 @@
 <#@ import namespace="System.Reflection" #>
 <#@ import namespace="System.Text" #>
 <#@ output extension=".cs" #>
-#if CODEGEN
-
 using System.Diagnostics.CodeAnalysis;
 using System.Memory;
 <#
@@ -957,5 +955,3 @@ namespace <#=type.Namespace#><#=test?".Test":""#>
     } // </if-not-type-isvaluetype>
 } // </foreach-e-in-types>
 #>
-
-#endif
