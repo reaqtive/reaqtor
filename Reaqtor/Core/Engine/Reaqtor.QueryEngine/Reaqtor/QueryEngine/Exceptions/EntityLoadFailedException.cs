@@ -11,7 +11,8 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Exception representing the failure to load a reactive entity.
     /// </summary>
-    public partial class EntityLoadFailedException : Exception
+    [Serializable]
+    public class EntityLoadFailedException : Exception
     {
         /// <summary>
         /// Creates a new instance of the <see cref="EntityLoadFailedException"/> type.
@@ -65,26 +66,6 @@ namespace Reaqtor.QueryEngine
         }
 
         /// <summary>
-        /// Gets URI identifying the entity that failed to be loaded.
-        /// </summary>
-        public Uri EntityUri { get; }
-
-        /// <summary>
-        /// Gets the reactive entity kind of the entity that failed to be loaded.
-        /// </summary>
-        public ReactiveEntityKind EntityType { get; }
-
-        private static string GetMessage(Uri uri, ReactiveEntityKind type)
-        {
-            return string.Format(CultureInfo.InvariantCulture, "The entity of type '{0}' with identifier '{1}' failed to load.", type, uri.ToCanonicalString());
-        }
-    }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class EntityLoadFailedException
-    {
-        /// <summary>
         /// Creates a new instance of the <see cref="EntityLoadFailedException"/> type from serialized state.
         /// </summary>
         /// <param name="info">Serialization info to obtain the exception data from.</param>
@@ -97,6 +78,16 @@ namespace Reaqtor.QueryEngine
         }
 
         /// <summary>
+        /// Gets URI identifying the entity that failed to be loaded.
+        /// </summary>
+        public Uri EntityUri { get; }
+
+        /// <summary>
+        /// Gets the reactive entity kind of the entity that failed to be loaded.
+        /// </summary>
+        public ReactiveEntityKind EntityType { get; }
+
+        /// <summary>
         /// Sets the <see cref="System.Runtime.Serialization.SerializationInfo" /> object with the parameter name and additional exception information.
         /// </summary>
         /// <param name="info">The object that holds the serialized object data.</param>
@@ -104,9 +95,16 @@ namespace Reaqtor.QueryEngine
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
+
+            // NB: Names kept for backwards compat.
+
             info.AddValue("EntityUri", EntityUri, typeof(Uri));
             info.AddValue("EntityKind", EntityType, typeof(ReactiveEntityKind));
         }
+
+        private static string GetMessage(Uri uri, ReactiveEntityKind type)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "The entity of type '{0}' with identifier '{1}' failed to load.", type, uri.ToCanonicalString());
+        }
     }
-#endif
 }

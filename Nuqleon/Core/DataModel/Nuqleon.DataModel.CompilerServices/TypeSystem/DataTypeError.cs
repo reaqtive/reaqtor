@@ -19,7 +19,8 @@ namespace Nuqleon.DataModel.TypeSystem
     /// <summary>
     /// Provides information about data type errors, when converting from CLR types.
     /// </summary>
-    public partial class DataTypeError
+    [Serializable]
+    public class DataTypeError : ISerializable
     {
         internal DataTypeError(Type type, string message, Type[] stack)
         {
@@ -31,6 +32,21 @@ namespace Nuqleon.DataModel.TypeSystem
             // collection type is not serializable.
             //
             Stack = stack.ToList().AsReadOnly();
+        }
+
+        /// <summary>
+        /// Creates a new data type error object from serialization information.
+        /// </summary>
+        /// <param name="info">Serialization information.</param>
+        /// <param name="context">Streaming context.</param>
+        protected DataTypeError(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            Type = (Type)info.GetValue(nameof(Type), typeof(Type));
+            Message = info.GetString(nameof(Message));
+            Stack = (ReadOnlyCollection<Type>)info.GetValue(nameof(Stack), typeof(ReadOnlyCollection<Type>));
         }
 
         /// <summary>
@@ -75,26 +91,6 @@ namespace Nuqleon.DataModel.TypeSystem
 
             return sb.ToString();
         }
-    }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class DataTypeError : ISerializable
-    {
-        /// <summary>
-        /// Creates a new data type error object from serialization information.
-        /// </summary>
-        /// <param name="info">Serialization information.</param>
-        /// <param name="context">Streaming context.</param>
-        protected DataTypeError(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            Type = (Type)info.GetValue("Type", typeof(Type));
-            Stack = (ReadOnlyCollection<Type>)info.GetValue("Stack", typeof(ReadOnlyCollection<Type>));
-            Message = info.GetString("Message");
-        }
 
         /// <summary>
         /// Serializes the object instance to the specified serialization info object.
@@ -106,15 +102,13 @@ namespace Nuqleon.DataModel.TypeSystem
             if (info == null)
                 throw new ArgumentNullException(nameof(info));
 
-            info.AddValue("Type", Type);
-            info.AddValue("Stack", Stack);
-            info.AddValue("Message", Message);
+            // NB: Order kept for compat.
+
+            info.AddValue(nameof(Type), Type);
+            info.AddValue(nameof(Stack), Stack);
+            info.AddValue(nameof(Message), Message);
         }
 
-        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            GetObjectData(info, context);
-        }
+        void ISerializable.GetObjectData(SerializationInfo info, StreamingContext context) => GetObjectData(info, context);
     }
-#endif
 }

@@ -10,7 +10,8 @@ namespace System.Linq.Expressions.Bonsai.Serialization
     /// <summary>
     /// Exception describing an error while parsing a Bonsai expression.
     /// </summary>
-    public partial class BonsaiParseException
+    [Serializable]
+    public class BonsaiParseException : Exception, ISerializable
     {
         /// <summary>
         /// Creates a new Bonsai parsing exception.
@@ -62,16 +63,6 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         }
 
         /// <summary>
-        /// Gets the node where the parsing failure occurred.
-        /// </summary>
-        public Json.Expression Node { get; }
-    }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class BonsaiParseException : Exception, ISerializable
-    {
-        /// <summary>
         /// Creates a new Bonsai parsing exception during deserialization.
         /// </summary>
         /// <param name="info">Serialization info.</param>
@@ -79,8 +70,13 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         protected BonsaiParseException(SerializationInfo info, StreamingContext context)
             : base(info, context)
         {
-            Node = Json.Expression.Parse(info.GetString("Node"), ensureTopLevelObjectOrArray: false);
+            Node = Json.Expression.Parse(info.GetString(nameof(Node)), ensureTopLevelObjectOrArray: false);
         }
+
+        /// <summary>
+        /// Gets the node where the parsing failure occurred.
+        /// </summary>
+        public Json.Expression Node { get; }
 
         /// <summary>
         /// Gets object data during serialization.
@@ -95,12 +91,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             //       so we don't have to worry about this too much. If it turns out this is not the
             //       case, we can consider passing in a pooled StringBuilder instance.
 
-            info.AddValue("Node", Node.ToString());
+            info.AddValue(nameof(Node), Node.ToString());
         }
     }
-#else
-    public partial class BonsaiParseException : Exception
-    {
-    }
-#endif
 }

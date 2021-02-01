@@ -10,7 +10,8 @@ namespace Nuqleon.DataModel.Serialization.Json
     /// <summary>
     /// Exception thrown when there is an error during serialization.
     /// </summary>
-    public sealed partial class DataSerializerException : SerializationException
+    [Serializable]
+    public sealed class DataSerializerException : SerializationException
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataSerializerException"/> class.
@@ -37,12 +38,7 @@ namespace Nuqleon.DataModel.Serialization.Json
             : base(message, innerException)
         {
         }
-    }
 
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class DataSerializerException
-    {
         /// <summary>
         /// Initializes a new instance of the <see cref="DataSerializerException"/> class.
         /// </summary>
@@ -53,5 +49,4 @@ namespace Nuqleon.DataModel.Serialization.Json
         {
         }
     }
-#endif
 }

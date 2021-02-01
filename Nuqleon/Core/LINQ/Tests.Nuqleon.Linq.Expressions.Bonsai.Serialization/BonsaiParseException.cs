@@ -12,7 +12,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions.Bonsai.Serialization;
 using Json = Nuqleon.Json.Expressions;
 
-#if !NO_SERIALIZATION && !NET5_0 // https://aka.ms/binaryformatter
+#if !NET5_0 // https://aka.ms/binaryformatter
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
@@ -32,7 +32,7 @@ namespace Tests
             Assert.AreEqual("foo", ex.Message);
             Assert.AreSame(json, ex.Node);
 
-#if !NO_SERIALIZATION && !NET5_0 // https://aka.ms/binaryformatter
+#if !NET5_0 // https://aka.ms/binaryformatter
             var f = new BinaryFormatter();
 
             var ms = new MemoryStream();

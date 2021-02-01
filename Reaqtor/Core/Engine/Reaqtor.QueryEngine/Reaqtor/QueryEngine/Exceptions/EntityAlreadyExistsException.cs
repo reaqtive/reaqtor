@@ -11,7 +11,8 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Exception indicating that an entity with a given identifier already exists.
     /// </summary>
-    public partial class EntityAlreadyExistsException : ArgumentException
+    [Serializable]
+    public class EntityAlreadyExistsException : ArgumentException
     {
         /// <summary>
         /// Creates a new instance of the <see cref="EntityAlreadyExistsException"/> class.
@@ -71,13 +72,24 @@ namespace Reaqtor.QueryEngine
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="EntityAlreadyExistsException"/> class from serialized state.
+        /// </summary>
+        /// <param name="info">Serialization information to deserialize state from.</param>
+        /// <param name="context">Streaming context to deserialize state from.</param>
+        protected EntityAlreadyExistsException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            // NB: Names kept for backwards compat.
+
+            QueryEngineUri = (Uri)info.GetValue("QeId", typeof(Uri));
+            EntityUri = (Uri)info.GetValue("EntityUri", typeof(Uri));
+            EntityType = (ReactiveEntityKind)info.GetValue("EntityKind", typeof(ReactiveEntityKind));
+        }
+
+        /// <summary>
         /// Gets the URI identifying the query engine whose registry already contains an entity with <see cref="EntityUri"/> as the entity URI.
         /// </summary>
-        public Uri QueryEngineUri
-        {
-            get;
-            private set;
-        }
+        public Uri QueryEngineUri { get; }
 
         /// <summary>
         /// Gets the URI identifying the reactive entity that already exists.
@@ -89,29 +101,6 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         public ReactiveEntityKind EntityType { get; }
 
-        private static string GetMessage(Uri uri, ReactiveEntityKind type, Uri qeId)
-        {
-            return string.Format(CultureInfo.InvariantCulture, "An entity of type '{0}' with identifier '{1}' already exists in query engine '{2}'.", type, uri.ToCanonicalString(), qeId.ToCanonicalString());
-        }
-    }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class EntityAlreadyExistsException
-    {
-        /// <summary>
-        /// Creates a new instance of the <see cref="EntityAlreadyExistsException"/> class from serialized state.
-        /// </summary>
-        /// <param name="info">Serialization information to deserialize state from.</param>
-        /// <param name="context">Streaming context to deserialize state from.</param>
-        protected EntityAlreadyExistsException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            EntityUri = (Uri)info.GetValue("EntityUri", typeof(Uri));
-            EntityType = (ReactiveEntityKind)info.GetValue("EntityKind", typeof(ReactiveEntityKind));
-            QueryEngineUri = (Uri)info.GetValue("QeId", typeof(Uri));
-        }
-
         /// <summary>
         /// Sets the <see cref="System.Runtime.Serialization.SerializationInfo" /> object with the parameter name and additional exception information.
         /// </summary>
@@ -120,10 +109,17 @@ namespace Reaqtor.QueryEngine
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
+
+            // NB: Names and order kept for backwards compat.
+
             info.AddValue("EntityUri", EntityUri, typeof(Uri));
             info.AddValue("EntityKind", EntityType, typeof(ReactiveEntityKind));
             info.AddValue("QeId", QueryEngineUri, typeof(Uri));
         }
+
+        private static string GetMessage(Uri uri, ReactiveEntityKind type, Uri qeId)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "An entity of type '{0}' with identifier '{1}' already exists in query engine '{2}'.", type, uri.ToCanonicalString(), qeId.ToCanonicalString());
+        }
     }
-#endif
 }

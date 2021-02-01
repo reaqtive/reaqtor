@@ -17,7 +17,8 @@ namespace Nuqleon.DataModel.TypeSystem
     /// <summary>
     /// Exception for data type violations, containing diagnostic information.
     /// </summary>
-    public partial class DataTypeException : Exception
+    [Serializable]
+    public class DataTypeException : Exception
     {
         /// <summary>
         /// Creates a new data type violation exception.
@@ -55,6 +56,17 @@ namespace Nuqleon.DataModel.TypeSystem
             Error = error ?? throw new ArgumentNullException(nameof(error));
         }
 
+        /// <summary>
+        /// Creates a new data type violation exception from serialization information.
+        /// </summary>
+        /// <param name="info">Serialization information.</param>
+        /// <param name="context">Streaming context.</param>
+        protected DataTypeException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            Error = (DataTypeError)info.GetValue(nameof(Error), typeof(DataTypeError));
+        }
+
         private static string GetErrorMessage(DataTypeError error)
         {
             if (error == null)
@@ -81,22 +93,6 @@ namespace Nuqleon.DataModel.TypeSystem
 
             return Error.ToString();
         }
-    }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class DataTypeException
-    {
-        /// <summary>
-        /// Creates a new data type violation exception from serialization information.
-        /// </summary>
-        /// <param name="info">Serialization information.</param>
-        /// <param name="context">Streaming context.</param>
-        protected DataTypeException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            Error = (DataTypeError)info.GetValue("Error", typeof(DataTypeError));
-        }
 
         /// <summary>
         /// Serializes the object instance to the specified serialization info object.
@@ -109,8 +105,8 @@ namespace Nuqleon.DataModel.TypeSystem
                 throw new ArgumentNullException(nameof(info));
 
             base.GetObjectData(info, context);
-            info.AddValue("Error", Error);
+
+            info.AddValue(nameof(Error), Error);
         }
     }
-#endif
 }

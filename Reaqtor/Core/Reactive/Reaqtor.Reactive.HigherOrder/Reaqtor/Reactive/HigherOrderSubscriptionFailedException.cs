@@ -3,10 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-
-#if !NO_SERIALIZATION
 using System.Runtime.Serialization;
-#endif
 
 //
 // NB: This moved from Reaqtor to the query engine, but for backward compat reasons we keep the
@@ -18,7 +15,8 @@ namespace Reaqtor.Reactive
     /// <summary>
     /// Exception representing failures in higher order subscriptions.
     /// </summary>
-    public partial class HigherOrderSubscriptionFailedException : Exception
+    [Serializable]
+    public class HigherOrderSubscriptionFailedException : Exception
     {
         /// <summary>
         /// Creates a new higher order subscription failure exception.
@@ -37,12 +35,7 @@ namespace Reaqtor.Reactive
         /// <param name="message">Error message.</param>
         /// <param name="inner">Inner exception.</param>
         public HigherOrderSubscriptionFailedException(string message, Exception inner) : base(message, inner) { }
-    }
 
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class HigherOrderSubscriptionFailedException
-    {
         /// <summary>
         /// Creates a new higher order subscription failure exception from the specified serialization information.
         /// </summary>
@@ -50,5 +43,4 @@ namespace Reaqtor.Reactive
         /// <param name="context">Streaming context to deserialize the exception from.</param>
         protected HigherOrderSubscriptionFailedException(SerializationInfo info, StreamingContext context) : base(info, context) { }
     }
-#endif
 }

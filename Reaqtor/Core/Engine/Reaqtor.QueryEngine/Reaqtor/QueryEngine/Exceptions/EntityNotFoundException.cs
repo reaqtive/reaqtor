@@ -11,7 +11,8 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Exception indicating that an entity with a given identifier was not found.
     /// </summary>
-    public partial class EntityNotFoundException : ArgumentException
+    [Serializable]
+    public class EntityNotFoundException : ArgumentException
     {
         /// <summary>
         /// Creates a new instance of the <see cref="EntityNotFoundException"/> class.
@@ -71,6 +72,19 @@ namespace Reaqtor.QueryEngine
         }
 
         /// <summary>
+        /// Creates a new instance of the <see cref="EntityNotFoundException"/> class from serialized state.
+        /// </summary>
+        /// <param name="info">Serialization information to deserialize state from.</param>
+        /// <param name="context">Streaming context to deserialize state from.</param>
+        protected EntityNotFoundException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            EntityUri = (Uri)info.GetValue("EntityUri", typeof(Uri));
+            EntityType = (ReactiveEntityKind)info.GetValue("EntityKind", typeof(ReactiveEntityKind));
+            QueryEngineUri = (Uri)info.GetValue("QeId", typeof(Uri));
+        }
+
+        /// <summary>
         /// Gets the URI identifying the query engine whose registry does not contain an entity with <see cref="EntityUri"/> as the entity URI.
         /// </summary>
         public Uri QueryEngineUri { get; }
@@ -85,29 +99,6 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         public ReactiveEntityKind EntityType { get; }
 
-        private static string GetMessage(Uri uri, ReactiveEntityKind type, Uri qeId)
-        {
-            return string.Format(CultureInfo.InvariantCulture, "An entity of type '{0}' with identifier '{1}' could not be found in query engine '{2}'.", type, uri.ToCanonicalString(), qeId);
-        }
-    }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class EntityNotFoundException
-    {
-        /// <summary>
-        /// Creates a new instance of the <see cref="EntityNotFoundException"/> class from serialized state.
-        /// </summary>
-        /// <param name="info">Serialization information to deserialize state from.</param>
-        /// <param name="context">Streaming context to deserialize state from.</param>
-        protected EntityNotFoundException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            EntityUri = (Uri)info.GetValue("EntityUri", typeof(Uri));
-            EntityType = (ReactiveEntityKind)info.GetValue("EntityKind", typeof(ReactiveEntityKind));
-            QueryEngineUri = (Uri)info.GetValue("QeId", typeof(Uri));
-        }
-
         /// <summary>
         /// Sets the <see cref="System.Runtime.Serialization.SerializationInfo" /> object with the parameter name and additional exception information.
         /// </summary>
@@ -116,10 +107,17 @@ namespace Reaqtor.QueryEngine
         public override void GetObjectData(SerializationInfo info, StreamingContext context)
         {
             base.GetObjectData(info, context);
+
+            // NB: Names and order kept for backwards compat.
+
             info.AddValue("EntityUri", EntityUri, typeof(Uri));
             info.AddValue("EntityKind", EntityType, typeof(ReactiveEntityKind));
             info.AddValue("QeId", QueryEngineUri, typeof(Uri));
         }
+
+        private static string GetMessage(Uri uri, ReactiveEntityKind type, Uri qeId)
+        {
+            return string.Format(CultureInfo.InvariantCulture, "An entity of type '{0}' with identifier '{1}' could not be found in query engine '{2}'.", type, uri.ToCanonicalString(), qeId);
+        }
     }
-#endif
 }

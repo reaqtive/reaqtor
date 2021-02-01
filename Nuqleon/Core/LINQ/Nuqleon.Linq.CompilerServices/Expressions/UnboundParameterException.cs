@@ -21,8 +21,15 @@ namespace System.Linq.CompilerServices
     /// Exception raised when an expression contains unbound parameters which prevent the expression to be processed.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "The standard object creation patterns don't apply.")]
+    [Serializable]
     public sealed partial class UnboundParameterException : Exception
     {
+        [NonSerialized]
+        private readonly Expression _expression;
+
+        [NonSerialized]
+        private readonly ReadOnlyCollection<ParameterExpression> _parameters;
+
         /// <summary>
         /// Creates a new unbound parameter exception for the specified expression and the unbound parameters.
         /// </summary>
@@ -37,6 +44,16 @@ namespace System.Linq.CompilerServices
 
             _expression = expression;
             _parameters = parameters.ToReadOnly();
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the UnboundParameterException class with serialized data.
+        /// </summary>
+        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
+        /// <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
+        private UnboundParameterException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
         }
 
         /// <summary>
@@ -78,27 +95,6 @@ namespace System.Linq.CompilerServices
                 throw new UnboundParameterException(message, expression, variables);
             }
         }
-    }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class UnboundParameterException
-    {
-        [NonSerialized]
-        private readonly Expression _expression;
-
-        [NonSerialized]
-        private readonly ReadOnlyCollection<ParameterExpression> _parameters;
-
-        /// <summary>
-        /// Initializes a new instance of the UnboundParameterException class with serialized data.
-        /// </summary>
-        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
-        private UnboundParameterException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-        }
 
         /// <summary>
         /// Sets the System.Runtime.Serialization.SerializationInfo with information about the exception.
@@ -110,12 +106,4 @@ namespace System.Linq.CompilerServices
             base.GetObjectData(info, context);
         }
     }
-#else
-    public partial class UnboundParameterException
-    {
-        private readonly Expression _expression;
-
-        private readonly ReadOnlyCollection<ParameterExpression> _parameters;
-    }
-#endif
 }

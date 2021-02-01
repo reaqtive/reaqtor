@@ -19,7 +19,8 @@ namespace Nuqleon.Json.Parser
     /// <summary>
     /// Parser exception signaling a parsing error in the input stream.
     /// </summary>
-    public partial class ParseException
+    [Serializable]
+    public class ParseException : Exception, ISerializable
     {
         /// <summary>
         /// Creates a new parser exception signaling an error in the input stream at the given position.
@@ -35,6 +36,18 @@ namespace Nuqleon.Json.Parser
         }
 
         /// <summary>
+        /// Creates a new parser exception during deserialization.
+        /// </summary>
+        /// <param name="info">Serialization info.</param>
+        /// <param name="context">serialization streaming context.</param>
+        protected ParseException(SerializationInfo info, StreamingContext context)
+            : base(info, context)
+        {
+            Position = info.GetInt32(nameof(Position));
+            Error = (ParseError)info.GetInt32(nameof(Error));
+        }
+
+        /// <summary>
         /// Gets the position in the input stream where the parsing error occurred.
         /// </summary>
         public int Position { get; }
@@ -43,23 +56,6 @@ namespace Nuqleon.Json.Parser
         /// Gets the parser error.
         /// </summary>
         public ParseError Error { get; }
-    }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class ParseException : Exception, ISerializable
-    {
-        /// <summary>
-        /// Creates a new parser exception during deserialization.
-        /// </summary>
-        /// <param name="info">Serialization info.</param>
-        /// <param name="context">serialization streaming context.</param>
-        protected ParseException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            Error = (ParseError)info.GetInt32("Error");
-            Position = info.GetInt32("Position");
-        }
 
         /// <summary>
         /// Gets object data during serialization.
@@ -70,13 +66,8 @@ namespace Nuqleon.Json.Parser
         {
             base.GetObjectData(info, context);
 
-            info.AddValue("Position", Position);
-            info.AddValue("Error", (int)Error);
+            info.AddValue(nameof(Position), Position);
+            info.AddValue(nameof(Error), (int)Error);
         }
     }
-#else
-    public partial class ParseException : Exception
-    {
-    }
-#endif
 }

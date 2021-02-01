@@ -10,6 +10,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// <summary>
     /// Exception to indicate a write conflict in the key/value store.
     /// </summary>
+    [Serializable]
     public partial class WriteConflictException : Exception
     {
         /// <summary>
@@ -35,12 +36,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         public WriteConflictException(string message, Exception innerException) : base(message, innerException)
         {
         }
-    }
 
-#if !NO_SERIALIZATION
-    [Serializable]
-    public partial class WriteConflictException
-    {
         /// <summary>
         /// Initializes a new instance of the <see cref="WriteConflictException"/> class.
         /// </summary>
@@ -50,5 +46,4 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         {
         }
     }
-#endif
 }

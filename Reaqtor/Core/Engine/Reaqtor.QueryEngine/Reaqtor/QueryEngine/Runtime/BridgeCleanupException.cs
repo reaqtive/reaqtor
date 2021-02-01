@@ -9,18 +9,12 @@ using System;
 
 namespace Reaqtor.QueryEngine
 {
-    internal partial class BridgeCleanupException : Exception
+    [Serializable]
+    internal class BridgeCleanupException : Exception
     {
         public BridgeCleanupException() { }
         public BridgeCleanupException(string message) : base(message) { }
         public BridgeCleanupException(string message, Exception inner) : base(message, inner) { }
-    }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    internal partial class BridgeCleanupException
-    {
         protected BridgeCleanupException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
-#endif
 }
