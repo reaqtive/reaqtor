@@ -76,17 +76,13 @@ namespace Rxcel
             protected internal override Expression VisitFormula(FormulaExcelExpression node)
             {
                 var args = Expression.NewArrayInit(typeof(double?), node.Arguments.Select(Visit).SelectMany(Flatten).ToArray());
-                var mtd = default(MethodInfo);
 
-                switch (node.Name.ToUpper(CultureInfo.InvariantCulture))
+                var mtd = node.Name.ToUpper(CultureInfo.InvariantCulture) switch
                 {
-                    case "SUM":
-                        mtd = InfoOf((double?[] xs) => xs.Sum());
-                        break;
-                    case "AVERAGE":
-                        mtd = InfoOf((double?[] xs) => xs.Average());
-                        break;
-                }
+                    "SUM" => InfoOf((double?[] xs) => xs.Sum()),
+                    "AVERAGE" => InfoOf((double?[] xs) => xs.Average()),
+                    _ => throw new InvalidOperationException("Unknown function: " + node.Name)
+                };
 
                 return Expression.Call(mtd, args);
             }

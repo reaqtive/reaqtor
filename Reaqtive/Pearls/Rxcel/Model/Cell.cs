@@ -85,6 +85,10 @@ namespace Rxcel
 #endif
                                 "Invalid formula: " + ex.Message
                             );
+
+#if NO_UI
+                            Console.ReadLine();
+#endif
                             return;
                         }
 
