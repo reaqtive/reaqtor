@@ -116,8 +116,6 @@ namespace System.Reflection
             }
         }
 
-#if !NO_REFLECTIONEMIT
-
         // TODO: Implement cache eviction policies
         private static readonly ConcurrentDictionary<StructuralTypeSlim, Type> s_structuralTypeCache = new();
 
@@ -209,21 +207,6 @@ namespace System.Reflection
             _typeMap[type] = newType;
             return newType;
         }
-
-#else
-
-        /// <summary>
-        /// Visits a structural type slim and returns a CLR type.
-        /// </summary>
-        /// <param name="type">Original type.</param>
-        /// <returns>CLR type represented by the slim type.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1062:Validate arguments of public methods", MessageId = "0", Justification = "Visit method filters out null references; subclasses should dispatch through the Visit method.")]
-        protected override Type VisitStructural(StructuralTypeSlim type)
-        {
-            throw new NotSupportedException("Structural types are not yet supported in the Portable Library build."); // TODO[DOTNETPL]
-        }
-
-#endif
 
         /// <summary>
         /// Method not used for this derived class.

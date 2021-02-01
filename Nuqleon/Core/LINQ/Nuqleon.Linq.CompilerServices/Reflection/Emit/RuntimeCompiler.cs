@@ -9,8 +9,6 @@
 // ER - July 2013 - Small tweaks.
 //
 
-#if !NO_REFLECTIONEMIT
-
 using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
@@ -1130,5 +1128,3 @@ namespace System.Linq.CompilerServices
         #endregion
     }
 }
-
-#endif

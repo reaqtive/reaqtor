@@ -72,7 +72,6 @@ namespace Nuqleon.DataModel.CompilerServices
         #endregion
     }
 
-#if !NO_REFLECTIONEMIT
     public partial class ExpressionEntityTypeSubstitutor
     {
         #region Methods
@@ -154,16 +153,4 @@ namespace Nuqleon.DataModel.CompilerServices
 
         #endregion
     }
-#else
-    public partial class ExpressionEntityTypeSubstitutor
-    {
-        private void CompileEntityTypes(EntityInfo entityInfo)
-        {
-            if (entityInfo.Entities.Count > 0)
-            {
-                throw new NotSupportedException("Entity types are not yet supported in this build flavor.");
-            }
-        }
-    }
-#endif
 }

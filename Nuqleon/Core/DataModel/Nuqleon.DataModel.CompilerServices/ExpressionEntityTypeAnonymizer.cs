@@ -8,8 +8,6 @@
 // BD - June 2013 - Created this file.
 //
 
-#if !NO_REFLECTIONEMIT
-
 using Nuqleon.DataModel.TypeSystem;
 using System;
 using System.Collections.Generic;
@@ -124,5 +122,3 @@ namespace Nuqleon.DataModel.CompilerServices
         }
     }
 }
-
-#endif
