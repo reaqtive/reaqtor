@@ -38,7 +38,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Reaqtive.Quotation", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Reaqtive.Scheduler", "Core\Tests.Reaqtive.Scheduler\Tests.Reaqtive.Scheduler.csproj", "{EB06572D-FF91-4A99-A84E-BF72841C6195}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Pearls.Rxcel", "Pearls\Rxcel\Nuqleon.Pearls.Rxcel.csproj", "{BBA890B3-51D3-41FF-B00F-784665F9A81B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reaqtive.Pearls.Rxcel", "Pearls\Rxcel\Reaqtive.Pearls.Rxcel.csproj", "{BBA890B3-51D3-41FF-B00F-784665F9A81B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Nuqleon", "Nuqleon", "{549A1E9F-109A-4980-8C04-D1CAF717C368}"
 EndProject

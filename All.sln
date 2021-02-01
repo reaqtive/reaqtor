@@ -356,7 +356,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "perf", "perf", "{88A395C7-4
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Rxcel", "Rxcel", "{FA8F4707-9EBB-4F7E-A888-7D714DADDD50}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Pearls.Rxcel", "Reaqtive\Pearls\Rxcel\Nuqleon.Pearls.Rxcel.csproj", "{806399D7-8921-4F62-81A8-B7F6D0A918EB}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reaqtive.Pearls.Rxcel", "Reaqtive\Pearls\Rxcel\Reaqtive.Pearls.Rxcel.csproj", "{806399D7-8921-4F62-81A8-B7F6D0A918EB}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "PartitionedSubject", "PartitionedSubject", "{888AB2C7-0F92-433B-B34A-47793030EE89}"
 EndProject

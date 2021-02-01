@@ -4,7 +4,7 @@ VisualStudioVersion = 16.0.30523.141
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{112923AC-9D24-4003-9D71-0AAB687F69E8}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Pearls.Rxcel", "Nuqleon.Pearls.Rxcel.csproj", "{97A9F3B0-B0E1-4E83-9137-44CE5E255559}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Reaqtive.Pearls.Rxcel", "Reaqtive.Pearls.Rxcel.csproj", "{97A9F3B0-B0E1-4E83-9137-44CE5E255559}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
