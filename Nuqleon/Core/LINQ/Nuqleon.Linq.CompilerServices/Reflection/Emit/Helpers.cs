@@ -12,6 +12,8 @@
 // NB: This file contains a late bound accessor for System.Reflection.Emit types which are unavailable on .NET Standard 2.0.
 //
 
+#if NETSTANDARD2_0
+
 using System;
 using System.Reflection;
 
@@ -64,3 +66,5 @@ namespace Nuqleon.Reflection.Emit
         public static PropertyInfo Unwrap(this PropertyInfo property) => property is PropertyBuilder pb ? pb._property : property;
     }
 }
+
+#endif

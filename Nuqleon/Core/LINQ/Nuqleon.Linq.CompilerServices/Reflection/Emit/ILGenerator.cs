@@ -12,6 +12,8 @@
 // NB: This file contains a late bound accessor for System.Reflection.Emit types which are unavailable on .NET Standard 2.0.
 //
 
+#if NETSTANDARD2_0
+
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CS1591 // XML docs missing for late bound accessor mirror image of System.Reflection.Emit functionality.
 #pragma warning disable CA1062 // Null checks omitted; just a forwarder.
@@ -247,3 +249,5 @@ namespace Nuqleon.Reflection.Emit
         public void MarkLabel(Label label) => s_MarkLabel(_ilgen, label._label);
     }
 }
+
+#endif

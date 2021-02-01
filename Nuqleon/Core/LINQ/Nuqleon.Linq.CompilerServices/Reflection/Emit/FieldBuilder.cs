@@ -12,6 +12,8 @@
 // NB: This file contains a late bound accessor for System.Reflection.Emit types which are unavailable on .NET Standard 2.0.
 //
 
+#if NETSTANDARD2_0
+
 #pragma warning disable CS1591 // XML docs missing for late bound accessor mirror image of System.Reflection.Emit functionality.
 
 using System;
@@ -49,3 +51,5 @@ namespace Nuqleon.Reflection.Emit
         public override void SetValue(object obj, object value, BindingFlags invokeAttr, Binder binder, CultureInfo culture) => _field.SetValue(obj, value, invokeAttr, binder, culture);
     }
 }
+
+#endif

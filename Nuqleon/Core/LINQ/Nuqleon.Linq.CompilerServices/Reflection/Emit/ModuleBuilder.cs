@@ -12,6 +12,8 @@
 // NB: This file contains a late bound accessor for System.Reflection.Emit types which are unavailable on .NET Standard 2.0.
 //
 
+#if NETSTANDARD2_0
+
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CS1591 // XML docs missing for late bound accessor mirror image of System.Reflection.Emit functionality.
 #pragma warning disable CA1810 // Initialization of static fields in static constructor.
@@ -62,3 +64,5 @@ namespace Nuqleon.Reflection.Emit
         public TypeBuilder DefineType(string name, TypeAttributes attributes) => s_DefineType(_builder, name, attributes);
     }
 }
+
+#endif
