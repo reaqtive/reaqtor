@@ -7013,7 +7013,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", null);
@@ -7070,7 +7073,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
@@ -7130,7 +7136,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
@@ -7193,7 +7202,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
@@ -7259,7 +7271,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
@@ -7328,7 +7343,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
@@ -7400,7 +7418,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
@@ -7475,7 +7496,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
@@ -7553,7 +7577,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
@@ -7634,7 +7661,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
@@ -7718,7 +7748,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
@@ -7805,7 +7838,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
@@ -7895,7 +7931,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
@@ -7988,7 +8027,10 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
@@ -8088,13 +8130,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8113,6 +8160,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_2")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8123,13 +8176,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8150,6 +8208,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_3")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8160,13 +8224,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8189,6 +8258,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_4")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8199,13 +8274,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8230,6 +8310,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_5")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8240,13 +8326,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8273,6 +8364,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_6")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8283,13 +8380,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8318,6 +8420,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_7")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8328,13 +8436,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8365,6 +8478,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_8")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8375,13 +8494,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8414,6 +8538,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_9")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8424,13 +8554,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8465,6 +8600,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_10")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8475,13 +8616,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8518,6 +8664,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_11")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8528,13 +8680,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8573,6 +8730,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_12")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8583,13 +8746,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8630,6 +8798,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_13")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8640,13 +8814,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8689,6 +8868,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_14")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }
@@ -8699,13 +8884,18 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
+                    var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8750,6 +8940,12 @@ namespace Tests.Reaqtor.Service
                         Expression.Constant("factory_parameter_15")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }

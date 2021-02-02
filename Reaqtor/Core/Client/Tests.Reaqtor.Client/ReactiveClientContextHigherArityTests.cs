@@ -7016,7 +7016,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", state: null);
@@ -7075,7 +7078,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null);
@@ -7137,7 +7143,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null);
@@ -7202,7 +7211,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null);
@@ -7270,7 +7282,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null);
@@ -7341,7 +7356,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null);
@@ -7415,7 +7433,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null);
@@ -7492,7 +7513,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null);
@@ -7572,7 +7596,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null);
@@ -7655,7 +7682,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null);
@@ -7741,7 +7771,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null);
@@ -7830,7 +7863,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null);
@@ -7922,7 +7958,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null);
@@ -8017,7 +8056,10 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null);
@@ -8119,13 +8161,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8135,6 +8186,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_2")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8145,13 +8199,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8162,6 +8225,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_3")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8172,13 +8238,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8190,6 +8265,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_4")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8200,13 +8278,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8219,6 +8306,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_5")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8229,13 +8319,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8249,6 +8348,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_6")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8259,13 +8361,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8280,6 +8391,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_7")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8290,13 +8404,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8312,6 +8435,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_8")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8322,13 +8448,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8345,6 +8480,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_9")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8355,13 +8493,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8379,6 +8526,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_10")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8389,13 +8539,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8414,6 +8573,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_11")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8424,13 +8586,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8450,6 +8621,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_12")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8460,13 +8634,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8487,6 +8670,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_13")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8497,13 +8683,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8525,6 +8720,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_14")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
@@ -8535,13 +8733,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -8564,6 +8771,9 @@ namespace Tests.Reaqtor.Client
                         Expression.Constant("factory_parameter_15")
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }

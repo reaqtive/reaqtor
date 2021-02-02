@@ -824,7 +824,10 @@ for (int i = 2; i<=highestSupportedArity; i++) {
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.Create(new Uri(Constants.Stream.BAR), <#=args#>, null);
 
                     factory.Create(new Uri(Constants.Stream.FOO), <#=args#>, null);
@@ -912,13 +915,18 @@ for (int i = 2; i<=highestSupportedArity; i++) {
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(new Uri(Constants.SubscriptionFactory.SF));
-                    var stream = factory.Create(new Uri(Constants.Subscription.SUB1), <#=args#>, null);
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
 
-                    ((IReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).Create(new Uri(Constants.Subscription.SUB2), <#=args#>, null);
+                    var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), <#=args#>, null);
+                    var sub2 = ((IReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).Create(new Uri(Constants.Subscription.SUB2), <#=args#>, null);
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, <#=args#>, null));
                     Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).Create(null, <#=args#>, null));
+
+                    sub1.Dispose();
+                    sub2.Dispose();
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -947,6 +955,12 @@ for (int j = 1; j<=i; j++)
 <#}#>
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB2)
                 )
             );
         }

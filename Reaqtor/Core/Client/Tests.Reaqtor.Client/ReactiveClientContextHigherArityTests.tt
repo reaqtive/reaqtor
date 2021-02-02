@@ -828,7 +828,10 @@ for (int i = 2; i<=highestSupportedArity; i++) {
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(new Uri(Constants.StreamFactory.SF));
+                    var factoryUri = new Uri(Constants.StreamFactory.SF);
+                    var factory = ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
                     var stream = factory.CreateAsync(new Uri(Constants.Stream.FOO), <#=args#>, state: null, CancellationToken.None).Result;
 
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), <#=args#>, state: null);
@@ -918,13 +921,22 @@ for (int i = 2; i<=highestSupportedArity; i++) {
             Apply(
                 ctx =>
                 {
-                    var factory = ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(new Uri(Constants.SubscriptionFactory.SF));
-                    factory.CreateAsync(new Uri(Constants.Subscription.SUB1), <#=args#>, state: null, CancellationToken.None).Wait();
+                    var factoryUri = new Uri(Constants.SubscriptionFactory.SF);
+                    var factory = ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(factoryUri);
+                    Assert.AreEqual(factoryUri, ((IKnownResource)factory).Uri);
+
+                    var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), <#=args#>, state: null, CancellationToken.None).Result;
 
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
+
+#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+                    sub.DisposeAsync().AsTask().Wait();
+#else
+                    sub.DisposeAsync().Wait();
+#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),
@@ -939,6 +951,9 @@ for (int j = 1; j<=i; j++)
 <#}#>
                     ),
                     state: null
+                ),
+                new DeleteSubscription(
+                    new Uri(Constants.Subscription.SUB1)
                 )
             );
         }
