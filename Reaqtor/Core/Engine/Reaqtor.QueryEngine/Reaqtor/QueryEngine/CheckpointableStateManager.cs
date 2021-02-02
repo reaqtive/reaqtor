@@ -314,6 +314,20 @@ namespace Reaqtor.QueryEngine
                     {
                         try
                         {
+                            //
+                            // NB: Leave first, before signaling the TaskCompletionSource, which can cause
+                            //     user code to resume on a different thread, before the state gets set by
+                            //     the UnloadAsyncLeave code path.
+                            //
+                            //     We want to make sure the resuming thread will see the new state, and in
+                            //     case of a failure, can immediately retry by starting a new UnloadAsync
+                            //     operation (which would not work if the state is still Unloading).
+                            //
+
+                            UnloadAsyncLeave(t.Status != TaskStatus.RanToCompletion);
+                        }
+                        finally
+                        {
                             switch (t.Status)
                             {
                                 case TaskStatus.Canceled:
@@ -327,19 +341,15 @@ namespace Reaqtor.QueryEngine
                                     break;
                             }
                         }
-                        finally
-                        {
-                            UnloadAsyncLeave(t.Status != TaskStatus.RanToCompletion);
-                        }
                     }, TaskScheduler.Default);
                 }
                 catch (Exception ex)
                 {
+                    UnloadAsyncLeave(failed: true);
+
                     // Handles the rare case where the synchronous portion of UnloadAsync throws,
                     // if not implemented as an async method.
                     _pendingUnload.SetException(ex);
-
-                    UnloadAsyncLeave(true);
                 }
 #pragma warning restore CA1031
 #pragma warning restore IDE0079
