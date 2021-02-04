@@ -77,8 +77,8 @@ jobs:
   - task: PublishBuildArtifacts@1
     inputs:
       pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-      artifactName: Logs    
+      artifactName: Logs
       parallel: true
-      parallelCount: 8      
-    displayName: Publish Build Logs      
+      parallelCount: 8
+    displayName: Publish Build Logs
     condition: always()
