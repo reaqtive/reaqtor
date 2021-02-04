@@ -17,4 +17,8 @@
   <ItemGroup>
     <PackageReference Include="System.Reactive" Version="5.0.0" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.Expressions.Bonsai.Serialization\Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <ProjectReference Include="..\..\..\Nuqleon\Core\LINQ\Nuqleon.Linq.Expressions.Bonsai\Nuqleon.Linq.Expressions.Bonsai.csproj" />
+  </ItemGroup>
 </Project>

@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -14,6 +14,7 @@
 //
 
 #pragma warning disable CA1303 // No localization in sample.
+#pragma warning disable CA1031 // Do not catch general exception types
 
 #if NO_UI
 
@@ -80,15 +81,53 @@ namespace Rxcel
             {
                 Draw();
 
-                Console.Write("Enter cell: ");
+                Console.Write("Enter cell (O = Open, S = Save, X = Exit): ");
                 var cell = Console.ReadLine().Trim();
+
+                var option = cell.ToUpper(CultureInfo.InvariantCulture);
+
+                if (option == "O")
+                {
+                    Console.Write("Enter file name: ");
+                    var file = Console.ReadLine();
+
+                    try
+                    {
+                        sheet = Sheet.Load(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowError("Error: " + ex);
+                        continue;
+                    }
+
+                    Draw();
+                    continue;
+                }
+                else if (option == "S")
+                {
+                    Console.Write("Enter file name: ");
+                    var file = Console.ReadLine();
+
+                    try
+                    {
+                        sheet.Save(file);
+                    }
+                    catch (Exception ex)
+                    {
+                        ShowError("Error: " + ex);
+                    }
+
+                    continue;
+                }
+                else if (option == "X")
+                {
+                    return;
+                }
 
                 if (!Parser.TryParseCell(cell, out var row, out var col) || row <= 0 || row > R || col <= 0 || col > C)
                 {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine("Invalid cell. Press ENTER to retry.");
-                    Console.ResetColor();
-                    Console.ReadLine();
+                    ShowError("Invalid cell. Press ENTER to retry.");
                     continue;
                 }
 
@@ -119,6 +158,14 @@ namespace Rxcel
 
                 return new string(' ', leftPadding) + s + new string(' ', rightPadding);
             }
+
+            static void ShowError(string msg)
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(msg);
+                Console.ResetColor();
+                Console.ReadLine();
+            }
         }
     }
 }
@@ -136,11 +183,30 @@ namespace Rxcel
         [STAThread]
         public static void Main()
         {
+            var open = new ToolStripMenuItem("&Open") { ShortcutKeys = Keys.Control | Keys.O };
+            var save = new ToolStripMenuItem("&Save") { ShortcutKeys = Keys.Control | Keys.S };
+
+            var menu = new MenuStrip()
+            {
+                Items =
+                {
+                    new ToolStripMenuItem("&File")
+                    {
+                        DropDownItems =
+                        {
+                            open,
+                            save
+                        }
+                    }
+                }
+            };
+
             using var frm = new Form
             {
                 Text = "Rxcel",
                 Width = 1200,
                 Height = 400,
+                MainMenuStrip = menu
             };
 
             var txt = new TextBox
@@ -151,7 +217,16 @@ namespace Rxcel
                 Width = frm.Width
             };
 
-            frm.Controls.Add(txt);
+            var panel = new Panel
+            {
+                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
+                Left = 0,
+                Top = menu.Height,
+                Width = frm.Width,
+                Height = frm.Height - txt.Height
+            };
+
+            panel.Controls.Add(txt);
 
             var dg = new DataGridView
             {
@@ -167,27 +242,88 @@ namespace Rxcel
 
             var sheet = new Sheet(R, C);
 
-            for (var c = 'A'; c < 'A' + C; c++)
+            void DrawSheet()
             {
-                dg.Columns.Add(c.ToString(), c.ToString());
-            }
+                dg.Rows.Clear();
+                dg.Columns.Clear();
 
-            for (var i = 0; i < R; i++)
-            {
-                var j = dg.Rows.Add();
-                dg.Rows[j].HeaderCell.Value = (i + 1).ToString(CultureInfo.InvariantCulture);
-            }
-
-            for (var r = 0; r < dg.Rows.Count - 1; r++)
-            {
-                var row = dg.Rows[r];
-                for (var c = 0; c < dg.Columns.Count; c++)
+                for (var c = 'A'; c < 'A' + sheet.ColumnCount; c++)
                 {
-                    row.Cells[c].Value = sheet[r, c];
+                    dg.Columns.Add(c.ToString(), c.ToString());
+                }
+
+                for (var i = 0; i < sheet.ColumnCount; i++)
+                {
+                    var j = dg.Rows.Add();
+                    dg.Rows[j].HeaderCell.Value = (i + 1).ToString(CultureInfo.InvariantCulture);
+                }
+
+                for (var r = 0; r < dg.Rows.Count - 1; r++)
+                {
+                    var row = dg.Rows[r];
+                    for (var c = 0; c < dg.Columns.Count; c++)
+                    {
+                        row.Cells[c].Value = sheet[r, c];
+                    }
                 }
             }
 
-            frm.Controls.Add(dg);
+            DrawSheet();
+
+            panel.Controls.Add(dg);
+
+            open.Click += (_1, _2) =>
+            {
+                string file;
+
+                using (var dlg = new OpenFileDialog())
+                {
+                    if (dlg.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    file = dlg.FileName;
+                }
+
+                try
+                {
+                    var newSheet = Sheet.Load(file);
+                    if (newSheet != null)
+                    {
+                        sheet = newSheet;
+                        DrawSheet();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    ShowError(ex);
+                }
+            };
+
+            save.Click += (_1, _2) =>
+            {
+                string file;
+
+                using (var dlg = new SaveFileDialog())
+                {
+                    if (dlg.ShowDialog() != DialogResult.OK)
+                    {
+                        return;
+                    }
+
+                    file = dlg.FileName;
+                }
+
+                try
+                {
+                    sheet.Save(file);
+                }
+                catch (Exception ex)
+                {
+                    ShowError(ex);
+                }
+            };
 
             txt.KeyDown += (o, e) =>
             {
@@ -242,7 +378,15 @@ namespace Rxcel
                 }
             };
 
+            frm.Controls.Add(panel);
+            frm.Controls.Add(menu);
+
             Application.Run(frm);
+
+            static void ShowError(Exception ex)
+            {
+                MessageBox.Show("Error: " + ex, "Rxcel", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }
