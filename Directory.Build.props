@@ -1,5 +1,5 @@
 <Project>
-  <PropertyGroup>    
+  <PropertyGroup>
     <LangVersion>latest</LangVersion>
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -44,7 +44,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' Or '$(IsPerfProject)' == 'true' Or '$(IsPlaygroundProject)' == 'true'">
-    <IsPackable>false</IsPackable>    
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsPlaygroundProject)' == 'false'">
