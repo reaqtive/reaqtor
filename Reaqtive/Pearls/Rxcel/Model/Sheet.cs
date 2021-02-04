@@ -22,10 +22,6 @@ using System.IO;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Bonsai.Serialization;
 
-#if !NO_UI
-using System.Windows.Forms;
-#endif
-
 namespace Rxcel
 {
     internal sealed class Sheet
