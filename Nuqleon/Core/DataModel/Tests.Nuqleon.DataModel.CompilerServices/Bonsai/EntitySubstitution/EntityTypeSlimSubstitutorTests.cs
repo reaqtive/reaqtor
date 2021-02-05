@@ -94,7 +94,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
             }
 
+#if DEBUG
             protected override void CheckConstantStructuralCore(ObjectSlim newValue, StructuralDataType oldDataType) { }
+#endif
 
             protected override object ConvertConstantStructuralCore(object originalValue, StructuralDataType oldDataType, StructuralDataType newDataType) => originalValue;
 
