@@ -40,15 +40,19 @@ public interface IOperator : IDisposable
 {
     IEnumerable<ISubscription> Inputs { get; }
 
+    void Subscribe();
+
     void SetContext(IOperatorContext context);
 
     void Start();
 }
 ```
 
-The lifecycle of operators is also different from Rx. In classic Rx, `Subscribe` both attaches an observer and kicks off the flow of events. In Reaqtive, `Subscribe` merely attaches an observer, and subsequent calls to `SetContext` and `Start` are used to provide additional context and to kick off the event flow. Additional steps can be taken in between `SetContext` and `Start`, as we'll discuss later. Tearing down an active operator is still done through the `Dispose` method.
+The lifecycle of operators is also different from Rx. In classic Rx, `Subscribe` both attaches an observer and kicks off the flow of events. In Reaqtive, `Subscribe` merely attaches an observer, and subsequent calls to `IOperator.Subscribe`, `IOperator.SetContext`, and `IOperator.Start` are used to initialize inputs, to provide additional context, and to kick off the event flow. Additional steps can be taken in between `IOperator.SetContext` and `IOperator.Start`, as we'll discuss later. Tearing down an active operator is still done through the `Dispose` method.
 
-`SetContext` allows providing additional context to operators, through an `IOperatorContext` object. This facility enables distributing various utilities to operators, some of which are general-purpose, but some may be domain-specific. For example, a Reaqtive `IScheduler` is provided through the operator context, which is different from the approach in Rx where operators are parameterized on schedulers.
+While the top-level `Subscribe` call is shallow, the `IOperator.Subscribe` call can trigger the initialization of upstream subscriptions, which get persisted in the `Inputs` collection, used to continue the traversal into the upstream subscriptions. For example, an operator like `CombineLatest` will use `Subscribe` to create subscriptions to its sources and store these in `Inputs`.
+
+`IOperator.SetContext` allows providing additional context to operators, through an `IOperatorContext` object. This facility enables distributing various utilities to operators, some of which are general-purpose, but some may be domain-specific. For example, a Reaqtive `IScheduler` is provided through the operator context, which is different from the approach in Rx where operators are parameterized on schedulers.
 
 > **Note:** The use of a single scheduler for an entire reactive computation is essential for a query engine to control the flow of events and support pausing computations in order to checkpoint query operator state. Furthermore, users in Reaqtive do not have a notion of schedulers (i.e. there's no "quoted" variant of `IScheduler` - `IQeduler`? - to flow a scheduler representation through expression trees). The mechanism to distribute a scheduler to operators has also been a popular request for classic Rx. Both approaches could be made complementary, but supporting `IScheduler` parameters on operators and having one scheduler take precedence over another. This could be an approach for Reaqtive-Rx convergence.
 

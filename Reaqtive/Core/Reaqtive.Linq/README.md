@@ -119,12 +119,13 @@ IObserver<string> obv = Observer.Create<string>(s => Console.WriteLine(s));
 ISubscription sub = obs.Subscribe(obv);
 ```
 
-In regular Rx, the equivalent code using `Observable` rather than `Subscribable` would suffice to kick off a timer, apply the filter and projection, and see results getting printed by the observer. In Reaqtive, the resulting `ISubscription` is not yet active and needs additional steps to kick off the computation. At a minimum, there are two steps that are needed:
+In regular Rx, the equivalent code using `Observable` rather than `Subscribable` would suffice to kick off a timer, apply the filter and projection, and see results getting printed by the observer. In Reaqtive, the resulting `ISubscription` is not yet active and needs additional steps to kick off the computation. At a minimum, there are three steps that are needed:
 
+* Use `Subscribe` to connect the operator to its source(s), if any.
 * Distribute operator context to the operators through the `SetContext(IOperatorContext)` method.
 * Call `Start` on the operators to kick off the flow of events.
 
-If the subscription were to be recovered from existing persisted runtime state, an additional `LoadState` phase would be inserted between the two phases above. The simplest way to perform the `SetContext` and `Start` operations is by using the `SubscriptionInitializeVisitor.Initialize(ISubscription, IOperatorContext)` method. To do so, we need to first create an operator context, which can be done by instantiating `OperatorContext`:
+If the subscription were to be recovered from existing persisted runtime state, an additional `LoadState` phase would be inserted between the last two phases above. The simplest way to perform the `Subscribe`, `SetContext`, and `Start` operations is by using the `SubscriptionInitializeVisitor.Initialize(ISubscription, IOperatorContext)` method. To do so, we need to first create an operator context, which can be done by instantiating `OperatorContext`:
 
 ```csharp
 public class OperatorContext : IOperatorContext
@@ -207,9 +208,10 @@ where `Transaction` and `StateWriterFactory` are custom-built facilities over so
          a. If it succeeds, visit the subscription one more time to unmark `StateChanged` flags (unless new edits to state happened already).
          b. Otherwise, if it fails, report the error and hope that a future checkpoint succeeds in committing the (newly harvested) state to the underlying store.
 
-Loading state from a checkpoint is done by inserting a `SubscriptionStateVisitor.LoadState` call in between performing `SetContext` and `Start`. So rather than using `Initialize`, we'd decompose this into three steps:
+Loading state from a checkpoint is done by inserting a `SubscriptionStateVisitor.LoadState` call in between performing `SetContext` and `Start`. So rather than using `Initialize`, we'd decompose this into four steps:
 
 ```csharp
+SubscriptionInitializeVisitor.Subscribe(sub);
 SubscriptionInitializeVisitor.SetContext(sub, ctx);
 
 var transaction = new Transaction(); // some transaction into a checkpoint state store

@@ -64,6 +64,8 @@ public class SubscriptionInitializeVisitor
 {
     public static void Initialize(ISubscription subscription, IOperatorContext context);
 
+    public static void Subscribe(ISubscription subscription);
+
     public static void SetContext(ISubscription subscription, IOperatorContext context);
 
     public static void Start(ISubscription subscription);
@@ -72,7 +74,7 @@ public class SubscriptionInitializeVisitor
 
 > **Note:** Besides static methods, instance variants are provided as well, which operate on an instance of the visitor that's given an `ISubscription`. We omit this detail for clarity.
 
-In here, `Initialize` calls both `SetContext` and `Start` on all of the nodes in the given subscription. This combination is useful when node state needs to be loaded (e.g. when recovering a subscription). If state loading should take place prior to calling `Start`, one can call `SetContext` first, then use the `SubscriptionStateVisitor` to handle state loading, and finally call `Start`.
+In here, `Initialize` calls `Subscribe`, `SetContext`, and `Start` on all of the nodes in the given subscription. This combination is useful when node state needs to be loaded (e.g. when recovering a subscription). If state loading should take place prior to calling `Start`, one can call `SetContext` first, then use the `SubscriptionStateVisitor` to handle state loading, and finally call `Start`.
 
 > **Note:** A query engine does perform these operations in separate stages of recovery. For example, it may first provide context to all reactive entities in the system after reinstantiating these from persisted expression trees. Next, it may restore state to stateful artifacts, possibly in a concurrent fashion. Finally, it can kick off the event flow using `Start`, often phasing this on an artifact-by-artifact basis (e.g. subscriptions first, subjects lsat).
 
