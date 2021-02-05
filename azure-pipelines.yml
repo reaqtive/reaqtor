@@ -81,7 +81,7 @@ stages:
   jobs: 
   - job: ProcessCoverage
     pool:
-      vmImage: windows-latest
+      vmImage: ubuntu-latest
     steps:
     - checkout: self
       fetchDepth: 1
@@ -96,7 +96,11 @@ stages:
         arguments: install -g dotnet-reportgenerator-globaltool
       displayName: Install ReportGenerator tool
 
-    - script: reportgenerator -reports:$(Pipeline.Workspace)/RawCoverage/**/*.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura"
+    - script: |
+        dotnet tool update -g dotnet-reportgenerator-globaltool
+        export PATH=$PATH:$HOME/.dotnet/tools
+        . ~/.bashrc
+        reportgenerator -reports:$(Pipeline.Workspace)/RawCoverage/**/*.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura;lcov"
       displayName: Consolidate Reports from Jobs
 
     - task: PublishCodeCoverageResults@1
@@ -105,6 +109,13 @@ stages:
         codeCoverageTool: Cobertura
         pathToSources: $(Build.SourcesDirectory)
         summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
+
+    - script: |
+        bash <(curl -s https://codecov.io/bash)
+      displayName: 'Upload to codecov.io'
+      workingDirectory: $(Build.SourcesDirectory)/coverlet/reports
+      env:
+        CODECOV_TOKEN: $(CODECOV_TOKEN)
 
 - stage: CodeSign
   dependsOn: Build
