@@ -4,7 +4,7 @@
     <DataCollectors>
       <DataCollector friendlyName="XPlat code coverage">
         <Configuration>
-          <Exclude>[Reaqtor.Remoting*]*,[Reaqtive.Testing*]*,[SampleTrees]*</Exclude>
+          <Exclude>[Reaqtor.Remoting*]*,[Reaqtor.TestingFramework*]*,[Reaqtive.Testing*]*,[SampleTrees]*</Exclude>
         </Configuration>
       </DataCollector>
     </DataCollectors>
