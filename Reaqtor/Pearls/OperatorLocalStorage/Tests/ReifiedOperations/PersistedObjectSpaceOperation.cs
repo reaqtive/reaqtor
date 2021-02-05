@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -12,8 +12,6 @@ using System;
 
 using Reaqtive.Storage;
 
-using Reaqtor.QueryEngine;
-
 namespace Tests.ReifiedOperations
 {
     internal enum PersistedObjectSpaceOperationKind
@@ -24,6 +22,8 @@ namespace Tests.ReifiedOperations
         GetArray,
         CreateList,
         GetList,
+        CreateLinkedList,
+        GetLinkedList,
         CreateQueue,
         GetQueue,
         CreateStack,
@@ -62,6 +62,10 @@ namespace Tests.ReifiedOperations
         public static CreateListPersistedObjectSpaceOperation<T> CreateList<T>(string id) => new(id);
 
         public static GetListPersistedObjectSpaceOperation<T> GetList<T>(string id) => new(id);
+
+        public static CreateLinkedListPersistedObjectSpaceOperation<T> CreateLinkedList<T>(string id) => new(id);
+
+        public static GetLinkedListPersistedObjectSpaceOperation<T> GetLinkedList<T>(string id) => new(id);
 
         public static CreateQueuePersistedObjectSpaceOperation<T> CreateQueue<T>(string id) => new(id);
 
@@ -245,6 +249,42 @@ namespace Tests.ReifiedOperations
         public override PersistedObjectSpaceOperationKind Kind => PersistedObjectSpaceOperationKind.CreateList;
 
         public override IPersistedList<T> GetResult(IPersistedObjectSpace space) => space.CreateList<T>(Id);
+    }
+
+    internal abstract class LinkedListPersistedObjectSpaceOperation<T> : ResultPersistedObjectSpaceOperation<IPersistedLinkedList<T>, IPersistedLinkedListOperationFactory<T>>
+    {
+        internal LinkedListPersistedObjectSpaceOperation(string id)
+            : base(id)
+        {
+        }
+
+        protected override string DebugViewCore => FormattableString.Invariant($"{Kind}<{typeof(T).Name}>({Id})");
+
+        public override IPersistedLinkedListOperationFactory<T> Reified => PersistedLinkedListOperation.WithType<T>();
+    }
+
+    internal sealed class GetLinkedListPersistedObjectSpaceOperation<T> : LinkedListPersistedObjectSpaceOperation<T>
+    {
+        internal GetLinkedListPersistedObjectSpaceOperation(string id)
+            : base(id)
+        {
+        }
+
+        public override PersistedObjectSpaceOperationKind Kind => PersistedObjectSpaceOperationKind.GetLinkedList;
+
+        public override IPersistedLinkedList<T> GetResult(IPersistedObjectSpace space) => space.GetLinkedList<T>(Id);
+    }
+
+    internal sealed class CreateLinkedListPersistedObjectSpaceOperation<T> : LinkedListPersistedObjectSpaceOperation<T>
+    {
+        internal CreateLinkedListPersistedObjectSpaceOperation(string id)
+            : base(id)
+        {
+        }
+
+        public override PersistedObjectSpaceOperationKind Kind => PersistedObjectSpaceOperationKind.CreateLinkedList;
+
+        public override IPersistedLinkedList<T> GetResult(IPersistedObjectSpace space) => space.CreateLinkedList<T>(Id);
     }
 
     internal abstract class QueuePersistedObjectSpaceOperation<T> : ResultPersistedObjectSpaceOperation<IPersistedQueue<T>, IPersistedQueueOperationFactory<T>>

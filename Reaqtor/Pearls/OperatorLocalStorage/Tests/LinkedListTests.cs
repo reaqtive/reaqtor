@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -8,10 +8,12 @@
 // BD - February 2018
 //
 
+using Reaqtive.Storage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Tests.ReifiedOperations;
 using Utilities;
 
 namespace Tests
@@ -19,7 +21,96 @@ namespace Tests
     [TestClass]
     public class LinkedListTests : PersistedTestBase
     {
-        // TODO: Add CreateAndGet and ManOrBoy tests.
+        // TODO: Add ManOrBoy tests.
+
+        [TestMethod]
+        public void LinkedList_CreateAndGet()
+        {
+            var assert = AssertOperation.WithAssert(MsTestAssert.Instance);
+            var space = new PersistedObjectSpace(new SerializationFactory());
+
+            CreateAndGetCore(assert).Accept(space);
+        }
+
+        [TestMethod]
+        public void LinkedList_Volatile_CreateAndGet()
+        {
+            var assert = AssertOperation.WithAssert(MsTestAssert.Instance);
+            var space = new VolatilePersistedObjectSpace();
+
+            CreateAndGetCore(assert).Accept(space);
+        }
+
+        private static IOperation<IPersistedObjectSpace> CreateAndGetCore(IAssertOperationFactory assert) =>
+            Operation.Sequence(
+
+                //
+                // Exceptions thrown by Create.
+                //
+                Operation.Sequence(
+                    assert.ThrowsException<ArgumentNullException>().When(PersistedObjectSpaceOperation.CreateLinkedList<int>(null))
+                ),
+
+                //
+                // Exceptions thrown by Get.
+                //
+                Operation.Sequence(
+                    assert.ThrowsException<ArgumentNullException>().When(PersistedObjectSpaceOperation.GetLinkedList<int>(null))
+                ),
+
+                //
+                // Exceptions thrown by Delete.
+                //
+                Operation.Sequence(
+                    assert.ThrowsException<KeyNotFoundException>().When(PersistedObjectSpaceOperation.Delete("bar"))
+                ),
+
+                //
+                // Create a new array.
+                //
+                PersistedObjectSpaceOperation.CreateLinkedList<int>("bar").Apply(list =>
+
+                    //
+                    // Check the new array is present in the object space.
+                    //
+                    Operation.Sequence(
+
+                        //
+                        // Assert we can get the same instance back using GetLinkedList.
+                        //
+                        assert.AreSame(
+                            PersistedObjectSpaceOperation.GetLinkedList<int>("bar"),
+                            list
+                        ),
+
+                        //
+                        // Assert we can't create an artifact with the same name.
+                        //
+                        Operation.Sequence(
+                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateArray<int>("bar", 42)),
+                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateDictionary<int, int>("bar")),
+                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateList<int>("bar")),
+                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateQueue<int>("bar")),
+                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateSet<int>("bar")),
+                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateStack<int>("bar")),
+                            assert.ThrowsException<InvalidOperationException>().When(PersistedObjectSpaceOperation.CreateValue<int>("bar"))
+                        )
+                    )
+                ),
+
+                //
+                // Delete array.
+                //
+                PersistedObjectSpaceOperation.Delete("bar"),
+
+                //
+                // Check the array is no longer present in the object space.
+                //
+                Operation.Sequence(
+                    assert.ThrowsException<KeyNotFoundException>().When(PersistedObjectSpaceOperation.GetLinkedList<int>("bar")),
+                    assert.ThrowsException<KeyNotFoundException>().When(PersistedObjectSpaceOperation.Delete("bar"))
+                )
+            );
 
         [TestMethod]
         public void LinkedList_Recovery_CreateDefault() => WithNewSpace(s =>
