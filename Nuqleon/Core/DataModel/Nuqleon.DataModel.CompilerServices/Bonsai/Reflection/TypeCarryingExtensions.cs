@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -15,6 +15,22 @@ using System.Runtime.CompilerServices;
 
 namespace Nuqleon.DataModel.CompilerServices.Bonsai
 {
+    //
+    // NB: This mechanism is arguably a hack that was put in place to keep TypeSlim clean but
+    //     allow some facilities in disjoint areas of the product to leverage an association
+    //     between a TypeSlim and its original Type, if it was constructed through a conversion
+    //     from Type to TypeSlim (e.g. as part of Expression to ExpressionSlim rewriting). By
+    //     providing out-of-band access to the original Type, the TypeSlim API can be kept clean
+    //     while rich reflection on the original Type is possible in places where its known that
+    //     such a "carried type" exists. (E.g. to look up custom attributes.)
+    //
+    //     One of the drawbacks of the mechanism is that it relies on static global state, so
+    //     only a single association is possible. This isn't necessarily a problem because new
+    //     value-identical instances of TypeSlim could be created for new associations. A better
+    //     mechanism would be to thread associations as instance state through rewriters, but it
+    //     has turned out to be quite invasive throughout the API surface.
+    //
+
     /// <summary>
     /// Extensions to associate a slim type with a type.
     /// </summary>
