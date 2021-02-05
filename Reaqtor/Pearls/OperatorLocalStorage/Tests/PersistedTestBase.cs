@@ -12,6 +12,7 @@ using Reaqtor.QueryEngine;
 using Reaqtive.Storage;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+using System.IO;
 using Utilities;
 
 namespace Tests
@@ -47,10 +48,11 @@ namespace Tests
                 }
 
                 using var writer = new Writer(Store, differential ? CheckpointKind.Differential : CheckpointKind.Full);
+                using var logger = new LoggingStateWriter(writer, TextWriter.Null);
 
-                Space.Save(writer);
+                Space.Save(logger);
 
-                writer.CommitAsync().GetAwaiter().GetResult();
+                logger.CommitAsync().GetAwaiter().GetResult();
 
                 Space.OnSaved();
 
@@ -60,15 +62,17 @@ namespace Tests
             public void SaveSpaceFail(bool differential)
             {
                 using var writer = new Writer(Store, differential ? CheckpointKind.Differential : CheckpointKind.Full);
+                using var logger = new LoggingStateWriter(writer, TextWriter.Null);
 
-                Space.Save(writer);
+                Space.Save(logger);
             }
 
             public void LoadSpace()
             {
                 using var reader = new Reader(Store);
+                using var logger = new LoggingStateReader(reader, TextWriter.Null);
 
-                Space.Load(reader);
+                Space.Load(logger);
             }
 
             public StateWriterOperation[] SaveAndReloadSpace(bool differential)
