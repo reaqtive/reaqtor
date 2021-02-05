@@ -198,7 +198,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 
         /// <summary>
         /// Tries retrieving the item identified by the provided <paramref name="category"/>
-        /// and <paramref name="key"/>.        
+        /// and <paramref name="key"/>.
         /// </summary>
         /// <param name="category">The category.</param>
         /// <param name="key">The item key.</param>
@@ -297,8 +297,8 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 
         /// <summary>
         /// Clear the content of the store.
-        /// <remarks>Should be used when the store is no longer used to help garbage collection. 
-        /// This also clear the list of removed items.</remarks>        
+        /// <remarks>Should be used when the store is no longer used to help garbage collection.
+        /// This also clear the list of removed items.</remarks>
         /// </summary>
         public void Clear()
         {
