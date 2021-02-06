@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;
 
@@ -182,9 +183,23 @@ namespace Tests.Reaqtor.QueryEngine
         /// <param name="chkpt">Checkpoint from which to recover.</param>
         protected static void Recover(ICheckpointingQueryEngine qe, InMemoryStateStore chkpt)
         {
-            using var stateReader = new InMemoryStateReader(chkpt);
+            using var stateReader = new InMemoryStateReader(Clone(chkpt));
 
             qe.RecoverAsync(stateReader).Wait();
+
+            static InMemoryStateStore Clone(InMemoryStateStore store)
+            {
+                var debugView = store.DebugView;
+                _ = debugView; // NB: Kept for ease of debugging.
+
+                using var ms = new MemoryStream();
+
+                store.Save(ms);
+
+                ms.Position = 0;
+
+                return InMemoryStateStore.Load(ms);
+            }
         }
 
         /// <summary>
