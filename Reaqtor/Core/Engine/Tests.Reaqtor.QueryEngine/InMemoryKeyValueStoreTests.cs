@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.IO;
 using System.Linq;
 
 using Reaqtor.QueryEngine;
@@ -105,9 +106,30 @@ namespace Tests.Reaqtor.QueryEngine
         }
 
         [TestMethod]
-        public void InMemoryKeyValueStore_AllOperations_MultipleTransaction()
+        public void InMemoryKeyValueStore_AllOperations_MultipleTransaction() => InMemoryKeyValueStore_AllOperations_MultipleTransaction_Core(false);
+
+        [TestMethod]
+        public void InMemoryKeyValueStore_AllOperations_MultipleTransaction_SaveAndLoad() => InMemoryKeyValueStore_AllOperations_MultipleTransaction_Core(true);
+
+        private void InMemoryKeyValueStore_AllOperations_MultipleTransaction_Core(bool saveAndLoad)
         {
             var kvs = new InMemoryKeyValueStore();
+
+            void SaveAndLoad()
+            {
+                if (!saveAndLoad)
+                {
+                    return;
+                }
+
+                using var ms = new MemoryStream();
+
+                kvs.Save(ms);
+
+                ms.Position = 0;
+
+                kvs = InMemoryKeyValueStore.Load(ms);
+            }
 
             var subtable = kvs.GetTable("MyTable");
 
@@ -120,6 +142,8 @@ namespace Tests.Reaqtor.QueryEngine
                 tx.CommitAsync().Wait();
             }
 
+            SaveAndLoad();
+
             using (var tx = kvs.CreateTransaction())
             {
                 var table = subtable.Enter(tx);
@@ -131,6 +155,8 @@ namespace Tests.Reaqtor.QueryEngine
                 tx.CommitAsync().Wait();
             }
 
+            SaveAndLoad();
+
             using (var tx = kvs.CreateTransaction())
             {
                 var table = subtable.Enter(tx);
@@ -140,6 +166,8 @@ namespace Tests.Reaqtor.QueryEngine
                 tx.CommitAsync().Wait();
             }
 
+            SaveAndLoad();
+
             using (var tx = kvs.CreateTransaction())
             {
                 var table = subtable.Enter(tx);
@@ -148,6 +176,8 @@ namespace Tests.Reaqtor.QueryEngine
 
                 tx.CommitAsync().Wait();
             }
+
+            SaveAndLoad();
 
             using (var tx = kvs.CreateTransaction())
             {
@@ -159,6 +189,8 @@ namespace Tests.Reaqtor.QueryEngine
 
                 tx.CommitAsync().Wait();
             }
+
+            SaveAndLoad();
 
             using (var tx = kvs.CreateTransaction())
             {
@@ -173,6 +205,8 @@ namespace Tests.Reaqtor.QueryEngine
                 tx.CommitAsync().Wait();
             }
 
+            SaveAndLoad();
+
             using (var tx = kvs.CreateTransaction())
             {
                 var table = subtable.Enter(tx);
@@ -182,6 +216,8 @@ namespace Tests.Reaqtor.QueryEngine
                 tx.CommitAsync().Wait();
             }
 
+            SaveAndLoad();
+
             using (var tx = kvs.CreateTransaction())
             {
                 var table = subtable.Enter(tx);
@@ -190,6 +226,8 @@ namespace Tests.Reaqtor.QueryEngine
 
                 tx.CommitAsync().Wait();
             }
+
+            SaveAndLoad();
 
             using (var tx = kvs.CreateTransaction())
             {
