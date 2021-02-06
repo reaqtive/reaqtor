@@ -1,0 +1,153 @@
+{
+   "metadata":[
+      {
+         "src":[
+            {
+               "files":[
+                  "**BCL/Nuqleon.Collections.Specialized/bin/Release/net50/Nuqleon.Collections.Specialized.dll",
+                  "**BCL/Nuqleon.Documentation/bin/Release/net50/Nuqleon.Documentation.dll",
+                  "**BCL/Nuqleon.IO.StreamSegment/bin/Release/net50/Nuqleon.IO.StreamSegment.dll",
+                  "**BCL/Nuqleon.Memory/bin/Release/net50/Nuqleon.Memory.dll",
+                  "**BCL/Nuqleon.Reflection.Virtualization/bin/Release/net50/Nuqleon.Reflection.Virtualization.dll",
+                  "**BCL/Nuqleon.Runtime.Remoting.Tasks/bin/Release/net50/Nuqleon.Runtime.Remoting.Tasks.dll",
+                  "**BCL/Nuqleon.StringSegment/bin/Release/net50/Nuqleon.StringSegment.dll",
+                  "**BCL/Nuqleon.Time/bin/Release/net50/Nuqleon.Time.dll",
+                  "**DataModel/Nuqleon.DataModel/bin/Release/net50/Nuqleon.DataModel.dll",
+                  "**DataModel/Nuqleon.DataModel.CompilerServices/bin/Release/net50/Nuqleon.DataModel.CompilerServices.dll",
+                  "**DataModel/Nuqleon.DataModel.Serialization.Binary/bin/Release/net50/Nuqleon.DataModel.Serialization.Binary.dll",
+                  "**DataModel/Nuqleon.DataModel.Serialization.Json/bin/Release/net50/Nuqleon.DataModel.Serialization.Json.dll",
+                  "**JSON/Nuqleon.Json/bin/Release/net50/Nuqleon.Json.dll",
+                  "**JSON/Nuqleon.Json.Interop.Newtonsoft/bin/Release/net50/Nuqleon.Json.Interop.Newtonsoft.dll",
+                  "**JSON/Nuqleon.Json.Serialization/bin/Release/net50/Nuqleon.Json.Serialization.dll",
+                  "**LINQ/Nuqleon.Linq.CompilerServices/bin/Release/net50/Nuqleon.Linq.CompilerServices.dll",
+                  "**LINQ/Nuqleon.Linq.CompilerServices.Optimizers/bin/Release/net50/Nuqleon.Linq.CompilerServices.Optimizers.dll",
+                  "**LINQ/Nuqleon.Linq.Expressions.Bonsai/bin/Release/net50/Nuqleon.Linq.Expressions.Bonsai.dll",
+                  "**LINQ/Nuqleon.Linq.Expressions.Bonsai.Hashing/bin/Release/net50/Nuqleon.Linq.Expressions.Bonsai.Hashing.dll",
+                  "**LINQ/Nuqleon.Linq.Expressions.Bonsai.Serialization/bin/Release/net50/Nuqleon.Linq.Expressions.Bonsai.Serialization.dll",
+                  "**LINQ/Nuqleon.Linq.Expressions.Optimizers/bin/Release/net50/Nuqleon.Linq.Expressions.Optimizers.dll"
+               ],
+               "src":"../Nuqleon/Core"
+            }
+         ],
+         "dest":"nuqleon",
+         "globalNamespaceId": "Global",
+         "filter": "filterConfig.yml",
+         "properties": {
+            "TargetFramework": ".net5"
+          }
+      },
+      {
+         "src":[
+            {
+               "files":[
+                  "**/Reaqtive.Core/bin/Release/net50/Reaqtive.Core.dll",
+                  "**/Reaqtive.Interfaces/bin/Release/net50/Reaqtive.Interfaces.dll",
+                  "**/Reaqtive.Linq/bin/Release/net50/Reaqtive.Linq.dll",
+                  "**/Reaqtive.Quotation/bin/Release/net50/Reaqtive.Quotation.dll",
+                  "**/Reaqtive.Scheduler/bin/Release/net50/Reaqtive.Scheduler.dll",
+                  "**/Reaqtive.Testing/bin/Release/net50/Reaqtive.Testing.dll",
+                  "**/Reaqtive.TestingFramework/bin/Release/net50/Reaqtive.TestingFramework.dll"
+               ],
+               "src":"../Reaqtive/Core"
+            }
+         ],
+         "dest":"reaqtive",
+         "globalNamespaceId": "Global",
+         "filter": "filterConfig.yml",
+         "properties": {
+            "TargetFramework": ".net5"
+          }
+      },
+      {
+         "src":[
+            {
+               "files":[
+                  "**Client/Reaqtor.Client/bin/Release/net50/Reaqtor.Client.dll",
+                  "**Client/Reaqtor.Client.Core/bin/Release/net50/Reaqtor.Client.Core.dll",
+                  "**Client/Reaqtor.Client.Model/bin/Release/net50/Reaqtor.Client.Model.dll",
+                  "**Engine/Reaqtor.Engine.Contracts/bin/Release/net50/Reaqtor.Engine.Contracts.dll",
+                  "**Engine/Reaqtor.QueryEngine/bin/Release/net50/Reaqtor.QueryEngine.dll",
+                  "**Engine/Reaqtor.QueryEngine.Interfaces/bin/Release/net50/Reaqtor.QueryEngine.Interfaces.dll",
+                  "**Engine/Reaqtor.QueryEngine.KeyValueStore.InMemory/bin/Release/net50/Reaqtor.QueryEngine.KeyValueStore.InMemory.dll",
+                  "**Engine/Reaqtor.QueryEngine.Mocks/bin/Release/net50/Reaqtor.QueryEngine.Mocks.dll",
+                  "**Engine/Reaqtor.QueryEngine.ReificationFramework/bin/Release/net50/Reaqtor.QueryEngine.ReificationFramework.dll",
+                  "**Engine/Reaqtor.QueryEngine.Serialization.DataModel/bin/Release/net50/Reaqtor.QueryEngine.Serialization.DataModel.dll",
+                  "**Expressions/Reaqtor.Expressions.Binding/bin/Release/net50/Reaqtor.Expressions.Binding.dll",
+                  "**Expressions/Reaqtor.Expressions.Core/bin/Release/net50/Reaqtor.Expressions.Core.dll",
+                  "**Expressions/Reaqtor.Expressions.Model/bin/Release/net50/Reaqtor.Expressions.Model.dll",
+                  "**Hosting/Reaqtor.Hosting.Service/bin/Release/net50/Reaqtor.Hosting.Service.dll",
+                  "**Hosting/Reaqtor.Hosting.Shared/bin/Release/net50/Reaqtor.Hosting.Shared.dll",
+                  "**Local/Reaqtor.Local.Core/bin/Release/net50/Reaqtor.Local.Core.dll",
+                  "**Local/Reaqtor.Local.Model/bin/Release/net50/Reaqtor.Local.Model.dll",
+                  "**Metadata/Reaqtor.Metadata.Model/bin/Release/net50/Reaqtor.Metadata.Model.dll",
+                  "**Reactive/Reaqtor.Reactive.HigherOrder/bin/Release/net50/Reaqtor.Reactive.HigherOrder.dll",
+                  "**Reliable/Reaqtor.Reliable/bin/Release/net50/Reaqtor.Reliable.dll",
+                  "**Reliable/Reaqtor.Reliable.Model/bin/Release/net50/Reaqtor.Reliable.Model.dll",
+                  "**Service/Reaqtor.Service/bin/Release/net50/Reaqtor.Service.dll",
+                  "**Service/Reaqtor.Service.Contracts/bin/Release/net50/Reaqtor.Service.Contracts.dll",
+                  "**Service/Reaqtor.Service.Core/bin/Release/net50/Reaqtor.Service.Core.dll",
+                  "**Service/Reaqtor.Service.Model/bin/Release/net50/Reaqtor.Service.Model.dll",
+                  "**Shared/Reaqtor.Shared.Core/bin/Release/net50/Reaqtor.Shared.Core.dll",
+                  "**Shared/Reaqtor.Shared.Model/bin/Release/net50/Reaqtor.Shared.Model.dll",
+                  "**Testing/Reaqtor.ReificationFramework/bin/Release/net50/Reaqtor.ReificationFramework.dll",
+                  "**Testing/Reaqtor.ReifiedOperations/bin/Release/net50/Reaqtor.ReifiedOperations.dll",
+                  "**Testing/Reaqtor.TestingFramework.Engine/bin/Release/net50/Reaqtor.TestingFramework.Engine.dll",
+                  "**Testing/Reaqtor.TestingFramework.Hosted/bin/Release/net50/Reaqtor.TestingFramework.Hosted.dll",
+                  "**Testing/Reaqtor.TestingFramework.Reliable/bin/Release/net50/Reaqtor.TestingFramework.Reliable.dll",
+                  "**Testing/Reaqtor.TestingFramework.Service/bin/Release/net50/Reaqtor.TestingFramework.Service.dll"
+               ],
+               "src":"../Reaqtor/Core"
+            }
+         ],
+         "dest":"reaqtor",
+         "globalNamespaceId": "Global",
+         "filter": "filterConfig.yml",
+         "properties": {
+            "TargetFramework": ".net5"
+          }
+      }   
+   ],
+   "build":{
+      "content":[
+         {
+            "files":[
+               "nuqleon/**.yml",
+               "nuqleon/**.md",
+               "reaqtive/**.yml",
+               "reaqtive/**.md",
+               "reaqtor/**.yml",
+               "reaqtor/**.md"
+            ]
+         },
+         {
+            "files":[
+               "toc.yml",
+               "*.md"
+            ],
+            "exclude":[
+               "**/bin/**",
+               "**/obj/**"
+            ]
+         }
+      ],
+      "resource":[
+         {
+            "files":[
+               "images/**",
+               "favicon.ico"
+            ],
+            "exclude":[
+               "**/bin/**",
+               "**/obj/**"
+            ]
+         }
+      ],
+      "dest":"../.docs/api",
+      "template":[
+         "default",
+         "templates/unity"
+      ],
+      "keepFileLink": false,
+      "cleanupCacheHistory": true
+   }
+}
