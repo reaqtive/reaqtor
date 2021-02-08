@@ -1,84 +1,73 @@
-
-parameters:
-- name: pool
-  type: object
-  default: {}
-- name: name
-
 jobs:
-- job: Test_${{ parameters.name }}
-  timeoutInMinutes: 120
-  pool: ${{ parameters.pool }}
-  
-  strategy:
-    matrix:
-      Release:
-        BuildConfiguration: Release
-      Debug:
-        BuildConfiguration: Debug
+  - ${{ each pool in parameters.pools }}:
+    - ${{ each project in parameters.projects }}:
+      - ${{ each configuration in parameters.configurations }}:
+        - job:
+          displayName: ${{ format('{0} {1} {2}', pool.name, project, configuration) }}
+          timeoutInMinutes: 120
+          pool: ${{ pool.pool }}
+          steps:
+            - task: UseDotNet@2
+              displayName: Use .NET Core 5.x SDK
+              inputs:
+                version: 5.x
+                performMultiLevelLookup: true
 
-  steps:
-  - task: UseDotNet@2
-    displayName: Use .NET Core 5.x SDK
-    inputs:
-      version: 5.x
-      performMultiLevelLookup: true
+            - task: UseDotNet@2
+              inputs:
+                version: '3.1.x'
+                packageType: runtime
+              displayName: Install .NET Core 3.1 runtime
 
-  - task: UseDotNet@2
-    inputs:
-      version: '3.1.x'
-      packageType: runtime
-    displayName: Install .NET Core 3.1 runtime
+            - task: UseDotNet@2
+              inputs:
+                version: '2.1.x'
+                packageType: runtime
+              displayName: Install .NET Core 2.1 runtime
 
-  - task: UseDotNet@2
-    inputs:
-      version: '2.1.x'
-      packageType: runtime
-    displayName: Install .NET Core 2.1 runtime
+            - task: DotNetCoreCLI@2
+              inputs:
+                command: custom
+                custom: tool
+                arguments: install -g nbgv
+              displayName: Install NBGV tool
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: custom
-      custom: tool
-      arguments: install -g nbgv
-    displayName: Install NBGV tool
+            - script: nbgv cloud -a
+              displayName: Set Version
 
-  - script: nbgv cloud -a
-    displayName: Set Version
+            - task: DotNetCoreCLI@2
+              inputs:
+                command: custom
+                custom: tool
+                arguments: install -g dotnet-reportgenerator-globaltool
+              displayName: Install ReportGenerator tool
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: custom
-      custom: tool
-      arguments: install -g dotnet-reportgenerator-globaltool
-    displayName: Install ReportGenerator tool
+            - task: DotNetCoreCLI@2
+              inputs:
+                command: test
+                workingDirectory: ${{ project }}
+                arguments: -c ${{ configuration }} /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ project }}.${{ configuration }}.Test.binlog --settings $(Build.SourcesDirectory)/coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m --filter "TestCategory!~NonDeterministic_Strong"
+                testRunTitle: ${{ project }} ${{ configuration }}
+              displayName: Run Unit Tests
 
-  - task: DotNetCoreCLI@2
-    inputs:
-      command: test
-      projects: All.sln
-      arguments: -c $(BuildConfiguration) /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ parameters.name }}.$(BuildConfiguration).Test.binlog --settings coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m --filter "TestCategory!~NonDeterministic_Strong"
-      testRunTitle: ${{ parameters.name }} $(BuildConfiguration)
-    displayName: Run Unit Tests
+            - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/${{ project }}.${{ configuration }} -reporttypes:"Cobertura"
+              displayName: Consolidate Coverage Runs
+              condition: succeededOrFailed()
 
-  - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/${{ parameters.name }}.$(BuildConfiguration) -reporttypes:"Cobertura"
-    displayName: Consolidate Coverage Runs
-    condition: succeededOrFailed()
+            - task: PublishBuildArtifacts@1
+              inputs:
+                pathToPublish: $(Build.ArtifactStagingDirectory)/coverage
+                artifactName: RawCoverage
+                parallel: true
+                parallelCount: 8
+              displayName: Publish Raw Coverage Output
+              condition: succeededOrFailed()
 
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)/coverage
-      artifactName: RawCoverage
-      parallel: true
-      parallelCount: 8
-    displayName: Publish Raw Coverage Output
-    condition: succeededOrFailed()
-
-  - task: PublishBuildArtifacts@1
-    inputs:
-      pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-      artifactName: Logs
-      parallel: true
-      parallelCount: 8
-    displayName: Publish Build Logs
-    condition: always()
+            - task: PublishBuildArtifacts@1
+              inputs:
+                pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
+                artifactName: Logs
+                parallel: true
+                parallelCount: 8
+              displayName: Publish Build Logs
+              condition: always()
