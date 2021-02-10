@@ -10,6 +10,14 @@ pr:
     - main
     - rel/*
 
+schedules:
+- cron: "0 * * * *"
+  displayName: Hourly test bug bash build
+  branches:
+    include:
+    - main
+  always: true
+
 variables:
   BuildPlatform: Any CPU
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
@@ -172,7 +180,7 @@ stages:
 
 - stage: CodeSign
   dependsOn: Build
-  condition: and(succeeded('Build'), not(eq(variables['build.reason'], 'PullRequest')))
+  condition: and(succeeded('Build'), not(or(eq(variables['build.reason'], 'PullRequest'), eq(variables['build.reason'], 'Schedule'))))
   jobs:
   - deployment: CodeSign
     displayName: Code Signing
