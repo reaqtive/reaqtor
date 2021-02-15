@@ -145,7 +145,7 @@
       "dest":"../.docs/api",
       "template":[
          "default",
-         "templates/unity"
+         "templates/reaqtive"
       ],
       "keepFileLink": false,
       "cleanupCacheHistory": true
