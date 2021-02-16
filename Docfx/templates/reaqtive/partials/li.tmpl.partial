@@ -4,8 +4,8 @@
   {{#items}}
     {{^dropdown}}
       <li>
-        {{^topicHref}}
-          <a>{{{name}}}</a>
+        {{#topicHref}}
+          <a href="{{topicHref}}" name="{{tocHref}}" title="{{name}}">{{name}}</a>
         {{/topicHref}}
         {{^leaf}}
           {{>partials/li}}
