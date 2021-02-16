@@ -9,7 +9,7 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="{{_rel}}index.html">
+      <a class="navbar-brand" href="/">
         <img id="logo" src="{{_rel}}images/logo.png" height="46" width="46" alt="{{_appName}}" >
       </a>
     </div>
