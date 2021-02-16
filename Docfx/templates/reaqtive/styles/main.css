@@ -148,7 +148,7 @@ a:hover {
 
 @media only screen and (min-width: 960px) {
   .navbar-inverse {
-    background-image: url('https://reaqtive.net/api/images/circle-dashes/reaqtor.png');
+    background-image: url('https://reaqtive.net/documentation/api/images/circle-dashes/reaqtor.png');
     background-position: right center;
     background-repeat: no-repeat;
     background-size: contain;
@@ -186,7 +186,7 @@ a:hover {
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 120px auto;
-  background-image: url('https://reaqtive.net/api/images/logos/reaqtor/standard/reaqtor-logo_vector.svg');
+  background-image: url('https://reaqtive.net/documentation/api/images/logos/reaqtor/standard/reaqtor-logo_vector.svg');
 }
 
 .navbar-toggle {
