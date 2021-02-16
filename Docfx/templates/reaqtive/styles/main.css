@@ -116,11 +116,37 @@ a:hover {
 .container {
   width: 100%;
   max-width: var(--max-width-wrapper);
+  padding-left: var(--margin);
+  padding-right: var(--margin);
+  margin: 0 auto;
 }
+
+@media only screen and (min-width: 34rem) {
+  .container {
+    padding-left: var(--margin-lg);
+    padding-right: var(--margin-lg);
+  }
+}
+@media only screen and (min-width: 48rem) {
+  .container {
+    padding-left: var(--margin-xl);
+    padding-right: var(--margin-xl);
+  }
+}
+@media only screen and (min-width: 100rem) {
+  .container {
+    padding-left: var(--margin-xxl);
+    padding-right: var(--margin-xxl);
+  }
+}
+
+/* Code */
 
 .codewrapper pre {
   border: none;
 }
+
+/* Tables */
 
 .table-bordered {
   border: none;
@@ -141,26 +167,92 @@ a:hover {
 /* Header
 ============================= */
 
+.navbar .container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--c-grey-border);
+  background-color: #fff;
+}
+
+@media (min-width: 768px) {
+  .navbar .container {
+    flex-wrap: nowrap;
+  }
+}
+
+.navbar-header {
+  float: none;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .navbar-header {
+    width: auto;
+  }
+}
+
+header .subnav {
+  display: none;
+}
+
 .navbar-inverse {
   background-color: #fff;
   border-bottom: none;
 }
 
-@media only screen and (min-width: 960px) {
-  .navbar-inverse {
-    background-image: url('https://reaqtive.net/documentation/api/images/circle-dashes/reaqtor.png');
-    background-position: right center;
-    background-repeat: no-repeat;
-    background-size: contain;
+.collapse.navbar-collapse {
+  min-height: 79px;
+  margin: 0;
+}
+@media (min-width: 768px) {
+  .navbar-collapse.collapse {
+    display: flex !important;
+    align-items: center;
+    justify-content: flex-end;
+  }
+}
+.navbar-brand img {
+  display: none;
+}
+
+.navbar-brand {
+  display: block;
+  min-height: 100%;
+  width: 90px;
+  background-position: left center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  background-image: url('https://reaqtive.net/documentation/api/images/logos/reaqtor/standard/reaqtor-logo_vector.svg');
+}
+
+@media only screen and (min-width: 600px) {
+  .navbar-brand {
+    width: 144px;
+    margin: auto;
   }
 }
 
+.navbar-toggle {
+  background-color: var(--c-brand);
+}
+.navbar-inverse .navbar-collapse,
+.navbar-inverse .navbar-form {
+  border: none;
+}
+
+/* Nav links */
+
 .navbar-inverse .navbar-nav > li > a,
 .navbar-inverse .navbar-text {
-  color: var(--c-grey-med);
   text-transform: uppercase;
   font-weight: var(--fw-bold);
-  font-size: var(--fs-sm);
+  font-size: var(--fs-md);
+  display: flex;
+  align-items: center;
+  color: var(--c-text);
+  justify-content: center;
+  position: relative;
+  padding: 0;
 }
 
 .navbar-inverse .navbar-nav > .active > a,
@@ -175,40 +267,64 @@ a:hover {
   color: var(--c-brand);
 }
 
-.navbar-brand img {
-  display: none;
+/* Dropdowns */
+
+.navbar .nav.level1 {
+  display: grid !important;
+  grid-auto-flow: row;
+  grid-gap: var(--margin);
+  font-weight: var(--fw-bold);
 }
 
-.navbar-brand {
+@media only screen and (min-width: 48rem) {
+  .navbar .nav.level1 {
+    grid-auto-flow: column;
+    grid-gap: var(--margin);
+    font-size: var(--fs-sm);
+  }
+}
+@media only screen and (min-width: 56rem) {
+  .navbar .nav.level1 {
+    font-size: var(--fs-md);
+    grid-gap: var(--margin-lg);
+  }
+}
+@media only screen and (min-width: 62rem) {
+  .navbar .nav.level1 {
+    grid-gap: var(--margin-lg);
+  }
+}
+
+.navbar .nav > li > a {
+  padding: 0;
   display: block;
-  min-height: 100%;
-  width: 144px;
-  background-position: left center;
-  background-repeat: no-repeat;
-  background-size: 120px auto;
-  background-image: url('https://reaqtive.net/documentation/api/images/logos/reaqtor/standard/reaqtor-logo_vector.svg');
+  text-align: left;
+}
+.navbar .nav a {
+  display: flex;
+  height: 100%;
 }
 
-.navbar-toggle {
-  background-color: var(--c-brand);
+.navbar .nav.level2 {
+  position: relative;
+  font-weight: var(--fw-bold);
 }
-.navbar-inverse .navbar-collapse,
-.navbar-inverse .navbar-form {
-  border: none;
+.navbar .nav.level2:hover .nav.level3 {
+  display: block;
 }
-
-.navbar-collapse {
-  /* background-color: var(--c-grey-light); */
+.navbar .nav.level3 {
+  display: none;
+  background-color: white;
+  position: absolute;
+  top: 100%;
+  box-shadow: var(--bxs-fat);
 }
-.navbar-collapse .navbar-nav {
-  /* display: flex;
-  width: 100%; */
+.navbar .nav.level3 a {
+  padding: var(--margin) var(--margin);
+  color: var(--c-text);
 }
-
-.navbar-collapse .navbar-nav a {
-  /* display: block;
-  width: 100%;
-  padding-right: 0; */
+.navbar .nav.level3 a:hover {
+  color: var(--c-brand);
 }
 
 /* Sidefilter
@@ -217,6 +333,8 @@ a:hover {
 .sidefilter {
   border: none;
   background-color: transparent;
+  padding-left: 0;
+  padding-righr: 0;
 }
 
 .toc-filter {
@@ -238,6 +356,8 @@ a:hover {
 body .toc {
   background-color: transparent;
   text-align: left;
+  margin: 0;
+  padding: 0;
 }
 
 .toc .level1 > li {
