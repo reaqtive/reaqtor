@@ -142,7 +142,7 @@
             ]
          }
       ],
-      "dest":"../.docs/api",
+      "dest":"../.docs/documentation/api",
       "template":[
          "default",
          "templates/reaqtive"
