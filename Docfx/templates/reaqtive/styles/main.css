@@ -232,9 +232,26 @@ header .subnav {
   }
 }
 
-.navbar-toggle {
+.navbar-inverse .navbar-toggle {
+  color: var(--c-text);
+  background-color: #fff;
+  border-color: transparent;
+}
+
+.navbar-inverse .navbar-toggle:hover,
+.navbar-inverse .navbar-toggle:focus,
+.navbar-inverse .navbar-toggle:active {
+  background-color: transparent;
+}
+
+.navbar-inverse .navbar-toggle .icon-bar {
+  background-color: var(--c-text);
+}
+
+.navbar-inverse .navbar-toggle[aria-expanded='true'] .icon-bar {
   background-color: var(--c-brand);
 }
+
 .navbar-inverse .navbar-collapse,
 .navbar-inverse .navbar-form {
   border: none;
@@ -320,11 +337,18 @@ header .subnav {
   box-shadow: var(--bxs-fat);
 }
 .navbar .nav.level3 a {
-  padding: var(--margin) var(--margin);
+  padding: var(--margin) var(--margin-lg) var(--margin) var(--margin);
   color: var(--c-text);
 }
 .navbar .nav.level3 a:hover {
   color: var(--c-brand);
+}
+
+/* Not a hack at all */
+
+.navbar .nav > li > .expand-stub,
+.navbar .nav > li > a:empty {
+  display: none;
 }
 
 /* Sidefilter
@@ -334,15 +358,25 @@ header .subnav {
   border: none;
   background-color: transparent;
   padding-left: 0;
-  padding-righr: 0;
+  padding-right: 0;
 }
 
 .toc-filter {
-  background-color: var(--c-grey-med-light);
+  background-color: white;
+  border: 1px solid var(--c-grey-med-light);
 }
 .toc-filter > input {
-  background-color: var(--c-grey-med-light);
+  background-color: white;
   font-size: var(--fs-sm);
+}
+.toc-filter > input::placeholder,
+.toc-filter .glyphicon {
+  color: var(--c-grey-med-light);
+  transition: color 0.2s ease;
+}
+.toc-filter:hover > input::placeholder,
+.toc-filter:hover .glyphicon {
+  color: var(--c-grey-med);
 }
 
 /* Sidebar TOC
@@ -358,6 +392,10 @@ body .toc {
   text-align: left;
   margin: 0;
   padding: 0;
+}
+
+.toc ul {
+  margin: 0 0 0 10px;
 }
 
 .toc .level1 > li {
