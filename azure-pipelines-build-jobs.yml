@@ -46,11 +46,11 @@ jobs:
               inputs:
                 command: test
                 workingDirectory: ${{ project }}
-                arguments: -c ${{ configuration }} /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ project }}.${{ configuration }}.Test.binlog --settings $(Build.SourcesDirectory)/coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m --filter "TestCategory!~NonDeterministic_Strong"
+                arguments: -c ${{ configuration }} /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ pool.name }}.${{ project }}.${{ configuration }}.Test.binlog --settings $(Build.SourcesDirectory)/coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m --filter "TestCategory!~NonDeterministic_Strong"
                 testRunTitle: ${{ project }} ${{ configuration }}
               displayName: Run Unit Tests
 
-            - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/${{ project }}.${{ configuration }} -reporttypes:"Cobertura"
+            - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/${{ pool.name }}.${{ project }}.${{ configuration }} -reporttypes:"Cobertura"
               displayName: Consolidate Coverage Runs
               condition: succeededOrFailed()
 
