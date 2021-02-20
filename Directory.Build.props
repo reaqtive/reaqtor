@@ -1,6 +1,5 @@
 <Project>
   <PropertyGroup>
-    <Deterministic>true</Deterministic>
     <LangVersion>latest</LangVersion>
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
@@ -10,6 +9,13 @@
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
     <IncludeSymbols>true</IncludeSymbols>
     <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <DebugType>embedded</DebugType>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/reaqtive/reaqtor</PackageProjectUrl>
+    <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts</PackageOutputPath>
+
+    <Copyright>Copyright (c) .NET Foundation and Contributors.</Copyright>
+    <Authors>.NET Foundation and Contributors</Authors>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(TF_BUILD)' == 'true' Or '$(GITHUB_ACTIONS)' == 'true'">
@@ -34,6 +40,7 @@
   <PropertyGroup Condition="'$(IsTestProject)' == 'false' And '$(IsPerfProject)' == 'false' And '$(IsPlaygroundProject)' == 'false'">
     <AnalysisMode>AllEnabledByDefault</AnalysisMode>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <GeneratePackageOnBuild Condition=" '$(CreatePackage)' == 'true' ">true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' Or '$(IsPerfProject)' == 'true' Or '$(IsPlaygroundProject)' == 'true'">
@@ -46,6 +53,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.0.0" PrivateAssets="All"/>
+    <PackageReference Include="Nerdbank.GitVersioning" Version="3.3.37" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
@@ -71,5 +79,9 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
     <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup Condition="!$(AssemblyName.StartsWith('Tests.')) And !$(AssemblyName.StartsWith('Perf.')) And !$(AssemblyName.EndsWith('.Perf')) And !$(AssemblyName.Contains('Playground'))">
+    <InternalsVisibleTo Include="Tests.$(AssemblyName)" />
   </ItemGroup>
 </Project>
