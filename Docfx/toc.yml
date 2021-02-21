@@ -1,4 +1,4 @@
-- name: Documentation
+- name: Docs
   href: /documentation/
 - items:
   - name: API
@@ -13,6 +13,8 @@
     - name: Reaqtor
       href: api/reaqtor/
       homepage: reaqtor/index.md
+- name: Demos
+  href: /download/
 - name: Download
   href: /download/
 - name: Blog
@@ -21,5 +23,9 @@
   href: /talks/
 - name: Team
   href: /team/
-- name: A History of Reaqtor
+- name: History
   href: /history/
+- name: Discuss
+  href: https://reaqtive.slack.com
+- name: Contribute
+  href: /contribute/
