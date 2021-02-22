@@ -7,7 +7,7 @@
 
 # About Reaqtor
 
-[Reaqtor](https://reaqtive.net) is a framework for reliable, stateful, distributed, and scalable event processing based on [Reactive Extensions (Rx)](https://github.com/dotnet/reactive). 
+[Reaqtor](https://reaqtive.net) is a framework for reliable, stateful, distributed, and scalable event processing based on [Reactive Extensions (Rx)](https://github.com/dotnet/reactive).
 
 Reaqtor has been in [development for over 10 years](https://reaqtive.net/history). It is the evolution of the Reactive Extensions & powers services across Bing and M365.
 
