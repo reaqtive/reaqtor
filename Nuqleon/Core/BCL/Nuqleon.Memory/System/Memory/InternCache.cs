@@ -22,7 +22,7 @@ namespace System.Memory
         /// </summary>
         /// <typeparam name="T">The type of the values to intern.</typeparam>
         /// <param name="cacheFactory">The cache factory used to create an intern cache.</param>
-        /// <param name="comparer">Comparer to compare the function argument during lookup in the memoization cache.</param>
+        /// <param name="comparer">Comparer to determine the equality of instances of type <typeparamref name="T"/>.</param>
         /// <returns>Empty intern cache for values of type <typeparamref name="T"/>.</returns>
         public static IInternCache<T> CreateInternCache<T>(this IMemoizationCacheFactory cacheFactory, IEqualityComparer<T> comparer = null)
             where T : class
