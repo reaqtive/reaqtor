@@ -1,6 +1,6 @@
 # Reaqtor
 
-Reaqtor is a framework for creating reliable, stateful, distributed, and scalable event processing based on Rx.
+Reaqtor is a framework for creating reliable, stateful, distributed, and scalable event processing based on [Reactive Extensions (Rx)](https://github.com/dotnet/reactive).
 
 Reaqtor is composed of 3 layers:
 
