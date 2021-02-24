@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -1642,13 +1642,12 @@ namespace Tests
         {
             Assert.AreEqual(0, default(StringSegment).GetHashCode());
 
-            var bar = new StringSegment("bar").GetHashCode();
-            var foo = new StringSegment("foo").GetHashCode();
-            var qux = new StringSegment("qux").GetHashCode();
+            var s1 = new StringSegment("foobarqux", 3, 3);
+            var s2 = new StringSegment("barfoo", 0, 3);
+            var s3 = new StringSegment("quxfoobar", 6, 3);
 
-            Assert.AreNotEqual(bar, foo);
-            Assert.AreNotEqual(foo, qux);
-            Assert.AreNotEqual(0, bar + foo + qux);
+            Assert.AreNotEqual(s1.GetHashCode(), s2.GetHashCode());
+            Assert.AreNotEqual(s1.GetHashCode(), s3.GetHashCode());
         }
 
         [TestMethod]
