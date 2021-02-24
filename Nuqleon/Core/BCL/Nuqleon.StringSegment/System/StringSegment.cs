@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -198,7 +198,7 @@ namespace System
         /// Gets a hash code for the string segment.
         /// </summary>
         /// <returns>Hash code for the string segment.</returns>
-        public override int GetHashCode() => String == null ? 0 : String.GetHashCode() ^ StartIndex ^ Length;  // NB: same as ArraySegment<T>
+        public override int GetHashCode() => String == null ? 0 : Marvin.GetMarvin32Hash(String, StartIndex, Length, 0UL);
 
         /// <summary>
         /// Checks whether the string segment is equal to the specified object.
