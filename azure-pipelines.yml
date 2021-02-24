@@ -89,6 +89,27 @@ stages:
       displayName: Publish Build Logs
       condition: always()
 
+  - job: Reaqtor_Dotnet_Format
+    displayName: Run dotnet-format checks
+    pool: vs2019-preview
+
+    steps:
+    - task: UseDotNet@2
+      displayName: Use .NET Core 5.x SDK
+      inputs:
+        version: 5.x
+        performMultiLevelLookup: true
+
+    - task: DotNetCoreCLI@2
+      inputs:
+        command: custom
+        custom: tool
+        arguments: install -g dotnet-format
+      displayName: Install dotnet-format tool
+
+    - script: dotnet-format --check All.sln
+      displayName: Run dotnet-format
+
   - job: Build_and_Pack
     pool: vs2019-preview
 
@@ -177,6 +198,7 @@ stages:
       workingDirectory: $(Build.SourcesDirectory)/coverlet/reports
       env:
         CODECOV_TOKEN: $(CODECOV_TOKEN)
+      condition: ne(variables['build.reason'], 'PullRequest')
 
 - stage: CodeSign
   dependsOn: Build
