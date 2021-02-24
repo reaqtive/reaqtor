@@ -5,10 +5,10 @@
 using System;
 using System.Threading;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive.Scheduler;
 using Reaqtive.Tasks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Reaqtive
 {

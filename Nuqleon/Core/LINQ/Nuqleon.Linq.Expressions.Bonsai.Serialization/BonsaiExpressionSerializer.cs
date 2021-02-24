@@ -5,6 +5,7 @@
 using System.Collections.Generic;
 using System.Memory;
 using System.Reflection;
+
 using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization

@@ -14,6 +14,7 @@ using System.Collections.Generic;
 namespace Nuqleon.Json.Parser
 {
     using Expressions;
+
     using Internal;
 
     /// <summary>

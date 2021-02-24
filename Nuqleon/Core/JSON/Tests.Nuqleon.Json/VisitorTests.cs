@@ -8,9 +8,10 @@
 // BD - June 2013 - Created this file.
 //
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Nuqleon.Json.Expressions;
 using Nuqleon.Json.Parser;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Nuqleon.Json
 {

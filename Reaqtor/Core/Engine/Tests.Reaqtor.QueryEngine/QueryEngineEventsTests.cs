@@ -6,11 +6,11 @@ using System;
 using System.Linq.Expressions;
 using System.Threading;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor;
 using Reaqtor.QueryEngine;
 using Reaqtor.QueryEngine.Events;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

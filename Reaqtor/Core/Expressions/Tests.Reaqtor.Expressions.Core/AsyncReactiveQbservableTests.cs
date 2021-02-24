@@ -11,9 +11,9 @@
 using System;
 using System.Threading;
 
-using Reaqtor;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor;
 
 namespace Tests.Reaqtor.Expressions.Core
 {

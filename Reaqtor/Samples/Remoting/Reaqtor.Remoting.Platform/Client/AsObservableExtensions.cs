@@ -12,9 +12,9 @@ using System;
 using System.Linq.Expressions;
 using System.Threading;
 
+using Reaqtor.Hosting.Shared.Serialization;
 using Reaqtor.Remoting.Platform;
 using Reaqtor.Remoting.Protocol;
-using Reaqtor.Hosting.Shared.Serialization;
 
 namespace Reaqtor.Remoting
 {

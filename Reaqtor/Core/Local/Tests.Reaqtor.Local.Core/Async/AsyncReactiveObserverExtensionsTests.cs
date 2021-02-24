@@ -3,12 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Threading.Tasks;
 using System.Threading;
-
-using Reaqtor;
+using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor;
 
 namespace Tests.Reaqtor.Core
 {

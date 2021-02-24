@@ -11,7 +11,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1062 // Omitted null checks similar to expression tree visitors.
 
-using Nuqleon.DataModel.TypeSystem;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,6 +20,8 @@ using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using Nuqleon.DataModel.TypeSystem;
 
 namespace Nuqleon.DataModel.CompilerServices
 {

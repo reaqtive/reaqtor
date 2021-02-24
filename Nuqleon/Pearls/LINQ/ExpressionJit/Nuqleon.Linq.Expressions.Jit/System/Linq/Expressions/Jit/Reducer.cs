@@ -9,6 +9,7 @@
 //
 
 using System.Diagnostics;
+
 using static System.Linq.Expressions.Expression;
 
 namespace System.Linq.Expressions.Jit

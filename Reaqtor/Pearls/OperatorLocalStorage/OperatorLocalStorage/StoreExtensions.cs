@@ -11,9 +11,10 @@
 using System;
 using System.IO;
 using System.Linq;
-using Utilities;
 
 using Reaqtor.QueryEngine;
+
+using Utilities;
 
 namespace Playground
 {

@@ -5,6 +5,7 @@
 namespace Reaqtor.Remoting.Samples.Models.V2
 {
     using System;
+
     using Nuqleon.DataModel;
 
     /// <summary>

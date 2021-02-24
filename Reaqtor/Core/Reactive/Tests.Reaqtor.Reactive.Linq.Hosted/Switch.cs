@@ -5,6 +5,8 @@
 using System;
 using System.Linq.Expressions;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Tasks;
 using Reaqtive.Testing;
@@ -13,8 +15,6 @@ using Reaqtive.TestingFramework;
 using Reaqtor.Reactive;
 using Reaqtor.Reactive.Expressions;
 using Reaqtor.TestingFramework;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Reaqtor.Operators
 {

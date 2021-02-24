@@ -12,12 +12,12 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor.Reliable.Client;
 using Reaqtor.Reliable.Expressions;
 using Reaqtor.Reliable.Service;
 using Reaqtor.TestingFramework;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.Reliable
 {

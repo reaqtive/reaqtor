@@ -5,9 +5,9 @@
 using System;
 using System.Linq.Expressions;
 
-using Reaqtor.Reliable.Expressions;
-
 using Reaqtive;
+
+using Reaqtor.Reliable.Expressions;
 
 namespace Reaqtor.Reliable.Service
 {

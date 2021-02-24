@@ -9,10 +9,11 @@
 // BD - October 2014
 //
 
-using RuntimeLib;
 using System;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using RuntimeLib;
 
 namespace OperatorFusion
 {

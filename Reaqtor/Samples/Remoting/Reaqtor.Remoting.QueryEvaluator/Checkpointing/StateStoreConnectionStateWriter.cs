@@ -17,9 +17,9 @@ namespace Reaqtor.Remoting.QueryEvaluator
     //
     // friendly type aliases help us easily remember what Tuple<blah...> means
     //
-    using ToRemove = Tuple<string, string>;
-    using ToAdd = Tuple<string, string, byte[]>;
     using StagedChange = Object;
+    using ToAdd = Tuple<string, string, byte[]>;
+    using ToRemove = Tuple<string, string>;
 
     /// <summary>
     /// Thread-safe state writer writing item in the remoting state store role.

@@ -34,41 +34,38 @@ namespace System.Linq.CompilerServices
     using CatchBlock = CatchBlockSlim;
     using ConditionalExpression = ConditionalExpressionSlim;
     using ConstantExpression = ConstantExpressionSlim;
+    using ConstructorInfo = ConstructorInfoSlim;
     using DefaultExpression = DefaultExpressionSlim;
+    using ElementInit = ElementInitSlim;
     using Expression = ExpressionSlim;
     using GotoExpression = GotoExpressionSlim;
     using IndexExpression = IndexExpressionSlim;
     using InvocationExpression = InvocationExpressionSlim;
-    using LabelTarget = LabelTargetSlim;
     using LabelExpression = LabelExpressionSlim;
+    using LabelTarget = LabelTargetSlim;
     using LambdaExpression = LambdaExpressionSlim;
     using ListInitExpression = ListInitExpressionSlim;
     using LoopExpression = LoopExpressionSlim;
+    using MemberAssignment = MemberAssignmentSlim;
+    using MemberBinding = MemberBindingSlim;
     using MemberExpression = MemberExpressionSlim;
+    using MemberInfo = MemberInfoSlim;
     using MemberInitExpression = MemberInitExpressionSlim;
+    using MemberListBinding = MemberListBindingSlim;
+    using MemberMemberBinding = MemberMemberBindingSlim;
     using MethodCallExpression = MethodCallExpressionSlim;
+    using MethodInfo = MethodInfoSlim;
     using NewArrayExpression = NewArrayExpressionSlim;
     using NewExpression = NewExpressionSlim;
+    using Object = ObjectSlim;
     using ParameterExpression = ParameterExpressionSlim;
+    using PropertyInfo = PropertyInfoSlim;
     using SwitchCase = SwitchCaseSlim;
     using SwitchExpression = SwitchExpressionSlim;
     using TryExpression = TryExpressionSlim;
+    using Type = TypeSlim;
     using TypeBinaryExpression = TypeBinaryExpressionSlim;
     using UnaryExpression = UnaryExpressionSlim;
-
-    using ElementInit = ElementInitSlim;
-    using MemberAssignment = MemberAssignmentSlim;
-    using MemberBinding = MemberBindingSlim;
-    using MemberListBinding = MemberListBindingSlim;
-    using MemberMemberBinding = MemberMemberBindingSlim;
-
-    using ConstructorInfo = ConstructorInfoSlim;
-    using MemberInfo = MemberInfoSlim;
-    using MethodInfo = MethodInfoSlim;
-    using PropertyInfo = PropertyInfoSlim;
-    using Type = TypeSlim;
-
-    using Object = ObjectSlim;
 
     #endregion
 #endif

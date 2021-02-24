@@ -12,11 +12,11 @@ using System;
 using System.IO;
 using System.Linq.Expressions;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Newtonsoft.Json;
 
 using Nuqleon.DataModel.Serialization.Json;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Nuqleon.DataModel.Serialization.JsonTest
 {

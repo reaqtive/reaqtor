@@ -8,10 +8,11 @@
 //   BD - 07/29/2015 - Wrote these tests.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Threading;
 using System.Time;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {

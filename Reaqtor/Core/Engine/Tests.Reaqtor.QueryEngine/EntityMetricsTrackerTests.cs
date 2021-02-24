@@ -7,10 +7,10 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.Expressions;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor.Metadata;
 using Reaqtor.QueryEngine.Metrics;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

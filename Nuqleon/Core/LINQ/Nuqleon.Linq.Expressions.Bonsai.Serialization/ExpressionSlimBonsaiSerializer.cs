@@ -11,6 +11,7 @@
 
 using System.Collections.Generic;
 using System.Reflection;
+
 using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization

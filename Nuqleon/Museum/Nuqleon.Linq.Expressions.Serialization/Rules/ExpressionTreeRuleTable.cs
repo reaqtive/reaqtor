@@ -8,7 +8,6 @@
 // BD - December 2012
 //
 
-using Nuqleon.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,10 +16,13 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Nuqleon.Serialization;
+
 namespace Nuqleon.Linq.Expressions.Serialization
 {
-    using Json = Nuqleon.Json.Expressions;
     using TypeSystem;
+
+    using Json = Nuqleon.Json.Expressions;
 
     /// <summary>
     /// Rule table for serialization of expression trees.

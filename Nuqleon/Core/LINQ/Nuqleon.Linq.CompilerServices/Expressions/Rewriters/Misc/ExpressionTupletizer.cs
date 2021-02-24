@@ -23,15 +23,13 @@ namespace System.Linq.CompilerServices
     #region Aliases
 
     using Expression = System.Linq.Expressions.ExpressionSlim;
+    using FreeVariableScanner = System.Reflection.FreeVariableScannerSlim;
     using LambdaExpression = System.Linq.Expressions.LambdaExpressionSlim;
     using MemberExpression = System.Linq.Expressions.MemberExpressionSlim;
     using NewExpression = System.Linq.Expressions.NewExpressionSlim;
     using ParameterExpression = System.Linq.Expressions.ParameterExpressionSlim;
-
-    using FreeVariableScanner = System.Reflection.FreeVariableScannerSlim;
-
-    using Type = System.Reflection.TypeSlim;
     using PropertyInfo = System.Reflection.PropertyInfoSlim;
+    using Type = System.Reflection.TypeSlim;
 
     #endregion
 #endif

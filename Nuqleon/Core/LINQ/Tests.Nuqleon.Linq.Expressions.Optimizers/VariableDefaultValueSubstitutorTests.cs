@@ -8,11 +8,12 @@
 // BD - January 2017 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Linq.Expressions;
 using System;
 using System.Collections.Generic;
 using System.Linq.CompilerServices;
+using System.Linq.Expressions;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.Expressions.Optimizers
 {

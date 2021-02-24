@@ -2,11 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using Nuqleon.DataModel;
-using Reaqtor.Hosting.Shared.Tools;
 using System;
 using System.Globalization;
 using System.Reflection;
+
+using Nuqleon.DataModel;
+
+using Reaqtor.Hosting.Shared.Tools;
 
 namespace Reaqtor.Hosting.Shared.Serialization
 {

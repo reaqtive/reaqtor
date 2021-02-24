@@ -8,9 +8,10 @@
 // ER - June 2013
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Linq.Expressions.Serialization;
 

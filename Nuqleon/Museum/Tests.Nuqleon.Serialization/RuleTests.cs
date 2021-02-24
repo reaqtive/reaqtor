@@ -8,9 +8,11 @@
 // BD - May 2014
 //
 
-using Nuqleon.Serialization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.Serialization;
 
 namespace Tests.Microsoft.Serialization
 {

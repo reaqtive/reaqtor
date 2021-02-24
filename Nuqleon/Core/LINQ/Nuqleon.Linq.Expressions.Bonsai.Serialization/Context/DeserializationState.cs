@@ -13,6 +13,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+
 using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
@@ -23,12 +24,11 @@ namespace System.Linq.Expressions.Bonsai.Serialization
     // This makes diffing with the original Bonsai serializer easier.
     //
 
-    using Type = TypeSlim;
-    using MemberInfo = MemberInfoSlim;
-
     using Expression = ExpressionSlim;
-    using ParameterExpression = ParameterExpressionSlim;
     using LabelTarget = LabelTargetSlim;
+    using MemberInfo = MemberInfoSlim;
+    using ParameterExpression = ParameterExpressionSlim;
+    using Type = TypeSlim;
 
     #endregion
 

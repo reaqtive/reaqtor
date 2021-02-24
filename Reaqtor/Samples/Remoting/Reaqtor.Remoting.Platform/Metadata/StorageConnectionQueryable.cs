@@ -12,9 +12,9 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Reaqtor.Remoting.Protocol;
-
 using Microsoft.Azure.Cosmos.Table;
+
+using Reaqtor.Remoting.Protocol;
 
 namespace Reaqtor.Remoting.Metadata
 {

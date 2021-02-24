@@ -4,9 +4,9 @@
 
 using System;
 
-using Reaqtor.Hosting.Shared.Serialization;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor.Hosting.Shared.Serialization;
 
 namespace Tests.Microsoft.Hosting.Shared.Serialization
 {

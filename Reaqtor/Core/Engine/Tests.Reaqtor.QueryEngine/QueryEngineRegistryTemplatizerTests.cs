@@ -8,10 +8,10 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor.QueryEngine;
 using Reaqtor.QueryEngine.Mocks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

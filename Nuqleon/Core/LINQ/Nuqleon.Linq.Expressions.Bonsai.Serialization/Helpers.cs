@@ -9,6 +9,7 @@
 //
 
 using System.Globalization;
+
 using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization

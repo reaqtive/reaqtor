@@ -8,7 +8,6 @@
 // BD, ER - July 2013 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -22,6 +21,9 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Json = Nuqleon.Json.Expressions;
 
 namespace Tests

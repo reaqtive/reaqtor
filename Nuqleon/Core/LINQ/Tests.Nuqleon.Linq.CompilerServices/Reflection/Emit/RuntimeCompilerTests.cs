@@ -9,7 +9,6 @@
 // ER - July 2013 - Small tweaks.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -17,6 +16,8 @@ using System.Linq;
 using System.Linq.CompilerServices;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.CompilerServices
 {

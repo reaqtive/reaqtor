@@ -8,13 +8,14 @@
 //   ER - 10/27/2014 - Wrote these tests.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Memory;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Memory
 {

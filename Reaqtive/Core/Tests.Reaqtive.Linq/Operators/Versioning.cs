@@ -7,9 +7,9 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime.Serialization;
 
-using Reaqtive;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive;
 
 namespace Test.Reaqtive.Operators
 {

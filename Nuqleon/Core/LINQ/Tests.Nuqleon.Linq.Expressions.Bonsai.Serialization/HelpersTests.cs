@@ -8,9 +8,10 @@
 // BD - December 2016 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq.Expressions.Bonsai.Serialization;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {

@@ -18,9 +18,9 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
-using Nuqleon.DataModel.TypeSystem;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.DataModel.TypeSystem;
 
 namespace Nuqleon.DataModel.Serialization.JsonTest
 {

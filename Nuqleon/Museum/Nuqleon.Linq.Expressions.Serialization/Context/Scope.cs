@@ -16,8 +16,9 @@ using System.Linq.Expressions;
 
 namespace Nuqleon.Linq.Expressions.Serialization
 {
-    using Json = Nuqleon.Json.Expressions;
     using TypeSystem;
+
+    using Json = Nuqleon.Json.Expressions;
 
     /// <summary>
     /// Scope tracking facility for parameters in lambda expressions and block expressions.

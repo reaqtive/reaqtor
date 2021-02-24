@@ -14,11 +14,11 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Nuqleon.DataModel;
 using Nuqleon.DataModel.CompilerServices.Bonsai;
 using Nuqleon.DataModel.TypeSystem;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices.Bonsai.EntitySubstitution
 {

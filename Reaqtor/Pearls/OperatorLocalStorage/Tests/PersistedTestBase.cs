@@ -8,11 +8,15 @@
 // BD - January 2018
 //
 
-using Reaqtor.QueryEngine;
-using Reaqtive.Storage;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.IO;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive.Storage;
+
+using Reaqtor.QueryEngine;
+
 using Utilities;
 
 namespace Tests

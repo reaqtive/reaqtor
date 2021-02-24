@@ -6,10 +6,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.TestingFramework.Mocks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Reaqtive
 {

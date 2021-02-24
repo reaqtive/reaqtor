@@ -29,17 +29,23 @@ namespace System.Linq.CompilerServices
     using ConditionalExpression = ConditionalExpressionSlim;
     using ConstantExpression = ConstantExpressionSlim;
     using DefaultExpression = DefaultExpressionSlim;
+    using ElementInit = ElementInitSlim;
     using Expression = ExpressionSlim;
     using GotoExpression = GotoExpressionSlim;
     using IndexExpression = IndexExpressionSlim;
     using InvocationExpression = InvocationExpressionSlim;
-    using LabelTarget = LabelTargetSlim;
     using LabelExpression = LabelExpressionSlim;
+    using LabelTarget = LabelTargetSlim;
     using LambdaExpression = LambdaExpressionSlim;
     using ListInitExpression = ListInitExpressionSlim;
     using LoopExpression = LoopExpressionSlim;
+    using MemberAssignment = MemberAssignmentSlim;
+    using MemberBinding = MemberBindingSlim;
     using MemberExpression = MemberExpressionSlim;
+    using MemberInfo = MemberInfoSlim;
     using MemberInitExpression = MemberInitExpressionSlim;
+    using MemberListBinding = MemberListBindingSlim;
+    using MemberMemberBinding = MemberMemberBindingSlim;
     using MethodCallExpression = MethodCallExpressionSlim;
     using NewArrayExpression = NewArrayExpressionSlim;
     using NewExpression = NewExpressionSlim;
@@ -47,17 +53,9 @@ namespace System.Linq.CompilerServices
     using SwitchCase = SwitchCaseSlim;
     using SwitchExpression = SwitchExpressionSlim;
     using TryExpression = TryExpressionSlim;
+    using Type = TypeSlim;
     using TypeBinaryExpression = TypeBinaryExpressionSlim;
     using UnaryExpression = UnaryExpressionSlim;
-
-    using ElementInit = ElementInitSlim;
-    using MemberAssignment = MemberAssignmentSlim;
-    using MemberBinding = MemberBindingSlim;
-    using MemberListBinding = MemberListBindingSlim;
-    using MemberMemberBinding = MemberMemberBindingSlim;
-
-    using MemberInfo = MemberInfoSlim;
-    using Type = TypeSlim;
 
     #endregion
 #endif

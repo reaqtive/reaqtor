@@ -7,9 +7,10 @@
 //
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.CompilerServices.Expressions.Rewriters.Misc
 {

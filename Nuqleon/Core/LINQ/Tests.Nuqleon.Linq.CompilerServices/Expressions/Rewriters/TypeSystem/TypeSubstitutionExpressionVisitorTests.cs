@@ -8,13 +8,14 @@
 // BD - June 2013 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.CompilerServices
 {

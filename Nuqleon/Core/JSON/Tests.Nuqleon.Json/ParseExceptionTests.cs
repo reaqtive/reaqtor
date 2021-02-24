@@ -8,10 +8,12 @@
 // BD - May 2014 - Created this file.
 //
 
-using Nuqleon.Json.Parser;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.Json.Parser;
 
 namespace Tests.Nuqleon.Json
 {

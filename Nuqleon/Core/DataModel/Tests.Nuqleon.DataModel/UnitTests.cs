@@ -10,9 +10,9 @@
 
 using System.Collections.Generic;
 
-using Nuqleon.DataModel;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.DataModel;
 
 namespace Tests.Nuqleon.DataModel
 {

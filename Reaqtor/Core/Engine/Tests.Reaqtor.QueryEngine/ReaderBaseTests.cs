@@ -7,9 +7,9 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 
-using Reaqtor.QueryEngine;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor.QueryEngine;
 
 namespace Tests.Reaqtor.QueryEngine
 {

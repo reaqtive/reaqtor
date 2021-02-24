@@ -20,13 +20,13 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 
-using Nuqleon.DataModel;
-using Nuqleon.DataModel.CompilerServices;
-using Nuqleon.DataModel.CompilerServices.Bonsai;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using MijnEntiteiten;
+
+using Nuqleon.DataModel;
+using Nuqleon.DataModel.CompilerServices;
+using Nuqleon.DataModel.CompilerServices.Bonsai;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices
 {

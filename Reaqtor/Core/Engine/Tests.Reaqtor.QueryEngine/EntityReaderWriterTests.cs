@@ -7,13 +7,13 @@ using System.IO;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive.Expressions;
 
 using Reaqtor;
 using Reaqtor.QueryEngine;
 using Reaqtor.QueryEngine.Mocks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

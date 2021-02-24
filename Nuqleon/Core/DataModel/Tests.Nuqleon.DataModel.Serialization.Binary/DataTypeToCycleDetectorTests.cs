@@ -6,11 +6,11 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Nuqleon.DataModel;
 using Nuqleon.DataModel.Serialization.Binary;
 using Nuqleon.DataModel.TypeSystem;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Nuqleon.DataModel.Serialization.Binary
 {

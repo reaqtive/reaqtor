@@ -21,17 +21,18 @@ using System.Linq.CompilerServices;
 namespace System.Linq.Expressions.Bonsai.Serialization.Binary
 {
 #if USE_SLIM
-    using Object = ObjectSlim;
-
-    using Expression = ExpressionSlim;
-
+    using Assembly = AssemblySlim;
     using BinaryExpression = BinaryExpressionSlim;
     using BlockExpression = BlockExpressionSlim;
     using CatchBlock = CatchBlockSlim;
     using ConditionalExpression = ConditionalExpressionSlim;
     using ConstantExpression = ConstantExpressionSlim;
+    using ConstructorInfo = ConstructorInfoSlim;
     using DefaultExpression = DefaultExpressionSlim;
     using ElementInit = ElementInitSlim;
+    using Expression = ExpressionSlim;
+    using ExpressionVisitor = ExpressionSlimVisitor;
+    using FieldInfo = FieldInfoSlim;
     using GotoExpression = GotoExpressionSlim;
     using IndexExpression = IndexExpressionSlim;
     using InvocationExpression = InvocationExpressionSlim;
@@ -43,30 +44,24 @@ namespace System.Linq.Expressions.Bonsai.Serialization.Binary
     using MemberAssignment = MemberAssignmentSlim;
     using MemberBinding = MemberBindingSlim;
     using MemberExpression = MemberExpressionSlim;
-    using MemberMemberBinding = MemberMemberBindingSlim;
-    using MemberListBinding = MemberListBindingSlim;
+    using MemberInfo = MemberInfoSlim;
     using MemberInitExpression = MemberInitExpressionSlim;
+    using MemberListBinding = MemberListBindingSlim;
+    using MemberMemberBinding = MemberMemberBindingSlim;
     using MethodCallExpression = MethodCallExpressionSlim;
-    using NewExpression = NewExpressionSlim;
+    using MethodInfo = MethodInfoSlim;
     using NewArrayExpression = NewArrayExpressionSlim;
+    using NewExpression = NewExpressionSlim;
+    using Object = ObjectSlim;
     using ParameterExpression = ParameterExpressionSlim;
+    using PropertyInfo = PropertyInfoSlim;
     using SwitchCase = SwitchCaseSlim;
     using SwitchExpression = SwitchExpressionSlim;
     using TryExpression = TryExpressionSlim;
-    using TypeBinaryExpression = TypeBinaryExpressionSlim;
-    using UnaryExpression = UnaryExpressionSlim;
-
-    using ExpressionVisitor = ExpressionSlimVisitor;
-
-    using Assembly = AssemblySlim;
-    using ConstructorInfo = ConstructorInfoSlim;
-    using FieldInfo = FieldInfoSlim;
-    using MemberInfo = MemberInfoSlim;
-    using MethodInfo = MethodInfoSlim;
-    using PropertyInfo = PropertyInfoSlim;
     using Type = TypeSlim;
-
+    using TypeBinaryExpression = TypeBinaryExpressionSlim;
     using TypeVisitor = TypeSlimVisitor;
+    using UnaryExpression = UnaryExpressionSlim;
 #endif
 
     public partial class ExpressionSerializer

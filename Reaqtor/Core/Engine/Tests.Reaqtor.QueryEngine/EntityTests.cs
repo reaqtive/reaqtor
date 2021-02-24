@@ -6,9 +6,9 @@ using System;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
-using Reaqtor.QueryEngine;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor.QueryEngine;
 
 namespace Tests.Reaqtor.QueryEngine
 {

@@ -6,8 +6,8 @@
 
 #pragma warning disable
 
-using System.Reflection.Emit;
 using System.Reflection;
+using System.Reflection.Emit;
 
 namespace System.Linq.Expressions.Tests
 {

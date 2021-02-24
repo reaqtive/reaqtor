@@ -5,13 +5,13 @@
 using System;
 using System.Linq;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
-using Reaqtive.TestingFramework;
 using Reaqtive.Testing;
+using Reaqtive.TestingFramework;
 
 using Reaqtor.QueryEngine.KeyValueStore.InMemory;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

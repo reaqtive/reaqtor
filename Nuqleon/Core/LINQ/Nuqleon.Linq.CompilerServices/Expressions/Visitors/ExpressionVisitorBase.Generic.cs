@@ -35,6 +35,7 @@ namespace System.Linq.CompilerServices
     using DefaultExpressionAlias = DefaultExpressionSlim;
     using ExpressionAlias = ExpressionSlim;
     using GotoExpressionAlias = GotoExpressionSlim;
+    using IArgumentProviderAlias = IArgumentProviderSlim;
     using IndexExpressionAlias = IndexExpressionSlim;
     using InvocationExpressionAlias = InvocationExpressionSlim;
     using LabelExpressionAlias = LabelExpressionSlim;
@@ -51,8 +52,6 @@ namespace System.Linq.CompilerServices
     using TryExpressionAlias = TryExpressionSlim;
     using TypeBinaryExpressionAlias = TypeBinaryExpressionSlim;
     using UnaryExpressionAlias = UnaryExpressionSlim;
-
-    using IArgumentProviderAlias = IArgumentProviderSlim;
 
     #endregion
 #else

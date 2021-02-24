@@ -20,6 +20,7 @@ using System.Runtime.Serialization;
 namespace Nuqleon.Json.Serialization
 {
     using Expressions;
+
     using Internal;
 
     /// <summary>

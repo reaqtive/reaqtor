@@ -6,6 +6,8 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Subjects;
 using Reaqtive.Tasks;
@@ -16,8 +18,6 @@ using Reaqtive.TestingFramework.Mocks;
 using Reaqtor.QueryEngine;
 using Reaqtor.Reliable;
 using Reaqtor.TestingFramework;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

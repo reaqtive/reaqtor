@@ -8,12 +8,14 @@
 // BD - December 2016 - Created this file.
 //
 
-using Nuqleon.Json.Expressions;
-using Newtonsoft.Json;
 using System;
 using System.Globalization;
 using System.Numerics;
 using System.Threading;
+
+using Newtonsoft.Json;
+
+using Nuqleon.Json.Expressions;
 
 namespace Nuqleon.Json.Interop.Newtonsoft
 {

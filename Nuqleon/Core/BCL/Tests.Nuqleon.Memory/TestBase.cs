@@ -8,11 +8,12 @@
 //   BD - 07/02/2014 - Created test base class.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {

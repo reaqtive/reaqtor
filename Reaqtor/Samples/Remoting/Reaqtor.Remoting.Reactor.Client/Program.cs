@@ -19,6 +19,7 @@ using System.Threading;
 using System.Threading.Tasks;
 
 using Reaqtive;
+using Reaqtive.TestingFramework;
 
 using Reaqtor.Remoting.Client;
 using Reaqtor.Remoting.Deployable;
@@ -29,7 +30,6 @@ using Reaqtor.Remoting.Reactor;
 using Reaqtor.Remoting.Reactor.Client;
 using Reaqtor.Remoting.Reactor.DomainFeeds;
 using Reaqtor.Remoting.TestingFramework;
-using Reaqtive.TestingFramework;
 
 namespace Reaqtor.Remoting
 {

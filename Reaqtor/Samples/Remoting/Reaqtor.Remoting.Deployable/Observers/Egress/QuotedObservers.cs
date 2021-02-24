@@ -9,9 +9,9 @@ using System.Linq.Expressions;
 using System.Reactive;
 using System.Threading.Tasks;
 
-using Reaqtive;
-
 using Nuqleon.DataModel;
+
+using Reaqtive;
 
 namespace Reaqtor.Remoting.Deployable
 {

@@ -5,9 +5,9 @@
 using System.IO;
 using System.Linq;
 
-using Nuqleon.DataModel.Serialization.Binary;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.DataModel.Serialization.Binary;
 
 namespace Tests.Nuqleon.DataModel.Serialization.Binary
 {

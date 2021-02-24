@@ -19,6 +19,8 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Expressions;
 using Reaqtive.Linq;
@@ -32,8 +34,6 @@ using Reaqtor.QueryEngine.KeyValueStore.InMemory;
 using Reaqtor.QueryEngine.Metrics;
 using Reaqtor.QueryEngine.Mocks;
 using Reaqtor.Reliable;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

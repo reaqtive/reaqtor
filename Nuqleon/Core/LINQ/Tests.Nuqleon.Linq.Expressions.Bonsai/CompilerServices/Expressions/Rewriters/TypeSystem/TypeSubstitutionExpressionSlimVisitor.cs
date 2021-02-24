@@ -8,7 +8,6 @@
 // ER - October 2013 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +16,8 @@ using System.Linq.CompilerServices.Bonsai;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 {

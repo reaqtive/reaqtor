@@ -13,10 +13,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Nuqleon.DataModel;
 using Nuqleon.DataModel.CompilerServices;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices
 {

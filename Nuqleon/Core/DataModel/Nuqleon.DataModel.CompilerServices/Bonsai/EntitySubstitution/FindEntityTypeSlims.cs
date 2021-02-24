@@ -8,26 +8,24 @@
 // BD, ER - November 2013 - Created this file.
 //
 
-using Nuqleon.DataModel.TypeSystem;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.CompilerServices.Bonsai;
 using System.Reflection;
 
+using Nuqleon.DataModel.TypeSystem;
+
 namespace Nuqleon.DataModel.CompilerServices.Bonsai
 {
     #region Aliases
 
-    using Expression = System.Linq.Expressions.ExpressionSlim;
-
-    using Type = System.Reflection.TypeSlim;
-    using MethodInfo = System.Reflection.MethodInfoSlim;
-
-    using TypeVisitor = System.Reflection.TypeSlimVisitor;
-    using ExpressionVisitorWithReflection = System.Linq.CompilerServices.Bonsai.ExpressionSlimVisitorWithReflection;
-
     using EntityInfo = Nuqleon.DataModel.CompilerServices.Bonsai.EntityInfoSlim;
+    using Expression = System.Linq.Expressions.ExpressionSlim;
+    using ExpressionVisitorWithReflection = System.Linq.CompilerServices.Bonsai.ExpressionSlimVisitorWithReflection;
+    using MethodInfo = System.Reflection.MethodInfoSlim;
+    using Type = System.Reflection.TypeSlim;
+    using TypeVisitor = System.Reflection.TypeSlimVisitor;
 
     #endregion
 

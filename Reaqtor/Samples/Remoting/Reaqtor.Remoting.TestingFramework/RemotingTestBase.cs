@@ -18,6 +18,8 @@ using System.Runtime.CompilerServices;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.TestingFramework;
 
@@ -25,8 +27,6 @@ using Reaqtor.Remoting.Platform;
 using Reaqtor.Remoting.Protocol;
 using Reaqtor.Remoting.Reactor.Client;
 using Reaqtor.Remoting.Reactor.DomainFeeds;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Reaqtor.Remoting.TestingFramework
 {

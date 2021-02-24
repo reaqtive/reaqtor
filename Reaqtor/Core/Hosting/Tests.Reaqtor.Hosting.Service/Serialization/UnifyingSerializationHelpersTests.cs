@@ -9,12 +9,13 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Nuqleon.DataModel;
-using Reaqtor;
-using Reaqtor.Metadata;
-using Reaqtor.Hosting.Shared.Serialization;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.DataModel;
+
+using Reaqtor;
+using Reaqtor.Hosting.Shared.Serialization;
+using Reaqtor.Metadata;
 
 namespace Tests.Microsoft.Hosting.Shared.Serialization
 {

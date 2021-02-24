@@ -8,8 +8,6 @@
 // ER - December 2012
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using Tests.VisualBasic;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -21,7 +19,11 @@ using System.Numerics;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Nuqleon.Linq.Expressions.Serialization;
+
+using Tests.VisualBasic;
 
 using CSharpDynamic = Microsoft.CSharp.RuntimeBinder;
 

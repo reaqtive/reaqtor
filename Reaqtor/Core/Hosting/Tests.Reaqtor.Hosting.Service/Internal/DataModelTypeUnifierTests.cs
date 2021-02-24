@@ -4,15 +4,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Linq;
 using System.Linq.CompilerServices;
-
-using Nuqleon.DataModel;
-using Reaqtor;
-using Reaqtor.Hosting.Shared.Serialization;
+using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.DataModel;
+
+using Reaqtor;
+using Reaqtor.Hosting.Shared.Serialization;
 
 namespace Tests.Microsoft.Hosting.Shared.Serialization
 {

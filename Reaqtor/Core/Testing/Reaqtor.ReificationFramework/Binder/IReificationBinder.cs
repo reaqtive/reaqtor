@@ -2,9 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using Reaqtor.TestingFramework;
 using System;
 using System.Linq.Expressions;
+
+using Reaqtor.TestingFramework;
 
 namespace Reaqtor.ReificationFramework
 {

@@ -12,13 +12,13 @@ using System.Memory;
 using System.Reflection;
 using System.Threading.Tasks;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Expressions;
 
 using Reaqtor.QueryEngine;
 using Reaqtor.Reactive.Expressions;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

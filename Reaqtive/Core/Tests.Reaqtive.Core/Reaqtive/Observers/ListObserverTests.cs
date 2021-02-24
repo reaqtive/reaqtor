@@ -8,9 +8,9 @@ using System.Linq;
 using System.Reflection;
 using System.Threading;
 
-using Reaqtive;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive;
 
 namespace Test.Reaqtive
 {

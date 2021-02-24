@@ -10,12 +10,13 @@
 
 #pragma warning disable IDE0050 // Convert to tuple. (This facility deals with anonymous types.)
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.CompilerServices
 {

@@ -5,11 +5,11 @@
 using System;
 using System.Linq;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Tasks;
 using Reaqtive.TestingFramework.Mocks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Reaqtive
 {

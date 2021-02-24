@@ -4,9 +4,9 @@
 
 using System;
 
-using Reaqtor.Remoting.Protocol;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor.Remoting.Protocol;
 
 namespace Tests.Reaqtor.Remoting.Protocol
 {

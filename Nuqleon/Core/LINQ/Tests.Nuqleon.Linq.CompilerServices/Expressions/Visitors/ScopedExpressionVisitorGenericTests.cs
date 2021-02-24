@@ -9,6 +9,7 @@
 //
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -31,39 +32,36 @@ namespace Tests.System.Linq.CompilerServices
 
     using BinaryExpression = global::System.Linq.Expressions.BinaryExpressionSlim;
     using BlockExpression = global::System.Linq.Expressions.BlockExpressionSlim;
+    using CatchBlock = global::System.Linq.Expressions.CatchBlockSlim;
     using ConditionalExpression = global::System.Linq.Expressions.ConditionalExpressionSlim;
     using ConstantExpression = global::System.Linq.Expressions.ConstantExpressionSlim;
     using DefaultExpression = global::System.Linq.Expressions.DefaultExpressionSlim;
+    using ElementInit = global::System.Linq.Expressions.ElementInitSlim;
     using Expression = global::System.Linq.Expressions.ExpressionSlim;
     using GotoExpression = global::System.Linq.Expressions.GotoExpressionSlim;
     using IndexExpression = global::System.Linq.Expressions.IndexExpressionSlim;
     using InvocationExpression = global::System.Linq.Expressions.InvocationExpressionSlim;
     using LabelExpression = global::System.Linq.Expressions.LabelExpressionSlim;
+    using LabelTarget = global::System.Linq.Expressions.LabelTargetSlim;
     using LambdaExpression = global::System.Linq.Expressions.LambdaExpressionSlim;
     using ListInitExpression = global::System.Linq.Expressions.ListInitExpressionSlim;
     using LoopExpression = global::System.Linq.Expressions.LoopExpressionSlim;
+    using MemberAssignment = global::System.Linq.Expressions.MemberAssignmentSlim;
+    using MemberBinding = global::System.Linq.Expressions.MemberBindingSlim;
     using MemberExpression = global::System.Linq.Expressions.MemberExpressionSlim;
     using MemberInitExpression = global::System.Linq.Expressions.MemberInitExpressionSlim;
+    using MemberListBinding = global::System.Linq.Expressions.MemberListBindingSlim;
+    using MemberMemberBinding = global::System.Linq.Expressions.MemberMemberBindingSlim;
     using MethodCallExpression = global::System.Linq.Expressions.MethodCallExpressionSlim;
     using NewArrayExpression = global::System.Linq.Expressions.NewArrayExpressionSlim;
     using NewExpression = global::System.Linq.Expressions.NewExpressionSlim;
     using ParameterExpression = global::System.Linq.Expressions.ParameterExpressionSlim;
+    using SwitchCase = global::System.Linq.Expressions.SwitchCaseSlim;
     using SwitchExpression = global::System.Linq.Expressions.SwitchExpressionSlim;
     using TryExpression = global::System.Linq.Expressions.TryExpressionSlim;
+    using Type = global::System.Reflection.TypeSlim;
     using TypeBinaryExpression = global::System.Linq.Expressions.TypeBinaryExpressionSlim;
     using UnaryExpression = global::System.Linq.Expressions.UnaryExpressionSlim;
-
-    using ElementInit = global::System.Linq.Expressions.ElementInitSlim;
-    using MemberAssignment = global::System.Linq.Expressions.MemberAssignmentSlim;
-    using MemberBinding = global::System.Linq.Expressions.MemberBindingSlim;
-    using MemberListBinding = global::System.Linq.Expressions.MemberListBindingSlim;
-    using MemberMemberBinding = global::System.Linq.Expressions.MemberMemberBindingSlim;
-
-    using CatchBlock = global::System.Linq.Expressions.CatchBlockSlim;
-    using LabelTarget = global::System.Linq.Expressions.LabelTargetSlim;
-    using SwitchCase = global::System.Linq.Expressions.SwitchCaseSlim;
-
-    using Type = global::System.Reflection.TypeSlim;
 
     #endregion
 #endif

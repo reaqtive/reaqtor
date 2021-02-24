@@ -8,12 +8,13 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Memory;
 using System.Time;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {

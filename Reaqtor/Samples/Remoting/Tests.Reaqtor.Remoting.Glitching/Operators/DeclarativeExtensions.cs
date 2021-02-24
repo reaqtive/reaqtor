@@ -8,11 +8,12 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 
-using Reaqtor.Remoting.Protocol;
-using Reaqtor.Remoting.TestingFramework;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive.Testing;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Reaqtor.Remoting.Protocol;
+using Reaqtor.Remoting.TestingFramework;
 
 namespace Reaqtor.TestingFramework
 {

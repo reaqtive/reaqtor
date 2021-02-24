@@ -25,21 +25,19 @@ namespace System.Linq.Expressions.Bonsai.Serialization
     // This makes diffing with the original Bonsai serializer easier.
     //
 
-    using Expression = ExpressionSlim;
-    using LambdaExpression = LambdaExpressionSlim;
-    using NewExpression = NewExpressionSlim;
-    using ParameterExpression = ParameterExpressionSlim;
-
     using CatchBlock = CatchBlockSlim;
-    using ElementInit = ElementInitSlim;
-    using LabelTarget = LabelTargetSlim;
-    using MemberBinding = MemberBindingSlim;
-    using SwitchCase = SwitchCaseSlim;
-
     using ConstructorInfo = ConstructorInfoSlim;
+    using ElementInit = ElementInitSlim;
+    using Expression = ExpressionSlim;
+    using LabelTarget = LabelTargetSlim;
+    using LambdaExpression = LambdaExpressionSlim;
+    using MemberBinding = MemberBindingSlim;
     using MemberInfo = MemberInfoSlim;
     using MethodInfo = MethodInfoSlim;
+    using NewExpression = NewExpressionSlim;
+    using ParameterExpression = ParameterExpressionSlim;
     using PropertyInfo = PropertyInfoSlim;
+    using SwitchCase = SwitchCaseSlim;
     using Type = TypeSlim;
 
     #endregion

@@ -6,16 +6,16 @@ using System;
 using System.Collections.Generic;
 using System.Threading;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Disposables;
 using Reaqtive.Linq;
-using Reaqtive.Subjects;
 using Reaqtive.Scheduler;
+using Reaqtive.Subjects;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
 using Reaqtive.TestingFramework.Mocks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Reaqtive.Operators
 {

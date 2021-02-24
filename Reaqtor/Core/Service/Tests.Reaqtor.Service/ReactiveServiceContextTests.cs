@@ -15,11 +15,11 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor;
 using Reaqtor.Metadata;
 using Reaqtor.TestingFramework;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.Service
 {

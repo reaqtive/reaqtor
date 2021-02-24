@@ -4,12 +4,12 @@
 
 using System;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor;
 using Reaqtor.QueryEngine;
 using Reaqtor.QueryEngine.KeyValueStore.InMemory;
 using Reaqtor.QueryEngine.Mocks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

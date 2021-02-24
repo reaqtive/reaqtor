@@ -14,8 +14,9 @@ using System.ComponentModel.Design;
 
 namespace Nuqleon.Linq.Expressions.Serialization
 {
-    using Json = Json.Expressions;
     using TypeSystem;
+
+    using Json = Json.Expressions;
 
     /// <summary>
     /// (Infrastructure only) Expression tree serialization context.

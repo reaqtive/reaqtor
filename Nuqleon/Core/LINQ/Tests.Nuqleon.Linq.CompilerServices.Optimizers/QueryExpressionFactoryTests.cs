@@ -8,12 +8,13 @@
 // PS - February 2015 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.Optimizers;
 using System.Linq.Expressions;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.CompilerServices.Optimizers
 {

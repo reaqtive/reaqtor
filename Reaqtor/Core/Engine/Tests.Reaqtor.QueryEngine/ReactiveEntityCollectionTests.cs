@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-using Reaqtor.QueryEngine;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor.QueryEngine;
 
 namespace Tests.Reaqtor.QueryEngine
 {

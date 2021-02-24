@@ -8,6 +8,8 @@ using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 
 using Reaqtor;
@@ -15,8 +17,6 @@ using Reaqtor.Metadata;
 using Reaqtor.QueryEngine;
 using Reaqtor.QueryEngine.Mocks;
 using Reaqtor.Reliable;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

@@ -9,10 +9,11 @@
 //   BD - 05/08/2016 - Added support for deserialization from text readers.
 //
 
-using Nuqleon.Json.Parser;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+
+using Nuqleon.Json.Parser;
 
 namespace Nuqleon.Json.Serialization
 {
