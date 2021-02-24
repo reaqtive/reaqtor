@@ -10,16 +10,16 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
-using System.Globalization;
 using System.Threading.Tasks;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor;
 using Reaqtor.Hosting.Shared.Tools;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.Remoting.Tools
 {

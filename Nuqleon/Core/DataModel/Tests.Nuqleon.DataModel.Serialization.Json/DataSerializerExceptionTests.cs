@@ -9,12 +9,12 @@
 //
 
 using System;
-using System.Runtime.Serialization.Formatters.Binary;
 using System.IO;
-
-using Nuqleon.DataModel.Serialization.Json;
+using System.Runtime.Serialization.Formatters.Binary;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.DataModel.Serialization.Json;
 
 namespace Tests.Nuqleon.DataModel.Serialization.Json
 {

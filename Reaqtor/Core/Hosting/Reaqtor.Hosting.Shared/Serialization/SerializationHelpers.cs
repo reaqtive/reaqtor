@@ -2,15 +2,17 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using Nuqleon.DataModel.Serialization.Json;
-using Nuqleon.Json.Interop.Newtonsoft;
-using Newtonsoft.Json;
 using System;
 using System.IO;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Bonsai.Serialization;
 using System.Reflection;
+
+using Newtonsoft.Json;
+
+using Nuqleon.DataModel.Serialization.Json;
+using Nuqleon.Json.Interop.Newtonsoft;
 
 using JsonExpression = Nuqleon.Json.Expressions.Expression;
 

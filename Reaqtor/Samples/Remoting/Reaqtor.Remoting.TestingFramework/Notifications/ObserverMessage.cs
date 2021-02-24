@@ -13,11 +13,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive.Testing;
 
 using Reaqtor.Remoting.Protocol;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Reaqtor.Remoting.TestingFramework
 {

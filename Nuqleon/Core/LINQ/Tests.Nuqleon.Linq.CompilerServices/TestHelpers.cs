@@ -9,9 +9,9 @@
 //
 
 using System;
-using System.Linq.Expressions;
 using System.Linq;
 using System.Linq.CompilerServices;
+using System.Linq.Expressions;
 
 namespace Tests.System.Linq.CompilerServices
 {

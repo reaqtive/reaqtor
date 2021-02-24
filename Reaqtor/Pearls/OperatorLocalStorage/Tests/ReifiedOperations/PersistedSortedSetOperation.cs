@@ -9,6 +9,7 @@
 //
 
 using System.Collections.Generic;
+
 using Reaqtive.Storage;
 
 namespace Tests.ReifiedOperations

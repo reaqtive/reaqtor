@@ -4,8 +4,8 @@
 
 using System;
 using System.Collections.Generic;
-using System.Linq.Expressions;
 using System.Linq.CompilerServices.Bonsai;
+using System.Linq.Expressions;
 
 namespace Reaqtor.Hosting.Shared.Tools
 {

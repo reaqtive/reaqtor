@@ -7,9 +7,9 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.Threading.Tasks;
 
-using Reaqtor.Remoting.Protocol;
-
 using Microsoft.Azure.Cosmos.Table;
+
+using Reaqtor.Remoting.Protocol;
 
 namespace Reaqtor.Remoting.Metadata
 {

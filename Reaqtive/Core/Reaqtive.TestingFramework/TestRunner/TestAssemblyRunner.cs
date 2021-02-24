@@ -2,13 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Reflection;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Reaqtive.TestingFramework.TestRunner
 {

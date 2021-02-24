@@ -9,13 +9,13 @@ using System.Linq;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Threading;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Scheduler;
 
 using Reaqtor;
 using Reaqtor.QueryEngine.Mocks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

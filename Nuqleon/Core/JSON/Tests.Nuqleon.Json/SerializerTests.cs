@@ -8,16 +8,18 @@
 // BD - June 2013 - Created this file.
 //
 
-using Nuqleon.Json.Expressions;
-using Nuqleon.Json.Parser;
-using Nuqleon.Json.Serialization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Runtime.Serialization;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.Json.Expressions;
+using Nuqleon.Json.Parser;
+using Nuqleon.Json.Serialization;
 
 namespace Tests.Nuqleon.Json
 {

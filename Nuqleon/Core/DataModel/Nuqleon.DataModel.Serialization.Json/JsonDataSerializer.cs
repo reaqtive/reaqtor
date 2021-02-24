@@ -9,6 +9,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq.Expressions;
 using System.Text;
+
 using Newtonsoft.Json;
 
 namespace Nuqleon.DataModel.Serialization.Json

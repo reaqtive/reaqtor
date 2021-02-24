@@ -6,13 +6,13 @@ using System;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Expressions;
 
 using Reaqtor.Expressions;
 using Reaqtor.Reactive.Expressions;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

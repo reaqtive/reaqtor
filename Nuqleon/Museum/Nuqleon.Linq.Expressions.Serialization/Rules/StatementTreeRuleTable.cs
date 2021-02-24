@@ -8,12 +8,13 @@
 // BD - December 2012
 //
 
-using Nuqleon.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.Expressions;
+
+using Nuqleon.Serialization;
 
 namespace Nuqleon.Linq.Expressions.Serialization
 {

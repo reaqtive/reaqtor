@@ -11,9 +11,9 @@
 using System;
 using System.Threading;
 
-using Reaqtive;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive;
 
 namespace Reaqtor.Remoting.TestingFramework
 {

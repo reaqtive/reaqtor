@@ -5,10 +5,10 @@
 using System;
 using System.Reflection;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor;
 using Reaqtor.Hosting.Shared.Tools;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Microsoft.Hosting.Shared.Tools
 {

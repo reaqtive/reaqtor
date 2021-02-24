@@ -14,10 +14,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor;
 using Reaqtor.TestingFramework;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.Service
 {

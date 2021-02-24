@@ -5,9 +5,9 @@
 using System;
 using System.Threading;
 
-using Reaqtive.Scheduler;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive.Scheduler;
 
 using Test.Reaqtive.Scheduler.Tasks;
 

@@ -29,22 +29,18 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
     #region Aliases
 
     using Expression = ExpressionSlim;
-    using MemberInitExpression = MemberInitExpressionSlim;
-    using NewExpression = NewExpressionSlim;
-
+    using FieldInfo = FieldInfoSlim;
     using MemberAssignment = MemberAssignmentSlim;
     using MemberBinding = MemberBindingSlim;
+    using MemberInfo = MemberInfoSlim;
+    using MemberInitExpression = MemberInitExpressionSlim;
     using MemberListBinding = MemberListBindingSlim;
     using MemberMemberBinding = MemberMemberBindingSlim;
-
-    using Type = TypeSlim;
-    using FieldInfo = FieldInfoSlim;
-    using PropertyInfo = PropertyInfoSlim;
-    using MemberInfo = MemberInfoSlim;
-
-    using TypeSubstitutionExpressionVisitor = System.Linq.CompilerServices.Bonsai.TypeSubstitutionExpressionSlimVisitor;
-
+    using NewExpression = NewExpressionSlim;
     using Object = ObjectSlim;
+    using PropertyInfo = PropertyInfoSlim;
+    using Type = TypeSlim;
+    using TypeSubstitutionExpressionVisitor = System.Linq.CompilerServices.Bonsai.TypeSubstitutionExpressionSlimVisitor;
 
     #endregion
 

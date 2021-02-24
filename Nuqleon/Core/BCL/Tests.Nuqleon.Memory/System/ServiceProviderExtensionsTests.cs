@@ -8,8 +8,9 @@
 //   BD - 08/06/2015 - Wrote these tests.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {

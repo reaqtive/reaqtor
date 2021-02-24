@@ -20,6 +20,8 @@ using System.Reactive.Threading.Tasks;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Engine;
+
 using Reaqtive;
 using Reaqtive.Operators;
 using Reaqtive.Scheduler;
@@ -28,8 +30,6 @@ using Reaqtor;
 using Reaqtor.Expressions.Core;
 using Reaqtor.QueryEngine;
 using Reaqtor.QueryEngine.KeyValueStore.InMemory;
-
-using Engine;
 
 using Utilities;
 

@@ -8,7 +8,6 @@
 // BD - January 2017 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,6 +16,8 @@ using System.Memory;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Threading;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Reflection.Virtualization
 {

@@ -32,18 +32,15 @@ namespace System.Linq.CompilerServices
 #if USE_SLIM
     #region Aliases
 
-    using Expression = ExpressionSlim;
-
     using ConstructorInfo = ConstructorInfoSlim;
+    using Expression = ExpressionSlim;
+    using ExpressionVisitorWithReflection = ExpressionSlimVisitorWithReflection;
     using FieldInfo = FieldInfoSlim;
     using MemberInfo = MemberInfoSlim;
     using MethodInfo = MethodInfoSlim;
+    using Object = ObjectSlim;
     using PropertyInfo = PropertyInfoSlim;
     using Type = TypeSlim;
-
-    using Object = ObjectSlim;
-
-    using ExpressionVisitorWithReflection = ExpressionSlimVisitorWithReflection;
     using TypeSubstitutor = TypeSlimSubstitutor;
 
     #endregion

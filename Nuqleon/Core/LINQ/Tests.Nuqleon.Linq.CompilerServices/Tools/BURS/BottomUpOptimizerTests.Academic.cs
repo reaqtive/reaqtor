@@ -8,10 +8,12 @@
 // BD - May 2013 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using SampleTrees.Logic;
 using System.IO;
 using System.Linq.CompilerServices;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using SampleTrees.Logic;
 
 namespace Tests.System.Linq.CompilerServices
 {

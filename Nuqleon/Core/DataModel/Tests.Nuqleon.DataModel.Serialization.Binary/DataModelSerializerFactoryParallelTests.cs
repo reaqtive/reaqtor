@@ -4,12 +4,12 @@
 
 using System;
 using System.IO;
-using System.Threading.Tasks;
 using System.Linq;
-
-using Nuqleon.DataModel.Serialization.Binary;
+using System.Threading.Tasks;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.DataModel.Serialization.Binary;
 
 namespace Tests.Nuqleon.DataModel.Serialization.Binary
 {

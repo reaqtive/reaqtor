@@ -14,11 +14,11 @@ using System.IO;
 using System.Linq;
 using System.Text;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor.QueryEngine;
 
 using Utilities;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {

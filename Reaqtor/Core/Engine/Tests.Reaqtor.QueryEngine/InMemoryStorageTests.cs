@@ -4,10 +4,10 @@
 
 using System.IO;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor.QueryEngine;
 using Reaqtor.QueryEngine.KeyValueStore.InMemory;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

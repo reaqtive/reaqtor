@@ -8,6 +8,8 @@ using System.Globalization;
 using System.Linq;
 using System.Reflection;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
@@ -15,8 +17,6 @@ using Reaqtive.TestingFramework;
 using Reaqtor;
 using Reaqtor.Remoting.Protocol;
 using Reaqtor.Remoting.TestingFramework;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.Reaqtor.Remoting.Glitching;
 using Tests.Reaqtor.Remoting.Glitching.Versioning;

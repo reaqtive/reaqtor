@@ -6,8 +6,10 @@
 
 using System;
 using System.Reflection;
-using Nuqleon.Reflection.Emit;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.Reflection.Emit;
 
 namespace Tests.Nuqleon.Linq.CompilerServices.Reflection.Emit
 {

@@ -11,7 +11,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable IDE0049 // Name can be simplified.
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,8 +19,11 @@ using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 #if !USE_SLIM
 using System.Runtime.CompilerServices;
+
 using CS = Microsoft.CSharp.RuntimeBinder;
 using LE = System.Linq.Expressions;
 #endif

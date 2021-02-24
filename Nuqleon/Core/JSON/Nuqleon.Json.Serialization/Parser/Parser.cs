@@ -11,6 +11,7 @@
 //
 
 using Nuqleon.Json.Parser;
+
 #if USE_SPAN
 using System;
 #endif

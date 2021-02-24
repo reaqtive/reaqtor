@@ -8,7 +8,6 @@
 // BD - December 2012
 //
 
-using Nuqleon.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -16,10 +15,12 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
+using Nuqleon.Serialization;
+
 namespace Nuqleon.Linq.Expressions.Serialization
 {
-    using Json = Nuqleon.Json.Expressions;
     using CSharp = Microsoft.CSharp.RuntimeBinder;
+    using Json = Nuqleon.Json.Expressions;
 
     /// <summary>
     /// Rule table for dynamic expression support using the Microsoft.CSharp binders.

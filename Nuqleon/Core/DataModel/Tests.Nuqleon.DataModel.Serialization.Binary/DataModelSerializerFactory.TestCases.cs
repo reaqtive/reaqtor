@@ -3,17 +3,17 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Collections;
 using System.IO;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Nuqleon.DataModel.Serialization.Binary;
 using Nuqleon.DataModel;
+using Nuqleon.DataModel.Serialization.Binary;
 using Nuqleon.DataModel.TypeSystem;
 
 using IExpressionSerializer = Nuqleon.DataModel.Serialization.Binary.IExpressionSerializer;

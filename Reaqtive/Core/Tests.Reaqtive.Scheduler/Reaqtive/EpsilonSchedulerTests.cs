@@ -10,9 +10,9 @@ using System.Runtime.ExceptionServices;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Reaqtive.Scheduler;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive.Scheduler;
 
 using Test.Reaqtive.Scheduler.Tasks;
 

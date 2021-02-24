@@ -8,13 +8,15 @@
 // ER - July 2013 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Collections.ObjectModel;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Reflection;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Tests.System.Linq.Expressions.Bonsai;
 
 namespace Tests.System.Reflection

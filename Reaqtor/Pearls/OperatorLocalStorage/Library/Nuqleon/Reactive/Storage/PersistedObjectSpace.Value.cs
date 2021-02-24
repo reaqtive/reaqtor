@@ -9,8 +9,8 @@
 //
 
 using System;
-using System.Diagnostics;
 using System.Collections.Generic; // NB: Used for XML doc comments.
+using System.Diagnostics;
 using System.IO;
 
 using Reaqtive.Serialization;

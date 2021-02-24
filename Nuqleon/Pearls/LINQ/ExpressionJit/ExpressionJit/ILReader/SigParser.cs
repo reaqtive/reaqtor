@@ -7,10 +7,10 @@
 #pragma warning disable
 
 using sig_byte = System.Byte;
-using sig_elem_type = System.Byte;
-using sig_index_type = System.Byte;
-using sig_index = System.Int32;
 using sig_count = System.Int32;
+using sig_elem_type = System.Byte;
+using sig_index = System.Int32;
+using sig_index_type = System.Byte;
 using sig_mem_number = System.Int32;
 
 namespace System.Linq.Expressions.Tests
@@ -486,14 +486,14 @@ namespace System.Linq.Expressions.Tests
             if (!ParseType())
                 return false;
 
-            Success:
+Success:
             NotifyEndLocal();
             return true;
         }
 
         bool ParseOptionalCustomModsOrConstraint()
         {
-            for (;;)
+            for (; ; )
             {
                 if (pbCur >= pbEnd)
                     return true;
@@ -519,7 +519,7 @@ namespace System.Linq.Expressions.Tests
 
         bool ParseOptionalCustomMods()
         {
-            for (;;)
+            for (; ; )
             {
                 if (pbCur >= pbEnd)
                     return true;
@@ -589,7 +589,7 @@ namespace System.Linq.Expressions.Tests
             if (!ParseType())
                 return false;
 
-            Success:
+Success:
             NotifyEndParam();
             return true;
         }
@@ -629,7 +629,7 @@ namespace System.Linq.Expressions.Tests
             if (!ParseType())
                 return false;
 
-            Success:
+Success:
             NotifyEndRetType();
             return true;
         }

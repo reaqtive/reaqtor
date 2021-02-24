@@ -16,17 +16,16 @@ using System.Reflection;
 namespace System.Linq.Expressions.Bonsai.Serialization.Binary
 {
 #if USE_SLIM
-    using Object = ObjectSlim;
-
-    using Expression = ExpressionSlim;
-
+    using Assembly = AssemblySlim;
     using BinaryExpression = BinaryExpressionSlim;
     using BlockExpression = BlockExpressionSlim;
     using CatchBlock = CatchBlockSlim;
     using ConditionalExpression = ConditionalExpressionSlim;
     using ConstantExpression = ConstantExpressionSlim;
+    using ConstructorInfo = ConstructorInfoSlim;
     using DefaultExpression = DefaultExpressionSlim;
     using ElementInit = ElementInitSlim;
+    using Expression = ExpressionSlim;
     using GotoExpression = GotoExpressionSlim;
     using IndexExpression = IndexExpressionSlim;
     using InvocationExpression = InvocationExpressionSlim;
@@ -37,23 +36,21 @@ namespace System.Linq.Expressions.Bonsai.Serialization.Binary
     using LoopExpression = LoopExpressionSlim;
     using MemberBinding = MemberBindingSlim;
     using MemberExpression = MemberExpressionSlim;
+    using MemberInfo = MemberInfoSlim;
     using MemberInitExpression = MemberInitExpressionSlim;
     using MethodCallExpression = MethodCallExpressionSlim;
-    using NewExpression = NewExpressionSlim;
+    using MethodInfo = MethodInfoSlim;
     using NewArrayExpression = NewArrayExpressionSlim;
+    using NewExpression = NewExpressionSlim;
+    using Object = ObjectSlim;
     using ParameterExpression = ParameterExpressionSlim;
+    using PropertyInfo = PropertyInfoSlim;
     using SwitchCase = SwitchCaseSlim;
     using SwitchExpression = SwitchExpressionSlim;
     using TryExpression = TryExpressionSlim;
+    using Type = TypeSlim;
     using TypeBinaryExpression = TypeBinaryExpressionSlim;
     using UnaryExpression = UnaryExpressionSlim;
-
-    using ConstructorInfo = ConstructorInfoSlim;
-    using MemberInfo = MemberInfoSlim;
-    using MethodInfo = MethodInfoSlim;
-    using PropertyInfo = PropertyInfoSlim;
-    using Type = TypeSlim;
-    using Assembly = AssemblySlim;
 #endif
 
     public partial class ExpressionSerializer

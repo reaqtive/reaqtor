@@ -9,9 +9,9 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Reaqtor.QueryEngine;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor.QueryEngine;
 
 namespace Tests.Reaqtor.QueryEngine
 {

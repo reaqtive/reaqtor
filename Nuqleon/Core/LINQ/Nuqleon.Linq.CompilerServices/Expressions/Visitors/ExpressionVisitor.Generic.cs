@@ -30,17 +30,22 @@ namespace System.Linq.CompilerServices
     using ConditionalExpressionAlias = ConditionalExpressionSlim;
     using ConstantExpressionAlias = ConstantExpressionSlim;
     using DefaultExpressionAlias = DefaultExpressionSlim;
+    using ElementInitAlias = ElementInitSlim;
     using ExpressionAlias = ExpressionSlim;
     using GotoExpressionAlias = GotoExpressionSlim;
     using IndexExpressionAlias = IndexExpressionSlim;
     using InvocationExpressionAlias = InvocationExpressionSlim;
-    using LabelTargetAlias = LabelTargetSlim;
     using LabelExpressionAlias = LabelExpressionSlim;
+    using LabelTargetAlias = LabelTargetSlim;
     using LambdaExpressionAlias = LambdaExpressionSlim;
     using ListInitExpressionAlias = ListInitExpressionSlim;
     using LoopExpressionAlias = LoopExpressionSlim;
+    using MemberAssignmentAlias = MemberAssignmentSlim;
+    using MemberBindingAlias = MemberBindingSlim;
     using MemberExpressionAlias = MemberExpressionSlim;
     using MemberInitExpressionAlias = MemberInitExpressionSlim;
+    using MemberListBindingAlias = MemberListBindingSlim;
+    using MemberMemberBindingAlias = MemberMemberBindingSlim;
     using MethodCallExpressionAlias = MethodCallExpressionSlim;
     using NewArrayExpressionAlias = NewArrayExpressionSlim;
     using NewExpressionAlias = NewExpressionSlim;
@@ -50,12 +55,6 @@ namespace System.Linq.CompilerServices
     using TryExpressionAlias = TryExpressionSlim;
     using TypeBinaryExpressionAlias = TypeBinaryExpressionSlim;
     using UnaryExpressionAlias = UnaryExpressionSlim;
-
-    using ElementInitAlias = ElementInitSlim;
-    using MemberAssignmentAlias = MemberAssignmentSlim;
-    using MemberBindingAlias = MemberBindingSlim;
-    using MemberListBindingAlias = MemberListBindingSlim;
-    using MemberMemberBindingAlias = MemberMemberBindingSlim;
 
     #endregion
 #else
@@ -67,16 +66,21 @@ namespace System.Linq.CompilerServices
     using ConditionalExpressionAlias = ConditionalExpression;
     using ConstantExpressionAlias = ConstantExpression;
     using DefaultExpressionAlias = DefaultExpression;
+    using ElementInitAlias = ElementInit;
     using ExpressionAlias = Expression;
     using GotoExpressionAlias = GotoExpression;
     using IndexExpressionAlias = IndexExpression;
     using InvocationExpressionAlias = InvocationExpression;
-    using LabelTargetAlias = LabelTarget;
     using LabelExpressionAlias = LabelExpression;
+    using LabelTargetAlias = LabelTarget;
     using ListInitExpressionAlias = ListInitExpression;
     using LoopExpressionAlias = LoopExpression;
+    using MemberAssignmentAlias = MemberAssignment;
+    using MemberBindingAlias = MemberBinding;
     using MemberExpressionAlias = MemberExpression;
     using MemberInitExpressionAlias = MemberInitExpression;
+    using MemberListBindingAlias = MemberListBinding;
+    using MemberMemberBindingAlias = MemberMemberBinding;
     using MethodCallExpressionAlias = MethodCallExpression;
     using NewArrayExpressionAlias = NewArrayExpression;
     using NewExpressionAlias = NewExpression;
@@ -86,12 +90,6 @@ namespace System.Linq.CompilerServices
     using TryExpressionAlias = TryExpression;
     using TypeBinaryExpressionAlias = TypeBinaryExpression;
     using UnaryExpressionAlias = UnaryExpression;
-
-    using ElementInitAlias = ElementInit;
-    using MemberAssignmentAlias = MemberAssignment;
-    using MemberBindingAlias = MemberBinding;
-    using MemberListBindingAlias = MemberListBinding;
-    using MemberMemberBindingAlias = MemberMemberBinding;
 
     #endregion
 #endif

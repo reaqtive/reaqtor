@@ -4,12 +4,12 @@
 
 using System;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
+using Reaqtive.Linq;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
-using Reaqtive.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Reaqtive.Operators
 {

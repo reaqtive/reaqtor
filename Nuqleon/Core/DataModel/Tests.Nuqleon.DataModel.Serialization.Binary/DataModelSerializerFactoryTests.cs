@@ -11,11 +11,11 @@ using System.Linq.Expressions;
 using System.Runtime.CompilerServices;
 using System.Threading;
 
-using Nuqleon.DataModel.Serialization.Binary;
-using Nuqleon.DataModel;
-using Nuqleon.DataModel.TypeSystem;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.DataModel;
+using Nuqleon.DataModel.Serialization.Binary;
+using Nuqleon.DataModel.TypeSystem;
 
 namespace Tests.Nuqleon.DataModel.Serialization.Binary
 {

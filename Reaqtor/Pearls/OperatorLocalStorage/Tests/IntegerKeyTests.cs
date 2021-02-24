@@ -9,8 +9,10 @@
 //
 
 using System;
-using Reaqtive.Storage;
+
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive.Storage;
 
 namespace Tests
 {

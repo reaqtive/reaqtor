@@ -8,9 +8,10 @@
 //   BD - 03/30/2016 - Created StringSegment functionality.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Text;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {

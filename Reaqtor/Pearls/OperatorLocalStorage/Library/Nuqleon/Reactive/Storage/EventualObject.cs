@@ -8,8 +8,9 @@
 // BD - January 2018
 //
 
-using Reaqtive.Serialization;
 using System.IO;
+
+using Reaqtive.Serialization;
 
 namespace Reaqtive.Storage
 {

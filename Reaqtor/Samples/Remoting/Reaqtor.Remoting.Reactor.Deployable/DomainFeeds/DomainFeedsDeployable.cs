@@ -16,6 +16,7 @@ namespace Reaqtor.Remoting.Reactor.DomainFeeds
     using DataModels.News;
     using DataModels.Traffic;
     using DataModels.Weather;
+
     using Observables;
 
     /// <summary>

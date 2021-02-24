@@ -8,12 +8,13 @@
 // ER, BD - November 2013 - Created this file.
 //
 
-using Nuqleon.DataModel.TypeSystem;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Reflection;
+
+using Nuqleon.DataModel.TypeSystem;
 
 namespace Nuqleon.DataModel.CompilerServices.Bonsai
 {

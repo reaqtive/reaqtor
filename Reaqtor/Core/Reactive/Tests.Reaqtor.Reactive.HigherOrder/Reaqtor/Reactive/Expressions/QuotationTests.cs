@@ -11,12 +11,12 @@ using System.Memory;
 using System.Reflection;
 using System.Threading;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Expressions;
 
 using Reaqtor.Reactive.Expressions;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Reaqtor.Expressions
 {

@@ -5,13 +5,14 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1062 // Validate arguments of public methods. (Omitting null checks for protected methods.)
 
-using Reaqtor.TestingFramework;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Reflection;
+
+using Reaqtor.TestingFramework;
 
 namespace Reaqtor.ReificationFramework
 {

@@ -8,10 +8,11 @@
 // BD - December 2012
 //
 
-using Nuqleon.Serialization;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
 using System.Linq.Expressions;
+
+using Nuqleon.Serialization;
 
 namespace Nuqleon.Linq.Expressions.Serialization
 {

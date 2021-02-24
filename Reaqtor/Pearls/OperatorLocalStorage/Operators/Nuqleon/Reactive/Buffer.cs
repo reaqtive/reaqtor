@@ -8,10 +8,11 @@
 // BD - February 2018
 //
 
-using Reaqtive.Scheduler;
-using Reaqtive.Storage;
 using System;
 using System.Collections.Generic;
+
+using Reaqtive.Scheduler;
+using Reaqtive.Storage;
 
 namespace Reaqtive.Operators
 {

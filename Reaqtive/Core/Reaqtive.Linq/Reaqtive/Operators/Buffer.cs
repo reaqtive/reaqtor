@@ -2,10 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using Reaqtive.Scheduler;
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+
+using Reaqtive.Scheduler;
 
 namespace Reaqtive.Operators
 {

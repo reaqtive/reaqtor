@@ -8,11 +8,13 @@
 // BD - May 2014
 //
 
-using Nuqleon.Serialization;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Linq.Expressions;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.Serialization;
 
 namespace Tests.Microsoft.Serialization
 {

@@ -8,7 +8,6 @@
 // BD - May 2013 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -17,7 +16,11 @@ using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;
 using System.Reflection;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Tests.VisualBasic;
+
 using TypeExtensions = System.TypeExtensions;
 
 namespace Tests.System.Linq.CompilerServices

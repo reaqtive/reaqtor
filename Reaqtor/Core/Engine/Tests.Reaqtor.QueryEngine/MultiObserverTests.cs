@@ -5,11 +5,11 @@
 using System;
 using System.Linq;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 
 using Reaqtor.QueryEngine;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

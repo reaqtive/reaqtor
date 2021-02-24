@@ -7,9 +7,9 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
-using Reaqtive;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive;
 
 namespace Test.Reaqtive
 {

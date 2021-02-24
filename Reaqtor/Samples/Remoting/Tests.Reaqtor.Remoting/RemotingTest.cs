@@ -9,6 +9,8 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
@@ -16,8 +18,6 @@ using Reaqtive.TestingFramework;
 using Reaqtor;
 using Reaqtor.Remoting.Reactor.Client;
 using Reaqtor.Remoting.TestingFramework;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Constants = Reaqtor.Remoting.Client.Constants;
 using PlatformConstants = Reaqtor.Remoting.Platform.Constants;

@@ -5,14 +5,14 @@
 using System;
 using System.Linq.CompilerServices.TypeSystem;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtive;
 using Reaqtive.Scheduler;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework.Mocks;
 
 using Reaqtor;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

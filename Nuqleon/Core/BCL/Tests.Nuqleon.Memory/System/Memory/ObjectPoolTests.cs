@@ -9,11 +9,12 @@
 //   BD - 07/29/2015 - Added tests for pooling of objects without IFreeable.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Memory;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {

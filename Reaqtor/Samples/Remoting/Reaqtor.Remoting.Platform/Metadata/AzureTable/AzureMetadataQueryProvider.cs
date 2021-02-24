@@ -13,9 +13,9 @@ using System.Linq.Expressions;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Reaqtor.Metadata;
-
 using Microsoft.Azure.Cosmos.Table;
+
+using Reaqtor.Metadata;
 
 namespace Reaqtor.Remoting.Metadata
 {

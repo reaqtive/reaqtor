@@ -20,13 +20,12 @@ namespace System.Linq.CompilerServices
 #if USE_SLIM
     #region Aliases
 
-    using Expression = System.Linq.Expressions.ExpressionSlim;
     using BlockExpression = System.Linq.Expressions.BlockExpressionSlim;
     using CatchBlock = System.Linq.Expressions.CatchBlockSlim;
+    using Expression = System.Linq.Expressions.ExpressionSlim;
+    using ExpressionVisitor = ExpressionSlimVisitor;
     using LambdaExpression = System.Linq.Expressions.LambdaExpressionSlim;
     using ParameterExpression = System.Linq.Expressions.ParameterExpressionSlim;
-
-    using ExpressionVisitor = ExpressionSlimVisitor;
 
     #endregion
 #endif

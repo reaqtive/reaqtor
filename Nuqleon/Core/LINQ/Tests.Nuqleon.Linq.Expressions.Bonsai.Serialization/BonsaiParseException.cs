@@ -9,7 +9,9 @@
 //
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using System.Linq.Expressions.Bonsai.Serialization;
+
 using Json = Nuqleon.Json.Expressions;
 
 #if !NET5_0 // https://aka.ms/binaryformatter

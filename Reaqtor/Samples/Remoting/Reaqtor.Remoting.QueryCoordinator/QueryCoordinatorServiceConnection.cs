@@ -2,13 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using Reaqtor.Remoting.Client;
-using Reaqtor.Remoting.Metadata;
-using Reaqtor.Remoting.Protocol;
 using System;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
+
+using Reaqtor.Remoting.Client;
+using Reaqtor.Remoting.Metadata;
+using Reaqtor.Remoting.Protocol;
 
 namespace Reaqtor.Remoting.QueryCoordinator
 {

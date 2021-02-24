@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+
 using Reaqtive.Tasks;
 
 namespace Reaqtive.Operators

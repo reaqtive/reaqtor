@@ -9,6 +9,7 @@
 //
 
 using System.Linq.Expressions;
+
 using Reaqtor;
 
 namespace Tests.Reaqtor.Client

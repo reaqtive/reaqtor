@@ -13,8 +13,8 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Reaqtor.Remoting.Protocol;
 using Reaqtor.Hosting.Shared.Serialization;
+using Reaqtor.Remoting.Protocol;
 
 namespace Reaqtor.Remoting.Client
 {

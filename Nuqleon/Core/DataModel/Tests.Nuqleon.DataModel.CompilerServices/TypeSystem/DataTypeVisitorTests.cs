@@ -16,9 +16,9 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Nuqleon.DataModel.TypeSystem;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Nuqleon.DataModel.TypeSystem;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
 {

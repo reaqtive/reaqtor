@@ -19,12 +19,12 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Nuqleon.DataModel;
-using Nuqleon.DataModel.CompilerServices;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using MijnEntiteiten;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using Nuqleon.DataModel;
+using Nuqleon.DataModel.CompilerServices;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices
 {

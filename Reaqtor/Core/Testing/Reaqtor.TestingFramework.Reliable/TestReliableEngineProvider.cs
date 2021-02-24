@@ -16,10 +16,10 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Reaqtor.Reliable.Engine;
-using Reaqtor.Reliable.Client;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor.Reliable.Client;
+using Reaqtor.Reliable.Engine;
 
 namespace Reaqtor.TestingFramework
 {

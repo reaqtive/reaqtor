@@ -12,9 +12,9 @@ using System.Globalization;
 using System.Linq;
 using System.Text;
 
-using Reaqtive.Linq;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive.Linq;
 
 namespace Reaqtive.Testing
 {

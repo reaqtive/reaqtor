@@ -8,6 +8,7 @@ using System.Text;
 using BenchmarkDotNet.Attributes;
 
 using Newtonsoft.Json;
+
 using Nuqleon.Json.Serialization;
 
 namespace Perf.Nuqleon.Json.Serialization

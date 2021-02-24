@@ -9,6 +9,7 @@
 //
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Nuqleon.Json.Serialization;
 
 namespace Tests

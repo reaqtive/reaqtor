@@ -14,6 +14,7 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Reflection;
+
 using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
@@ -24,40 +25,34 @@ namespace System.Linq.Expressions.Bonsai.Serialization
     // This makes diffing with the original Bonsai serializer easier.
     //
 
-    using Visitor = ExpressionSlimVisitor<Json.Expression, Json.Expression, Json.Expression, Json.Expression, Json.Expression, Json.Expression>;
-
-    using Object = ObjectSlim;
-
-    using Type = System.Reflection.TypeSlim;
-    using MemberInfo = System.Reflection.MemberInfoSlim;
-
-    using LabelTarget = System.Linq.Expressions.LabelTargetSlim;
-
-    using Expression = System.Linq.Expressions.ExpressionSlim;
     using BinaryExpression = System.Linq.Expressions.BinaryExpressionSlim;
     using BlockExpression = System.Linq.Expressions.BlockExpressionSlim;
     using ConditionalExpression = System.Linq.Expressions.ConditionalExpressionSlim;
     using ConstantExpression = System.Linq.Expressions.ConstantExpressionSlim;
     using DefaultExpression = System.Linq.Expressions.DefaultExpressionSlim;
+    using ElementInit = System.Linq.Expressions.ElementInitSlim;
+    using Expression = System.Linq.Expressions.ExpressionSlim;
     using IndexExpression = System.Linq.Expressions.IndexExpressionSlim;
     using InvocationExpression = System.Linq.Expressions.InvocationExpressionSlim;
-    using LambdaExpression = System.Linq.Expressions.LambdaExpressionSlim;
     using LabelExpression = System.Linq.Expressions.LabelExpressionSlim;
+    using LabelTarget = System.Linq.Expressions.LabelTargetSlim;
+    using LambdaExpression = System.Linq.Expressions.LambdaExpressionSlim;
     using ListInitExpression = System.Linq.Expressions.ListInitExpressionSlim;
-    using MemberExpression = System.Linq.Expressions.MemberExpressionSlim;
-    using MemberInitExpression = System.Linq.Expressions.MemberInitExpressionSlim;
-    using MethodCallExpression = System.Linq.Expressions.MethodCallExpressionSlim;
-    using NewExpression = System.Linq.Expressions.NewExpressionSlim;
-    using NewArrayExpression = System.Linq.Expressions.NewArrayExpressionSlim;
-    using ParameterExpression = System.Linq.Expressions.ParameterExpressionSlim;
-    using TypeBinaryExpression = System.Linq.Expressions.TypeBinaryExpressionSlim;
-    using UnaryExpression = System.Linq.Expressions.UnaryExpressionSlim;
-
-    using ElementInit = System.Linq.Expressions.ElementInitSlim;
-
     using MemberAssignment = System.Linq.Expressions.MemberAssignmentSlim;
+    using MemberExpression = System.Linq.Expressions.MemberExpressionSlim;
+    using MemberInfo = System.Reflection.MemberInfoSlim;
+    using MemberInitExpression = System.Linq.Expressions.MemberInitExpressionSlim;
     using MemberListBinding = System.Linq.Expressions.MemberListBindingSlim;
     using MemberMemberBinding = System.Linq.Expressions.MemberMemberBindingSlim;
+    using MethodCallExpression = System.Linq.Expressions.MethodCallExpressionSlim;
+    using NewArrayExpression = System.Linq.Expressions.NewArrayExpressionSlim;
+    using NewExpression = System.Linq.Expressions.NewExpressionSlim;
+    using Object = ObjectSlim;
+    using ParameterExpression = System.Linq.Expressions.ParameterExpressionSlim;
+    using Type = System.Reflection.TypeSlim;
+    using TypeBinaryExpression = System.Linq.Expressions.TypeBinaryExpressionSlim;
+    using UnaryExpression = System.Linq.Expressions.UnaryExpressionSlim;
+    using Visitor = ExpressionSlimVisitor<Json.Expression, Json.Expression, Json.Expression, Json.Expression, Json.Expression, Json.Expression>;
 
     #endregion
 

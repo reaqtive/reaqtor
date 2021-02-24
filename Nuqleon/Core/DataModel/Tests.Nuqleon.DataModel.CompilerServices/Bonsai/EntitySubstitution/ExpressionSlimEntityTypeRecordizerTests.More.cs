@@ -15,10 +15,10 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Nuqleon.DataModel;
 using Nuqleon.DataModel.CompilerServices;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #if NETFRAMEWORK
 using System.IO;

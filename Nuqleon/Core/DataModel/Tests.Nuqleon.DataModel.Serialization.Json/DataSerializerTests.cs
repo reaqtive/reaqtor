@@ -17,11 +17,11 @@ using System.Linq.Expressions;
 using System.Linq.Expressions.Bonsai.Serialization;
 using System.Reflection;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Newtonsoft.Json;
 
 using Nuqleon.DataModel.Serialization.Json;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using JsonExpression = Nuqleon.Json.Expressions.Expression;
 

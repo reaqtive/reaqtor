@@ -9,9 +9,9 @@ using System.Linq.Expressions;
 using System.Memory;
 using System.Reflection;
 
-using Reaqtive.Expressions;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive.Expressions;
 
 namespace Test.Reaqtive.Expressions
 {

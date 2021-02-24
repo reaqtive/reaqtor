@@ -15,9 +15,9 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Reaqtor;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor;
 
 namespace Tests.Reaqtor
 {

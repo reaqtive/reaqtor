@@ -6,9 +6,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-using Reaqtor;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor;
 
 namespace Tests.Reaqtor.Shared.Core.Reaqtor
 {

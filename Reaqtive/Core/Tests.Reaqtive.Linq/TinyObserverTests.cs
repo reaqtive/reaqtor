@@ -4,9 +4,9 @@
 
 using System;
 
-using Reaqtive;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive;
 
 namespace Test.Reaqtive
 {

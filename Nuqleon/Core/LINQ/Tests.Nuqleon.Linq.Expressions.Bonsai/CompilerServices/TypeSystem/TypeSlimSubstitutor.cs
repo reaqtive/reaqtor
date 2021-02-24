@@ -8,12 +8,13 @@
 // ER - October 2013 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System;
-using System.Reflection;
 using System.Collections.Generic;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.Bonsai;
+using System.Reflection;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 {

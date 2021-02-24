@@ -8,9 +8,9 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 
-using Reaqtive.Scheduler;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtive.Scheduler;
 
 namespace Tests.Reaqtive.Scheduler
 {
