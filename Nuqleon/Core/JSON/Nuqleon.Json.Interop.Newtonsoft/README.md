@@ -11,7 +11,7 @@ The `JsonExpressionReader` class inherits from Newtonsoft's `JsonReader` base cl
 ```csharp
 var expr = Nuqleon.Json.Expressions.Expression.Parse("{ \"bar\": 42 }");
 var reader = new JsonExpressionReader(expr);
-var serializer = Newtonsoft.Json.JsonSerializer();
+var serializer = new Newtonsoft.Json.JsonSerializer();
 var res = serializer.Deserialize(reader);
 ```
 
@@ -22,7 +22,7 @@ The `JsonExpressionWriter` class inherits from Newtonsoft's `JsonWriter` base cl
 ```csharp
 var obj = new { bar = 42 };
 var writer = new JsonExpressionWriter();
-var serializer = Newtonsoft.Json.JsonSerializer();
-var res = serializer.Serialize(obj, writer);
+var serializer = new Newtonsoft.Json.JsonSerializer();
+serializer.Serialize(writer, obj);
 var expr = writer.Expression;
 ```
