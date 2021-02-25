@@ -52,14 +52,17 @@ namespace System.Linq.Expressions
     /// with extreme caution, only if type safety guarantees are provided elsewhere. A typical use of this
     /// factory is for expression deserialization.
     /// </summary>
-    public sealed class ExpressionUnsafeFactory : IExpressionFactory
+    public class ExpressionUnsafeFactory : IExpressionFactory
     {
         /// <summary>
         /// Gets the singleton instance of the factory.
         /// </summary>
-        public static readonly IExpressionFactory Instance = new ExpressionUnsafeFactory();
+        public static readonly ExpressionUnsafeFactory Instance = new();
 
-        private ExpressionUnsafeFactory() {}
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        protected ExpressionUnsafeFactory() {}
 
 <#
 foreach (var m in typeof(Expression).GetMethods().Where(m => m.IsStatic && m.DeclaringType == typeof(Expression)).Where(m => !exclude.Contains(m.Name)).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length))
@@ -87,7 +90,7 @@ foreach (var m in typeof(Expression).GetMethods().Where(m => m.IsStatic && m.Dec
 #>
 <#=doc#>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public <#=ret#> <#=name#><#=genArgs#>(<#=pars#>) => ExpressionUnsafe.<#=name#><#=genArgs#>(<#=args#>);
+        public virtual <#=ret#> <#=name#><#=genArgs#>(<#=pars#>) => ExpressionUnsafe.<#=name#><#=genArgs#>(<#=args#>);
 
 <#
 }
