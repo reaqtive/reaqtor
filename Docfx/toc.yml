@@ -1,18 +1,17 @@
 - name: Docs
   href: /documentation/
-- items:
-  - name: API
-    href: index.md
-  - items:
-    - name: Nuqleon
-      href: api/nuqleon/
-      homepage: nuqleon/index.md
-    - name: Reaqtive
-      href: api/reaqtive/
-      homepage: reaqtive/index.md
-    - name: Reaqtor
-      href: api/reaqtor/
-      homepage: reaqtor/index.md
+- name: API
+  href: index.md
+  items:
+  - name: Nuqleon
+    href: api/nuqleon/
+    homepage: nuqleon/index.md
+  - name: Reaqtive
+    href: api/reaqtive/
+    homepage: reaqtive/index.md
+  - name: Reaqtor
+    href: api/reaqtor/
+    homepage: reaqtor/index.md
 - name: Demos
   href: /download/
 - name: Download
