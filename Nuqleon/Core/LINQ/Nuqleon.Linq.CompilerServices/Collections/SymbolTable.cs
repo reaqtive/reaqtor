@@ -49,6 +49,11 @@ namespace System.Linq.CompilerServices
         }
 
         /// <summary>
+        /// Gets the comparer used to compare symbols.
+        /// </summary>
+        public IEqualityComparer<TSymbol> Comparer => _table.Comparer;
+
+        /// <summary>
         /// Gets the parent symbol table. Returns null if no parent table was specified during creation of the symbol table.
         /// </summary>
         public SymbolTable<TSymbol, TValue> Parent { get; }

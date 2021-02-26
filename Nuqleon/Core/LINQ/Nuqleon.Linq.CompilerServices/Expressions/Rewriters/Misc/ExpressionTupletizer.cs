@@ -53,8 +53,9 @@ namespace System.Linq.CompilerServices
         /// Packs the specified expressions into an expression that creates a tuple of the expressions.
         /// </summary>
         /// <param name="expressions">Expressions to pack in a tuple.</param>
+        /// <param name="setNewExpressionMembers">Specifies if the resulting expression should populate <see cref="NewExpression.Members"/>.</param>
         /// <returns>Expression representing the creation of a tuple of the given expressions.</returns>
-        public static Expression Pack(IEnumerable<Expression> expressions)
+        public static Expression Pack(IEnumerable<Expression> expressions, bool setNewExpressionMembers = true)
         {
             if (expressions == null)
                 throw new ArgumentNullException(nameof(expressions));
@@ -77,7 +78,7 @@ namespace System.Linq.CompilerServices
                 }
             }
 
-            return PackImpl(exprs);
+            return PackImpl(exprs, setNewExpressionMembers);
         }
 
         /// <summary>
@@ -267,7 +268,7 @@ namespace System.Linq.CompilerServices
             return PackImpl(expression.Body, expression.Parameters, voidType);
         }
 
-        private static LambdaExpression PackImpl(Expression body, IList<ParameterExpression> parameters, Type voidType)
+        private static LambdaExpression PackImpl(Expression body, IReadOnlyList<ParameterExpression> parameters, Type voidType)
         {
             if (parameters.Count == 0)
             {
@@ -281,15 +282,11 @@ namespace System.Linq.CompilerServices
                 }
             }
 
-#if USE_SLIM
-            var tupleType = Derive(Pack(parameters));
-#else
-            var tupleType = Pack(parameters).Type;
-#endif
+            var tupleType = GetTupleType(parameters);
 
             var tupleParameter = Expression.Parameter(tupleType, "t");
 
-            var map = new Dictionary<ParameterExpression, Expression>();
+            var map = new Dictionary<ParameterExpression, Expression>(parameters.Count);
 
             var lhs = (Expression)tupleParameter;
             const int restPosition = TupleTypeCount - 1 /* T1..T7,TRest */;
@@ -498,11 +495,7 @@ namespace System.Linq.CompilerServices
                     }
                     else
                     {
-#if NET5_0 || NETSTANDARD2_1
-                        n = int.Parse(name[4.. /* "Item".Length */], CultureInfo.InvariantCulture);
-#else
-                        n = int.Parse(name.Substring(4 /* "Item".Length */), CultureInfo.InvariantCulture);
-#endif
+                        n = name[4 /* "Item".Length */] - '0';
                     }
 
                     if (node.Expression is MemberExpression lhs && IsTupleAccessor(lhs, out position))
@@ -537,7 +530,58 @@ namespace System.Linq.CompilerServices
             }
         }
 
-        private static NewExpression PackImpl(Expression[] expressions)
+        private static Type GetTupleType(IReadOnlyList<Expression> expressions)
+        {
+            var n = expressions.Count;
+
+            const int max = TupleTypeCount - 2 /* T1..T7 */;
+
+            var fst = (n / max) * max;
+            var rem = n - fst;
+
+            if (rem == 0)
+            {
+                fst = n - max;
+                rem = max;
+            }
+
+            var tuple = default(Type);
+
+            for (var i = fst; i >= 0; i -= max)
+            {
+                var len = rem + (tuple != null ? 1 : 0);
+
+                var args = new Type[len];
+
+                for (var j = 0; j < rem; j++)
+                {
+#if USE_SLIM
+                    args[j] = Derive(expressions[i + j]);
+#else
+                    args[j] = expressions[i + j].Type;
+#endif
+                }
+
+                if (tuple != null)
+                {
+                    args[len - 1] = tuple;
+                }
+
+                tuple = TupleTypes[args.Length].MakeGenericType(
+#if USE_SLIM
+                    args.ToReadOnly()
+#else
+                    args
+#endif
+                );
+
+                rem = max;
+            }
+
+            return tuple;
+        }
+
+        private static NewExpression PackImpl(Expression[] expressions, bool setNewExpressionMembers)
         {
             var n = expressions.Length;
 
@@ -566,34 +610,57 @@ namespace System.Linq.CompilerServices
                     args[len - 1] = tuple;
                 }
 
+                var types = new Type[args.Length];
+
+                for (var j = 0; j < args.Length; j++)
+                {
 #if USE_SLIM
-                var types = args.Select(Derive).ToReadOnly();
+                    types[j] = Derive(args[j]);
 #else
-                var types = args.Select(arg => arg.Type).ToArray();
+                    types[j] = args[j].Type;
 #endif
+                }
+
+#if USE_SLIM
+                var typesReadOnly = types.ToReadOnly();
+
+                var tupleType = TupleTypes[args.Length].MakeGenericType(typesReadOnly);
+
+                var ctor = tupleType.GetConstructor(typesReadOnly);
+#else
                 var tupleType = TupleTypes[args.Length].MakeGenericType(types);
 
-                var members = new PropertyInfo[len];
-                for (var j = 0; j < rem; j++)
-                {
-#if USE_SLIM
-                    var property = tupleType.GetProperty(ItemNames[j + 1], types[j], EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: false);
-#else
-                    var property = tupleType.GetProperty(ItemNames[j + 1]);
+                var ctor = tupleType.GetConstructor(types);
 #endif
-                    members[j] = property;
-                }
 
-                if (tuple != null)
+                if (setNewExpressionMembers)
                 {
+                    var members = new PropertyInfo[len];
+                    for (var j = 0; j < rem; j++)
+                    {
 #if USE_SLIM
-                    members[len - 1] = tupleType.GetProperty("Rest", types[len - 1], EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: false);
+                        var property = tupleType.GetProperty(ItemNames[j + 1], types[j], EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: false);
 #else
-                    members[len - 1] = tupleType.GetProperty("Rest");
+                        var property = tupleType.GetProperty(ItemNames[j + 1]);
 #endif
-                }
+                        members[j] = property;
+                    }
 
-                tuple = Expression.New(tupleType.GetConstructor(types), args, members);
+                    if (tuple != null)
+                    {
+#if USE_SLIM
+                        members[len - 1] = tupleType.GetProperty("Rest", types[len - 1], EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: false);
+#else
+                        members[len - 1] = tupleType.GetProperty("Rest");
+#endif
+                    }
+
+                    tuple = Expression.New(ctor, args, members);
+                }
+                else
+                {
+                    tuple = Expression.New(ctor, args);
+                }
 
                 rem = max;
             }

@@ -391,7 +391,7 @@ where `<>__blah` is some compiler-generated identifier. This can make debug outp
 
 ### Constant hoisting
 
-Contant expressions often occur in expression trees due to partial evaluation of locals at the point of rewriting an expression for submission to a service. For example:
+Constant expressions often occur in expression trees due to partial evaluation of locals at the point of rewriting an expression for submission to a service. For example:
 
 ```csharp
 int a = 41;
@@ -514,7 +514,7 @@ var subst = new TypeSubstitutionExpressionVisitor(new Dictionary<Type, Type>
 Expression rewritten = subst.Apply(expr);
 ```
 
-By default, members are located by finding a member with the same name (and parameter types, after type substitution in child nodes, in case of methods and constructors) on the target type. For example, when rewriting `dt => dt.Now.AddDays(1)` from `DateTime` to `DateTimeOffset`, both `Now` and `AddDays` will be located successfully.
+By default, members are located by finding a member with the same name (and parameter types, after type substitution in child nodes, in case of methods and constructors) on the target type. For example, when rewriting `() => DateTime.Now.AddDays(1)` from `DateTime` to `DateTimeOffset`, both `Now` and `AddDays` will be located successfully.
 
 However, if more advanced rules are needed to retarget members on types, a subclass of `TypeSubstitutionExpressionVisitor` can be used to override various `Resolve*` methods. An an example, consider the method used to resolve a `MethodInfo`:
 
