@@ -92,7 +92,12 @@ namespace System.Linq.CompilerServices
             if (parameters == null)
                 throw new ArgumentNullException(nameof(parameters));
 
-            PushCore(parameters.Select(p => new KeyValuePair<ParameterExpression, TState>(p, GetState(p))));
+            _symbolTable.Push();
+
+            foreach (var parameter in parameters)
+            {
+                _symbolTable.Add(parameter, GetState(parameter));
+            }
         }
 
         /// <summary>
@@ -104,16 +109,6 @@ namespace System.Linq.CompilerServices
             if (scope == null)
                 throw new ArgumentNullException(nameof(scope));
 
-            PushCore(scope);
-        }
-
-        /// <summary>
-        /// Pops a scope from the symbol table.
-        /// </summary>
-        protected override void Pop() => _symbolTable.Pop();
-
-        private void PushCore(IEnumerable<KeyValuePair<ParameterExpression, TState>> scope)
-        {
             _symbolTable.Push();
 
             foreach (var entry in scope)
@@ -121,5 +116,10 @@ namespace System.Linq.CompilerServices
                 _symbolTable.Add(entry.Key, entry.Value);
             }
         }
+
+        /// <summary>
+        /// Pops a scope from the symbol table.
+        /// </summary>
+        protected override void Pop() => _symbolTable.Pop();
     }
 }

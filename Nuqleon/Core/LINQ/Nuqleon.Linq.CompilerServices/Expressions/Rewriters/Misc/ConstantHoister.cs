@@ -50,7 +50,6 @@ namespace System.Linq.CompilerServices
         /// Creates a new constant hoister without an exclusion list.
         /// </summary>
         public ConstantHoister()
-            : this(useDefaultForNull: false, Array.Empty<LambdaExpression>())
         {
         }
 
@@ -61,10 +60,7 @@ namespace System.Linq.CompilerServices
         /// <param name="exclusions">Exclusion list for constant sites that should be excluded from hoisting.</param>
         public ConstantHoister(bool useDefaultForNull, params LambdaExpression[] exclusions)
         {
-            if (exclusions == null)
-            {
-                exclusions = Array.Empty<LambdaExpression>();
-            }
+            exclusions ??= Array.Empty<LambdaExpression>();
 
             _useDefaultForNull = useDefaultForNull;
             _holes = new Dictionary<MemberInfo, List<int>>();
@@ -291,7 +287,7 @@ namespace System.Linq.CompilerServices
             public Impl(ConstantHoister parent)
             {
                 _parent = parent;
-                _constants = new Dictionary<object, ParameterExpression>(new TypeAwareComparer());
+                _constants = new Dictionary<object, ParameterExpression>(TypeAwareComparer.Instance);
                 Environment = new List<Binding>();
 
                 if (!_parent._useDefaultForNull)
@@ -302,6 +298,8 @@ namespace System.Linq.CompilerServices
 
             private sealed class TypeAwareComparer : IEqualityComparer<object>
             {
+                public static readonly TypeAwareComparer Instance = new();
+
                 public new bool Equals(object x, object y)
                 {
                     if (x.GetType() != y.GetType())
@@ -321,7 +319,7 @@ namespace System.Linq.CompilerServices
             {
                 if (node.Expression != null)
                 {
-                    if (_parent._holes.TryGetValue(node.Member, out List<int> holes))
+                    if (TryGetHoles(node.Member, out List<int> holes))
                     {
                         var f = VisitArgument(node.Expression, 0, holes);
 
@@ -334,7 +332,7 @@ namespace System.Linq.CompilerServices
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                if (_parent._holes.TryGetValue(node.Method, out List<int> holes))
+                if (TryGetHoles(node.Method, out List<int> holes))
                 {
                     var o = node.Object;
 
@@ -356,7 +354,7 @@ namespace System.Linq.CompilerServices
             {
                 if (node.Constructor != null)
                 {
-                    if (_parent._holes.TryGetValue(node.Constructor, out List<int> holes))
+                    if (TryGetHoles(node.Constructor, out List<int> holes))
                     {
                         var b = VisitArguments(node.Arguments, 0, holes);
                         return node.Update(b);
@@ -430,6 +428,17 @@ namespace System.Linq.CompilerServices
             }
 
             private ParameterExpression GetParameter(ConstantExpression node) => Expression.Parameter(node.Type, "@p" + Environment.Count);
+
+            private bool TryGetHoles(MemberInfo member, out List<int> holes)
+            {
+                if (_parent._holes == null)
+                {
+                    holes = null;
+                    return false;
+                }
+
+                return _parent._holes.TryGetValue(member, out holes);
+            }
         }
     }
 }

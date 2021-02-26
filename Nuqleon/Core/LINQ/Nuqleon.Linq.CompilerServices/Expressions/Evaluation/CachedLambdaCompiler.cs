@@ -159,7 +159,7 @@ namespace System.Linq.Expressions
             //
             // E.g.  outline |                                  template expressions
             //      ---------+------------------------------------------------------------------------------------------
-            //          Y    | (a, b) => xs => xs.Bar(a).Foo(b)  and recursively  c => x => x > c  and  d => x => x * 2
+            //          Y    | (a, b) => xs => xs.Bar(a).Foo(b)  and recursively  c => x => x > c  and  d => x => x * d
             //          N    | (c, d) => xs => xs.Bar(x => x > c).Foo(x => x * d)
             //
             var lambda = template.Template;
@@ -205,14 +205,14 @@ namespace System.Linq.Expressions
         {
             var oldBody = lambda.Body;
 
-            var newBody = ExpressionOutliner.Outline(oldBody, l =>
-            {
-                var d = CompileImpl(l, cache, outliningEnabled: true, hoister);
-                var c = Expression.Constant(d, l.Type);
-                return c;
-            });
+            var newBody = ExpressionOutliner.Outline(oldBody, cache, hoister);
 
-            var result = Expression.Lambda(lambda.Type, newBody, lambda.Parameters);
+            if (ReferenceEquals(oldBody, newBody))
+            {
+                return lambda;
+            }
+
+            var result = Expression.Lambda(lambda.Type, newBody, lambda.Name, lambda.TailCall, lambda.Parameters);
 
             return result;
         }
@@ -246,7 +246,52 @@ namespace System.Linq.Expressions
 
                     //
                     // In case you wonder why we're not building a LambdaExpression from the parameters
-                    // and the visited body, the reason is quite subtle. For lambda expressions with an
+                    // and the visited body, there are two reasons.
+                    //
+                    //
+                    // The first reason is due to the way the LambdaCompiler generates code for closures,
+                    // which can be illustrated with this example:
+                    //
+                    //   (c1, c2, c3) => (arg1, arg2) => f(arg1, c1, arg2, c2, c3)
+                    //
+                    // In here, the outermost lambda contains the hoisted constants, and the innermost
+                    // lambda matches the original lambda's signature. When we compile this higher-order
+                    // expression and then invoke the outer delegate to re-supply the constants, we end
+                    // up with a delegate whose target is a System.Runtime.CompilerServices.Closure which
+                    // contains two fields:
+                    //
+                    //   object[] Constants;
+                    //   object[] Locals;
+                    //
+                    // Due to constant hoisting, the first array is empty. The second array will hold
+                    // the variables that are closed over, in the form of StrongBox<T> objects, so we
+                    // end up with the Locals containing:
+                    //
+                    //   new object[]
+                    //   {
+                    //       new StrongBox<T1> { Value = c1 },
+                    //       new StrongBox<T2> { Value = c2 },
+                    //       new StrongBox<T3> { Value = c3 },
+                    //   }
+                    //
+                    // Uses of c1, c2, and c3 inside the inner lambda will effectively become accesses
+                    // to the closure using a field traversal like this:
+                    //
+                    //   ((StrongBox<T1>)closure.Locals[0]).Value
+                    //
+                    // For N constants we have N allocations of a StrongBox<T>. If instead we use a
+                    // single tuple to hold all of the constants, we reduce this cost slightly, at the
+                    // expense of requiring one more property lookup to access the constant at runtime.
+                    //
+                    // NB: We could consider using a ValueTuple in the future (which was added to .NET
+                    //     much later than the original implementation of this library) to avoid the
+                    //     cost of accessing properties, though we should have a hard look at code gen
+                    //     to a) make sure that the JITted code does not already elide the call, and
+                    //     more importantly b) that no copies of ValueTuple values are made, and c) that
+                    //     we don't end up just boxing the ValueTuple and thus undo the potential gains.
+                    //
+                    //
+                    // The second (and original) reason is quite subtle. For lambda expressions with an
                     // arity of 17 and beyond the Expression.Lambda factory method will use lightweight
                     // code generation to create a delegate type. The code for this can be found in:
                     //
@@ -280,7 +325,7 @@ namespace System.Linq.Expressions
                     // specified body and parameters collection.
                     //
                     res.Template = ExpressionTupletizer.Pack(env.Expression, parameters);
-                    res.Argument = ExpressionTupletizer.Pack(arguments);
+                    res.Argument = ExpressionTupletizer.Pack(arguments, setNewExpressionMembers: false);
                 }
 
                 return res;
@@ -301,6 +346,27 @@ namespace System.Linq.Expressions
             private sealed class Impl : ExpressionVisitor
             {
                 private const string ParameterPrefix = "@p";
+                private const int CachedParameterPrefixCount = 16;
+                private static readonly string[] ParameterPrefixes = new string[CachedParameterPrefixCount]
+                {
+                    "@p0",
+                    "@p1",
+                    "@p2",
+                    "@p3",
+                    "@p4",
+                    "@p5",
+                    "@p6",
+                    "@p7",
+                    "@p8",
+                    "@p9",
+                    "@p10",
+                    "@p11",
+                    "@p12",
+                    "@p13",
+                    "@p14",
+                    "@p15"
+                };
+
                 public readonly List<Binding> bindings = new();
 
                 protected override Expression VisitConstant(ConstantExpression node) => MakeBinding(node);
@@ -316,7 +382,10 @@ namespace System.Linq.Expressions
 
                 private Expression MakeBinding(Expression node)
                 {
-                    var paramExpr = Expression.Parameter(node.Type, ParameterPrefix + bindings.Count);
+                    var n = bindings.Count;
+                    var name = n < CachedParameterPrefixCount ? ParameterPrefixes[n] : ParameterPrefix + n;
+
+                    var paramExpr = Expression.Parameter(node.Type, name);
 
                     bindings.Add(new Binding(paramExpr, node));
 
@@ -375,15 +444,21 @@ namespace System.Linq.Expressions
             /// taken when calling this method as not to trigger a stack overflow.
             /// </summary>
             /// <param name="expression">Expression to apply nested lambda expression outlining on.</param>
-            /// <param name="reduce">Function to reduce inner lambda expressions to a simpler for (e.g. a constant delegate expression).</param>
+            /// <param name="cache">Cache to hold any recursively compiled delegates.</param>
+            /// <param name="hoister">Constant hoister used to selectively hoist constants in the specified expression.</param>
             /// <returns>Original expression with outlining steps applied.</returns>
-            public static Expression Outline(Expression expression, Func<LambdaExpression, Expression> reduce) => new Visitor(reduce).Visit(expression);
+            public static Expression Outline(Expression expression, ICompiledDelegateCache cache, IConstantHoister hoister) => new Visitor(cache, hoister).Visit(expression);
 
             private sealed class Visitor : ExpressionVisitor
             {
-                private readonly Func<LambdaExpression, Expression> _reduce;
+                private readonly ICompiledDelegateCache _cache;
+                private readonly IConstantHoister _hoister;
 
-                public Visitor(Func<LambdaExpression, Expression> reduce) => _reduce = reduce;
+                public Visitor(ICompiledDelegateCache cache, IConstantHoister hoister)
+                {
+                    _cache = cache;
+                    _hoister = hoister;
+                }
 
                 protected override Expression VisitUnary(UnaryExpression node)
                 {
@@ -399,7 +474,9 @@ namespace System.Linq.Expressions
                 {
                     if (!FreeVariableScanner.HasFreeVariables(node))
                     {
-                        return _reduce(node);
+                        var d = CompileImpl(node, _cache, outliningEnabled: true, _hoister);
+                        var c = Expression.Constant(d, node.Type);
+                        return c;
                     }
 
                     return base.VisitLambda<T>(node);
