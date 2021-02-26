@@ -11,6 +11,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
+using System.Memory;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
@@ -68,7 +69,7 @@ namespace System.Linq.CompilerServices
 #else
     public class ExpressionEqualityComparator
 #endif
-        : IEqualityComparer<Expression>, IEqualityComparer<MemberBinding>, IEqualityComparer<ElementInit>, IEqualityComparer<CatchBlock>, IEqualityComparer<SwitchCase>
+        : IClearable, IEqualityComparer<Expression>, IEqualityComparer<MemberBinding>, IEqualityComparer<ElementInit>, IEqualityComparer<CatchBlock>, IEqualityComparer<SwitchCase>
     {
         private readonly IEqualityComparer<Type> _typeComparer;
         private readonly IEqualityComparer<MemberInfo> _memberInfoComparer;
@@ -80,8 +81,10 @@ namespace System.Linq.CompilerServices
 
         private readonly IEqualityComparer<CallSiteBinder> _callSiteBinderComparer;
 
-        private readonly Stack<IReadOnlyList<ParameterExpression>> _environmentLeft;
-        private readonly Stack<IReadOnlyList<ParameterExpression>> _environmentRight;
+        private Stack<IReadOnlyList<ParameterExpression>> _environmentLeft;
+        private Stack<IReadOnlyList<ParameterExpression>> _environmentRight;
+
+        private LabelData _labelData;
 
         /// <summary>
         /// Creates a new expression equality comparator with default comparers for types, members, objects, and call site binders.
@@ -93,7 +96,6 @@ namespace System.Linq.CompilerServices
         public ExpressionEqualityComparator()
             : this(EqualityComparer<Type>.Default, EqualityComparer<MemberInfo>.Default, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
 #endif
-
         {
         }
 
@@ -113,11 +115,21 @@ namespace System.Linq.CompilerServices
             _typeComparer = typeComparer;
             _memberInfoComparer = memberInfoComparer;
             _constantExpressionValueComparer = constantExpressionValueComparer;
-
-            _environmentLeft = new Stack<IReadOnlyList<ParameterExpression>>();
-            _environmentRight = new Stack<IReadOnlyList<ParameterExpression>>();
-
             _callSiteBinderComparer = callSiteBinderComparer;
+        }
+
+        private Stack<IReadOnlyList<ParameterExpression>> EnvironmentLeft => _environmentLeft ??= new();
+        private Stack<IReadOnlyList<ParameterExpression>> EnvironmentRight => _environmentRight ??= new();
+        private LabelData BranchTrackingData => _labelData ??= new();
+
+        /// <summary>
+        /// Clears the internal data structures to enable reuse of the instance.
+        /// </summary>
+        public void Clear()
+        {
+            _environmentLeft?.Clear();
+            _environmentRight?.Clear();
+            _labelData?.Clear();
         }
 
         #region Equals
@@ -630,8 +642,8 @@ namespace System.Linq.CompilerServices
                 return false;
             }
 
-            var l = Find(x, _environmentLeft);
-            var r = Find(y, _environmentRight);
+            var l = Find(x, EnvironmentLeft);
+            var r = Find(y, EnvironmentRight);
 
             if (l == null && r == null)
             {
@@ -1300,22 +1312,6 @@ namespace System.Linq.CompilerServices
             return true;
         }
 
-        private Dictionary<LabelTarget, HashSet<LabelTarget>> _labelDefinitionsLeft;
-        private Dictionary<LabelTarget, HashSet<LabelTarget>> _labelDefinitionsRight;
-        private Dictionary<LabelTarget, HashSet<LabelTarget>> _labelGotosLeft;
-        private Dictionary<LabelTarget, HashSet<LabelTarget>> _labelGotosRight;
-
-        private void EnsureBranchTrackingDataStructures()
-        {
-            if (_labelDefinitionsLeft == null)
-            {
-                _labelDefinitionsLeft = new Dictionary<LabelTarget, HashSet<LabelTarget>>();
-                _labelDefinitionsRight = new Dictionary<LabelTarget, HashSet<LabelTarget>>();
-                _labelGotosLeft = new Dictionary<LabelTarget, HashSet<LabelTarget>>();
-                _labelGotosRight = new Dictionary<LabelTarget, HashSet<LabelTarget>>();
-            }
-        }
-
         /// <summary>
         /// Checks whether the two given switch case sequences are equal.
         /// </summary>
@@ -1339,8 +1335,8 @@ namespace System.Linq.CompilerServices
         /// <param name="y">The right parameters.</param>
         protected void EqualsPush(IReadOnlyList<ParameterExpression> x, IReadOnlyList<ParameterExpression> y)
         {
-            _environmentLeft.Push(x);
-            _environmentRight.Push(y);
+            EnvironmentLeft.Push(x);
+            EnvironmentRight.Push(y);
         }
 
         /// <summary>
@@ -1348,8 +1344,8 @@ namespace System.Linq.CompilerServices
         /// </summary>
         protected void EqualsPop()
         {
-            _environmentRight.Pop();
-            _environmentLeft.Pop();
+            EnvironmentRight.Pop();
+            EnvironmentLeft.Pop();
         }
 
         private static bool Equals(GotoExpressionKind x, GotoExpressionKind y) => x == y;
@@ -1366,12 +1362,12 @@ namespace System.Linq.CompilerServices
                 return false;
             }
 
-            EnsureBranchTrackingDataStructures();
+            var labelData = BranchTrackingData;
 
-            UpdateLabelMap(_labelDefinitionsLeft, x, y);
-            UpdateLabelMap(_labelDefinitionsRight, y, x);
+            UpdateLabelMap(labelData.DefinitionsLeft, x, y);
+            UpdateLabelMap(labelData.DefinitionsRight, y, x);
 
-            if (!CheckLabelMap(_labelGotosLeft, x, y) || !CheckLabelMap(_labelGotosRight, y, x))
+            if (!CheckLabelMap(labelData.GotosLeft, x, y) || !CheckLabelMap(labelData.GotosRight, y, x))
             {
                 return false;
             }
@@ -1381,12 +1377,12 @@ namespace System.Linq.CompilerServices
 
         private bool GotoLabelAndCheck(LabelTarget x, LabelTarget y)
         {
-            EnsureBranchTrackingDataStructures();
+            var labelData = BranchTrackingData;
 
-            UpdateLabelMap(_labelGotosLeft, x, y);
-            UpdateLabelMap(_labelGotosRight, y, x);
+            UpdateLabelMap(labelData.GotosLeft, x, y);
+            UpdateLabelMap(labelData.GotosRight, y, x);
 
-            if (!CheckLabelMap(_labelDefinitionsLeft, x, y) || !CheckLabelMap(_labelDefinitionsRight, y, x))
+            if (!CheckLabelMap(labelData.DefinitionsLeft, x, y) || !CheckLabelMap(labelData.DefinitionsRight, y, x))
             {
                 return false;
             }
@@ -1788,7 +1784,7 @@ namespace System.Linq.CompilerServices
             }
 
             var i = 0;
-            foreach (var frame in _environmentLeft)
+            foreach (var frame in EnvironmentLeft)
             {
                 for (int j = 0, n = frame.Count; j < n; j++)
                 {
@@ -2159,12 +2155,12 @@ namespace System.Linq.CompilerServices
         /// Push parameters into the expression environment for hash code computation.
         /// </summary>
         /// <param name="parameters">The parameters.</param>
-        protected void GetHashCodePush(IReadOnlyList<ParameterExpression> parameters) => _environmentLeft.Push(parameters);
+        protected void GetHashCodePush(IReadOnlyList<ParameterExpression> parameters) => EnvironmentLeft.Push(parameters);
 
         /// <summary>
         /// Pop parameters from the expression environments for hash code computation.
         /// </summary>
-        protected void GetHashCodePop() => _environmentLeft.Pop();
+        protected void GetHashCodePop() => EnvironmentLeft.Pop();
 
         private static int GetHashCode(ExpressionType obj) => (int)obj;
 
@@ -2185,6 +2181,19 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given expression sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<Expression> obj)
         {
+#if NET5_0 || NETSTANDARD3_1
+            HashCode h = default;
+
+            if (obj != null)
+            {
+                for (int i = 0, n = obj.Count; i < n; i++)
+                {
+                    h.Add(GetHashCode(obj[i]));
+                }
+            }
+
+            return h.ToHashCode();
+#else
             unchecked
             {
                 var h = 17;
@@ -2199,6 +2208,7 @@ namespace System.Linq.CompilerServices
 
                 return h;
             }
+#endif
         }
 
         /// <summary>
@@ -2208,6 +2218,19 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given parameter expression sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<ParameterExpression> obj)
         {
+#if NET5_0 || NETSTANDARD3_1
+            HashCode h = default;
+
+            if (obj != null)
+            {
+                for (int i = 0, n = obj.Count; i < n; i++)
+                {
+                    h.Add(GetHashCode(obj[i]));
+                }
+            }
+
+            return h.ToHashCode();
+#else
             unchecked
             {
                 var h = 17;
@@ -2222,6 +2245,7 @@ namespace System.Linq.CompilerServices
 
                 return h;
             }
+#endif
         }
 
         /// <summary>
@@ -2231,6 +2255,19 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given member binding sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<MemberBinding> obj)
         {
+#if NET5_0 || NETSTANDARD3_1
+            HashCode h = default;
+
+            if (obj != null)
+            {
+                for (int i = 0, n = obj.Count; i < n; i++)
+                {
+                    h.Add(GetHashCode(obj[i]));
+                }
+            }
+
+            return h.ToHashCode();
+#else
             unchecked
             {
                 var h = 17;
@@ -2245,6 +2282,7 @@ namespace System.Linq.CompilerServices
 
                 return h;
             }
+#endif
         }
 
         /// <summary>
@@ -2254,6 +2292,19 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given element initializer sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<ElementInit> obj)
         {
+#if NET5_0 || NETSTANDARD3_1
+            HashCode h = default;
+
+            if (obj != null)
+            {
+                for (int i = 0, n = obj.Count; i < n; i++)
+                {
+                    h.Add(GetHashCode(obj[i]));
+                }
+            }
+
+            return h.ToHashCode();
+#else
             unchecked
             {
                 var h = 17;
@@ -2268,6 +2319,7 @@ namespace System.Linq.CompilerServices
 
                 return h;
             }
+#endif
         }
 
         /// <summary>
@@ -2277,6 +2329,19 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given switch case sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<SwitchCase> obj)
         {
+#if NET5_0 || NETSTANDARD3_1
+            HashCode h = default;
+
+            if (obj != null)
+            {
+                for (int i = 0, n = obj.Count; i < n; i++)
+                {
+                    h.Add(GetHashCode(obj[i]));
+                }
+            }
+
+            return h.ToHashCode();
+#else
             unchecked
             {
                 var h = 17;
@@ -2291,6 +2356,7 @@ namespace System.Linq.CompilerServices
 
                 return h;
             }
+#endif
         }
 
         /// <summary>
@@ -2300,6 +2366,19 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given catch block sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<CatchBlock> obj)
         {
+#if NET5_0 || NETSTANDARD3_1
+            HashCode h = default;
+
+            if (obj != null)
+            {
+                for (int i = 0, n = obj.Count; i < n; i++)
+                {
+                    h.Add(GetHashCode(obj[i]));
+                }
+            }
+
+            return h.ToHashCode();
+#else
             unchecked
             {
                 var h = 17;
@@ -2314,6 +2393,7 @@ namespace System.Linq.CompilerServices
 
                 return h;
             }
+#endif
         }
 
         /// <summary>
@@ -2324,6 +2404,9 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code composed from the specified values.</returns>
         protected static int Hash(int a, int b)
         {
+#if NET5_0 || NETSTANDARD3_1
+            return HashCode.Combine(a, b);
+#else
             unchecked
             {
                 var h = 17;
@@ -2331,6 +2414,7 @@ namespace System.Linq.CompilerServices
                 h = h * 23 + b;
                 return h;
             }
+#endif
         }
 
         /// <summary>
@@ -2342,6 +2426,9 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code composed from the specified values.</returns>
         protected static int Hash(int a, int b, int c)
         {
+#if NET5_0 || NETSTANDARD3_1
+            return HashCode.Combine(a, b, c);
+#else
             unchecked
             {
                 var h = 17;
@@ -2350,6 +2437,7 @@ namespace System.Linq.CompilerServices
                 h = h * 23 + c;
                 return h;
             }
+#endif
         }
 
         /// <summary>
@@ -2362,6 +2450,9 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code composed from the specified values.</returns>
         protected static int Hash(int a, int b, int c, int d)
         {
+#if NET5_0 || NETSTANDARD3_1
+            return HashCode.Combine(a, b, c, d);
+#else
             unchecked
             {
                 var h = 17;
@@ -2371,10 +2462,27 @@ namespace System.Linq.CompilerServices
                 h = h * 23 + d;
                 return h;
             }
+#endif
         }
 
         #endregion
 
         #endregion
+
+        private sealed class LabelData : IClearable
+        {
+            public Dictionary<LabelTarget, HashSet<LabelTarget>> DefinitionsLeft { get; } = new();
+            public Dictionary<LabelTarget, HashSet<LabelTarget>> DefinitionsRight { get; } = new();
+            public Dictionary<LabelTarget, HashSet<LabelTarget>> GotosLeft { get; } = new();
+            public Dictionary<LabelTarget, HashSet<LabelTarget>> GotosRight { get; } = new();
+
+            public void Clear()
+            {
+                DefinitionsLeft.Clear();
+                DefinitionsRight.Clear();
+                GotosLeft.Clear();
+                GotosRight.Clear();
+            }
+        }
     }
 }

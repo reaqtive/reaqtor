@@ -20,7 +20,6 @@ namespace System.Linq.CompilerServices
     /// <typeparam name="TValue">Type of the values associated with the symbols stored in the table.</typeparam>
     public class ScopedSymbolTable<TSymbol, TValue> : IEnumerable<Indexed<SymbolTable<TSymbol, TValue>>>
     {
-        private readonly IEqualityComparer<TSymbol> _symbolComparer;
         private readonly Stack<SymbolTable<TSymbol, TValue>> _environment;
 
         /// <summary>
@@ -37,8 +36,7 @@ namespace System.Linq.CompilerServices
         /// <param name="symbolComparer">Equality comparer to compare symbols. A scoped symbol table can only contain distinct symbols within each level. Symbols can shadow declarations in the enclosing scope.</param>
         public ScopedSymbolTable(IEqualityComparer<TSymbol> symbolComparer)
         {
-            _symbolComparer = symbolComparer ?? throw new ArgumentNullException(nameof(symbolComparer));
-            GlobalScope = new SymbolTable<TSymbol, TValue>(parent: null, symbolComparer);
+            GlobalScope = new SymbolTable<TSymbol, TValue>(parent: null, symbolComparer ?? throw new ArgumentNullException(nameof(symbolComparer)));
             _environment = new Stack<SymbolTable<TSymbol, TValue>>();
         }
 
@@ -56,7 +54,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Pushes a new scope onto the scoped symbol table.
         /// </summary>
-        public void Push() => _environment.Push(new SymbolTable<TSymbol, TValue>(CurrentScope, _symbolComparer));
+        public void Push() => _environment.Push(new SymbolTable<TSymbol, TValue>(CurrentScope, GlobalScope.Comparer));
 
         /// <summary>
         /// Pops the most recent scope from the scoped symbol table.
