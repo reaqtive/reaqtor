@@ -10,13 +10,14 @@
 
 using System.Collections.Concurrent;
 using System.Linq.CompilerServices;
+using System.Memory;
 
 namespace System.Linq.Expressions
 {
     /// <summary>
     /// Simple compiled delegate cache with unbounded size.
     /// </summary>
-    public class SimpleCompiledDelegateCache : ICompiledDelegateCache
+    public class SimpleCompiledDelegateCache : ICompiledDelegateCache, IClearable
     {
         private readonly ConcurrentDictionary<LambdaExpression, Delegate> _cache;
 
@@ -45,6 +46,13 @@ namespace System.Linq.Expressions
         {
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression));
+
+            //
+            // PERF: On .NET Framework, this causes multiple calls to GetHashCode, which is expensive for our comparer. However,
+            //       since the following commit in .NET Core, this path has been optimized:
+            //
+            //         https://github.com/dotnet/runtime/commit/b4a76eed426f18d087f27edbe6d2bc63590bf914
+            //
 
             return _cache.GetOrAdd(expression, l => l.Compile());
         }

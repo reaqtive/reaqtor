@@ -10,16 +10,17 @@
 
 using System.Collections.Generic;
 using System.Linq.CompilerServices;
+using System.Memory;
 
 namespace System.Linq.Expressions
 {
     /// <summary>
     /// Compiled delegate cache with a least recently used (LRU) eviction policy.
     /// </summary>
-    public class LeastRecentlyUsedCompiledDelegateCache : ICompiledDelegateCache
+    public class LeastRecentlyUsedCompiledDelegateCache : ICompiledDelegateCache, IClearable
     {
         private readonly int _capacity;
-        private readonly Dictionary<LambdaExpression, CacheEntry> _cache;
+        private readonly Dictionary<ExpressionWithHashCode, CacheEntry> _cache;
         private readonly LinkedList<CacheEntry> _lru;
 
         /// <summary>
@@ -32,7 +33,7 @@ namespace System.Linq.Expressions
                 throw new ArgumentOutOfRangeException(nameof(capacity), "The specified capacity should be >= 1.");
 
             _capacity = capacity;
-            _cache = new Dictionary<LambdaExpression, CacheEntry>(Math.Max(capacity, 16), new ExpressionEqualityComparer());
+            _cache = new Dictionary<ExpressionWithHashCode, CacheEntry>(Math.Max(capacity, 16));
             _lru = new LinkedList<CacheEntry>();
         }
 
@@ -88,12 +89,33 @@ namespace System.Linq.Expressions
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression));
 
+            //
+            // PERF: We short-circuit a few commonly hit paths over here to avoid running too much code under the
+            //       lock. There are two parts to this:
+            //
+            //       1. Computing the hash code outside the lock and saving it in ExpressionWithHashCode. The
+            //          default equality comparer will dispatch to ExpressionWithHashCode.GetHashCode() and just
+            //          get the precomputed value back. This hash code is used multiple times below due to the
+            //          double-checked locking pattern:
+            //
+            //            - TryGetValue during the first "fast path" check.
+            //            - TryAdd during the "slow path" to add to the cache, or, on downlevel platforms:
+            //              - ContainsKey to perform the second check, and,
+            //              - indexer assignment to insert the entry.
+            //
+            //       2. If there's a hit during TryGetValue, we still need to run Equals, which short-circuits
+            //          for reference equality. If the slow path is taken, we still run the recursive equality
+            //          check under the lock.
+            //
+
+            var key = new ExpressionWithHashCode(expression);
+
             var cacheEntry = default(CacheEntry);
 
             // PERF: consider a lock-free implementation
             lock (_cache)
             {
-                if (_cache.TryGetValue(expression, out cacheEntry)) // PERF: expensive comparer (1)
+                if (_cache.TryGetValue(key, out cacheEntry)) // PERF: expensive comparer (1)
                 {
                     OnHit(expression, cacheEntry.Delegate);
 
@@ -109,28 +131,33 @@ namespace System.Linq.Expressions
 
             cacheEntry = new CacheEntry()
             {
-                Lambda = expression,
+                Expression = key,
                 Delegate = expression.Compile(),
             };
 
             lock (_cache)
             {
-                if (!_cache.ContainsKey(expression)) // PERF: expensive comparer (2)
+#if NET5_0 || NETSTANDARD3_1
+                if (_cache.TryAdd(key, cacheEntry)) // PERF: expensive comparer (2)
                 {
-                    OnAdded(expression, cacheEntry.Delegate);
+#else
+                if (!_cache.ContainsKey(key)) // PERF: expensive comparer (2)
+                {
+                    _cache[key] = cacheEntry; // PERF: expensive comparer (3)
+#endif
 
-                    _cache[expression] = cacheEntry; // PERF: expensive comparer (3)
+                    OnAdded(expression, cacheEntry.Delegate);
 
                     var entry = _lru.AddFirst(cacheEntry);
                     cacheEntry.Entry = entry;
 
                     if (_cache.Count > _capacity)
                     {
-                        var victim = _lru.Last;
-                        _cache.Remove(victim.Value.Lambda); // PERF: expensive comparer (4)
+                        var victim = _lru.Last.Value;
+                        _cache.Remove(victim.Expression); // PERF: expensive comparer (3 or 4)
                         _lru.RemoveLast();
 
-                        OnEvicted(victim.Value.Lambda, victim.Value.Delegate);
+                        OnEvicted(victim.Expression.Expression, victim.Delegate);
                     }
                 }
             }
@@ -167,9 +194,41 @@ namespace System.Linq.Expressions
 
         private sealed class CacheEntry
         {
-            public LambdaExpression Lambda;
+            public ExpressionWithHashCode Expression;
             public Delegate Delegate;
             public LinkedListNode<CacheEntry> Entry;
+        }
+
+        private sealed class FastExpressionEqualityComparer : IEqualityComparer<Expression>
+        {
+            public static readonly FastExpressionEqualityComparer Instance = new();
+
+            private readonly ExpressionEqualityComparer _comparer = new();
+
+            private FastExpressionEqualityComparer() { }
+
+            public bool Equals(Expression x, Expression y) => ReferenceEquals(x, y) || _comparer.Equals(x, y);
+
+            public int GetHashCode(Expression obj) => _comparer.GetHashCode(obj);
+        }
+
+        private struct ExpressionWithHashCode : IEquatable<ExpressionWithHashCode>
+        {
+            private readonly int _hashCode;
+
+            public ExpressionWithHashCode(LambdaExpression expression)
+            {
+                Expression = expression;
+                _hashCode = FastExpressionEqualityComparer.Instance.GetHashCode(expression);
+            }
+
+            public LambdaExpression Expression { get; }
+
+            public override bool Equals(object obj) => obj is ExpressionWithHashCode e && Equals(e);
+
+            public bool Equals(ExpressionWithHashCode other) => FastExpressionEqualityComparer.Instance.Equals(Expression, other.Expression);
+
+            public override int GetHashCode() => _hashCode;
         }
     }
 }
