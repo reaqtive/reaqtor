@@ -1649,13 +1649,20 @@ namespace Tests.Reaqtor.QueryEngine
             var mv1 = GetMockObserver<int>("v1");
 
             var reset = new ManualResetEvent(false);
+            var ex = default(Exception);
+
             qe2.Scheduler.UnhandledException += (sender, args) =>
             {
-                reset.Set();
                 args.Handled = true;
+                ex = args.Exception;
+                reset.Set();
             };
 
-            Assert.IsFalse(reset.WaitOne(1000));
+            if (reset.WaitOne(1000))
+            {
+                Assert.IsNull(ex, ex?.ToString());
+                Assert.Fail("Unexpected exception.");
+            }
         }
 
         [TestMethod]
@@ -1677,7 +1684,6 @@ namespace Tests.Reaqtor.QueryEngine
 
             var v2 = ctx1.GetObserver<string, int>(MockObserverUri)("v2");
 
-
             qe2.SchedulerPaused += (sender, args) =>
             {
                 ctx2.Return(4).StartWith(1, 2, 3).AwaitDo(null, null, l).Subscribe(v2, new Uri("sub:/test/2"), null);
@@ -1685,16 +1691,24 @@ namespace Tests.Reaqtor.QueryEngine
 
             Recover(qe2, chkpt1);
 
-            var mv2 = GetMockObserver<int>("v2", false);
+            var mv2 = GetMockObserver<int>("v2", validate: false);
 
             var reset = new ManualResetEvent(false);
+            var ex = default(Exception);
+
             qe2.Scheduler.UnhandledException += (sender, args) =>
             {
-                reset.Set();
                 args.Handled = true;
+                ex = args.Exception;
+                reset.Set();
             };
 
-            Assert.IsFalse(reset.WaitOne(1000));
+            if (reset.WaitOne(1000))
+            {
+                Assert.IsNull(ex, ex?.ToString());
+                Assert.Fail("Unexpected exception.");
+            }
+
             Assert.IsTrue(LockManager.Wait(l, 1000));
             Assert.IsTrue(mv2.Values.SequenceEqual(new[] { 1, 2, 3, 4 }));
         }
