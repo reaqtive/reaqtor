@@ -46,6 +46,13 @@ namespace System.Linq.Expressions
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression));
 
+            //
+            // PERF: On .NET Framework, this causes multiple calls to GetHashCode, which is expensive for our comparer. However,
+            //       since the following commit in .NET Core, this path has been optimized:
+            //
+            //         https://github.com/dotnet/runtime/commit/b4a76eed426f18d087f27edbe6d2bc63590bf914
+            //
+
             return _cache.GetOrAdd(expression, l => l.Compile());
         }
     }
