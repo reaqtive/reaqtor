@@ -10,13 +10,14 @@
 
 using System.Collections.Concurrent;
 using System.Linq.CompilerServices;
+using System.Memory;
 
 namespace System.Linq.Expressions
 {
     /// <summary>
     /// Simple compiled delegate cache with unbounded size.
     /// </summary>
-    public class SimpleCompiledDelegateCache : ICompiledDelegateCache
+    public class SimpleCompiledDelegateCache : ICompiledDelegateCache, IClearable
     {
         private readonly ConcurrentDictionary<LambdaExpression, Delegate> _cache;
 
