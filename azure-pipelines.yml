@@ -238,7 +238,8 @@ stages:
               --secret "$(SignClientSecret)" `
               --name "Reaqtive" `
               --description "Reaqtive" `
-              --descriptionUrl "https://github.com/reaqtive/reaqtor"
+              --descriptionUrl "https://github.com/reaqtive/reaqtor" `
+              --logLevel "Verbose"
             displayName: Sign packages
 
           - publish: $(Pipeline.Workspace)/BuildPackages
