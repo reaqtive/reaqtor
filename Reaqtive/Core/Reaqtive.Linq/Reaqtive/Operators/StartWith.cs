@@ -67,7 +67,7 @@ namespace Reaqtive.Operators
 
                 if (_valuesIndex >= Params._values.Length)
                 {
-                    DoSubscribeTask(true);
+                    DoSubscribeTask(recovery: true);
                 }
             }
 
@@ -113,22 +113,52 @@ namespace Reaqtive.Operators
 
                     _context.TraceSource.StartWith_Processing(_context.InstanceId, _valuesIndex, count);
 
-                    if (_valuesIndex < count)
+                    //
+                    // NB: The following is carefully crafted to ensure that we never make decisions based on
+                    //     _valuesIndex after having scheduled new work, using a scheduling tail call.
+                    //
+                    //     E.g. the following (simplified) logic would have a bug:
+                    //
+                    //       if (_valuesIndex < count)
+                    //       {
+                    //           OnNext(values[_valuesIndex]);
+                    //
+                    //           if (++_valuesIndex < count)       // X
+                    //           {
+                    //               DoSchedule(GetNextTask());    // A
+                    //           }
+                    //       }
+                    //
+                    //       if (_valueIndex == count)             // B
+                    //       {
+                    //           DoSubscribeTask();
+                    //       }
+                    //
+                    //     Consider the current execution of this logic to be T0 and assume we reach line A
+                    //     where another copy of this logic is executed, which we call T1.
+                    //
+                    //     T1 can run to completion before T0 reaches B. In this case, T1 will have executed
+                    //     line X causing an increment of the index field. If the new index value makes the
+                    //     condition on line B evaluate to true, both T0 and T1 will execute the branch, thus
+                    //     causing duplicate execution of DoSubscribeTask.
+                    //
+
+                    var i = _valuesIndex;
+
+                    if (i < count)
                     {
-                        StateChanged = true;
-
-                        OnNext(values[_valuesIndex]);
-
-                        // NOTE: be sure that no more tail-scheduled tasks are scheduled
-                        // after the final value is pushed, otherwise it will call
-                        // subscribe to the upstream observable more than once.
-                        if (++_valuesIndex < count)
-                        {
-                            DoSchedule(GetNextTask());
-                        }
+                        OnNext(values[i]);
+                        i++;
                     }
 
-                    if (_valuesIndex == count)
+                    _valuesIndex = i;
+                    StateChanged = true;
+
+                    if (i < count)
+                    {
+                        DoSchedule(GetNextTask());
+                    }
+                    else if (i == count)
                     {
                         DoSubscribeTask();
                     }
@@ -156,10 +186,7 @@ namespace Reaqtive.Operators
                 }
                 catch (Exception ex)
                 {
-                    if (subscription != null)
-                    {
-                        subscription.Dispose();
-                    }
+                    subscription?.Dispose();
 
                     DoSchedule(new ActionTask(() =>
                     {
