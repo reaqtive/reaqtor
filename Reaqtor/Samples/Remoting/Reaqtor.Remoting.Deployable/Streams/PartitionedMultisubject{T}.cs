@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -55,6 +56,7 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
         public void Dispose()
         {
+            _multicaster.Dispose();
         }
 
         private class ObserverImpl : IObserver<T>
@@ -116,7 +118,7 @@ namespace Reaqtor.Remoting.Deployable.Streams
             public abstract void OnNext(T value);
         }
 
-        private sealed class PartitionedMulticaster : IObserver<T>
+        private sealed class PartitionedMulticaster : IObserver<T>, IDisposable
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (documents the signature)
             private static readonly MethodInfo s_subscribeTyped = ((MethodInfo)ReflectionHelpers.InfoOf((PartitionedMulticaster p) => p.SubscribeTyped<int>(default(IObserver<T>), default(KeyBinding<T, int>), default(IReadOnlyList<TypeErasedKeyBinding<T>>)))).GetGenericMethodDefinition();
@@ -146,6 +148,11 @@ namespace Reaqtor.Remoting.Deployable.Streams
                 var lst = bindings.Sublist(1);
 
                 return (ISubscription)s_subscribeTyped.MakeGenericMethod(fst.KeyType).Invoke(this, new object[] { observer, fst, lst });
+            }
+
+            public void Dispose()
+            {
+                _default.Dispose();
             }
 
             private ISubscription SubscribeTyped<TKey>(IObserver<T> observer, KeyBinding<T, TKey> keyBinding, IReadOnlyList<TypeErasedKeyBinding<T>> rest)
@@ -222,6 +229,8 @@ namespace Reaqtor.Remoting.Deployable.Streams
             public override void OnNext(T value)
             {
                 TKey key;
+
+#pragma warning disable CA1031 // Do not catch general exception types. (Standard Rx pattern using OnError.)
                 try
                 {
                     key = _partitionKeySelector(value);
@@ -231,6 +240,7 @@ namespace Reaqtor.Remoting.Deployable.Streams
                     OnError(ex);
                     return;
                 }
+#pragma warning restore CA1031
 
                 foreach (var observer in _observers)
                 {
@@ -435,6 +445,8 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
         public void SetContext(IOperatorContext context)
         {
+            Debug.Assert(context != null);
+
             _uri = context.InstanceId;
         }
 

@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -25,6 +26,8 @@ namespace Reaqtor.Remoting.Metadata
 
         protected override Expression VisitBinary(BinaryExpression node)
         {
+            Debug.Assert(node != null);
+
             if (node.NodeType == ExpressionType.Equal)
             {
                 if (IsPropertyAccess(node.Left))

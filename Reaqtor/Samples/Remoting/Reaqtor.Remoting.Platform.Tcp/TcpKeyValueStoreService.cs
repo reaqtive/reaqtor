@@ -12,7 +12,9 @@ namespace Reaqtor.Remoting.Platform
     internal sealed class TcpKeyValueStoreService : ReactiveServiceBase, IKeyValueStoreService
     {
         public TcpKeyValueStoreService(string executablePath, int port, string uri)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : this(new TcpRunnable<ITransactionalKeyValueStoreConnection>(executablePath, port, uri))
+#pragma warning restore CA2000
         {
         }
 

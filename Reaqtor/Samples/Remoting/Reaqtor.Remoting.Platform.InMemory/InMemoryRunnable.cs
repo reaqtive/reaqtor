@@ -37,7 +37,7 @@ namespace Reaqtor.Remoting.Platform
                         Instance = t.Result;
                         IsRunning = false;
                         return 0;
-                    });
+                    }, TaskScheduler.Default);
             }
             else
             {

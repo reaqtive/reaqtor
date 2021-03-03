@@ -8,6 +8,8 @@ using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+
 namespace Reaqtor.Remoting.Platform.Tcp.Host
 {
     public static class Program
@@ -30,7 +32,7 @@ namespace Reaqtor.Remoting.Platform.Tcp.Host
 
                 Console.WriteLine("Query coordinator started at 'tcp://{0}:{1}/{2}'", settings.Host, settings.QueryCoordinatorPort, settings.QueryCoordinatorUri);
                 Console.Write("Deploying builtin metadata definitions and domain feeds... ");
-                new ReactivePlatformDeployer(platform, new Deployable.Deployable(), new Reactor.Deployable(), new Reactor.DomainFeeds.DomainFeedsDeployable()).Deploy();
+                new ReactivePlatformDeployer(platform, new Deployable.CoreDeployable(), new Reactor.Deployable(), new Reactor.DomainFeeds.DomainFeedsDeployable()).Deploy();
                 Console.WriteLine("Done.");
 
                 Console.WriteLine("Press any key to shutdown...");
@@ -45,7 +47,7 @@ namespace Reaqtor.Remoting.Platform.Tcp.Host
             var readLine = reader.ReadLineAsync();
             while (true)
             {
-                var finished = await Task.WhenAny(Task.Delay(OutputDelay, token), readLine);
+                var finished = await Task.WhenAny(Task.Delay(OutputDelay, token), readLine).ConfigureAwait(false);
                 if (finished == readLine)
                 {
                     if (readLine.Result == null)

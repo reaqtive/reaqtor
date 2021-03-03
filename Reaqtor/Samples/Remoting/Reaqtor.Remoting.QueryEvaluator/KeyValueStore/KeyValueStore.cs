@@ -122,7 +122,7 @@ namespace Reaqtor.Remoting.QueryEvaluator
 
             public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(string tableName)
             {
-                return _connection.GetEnumerator(Id, tableName).GetEnumerator();
+                return _connection.GetEnumerator(Id, tableName);
             }
 
             public Task CommitAsync(CancellationToken token)

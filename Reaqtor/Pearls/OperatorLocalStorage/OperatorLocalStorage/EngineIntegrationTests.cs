@@ -188,7 +188,7 @@ namespace Playground
                 // NB: We have to use the "long" overload here because it's the only one we supply in our extension to CheckpointingQueryEngine.
                 //
 
-                await engine.CheckpointAsync(new Writer(checkpointStore, CheckpointKind.Differential), CancellationToken.None, progress: null);
+                await engine.CheckpointAsync(new StateWriter(checkpointStore, CheckpointKind.Differential), CancellationToken.None, progress: null);
 
                 //
                 // To make our testing easier, we'll call UnloadAsync, which enables our Source<T> to detach from the stream manager.
@@ -226,7 +226,7 @@ namespace Playground
                 // NB: We have to use the "long" overload here because it's the only one we supply in our extension to CheckpointingQueryEngine.
                 //
 
-                await engine.RecoverAsync(new Reader(checkpointStore), CancellationToken.None, progress: null);
+                await engine.RecoverAsync(new StateReader(checkpointStore), CancellationToken.None, progress: null);
 
                 //
                 // We'll continue to send events in range [10..19] which should emit the two buffers that were pending ([6..10] and [9..13]) and two new buffers ([12..16] and [15..19]).

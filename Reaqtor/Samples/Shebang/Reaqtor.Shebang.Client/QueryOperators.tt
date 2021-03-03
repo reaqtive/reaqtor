@@ -4,9 +4,9 @@
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="$(SolutionDir)\Reactive\Nuqleon.Reactive.Interfaces\bin\$(Configuration)\net472\Nuqleon.Reactive.Interfaces.dll" #>
-<#@ assembly name="$(SolutionDir)\Reactive\Nuqleon.Reactive.Core\bin\$(Configuration)\net472\Nuqleon.Reactive.Core.dll" #>
-<#@ assembly name="$(SolutionDir)\Reactive\Nuqleon.Reactive.Linq\bin\$(Configuration)\net472\Nuqleon.Reactive.Linq.dll" #>
+<#@ assembly name="$(SolutionDir)\Reaqtive\Core\Reaqtive.Interfaces\bin\$(Configuration)\net472\Reaqtive.Interfaces.dll" #>
+<#@ assembly name="$(SolutionDir)\Reaqtive\Core\Reaqtive.Core\bin\$(Configuration)\net472\Reaqtive.Core.dll" #>
+<#@ assembly name="$(SolutionDir)\Reaqtive\Core\Reaqtive.Linq\bin\$(Configuration)\net472\Reaqtive.Linq.dll" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Linq.Expressions" #>
@@ -122,7 +122,7 @@ var toQuotedShallow = new Func<Type, string>(t =>
     return name;
 });
 
-var methods = typeof(Nuqleon.Reactive.Subscribable).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.IsDefined(typeof(ExtensionAttribute))).Where(m => m.Name != "ToSubscribable" && !(m.Name == "CombineLatest" && m.GetGenericArguments().Length > 8)).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length);
+var methods = typeof(Reaqtive.Subscribable).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.IsDefined(typeof(ExtensionAttribute))).Where(m => m.Name != "ToSubscribable" && !(m.Name == "CombineLatest" && m.GetGenericArguments().Length > 8)).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length);
 
 var uris = new HashSet<string>();
 
@@ -308,7 +308,7 @@ foreach (var kv in all)
             {
                 return p.Name;
             }
-            else if (p.ParameterType.IsGenericType && p.ParameterType.GetGenericTypeDefinition() == typeof(Nuqleon.Reactive.ISubscribable<>))
+            else if (p.ParameterType.IsGenericType && p.ParameterType.GetGenericTypeDefinition() == typeof(Reaqtive.ISubscribable<>))
             {
                 return p.Name + ".Expression";
             }
@@ -319,13 +319,40 @@ foreach (var kv in all)
         }));
     }
 
+    var nullChecks = new List<string>();
+
+    foreach (var p in parameters)
+    {
+        if (typeof(Delegate).IsAssignableFrom(p.ParameterType))
+        {
+            nullChecks.Add(p.Name);
+        }
+        else if (p.ParameterType.IsGenericType && p.ParameterType.GetGenericTypeDefinition() == typeof(Reaqtive.ISubscribable<>))
+        {
+            nullChecks.Add(p.Name);
+        }
+    }
+
     var expr = "Expression.Call(" + methodInfo + quotedArgs + ")";
 
     var pars = "this " + string.Join(", ", parameters.Select(p => toQuoted(p.ParameterType) + " " + p.Name));
     var body = firstParameter.Name + ".Provider.CreateQbservable<" + toQuoted(retElementType) + ">(" + expr + ")";
 #>
         [KnownResource("<#=uri#>")]
-        public static <#=ret#> <#=method.Name#><#=gen#>(<#=pars#>) => <#=body#>;
+        public static <#=ret#> <#=method.Name#><#=gen#>(<#=pars#>)
+        {
+<#
+    foreach (var p in nullChecks)
+    {
+#>
+            if (<#=p#> == null)
+                throw new ArgumentNullException(nameof(<#=p#>));
+<#
+    }
+#>
+
+            return <#=body#>;
+        }
 
 <#
 }

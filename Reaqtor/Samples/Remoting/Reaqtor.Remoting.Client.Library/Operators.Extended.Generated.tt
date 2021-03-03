@@ -40,6 +40,9 @@ foreach (var op in new [] { "Sum", "Max", "Min", "Average" })
         [KnownResource(Remoting.Client.Constants.Observable.<#=op#>.NoSelector.<#=tn#>)]
         public static IAsyncReactiveQbservable<<#=tr#>> <#=op#>(this IAsyncReactiveQbservable<<#=tc#>> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Provider.CreateQbservable<<#=tr#>>(
                 Expression.Call(
                     (MethodInfo)MethodBase.GetCurrentMethod(),
@@ -49,6 +52,11 @@ foreach (var op in new [] { "Sum", "Max", "Min", "Average" })
         [KnownResource(Remoting.Client.Constants.Observable.<#=op#>.Selector.<#=tn#>)]
         public static IAsyncReactiveQbservable<<#=tr#>> <#=op#><T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, <#=tc#>>> selector)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
             return source.Provider.CreateQbservable<<#=tr#>>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)),

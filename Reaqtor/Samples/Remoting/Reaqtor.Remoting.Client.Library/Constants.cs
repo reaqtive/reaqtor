@@ -2,6 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+#pragma warning disable CA1034 // Nested types should not be visible. (Legacy approach; kept for compat.)
+#pragma warning disable CA1716 // Identifiers should not match keywords. (Rx nomenclature.)
+
 namespace Reaqtor.Remoting.Client
 {
     /// <summary>
@@ -321,7 +324,7 @@ namespace Reaqtor.Remoting.Client
                 /// The resource identifier for the Skip signature that
                 /// takes an int.
                 /// </summary>
-                public const string Int = "rx://operators/skip/count";
+                public const string Count = "rx://operators/skip/count";
 
                 /// <summary>
                 /// The resource identifier for the Skip signature that
@@ -399,7 +402,7 @@ namespace Reaqtor.Remoting.Client
                 /// The resource identifier for the Take signature that
                 /// takes an int.
                 /// </summary>
-                public const string Int = "rx://operators/take/count";
+                public const string Count = "rx://operators/take/count";
 
                 /// <summary>
                 /// The resource identifier for the Take signature that

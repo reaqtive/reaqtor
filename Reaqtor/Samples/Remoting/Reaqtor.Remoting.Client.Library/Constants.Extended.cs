@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+#pragma warning disable CA1034 // Nested types should not be visible. (Legacy approach; kept for compat.)
+
 namespace Reaqtor.Remoting.Client
 {
     /// <summary>
@@ -58,6 +60,8 @@ namespace Reaqtor.Remoting.Client
                 public const string Seed = "rx://operators/scan/seed";
             }
 
+#pragma warning disable CA1716 // Identifiers should not match keywords. (Rx nomenclature.)
+
             public static class Return
             {
                 public const string Value = "rx://operators/return";
@@ -67,6 +71,8 @@ namespace Reaqtor.Remoting.Client
             {
                 public const string Error = "rx://operators/throw";
             }
+
+#pragma warning restore CA1716
 
             public static class Never
             {

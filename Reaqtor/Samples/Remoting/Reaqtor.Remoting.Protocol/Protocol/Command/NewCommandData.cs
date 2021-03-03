@@ -16,21 +16,6 @@ namespace Reaqtor.Remoting.Protocol
         private const uint Prime = 0xa5555529; // See CompilationPass.cpp in C# compiler codebase.
 
         /// <summary>
-        /// The URI of the resource to create.
-        /// </summary>
-        public readonly Uri Uri;
-
-        /// <summary>
-        /// The expression representing the resource to create.
-        /// </summary>
-        public readonly TExpression Expression;
-
-        /// <summary>
-        /// The state object of the resource to create.
-        /// </summary>
-        public readonly object State;
-
-        /// <summary>
         /// Instantiates the bundle.
         /// </summary>
         /// <param name="uri">The URI of the resource to create.</param>
@@ -42,6 +27,21 @@ namespace Reaqtor.Remoting.Protocol
             Expression = expression;
             State = state;
         }
+
+        /// <summary>
+        /// The URI of the resource to create.
+        /// </summary>
+        public readonly Uri Uri { get; }
+
+        /// <summary>
+        /// The expression representing the resource to create.
+        /// </summary>
+        public readonly TExpression Expression { get; }
+
+        /// <summary>
+        /// The state object of the resource to create.
+        /// </summary>
+        public readonly object State { get; }
 
         /// <summary>
         /// Checks if the current instance is equal to some other instance.

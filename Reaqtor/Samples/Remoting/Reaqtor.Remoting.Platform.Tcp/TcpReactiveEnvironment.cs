@@ -8,6 +8,8 @@
 // ER - December 2013 - Created this file.
 //
 
+using System;
+
 using Reaqtor.Remoting.Protocol;
 
 namespace Reaqtor.Remoting.Platform
@@ -21,6 +23,9 @@ namespace Reaqtor.Remoting.Platform
 
         public TcpReactiveEnvironment(ITcpReactivePlatformSettings settings)
         {
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
             StorageType = MetadataStorageType.Remoting;
             MetadataService = new TcpMetadataService(settings.GetExecutablePath("MetadataHost"), settings.MetadataPort, settings.MetadataUri);
             MessagingService = new TcpMessagingService(settings.GetExecutablePath("MessagingHost"), settings.MessagingPort, settings.MessagingUri);
@@ -35,6 +40,9 @@ namespace Reaqtor.Remoting.Platform
 
         public TcpReactiveEnvironment(string azureConnectionString, ITcpReactivePlatformSettings settings)
         {
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
             StorageType = MetadataStorageType.Azure;
             AzureConnectionString = azureConnectionString;
             MessagingService = new TcpMessagingService(settings.GetExecutablePath("MessagingHost"), settings.MessagingPort, settings.MessagingUri);

@@ -40,7 +40,7 @@ namespace Reaqtor.Remoting.Protocol
         /// <summary>
         /// Sets the configuration options that should be threaded to the query engine.
         /// </summary>
-        Dictionary<string, string> EngineOptions { get; set; }
+        Dictionary<string, string> EngineOptions { get; }
 
         /// <summary>
         /// Sets the type of metadata storage that should be used.
@@ -75,6 +75,6 @@ namespace Reaqtor.Remoting.Protocol
         /// <summary>
         /// Sets the instances or transparent proxies to the query evaluator connections.
         /// </summary>
-        List<IReactiveQueryEvaluatorConnection> QueryEvaluatorConnections { get; }
+        IList<IReactiveQueryEvaluatorConnection> QueryEvaluatorConnections { get; }
     }
 }

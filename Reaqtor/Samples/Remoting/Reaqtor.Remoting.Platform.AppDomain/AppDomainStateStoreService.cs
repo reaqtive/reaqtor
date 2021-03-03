@@ -9,7 +9,9 @@ namespace Reaqtor.Remoting.Platform
     public sealed class AppDomainStateStoreService : ReactiveServiceBase, IReactiveStateStoreService
     {
         public AppDomainStateStoreService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(new AppDomainRunnable("StateStoreService", typeof(StateStoreConnection)), ReactiveServiceType.StateStoreService)
+#pragma warning restore CA2000
         {
         }
     }

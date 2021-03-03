@@ -28,6 +28,9 @@ namespace Reaqtor.Remoting.TestingFramework
     {
         public static IEnumerable<Recorded<INotification<T>>> DeserializeObserverMessages<T>(IList<Recorded<INotification<string>>> messages)
         {
+            if (messages == null)
+                throw new ArgumentNullException(nameof(messages));
+
             foreach (var message in messages)
             {
                 switch (message.Value.Kind)
@@ -50,6 +53,9 @@ namespace Reaqtor.Remoting.TestingFramework
 
         public static IEnumerable<Recorded<INotification<string>>> SerializeObserverMessages<T>(IList<Recorded<INotification<T>>> messages)
         {
+            if (messages == null)
+                throw new ArgumentNullException(nameof(messages));
+
             foreach (var message in messages)
             {
                 switch (message.Value.Kind)

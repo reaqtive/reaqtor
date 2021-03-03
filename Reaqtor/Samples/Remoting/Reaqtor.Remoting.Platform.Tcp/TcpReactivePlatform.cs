@@ -8,6 +8,7 @@
 // ER - October 2013 - Created this file.
 //
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 
@@ -25,7 +26,9 @@ namespace Reaqtor.Remoting.Platform
         }
 
         public TcpReactivePlatform(ITcpReactivePlatformSettings settings)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : this(settings, new TcpReactiveEnvironment())
+#pragma warning restore CA2000
         {
             _selfContainedEnvironment = true;
             Environment.StartAsync(CancellationToken.None).Wait();
@@ -39,6 +42,9 @@ namespace Reaqtor.Remoting.Platform
         public TcpReactivePlatform(ITcpReactivePlatformSettings settings, IReactiveEnvironment environment)
             : base(environment)
         {
+            if (settings == null)
+                throw new ArgumentNullException(nameof(settings));
+
             _queryEvaluator = new TcpQueryEvaluator(this, settings.GetExecutablePath("QueryEvaluatorHost"), settings.QueryEvaluatorPort, settings.QueryEvaluatorUri);
             _queryCoordinator = new TcpQueryCoordinator(this, settings.GetExecutablePath("QueryCoordinatorHost"), settings.QueryCoordinatorPort, settings.QueryCoordinatorUri);
         }

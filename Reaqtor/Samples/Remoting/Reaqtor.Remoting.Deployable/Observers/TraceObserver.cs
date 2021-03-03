@@ -36,6 +36,8 @@ namespace Reaqtor.Remoting.Deployable
 
         public override void SetContext(IOperatorContext context)
         {
+            Debug.Assert(context != null);
+
             _scheduler = context.Scheduler;
             _id = context.InstanceId;
             _tracer = context.TraceSource;

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -360,28 +361,6 @@ namespace Reaqtor.Shebang.Service
             }
         }
 
-        private sealed class TableNotFoundException : Exception
-        {
-            public TableNotFoundException(string tableName)
-            {
-                TableName = tableName;
-            }
-
-            public string TableName { get; }
-        }
-
-        private sealed class KeyNotFoundException : Exception
-        {
-            public KeyNotFoundException(string tableName, string key)
-            {
-                TableName = tableName;
-                Key = key;
-            }
-
-            public string TableName { get; }
-            public string Key { get; }
-        }
-
         private sealed class Table : IKeyValueTable<string, byte[]>
         {
             private readonly string _name;
@@ -515,7 +494,7 @@ namespace Reaqtor.Shebang.Service
                     }
                 }
 
-                await tx.CommitAsync(token);
+                await tx.CommitAsync(token).ConfigureAwait(false);
             }
 
             public void DeleteItem(string category, string key)
@@ -535,4 +514,62 @@ namespace Reaqtor.Shebang.Service
             public void Rollback() { }
         }
     }
+
+#pragma warning disable CA1032 // Implement standard exception constructors. (Only constructed internally.)
+    [Serializable]
+    public sealed class TableNotFoundException : Exception
+    {
+        internal TableNotFoundException(string tableName)
+        {
+            TableName = tableName;
+        }
+
+        private TableNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        {
+            TableName = serializationInfo.GetString(nameof(TableName));
+        }
+
+        public string TableName { get; }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            info.AddValue(nameof(TableName), TableName);
+
+            base.GetObjectData(info, context);
+        }
+    }
+
+    [Serializable]
+    public sealed class KeyNotFoundException : Exception
+    {
+        internal KeyNotFoundException(string tableName, string key)
+        {
+            TableName = tableName;
+            Key = key;
+        }
+
+        private KeyNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+        {
+            TableName = serializationInfo.GetString(nameof(TableName));
+            Key = serializationInfo.GetString(nameof(Key));
+        }
+
+        public string TableName { get; }
+        public string Key { get; }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            if (info == null)
+                throw new ArgumentNullException(nameof(info));
+
+            info.AddValue(nameof(TableName), TableName);
+            info.AddValue(nameof(Key), Key);
+
+            base.GetObjectData(info, context);
+        }
+    }
+#pragma warning restore CA1032
 }

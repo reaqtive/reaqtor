@@ -62,7 +62,9 @@ namespace Reaqtor.Remoting
             private sealed class _ : IDisposable
             {
                 private Action _onDispose;
+#pragma warning disable CA2213 // Disposable fields should be disposed. (False positive; it is disposed but in a roundabout way.)
                 private IDisposable _disposable;
+#pragma warning restore CA2213
 
                 public _(Impl<T> parent, IObserver<T> observer)
                 {

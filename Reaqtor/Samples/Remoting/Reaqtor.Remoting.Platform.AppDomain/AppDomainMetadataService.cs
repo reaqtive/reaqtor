@@ -15,7 +15,9 @@ namespace Reaqtor.Remoting.Platform
     internal sealed class AppDomainMetadataService : ReactiveServiceBase, IReactiveMetadataService
     {
         public AppDomainMetadataService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(new AppDomainRunnable("MetadataService", typeof(StorageConnection)), ReactiveServiceType.MetadataService)
+#pragma warning restore CA2000
         {
         }
     }

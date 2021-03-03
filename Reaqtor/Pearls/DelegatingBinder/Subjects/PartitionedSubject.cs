@@ -6,14 +6,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
-using System.Reactive;
 using System.Reactive.Disposables;
 using System.Reactive.Subjects;
 using System.Reflection;
 
 namespace DelegatingBinder
 {
-    internal sealed class PartitionedSubject<T> : ISubject<T>, IDelegationTarget
+    internal sealed class PartitionedSubject<T> : ISubject<T>, IDelegationTarget, IDisposable
     {
         private readonly Subject<T> _subject;
         private readonly Dictionary<MemberInfo, Partition> _partitions;
@@ -57,6 +56,11 @@ namespace DelegatingBinder
         public IDisposable Subscribe(IObserver<T> observer)
         {
             return _subject.Subscribe(observer);
+        }
+
+        public void Dispose()
+        {
+            _subject.Dispose();
         }
 
         private IDisposable Subscribe(MemberInfo member, object value, IObserver<T> observer)

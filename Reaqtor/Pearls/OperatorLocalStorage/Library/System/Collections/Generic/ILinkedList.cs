@@ -8,6 +8,8 @@
 // BD - February 2018
 //
 
+#pragma warning disable CA1710 // Identifiers should have correct suffix. (By design for collection interfaces.)
+
 namespace System.Collections.Generic
 {
     /// <summary>

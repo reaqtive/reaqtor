@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.TypeSystem;
@@ -21,8 +22,8 @@ namespace DelegatingBinder
         {
             _registry = new Dictionary<string, object>
             {
-                { "rx://builtin/createSubject", (Expression<Func<ISubjectFactory<T>, string, ISubject<T>>>)((sf, id) => this.CreateSubject<T>(sf, id)) },
-                { "rx://builtin/subscribe", (Expression<Func<IObservable<T>, string, IObserver<T>, IDisposable>>)((io, id, iv) => this.Subscribe<T>(io, id, iv)) },
+                { "rx://builtin/createSubject", (Expression<Func<ISubjectFactory<T>, string, ISubject<T>>>)((sf, id) => CreateSubject<T>(sf, id)) },
+                { "rx://builtin/subscribe", (Expression<Func<IObservable<T>, string, IObserver<T>, IDisposable>>)((io, id, iv) => Subscribe<T>(io, id, iv)) },
                 { "rx://builtin/onNext", (Expression<Action<IObserver<T>, T>>)((iv, value) => iv.OnNext(value)) },
                 { "rx://builtin/dispose", (Expression<Action<IDisposable>>)(d => d.Dispose()) },
 
@@ -72,7 +73,7 @@ namespace DelegatingBinder
                     }
                 }
 
-                throw new InvalidOperationException(string.Format("Could not bind '{0}'.", fv.Name));
+                throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Could not bind '{0}'.", fv.Name));
             }
 
             var bound = new Binder(map).Bind(expr);

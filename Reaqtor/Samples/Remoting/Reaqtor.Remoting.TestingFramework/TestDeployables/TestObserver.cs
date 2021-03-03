@@ -75,6 +75,7 @@ namespace Reaqtor.Remoting.TestingFramework
 
         public void Accept(ISubscriptionVisitor visitor)
         {
+            Debug.Assert(visitor != null);
             visitor.Visit(this);
         }
 
@@ -86,6 +87,7 @@ namespace Reaqtor.Remoting.TestingFramework
 
         public void SetContext(IOperatorContext context)
         {
+            Debug.Assert(context != null);
             context.TryGetElement<TestObserverStoreConnection>(
                 TestObserverStoreConnection.ContextHandle,
                 out _observerStore);

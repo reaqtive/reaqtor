@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -55,7 +56,7 @@ namespace Reaqtor.Remoting.Platform
             {
                 inlined[3 * i + 0] = args[i].Role.ToString();
                 inlined[3 * i + 1] = args[i].Uri;
-                inlined[3 * i + 2] = args[i].Port.ToString();
+                inlined[3 * i + 2] = args[i].Port.ToString(CultureInfo.InvariantCulture);
             }
 
             return inlined;

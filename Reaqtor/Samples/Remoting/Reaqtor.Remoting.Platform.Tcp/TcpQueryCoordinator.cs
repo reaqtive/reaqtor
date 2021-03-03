@@ -18,7 +18,9 @@ namespace Reaqtor.Remoting.Platform
     internal sealed class TcpQueryCoordinator : ReactivePlatformServiceBase, IReactiveQueryCoordinator
     {
         public TcpQueryCoordinator(IReactivePlatform platform, string executablePath, int port, string uri)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : this(platform, new TcpRunnable<IRemotingReactiveServiceConnection>(executablePath, port, uri))
+#pragma warning restore CA2000
         {
         }
 

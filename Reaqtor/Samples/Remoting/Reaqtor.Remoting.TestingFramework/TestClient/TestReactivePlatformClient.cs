@@ -86,10 +86,12 @@ namespace Reaqtor.Remoting.TestingFramework
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable IDE0060 // Remove unused parameter (used for type inference)
+#pragma warning disable CA1801 // Review unused parameters
         public ITestableQbservable<T> CreateHotObservableWitnessed<T>(T witness, params Recorded<INotification<T>>[] messages)
         {
             return CreateHotObservable(messages);
         }
+#pragma warning restore CA1801 // Review unused parameters
 #pragma warning restore IDE0060 // Remove unused parameter
 #pragma warning restore IDE0079 // Remove unnecessary suppression
 

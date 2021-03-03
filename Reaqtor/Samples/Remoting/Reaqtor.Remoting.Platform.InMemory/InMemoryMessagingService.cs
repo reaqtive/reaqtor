@@ -18,7 +18,9 @@ namespace Reaqtor.Remoting.Platform
     internal sealed class InMemoryMessagingService : ReactiveServiceBase, IReactiveMessagingService
     {
         public InMemoryMessagingService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(new InMemoryRunnable(CreateMessagingService), ReactiveServiceType.MessagingService)
+#pragma warning restore CA2000
         {
         }
 

@@ -735,7 +735,7 @@ namespace Nuqleon.Json.Serialization
         /// <returns>true if the specified string starts with the specified value at the specified index; otherwise, false.</returns>
         internal static bool StartsWithFast(string str, ref int i, string value)
         {
-#if NET5_0
+#if NET5_0 || NETSTANDARD2_1
             Debug.Assert(value.IndexOf('\\', System.StringComparison.Ordinal) < 0 && value.IndexOf('"', System.StringComparison.Ordinal) < 0);
 #else
             Debug.Assert(value.IndexOf('\\') < 0 && value.IndexOf('"') < 0);

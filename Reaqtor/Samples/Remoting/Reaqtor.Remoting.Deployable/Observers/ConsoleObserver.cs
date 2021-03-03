@@ -3,9 +3,12 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 
 using Reaqtive;
 using Reaqtive.Scheduler;
+
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
 
 namespace Reaqtor.Remoting.Deployable
 {
@@ -27,6 +30,8 @@ namespace Reaqtor.Remoting.Deployable
 
         public override void SetContext(IOperatorContext context)
         {
+            Debug.Assert(context != null);
+
             _scheduler = context.Scheduler;
             _id = context.InstanceId;
 

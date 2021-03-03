@@ -10,6 +10,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
@@ -82,7 +83,7 @@ namespace Pearls.Reaqtor.CSE
 
             if (logger != null)
             {
-                logger.WriteLine(string.Format("Creating subscription {0} = {1}.", n, expression));
+                logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Creating subscription {0} = {1}.", n, expression));
             }
 
             var expr = expression;
@@ -102,7 +103,7 @@ namespace Pearls.Reaqtor.CSE
 
                 if (logger != null)
                 {
-                    logger.WriteLine(string.Format("Rewritten subscription {0} to {1}.", n, expr));
+                    logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Rewritten subscription {0} to {1}.", n, expr));
                 }
             }
 
@@ -110,14 +111,14 @@ namespace Pearls.Reaqtor.CSE
 
             if (logger != null)
             {
-                logger.WriteLine(string.Format("Bound subscription {0} as {1}.", n, b));
+                logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Bound subscription {0} as {1}.", n, b));
             }
 
             var d = b.Compile()();
 
             if (logger != null)
             {
-                logger.WriteLine(string.Format("Created subscription {0}.", n));
+                logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Created subscription {0}.", n));
             }
 
             return new Disposable(this, d, artifacts);
@@ -137,7 +138,7 @@ namespace Pearls.Reaqtor.CSE
                     var logger = Logger;
                     if (logger != null)
                     {
-                        logger.WriteLine(string.Format("Removing CSE node {0}", artifact.Id), ConsoleColor.Red);
+                        logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Removing CSE node {0}", artifact.Id), ConsoleColor.Red);
                     }
 
                     _hotArtifacts.Remove(artifact.Expression);
@@ -255,7 +256,7 @@ namespace Pearls.Reaqtor.CSE
                         var logger = _parent.Logger;
                         if (logger != null)
                         {
-                            logger.WriteLine(string.Format("Rewriting {0} to {1}", node, res), ConsoleColor.Green);
+                            logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Rewriting {0} to {1}", node, res), ConsoleColor.Green);
                         }
 
                         return res;
@@ -290,7 +291,7 @@ namespace Pearls.Reaqtor.CSE
                             var logger = _parent.Logger;
                             if (logger != null)
                             {
-                                logger.WriteLine(string.Format("Creating CSE node {0} for {1}", id, res), ConsoleColor.Yellow);
+                                logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Creating CSE node {0} for {1}", id, res), ConsoleColor.Yellow);
                             }
 
                             var obv = Expression.Constant(sub, obvType);

@@ -45,7 +45,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization.Binary
         public void Serialize(Stream stream, Type type, Object value)
         {
 #if USE_SLIM
-            _formatter.Serialize(stream, value.Value);
+            _formatter.Serialize(stream, value?.Value);
 #else
             _formatter.Serialize(stream, value);
 #endif
@@ -60,7 +60,11 @@ namespace System.Linq.Expressions.Bonsai.Serialization.Binary
         public Object Deserialize(Stream stream, Type type)
         {
 #if USE_SLIM
+#pragma warning disable CA2300 // REVIEW - Do not use insecure deserializer BinaryFormatter.
+#pragma warning disable CA2302
             var res = _formatter.Deserialize(stream);
+#pragma warning restore CA2302
+#pragma warning restore CA2300
             var clrType = res?.GetType() ?? typeof(object); // REVIEW
             var slimType = clrType.ToTypeSlim(); // REVIEW
             return Object.Create(res, slimType, clrType);

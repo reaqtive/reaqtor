@@ -50,13 +50,19 @@ namespace Reaqtor.Remoting.Protocol
 
         public async Task<T> ParseResponseAsync<T>(IReactiveServiceCommand command, Task<string> request, CancellationToken token)
         {
-            var response = await request;
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            var response = await request.ConfigureAwait(false);
             return _serializer.Deserialize<T>(response);
         }
 
         public async Task ParseResponseAsync(IReactiveServiceCommand command, Task<string> request, CancellationToken token)
         {
-            var response = await request;
+            if (request == null)
+                throw new ArgumentNullException(nameof(request));
+
+            var response = await request.ConfigureAwait(false);
             Debug.Assert(response == "OK");
         }
     }

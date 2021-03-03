@@ -67,9 +67,12 @@ using System.Diagnostics;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (By design for Rx subscriptions in sample.)
+
 namespace Pearls.Reaqtor.CSE
 {
-    public class Program
+    public static class Program
     {
         public static void Main()
         {

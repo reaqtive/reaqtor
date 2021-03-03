@@ -31,6 +31,9 @@ namespace Reaqtor.Remoting.Metadata
 
         public Task<TableResult> ExecuteAsync(ITableOperation operation, TableRequestOptions options, object state)
         {
+            if (operation == null)
+                throw new ArgumentNullException(nameof(operation));
+
             return operation.Type switch
             {
                 TableOperationType.Delete => Delete(operation.Entity),
@@ -62,7 +65,7 @@ namespace Reaqtor.Remoting.Metadata
                 { "ETag", new StorageEntityProperty { Type = (int)EdmType.String, Data = entity.ETag } },
                 { "PartitionKey", new StorageEntityProperty { Type = (int)EdmType.String, Data = entity.PartitionKey } },
                 { "RowKey", new StorageEntityProperty { Type = (int)EdmType.String, Data = entity.RowKey } },
-                { "Timestamp", new StorageEntityProperty { Type = (int)EdmType.DateTime, Data = entity.Timestamp.UtcTicks.ToString() } },
+                { "Timestamp", new StorageEntityProperty { Type = (int)EdmType.DateTime, Data = entity.Timestamp.UtcTicks.ToString(CultureInfo.InvariantCulture) } },
             };
 
             foreach (var property in entity.WriteEntity(null))
@@ -73,19 +76,19 @@ namespace Reaqtor.Remoting.Metadata
                         properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.Boolean, Data = property.Value.BooleanValue.Value ? "true" : "false" });
                         break;
                     case EdmType.DateTime:
-                        properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.DateTime, Data = property.Value.DateTimeOffsetValue.Value.UtcTicks.ToString() });
+                        properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.DateTime, Data = property.Value.DateTimeOffsetValue.Value.UtcTicks.ToString(CultureInfo.InvariantCulture) });
                         break;
                     case EdmType.Double:
-                        properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.Double, Data = property.Value.DoubleValue.Value.ToString() });
+                        properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.Double, Data = property.Value.DoubleValue.Value.ToString(CultureInfo.InvariantCulture) });
                         break;
                     case EdmType.Guid:
                         properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.Guid, Data = property.Value.GuidValue.Value.ToString() });
                         break;
                     case EdmType.Int32:
-                        properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.Int32, Data = property.Value.Int32Value.Value.ToString() });
+                        properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.Int32, Data = property.Value.Int32Value.Value.ToString(CultureInfo.InvariantCulture) });
                         break;
                     case EdmType.Int64:
-                        properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.Int64, Data = property.Value.Int64Value.Value.ToString() });
+                        properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.Int64, Data = property.Value.Int64Value.Value.ToString(CultureInfo.InvariantCulture) });
                         break;
                     case EdmType.String:
                         properties.Add(property.Key, new StorageEntityProperty { Type = (int)EdmType.String, Data = property.Value.StringValue });

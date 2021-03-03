@@ -33,6 +33,7 @@ namespace Reaqtor.Remoting.TestingFramework
             _notificationComparer = new NotificationEqualityComparer<T>(valueComparer);
         }
 
+#pragma warning disable CA1000 // Do not declare static members on generic types. (By design.)
         public static RecordedNotificationEqualityComparer<T> Default
         {
             get
@@ -44,6 +45,7 @@ namespace Reaqtor.Remoting.TestingFramework
                 return _instance;
             }
         }
+#pragma warning restore CA1000
 
         public bool Equals(Recorded<INotification<T>> x, Recorded<INotification<T>> y)
         {

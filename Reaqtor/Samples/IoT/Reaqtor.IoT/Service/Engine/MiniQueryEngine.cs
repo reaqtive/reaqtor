@@ -12,7 +12,6 @@ using System.Linq.Expressions;
 using Reaqtive;
 using Reaqtive.Scheduler;
 
-using Reaqtor;
 using Reaqtor.Expressions.Core;
 using Reaqtor.Metadata;
 using Reaqtor.QueryEngine;
@@ -26,7 +25,7 @@ namespace Reaqtor.IoT
     // Query engine implementation, specializing the Reactor Core engine on a few facilities.
     //
 
-    public sealed class QueryEngine : CheckpointingQueryEngine
+    public sealed class MiniQueryEngine : CheckpointingQueryEngine
     {
         private static readonly IQuotedTypeConversionTargets s_map = QuotedTypeConversionTargets.From(new Dictionary<Type, Type>
         {
@@ -37,7 +36,7 @@ namespace Reaqtor.IoT
 
         private readonly IngressEgressManager _iemgr;
 
-        internal QueryEngine(Uri uri, IScheduler scheduler, IKeyValueStore store, IngressEgressManager iemgr)
+        internal MiniQueryEngine(Uri uri, IScheduler scheduler, IKeyValueStore store, IngressEgressManager iemgr)
              : base(uri, new Resolver(), scheduler, new Registry(), store, SerializationPolicy.Default, s_map)
         {
             _iemgr = iemgr;
@@ -57,10 +56,10 @@ namespace Reaqtor.IoT
 
         private sealed class OperatorContext : IHostedOperatorContext
         {
-            private readonly QueryEngine _parent;
+            private readonly MiniQueryEngine _parent;
             private readonly IHostedOperatorContext _context;
 
-            public OperatorContext(QueryEngine parent, IHostedOperatorContext context) => (_parent, _context) = (parent, context);
+            public OperatorContext(MiniQueryEngine parent, IHostedOperatorContext context) => (_parent, _context) = (parent, context);
 
             public Uri InstanceId => _context.InstanceId;
 
@@ -130,7 +129,7 @@ namespace Reaqtor.IoT
 
             private sealed class EmptyQueryableDictionary<Key, Value> : IQueryableDictionary<Key, Value>
             {
-                public Value this[Key key] => throw new KeyNotFoundException();
+                public Value this[Key key] => throw new System.Collections.Generic.KeyNotFoundException();
 
                 public IQueryable<Key> Keys => Enumerable.Empty<Key>().AsQueryable();
 

@@ -9,6 +9,8 @@ namespace Reaqtor.Remoting.Metadata
     /// </summary>
     public interface IStorageResolver
     {
+#pragma warning disable CA1054 // URI-like parameters should not be strings. (Kept for compat.)
+
         /// <summary>
         /// Resolves a table address from a collection URI.
         /// </summary>
@@ -22,5 +24,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <param name="entityUri">The entity URI.</param>
         /// <returns>The partition key.</returns>
         string ResolvePartition(string entityUri);
+
+#pragma warning restore CA1054
     }
 }

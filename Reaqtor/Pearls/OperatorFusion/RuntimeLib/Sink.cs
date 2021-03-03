@@ -13,10 +13,18 @@ using System.Threading;
 
 namespace RuntimeLib
 {
+    //
+    // NB: Not CLS compliant due to fields starting with underscore. This type has to be public for runtime code-generation,
+    //     but the type isn't targeted by end users.
+    //
+
+    [CLSCompliant(false)]
     public class Sink<T> : IDisposable
     {
+#pragma warning disable CA1051 // Do not declare visible instance fields. (By design; runtime-generated code uses these fields.)
         protected IObserver<T> _observer;
         protected IDisposable _disposable;
+#pragma warning restore CA1051
 
         public Sink(IObserver<T> observer, IDisposable disposable)
         {

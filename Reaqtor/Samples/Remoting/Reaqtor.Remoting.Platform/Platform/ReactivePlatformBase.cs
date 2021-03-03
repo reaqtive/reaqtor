@@ -65,8 +65,6 @@ namespace Reaqtor.Remoting.Platform
                 _configuration.AzureConnectionString = _environment.AzureConnectionString;
             }
 
-            _configuration.QueryEvaluatorConnections = new List<IReactiveQueryEvaluatorConnection>();
-
             foreach (var queryEvaluator in QueryEvaluators)
             {
                 if (_configuration.StorageType == MetadataStorageType.Remoting)
@@ -77,7 +75,7 @@ namespace Reaqtor.Remoting.Platform
                 queryEvaluator.Register(_environment.StateStoreService);
                 queryEvaluator.Register(_environment.MessagingService);
                 queryEvaluator.Register(_environment.KeyValueStoreService);
-                await queryEvaluator.StartAsync(token);
+                await queryEvaluator.StartAsync(token).ConfigureAwait(false);
                 _configuration.QueryEvaluatorConnections.Add(queryEvaluator.GetInstance<IReactiveQueryEvaluatorConnection>());
                 QueryCoordinator.Register(queryEvaluator);
             }
@@ -86,16 +84,16 @@ namespace Reaqtor.Remoting.Platform
             {
                 QueryCoordinator.Register(_environment.MetadataService);
             }
-            await QueryCoordinator.StartAsync(token);
+            await QueryCoordinator.StartAsync(token).ConfigureAwait(false);
         }
 
         public virtual async Task StopAsync(CancellationToken token)
         {
-            await QueryCoordinator.StopAsync(token);
+            await QueryCoordinator.StopAsync(token).ConfigureAwait(false);
 
             foreach (var queryEvaluator in QueryEvaluators)
             {
-                await queryEvaluator.StopAsync(token);
+                await queryEvaluator.StopAsync(token).ConfigureAwait(false);
             }
         }
 
@@ -121,11 +119,6 @@ namespace Reaqtor.Remoting.Platform
         [Serializable]
         private sealed class ReactivePlatformConfiguration : IReactivePlatformConfiguration
         {
-            public ReactivePlatformConfiguration()
-            {
-                EngineOptions = new Dictionary<string, string>();
-            }
-
             public SchedulerType SchedulerType
             {
                 get;
@@ -150,11 +143,7 @@ namespace Reaqtor.Remoting.Platform
                 set;
             }
 
-            public Dictionary<string, string> EngineOptions
-            {
-                get;
-                set;
-            }
+            public Dictionary<string, string> EngineOptions { get; } = new();
 
             public MetadataStorageType StorageType
             {
@@ -192,11 +181,7 @@ namespace Reaqtor.Remoting.Platform
                 set;
             }
 
-            public List<IReactiveQueryEvaluatorConnection> QueryEvaluatorConnections
-            {
-                get;
-                set;
-            }
+            public IList<IReactiveQueryEvaluatorConnection> QueryEvaluatorConnections { get; } = new List<IReactiveQueryEvaluatorConnection>();
         }
     }
 }

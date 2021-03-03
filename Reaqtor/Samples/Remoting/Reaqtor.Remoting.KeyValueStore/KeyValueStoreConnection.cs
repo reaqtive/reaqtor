@@ -26,7 +26,9 @@ namespace Reaqtor.Remoting.KeyValueStore
             _transactionMap = new ConcurrentDictionary<long, IKeyValueStoreTransaction>();
         }
 
+#pragma warning disable CA1819 // Properties should not return arrays. (Legacy approach; kept for compat.)
         public byte[] this[long transactionId, string tableName, string key] => _transactionMap[transactionId][tableName, key];
+#pragma warning restore CA1819
 
         public void Add(long transactionId, string tableName, string key, byte[] value) => _transactionMap[transactionId].Add(tableName, key, value);
 
@@ -36,7 +38,7 @@ namespace Reaqtor.Remoting.KeyValueStore
 
         public void Remove(long transactionId, string tableName, string key) => _transactionMap[transactionId].Remove(tableName, key);
 
-        public List<KeyValuePair<string, byte[]>> GetEnumerator(long transactionId, string tableName)
+        public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(long transactionId, string tableName)
         {
             var enumerator = _transactionMap[transactionId].GetEnumerator(tableName);
 
@@ -44,7 +46,7 @@ namespace Reaqtor.Remoting.KeyValueStore
             while (enumerator.MoveNext())
                 list.Add(enumerator.Current);
 
-            return list;
+            return list.GetEnumerator();
         }
 
         public long CreateTransaction()
@@ -69,14 +71,14 @@ namespace Reaqtor.Remoting.KeyValueStore
 
         public byte[] SerializeStore()
         {
-            var stream = new MemoryStream();
+            using var stream = new MemoryStream();
             _kvs.Save(stream);
             return stream.ToArray();
         }
 
         public void DeserializeStore(byte[] bytes)
         {
-            var stream = new MemoryStream(bytes);
+            using var stream = new MemoryStream(bytes);
             _kvs = InMemoryKeyValueStore.Load(stream);
         }
 

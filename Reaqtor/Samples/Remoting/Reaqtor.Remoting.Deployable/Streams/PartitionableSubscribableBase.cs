@@ -15,7 +15,7 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
     public abstract class PartitionableSubscribableBase<TSource> : IPartitionableSubscribable<TSource>
     {
-        protected readonly TypeErasedKeyBinding<TSource>[] _bindings;
+        private protected readonly TypeErasedKeyBinding<TSource>[] _bindings;
 
         protected PartitionableSubscribableBase(IList<TypeErasedKeyBinding<TSource>> bindings)
         {
@@ -27,6 +27,9 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
         public IPartitionableSubscribable<TSource> AppendBindings(IList<TypeErasedKeyBinding<TSource>> bindings)
         {
+            if (bindings == null)
+                throw new ArgumentNullException(nameof(bindings));
+
             var appended = new TypeErasedKeyBinding<TSource>[bindings.Count + _bindings.Length];
 
             var origLen = _bindings.Length;
@@ -52,9 +55,9 @@ namespace Reaqtor.Remoting.Deployable.Streams
     public abstract class PartitionableSubscribableBase<TSource, TKey, TInner> : IPartitionableSubscribable<TSource, TKey, TInner>
         where TInner : IImmutableBindingHolder<TInner, TSource>
     {
-        protected readonly TypeErasedKeyBinding<TSource>[] _bindings;
-        protected readonly TInner _source;
-        protected readonly IKeySelector<TSource, TKey> _keySelector;
+        private protected readonly TypeErasedKeyBinding<TSource>[] _bindings;
+        private protected readonly TInner _source;
+        private protected readonly IKeySelector<TSource, TKey> _keySelector;
 
         protected PartitionableSubscribableBase(TInner source, IKeySelector<TSource, TKey> keySelector, IList<TypeErasedKeyBinding<TSource>> bindings)
         {
@@ -75,6 +78,9 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
         public IPartitionableSubscribable<TSource, TKey, TInner> AppendBindings(IList<TypeErasedKeyBinding<TSource>> bindings)
         {
+            if (bindings == null)
+                throw new ArgumentNullException(nameof(bindings));
+
             var appended = new TypeErasedKeyBinding<TSource>[bindings.Count + _bindings.Length];
 
             var origLen = _bindings.Length;

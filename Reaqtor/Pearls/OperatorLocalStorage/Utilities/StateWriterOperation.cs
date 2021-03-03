@@ -12,7 +12,7 @@ namespace Utilities
 {
     public abstract class StateWriterOperation
     {
-        public StateWriterOperation(string category, string key)
+        protected StateWriterOperation(string category, string key)
         {
             Category = category;
             Key = key;

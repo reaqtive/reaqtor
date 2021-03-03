@@ -62,7 +62,7 @@ namespace Reaqtor.Remoting.Metadata
             return table.TryGetValue(key, out entity);
         }
 
-        public List<StorageEntity> GetEntities(string collection)
+        public IList<StorageEntity> GetEntities(string collection)
         {
             if (!TryGetValue(collection, out var table))
             {

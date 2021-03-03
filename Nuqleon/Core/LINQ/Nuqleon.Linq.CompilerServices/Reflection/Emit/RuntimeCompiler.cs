@@ -881,7 +881,7 @@ namespace System.Linq.CompilerServices
                 {
                     var name = property.Name;
 
-#if NET5_0
+#if NET5_0 || NETSTANDARD2_1
                     var nameHash = name.GetHashCode(StringComparison.Ordinal);
 #else
                     var nameHash = name.GetHashCode();

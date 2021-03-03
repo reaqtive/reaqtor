@@ -15,7 +15,9 @@ namespace Reaqtor.Remoting.Platform
     internal sealed class AppDomainMessagingService : ReactiveServiceBase, IReactiveMessagingService
     {
         public AppDomainMessagingService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(new AppDomainRunnable("MessagingService", typeof(MessagingConnection)), ReactiveServiceType.MessagingService)
+#pragma warning restore CA2000
         {
         }
     }

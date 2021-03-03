@@ -18,7 +18,9 @@ namespace Reaqtor.Remoting.Platform
     internal sealed class InMemoryMetadataService : ReactiveServiceBase, IReactiveMetadataService
     {
         public InMemoryMetadataService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(new InMemoryRunnable(CreateMetadataService), ReactiveServiceType.MetadataService)
+#pragma warning restore CA2000
         {
         }
 

@@ -18,7 +18,9 @@ namespace Reaqtor.Remoting.Platform
     internal sealed class TcpMetadataService : ReactiveServiceBase, IReactiveMetadataService
     {
         public TcpMetadataService(string executablePath, int port, string uri)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : this(new TcpRunnable<IReactiveStorageConnection>(executablePath, port, uri))
+#pragma warning restore CA2000
         {
         }
 

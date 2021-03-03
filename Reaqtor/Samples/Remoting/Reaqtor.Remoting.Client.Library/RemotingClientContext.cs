@@ -39,6 +39,15 @@ namespace Reaqtor.Remoting.Client
         /// Initializes the remoting client context using a well-known service provider identified by serviceProviderUri.
         /// </summary>
         /// <param name="serviceProviderUri">URI of a well-known service provider.</param>
+        public RemotingClientContext(Uri serviceProviderUri)
+            : this(serviceProviderUri?.ToString())
+        {
+        }
+
+        /// <summary>
+        /// Initializes the remoting client context using a well-known service provider identified by serviceProviderUri.
+        /// </summary>
+        /// <param name="serviceProviderUri">URI of a well-known service provider.</param>
         public RemotingClientContext(string serviceProviderUri)
             : base(new TupletizingExpressionServices(typeof(IReactiveClientProxy)), GetServiceProvider(serviceProviderUri))
         {
@@ -53,8 +62,11 @@ namespace Reaqtor.Remoting.Client
         {
         }
 
-        private static IReactiveServiceProvider GetServiceProvider(string uri)
+        private static IReactiveServiceProvider GetServiceProvider(string serviceProviderUri)
         {
+            if (serviceProviderUri == null)
+                throw new ArgumentNullException(nameof(serviceProviderUri));
+
             var clientProvider = new BinaryClientFormatterSinkProvider();
             var serverProvider = new BinaryServerFormatterSinkProvider { TypeFilterLevel = TypeFilterLevel.Full };
             var props = new Hashtable
@@ -65,7 +77,7 @@ namespace Reaqtor.Remoting.Client
                     };
             ChannelServices.RegisterChannel(new TcpChannel(props, clientProvider, serverProvider), ensureSecurity: false);
 
-            var connection = (IRemotingReactiveServiceConnection)Activator.GetObject(typeof(IRemotingReactiveServiceConnection), uri);
+            var connection = (IRemotingReactiveServiceConnection)Activator.GetObject(typeof(IRemotingReactiveServiceConnection), serviceProviderUri);
             return GetServiceProvider(connection);
         }
 

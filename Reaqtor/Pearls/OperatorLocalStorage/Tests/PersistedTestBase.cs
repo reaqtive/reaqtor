@@ -51,7 +51,7 @@ namespace Tests
                     Store.Data.Clear();
                 }
 
-                using var writer = new Writer(Store, differential ? CheckpointKind.Differential : CheckpointKind.Full);
+                using var writer = new StateWriter(Store, differential ? CheckpointKind.Differential : CheckpointKind.Full);
                 using var logger = new LoggingStateWriter(writer, TextWriter.Null);
 
                 Space.Save(logger);
@@ -65,7 +65,7 @@ namespace Tests
 
             public void SaveSpaceFail(bool differential)
             {
-                using var writer = new Writer(Store, differential ? CheckpointKind.Differential : CheckpointKind.Full);
+                using var writer = new StateWriter(Store, differential ? CheckpointKind.Differential : CheckpointKind.Full);
                 using var logger = new LoggingStateWriter(writer, TextWriter.Null);
 
                 Space.Save(logger);
@@ -73,7 +73,7 @@ namespace Tests
 
             public void LoadSpace()
             {
-                using var reader = new Reader(Store);
+                using var reader = new StateReader(Store);
                 using var logger = new LoggingStateReader(reader, TextWriter.Null);
 
                 Space.Load(logger);

@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
@@ -23,16 +24,24 @@ namespace Tests.System.Linq.CompilerServices
             return cloner.Visit(expression);
         }
 
-        private class ExpressionCloner : ScopedExpressionVisitor<ParameterExpression>
+        private sealed class ExpressionCloner : ScopedExpressionVisitor<ParameterExpression>
         {
+            private readonly Dictionary<LabelTarget, LabelTarget> _labelMap = new();
+
             protected override Expression VisitBinary(BinaryExpression node)
             {
-                return Expression.MakeBinary(node.NodeType, Visit(node.Left), Visit(node.Right), node.IsLiftedToNull, node.Method, VisitAndConvert<LambdaExpression>(node.Conversion, "VisitBinary"));
+                return Expression.MakeBinary(node.NodeType, Visit(node.Left), Visit(node.Right), node.IsLiftedToNull, node.Method, VisitAndConvert<LambdaExpression>(node.Conversion, nameof(VisitBinary)));
             }
 
-            protected override Expression VisitBlockCore(BlockExpression node) => throw new NotImplementedException();
+            protected override Expression VisitBlockCore(BlockExpression node)
+            {
+                return Expression.Block(node.Type, VisitAndConvert<ParameterExpression>(node.Variables, nameof(VisitBlock)), Visit(node.Expressions));
+            }
 
-            protected override CatchBlock VisitCatchBlockCore(CatchBlock node) => throw new NotImplementedException();
+            protected override CatchBlock VisitCatchBlockCore(CatchBlock node)
+            {
+                return Expression.MakeCatchBlock(node.Test, VisitAndConvert<ParameterExpression>(node.Variable, nameof(VisitCatchBlock)), Visit(node.Body), Visit(node.Filter));
+            }
 
             protected override Expression VisitConditional(ConditionalExpression node)
             {
@@ -51,7 +60,10 @@ namespace Tests.System.Linq.CompilerServices
                 return Expression.Default(node.Type);
             }
 
-            protected override Expression VisitDynamic(DynamicExpression node) => throw new NotImplementedException();
+            protected override Expression VisitDynamic(DynamicExpression node)
+            {
+                return Expression.MakeDynamic(node.DelegateType, node.Binder, Visit(node.Arguments));
+            }
 
             protected override ElementInit VisitElementInit(ElementInit node)
             {
@@ -60,7 +72,10 @@ namespace Tests.System.Linq.CompilerServices
 
             protected override Expression VisitExtension(Expression node) => throw new NotImplementedException();
 
-            protected override Expression VisitGoto(GotoExpression node) => throw new NotImplementedException();
+            protected override Expression VisitGoto(GotoExpression node)
+            {
+                return Expression.MakeGoto(node.Kind, VisitLabelTarget(node.Target), Visit(node.Value), node.Type);
+            }
 
             protected override Expression VisitIndex(IndexExpression node)
             {
@@ -72,21 +87,41 @@ namespace Tests.System.Linq.CompilerServices
                 return Expression.Invoke(Visit(node.Expression), Visit(node.Arguments));
             }
 
-            protected override Expression VisitLabel(LabelExpression node) => throw new NotImplementedException();
+            protected override Expression VisitLabel(LabelExpression node)
+            {
+                return Expression.Label(VisitLabelTarget(node.Target), Visit(node.DefaultValue));
+            }
 
-            protected override LabelTarget VisitLabelTarget(LabelTarget node) => throw new NotImplementedException();
+            protected override LabelTarget VisitLabelTarget(LabelTarget node)
+            {
+                if (node == null)
+                {
+                    return null;
+                }
+
+                if (!_labelMap.TryGetValue(node, out var res))
+                {
+                    res = Expression.Label(node.Type, node.Name);
+                    _labelMap.Add(node, res);
+                }
+
+                return res;
+            }
 
             protected override Expression VisitLambdaCore<T>(Expression<T> node)
             {
-                return Expression.Lambda<T>(Visit(node.Body), node.Name, node.TailCall, VisitAndConvert<ParameterExpression>(node.Parameters, "VisitLambda"));
+                return Expression.Lambda<T>(Visit(node.Body), node.Name, node.TailCall, VisitAndConvert<ParameterExpression>(node.Parameters, nameof(VisitLambda)));
             }
 
             protected override Expression VisitListInit(ListInitExpression node)
             {
-                return Expression.ListInit(VisitAndConvert<NewExpression>(node.NewExpression, "VisitListInit"), node.Initializers.Select(VisitElementInit));
+                return Expression.ListInit(VisitAndConvert<NewExpression>(node.NewExpression, nameof(VisitListInit)), node.Initializers.Select(VisitElementInit));
             }
 
-            protected override Expression VisitLoop(LoopExpression node) => throw new NotImplementedException();
+            protected override Expression VisitLoop(LoopExpression node)
+            {
+                return Expression.Loop(Visit(node.Body), VisitLabelTarget(node.BreakLabel), VisitLabelTarget(node.ContinueLabel));
+            }
 
             protected override Expression VisitMember(MemberExpression node)
             {
@@ -110,7 +145,7 @@ namespace Tests.System.Linq.CompilerServices
 
             protected override Expression VisitMemberInit(MemberInitExpression node)
             {
-                return Expression.MemberInit(VisitAndConvert(node.NewExpression, "VisitMemberInit"), node.Bindings.Select(VisitMemberBinding));
+                return Expression.MemberInit(VisitAndConvert(node.NewExpression, nameof(VisitMemberInit)), node.Bindings.Select(VisitMemberBinding));
             }
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
@@ -156,13 +191,25 @@ namespace Tests.System.Linq.CompilerServices
                 }
             }
 
-            protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node) => throw new NotImplementedException();
+            protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
+            {
+                return Expression.RuntimeVariables(VisitAndConvert(node.Variables, nameof(VisitRuntimeVariables)));
+            }
 
-            protected override Expression VisitSwitch(SwitchExpression node) => throw new NotImplementedException();
+            protected override Expression VisitSwitch(SwitchExpression node)
+            {
+                return Expression.Switch(Visit(node.SwitchValue), Visit(node.DefaultBody), node.Comparison, node.Cases.Select(VisitSwitchCase));
+            }
 
-            protected override SwitchCase VisitSwitchCase(SwitchCase node) => throw new NotImplementedException();
+            protected override SwitchCase VisitSwitchCase(SwitchCase node)
+            {
+                return Expression.SwitchCase(Visit(node.Body), Visit(node.TestValues));
+            }
 
-            protected override Expression VisitTry(TryExpression node) => throw new NotImplementedException();
+            protected override Expression VisitTry(TryExpression node)
+            {
+                return Expression.MakeTry(node.Type, Visit(node.Body), Visit(node.Finally), Visit(node.Fault), node.Handlers.Select(VisitCatchBlock));
+            }
 
             protected override Expression VisitTypeBinary(TypeBinaryExpression node)
             {

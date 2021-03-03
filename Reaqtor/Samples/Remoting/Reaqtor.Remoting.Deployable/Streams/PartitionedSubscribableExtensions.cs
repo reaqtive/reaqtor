@@ -30,6 +30,13 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
         public static ISubscribable<T> Partition<T, TKey>(this ISubscribable<T> source, Expression<Func<T, TKey>> filter, IEqualityComparer<TKey> keyComparer, TKey value)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (filter == null)
+                throw new ArgumentNullException(nameof(filter));
+            if (keyComparer == null)
+                throw new ArgumentNullException(nameof(keyComparer));
+
             if (source is QuotedSubscribable<T> quotedPartitionableSubscribable)
             {
                 source = quotedPartitionableSubscribable.Value;

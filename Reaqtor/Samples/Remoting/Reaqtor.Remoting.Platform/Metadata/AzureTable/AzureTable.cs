@@ -26,9 +26,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <param name="table">The Azure CloudTable.</param>
         public AzureTable(CloudTable table)
         {
-            Contract.RequiresNotNull(table);
-
-            _table = table;
+            _table = table ?? throw new ArgumentNullException(nameof(table));
         }
 
         /// <summary>
@@ -54,6 +52,9 @@ namespace Reaqtor.Remoting.Metadata
         /// <exception cref="ReactiveProcessingStorageException">The specified resource already exists or The specified resource does not exist or Unknown</exception>
         public Task<TableResult> ExecuteAsync(ITableOperation operation, TableRequestOptions options, object state)
         {
+            if (operation == null)
+                throw new ArgumentNullException(nameof(operation));
+
             var azureOperation = operation.Type switch
             {
                 TableOperationType.Delete => TableOperation.Delete(operation.Entity),

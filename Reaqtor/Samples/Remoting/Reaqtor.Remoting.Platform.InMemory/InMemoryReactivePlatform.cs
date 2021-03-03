@@ -27,7 +27,9 @@ namespace Reaqtor.Remoting.Platform
         private readonly bool _selfContainedEnvironment;
 
         public InMemoryReactivePlatform()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : this(new InMemoryReactiveEnvironment())
+#pragma warning restore CA2000
         {
             _selfContainedEnvironment = true;
         }
@@ -53,10 +55,10 @@ namespace Reaqtor.Remoting.Platform
         {
             if (_selfContainedEnvironment)
             {
-                await Environment.StartAsync(CancellationToken.None);
+                await Environment.StartAsync(CancellationToken.None).ConfigureAwait(false);
             }
 
-            await base.StartAsync(token);
+            await base.StartAsync(token).ConfigureAwait(false);
         }
 
         protected override void Dispose(bool disposing)

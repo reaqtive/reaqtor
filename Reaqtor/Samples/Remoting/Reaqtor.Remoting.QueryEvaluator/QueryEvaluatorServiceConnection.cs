@@ -59,7 +59,7 @@ namespace Reaqtor.Remoting.QueryEvaluator
             {
                 throw new InvalidOperationException("State storage has not been initialized.");
             }
-            var stateWriter = new StateStoreConnectionStateWriter(connection, CheckpointKind.Differential);
+            using var stateWriter = new StateStoreConnectionStateWriter(connection, CheckpointKind.Differential);
             _engine.CheckpointAsync(stateWriter).Wait();
         }
 
@@ -134,7 +134,7 @@ namespace Reaqtor.Remoting.QueryEvaluator
             var stateStore = _configuration.StateStoreConnection;
             if (stateStore != null)
             {
-                var stateReader = new StateStoreConnectionStateReader(stateStore);
+                using var stateReader = new StateStoreConnectionStateReader(stateStore);
                 _engine.RecoverAsync(stateReader).Wait();
             }
             DefineBuiltinOperators();

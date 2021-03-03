@@ -20,6 +20,6 @@ namespace Reaqtor.Remoting.Protocol
 
         bool TryGetEntity(string collection, string key, out StorageEntity entity);
 
-        List<StorageEntity> GetEntities(string collection);
+        IList<StorageEntity> GetEntities(string collection);
     }
 }

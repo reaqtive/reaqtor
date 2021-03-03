@@ -54,8 +54,8 @@ namespace Engine
 
         public new async Task CheckpointAsync(IStateWriter writer, CancellationToken token, IProgress<int> progress)
         {
-            var coreState = new PartitionedStateWriter(writer, "Reactive", isOwner: true);
-            var objectState = new PartitionedStateWriter(writer, "ObjectSpace", isOwner: false);
+            using var coreState = new PartitionedStateWriter(writer, "Reactive", isOwner: true);
+            using var objectState = new PartitionedStateWriter(writer, "ObjectSpace", isOwner: false);
 
             var pausedHandler = new EventHandler<SchedulerPausedEventArgs>(delegate
             {
@@ -78,8 +78,8 @@ namespace Engine
 
         public new async Task RecoverAsync(IStateReader reader, CancellationToken token, IProgress<int> progress)
         {
-            var coreState = new PartitionedStateReader(reader, "Reactive", isOwner: true);
-            var objectState = new PartitionedStateReader(reader, "ObjectSpace", isOwner: false);
+            using var coreState = new PartitionedStateReader(reader, "Reactive", isOwner: true);
+            using var objectState = new PartitionedStateReader(reader, "ObjectSpace", isOwner: false);
 
             var pausedHandler = new EventHandler<SchedulerPausedEventArgs>(delegate
             {
@@ -208,7 +208,7 @@ namespace Engine
             }
 
 #pragma warning disable IDE0057 // Substring can be simplified. (Suppressing here for simplicify with multi-targeting.)
-            public IEnumerable<string> GetCategories() => _reader.GetCategories().Where(c => c.StartsWith(_prefix) && c.Length > _prefix.Length).Select(c => c.Substring(_prefix.Length));
+            public IEnumerable<string> GetCategories() => _reader.GetCategories().Where(c => c.StartsWith(_prefix, StringComparison.Ordinal) && c.Length > _prefix.Length).Select(c => c.Substring(_prefix.Length));
 #pragma warning restore IDE0057
 
             public bool TryGetItemKeys(string category, out IEnumerable<string> keys) => _reader.TryGetItemKeys(_prefix + category, out keys);

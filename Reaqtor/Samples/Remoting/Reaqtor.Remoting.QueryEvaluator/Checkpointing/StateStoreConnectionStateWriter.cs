@@ -234,6 +234,8 @@ namespace Reaqtor.Remoting.QueryEvaluator
 
             protected override void Dispose(bool disposing)
             {
+                base.Dispose(disposing);
+
                 _onDispose?.Invoke();
 
                 if (!_leaveStreamOpen)

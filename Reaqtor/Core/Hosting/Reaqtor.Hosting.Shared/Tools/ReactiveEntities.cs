@@ -2,8 +2,10 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
+using System.Runtime.Serialization;
 
 namespace Reaqtor.Hosting.Shared.Tools
 {
@@ -16,6 +18,7 @@ namespace Reaqtor.Hosting.Shared.Tools
     /// <summary>
     /// A dictionary used for organizing occurrences of Reactive entities in an expression.
     /// </summary>
+    [Serializable]
     public class ReactiveEntities : Dictionary<ReactiveEntityType, ReactiveEntitySet>
     {
         /// <summary>
@@ -29,6 +32,16 @@ namespace Reaqtor.Hosting.Shared.Tools
             Add(ReactiveEntityType.StreamFactory, new ReactiveEntitySet());
             Add(ReactiveEntityType.Subscription, new ReactiveEntitySet());
             Add(ReactiveEntityType.SubscriptionFactory, new ReactiveEntitySet());
+        }
+
+        /// <summary>
+        /// Initializes the dictionaries from serialized state.
+        /// </summary>
+        /// <param name="serializationInfo">Serialization information.</param>
+        /// <param name="streamingContext">Source of the serialized state.</param>
+        protected ReactiveEntities(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
+        {
         }
 
         /// <summary>

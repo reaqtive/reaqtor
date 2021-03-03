@@ -16,30 +16,12 @@ namespace Reaqtor.Remoting
         /// </summary>
         /// <typeparam name="TException">The type of the exception.</typeparam>
         /// <param name="condition">The condition to check.</param>
-        public static void Requires<TException>(bool condition) where TException : Exception, new()
+        private static void Requires<TException>(bool condition) where TException : Exception, new()
         {
             if (condition == false)
             {
                 throw new TException();
             }
-        }
-
-        /// <summary>
-        /// Checks that the condition is not false if it is throws exception
-        /// </summary>
-        /// <param name="condition">the condition to check</param>
-        public static void Requires(bool condition)
-        {
-            Requires<Exception>(condition);
-        }
-
-        /// <summary>
-        /// Requires that the string is not null or empty.
-        /// </summary>
-        /// <param name="s">The string.</param>
-        public static void RequiresIsNotNullOrEmpty(string s)
-        {
-            Requires<ArgumentNullException>(string.IsNullOrEmpty(s) == false);
         }
 
         /// <summary>
@@ -52,47 +34,12 @@ namespace Reaqtor.Remoting
         }
 
         /// <summary>
-        /// Requires the object is not null.
-        /// </summary>
-        /// <typeparam name="TException">The type of the exception.</typeparam>
-        /// <param name="obj">The object to check for not null</param>
-        public static void RequiresNotNull<TException>(object obj) where TException : Exception, new()
-        {
-            if (obj != null)
-            {
-                throw new TException();
-            }
-        }
-
-        /// <summary>
         /// Requires that the string is not null or empty.
         /// </summary>
         /// <param name="s">The string to check for not null or empty.</param>
         public static void RequiresNotNullOrEmpty(string s)
         {
             Requires<ArgumentNullException>(string.IsNullOrEmpty(s) == false);
-        }
-
-        /// <summary>
-        /// Ensures the specified condition.
-        /// </summary>
-        /// <typeparam name="TException">The type of the exception.</typeparam>
-        /// <param name="condition">The condition to check.</param>
-        public static void Ensures<TException>(bool condition) where TException : Exception, new()
-        {
-            if (condition == false)
-            {
-                throw new TException();
-            }
-        }
-
-        /// <summary>
-        /// Ensures the specified condition is true otherwise is throws an exception.
-        /// </summary>
-        /// <param name="condition">The condition to check.</param>
-        public static void Ensures(bool condition)
-        {
-            Ensures<Exception>(condition);
         }
     }
 }

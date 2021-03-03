@@ -22,16 +22,16 @@ using Utilities;
 
 namespace Playground
 {
-    class Program
+    public static class Program
     {
-        static void Main()
+        public static void Main()
         {
             ObjectSpaceTests();
 
             EngineIntegrationTests.RunAsync().GetAwaiter().GetResult();
         }
 
-        static void ObjectSpaceTests()
+        private static void ObjectSpaceTests()
         {
             var store = new Store();
 
@@ -263,7 +263,7 @@ namespace Playground
 
         private static IStateReader GetReader(Store store)
         {
-            return new Reader(store)
+            return new StateReader(store)
 #if LOG
                 .WithLogging()
 #endif
@@ -272,7 +272,7 @@ namespace Playground
 
         private static IStateWriter GetWriter(Store store, CheckpointKind checkpointKind)
         {
-            return new Writer(store, checkpointKind)
+            return new StateWriter(store, checkpointKind)
 #if LOG
                 .WithLogging()
 #endif

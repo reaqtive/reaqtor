@@ -13,40 +13,49 @@ using Nuqleon.DataModel;
 
 using Reaqtive;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization for tracing.)
+
 namespace Reaqtor.Remoting.Deployable
 {
     [KnownType]
-    public sealed class EOP<T, R> : IObserver<R>, IExpressible, ISubscription, IOperator
+    public sealed class EOP<TArgs, TInput> : IObserver<TInput>, IExpressible, ISubscription, IOperator
     {
         private readonly string Uri;
-        private readonly T Args;
-        private readonly BlockingCollection<Notification<R>> _notifications = new(/* defaults to queue underneath */);
+        private readonly TArgs Args;
+
+#pragma warning disable CA2213 // REVIEW: Disposable fields should be disposed.
+        private readonly BlockingCollection<Notification<TInput>> _notifications = new(/* defaults to queue underneath */);
+#pragma warning restore CA2213
 
         // NB: Don't change constructor signature; it is matched in expression trees.
 
-        public EOP(string uri, T args)
+#pragma warning disable CA1054 // URI-like parameters should not be strings. (Gets bound as a string by the environment.)
+
+        public EOP(string uri, TArgs args)
         {
             Uri = uri;
             Args = args;
         }
 
+#pragma warning restore CA1054
+
         public Expression Expression { get; set; }
 
         public IEnumerable<ISubscription> Inputs => Array.Empty<ISubscription>();
 
-        public void Accept(ISubscriptionVisitor visitor) => visitor.Visit(this);
+        public void Accept(ISubscriptionVisitor visitor) => visitor?.Visit(this);
 
         public void Dispose() => _notifications.CompleteAdding();
 
-        public void OnCompleted() => _notifications.Add(Notification.CreateOnCompleted<R>());
+        public void OnCompleted() => _notifications.Add(Notification.CreateOnCompleted<TInput>());
 
-        public void OnError(Exception error) => _notifications.Add(Notification.CreateOnError<R>(error));
+        public void OnError(Exception error) => _notifications.Add(Notification.CreateOnError<TInput>(error));
 
-        public void OnNext(R value) => _notifications.Add(Notification.CreateOnNext<R>(value));
+        public void OnNext(TInput value) => _notifications.Add(Notification.CreateOnNext<TInput>(value));
 
         public void Subscribe() { }
 
-        public void SetContext(IOperatorContext context) => Console.WriteLine("SetContext");
+        public void SetContext(IOperatorContext context) => Console.WriteLine(nameof(SetContext));
 
         public void Start()
         {
@@ -68,7 +77,7 @@ namespace Reaqtor.Remoting.Deployable
 
             Console.WriteLine($"Start - Bound = {bound}");
 
-            var observer = bound.Evaluate<IObserver<R>>();
+            var observer = bound.Evaluate<IObserver<TInput>>();
 
             //
             // This mimics a remote system processing the event that are sent over the system boundary through some

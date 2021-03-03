@@ -49,6 +49,8 @@ namespace Reaqtor.Remoting.Metadata
         /// </summary>
         private const string DefaultPartitionName = "Default";
 
+#pragma warning disable CA1054 // URI-like parameters should not be strings. (Kept for compat.)
+
         /// <summary>
         /// Resolves table name.
         /// </summary>
@@ -56,8 +58,6 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>The table name.</returns>
         public string ResolveTable(string collectionUri)
         {
-            Contract.RequiresNotNull(collectionUri);
-
             switch (collectionUri)
             {
                 case Constants.MetadataObservablesUri:
@@ -104,5 +104,7 @@ namespace Reaqtor.Remoting.Metadata
         {
             return DefaultPartitionName;
         }
+
+#pragma warning restore CA1054
     }
 }

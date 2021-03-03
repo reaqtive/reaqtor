@@ -7,8 +7,6 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Reaqtor;
-
 namespace Reaqtor.IoT
 {
     //
@@ -27,115 +25,190 @@ namespace Reaqtor.IoT
         [KnownResource("iot://reactor/observables/average/int32")]
         public static IAsyncReactiveQbservable<double> Average(this IAsyncReactiveQbservable<int> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("iot://reactor/observables/average/int64")]
         public static IAsyncReactiveQbservable<double> Average(this IAsyncReactiveQbservable<long> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("iot://reactor/observables/average/double")]
         public static IAsyncReactiveQbservable<double> Average(this IAsyncReactiveQbservable<double> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("iot://reactor/observables/average/selector/int32")]
-        public static IAsyncReactiveQbservable<double> Average<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, int>> selector)
+        public static IAsyncReactiveQbservable<double> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int>> selector)
         {
-            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, selector));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("iot://reactor/observables/average/selector/int64")]
-        public static IAsyncReactiveQbservable<double> Average<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, long>> selector)
+        public static IAsyncReactiveQbservable<double> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long>> selector)
         {
-            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, selector));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("iot://reactor/observables/average/selector/double")]
-        public static IAsyncReactiveQbservable<double> Average<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, double>> selector)
+        public static IAsyncReactiveQbservable<double> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double>> selector)
         {
-            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, selector));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("iot://reactor/observables/distinct")]
-        public static IAsyncReactiveQbservable<T> DistinctUntilChanged<T>(this IAsyncReactiveQbservable<T> source)
+        public static IAsyncReactiveQbservable<TSource> DistinctUntilChanged<TSource>(this IAsyncReactiveQbservable<TSource> source)
         {
-            return source.Provider.CreateQbservable<T>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
         }
 
         [KnownResource("iot://reactor/observables/group")]
-        public static IAsyncReactiveQbservable<IAsyncReactiveGroupedQbservable<K, T>> GroupBy<T, K>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, K>> selector)
+        public static IAsyncReactiveQbservable<IAsyncReactiveGroupedQbservable<TKey, TSource>> GroupBy<TSource, TKey>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TKey>> selector)
         {
-            return source.Provider.CreateQbservable<IAsyncReactiveGroupedQbservable<K, T>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(K)), source.Expression, selector));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<IAsyncReactiveGroupedQbservable<TKey, TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TKey)), source.Expression, selector));
         }
 
         [KnownResource("iot://reactor/observables/map")]
-        public static IAsyncReactiveQbservable<R> Select<T, R>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, R>> selector)
+        public static IAsyncReactiveQbservable<TResult> Select<TSource, TResult>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TResult>> selector)
         {
-            return source.Provider.CreateQbservable<R>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(R)), source.Expression, selector));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TResult)), source.Expression, selector));
         }
 
         [KnownResource("iot://reactor/observables/map/indexed")]
-        public static IAsyncReactiveQbservable<R> Select<T, R>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, int, R>> selector)
+        public static IAsyncReactiveQbservable<TResult> Select<TSource, TResult>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int, TResult>> selector)
         {
-            return source.Provider.CreateQbservable<R>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(R)), source.Expression, selector));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TResult)), source.Expression, selector));
         }
 
         [KnownResource("iot://reactor/observables/bind")]
-        public static IAsyncReactiveQbservable<R> SelectMany<T, R>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, IAsyncReactiveQbservable<R>>> selector)
+        public static IAsyncReactiveQbservable<TResult> SelectMany<TSource, TResult>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, IAsyncReactiveQbservable<TResult>>> selector)
         {
-            return source.Provider.CreateQbservable<R>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(R)), source.Expression, selector));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TResult)), source.Expression, selector));
         }
 
         [KnownResource("iot://reactor/observables/take")]
-        public static IAsyncReactiveQbservable<T> Take<T>(this IAsyncReactiveQbservable<T> source, int count)
+        public static IAsyncReactiveQbservable<TSource> Take<TSource>(this IAsyncReactiveQbservable<TSource> source, int count)
         {
-            return source.Provider.CreateQbservable<T>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, Expression.Constant(count)));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count)));
         }
 
         [KnownResource("iot://reactor/observables/filter")]
-        public static IAsyncReactiveQbservable<T> Where<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
+        public static IAsyncReactiveQbservable<TSource> Where<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
-            return source.Provider.CreateQbservable<T>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, predicate));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
         [KnownResource("iot://reactor/observables/filter/indexed")]
-        public static IAsyncReactiveQbservable<T> Where<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, int, bool>> predicate)
+        public static IAsyncReactiveQbservable<TSource> Where<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int, bool>> predicate)
         {
-            return source.Provider.CreateQbservable<T>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, predicate));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
         [KnownResource("iot://reactor/observables/window/hopping/count")]
-        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<T>> Window<T>(this IAsyncReactiveQbservable<T> source, int count)
+        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, int count)
         {
-            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<T>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, Expression.Constant(count)));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count)));
         }
 
         [KnownResource("iot://reactor/observables/window/hopping/time")]
-        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<T>> Window<T>(this IAsyncReactiveQbservable<T> source, TimeSpan duration)
+        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration)
         {
-            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<T>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, Expression.Constant(duration)));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration)));
         }
 
         [KnownResource("iot://reactor/observables/window/sliding/count")]
-        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<T>> Window<T>(this IAsyncReactiveQbservable<T> source, int count, int skip)
+        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, int count, int skip)
         {
-            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<T>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, Expression.Constant(count), Expression.Constant(skip)));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count), Expression.Constant(skip)));
         }
 
         [KnownResource("iot://reactor/observables/window/sliding/time")]
-        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<T>> Window<T>(this IAsyncReactiveQbservable<T> source, TimeSpan duration, TimeSpan shift)
+        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration, TimeSpan shift)
         {
-            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<T>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, Expression.Constant(duration), Expression.Constant(shift)));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration), Expression.Constant(shift)));
         }
 
         [KnownResource("iot://reactor/observables/window/ferry")]
-        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<T>> Window<T>(this IAsyncReactiveQbservable<T> source, TimeSpan duration, int count)
+        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration, int count)
         {
-            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<T>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(T)), source.Expression, Expression.Constant(duration), Expression.Constant(count)));
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration), Expression.Constant(count)));
         }
     }
 }

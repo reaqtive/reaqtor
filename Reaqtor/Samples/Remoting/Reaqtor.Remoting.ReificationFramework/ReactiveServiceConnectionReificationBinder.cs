@@ -26,6 +26,9 @@ namespace Reaqtor.Remoting.ReificationFramework
 
         public Expression<Action<ReactiveServiceConnectionEnvironment>> Bind(ServiceOperation operation)
         {
+            if (operation == null)
+                throw new ArgumentNullException(nameof(operation));
+
             var connectionProperty = s_getQcProperty;
             if ((operation.Kind == ServiceOperationKind.CreateSubscription || operation.Kind == ServiceOperationKind.DeleteSubscription) && _subscribeToQueryEvaluator)
             {
@@ -51,6 +54,9 @@ namespace Reaqtor.Remoting.ReificationFramework
 
         public Expression<Action<ReactiveServiceConnectionEnvironment>> Bind(QueryEngineOperation operation)
         {
+            if (operation == null)
+                throw new ArgumentNullException(nameof(operation));
+
             var uri = operation.TargetObjectUri;
 
             return operation.Kind switch

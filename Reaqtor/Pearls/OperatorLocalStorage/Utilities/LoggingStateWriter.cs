@@ -20,15 +20,14 @@ namespace Utilities
     /// <summary>
     /// Implementation of <see cref="IStateWriter"/> with logging of operations through a <see cref="TextWriter"/>.
     /// </summary>
-    public sealed class LoggingStateWriter : IStateWriter
+    public sealed class LoggingStateWriter : LoggingStateReaderWriterBase, IStateWriter
     {
         private readonly IStateWriter _writer;
-        private readonly TextWriter _log;
 
-        public LoggingStateWriter(IStateWriter writer, TextWriter log)
+        public LoggingStateWriter(IStateWriter writer, TextWriter log, bool keepOpen = true)
+            : base(log, keepOpen)
         {
             _writer = writer;
-            _log = log;
         }
 
         public CheckpointKind CheckpointKind => _writer.CheckpointKind;
@@ -38,7 +37,7 @@ namespace Utilities
             LogStart(nameof(CommitAsync));
             try
             {
-                await _writer.CommitAsync(token, progress);
+                await _writer.CommitAsync(token, progress).ConfigureAwait(false);
             }
             catch (Exception ex) when (LogError(nameof(CommitAsync), ex)) { throw; }
             finally
@@ -89,34 +88,6 @@ namespace Utilities
             }
         }
 
-        public void Dispose()
-        {
-            LogStart(nameof(Dispose));
-            try
-            {
-                _writer.Dispose();
-            }
-            catch (Exception ex) when (LogError(nameof(Dispose), ex)) { throw; }
-            finally
-            {
-                LogStop(nameof(Dispose));
-            }
-        }
-
-        private void LogStart(string method, params object[] args)
-        {
-            _log.WriteLine(method + "(" + string.Join(", ", args) + ")/Start");
-        }
-
-        private bool LogError(string method, Exception exception, params object[] args)
-        {
-            _log.WriteLine(method + "(" + string.Join(", ", args) + ")/Error -> " + exception);
-            return false;
-        }
-
-        private void LogStop(string method, params object[] args)
-        {
-            _log.WriteLine(method + "(" + string.Join(", ", args) + ")/Stop");
-        }
+        protected override void DisposeCore() => _writer.Dispose();
     }
 }

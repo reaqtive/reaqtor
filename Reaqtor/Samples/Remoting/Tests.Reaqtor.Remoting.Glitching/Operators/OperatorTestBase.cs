@@ -481,7 +481,13 @@ namespace Test.Reaqtive.Operators
             return configuration =>
             {
                 configuration.SchedulerType = SchedulerType.Logging;
-                configuration.EngineOptions = settings.Options;
+
+                configuration.EngineOptions.Clear();
+
+                foreach (var kv in settings.Options)
+                {
+                    configuration.EngineOptions[kv.Key] = kv.Value;
+                }
             };
         }
 

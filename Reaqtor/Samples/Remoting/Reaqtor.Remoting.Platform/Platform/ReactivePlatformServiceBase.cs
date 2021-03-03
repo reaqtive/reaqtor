@@ -21,7 +21,7 @@ namespace Reaqtor.Remoting.Platform
 
         public override async Task StartAsync(CancellationToken token)
         {
-            await base.StartAsync(token);
+            await base.StartAsync(token).ConfigureAwait(false);
             var instance = GetInstance<IRemotingReactiveServiceConnection>();
             instance.Configure(Platform.Configuration);
             instance.Start();

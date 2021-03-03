@@ -353,7 +353,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
                         foreach (var chunk in kv2.Value.Buffer(40))
                         {
                             var bytes = BitConverter.ToString(chunk)
-#if NET5_0
+#if NET5_0 || NETSTANDARD2_1
                                 .Replace("-", " ", StringComparison.Ordinal)
 #else
                                 .Replace("-", " ")

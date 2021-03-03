@@ -21,12 +21,12 @@ namespace Utilities
     /// <summary>
     /// Implementation of <see cref="IStateWriter"/> for the in-memory key/value store implementation in <see cref="Store"/>.
     /// </summary>
-    public sealed class Writer : IStateWriter
+    public sealed class StateWriter : IStateWriter
     {
         private readonly Store _store;
         private readonly List<StateWriterOperation> _log = new();
 
-        public Writer(Store store, CheckpointKind checkpointKind)
+        public StateWriter(Store store, CheckpointKind checkpointKind)
         {
             _store = store;
             CheckpointKind = checkpointKind;

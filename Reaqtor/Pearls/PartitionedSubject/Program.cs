@@ -84,14 +84,17 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Reactive;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+
 namespace PartitionedSubject
 {
-    public class Program
+    public static class Program
     {
         public static void Main()
         {
@@ -116,7 +119,7 @@ namespace PartitionedSubject
             for (var m = 0; m < M; m++)
             {
                 if (m % 1000 == 0)
-                    Console.Title = m.ToString();
+                    Console.Title = m.ToString(CultureInfo.InvariantCulture);
 
                 var tile = GetTile(rnd1);
 
@@ -151,15 +154,17 @@ namespace PartitionedSubject
             for (var m = 0; m < M; m++)
             {
                 if (m % 1000 == 0)
-                    Console.Title = m.ToString();
+                    Console.Title = m.ToString(CultureInfo.InvariantCulture);
 
                 var tile = GetTile(rnd1);
 
+#pragma warning disable CA2000 // Dispose objects before losing scope. (By design to keep Rx subscription running in sample.)
                 sub.Subscribe(tile, Observer.Create<Weather>(_ =>
                 {
                     c.TryGetValue(tile, out var d);
                     c[tile] = d + 1;
                 }));
+#pragma warning restore CA2000
             }
 
             Console.WriteLine("Done " + sw.Elapsed);
@@ -182,7 +187,7 @@ namespace PartitionedSubject
                 for (var n = 0; n < N; n++)
                 {
                     if (n % 1000 == 0)
-                        Console.Title = n.ToString();
+                        Console.Title = n.ToString(CultureInfo.InvariantCulture);
 
                     var tile = GetTile(rnd2);
 
@@ -197,17 +202,16 @@ namespace PartitionedSubject
 
         private static string GetTile(Random rnd)
         {
-            //var i = rnd.Next(0, 99999);
-            //var j = rnd.Next(0, 99999);
+            const int MAX = 999;
+            const int WIDTH = 3;
 
-            //var x = i.ToString().PadLeft(5, '0');
-            //var y = j.ToString().PadLeft(5, '0');
+#pragma warning disable CA5394 // Do not use insecure randomness. (No security needed for this sample.)
+            var i = rnd.Next(0, MAX);
+            var j = rnd.Next(0, MAX);
+#pragma warning restore CA5394
 
-            var i = rnd.Next(0, 999);
-            var j = rnd.Next(0, 999);
-
-            var x = i.ToString().PadLeft(3, '0');
-            var y = j.ToString().PadLeft(3, '0');
+            var x = i.ToString(CultureInfo.InvariantCulture).PadLeft(WIDTH, '0');
+            var y = j.ToString(CultureInfo.InvariantCulture).PadLeft(WIDTH, '0');
 
             var tile = "t000x" + x + "y" + y;
             return tile;

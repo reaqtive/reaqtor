@@ -244,6 +244,13 @@ namespace Tests.System.Linq.CompilerServices
             }
         }
 
+        [TestMethod]
+        public void Intern_Unary_Rethrow()
+        {
+            CloneAndAssert(Expression.Rethrow());
+            CloneAndAssert(Expression.Rethrow(typeof(int)));
+        }
+
         private static class CustomUnary
         {
             public static int Increment(int op)
@@ -1339,6 +1346,383 @@ namespace Tests.System.Linq.CompilerServices
         private sealed class Bar2
         {
             public int Zuz = 1;
+        }
+
+        #endregion
+
+        #region Block
+
+        [TestMethod]
+        public void Intern_Block1()
+        {
+            var b = Expression.Block(Expression.Constant(1), Expression.Constant(2));
+
+            CloneAndAssert(b);
+        }
+
+        [TestMethod]
+        public void Intern_Block2()
+        {
+            var x = Expression.Parameter(typeof(int), "x");
+            var y = Expression.Parameter(typeof(int), "y");
+
+            var vars = new[] { x, y };
+
+            var b = Expression.Block(vars, Expression.Add(x, y));
+
+            CloneAndAssert(b);
+        }
+
+        #endregion
+
+        #region Switch
+
+        [TestMethod]
+        public void Intern_Switch1()
+        {
+            var e1 = Expression.Empty();
+            var e2 = Expression.Empty();
+
+            var s =
+                Expression.Switch(
+                    Expression.Constant(1),
+                    Expression.SwitchCase(
+                        e1,
+                        Expression.Constant(2)
+                    ),
+                    Expression.SwitchCase(
+                        e2,
+                        Expression.Constant(3),
+                        Expression.Constant(4)
+                    )
+                );
+
+            CloneAndAssert(s);
+        }
+
+        [TestMethod]
+        public void Intern_Switch2()
+        {
+            var r1 = Expression.Constant(41);
+            var r2 = Expression.Constant(42);
+            var rd = Expression.Constant(43);
+
+            var s =
+                Expression.Switch(
+                    Expression.Constant(1),
+                    rd,
+                    Expression.SwitchCase(
+                        r1,
+                        Expression.Constant(2)
+                    ),
+                    Expression.SwitchCase(
+                        r2,
+                        Expression.Constant(3),
+                        Expression.Constant(4)
+                    )
+                );
+
+            CloneAndAssert(s);
+        }
+
+        [TestMethod]
+        public void Intern_SwitchCase()
+        {
+            var s =
+                Expression.Block(
+                    Expression.Switch(
+                        Expression.Constant(1),
+                        Expression.SwitchCase(
+                            Expression.Empty(),
+                            Expression.Constant(42)
+                        ),
+                        Expression.SwitchCase(
+                            Expression.Empty(),
+                            Expression.Constant(44),
+                            Expression.Constant(43)
+                        )
+                    ),
+                    Expression.Switch(
+                        Expression.Constant(2),
+                        Expression.SwitchCase(
+                            Expression.Empty(),
+                            Expression.Constant(44),
+                            Expression.Constant(43)
+                        ),
+                        Expression.SwitchCase(
+                            Expression.Empty(),
+                            Expression.Constant(42)
+                        )
+                    )
+                );
+
+            CloneAndAssert(s);
+        }
+
+        #endregion
+
+        #region Try
+
+        [TestMethod]
+        public void Intern_Try1()
+        {
+            var b = Expression.Constant(42);
+            var f = Expression.Empty();
+
+            var t = Expression.TryFinally(b, f);
+
+            CloneAndAssert(t);
+        }
+
+        [TestMethod]
+        public void Intern_Try2()
+        {
+            var b = Expression.Constant(42);
+            var f = Expression.Empty();
+
+            var t = Expression.TryFault(b, f);
+
+            CloneAndAssert(t);
+        }
+
+        [TestMethod]
+        public void Intern_Try3()
+        {
+            var b = Expression.Constant(42);
+
+            var ex1 = Expression.Parameter(typeof(Exception));
+            var ex2 = Expression.Parameter(typeof(InvalidOperationException));
+
+            var e1 = Expression.Constant(-1);
+            var e2 = Expression.Constant(-2);
+            var e3 = Expression.Constant(-3);
+
+            var t =
+                Expression.TryCatch(
+                    b,
+                    Expression.Catch(ex1, e1),
+                    Expression.Catch(ex2, e2, Expression.Constant(true)),
+                    Expression.Catch(typeof(ArgumentException), e3)
+                );
+
+            CloneAndAssert(t);
+        }
+
+        [TestMethod]
+        public void Intern_Try4()
+        {
+            var ex1 = Expression.Parameter(typeof(Exception));
+            var ex2 = Expression.Parameter(typeof(InvalidOperationException));
+
+            var t =
+                Expression.Block(
+                    Expression.Constant(-1),
+                    Expression.Constant(true),
+                    Expression.Constant(-3),
+                    Expression.TryCatch(
+                        Expression.Constant(42),
+                        Expression.Catch(ex1, Expression.Constant(-1)),
+                        Expression.Catch(ex2, Expression.Constant(-2), Expression.Constant(true)),
+                        Expression.Catch(typeof(ArgumentException), Expression.Constant(-3))
+                    )
+                );
+
+            CloneAndAssert(t);
+        }
+
+        [TestMethod]
+        public void Intern_Try5()
+        {
+            var t =
+                Expression.Block(
+                    Expression.Constant(42),
+                    Expression.TryFinally(
+                        Expression.Constant(42),
+                        Expression.Empty()
+                    )
+                );
+
+            CloneAndAssert(t);
+        }
+
+        #endregion
+
+        #region RuntimeVariables
+
+        [TestMethod]
+        public void Intern_RuntimeVariables()
+        {
+            var v1 = Expression.Parameter(typeof(int));
+            var v2 = Expression.Parameter(typeof(bool));
+
+            var r = Expression.RuntimeVariables(v1, v2);
+
+            CloneAndAssert(r);
+        }
+
+        #endregion
+
+        #region Goto
+
+        [TestMethod]
+        public void Intern_Goto()
+        {
+            var l1 = Expression.Label(typeof(void));
+            var l2 = Expression.Label(typeof(void));
+
+            var b =
+                Expression.Lambda<Action>(
+                    Expression.Block(
+                        Expression.Goto(l2),
+                        Expression.Label(l1),
+                        Expression.Goto(l1),
+                        Expression.Label(l2)
+                    )
+                );
+
+            CloneAndAssert(b);
+        }
+
+        [TestMethod]
+        public void Intern_Goto_Unsafe()
+        {
+            var l = Expression.Label(typeof(void));
+
+            var g = Expression.Goto(l);
+
+            Assert.AreSame(g, g.Intern());
+        }
+
+        [TestMethod]
+        public void Intern_Goto_Value()
+        {
+            var l1 = Expression.Label(typeof(int));
+            var l2 = Expression.Label(typeof(int));
+
+            var e =
+                Expression.Lambda<Action>(
+                    Expression.Block(
+                        Expression.Goto(l1, Expression.Constant(42)),
+                        Expression.Goto(l2, Expression.Constant(42))
+                    )
+                );
+
+            CloneAndAssert(e);
+        }
+
+        #endregion
+
+        #region Label
+
+        [TestMethod]
+        public void Intern_Label_Unsafe()
+        {
+            var l = Expression.Label(typeof(void));
+
+            var e = Expression.Label(l);
+
+            Assert.AreSame(e, e.Intern());
+        }
+
+        [TestMethod]
+        public void Intern_Label_DefautValue()
+        {
+            var l1 = Expression.Label(typeof(int));
+            var l2 = Expression.Label(typeof(int));
+
+            var e =
+                Expression.Lambda<Action>(
+                    Expression.Block(
+                        Expression.Label(l1, Expression.Constant(42)),
+                        Expression.Label(l2, Expression.Constant(42))
+                    )
+                );
+
+            CloneAndAssert(e);
+        }
+
+        #endregion
+
+        #region Loop
+
+        [TestMethod]
+        public void Intern_Loop()
+        {
+            var e = Expression.Empty();
+            var @break = Expression.Label(typeof(void));
+            var @continue = Expression.Label(typeof(void));
+
+            var l =
+                Expression.Lambda<Action>(
+                    Expression.Loop(
+                        e,
+                        @break,
+                        @continue
+                    )
+                );
+
+            CloneAndAssert(l);
+        }
+
+        [TestMethod]
+        public void Intern_Loop_Body()
+        {
+            var @break1 = Expression.Label(typeof(void));
+            var @continue1 = Expression.Label(typeof(void));
+
+            var @break2 = Expression.Label(typeof(void));
+            var @continue2 = Expression.Label(typeof(void));
+
+            var l =
+                Expression.Lambda<Action>(
+                    Expression.Block(
+                        Expression.Loop(
+                            Expression.Constant(42),
+                            @break1,
+                            @continue1
+                        ),
+                        Expression.Loop(
+                            Expression.Constant(42),
+                            @break2,
+                            @continue2
+                        )
+                    )
+                );
+
+            CloneAndAssert(l);
+        }
+
+        #endregion
+
+        #region Dynamic
+
+        [TestMethod]
+        public void Intern_Dynamic()
+        {
+            var add = Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(
+                Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
+                ExpressionType.Add,
+                typeof(ExpressionEqualityComparerTests),
+                new[]
+                {
+                    Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
+                    Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
+                }
+            );
+
+            var e =
+                Expression.Block(
+                    Expression.Constant(1),
+                    Expression.Constant(2),
+                    Expression.Dynamic(
+                        add,
+                        typeof(object),
+                        Expression.Constant(1),
+                        Expression.Constant(2)
+                    )
+                );
+
+            CloneAndAssert(e);
         }
 
         #endregion
