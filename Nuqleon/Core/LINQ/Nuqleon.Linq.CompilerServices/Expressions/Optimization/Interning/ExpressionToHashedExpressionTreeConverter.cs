@@ -9,6 +9,7 @@
 //
 
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.CompilerServices;
 
 namespace System.Linq.Expressions
@@ -19,221 +20,287 @@ namespace System.Linq.Expressions
 
         public ExpressionToHashedExpressionTreeConverter(Func<ExpressionEqualityComparator> comparatorFactory) => _comparatorFactory = comparatorFactory;
 
-        private static int GetNodeHash(Expression e) => (int)e.NodeType * 31 + e.Type.GetHashCode();
+        private static Hasher GetNodeHash(Expression expression)
+        {
+            var h = new Hasher();
 
-        private static int GetNodeHash(MemberBinding b) => (int)b.BindingType * 31 + b.Member.GetHashCode();
+            h.Add((int)expression.NodeType);
+            h.Add(expression.Type.GetHashCode());
 
-        private static int GetNodeHash(ElementInit i) => 1983 * 31 + i.AddMethod.GetHashCode();
+            return h;
+        }
+
+        private static Hasher GetNodeHash(MemberBinding binding)
+        {
+            var h = new Hasher();
+
+            h.Add((int)binding.BindingType);
+            h.Add(binding.Member.GetHashCode());
+
+            return h;
+        }
+
+        private static int OneIfNotNull(object o) => o != null ? 1 : 0;
+
+        private ITree<HashedNode> CreateTree(Expression node, ref Hasher h, params ITree<HashedNode>[] children)
+        {
+            return new Tree<HashedNode>(
+                new ExpressionHashedNode(node, h.ToHashCode(), _comparatorFactory),
+                ToReadOnly(children)
+            );
+        }
+
+        private ITree<HashedNode> CreateTree(MemberBinding node, ref Hasher h, params ITree<HashedNode>[] children)
+        {
+            return new Tree<HashedNode>(
+                new MemberBindingHashedNode(node, h.ToHashCode(), _comparatorFactory),
+                ToReadOnly(children)
+            );
+        }
+
+        private static ReadOnlyCollection<ITree<HashedNode>> ToReadOnly(params ITree<HashedNode>[] children)
+        {
+            // NB: This is safe because none of the arrays are referenced elsewhere, so no mutations can happen.
+            return new TrueReadOnlyCollection<ITree<HashedNode>>(children);
+        }
+
+        private ITree<HashedNode> Visit(Expression node, ref Hasher h)
+        {
+            var tree = Visit(node);
+
+            h.Add(tree.Value.Hash);
+
+            return tree;
+        }
+
+        private void Visit(Expression node, ref Hasher h, ITree<HashedNode>[] children, ref int i)
+        {
+            children[i++] = Visit(node, ref h);
+        }
+
+        private void VisitIfNotNull(Expression node, ref Hasher h, ITree<HashedNode>[] children, ref int i)
+        {
+            if (node != null)
+            {
+                children[i++] = Visit(node, ref h);
+            }
+        }
+
+        private void Visit(IEnumerable<Expression> nodes, ref Hasher h, ITree<HashedNode>[] children, ref int i)
+        {
+            foreach (var node in nodes)
+            {
+                children[i++] = Visit(node, ref h);
+            }
+        }
 
         protected override ITree<HashedNode> VisitBinary(BinaryExpression node)
         {
-            var l = Visit(node.Left);
-            var r = Visit(node.Right);
-            var c = Visit(node.Conversion);
-
             var h = GetNodeHash(node);
-            h = h * 31 + l.Value.Hash;
-            h = h * 31 + r.Value.Hash;
 
-            ITree<HashedNode>[] z;
+            h.Add(node.Method);
 
-            if (c != null)
-            {
-                h = h * 31 + c.Value.Hash;
-                z = new ITree<HashedNode>[] { l, r, c };
-            }
-            else
-            {
-                z = new ITree<HashedNode>[] { l, r };
-            }
+            var children = new ITree<HashedNode>[2 + OneIfNotNull(node.Conversion)];
 
-            if (node.Method != null)
-            {
-                h = h * 31 + node.Method.GetHashCode();
-            }
+            int i = 0;
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            Visit(node.Left, ref h, children, ref i);
+            Visit(node.Right, ref h, children, ref i);
+            VisitIfNotNull(node.Conversion, ref h, children, ref i);
+
+            return CreateTree(node, ref h, children);
         }
 
         protected override ITree<HashedNode> VisitBlock(BlockExpression node)
         {
-            throw new NotImplementedException();
+            var h = GetNodeHash(node);
+
+            var children = new ITree<HashedNode>[node.Variables.Count + node.Expressions.Count];
+
+            var i = 0;
+
+            Visit(node.Variables, ref h, children, ref i);
+            Visit(node.Expressions, ref h, children, ref i);
+
+            return CreateTree(node, ref h, children);
         }
 
         protected override ITree<HashedNode> VisitConditional(ConditionalExpression node)
         {
-            var c = Visit(node.Test);
-            var t = Visit(node.IfTrue);
-            var f = Visit(node.IfFalse);
-
             var h = GetNodeHash(node);
-            h = h * 31 + c.Value.Hash;
-            h = h * 31 + t.Value.Hash;
-            h = h * 31 + f.Value.Hash;
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                new[]
-                {
-                    c,
-                    t,
-                    f,
-                }
-            );
+            var testTree = Visit(node.Test, ref h);
+            var ifTrueTree = Visit(node.IfTrue, ref h);
+            var ifFalseTree = Visit(node.IfFalse, ref h);
+
+            return CreateTree(node, ref h, testTree, ifTrueTree, ifFalseTree);
         }
 
         protected override ITree<HashedNode> VisitConstant(ConstantExpression node)
         {
             var h = GetNodeHash(node);
-            h = h * 31 + EqualityComparer<object>.Default.GetHashCode(node.Value);
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h }
-            );
+            h.Add(EqualityComparer<object>.Default.GetHashCode(node.Value));
+
+            return CreateTree(node, ref h);
         }
 
-        protected override ITree<HashedNode> VisitDebugInfo(DebugInfoExpression node) => throw new NotImplementedException();
+        protected override ITree<HashedNode> VisitDebugInfo(DebugInfoExpression node)
+            => throw new NotSupportedException("Expression interning does not support DebugInfo nodes. Considering stripping these nodes from expression trees using a visitor pass.");
 
         protected override ITree<HashedNode> VisitDefault(DefaultExpression node)
         {
             var h = GetNodeHash(node);
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h }
-            );
+            return CreateTree(node, ref h);
         }
 
-        protected override ITree<HashedNode> VisitDynamic(DynamicExpression node) => throw new NotImplementedException();
+        protected override ITree<HashedNode> VisitDynamic(DynamicExpression node)
+        {
+            var h = GetNodeHash(node);
 
-        protected override ITree<HashedNode> VisitExtension(Expression node) => throw new NotImplementedException();
+            h.Add(node.DelegateType);
 
-        protected override ITree<HashedNode> VisitGoto(GotoExpression node) => throw new NotImplementedException();
+            var children = new ITree<HashedNode>[1 + node.Arguments.Count];
+
+            var i = 0;
+
+            children[i++] = new Tree<HashedNode>(new CallSiteHashedNode(node.Binder, h.ToHashCode(), _comparatorFactory));
+            Visit(node.Arguments, ref h, children, ref i);
+
+            return CreateTree(node, ref h, children);
+        }
+
+        protected override ITree<HashedNode> VisitExtension(Expression node)
+            => throw new NotSupportedException("Expression interning does not support Extension nodes. Considering reducing these nodes using a visitor pass.");
+
+        protected override ITree<HashedNode> VisitGoto(GotoExpression node)
+        {
+            var h = GetNodeHash(node);
+
+            var children = new ITree<HashedNode>[1 + OneIfNotNull(node.Value)];
+
+            var i = 0;
+
+            children[i++] = VisitLabelTarget(node.Target);
+            VisitIfNotNull(node.Value, ref h, children, ref i);
+
+            return CreateTree(node, ref h, children);
+        }
 
         protected override ITree<HashedNode> VisitIndex(IndexExpression node)
         {
-            var f = Visit(node.Object);
-            var a = Visit(node.Arguments);
-
             var h = GetNodeHash(node);
-            h = h * 31 + f.Value.Hash;
 
-            var z = new ITree<HashedNode>[a.Count + 1];
-            z[0] = f;
+            var children = new ITree<HashedNode>[1 + node.Arguments.Count];
 
-            var i = 1;
-            foreach (var b in a)
-            {
-                z[i] = b;
-                h = h * 31 + b.Value.Hash;
+            var i = 0;
 
-                i++;
-            }
+            Visit(node.Object, ref h, children, ref i);
+            Visit(node.Arguments, ref h, children, ref i);
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            return CreateTree(node, ref h, children);
         }
 
         protected override ITree<HashedNode> VisitInvocation(InvocationExpression node)
         {
-            var f = Visit(node.Expression);
-            var a = Visit(node.Arguments);
-
             var h = GetNodeHash(node);
-            h = h * 31 + f.Value.Hash;
 
-            var z = new ITree<HashedNode>[a.Count + 1];
-            z[0] = f;
+            var children = new ITree<HashedNode>[1 + node.Arguments.Count];
 
-            var i = 1;
-            foreach (var b in a)
-            {
-                z[i] = b;
-                h = h * 31 + b.Value.Hash;
+            var i = 0;
 
-                i++;
-            }
+            Visit(node.Expression, ref h, children, ref i);
+            Visit(node.Arguments, ref h, children, ref i);
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            return CreateTree(node, ref h, children);
         }
 
-        protected override ITree<HashedNode> VisitLabel(LabelExpression node) => throw new NotImplementedException();
+        protected override ITree<HashedNode> VisitLabel(LabelExpression node)
+        {
+            var h = GetNodeHash(node);
+
+            var children = new ITree<HashedNode>[1 + OneIfNotNull(node.DefaultValue)];
+
+            var i = 0;
+
+            children[i++] = VisitLabelTarget(node.Target);
+            VisitIfNotNull(node.DefaultValue, ref h, children, ref i);
+
+            return CreateTree(node, ref h, children);
+        }
+
+        private ITree<HashedNode> VisitLabelTarget(LabelTarget node)
+        {
+            // NB: All labels with the same type compare equal for the low-pass hash filter. Subsequent
+            //     equality checks on parent trees can overrule this.
+
+            var h = new Hasher();
+
+            h.Add(node.Type);
+
+            return new Tree<HashedNode>(new LabelTargetHashedNode(node, h.ToHashCode(), _comparatorFactory));
+        }
+
+        private void VisitLabelTargetIfNotNull(LabelTarget node, ref Hasher h, ITree<HashedNode>[] children, ref int i)
+        {
+            if (node != null)
+            {
+                var target = VisitLabelTarget(node);
+                children[i++] = target;
+                h.Add(target.Value.Hash);
+            }
+        }
 
         protected override ITree<HashedNode> VisitLambda<T>(Expression<T> node)
         {
-            var b = Visit(node.Body);
-            var p = Visit(node.Parameters);
-
             var h = GetNodeHash(node);
-            h = h * 31 + node.Type.GetHashCode();
-            h = h * 31 + b.Value.Hash;
 
-            var z = new ITree<HashedNode>[p.Count + 1];
-            z[0] = b;
+            var children = new ITree<HashedNode>[node.Parameters.Count + 1];
 
-            var i = 1;
-            foreach (var q in p)
-            {
-                z[i] = q;
-                h = h * 31 + q.Value.Hash;
+            var i = 0;
 
-                i++;
-            }
+            Visit(node.Body, ref h, children, ref i);
+            Visit(node.Parameters, ref h, children, ref i);
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            return CreateTree(node, ref h, children);
         }
 
         protected override ITree<HashedNode> VisitListInit(ListInitExpression node)
         {
-            var n = VisitNew(node.NewExpression);
-
-            var i = node.Initializers.Select(VisitElementInit).ToArray();
-
             var h = GetNodeHash(node);
-            h = h * 31 + n.Value.Hash;
 
-            var z = new ITree<HashedNode>[i.Length + 1];
-            z[0] = n;
+            var children = new ITree<HashedNode>[node.Initializers.Count + 1];
 
-            var k = 1;
-            foreach (var j in i)
+            children[0] = Visit(node.NewExpression, ref h);
+
+            var i = 1;
+
+            foreach (var initializer in node.Initializers)
             {
-                h = h * 31 + j.Value.Hash;
-                z[k] = j;
-
-                k++;
+                var initializerTree = VisitElementInit(initializer);
+                children[i++] = initializerTree;
+                h.Add(initializerTree.Value.Hash);
             }
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            return CreateTree(node, ref h, children);
         }
 
         private ITree<HashedNode> VisitElementInit(ElementInit node)
         {
-            var a = Visit(node.Arguments);
+            var h = new Hasher();
 
-            var h = GetNodeHash(node);
+            h.Add(node.AddMethod);
 
-            foreach (var b in a)
-            {
-                h = h * 31 + b.Value.Hash;
-            }
+            var children = new ITree<HashedNode>[node.Arguments.Count];
+
+            var i = 0;
+
+            Visit(node.Arguments, ref h, children, ref i);
 
             return new Tree<HashedNode>(
-                new ElementInitHashedNode(_comparatorFactory) { Initializer = node, Hash = h },
-                a
+                new ElementInitHashedNode(node, h.ToHashCode(), _comparatorFactory),
+                ToReadOnly(children)
             );
         }
 
@@ -250,244 +317,312 @@ namespace System.Linq.Expressions
 
         private ITree<HashedNode> VisitMemberAssignment(MemberAssignment node)
         {
-            var e = Visit(node.Expression);
-
             var h = GetNodeHash(node);
-            h = h * 31 + e.Value.Hash;
 
-            return new Tree<HashedNode>(
-                new MemberBindingHashedNode(_comparatorFactory) { Binding = node, Hash = h },
-                new[]
-                {
-                    e,
-                }
-            );
+            var expressionTree = Visit(node.Expression, ref h);
+
+            return CreateTree(node, ref h, expressionTree);
         }
 
         private ITree<HashedNode> VisitMemberListBinding(MemberListBinding node)
         {
-            var i = node.Initializers.Select(VisitElementInit);
-
             var h = GetNodeHash(node);
 
-            foreach (var j in i)
+            var children = new ITree<HashedNode>[node.Initializers.Count];
+
+            var i = 0;
+
+            foreach (var initializer in node.Initializers)
             {
-                h = h * 31 + j.Value.Hash;
+                var initializerTree = VisitElementInit(initializer);
+                children[i++] = initializerTree;
+                h.Add(initializerTree.Value.Hash);
             }
 
-            return new Tree<HashedNode>(
-                new MemberBindingHashedNode(_comparatorFactory) { Binding = node, Hash = h },
-                i
-            );
+            return CreateTree(node, ref h, children);
         }
 
         private ITree<HashedNode> VisitMemberMemberBinding(MemberMemberBinding node)
         {
-            var b = node.Bindings.Select(VisitMemberBinding);
-
             var h = GetNodeHash(node);
 
-            foreach (var c in b)
+            var children = new ITree<HashedNode>[node.Bindings.Count];
+
+            var i = 0;
+
+            foreach (var binding in node.Bindings)
             {
-                h = h * 31 + c.Value.Hash;
+                var bindingTree = VisitMemberBinding(binding);
+                children[i++] = bindingTree;
+                h.Add(bindingTree.Value.Hash);
             }
 
-            return new Tree<HashedNode>(
-                new MemberBindingHashedNode(_comparatorFactory) { Binding = node, Hash = h },
-                b
-            );
+            return CreateTree(node, ref h, children);
         }
 
-        protected override ITree<HashedNode> VisitLoop(LoopExpression node) => throw new NotImplementedException();
+        protected override ITree<HashedNode> VisitLoop(LoopExpression node)
+        {
+            var h = GetNodeHash(node);
+
+            var children = new ITree<HashedNode>[1 + OneIfNotNull(node.BreakLabel) + OneIfNotNull(node.ContinueLabel)];
+
+            var i = 0;
+
+            Visit(node.Body, ref h, children, ref i);
+            VisitLabelTargetIfNotNull(node.BreakLabel, ref h, children, ref i);
+            VisitLabelTargetIfNotNull(node.ContinueLabel, ref h, children, ref i);
+
+            return CreateTree(node, ref h, children);
+        }
 
         protected override ITree<HashedNode> VisitMember(MemberExpression node)
         {
-            var e = Visit(node.Expression);
-
             var h = GetNodeHash(node);
 
-            var z = new ITree<HashedNode>[e != null ? 1 : 0];
+            h.Add(node.Member);
 
-            if (e != null)
+            if (node.Expression != null)
             {
-                h = h * 31 + e.Value.Hash;
-                z[0] = e;
+                var expressionTree = Visit(node.Expression, ref h);
+                return CreateTree(node, ref h, expressionTree);
             }
-
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            else
+            {
+                return CreateTree(node, ref h);
+            }
         }
 
         protected override ITree<HashedNode> VisitMemberInit(MemberInitExpression node)
         {
-            var n = VisitNew(node.NewExpression);
-
             var h = GetNodeHash(node);
-            h = h * 31 + n.Value.Hash;
 
-            var b = node.Bindings.Select(VisitMemberBinding).ToArray();
+            var children = new ITree<HashedNode>[node.Bindings.Count + 1];
 
-            var z = new ITree<HashedNode>[b.Length + 1];
-            z[0] = n;
+            var newExpressionTree = Visit(node.NewExpression, ref h);
+            children[0] = newExpressionTree;
 
             var i = 1;
-            foreach (var c in b)
-            {
-                h = h * 31 + c.Value.Hash;
-                z[i] = c;
 
-                i++;
+            foreach (var binding in node.Bindings)
+            {
+                var memberBindingTree = VisitMemberBinding(binding);
+                h.Add(memberBindingTree.Value.Hash);
+                children[i++] = memberBindingTree;
             }
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            return CreateTree(node, ref h, children);
         }
 
         protected override ITree<HashedNode> VisitMethodCall(MethodCallExpression node)
         {
-            var o = Visit(node.Object);
-            var a = Visit(node.Arguments);
-
             var h = GetNodeHash(node);
-            h = h * 31 + node.Method.GetHashCode();
 
-            var z = new ITree<HashedNode>[a.Count + (o != null ? 1 : 0)];
+            h.Add(node.Method);
 
-            if (o != null)
+            var children = new ITree<HashedNode>[OneIfNotNull(node.Object) + node.Arguments.Count];
+
+            var i = 0;
+
+            VisitIfNotNull(node.Object, ref h, children, ref i);
+
+            foreach (var argument in node.Arguments)
             {
-                z[0] = o;
-                h = h * 31 + o.Value.Hash;
+                children[i++] = Visit(argument, ref h);
             }
 
-            var i = node.Object != null ? 1 : 0;
-            foreach (var b in a)
-            {
-                z[i] = b;
-                h = h * 31 + b.Value.Hash;
-
-                i++;
-            }
-
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            return CreateTree(node, ref h, children);
         }
 
         protected override ITree<HashedNode> VisitNew(NewExpression node)
         {
-            var a = Visit(node.Arguments);
-
             var h = GetNodeHash(node);
 
-            if (node.Constructor != null)
-            {
-                h = h * 31 + node.Constructor.GetHashCode();
-            }
+            h.Add(node.Constructor);
 
-            var z = new ITree<HashedNode>[a.Count];
+            var children = new ITree<HashedNode>[node.Arguments.Count];
 
             var i = 0;
-            foreach (var b in a)
-            {
-                z[i] = b;
-                h = h * 31 + b.Value.Hash;
 
-                i++;
-            }
+            Visit(node.Arguments, ref h, children, ref i);
 
             if (node.Members != null)
             {
                 foreach (var m in node.Members)
                 {
-                    h = h * 31 + m.GetHashCode();
+                    h.Add(m);
                 }
             }
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            return CreateTree(node, ref h, children);
         }
 
         protected override ITree<HashedNode> VisitNewArray(NewArrayExpression node)
         {
-            var e = Visit(node.Expressions);
-
             var h = GetNodeHash(node);
 
-            var z = new ITree<HashedNode>[e.Count];
+            var children = new ITree<HashedNode>[node.Expressions.Count];
 
             var i = 0;
-            foreach (var f in e)
-            {
-                z[i] = f;
-                h = h * 31 + f.Value.Hash;
 
-                i++;
-            }
+            Visit(node.Expressions, ref h, children, ref i);
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                z
-            );
+            return CreateTree(node, ref h, children);
         }
 
         protected override ITree<HashedNode> VisitParameter(ParameterExpression node)
         {
             var h = GetNodeHash(node);
 
+            return CreateTree(node, ref h);
+        }
+
+        protected override ITree<HashedNode> VisitRuntimeVariables(RuntimeVariablesExpression node)
+        {
+            var h = GetNodeHash(node);
+
+            var children = new ITree<HashedNode>[node.Variables.Count];
+
+            var i = 0;
+
+            Visit(node.Variables, ref h, children, ref i);
+
+            return CreateTree(node, ref h, children);
+        }
+
+        protected override ITree<HashedNode> VisitSwitch(SwitchExpression node)
+        {
+            var h = GetNodeHash(node);
+
+            h.Add(node.Comparison);
+
+            var children = new ITree<HashedNode>[1 + node.Cases.Count + OneIfNotNull(node.DefaultBody)];
+
+            children[0] = Visit(node.SwitchValue, ref h);
+
+            var i = 1;
+
+            foreach (var @case in node.Cases)
+            {
+                var caseTree = VisitSwitchCase(@case);
+                children[i++] = caseTree;
+                h.Add(caseTree.Value.Hash);
+            }
+
+            VisitIfNotNull(node.DefaultBody, ref h, children, ref i);
+
+            return CreateTree(node, ref h, children);
+        }
+
+        private ITree<HashedNode> VisitSwitchCase(SwitchCase node)
+        {
+            var h = new Hasher();
+
+            var children = new ITree<HashedNode>[1 + node.TestValues.Count];
+
+            var i = 0;
+
+            Visit(node.Body, ref h, children, ref i);
+            Visit(node.TestValues, ref h, children, ref i);
+
             return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h }
+                new SwitchCaseHashedNode(node, h.ToHashCode(), _comparatorFactory),
+                ToReadOnly(children)
             );
         }
 
-        protected override ITree<HashedNode> VisitRuntimeVariables(RuntimeVariablesExpression node) => throw new NotImplementedException();
+        protected override ITree<HashedNode> VisitTry(TryExpression node)
+        {
+            var h = GetNodeHash(node);
 
-        protected override ITree<HashedNode> VisitSwitch(SwitchExpression node) => throw new NotImplementedException();
+            var children = new ITree<HashedNode>[1 + node.Handlers.Count + OneIfNotNull(node.Finally) + OneIfNotNull(node.Fault)];
 
-        protected override ITree<HashedNode> VisitTry(TryExpression node) => throw new NotImplementedException();
+            var i = 0;
+
+            Visit(node.Body, ref h, children, ref i);
+
+            foreach (var handler in node.Handlers)
+            {
+                var catchBlockTree = VisitCatchBlock(handler);
+                h.Add(catchBlockTree.Value.Hash);
+                children[i++] = catchBlockTree;
+            }
+
+            VisitIfNotNull(node.Finally, ref h, children, ref i);
+            VisitIfNotNull(node.Fault, ref h, children, ref i);
+
+            return CreateTree(node, ref h, children);
+        }
+
+        private ITree<HashedNode> VisitCatchBlock(CatchBlock node)
+        {
+            var h = new Hasher();
+
+            h.Add(node.Test);
+
+            var children = new ITree<HashedNode>[1 + OneIfNotNull(node.Variable) + OneIfNotNull(node.Filter)];
+
+            var i = 0;
+
+            Visit(node.Body, ref h, children, ref i);
+            VisitIfNotNull(node.Variable, ref h, children, ref i);
+            VisitIfNotNull(node.Filter, ref h, children, ref i);
+
+            return new Tree<HashedNode>(
+                new CatchBlockHashedNode(node, h.ToHashCode(), _comparatorFactory),
+                ToReadOnly(children)
+            );
+        }
 
         protected override ITree<HashedNode> VisitTypeBinary(TypeBinaryExpression node)
         {
-            var e = Visit(node.Expression);
-
             var h = GetNodeHash(node);
-            h = h * 31 + e.Value.Hash;
-            h = h * 31 + node.TypeOperand.GetHashCode();
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                new[]
-                {
-                    e,
-                }
-            );
+            var expressionTree = Visit(node.Expression, ref h);
+
+            h.Add(node.TypeOperand);
+
+            return CreateTree(node, ref h, expressionTree);
         }
 
         protected override ITree<HashedNode> VisitUnary(UnaryExpression node)
         {
-            var o = Visit(node.Operand);
-
             var h = GetNodeHash(node);
-            h = h * 31 + o.Value.Hash;
 
-            if (node.Method != null)
+            h.Add(node.Method);
+
+            if (node.Operand != null)
             {
-                h = h * 31 + node.Method.GetHashCode();
+                var operandTree = Visit(node.Operand, ref h);
+
+                return CreateTree(node, ref h, operandTree);
             }
 
-            return new Tree<HashedNode>(
-                new ExpressionHashedNode(_comparatorFactory) { Expression = node, Hash = h },
-                new[]
+            return CreateTree(node, ref h);
+        }
+
+        private struct Hasher
+        {
+#if NET5_0 || NETSTANDARD3_1
+            private HashCode _hashCode;
+
+            public void Add(int h) => _hashCode.Add(h);
+
+            public int ToHashCode() => _hashCode.ToHashCode();
+#else
+            private int _hashCode;
+
+            public void Add(int h) => _hashCode = _hashCode * 31 + h;
+
+            public int ToHashCode() => _hashCode;
+#endif
+
+            public void Add<T>(T obj)
+            {
+                if (obj != null)
                 {
-                    o
+                    Add(obj.GetHashCode());
                 }
-            );
+            }
         }
     }
 }

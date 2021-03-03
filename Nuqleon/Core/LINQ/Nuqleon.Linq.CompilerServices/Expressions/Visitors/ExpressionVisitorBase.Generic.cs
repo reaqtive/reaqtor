@@ -281,10 +281,7 @@ namespace System.Linq.CompilerServices
 
         private TExpression VisitLambda(LambdaExpressionAlias node)
         {
-            if (_dispatch == null)
-            {
-                _dispatch = new LambdaDispatch(this);
-            }
+            _dispatch ??= new LambdaDispatch(this);
 
             return ((ExpressionHolder)_dispatch.Visit(node)).Result;
         }
