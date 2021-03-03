@@ -52,25 +52,25 @@ namespace Reaqtor.Remoting.Platform
         {
             if (StorageType == MetadataStorageType.Remoting)
             {
-                await MetadataService.StartAsync(token);
+                await MetadataService.StartAsync(token).ConfigureAwait(false);
             }
 
-            await MessagingService.StartAsync(token);
+            await MessagingService.StartAsync(token).ConfigureAwait(false);
             ServiceInstanceHelpers.SetMessagingServiceInstance(AppDomain.CurrentDomain, MessagingService.GetInstance<IReactiveMessagingConnection>());
-            await StateStoreService.StartAsync(token);
-            await KeyValueStoreService.StartAsync(token);
+            await StateStoreService.StartAsync(token).ConfigureAwait(false);
+            await KeyValueStoreService.StartAsync(token).ConfigureAwait(false);
         }
 
 
         public virtual async Task StopAsync(CancellationToken token)
         {
-            await StateStoreService.StopAsync(token);
-            await MessagingService.StopAsync(token);
-            await KeyValueStoreService.StopAsync(token);
+            await StateStoreService.StopAsync(token).ConfigureAwait(false);
+            await MessagingService.StopAsync(token).ConfigureAwait(false);
+            await KeyValueStoreService.StopAsync(token).ConfigureAwait(false);
 
             if (StorageType == MetadataStorageType.Remoting)
             {
-                await MetadataService.StopAsync(token);
+                await MetadataService.StopAsync(token).ConfigureAwait(false);
             }
         }
 

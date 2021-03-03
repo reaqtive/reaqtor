@@ -17,7 +17,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <summary>
         /// Default constructor, required by the Azure Table query provider.
         /// </summary>
-        public AsyncReactiveDefinedResourceTableEntity()
+        protected AsyncReactiveDefinedResourceTableEntity()
         {
         }
 
@@ -27,7 +27,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <param name="uri">URI identifying the defined resource represented by the table entity.</param>
         /// <param name="expression">Expression representation of the defined resource.</param>
         /// <param name="state">The state.</param>
-        public AsyncReactiveDefinedResourceTableEntity(Uri uri, Expression expression, object state)
+        protected AsyncReactiveDefinedResourceTableEntity(Uri uri, Expression expression, object state)
             : base(uri, expression)
         {
             DefinitionTime = DateTime.Now;

@@ -8,6 +8,7 @@
 // ER - October 2013 - Created this file.
 //
 
+using System;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace Reaqtor.Remoting.Platform
 
         public virtual async Task StartAsync(CancellationToken token)
         {
-            await Runnable.RunAsync(token);
+            await Runnable.RunAsync(token).ConfigureAwait(false);
         }
 
         public virtual Task StopAsync(CancellationToken token)
@@ -38,6 +39,9 @@ namespace Reaqtor.Remoting.Platform
 
         public void Register(IReactiveService service)
         {
+            if (service == null)
+                throw new ArgumentNullException(nameof(service));
+
             switch (service.ServiceType)
             {
                 case ReactiveServiceType.QueryCoordinator:

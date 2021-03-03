@@ -769,7 +769,7 @@ namespace System.Memory
         private void Write(StringBuilder sb, string str)
         {
             var parts =
-#if NET5_0
+#if NET5_0 || NETSTANDARD2_1
                 str.Replace("\r\n", "\n", StringComparison.Ordinal)
 #else
                 str.Replace("\r\n", "\n")

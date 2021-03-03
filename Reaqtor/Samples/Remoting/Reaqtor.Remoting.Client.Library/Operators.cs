@@ -1779,7 +1779,7 @@ namespace Reaqtor
         /// </exception>
         /// <exception cref="System.ArgumentOutOfRangeException">
         /// <c>count</c> is less than zero.</exception>
-        [KnownResource(Remoting.Client.Constants.Observable.Skip.Int)]
+        [KnownResource(Remoting.Client.Constants.Observable.Skip.Count)]
         public static IAsyncReactiveQbservable<TSource> Skip<TSource>(
             this IAsyncReactiveQbservable<TSource> source, int count)
         {
@@ -2101,7 +2101,7 @@ namespace Reaqtor
         /// <c>source</c> is null</exception>
         /// <exception cref="System.ArgumentOutOfRangeException">
         /// <c>count</c> is less than zero.</exception>
-        [KnownResource(Remoting.Client.Constants.Observable.Take.Int)]
+        [KnownResource(Remoting.Client.Constants.Observable.Take.Count)]
         public static IAsyncReactiveQbservable<TSource> Take<TSource>(
             this IAsyncReactiveQbservable<TSource> source,
             int count)

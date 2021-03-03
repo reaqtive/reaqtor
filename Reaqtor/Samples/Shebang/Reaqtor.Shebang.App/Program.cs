@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 using Reaqtor.Shebang.Linq;
 using Reaqtor.Shebang.Service;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+#pragma warning disable CA1305 // Specify IFormatProvider. (No globalization in sample.)
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task. (Omitted in sample code for brevity.)
+
 namespace Reaqtor.Shebang.App
 {
     public static class Program
@@ -23,7 +27,7 @@ namespace Reaqtor.Shebang.App
 
                 Console.WriteLine("Done.");
 
-                var ctx = qe.GetClient();
+                var ctx = qe.Client;
 
                 Console.Write("Create timer subscription... ");
 
@@ -53,7 +57,7 @@ namespace Reaqtor.Shebang.App
 
                 Console.WriteLine("Done.");
 
-                var ctx = qe.GetClient();
+                var ctx = qe.Client;
 
                 await Task.Delay(5000);
 

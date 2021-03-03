@@ -8,6 +8,8 @@
 // BD - January 2018
 //
 
+#pragma warning disable CA1711 // Identifiers should not have incorrect suffix. (By design for collection interfaces.)
+
 using System.Collections.Generic;
 
 namespace Reaqtive.Storage

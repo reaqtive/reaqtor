@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
@@ -34,22 +35,26 @@ namespace Reaqtor.Remoting.QueryCoordinator
 
         public async Task CreateSubscriptionAsync(Uri subscriptionUri, ExpressionSlim subscription, object state, CancellationToken token)
         {
-            await _queryEvaluators.First().CreateSubscriptionAsync(subscriptionUri, subscription, state, token);
+            await _queryEvaluators.First().CreateSubscriptionAsync(subscriptionUri, subscription, state, token).ConfigureAwait(false);
         }
 
         public async Task DeleteSubscriptionAsync(Uri subscriptionUri, CancellationToken token)
         {
-            await _queryEvaluators.First().DeleteSubscriptionAsync(subscriptionUri, token);
+            await _queryEvaluators.First().DeleteSubscriptionAsync(subscriptionUri, token).ConfigureAwait(false);
         }
 
         public async Task CreateStreamAsync(Uri streamUri, ExpressionSlim stream, object state, CancellationToken token)
         {
-            Contract.RequiresNotNull(streamUri);
-            Contract.RequiresNotNull(stream);
+            if (streamUri == null)
+                throw new ArgumentNullException(nameof(streamUri));
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
 
             var streamExpr = stream.ToExpression();
 
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Would trigger deletion of the artifact. Not desirable here.)
             var entity = new AsyncReactiveStreamTableEntity(streamUri, streamExpr, state);
+#pragma warning restore CA2000
 
             if (IsFireHose(stream))
             {
@@ -65,6 +70,7 @@ namespace Reaqtor.Remoting.QueryCoordinator
                     if (subjectInputType != subjectOutputType)
                     {
                         throw new QueryCoordinatorHostException(string.Format(
+                            CultureInfo.InvariantCulture,
                             "Input type '{0}' and output type '{1}' used in the creation of a stream using stream factory '{2}' don't match. This stream factory expects equal input and output types.",
                             subjectInputType,
                             subjectOutputType,
@@ -83,24 +89,25 @@ namespace Reaqtor.Remoting.QueryCoordinator
                     var defineObserverAsyncMethod = DefineObserverAsyncMethodDefinition.MakeGenericMethod(elementType);
                     var defineObserverAsyncTask = (Task)defineObserverAsyncMethod.Invoke(null, new object[] { this, streamUri, topicUri });
 
-                    await Task.WhenAll(defineObservableAsyncTask, defineObserverAsyncTask);
+                    await Task.WhenAll(defineObservableAsyncTask, defineObserverAsyncTask).ConfigureAwait(false);
 
-                    await _azureMetadataProxy.Streams.AddAsync(streamUri, entity);
+                    await _azureMetadataProxy.Streams.AddAsync(streamUri, entity).ConfigureAwait(false);
                 }
                 else
                 {
-                    throw new QueryCoordinatorHostException(string.Format("Unable to determine the desired element type for stream '{0}' from its creation expression '{1}'.", streamUri, streamExpr.ToCSharpString(allowCompilerGeneratedNames: true)));
+                    throw new QueryCoordinatorHostException(string.Format(CultureInfo.InvariantCulture, "Unable to determine the desired element type for stream '{0}' from its creation expression '{1}'.", streamUri, streamExpr.ToCSharpString(allowCompilerGeneratedNames: true)));
                 }
             }
             else
             {
-                await _queryEvaluators.First().CreateStreamAsync(streamUri, stream, state, token);
+                await _queryEvaluators.First().CreateStreamAsync(streamUri, stream, state, token).ConfigureAwait(false);
             }
         }
 
         public async Task DeleteStreamAsync(Uri streamUri, CancellationToken token)
         {
-            Contract.RequiresNotNull(streamUri);
+            if (streamUri == null)
+                throw new ArgumentNullException(nameof(streamUri));
 
             if (_azureMetadataProxy.Streams.TryGetValue(streamUri, out var entity))
             {
@@ -109,10 +116,10 @@ namespace Reaqtor.Remoting.QueryCoordinator
                     await Task.WhenAll(
                         UndefineObservableAsync(streamUri, token),
                         UndefineObserverAsync(streamUri, token)
-                    );
+                    ).ConfigureAwait(false);
                 }
 
-                await _azureMetadataProxy.Streams.RemoveAsync(streamUri);
+                await _azureMetadataProxy.Streams.RemoveAsync(streamUri).ConfigureAwait(false);
             }
         }
 
@@ -141,59 +148,70 @@ namespace Reaqtor.Remoting.QueryCoordinator
 
         public async Task DefineObservableAsync(Uri observableUri, ExpressionSlim observable, object state, CancellationToken token)
         {
-            Contract.RequiresNotNull(observableUri);
-            Contract.RequiresNotNull(observable);
+            if (observableUri == null)
+                throw new ArgumentNullException(nameof(observableUri));
+            if (observable == null)
+                throw new ArgumentNullException(nameof(observable));
 
             var entity = new AsyncReactiveObservableTableEntity(observableUri, observable.ToExpression(), state);
 
-            await _azureMetadataProxy.Observables.AddAsync(observableUri, entity);
+            await _azureMetadataProxy.Observables.AddAsync(observableUri, entity).ConfigureAwait(false);
         }
 
         public async Task UndefineObservableAsync(Uri observableUri, CancellationToken token)
         {
-            Contract.RequiresNotNull(observableUri);
+            if (observableUri == null)
+                throw new ArgumentNullException(nameof(observableUri));
 
-            await _azureMetadataProxy.Observables.RemoveAsync(observableUri);
+            await _azureMetadataProxy.Observables.RemoveAsync(observableUri).ConfigureAwait(false);
         }
 
         public async Task DefineObserverAsync(Uri observerUri, ExpressionSlim observer, object state, CancellationToken token)
         {
-            Contract.RequiresNotNull(observerUri);
-            Contract.RequiresNotNull(observer);
+            if (observerUri == null)
+                throw new ArgumentNullException(nameof(observerUri));
+            if (observer == null)
+                throw new ArgumentNullException(nameof(observer));
 
             var entity = new AsyncReactiveObserverTableEntity(observerUri, observer.ToExpression(), state);
 
-            await _azureMetadataProxy.Observers.AddAsync(observerUri, entity);
+            await _azureMetadataProxy.Observers.AddAsync(observerUri, entity).ConfigureAwait(false);
         }
 
         public async Task UndefineObserverAsync(Uri observerUri, CancellationToken token)
         {
-            Contract.RequiresNotNull(observerUri);
+            if (observerUri == null)
+                throw new ArgumentNullException(nameof(observerUri));
 
-            await _azureMetadataProxy.Observers.RemoveAsync(observerUri);
+            await _azureMetadataProxy.Observers.RemoveAsync(observerUri).ConfigureAwait(false);
         }
 
         public async Task DefineStreamFactoryAsync(Uri streamFactoryUri, ExpressionSlim streamFactory, object state, CancellationToken token)
         {
-            Contract.RequiresNotNull(streamFactoryUri);
-            Contract.RequiresNotNull(streamFactory);
+            if (streamFactoryUri == null)
+                throw new ArgumentNullException(nameof(streamFactoryUri));
+            if (streamFactory == null)
+                throw new ArgumentNullException(nameof(streamFactory));
 
             var entity = new AsyncReactiveStreamFactoryTableEntity(streamFactoryUri, streamFactory.ToExpression(), state);
 
-            await _azureMetadataProxy.StreamFactories.AddAsync(streamFactoryUri, entity);
+            await _azureMetadataProxy.StreamFactories.AddAsync(streamFactoryUri, entity).ConfigureAwait(false);
         }
 
         public async Task UndefineStreamFactoryAsync(Uri streamFactoryUri, CancellationToken token)
         {
-            Contract.RequiresNotNull(streamFactoryUri);
+            if (streamFactoryUri == null)
+                throw new ArgumentNullException(nameof(streamFactoryUri));
 
-            await _azureMetadataProxy.StreamFactories.RemoveAsync(streamFactoryUri);
+            await _azureMetadataProxy.StreamFactories.RemoveAsync(streamFactoryUri).ConfigureAwait(false);
         }
 
         public async Task DefineSubscriptionFactoryAsync(Uri subscriptionFactoryUri, ExpressionSlim subscriptionFactory, object state, CancellationToken token)
         {
-            Contract.RequiresNotNull(subscriptionFactoryUri);
-            Contract.RequiresNotNull(subscriptionFactory);
+            if (subscriptionFactoryUri == null)
+                throw new ArgumentNullException(nameof(subscriptionFactoryUri));
+            if (subscriptionFactory == null)
+                throw new ArgumentNullException(nameof(subscriptionFactory));
 
             // NB: The functionality to insert the hook needs to be revisited in order to have an effect on subscriptions created via subscription
             //     factories. However, its applicability will be limited when factories for things like "composite subscriptions" are used. While
@@ -215,14 +233,15 @@ namespace Reaqtor.Remoting.QueryCoordinator
 
             var entity = new AsyncReactiveSubscriptionFactoryTableEntity(subscriptionFactoryUri, subscriptionFactory.ToExpression(), state);
 
-            await _azureMetadataProxy.SubscriptionFactories.AddAsync(subscriptionFactoryUri, entity);
+            await _azureMetadataProxy.SubscriptionFactories.AddAsync(subscriptionFactoryUri, entity).ConfigureAwait(false);
         }
 
         public async Task UndefineSubscriptionFactoryAsync(Uri subscriptionFactoryUri, CancellationToken token)
         {
-            Contract.RequiresNotNull(subscriptionFactoryUri);
+            if (subscriptionFactoryUri == null)
+                throw new ArgumentNullException(nameof(subscriptionFactoryUri));
 
-            await _azureMetadataProxy.SubscriptionFactories.RemoveAsync(subscriptionFactoryUri);
+            await _azureMetadataProxy.SubscriptionFactories.RemoveAsync(subscriptionFactoryUri).ConfigureAwait(false);
         }
 
         public IQueryProvider Provider { get; }

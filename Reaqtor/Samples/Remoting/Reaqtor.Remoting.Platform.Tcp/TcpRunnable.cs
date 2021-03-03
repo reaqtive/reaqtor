@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Globalization;
 
 namespace Reaqtor.Remoting.Platform
 {
@@ -12,7 +13,7 @@ namespace Reaqtor.Remoting.Platform
         private readonly string _uri;
 
         public TcpRunnable(string executablePath, int port, string uri)
-            : base(executablePath, port.ToString(), uri)
+            : base(executablePath, port.ToString(CultureInfo.InvariantCulture), uri)
         {
             _port = port;
             _uri = uri;

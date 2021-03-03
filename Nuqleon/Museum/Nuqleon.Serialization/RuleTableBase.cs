@@ -106,6 +106,7 @@ namespace Nuqleon.Serialization
         #endregion
 
 #pragma warning disable IDE0060 // Remove unused parameter (witness parameters for type inference)
+#pragma warning disable CA1801 // Review unused parameters (same as above)
 
         #region Roundtrip function
 
@@ -379,7 +380,8 @@ namespace Nuqleon.Serialization
 
         #endregion
 
-#pragma warning restore IDE0060 // Remove unused parameter
+#pragma warning restore CA1801
+#pragma warning restore IDE0060
 
         #endregion
 
@@ -409,6 +411,8 @@ namespace Nuqleon.Serialization
         /// <returns>true if a rule with the specified name was found; otherwise, false.</returns>
         public abstract bool TryGetRule(string name, out Rule<TInput, TOutput, TContext> rule);
 
+#pragma warning disable CA1043 // Use Integral Or String Argument For Indexers. (Not any different from a Dictionary<Type, ...>)
+
         /// <summary>
         /// Gets a list of rules that can process objects of the given type using an exact type match.
         /// </summary>
@@ -418,6 +422,8 @@ namespace Nuqleon.Serialization
         {
             get;
         }
+
+#pragma warning restore CA1043
 
         #endregion
 

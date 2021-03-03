@@ -8,6 +8,9 @@ using System.Threading.Tasks;
 
 using Reaqtor.Remoting.Platform;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task. (Omitted in sample code for brevity.)
+
 namespace Reaqtor.Remoting.Demo
 {
     public static class Program
@@ -59,6 +62,7 @@ namespace Reaqtor.Remoting.Demo
                     platform.StartAsync(CancellationToken.None).Wait();
                     Console.WriteLine("Running demo with the TCP platform.");
                 }
+#pragma warning disable CA1031 // Do not catch general exception types. (Demo code.)
                 catch
                 {
                     try { platform.StopAsync(CancellationToken.None).Wait(); }
@@ -68,8 +72,9 @@ namespace Reaqtor.Remoting.Demo
                     platform.StartAsync(CancellationToken.None).Wait();
                     Console.WriteLine("Running demo with the in-memory platform.");
                 }
+#pragma warning restore CA1031
 
-                new ReactivePlatformDeployer(platform, new Deployable.Deployable()).Deploy();
+                new ReactivePlatformDeployer(platform, new Deployable.CoreDeployable()).Deploy();
 
                 action(platform.CreateClient().Context).Wait();
             }

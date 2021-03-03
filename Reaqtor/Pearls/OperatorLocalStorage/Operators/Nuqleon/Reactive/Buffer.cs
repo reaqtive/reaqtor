@@ -10,17 +10,20 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using Reaqtive.Scheduler;
 using Reaqtive.Storage;
+
+#pragma warning disable CA1051 // Do not declare visible instance fields. (We're okay with protected readonly fields here.)
 
 namespace Reaqtive.Operators
 {
     public abstract class Buffer<TSource> : SubscribableBase<IList<TSource>>
     {
-        protected readonly ISubscribable<TSource> _source;
+        private protected readonly ISubscribable<TSource> _source;
 
-        public Buffer(ISubscribable<TSource> source)
+        protected Buffer(ISubscribable<TSource> source)
         {
             _source = source;
         }
@@ -39,6 +42,8 @@ namespace Reaqtive.Operators
 
             public override void SetContext(IOperatorContext context)
             {
+                Debug.Assert(context != null);
+
                 base.SetContext(context);
 
                 //
@@ -54,7 +59,9 @@ namespace Reaqtive.Operators
             protected override ISubscription OnSubscribe() => Params._source.Subscribe(this);
 
             public abstract void OnNext(TSource value);
+#pragma warning disable CA1716 // Identifiers should not match keywords. (Inherited from IObserver<T>.OnError(Exception).)
             public abstract void OnError(Exception error);
+#pragma warning restore CA1716
             public abstract void OnCompleted();
         }
 
@@ -159,6 +166,8 @@ namespace Reaqtive.Operators
 
             protected override void LoadStateCore(IOperatorStateReader reader)
             {
+                Debug.Assert(reader != null);
+
                 base.LoadStateCore(reader);
 
                 var bufferId = reader.Read<string>();
@@ -169,6 +178,8 @@ namespace Reaqtive.Operators
 
             protected override void SaveStateCore(IOperatorStateWriter writer)
             {
+                Debug.Assert(writer != null);
+
                 base.SaveStateCore(writer);
 
                 writer.Write(_buffer.Id);
@@ -178,7 +189,7 @@ namespace Reaqtive.Operators
         protected abstract class SyncOneSink<TParams> : OneSink<TParams>
             where TParams : Buffer<TSource>
         {
-            protected readonly object _gate = new();
+            private protected readonly object _gate = new();
 
             protected SyncOneSink(TParams parent, IObserver<IList<TSource>> observer)
                 : base(parent, observer)
@@ -349,6 +360,8 @@ namespace Reaqtive.Operators
 
             protected override void LoadStateCore(IOperatorStateReader reader)
             {
+                Debug.Assert(reader != null);
+
                 base.LoadStateCore(reader);
 
                 var buffersId = reader.Read<string>();
@@ -364,6 +377,8 @@ namespace Reaqtive.Operators
 
             protected override void SaveStateCore(IOperatorStateWriter writer)
             {
+                Debug.Assert(writer != null);
+
                 base.SaveStateCore(writer);
 
                 writer.Write(_persistedBuffers.Id);
@@ -373,7 +388,7 @@ namespace Reaqtive.Operators
         protected abstract class SyncManySink<TParams> : ManySink<TParams>
             where TParams : Buffer<TSource>
         {
-            protected readonly object _gate = new();
+            private protected readonly object _gate = new();
 
             protected SyncManySink(TParams parent, IObserver<IList<TSource>> observer)
                 : base(parent, observer)

@@ -10,6 +10,7 @@
 
 namespace Reaqtor.Remoting.Platform
 {
+#pragma warning disable CA1056 // URI-like properties should not be strings. (Legacy approach; can be changed in the future.)
     public interface ITcpReactivePlatformSettings
     {
         string Host { get; }
@@ -29,4 +30,5 @@ namespace Reaqtor.Remoting.Platform
         string PlaybackStoreUri { get; }
         string GetExecutablePath(string component);
     }
+#pragma warning restore CA1056
 }

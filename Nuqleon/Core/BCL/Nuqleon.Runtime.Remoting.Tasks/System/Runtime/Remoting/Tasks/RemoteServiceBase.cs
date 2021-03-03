@@ -61,7 +61,7 @@ namespace System.Runtime.Remoting.Tasks
                 {
                     reply.OnNext(t.Result);
                 }
-            });
+            }, TaskScheduler.Default);
 
             return new RemoteCancellationDisposable(this, guid);
         }

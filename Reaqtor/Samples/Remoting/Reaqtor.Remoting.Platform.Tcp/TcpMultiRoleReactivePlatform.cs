@@ -16,11 +16,13 @@ using System.Threading.Tasks;
 
 using Reaqtor.Remoting.Protocol;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+
 namespace Reaqtor.Remoting.Platform
 {
     public sealed class TcpMultiRoleReactivePlatform : ReactivePlatformBase
     {
-        private static readonly int RetryCount = 1000;
+        private const int RetryCount = 1000;
 
         private readonly IReactiveQueryCoordinator _queryCoordinator;
         private readonly IReactiveQueryEvaluator _queryEvaluator;
@@ -36,7 +38,9 @@ namespace Reaqtor.Remoting.Platform
         }
 
         private TcpMultiRoleReactivePlatform(ReactiveServiceType[][] groups, TcpMultiRoleRunnable[] runnables)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(GetEnvironment(groups, runnables))
+#pragma warning restore CA2000
         {
             _queryCoordinator = GetQueryCoordinator(groups, runnables);
             _queryEvaluator = GetQueryEvaluator(groups, runnables);
@@ -54,8 +58,8 @@ namespace Reaqtor.Remoting.Platform
 
         public override async Task StartAsync(CancellationToken token)
         {
-            await Environment.StartAsync(token);
-            await base.StartAsync(token);
+            await Environment.StartAsync(token).ConfigureAwait(false);
+            await base.StartAsync(token).ConfigureAwait(false);
 
             var count = 0;
             while (count < RetryCount)
@@ -70,10 +74,12 @@ namespace Reaqtor.Remoting.Platform
                     QueryCoordinator.GetInstance<IReactiveConnection>().Ping();
                     break;
                 }
+#pragma warning disable CA1031 // REWIEW: Do not catch general exception types.
                 catch
                 {
                     Console.WriteLine("Waiting for services to start (retry attempt {0})...", ++count);
                 }
+#pragma warning restore CA1031
             }
 
             if (count == RetryCount)
@@ -202,6 +208,7 @@ namespace Reaqtor.Remoting.Platform
             {
                 for (var j = 0; j < groups[i].Length; ++j)
                 {
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
                     switch (groups[i][j])
                     {
                         case ReactiveServiceType.MetadataService:
@@ -222,6 +229,7 @@ namespace Reaqtor.Remoting.Platform
                         default:
                             break;
                     }
+#pragma warning restore CA2000
                 }
             }
 
@@ -234,6 +242,7 @@ namespace Reaqtor.Remoting.Platform
             {
                 for (var j = 0; j < groups[i].Length; ++j)
                 {
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
                     switch (groups[i][j])
                     {
                         case ReactiveServiceType.QueryCoordinator:
@@ -241,6 +250,7 @@ namespace Reaqtor.Remoting.Platform
                         default:
                             break;
                     }
+#pragma warning restore CA2000
                 }
             }
 
@@ -253,6 +263,7 @@ namespace Reaqtor.Remoting.Platform
             {
                 for (var j = 0; j < groups[i].Length; ++j)
                 {
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
                     switch (groups[i][j])
                     {
                         case ReactiveServiceType.QueryEvaluator:
@@ -260,6 +271,7 @@ namespace Reaqtor.Remoting.Platform
                         default:
                             break;
                     }
+#pragma warning restore CA2000
                 }
             }
 

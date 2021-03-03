@@ -18,6 +18,9 @@ namespace Reaqtor.Remoting.Protocol
 
         public static void SetMessagingServiceInstance(AppDomain domain, IReactiveMessagingConnection instance)
         {
+            if (domain == null)
+                throw new ArgumentNullException(nameof(domain));
+
             domain.SetData(MessagingHandle, instance);
         }
 

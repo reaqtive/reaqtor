@@ -15,28 +15,49 @@ namespace Reaqtor.Remoting.Deployable.Streams
     {
         public static IPartitionableSubscribable<T> ToPartitionableSubscribable<T>(this ISubscribable<T> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return new SimplePartitionableSubscribable<T>(source);
         }
 
         public static IPartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>> AddPartition<TSource, TKey>(this IPartitionableSubscribable<TSource> source, IKeySelector<TSource, TKey> keySelector)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (keySelector == null)
+                throw new ArgumentNullException(nameof(keySelector));
+
             return new SimplePartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>>(source, keySelector, null);
         }
 
         public static IPartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>> AddPartition<TSource, TKey>(this IPartitionableSubscribable<TSource> source, Expression<Func<TSource, TKey>> keySelector)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (keySelector == null)
+                throw new ArgumentNullException(nameof(keySelector));
+
             return new SimplePartitionableSubscribable<TSource, TKey, IPartitionableSubscribable<TSource>>(source, new LambdaKeySelector<TSource, TKey>(keySelector), null);
         }
 
         public static IPartitionableSubscribable<TSource, TNextKey, IPartitionableSubscribable<TSource, TKey, TInner>> AddPartition<TSource, TKey, TInner, TNextKey>(this IPartitionableSubscribable<TSource, TKey, TInner> source, IKeySelector<TSource, TNextKey> keySelector)
             where TInner : IImmutableBindingHolder<TInner, TSource>
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (keySelector == null)
+                throw new ArgumentNullException(nameof(keySelector));
+
             return new SimplePartitionableSubscribable<TSource, TNextKey, IPartitionableSubscribable<TSource, TKey, TInner>>(source, keySelector, null);
         }
 
         public static TInner Bind<TSource, TKey, TInner>(this IPartitionableSubscribable<TSource, TKey, TInner> source, TKey key, IEqualityComparer<TKey> keyComparer)
             where TInner : IImmutableBindingHolder<TInner, TSource>
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Parent.AppendBindings(new[] { new KeyBinding<TSource, TKey>(source.Selector, key, keyComparer) }.Concat(source.Bindings).ToList());
         }
     }

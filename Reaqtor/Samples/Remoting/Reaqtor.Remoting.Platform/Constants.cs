@@ -4,9 +4,12 @@
 
 using System;
 
+#pragma warning disable CA1034 // Nested types should not be visible. (Legacy approach; kept for compat.)
+#pragma warning disable CA1720 // Identifier contains type name. (Legacy approach; kept for compat.)
+
 namespace Reaqtor.Remoting.Platform
 {
-    public class Constants
+    public static class Constants
     {
         /// <summary>
         /// Declarations of string constants uses as keys in the operator context.
@@ -49,6 +52,8 @@ namespace Reaqtor.Remoting.Platform
             /// </summary>
             public static class Observable
             {
+#pragma warning disable CA1724 // Conflict with namespace name.
+
                 /// <summary>
                 /// The fire hose observable.
                 /// </summary>
@@ -60,6 +65,8 @@ namespace Reaqtor.Remoting.Platform
                     /// <summary>The resource id as a URI.</summary>
                     public static readonly Uri Uri = new(String);
                 }
+
+#pragma warning restore CA1724
 
                 /// <summary>
                 /// The garbage collector observable.
@@ -103,6 +110,8 @@ namespace Reaqtor.Remoting.Platform
                     public static readonly Uri Uri = new(String);
                 }
 
+#pragma warning disable CA1724 // Conflict with namespace name.
+
                 /// <summary>
                 /// The fire hose observer.
                 /// </summary>
@@ -114,6 +123,8 @@ namespace Reaqtor.Remoting.Platform
                     /// <summary>The resource id as a URI.</summary>
                     public static readonly Uri Uri = new(String);
                 }
+
+#pragma warning restore CA1724
 
                 /// <summary>The Trace observer.</summary>
                 public static class TraceObserver

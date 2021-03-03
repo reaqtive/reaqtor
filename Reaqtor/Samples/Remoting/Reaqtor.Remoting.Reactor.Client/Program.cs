@@ -31,6 +31,10 @@ using Reaqtor.Remoting.Reactor.Client;
 using Reaqtor.Remoting.Reactor.DomainFeeds;
 using Reaqtor.Remoting.TestingFramework;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+#pragma warning disable CA1305 // Specify IFormatProvider. (No globalization in sample.)
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task. (Omitted in sample code for brevity.)
+
 namespace Reaqtor.Remoting
 {
     #region Aliases
@@ -456,7 +460,7 @@ namespace Reaqtor.Remoting
             var kvsStream = default(byte[]);
 
             Console.Write("Loading environment... ");
-            var environment = new AppDomainReactiveEnvironment();
+            using var environment = new AppDomainReactiveEnvironment();
             Console.WriteLine("Done.");
 
             Console.Write("Loading reactive platform... ");
@@ -501,7 +505,7 @@ namespace Reaqtor.Remoting
             Console.Read();
 
             Console.Write("Loading environment... ");
-            var newEnvironment = new ReactiveEnvironment(environment.MetadataService, environment.MessagingService, new AppDomainStateStoreService(), new AppDomainKeyValueStoreService());
+            using var newEnvironment = new ReactiveEnvironment(environment.MetadataService, environment.MessagingService, new AppDomainStateStoreService(), new AppDomainKeyValueStoreService());
             newEnvironment.StateStoreService.StartAsync(CancellationToken.None).Wait();
             newEnvironment.KeyValueStoreService.StartAsync(CancellationToken.None).Wait();
             Console.WriteLine("Done.");
@@ -522,7 +526,6 @@ namespace Reaqtor.Remoting
             }
 
             newEnvironment.StateStoreService.StopAsync(CancellationToken.None);
-            environment.Dispose();
         }
 
         /// <summary>
@@ -609,8 +612,10 @@ namespace Reaqtor.Remoting
                         .Take(2);
             }
 
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             var environment = new InMemoryReactiveEnvironment();
             environment.StartAsync(CancellationToken.None).Wait();
+#pragma warning restore CA2000
 
             var sw = Stopwatch.StartNew();
             Console.Write("Deploying to environment... ");
@@ -663,7 +668,7 @@ namespace Reaqtor.Remoting
             var platforms = environments.Select(e => new InMemoryReactivePlatform(e)).ToList();
             var tasks = new Task[platforms.Count];
             var recoveries = new TimeSpan[platforms.Count];
-            ForEach(platforms, (p, i) => tasks[i] = Task.Factory.StartNew(() =>
+            ForEach(platforms, (p, i) => tasks[i] = Task.Run(() =>
             {
                 p.Configuration.SchedulerType = SchedulerType.Static;
                 var recoveryTimer = Stopwatch.StartNew();
@@ -716,6 +721,9 @@ namespace Reaqtor.Remoting
             const int numUsers = 100;
             const int numNotifications = 1000;
             var users = Enumerable.Range(0, numUsers).Select(_ => Tuple.Create(Guid.NewGuid().ToString(), Guid.NewGuid().ToString())).ToArray();
+
+#pragma warning disable CA5394 // Do not use insecure randomness. (Okay for sample code.)
+
             var rand = new Random(0);
             var notifications = Enumerable.Range(0, numNotifications).Select(_ =>
             {
@@ -748,6 +756,8 @@ namespace Reaqtor.Remoting
                     }
                 };
             }).ToArray();
+
+#pragma warning restore CA5394
 
             var disposables = new IAsyncDisposable[numUsers];
             Stress<Geocoordinate, Geocoordinate>(async (ctx, stream) =>
@@ -873,7 +883,7 @@ namespace Reaqtor.Remoting
         private static void Initialize(IReactivePlatform platform)
         {
             platform.StartAsync(CancellationToken.None).Wait();
-            var deployer = new ReactivePlatformDeployer(platform, new Deployable.Deployable(), new Reactor.Deployable(), new DomainFeedsDeployable());
+            var deployer = new ReactivePlatformDeployer(platform, new Deployable.CoreDeployable(), new Reactor.Deployable(), new DomainFeedsDeployable());
             deployer.Deploy();
         }
 

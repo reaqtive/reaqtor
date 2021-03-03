@@ -47,11 +47,8 @@ namespace Reaqtor.Remoting.Metadata
         /// <param name="requestOptions">Table request options, including retry policy.</param>
         public AzureMetadataQueryProvider(ITableClient tableClient, IStorageResolver storageResolver, TableRequestOptions requestOptions)
         {
-            Contract.RequiresNotNull(tableClient);
-            Contract.RequiresNotNull(storageResolver);
-
-            _tableClient = tableClient;
-            _storageResolver = storageResolver;
+            _tableClient = tableClient ?? throw new ArgumentNullException(nameof(tableClient));
+            _storageResolver = storageResolver ?? throw new ArgumentNullException(nameof(storageResolver));
             _requestOptions = requestOptions;
         }
 
@@ -62,6 +59,9 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>Query object representing the specified metadata query.</returns>
         public IQueryable CreateQuery(Expression expression)
         {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
             var queryableType = expression.Type.FindGenericType(typeof(IQueryable<>));
 
             Contract.RequiresNotNull(queryableType);
@@ -85,6 +85,9 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>Query object representing the specified metadata query.</returns>
         public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
         {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
             return new MetadataQuery<TElement>(this, expression);
         }
 
@@ -95,6 +98,9 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>Result of executing the query.</returns>
         public object Execute(Expression expression)
         {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
             return Execute<object>(expression);
         }
 
@@ -106,6 +112,9 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>Result of executing the query.</returns>
         public TResult Execute<TResult>(Expression expression)
         {
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
+
             //Tracer.TraceSource.TraceInformation("EXECUTE {0}", expression);
 
             var azureQueryFriendly = new AzureTableQueryRewriter().Visit(expression);
@@ -124,6 +133,8 @@ namespace Reaqtor.Remoting.Metadata
             return (TResult)result;
         }
 
+#pragma warning disable CA1054 // URI-like parameters should not be strings. (Legacy approach.)
+
         /// <summary>
         /// Inserts the specified table entity using the specified URI as the key.
         /// </summary>
@@ -133,8 +144,11 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>A task to await the insert operation.</returns>
         public async Task InsertAsync(Uri uri, TableEntity entity, string metadataCollectionUri)
         {
-            Contract.RequiresNotNull(uri);
-            Contract.RequiresNotNull(entity);
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
+
             Contract.RequiresNotNullOrEmpty(metadataCollectionUri);
 
             var tableAddress = _storageResolver.ResolveTable(metadataCollectionUri);
@@ -144,9 +158,9 @@ namespace Reaqtor.Remoting.Metadata
             //Tracer.TraceSource.TraceInformation("INSERT {0} INTO {1}", uri, tableAddress);
 
             var table = _tableClient.GetTableReference(tableAddress);
-            await table.CreateIfNotExistsAsync(_requestOptions, null);
+            await table.CreateIfNotExistsAsync(_requestOptions, null).ConfigureAwait(false);
             var insert = new InsertTableOperation(entity);
-            await table.ExecuteAsync(insert, _requestOptions, null);
+            await table.ExecuteAsync(insert, _requestOptions, null).ConfigureAwait(false);
         }
 
         /// <summary>
@@ -157,7 +171,9 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>A task to await the delete operation.</returns>
         public async Task DeleteAsync(Uri uri, string metadataCollectionUri)
         {
-            Contract.RequiresNotNull(uri);
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+
             Contract.RequiresNotNullOrEmpty(metadataCollectionUri);
 
             var tableAddress = _storageResolver.ResolveTable(metadataCollectionUri);
@@ -171,8 +187,10 @@ namespace Reaqtor.Remoting.Metadata
 
             var table = _tableClient.GetTableReference(tableAddress);
             var delete = new DeleteTableOperation(entity);
-            await table.ExecuteAsync(delete, _requestOptions, null);
+            await table.ExecuteAsync(delete, _requestOptions, null).ConfigureAwait(false);
         }
+
+#pragma warning restore CA1054
 
         /// <summary>
         /// Materializes the result set by lifting entities into KeyValuePair&lt;Uri, T&gt; representations.
@@ -183,7 +201,8 @@ namespace Reaqtor.Remoting.Metadata
         private static IQueryable<KeyValuePair<Uri, T>> Materialize<T>(IEnumerable<T> source)
             where T : IKnownResource
         {
-            Contract.RequiresNotNull(source);
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
 
             return source.Select(t => new KeyValuePair<Uri, T>(t.Uri, t)).AsQueryable();
         }

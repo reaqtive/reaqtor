@@ -39,6 +39,7 @@ namespace Reaqtor.Remoting.Platform
             return string.Format(CultureInfo.InvariantCulture, "tcp://{0}:{1}/{2}", host, port, path);
         }
 
+#pragma warning disable CA1034 // Nested types should not be visible. (Legacy pattern.)
         public static class Constants
         {
             public const string Host = "127.0.0.1";
@@ -57,5 +58,6 @@ namespace Reaqtor.Remoting.Platform
             public const int KeyValueStorePort = 8086;
             public const string KeyValueStoreUri = "KeyValueStore";
         }
+#pragma warning restore CA1034
     }
 }

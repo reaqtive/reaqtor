@@ -18,7 +18,7 @@ namespace Pearls.Reaqtor.CSE
     /// Attribute to annotate known resources.
     /// </summary>
     [AttributeUsage(AttributeTargets.Method)]
-    internal class KnownResourceAttribute : Attribute
+    internal sealed class KnownResourceAttribute : Attribute
     {
         /// <summary>
         /// Creates a new known resource attribute using the specified resource identifier.

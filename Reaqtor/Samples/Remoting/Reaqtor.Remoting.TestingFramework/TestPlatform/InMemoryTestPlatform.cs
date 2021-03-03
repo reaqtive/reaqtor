@@ -27,7 +27,7 @@ namespace Reaqtor.Remoting.TestingFramework
 
         public override async Task StartAsync(CancellationToken token)
         {
-            await base.StartAsync(token);
+            await base.StartAsync(token).ConfigureAwait(false);
             if (_selfContainedEnvironment)
             {
                 new ReactivePlatformDeployer(this, new TestDeployable(), new Reactor.Deployable(), new DomainFeedsDeployable()).Deploy();

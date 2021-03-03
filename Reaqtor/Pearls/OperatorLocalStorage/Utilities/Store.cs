@@ -20,6 +20,6 @@ namespace Utilities
         /// <summary>
         /// Gets the dictionary underneath the key/value store implementation. The keys represent categories, the values represent the key/value stores for each category.
         /// </summary>
-        public readonly Dictionary<string, Dictionary<string, byte[]>> Data = new();
+        public Dictionary<string, Dictionary<string, byte[]>> Data { get; } = new();
     }
 }

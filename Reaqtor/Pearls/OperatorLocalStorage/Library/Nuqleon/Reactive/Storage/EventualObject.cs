@@ -44,8 +44,11 @@ namespace Reaqtive.Storage
             {
                 stream.Position = 0;
 
-                ms = new MemoryStream();
-                stream.CopyTo(ms);
+                using var copy = new MemoryStream();
+
+                stream.CopyTo(copy);
+
+                return FromState(copy);
             }
 
             var bytes = ms.ToArray();

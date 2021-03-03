@@ -17,7 +17,7 @@ namespace Reaqtor.Remoting.Platform
 {
     public abstract class ProcessRunnable : IRunnable<Process>
     {
-        public ProcessRunnable(string executablePath, params string[] arguments)
+        protected ProcessRunnable(string executablePath, params string[] arguments)
         {
             Target = new Process();
             Target.StartInfo.FileName = executablePath;

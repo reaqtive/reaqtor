@@ -8,6 +8,8 @@ using System.Text;
 
 namespace Reaqtor.Remoting.Metadata
 {
+#pragma warning disable CA1032 // Implement standard exception constructors. (Overload with ErrorCodes is "larger".)
+
     /// <summary>
     /// Reactive Processing Storage Exception
     /// </summary>

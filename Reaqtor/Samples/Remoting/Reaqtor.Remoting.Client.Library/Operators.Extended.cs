@@ -6,7 +6,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace Reaqtor
 {
@@ -22,6 +21,11 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Aggregate.Accumulate)]
         public static IAsyncReactiveQbservable<TSource> Aggregate<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TSource, TSource>> aggregate)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (aggregate == null)
+                throw new ArgumentNullException(nameof(aggregate));
+
             return source.Provider.CreateQbservable<TSource>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -36,11 +40,16 @@ namespace Reaqtor
         /// <typeparam name="TResult">Type of the result of the aggregation.</typeparam>
         /// <param name="source">Source sequence whose elements to aggregate.</param>
         /// <param name="seed">Seed value of the aggregation.</param>
-        /// <param name="accumulate">Aggregation function used to combine the running aggregation result with each consecutive element.</param>
+        /// <param name="aggregate">Aggregation function used to combine the running aggregation result with each consecutive element.</param>
         /// <returns>Observable sequence containing a single element representing the result of the aggregation.</returns>
         [KnownResource(Remoting.Client.Constants.Observable.Aggregate.Seed)]
         public static IAsyncReactiveQbservable<TResult> Aggregate<TSource, TResult>(this IAsyncReactiveQbservable<TSource> source, TResult seed, Expression<Func<TResult, TSource, TResult>> aggregate)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (aggregate == null)
+                throw new ArgumentNullException(nameof(aggregate));
+
             return source.Provider.CreateQbservable<TResult>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TResult)),
@@ -63,6 +72,11 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Aggregate.SeedResult)]
         public static IAsyncReactiveQbservable<TResult> Aggregate<TSource, TAccumulate, TResult>(this IAsyncReactiveQbservable<TSource> source, TAccumulate seed, Expression<Func<TAccumulate, TSource, TAccumulate>> aggregate, Expression<Func<TAccumulate, TResult>> resultSelector)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (aggregate == null)
+                throw new ArgumentNullException(nameof(aggregate));
+
             return source.Provider.CreateQbservable<TResult>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TAccumulate), typeof(TResult)),
@@ -82,6 +96,11 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Scan.Accumulate)]
         public static IAsyncReactiveQbservable<TSource> Scan<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TSource, TSource>> aggregate)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (aggregate == null)
+                throw new ArgumentNullException(nameof(aggregate));
+
             return source.Provider.CreateQbservable<TSource>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -96,11 +115,16 @@ namespace Reaqtor
         /// <typeparam name="TResult">Type of the result of the aggregation.</typeparam>
         /// <param name="source">Source sequence whose elements to aggregate.</param>
         /// <param name="seed">Seed value of the aggregation.</param>
-        /// <param name="accumulate">Aggregation function used to combine the running aggregation result with each consecutive element.</param>
+        /// <param name="aggregate">Aggregation function used to combine the running aggregation result with each consecutive element.</param>
         /// <returns>Observable sequence containing elements obtained from applying the rolling aggregate to the source sequence. If the source sequence is empty, an empty sequence is returned.</returns>
         [KnownResource(Remoting.Client.Constants.Observable.Scan.Seed)]
         public static IAsyncReactiveQbservable<TResult> Scan<TSource, TResult>(this IAsyncReactiveQbservable<TSource> source, TResult seed, Expression<Func<TResult, TSource, TResult>> aggregate)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (aggregate == null)
+                throw new ArgumentNullException(nameof(aggregate));
+
             return source.Provider.CreateQbservable<TResult>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TResult)),
@@ -118,6 +142,9 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Any.NoArgument)]
         public static IAsyncReactiveQbservable<bool> Any<TSource>(this IAsyncReactiveQbservable<TSource> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Provider.CreateQbservable<bool>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -134,6 +161,11 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Any.Predicate)]
         public static IAsyncReactiveQbservable<bool> Any<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
             return source.Provider.CreateQbservable<bool>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -151,6 +183,11 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.All.Predicate)]
         public static IAsyncReactiveQbservable<bool> All<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
             return source.Provider.CreateQbservable<bool>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -167,6 +204,9 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.IsEmpty.NoArgument)]
         public static IAsyncReactiveQbservable<bool> IsEmpty<TSource>(this IAsyncReactiveQbservable<TSource> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Provider.CreateQbservable<bool>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -182,6 +222,9 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Count.NoArgument)]
         public static IAsyncReactiveQbservable<int> Count<TSource>(this IAsyncReactiveQbservable<TSource> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Provider.CreateQbservable<int>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -198,6 +241,11 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Count.Predicate)]
         public static IAsyncReactiveQbservable<int> Count<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
             return source.Provider.CreateQbservable<int>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -214,6 +262,9 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.LongCount.NoArgument)]
         public static IAsyncReactiveQbservable<long> LongCount<TSource>(this IAsyncReactiveQbservable<TSource> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Provider.CreateQbservable<long>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -230,6 +281,11 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.LongCount.Predicate)]
         public static IAsyncReactiveQbservable<long> LongCount<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
             return source.Provider.CreateQbservable<long>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -246,6 +302,9 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.ToList.NoArgument)]
         public static IAsyncReactiveQbservable<IList<TSource>> ToList<TSource>(this IAsyncReactiveQbservable<TSource> source)
         {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
             return source.Provider.CreateQbservable<IList<TSource>>(
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
@@ -261,6 +320,9 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Return.Value)]
         public static IAsyncReactiveQbservable<TResult> Return<TResult>(this IReactiveProxy context, TResult value)
         {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
             return context.GetObservable<TResult, TResult>(new Uri(Remoting.Client.Constants.Observable.Return.Value))(value);
         }
 
@@ -273,6 +335,9 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Return.Value)]
         public static IAsyncReactiveQbservable<TResult> Throw<TResult>(this IReactiveProxy context, Exception error)
         {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
             return context.GetObservable<Exception, TResult>(new Uri(Remoting.Client.Constants.Observable.Throw.Error))(error);
         }
 
@@ -284,6 +349,9 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Never.NoArgument)]
         public static IAsyncReactiveQbservable<TResult> Never<TResult>(this IReactiveProxy context)
         {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
             return context.GetObservable<TResult>(new Uri(Remoting.Client.Constants.Observable.Never.NoArgument));
         }
 
@@ -296,6 +364,9 @@ namespace Reaqtor
         [KnownResource(Remoting.Client.Constants.Observable.Merge.N)]
         public static IAsyncReactiveQbservable<TSource> Merge<TSource>(this IReactiveProxy context, params IAsyncReactiveQbservable<TSource>[] sources)
         {
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
             return context.GetObservable<IAsyncReactiveQbservable<TSource>[], TSource>(new Uri(Remoting.Client.Constants.Observable.Merge.N))(sources);
         }
     }

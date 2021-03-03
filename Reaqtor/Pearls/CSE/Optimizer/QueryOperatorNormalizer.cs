@@ -32,6 +32,7 @@
 //     xs.Where(x => g'(x)).Where(x => f'(x))
 //
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
@@ -130,7 +131,7 @@ namespace Pearls.Reaqtor.CSE
 
             if (e is UnaryExpression u)
             {
-                if (u.Operand is MethodCallExpression c && c.Method.DeclaringType == typeof(string) && c.Method.Name.StartsWith("IsNullOr"))
+                if (u.Operand is MethodCallExpression c && c.Method.DeclaringType == typeof(string) && c.Method.Name.StartsWith("IsNullOr", StringComparison.Ordinal))
                 {
                     return -1;
                 }
@@ -174,7 +175,7 @@ namespace Pearls.Reaqtor.CSE
                 if (TryFindMember(x, out var m1) && TryFindMember(y, out var m2))
                 {
                     // e.g. reorders xs.Where(x => x.Name == "Bart" && x.Age == 21) to xs.Where(x => x.Age == 21).Where(x => x.Name == "Bart")
-                    return m1.CompareTo(m2);
+                    return string.Compare(m1, m2, StringComparison.Ordinal);
                 }
 
                 // TODO: this is a bit shallow; would be better to classify first by "sortability"

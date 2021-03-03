@@ -12,7 +12,9 @@ namespace Reaqtor.Remoting.Platform
     internal sealed class InMemoryStateStoreService : ReactiveServiceBase, IReactiveStateStoreService
     {
         public InMemoryStateStoreService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(new InMemoryRunnable(CreateStateStoreService), ReactiveServiceType.StateStoreService)
+#pragma warning restore CA2000
         {
         }
 

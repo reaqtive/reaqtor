@@ -10,9 +10,12 @@
 
 using System;
 
+#pragma warning disable CA1034 // Nested types should not be visible. (Legacy approach; kept for compat.)
+#pragma warning disable CA1720 // Identifier contains type name. (Legacy approach; kept for compat.)
+
 namespace Reaqtor.Remoting.TestingFramework
 {
-    public class Constants
+    public static class Constants
     {
         public static class Test
         {

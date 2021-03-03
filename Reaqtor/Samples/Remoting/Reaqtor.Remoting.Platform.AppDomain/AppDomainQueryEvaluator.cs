@@ -18,7 +18,9 @@ namespace Reaqtor.Remoting.Platform
        where TQueryEvaluator : IReactiveQueryEvaluatorConnection
     {
         public AppDomainQueryEvaluator(IReactivePlatform platform, string uri)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(platform, new AppDomainRunnable(string.Format(CultureInfo.InvariantCulture, "QueryEvaluator({0})", uri), typeof(TQueryEvaluator)), ReactiveServiceType.QueryEvaluator)
+#pragma warning restore CA2000
         {
         }
 

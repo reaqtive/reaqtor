@@ -8,9 +8,11 @@ using System.Diagnostics;
 using System.Linq;
 using System.Reactive.Linq;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+
 namespace DelegatingBinder
 {
-    public class Program
+    public static class Program
     {
         public static void Main()
         {
@@ -43,9 +45,11 @@ namespace DelegatingBinder
             var J = 3;     // number of keys with events
             var N = 10000; // number of events sent per key (J)
 
+#pragma warning disable CA5394 // Do not use insecure randomness. (No security needed for this sample.)
             var r = new Random();
             var keys = new[] { "Homer", "Bart", "Lisa" }.Take(I).SelectMany(n => Enumerable.Repeat(n, K)).OrderBy(_ => r.Next()).ToArray();
             var events = new[] { new Person { Name = "Homer", Age = 38 }, new Person { Name = "Bart", Age = 10 }, new Person { Name = "Lisa", Age = 8 } }.Take(J).SelectMany(e => Enumerable.Repeat(e, N)).OrderBy(_ => r.Next()).ToArray();
+#pragma warning restore CA5394
 
             Perf("subject", keys, events);
             Perf("subject/partitioned", keys, events);

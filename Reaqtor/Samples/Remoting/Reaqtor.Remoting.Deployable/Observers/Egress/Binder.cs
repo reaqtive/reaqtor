@@ -166,6 +166,8 @@ namespace Reaqtor.Remoting.Deployable
                 _selector = selector;
             }
 
+#pragma warning disable CA1031 // Do not catch general exception types. (Gets propagated through the selector.)
+
             public void OnCompleted()
             {
                 try
@@ -204,6 +206,8 @@ namespace Reaqtor.Remoting.Deployable
                     _selector(ex).OnNext(value);
                 }
             }
+
+#pragma warning restore CA1031
         }
     }
 }

@@ -15,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Reaqtor.Remoting.TestingFramework
 {
-    public class TestDeployable : Deployable.Deployable
+    public class TestDeployable : Deployable.CoreDeployable
     {
         protected override Task UndefineOperators(ReactiveClientContext context)
         {
@@ -29,26 +29,29 @@ namespace Reaqtor.Remoting.TestingFramework
 
         protected override async Task DefineObservables(ReactiveClientContext context)
         {
-            await base.DefineObservables(context);
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
 
-            await context.UndefineObservableAsync(Platform.Constants.Identifiers.Observable.FireHose.Uri, CancellationToken.None);
+            await base.DefineObservables(context).ConfigureAwait(false);
+
+            await context.UndefineObservableAsync(Platform.Constants.Identifiers.Observable.FireHose.Uri, CancellationToken.None).ConfigureAwait(false);
             await context.DefineObservableAsync<Uri, T>(
                 Platform.Constants.Identifiers.Observable.FireHose.Uri,
                 topic => new TestFirehoseObservable<T>(topic).AsQbservable(),
                 null,
-                CancellationToken.None);
+                CancellationToken.None).ConfigureAwait(false);
 
             await context.DefineObservableAsync<Uri, T>(
                 Constants.Test.HotTimelineObservable.Uri,
                 uri => new TimelineObservable<T>(uri, false).AsQbservable(),
                 null,
-                CancellationToken.None);
+                CancellationToken.None).ConfigureAwait(false);
 
             await context.DefineObservableAsync<Uri, T>(
                 Constants.Test.ColdTimelineObservable.Uri,
                 uri => new TimelineObservable<T>(uri, true).AsQbservable(),
                 null,
-                CancellationToken.None);
+                CancellationToken.None).ConfigureAwait(false);
         }
 
         protected override Task UndefineObservers(ReactiveClientContext context)
@@ -58,13 +61,16 @@ namespace Reaqtor.Remoting.TestingFramework
 
         protected override async Task DefineObservers(ReactiveClientContext context)
         {
-            await base.DefineObservers(context);
+            if (context == null)
+                throw new ArgumentNullException(nameof(context));
+
+            await base.DefineObservers(context).ConfigureAwait(false);
 
             await context.DefineObserverAsync<Uri, T>(
                 Constants.Test.TestObserver.Uri,
                 name => new TestObserver<T>(name).AsQbserver(),
                 null,
-                CancellationToken.None);
+                CancellationToken.None).ConfigureAwait(false);
         }
     }
 }

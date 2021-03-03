@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -74,6 +75,7 @@ namespace Reaqtor.Remoting.QueryEvaluator
 
                 throw new InvalidOperationException(
                     string.Format(
+                        CultureInfo.InvariantCulture,
                         "Expected a subscription invocation with a tuple parameter of generic type IAsyncReactiveQbservable and IAsyncReactiveQbserver, respectively, of type IAsyncReactiveQubscription, got '{0}'.",
                         expression.ToTraceString()));
             }
@@ -92,6 +94,7 @@ namespace Reaqtor.Remoting.QueryEvaluator
 
                 throw new InvalidOperationException(
                     string.Format(
+                        CultureInfo.InvariantCulture,
                         "Expected a subscription invocation with a tuple parameter of generic type IAsyncReactiveQbservable and IAsyncReactiveQbserver, respectively, of type IAsyncReactiveQubscription, got '{0}'.",
                         expression.ToTraceString()));
             }

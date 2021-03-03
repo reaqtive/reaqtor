@@ -18,7 +18,7 @@ using Reaqtor.Expressions.Core;
 
 namespace Reaqtor.Remoting.Deployable
 {
-	public partial class Deployable
+	public partial class CoreDeployable
 	{
 		public static async Task UndefineOperatorsExtension(ReactiveClientContext context)
 		{
@@ -41,8 +41,8 @@ foreach (var op in new[] { "Average", "Min", "Max", "Sum" })
 				name = "Nullable" + name;
 			}
 #>
-            await TryUndefine(() => context.UndefineObservableAsync(new Uri(Client.Constants.Observable.<#=op#>.NoSelector.<#=name#>), CancellationToken.None));
-			await TryUndefine(() => context.UndefineObservableAsync(new Uri(Client.Constants.Observable.<#=op#>.Selector.<#=name#>), CancellationToken.None));
+            await TryUndefine(() => context.UndefineObservableAsync(new Uri(Client.Constants.Observable.<#=op#>.NoSelector.<#=name#>), CancellationToken.None)).ConfigureAwait(false);
+			await TryUndefine(() => context.UndefineObservableAsync(new Uri(Client.Constants.Observable.<#=op#>.Selector.<#=name#>), CancellationToken.None)).ConfigureAwait(false);
 <#
 		}
 	}
@@ -80,8 +80,8 @@ foreach (var op in new[] { "Average", "Min", "Max", "Sum" })
                 tr += "?";
             }
 #>
-			await context.DefineObservableAsync<IAsyncReactiveQbservable<<#=tc#>>, <#=tr#>>(new Uri(Client.Constants.Observable.<#=op#>.NoSelector.<#=tn#>), source => source.AsSync().<#=op#>().AsAsync(), null, CancellationToken.None);
-			await context.DefineObservableAsync<IAsyncReactiveQbservable<T>, Expression<Func<T, <#=tc#>>>, <#=tr#>>(new Uri(Client.Constants.Observable.<#=op#>.Selector.<#=tn#>), (source, selector) => source.AsSync().<#=op#>(selector).AsAsync(), null, CancellationToken.None);
+			await context.DefineObservableAsync<IAsyncReactiveQbservable<<#=tc#>>, <#=tr#>>(new Uri(Client.Constants.Observable.<#=op#>.NoSelector.<#=tn#>), source => source.AsSync().<#=op#>().AsAsync(), null, CancellationToken.None).ConfigureAwait(false);
+			await context.DefineObservableAsync<IAsyncReactiveQbservable<T>, Expression<Func<T, <#=tc#>>>, <#=tr#>>(new Uri(Client.Constants.Observable.<#=op#>.Selector.<#=tn#>), (source, selector) => source.AsSync().<#=op#>(selector).AsAsync(), null, CancellationToken.None).ConfigureAwait(false);
 <#
 		}
 	}

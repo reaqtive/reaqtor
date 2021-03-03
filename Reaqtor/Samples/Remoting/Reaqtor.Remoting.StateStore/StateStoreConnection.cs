@@ -83,14 +83,14 @@ namespace Reaqtor.Remoting.StateStore
 
         public byte[] SerializeStateStore()
         {
-            var stream = new MemoryStream();
+            using var stream = new MemoryStream();
             _stateStore.Save(stream);
             return stream.ToArray();
         }
 
         public void DeserializeStateStore(byte[] bytes)
         {
-            var stream = new MemoryStream(bytes);
+            using var stream = new MemoryStream(bytes);
             _stateStore = InMemoryStateStore.Load(stream);
         }
     }

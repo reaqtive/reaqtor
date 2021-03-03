@@ -20,7 +20,7 @@ namespace Reaqtor.Remoting.ReificationFramework
         {
             _platform = new InMemoryReactivePlatform<QueryCoordinatorServiceConnection, ConfiguredQueryEvaluatorServiceConnection>();
             _platform.StartAsync(CancellationToken.None).Wait();
-            new ReactivePlatformDeployer(_platform, new Deployable.Deployable()).Deploy();
+            new ReactivePlatformDeployer(_platform, new Deployable.CoreDeployable()).Deploy();
         }
 
         public IReactiveServiceConnection QueryCoordinator => _platform.QueryCoordinator.GetInstance<IReactiveServiceConnection>();

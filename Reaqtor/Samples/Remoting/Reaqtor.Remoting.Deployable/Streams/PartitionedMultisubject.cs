@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;
@@ -50,6 +51,7 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
         private ISubscription Subscribe<T>(IObserver<T> observer, IReadOnlyList<TypeErasedKeyBinding<T>> bindings)
         {
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             var sad = new SingleAssignmentDisposable();
 
             var subj = _map.AddRef(typeof(T), t => new Tuple<object, IDisposable>(new PartitionedMultiSubject<T>(), sad));
@@ -64,6 +66,7 @@ namespace Reaqtor.Remoting.Deployable.Streams
             }
 
             return new SubscriptionImpl<T>(this, pms.Subscribe(observer, bindings));
+#pragma warning restore CA2000
         }
 
         private void Unsubscribe<T>()
@@ -211,6 +214,8 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
         public override void SetContext(IOperatorContext context)
         {
+            Debug.Assert(context != null);
+
             base.SetContext(context);
 
             _uri = context.InstanceId;

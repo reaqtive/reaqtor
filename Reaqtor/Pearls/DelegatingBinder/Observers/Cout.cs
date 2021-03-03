@@ -5,6 +5,8 @@
 using System;
 using System.Reactive;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+
 namespace DelegatingBinder
 {
     internal sealed class Cout<T> : ObserverBase<T>

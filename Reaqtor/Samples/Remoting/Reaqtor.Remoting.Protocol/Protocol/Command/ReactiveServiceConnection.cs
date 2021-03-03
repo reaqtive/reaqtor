@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Diagnostics;
 using System.Globalization;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
@@ -61,12 +62,18 @@ namespace Reaqtor.Remoting.Protocol
 
         protected virtual Task<string> ExecuteMetadataQueryAsync(IReactiveServiceCommand command, Expression expression, CancellationToken token)
         {
+            Debug.Assert(command != null);
+            Debug.Assert(expression != null);
+
             var result = _serviceProvider.Provider.Execute(expression);
             return _commandResponseFactory.CreateResponseAsync(command, Task.FromResult(result), token);
         }
 
         protected virtual Task<string> ExecuteGetObserverAsync(IReactiveServiceCommand command, Expression expression, CancellationToken token)
         {
+            Debug.Assert(command != null);
+            Debug.Assert(expression != null);
+
             var genericType = typeof(IAsyncReactiveObserver<>);
             var observerType = expression.Type.FindGenericType(genericType);
             if (expression is not ParameterExpression parameterExpression || observerType == null)
@@ -81,6 +88,9 @@ namespace Reaqtor.Remoting.Protocol
 
         private Task<string> ExecuteGetObserverAsync<T>(IReactiveServiceCommand command, Uri uri, CancellationToken token)
         {
+            Debug.Assert(command != null);
+            Debug.Assert(uri != null);
+
             var result = _serviceProvider.GetObserverAsync<T>(uri, token);
             return _commandResponseFactory.CreateResponseAsync(command, result, token);
         }

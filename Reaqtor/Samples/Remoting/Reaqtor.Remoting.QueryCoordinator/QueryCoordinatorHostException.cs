@@ -5,8 +5,11 @@
 namespace Reaqtor.Remoting.QueryCoordinator
 {
     using System;
+    using System.Runtime.Serialization;
 
     using Protocol.FaultHandling;
+
+#pragma warning disable CA1032 // Implement standard exception constructors. (Overloads have optional parameter.)
 
     /// <summary>An exception for errors from the query coordinator host</summary>
     [Serializable]
@@ -41,6 +44,11 @@ namespace Reaqtor.Remoting.QueryCoordinator
         /// <param name="transient">A flag indicating if the exception is due to a transient error</param>
         public QueryCoordinatorHostException(string message, Exception exception, bool transient = false)
             : base(message, exception, transient)
+        {
+        }
+
+        protected QueryCoordinatorHostException(SerializationInfo serializationInfo, StreamingContext streamingContext)
+            : base(serializationInfo, streamingContext)
         {
         }
     }

@@ -24,6 +24,7 @@ namespace Reaqtor.Remoting.ReificationFramework
             var engine = base.CreateQueryEngine(uri, resolver, scheduler, metadata, keyValueStore, traceSource, contextElements);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
+#pragma warning disable CA1305 // Specify IFormatProvider (captured in expression tree)
             var constantHoister = ConstantHoister.Create(
                 true,
                 (Expression<Func<string, string>>)(c => string.Format(c, default(object))),
@@ -33,6 +34,7 @@ namespace Reaqtor.Remoting.ReificationFramework
                 (Expression<Func<string, string>>)(c => string.Format(default(IFormatProvider), c, default(object[]))),
                 (Expression<Func<string, JProperty>>)(c => new JProperty(c, default(object))),
                 (Expression<Func<string, JProperty>>)(c => new JProperty(c, default(object[]))));
+#pragma warning restore CA1305 // Specify IFormatProvider
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             engine.Options.ExpressionPolicy.DelegateCache = new SimpleCompiledDelegateCache();
@@ -52,11 +54,11 @@ namespace Reaqtor.Remoting.ReificationFramework
             protected override bool ShouldShareGlobal(ParameterExpression node)
             {
                 return node.Name != null
-                    && (node.Name.StartsWith("rx://operator")
-                    || node.Name.StartsWith("rx://observer")
-                    || node.Name.StartsWith("rx://subject")
-                    || node.Name.StartsWith("rx://observable")
-                    || node.Name.StartsWith("rx://builtin"));
+                    && (node.Name.StartsWith("rx://operator", StringComparison.Ordinal)
+                    || node.Name.StartsWith("rx://observer", StringComparison.Ordinal)
+                    || node.Name.StartsWith("rx://subject", StringComparison.Ordinal)
+                    || node.Name.StartsWith("rx://observable", StringComparison.Ordinal)
+                    || node.Name.StartsWith("rx://builtin", StringComparison.Ordinal));
             }
         }
     }

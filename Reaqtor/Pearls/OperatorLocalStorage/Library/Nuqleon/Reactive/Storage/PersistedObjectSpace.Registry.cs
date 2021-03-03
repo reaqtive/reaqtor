@@ -126,7 +126,12 @@ namespace Reaqtive.Storage
                         // NB: This makes an assumption that persisted entities won't try to access sibling entities during recovery. In case this assumption has to change, we need to introduce an order or better phasing of load operations.
                         //
 
-                        obj?.Load(new ItemReader(reader, key));
+                        if (obj != null)
+                        {
+                            using var itemReader = new ItemReader(reader, key);
+
+                            obj?.Load(itemReader);
+                        }
                     }
                 }
             }
@@ -168,7 +173,9 @@ namespace Reaqtive.Storage
                         //         Note that the delete/add order is maintained for such key/value store state entries.
                         //
 
-                        delete.Value.Delete(new ItemWriter(writer, delete.Key));
+                        using var itemWriter = new ItemWriter(writer, delete.Key);
+
+                        delete.Value.Delete(itemWriter);
                     }
                 }
 
@@ -189,7 +196,9 @@ namespace Reaqtive.Storage
                     {
                         _edits.Add(persistable);
 
-                        persistable.Save(new ItemWriter(writer, entry.Key));
+                        using var itemWriter = new ItemWriter(writer, entry.Key);
+
+                        persistable.Save(itemWriter);
                     }
                 }
             }

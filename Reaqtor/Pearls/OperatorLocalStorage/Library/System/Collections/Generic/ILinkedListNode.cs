@@ -31,9 +31,13 @@ namespace System.Collections.Generic
         /// </summary>
         new ILinkedListNode<T> Previous { get; }
 
+#pragma warning disable CA1716 // Identifiers should not match keywords. (By design to mimic linked list nomenclature.)
+
         /// <summary>
         /// Gets the next node in the linked list.
         /// </summary>
         new ILinkedListNode<T> Next { get; }
+
+#pragma warning restore CA1716
     }
 }

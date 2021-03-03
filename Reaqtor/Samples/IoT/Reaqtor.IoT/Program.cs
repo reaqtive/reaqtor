@@ -3,9 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 #define DEMO1
-//#define DEMO2
-//#define DEMO3
-//#define DEMO4
+#define DEMO2
+#define DEMO3
+#define DEMO4
+
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample.)
+#pragma warning disable CA1305 // Specify IFormatProvider. (No globalization in sample.)
+#pragma warning disable CA2007 // Consider calling ConfigureAwait on the awaited task. (Omitted in sample code for brevity.)
 
 using System;
 using System.Linq;
@@ -21,7 +25,7 @@ using Reaqtive.Scheduler;
 
 namespace Reaqtor.IoT
 {
-    public class Program
+    public static class Program
     {
         public static async Task Main()
         {
@@ -45,7 +49,7 @@ namespace Reaqtor.IoT
             //
             using var ps = PhysicalScheduler.Create();
 
-            var scheduler = new LogicalScheduler(ps);
+            using var scheduler = new LogicalScheduler(ps);
             var store = new InMemoryKeyValueStore();
             var iemgr = new IngressEgressManager();
 
@@ -62,9 +66,14 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Creating brand new engine...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
-                await engine.CheckpointAsync(store.GetWriter());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
+
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -84,14 +93,18 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Defining artifacts in engine...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
                 await ctx.DefineObserverAsync(new Uri("iot://reactor/observers/cout"), ctx.Provider.CreateQbserver<T>(Expression.New(typeof(ConsoleObserver<T>))), null, CancellationToken.None);
                 await ctx.DefineObservableAsync<TimeSpan, DateTimeOffset>(new Uri("iot://reactor/observables/timer"), t => new TimerObservable(t).AsAsyncQbservable(), null, CancellationToken.None);
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -116,8 +129,10 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Creating a subscription...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -132,7 +147,9 @@ namespace Reaqtor.IoT
 
                 await Task.Delay(TimeSpan.FromSeconds(5));
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -144,12 +161,16 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Recovering a subscription...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 await Task.Delay(TimeSpan.FromSeconds(5));
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -168,8 +189,10 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Disposing a subscription...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -180,7 +203,9 @@ namespace Reaqtor.IoT
 
                 // *** USER CODE ENDS HERE ***
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 #endif
@@ -199,8 +224,10 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Defining some query operators in engine...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -214,7 +241,9 @@ namespace Reaqtor.IoT
                 await ctx.DefineObservableAsync<IAsyncReactiveQbservable<T>, int, T>(new Uri("iot://reactor/observables/take"), (source, count) => source.AsSubscribable().Take(count).AsAsyncQbservable(), null, CancellationToken.None);
 #endif
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -236,8 +265,10 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Creating a more fancy subscription...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -254,7 +285,9 @@ namespace Reaqtor.IoT
 
                 await Task.Delay(TimeSpan.FromSeconds(5));
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -266,12 +299,16 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Recovering a subscription...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 await Task.Delay(TimeSpan.FromSeconds(5));
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -287,8 +324,10 @@ namespace Reaqtor.IoT
             // some idempotent Create operation.
             //
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -306,7 +345,9 @@ namespace Reaqtor.IoT
 
                 // *** USER CODE ENDS HERE ***
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -315,8 +356,10 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Disposing a subscription...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -327,7 +370,9 @@ namespace Reaqtor.IoT
 
                 // *** USER CODE ENDS HERE ***
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 #endif
@@ -354,14 +399,18 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Defining ingress/egress proxies in engine...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
                 await ctx.DefineObserverAsync<string, T>(new Uri("iot://reactor/observers/egress"), stream => new EgressObserver<T>(stream).AsAsyncQbserver(), null, CancellationToken.None);
                 await ctx.DefineObservableAsync<string, T>(new Uri("iot://reactor/observables/ingress"), stream => new IngressObservable<T>(stream).AsAsyncQbservable(), null, CancellationToken.None);
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -381,7 +430,7 @@ namespace Reaqtor.IoT
             //
             // Also note that all events outside the engine boundaries have sequence numbers.
             //
-            var stopBarProducer = new CancellationTokenSource();
+            using var stopBarProducer = new CancellationTokenSource();
 
             Console.WriteLine("Setting up external streams...");
             {
@@ -413,8 +462,10 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Creating subscription using ingress/egress...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -429,7 +480,9 @@ namespace Reaqtor.IoT
 
                 await Task.Delay(TimeSpan.FromSeconds(5));
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -441,12 +494,16 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Recovering a subscription...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 await Task.Delay(TimeSpan.FromSeconds(5));
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 
@@ -460,8 +517,10 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Disposing a subscription...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -472,7 +531,9 @@ namespace Reaqtor.IoT
 
                 // *** USER CODE ENDS HERE ***
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 #endif
@@ -483,8 +544,10 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Defining advanced query operators in engine...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -512,7 +575,9 @@ namespace Reaqtor.IoT
                 // GroupBy
                 await ctx.DefineObservableAsync<IAsyncReactiveQbservable<T>, Func<T, R>, IGroupedSubscribable<R, T>>(new Uri("iot://reactor/observables/group"), (source, selector) => source.AsSubscribable().GroupBy(selector).AsAsyncQbservable(), null, CancellationToken.None);
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 #endif
@@ -566,10 +631,14 @@ namespace Reaqtor.IoT
                 //
                 var offset = outsideMin + scale / 2;
 
+#pragma warning disable CA5394 // Do not use insecure randomness. (Okay for simulation purposes.)
+
                 //
                 // Random initial value inside, within the range of temperatures.
                 //
                 var inside = outsideMin + rand.NextDouble() * scale;
+
+#pragma warning restore CA5394
 
                 //
                 // null if A/C unit is off; otherwise, target temperature.
@@ -626,8 +695,10 @@ namespace Reaqtor.IoT
             //
             Console.WriteLine("Creating a complex subscription...");
             {
-                var engine = new QueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
-                await engine.RecoverAsync(store.GetReader());
+                using var engine = new MiniQueryEngine(new Uri("iot://reactor/1"), scheduler, store, iemgr);
+
+                using (var reader = store.GetReader())
+                    await engine.RecoverAsync(reader);
 
                 var ctx = new ReactorContext(engine);
 
@@ -645,7 +716,9 @@ namespace Reaqtor.IoT
 
                 await Task.Delay(TimeSpan.FromSeconds(120));
 
-                await engine.CheckpointAsync(store.GetWriter());
+                using (var writer = store.GetWriter())
+                    await engine.CheckpointAsync(writer);
+
                 await engine.UnloadAsync();
             }
 #endif

@@ -9,7 +9,9 @@ namespace Reaqtor.Remoting.Platform
     public class AppDomainKeyValueStoreService : ReactiveServiceBase, IKeyValueStoreService
     {
         public AppDomainKeyValueStoreService()
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(new AppDomainRunnable("KeyValueStoreService", typeof(KeyValueStoreConnection)), ReactiveServiceType.KeyValueStoreService)
+#pragma warning restore CA2000
         {
         }
     }

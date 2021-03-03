@@ -4,6 +4,8 @@
 
 using System;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+
 namespace Reaqtor.Shebang.Extensions
 {
     //

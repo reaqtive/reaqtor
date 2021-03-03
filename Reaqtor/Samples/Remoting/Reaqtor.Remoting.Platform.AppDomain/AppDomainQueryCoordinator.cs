@@ -16,7 +16,9 @@ namespace Reaqtor.Remoting.Platform
         where TQueryCoordinator : IRemotingReactiveServiceConnection
     {
         public AppDomainQueryCoordinator(IReactivePlatform platform)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(platform, new AppDomainRunnable("QueryCoordinator", typeof(TQueryCoordinator)), ReactiveServiceType.QueryCoordinator)
+#pragma warning restore CA2000
         {
         }
 

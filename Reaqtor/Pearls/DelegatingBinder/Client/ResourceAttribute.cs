@@ -7,7 +7,7 @@ using System;
 namespace DelegatingBinder
 {
     [AttributeUsage(AttributeTargets.Method)]
-    internal class ResourceAttribute : Attribute
+    internal sealed class ResourceAttribute : Attribute
     {
         public ResourceAttribute(string id)
         {

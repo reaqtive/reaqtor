@@ -12,7 +12,9 @@ namespace Reaqtor.Remoting.Platform
     internal sealed class TcpStateStoreService : ReactiveServiceBase, IReactiveStateStoreService
     {
         public TcpStateStoreService(string executablePath, int port, string uri)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : this(new TcpRunnable<IReactiveStateStoreConnection>(executablePath, port, uri))
+#pragma warning restore CA2000
         {
         }
 

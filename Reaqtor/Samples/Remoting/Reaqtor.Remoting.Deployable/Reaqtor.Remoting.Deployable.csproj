@@ -20,9 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Deployable.Generated.tt">
+    <None Update="CoreDeployable.Generated.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>Deployable.Generated.cs</LastGenOutput>
+      <LastGenOutput>CoreDeployable.Generated.cs</LastGenOutput>
     </None>
   </ItemGroup>
 
@@ -31,10 +31,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Update="Deployable.Generated.cs">
+    <Compile Update="CoreDeployable.Generated.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
-      <DependentUpon>Deployable.Generated.tt</DependentUpon>
+      <DependentUpon>CoreDeployable.Generated.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 

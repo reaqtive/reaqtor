@@ -17,7 +17,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <summary>
         /// Default constructor, required by the Azure Table query provider.
         /// </summary>
-        public ReactiveDefinedResourceTableEntity()
+        protected ReactiveDefinedResourceTableEntity()
         {
         }
 

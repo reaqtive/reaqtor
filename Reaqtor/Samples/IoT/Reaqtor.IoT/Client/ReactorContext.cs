@@ -7,8 +7,6 @@ using System.Collections.Generic;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
-using Reaqtor;
-
 namespace Reaqtor.IoT
 {
     //
@@ -39,7 +37,7 @@ namespace Reaqtor.IoT
 
     public class ReactorContext : ReactiveClientContext
     {
-        public ReactorContext(QueryEngine engine) : base(new ExpressionServices(), engine.ServiceProvider)
+        public ReactorContext(MiniQueryEngine engine) : base(new ExpressionServices(), engine?.ServiceProvider)
         {
         }
 

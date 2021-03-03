@@ -27,7 +27,7 @@ namespace Reaqtor.Remoting.Platform
 
         protected ReactivePlatformClientBase(IReactivePlatform platform)
         {
-            _platform = platform;
+            _platform = platform ?? throw new ArgumentNullException(nameof(platform));
             _queryCoordinator = platform.QueryCoordinator.GetInstance<IRemotingReactiveServiceConnection>();
             _messageRouter = GetMessageRouter(platform);
             _tableClient = GetTableClient(platform);

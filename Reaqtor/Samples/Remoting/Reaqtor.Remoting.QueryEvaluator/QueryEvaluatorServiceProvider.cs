@@ -43,14 +43,16 @@ namespace Reaqtor.Remoting.QueryEvaluator
         {
             using (_metadata.CreateScope())
             {
-                await CreateSubscriptionCoreAsync(subscriptionUri, subscription, state, token);
+                await CreateSubscriptionCoreAsync(subscriptionUri, subscription, state, token).ConfigureAwait(false);
             }
         }
 
         public virtual Task CreateSubscriptionCoreAsync(Uri subscriptionUri, Expression subscription, object state, CancellationToken token)
         {
-            Contract.RequiresNotNull(subscriptionUri);
-            Contract.RequiresNotNull(subscription);
+            if (subscriptionUri == null)
+                throw new ArgumentNullException(nameof(subscriptionUri));
+            if (subscription == null)
+                throw new ArgumentNullException(nameof(subscription));
 
             var rewritten = _rewriter(subscription);
 
@@ -88,7 +90,8 @@ namespace Reaqtor.Remoting.QueryEvaluator
 
         public virtual Task DeleteSubscriptionCoreAsync(Uri subscriptionUri, CancellationToken token)
         {
-            Contract.RequiresNotNull(subscriptionUri);
+            if (subscriptionUri == null)
+                throw new ArgumentNullException(nameof(subscriptionUri));
 
             return _queryEngine.ServiceProvider.DeleteSubscriptionAsync(subscriptionUri, token);
         }
@@ -97,14 +100,16 @@ namespace Reaqtor.Remoting.QueryEvaluator
         {
             using (_metadata.CreateScope())
             {
-                await CreateStreamCoreAsync(streamUri, stream, state, token);
+                await CreateStreamCoreAsync(streamUri, stream, state, token).ConfigureAwait(false);
             }
         }
 
         public virtual Task CreateStreamCoreAsync(Uri streamUri, Expression stream, object state, CancellationToken token)
         {
-            Contract.RequiresNotNull(streamUri);
-            Contract.RequiresNotNull(stream);
+            if (streamUri == null)
+                throw new ArgumentNullException(nameof(streamUri));
+            if (stream == null)
+                throw new ArgumentNullException(nameof(stream));
 
             var syncStream = ExpressionRewriteHelpers.RewriteAsyncToSync(stream);
 
@@ -115,13 +120,14 @@ namespace Reaqtor.Remoting.QueryEvaluator
         {
             using (_metadata.CreateScope())
             {
-                await DeleteStreamCoreAsync(streamUri, token);
+                await DeleteStreamCoreAsync(streamUri, token).ConfigureAwait(false);
             }
         }
 
         public virtual Task DeleteStreamCoreAsync(Uri streamUri, CancellationToken token)
         {
-            Contract.RequiresNotNull(streamUri);
+            if (streamUri == null)
+                throw new ArgumentNullException(nameof(streamUri));
 
             return _queryEngine.ServiceProvider.DeleteStreamAsync(streamUri, token);
         }
@@ -225,7 +231,9 @@ namespace Reaqtor.Remoting.QueryEvaluator
 
                 ms.Position = 0;
 
-                return new StreamReader(ms).ReadToEnd();
+                using var sr = new StreamReader(ms);
+
+                return sr.ReadToEnd();
             }
 
             private static readonly ConditionalWeakTable<Type, object> s_serializers = new();

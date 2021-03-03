@@ -11,6 +11,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
@@ -66,25 +67,31 @@ namespace Reaqtor.Remoting.TestingFramework
         protected static async Task RunAsync<TContext>(Func<TContext, Task> task)
             where TContext : ReactiveClientContext
         {
-            await RunTask(task, (_, __) => { });
+            Debug.Assert(task != null);
+
+            await RunTask(task, (_, __) => { }).ConfigureAwait(false);
         }
 
         protected static async Task RunAsync<TContext, TObserver>(Func<TContext, Task> task, params ObserverState<TObserver>[] observers)
             where TContext : ReactiveClientContext
         {
+            Debug.Assert(task != null);
+
             await RunTask(task, (client, platform) =>
             {
                 AssertObserverState(platform, observers);
-            });
+            }).ConfigureAwait(false);
         }
 
         protected static async Task RunAsync<TContext>(Func<TContext, Task> task, params MetadataState[] metadataState)
             where TContext : ReactiveClientContext
         {
+            Debug.Assert(task != null);
+
             await RunTask(task, (client, platform) =>
             {
                 AssertMetadataState(client.MetadataProxy, metadataState);
-            });
+            }).ConfigureAwait(false);
         }
 
         #endregion
@@ -96,25 +103,31 @@ namespace Reaqtor.Remoting.TestingFramework
         protected static async Task AssertVirtual<TContext>(Func<TContext, ITestScheduler, Task> task)
             where TContext : ReactiveClientContext
         {
-            await RunVirtualTask(task, (_, __) => { });
+            Debug.Assert(task != null);
+
+            await RunVirtualTask(task, (_, __) => { }).ConfigureAwait(false);
         }
 
         protected static async Task AssertVirtual<TContext, TObserver>(Func<TContext, ITestScheduler, Task> task, params ObserverState<TObserver>[] observers)
             where TContext : ReactiveClientContext
         {
+            Debug.Assert(task != null);
+
             await RunVirtualTask(task, (client, platform) =>
             {
                 AssertObserverState(platform, observers);
-            });
+            }).ConfigureAwait(false);
         }
 
         protected static async Task AssertVirtual<TContext>(Func<TContext, ITestScheduler, Task> task, params MetadataState[] metadataState)
             where TContext : ReactiveClientContext
         {
+            Debug.Assert(task != null);
+
             await RunVirtualTask(task, (client, platform) =>
             {
                 AssertMetadataState(client.MetadataProxy, metadataState);
-            });
+            }).ConfigureAwait(false);
         }
 
         #endregion
@@ -124,19 +137,25 @@ namespace Reaqtor.Remoting.TestingFramework
         protected static async Task AssertVirtual<TContext>(VirtualTimeAgenda<TContext> schedule)
             where TContext : ReactiveClientContext
         {
-            await AssertVirtual<TContext>(Helpers.DoScheduling<TContext>(schedule));
+            Debug.Assert(schedule != null);
+
+            await AssertVirtual<TContext>(Helpers.DoScheduling<TContext>(schedule)).ConfigureAwait(false);
         }
 
         protected static async Task AssertVirtual<TContext, TObserver>(VirtualTimeAgenda<TContext> schedule, params ObserverState<TObserver>[] observers)
             where TContext : ReactiveClientContext
         {
-            await AssertVirtual<TContext, TObserver>(Helpers.DoScheduling<TContext>(schedule), observers);
+            Debug.Assert(schedule != null);
+
+            await AssertVirtual<TContext, TObserver>(Helpers.DoScheduling<TContext>(schedule), observers).ConfigureAwait(false);
         }
 
         protected static async Task AssertVirtual<TContext>(VirtualTimeAgenda<TContext> schedule, params MetadataState[] metadataState)
             where TContext : ReactiveClientContext
         {
-            await AssertVirtual<TContext>(Helpers.DoScheduling<TContext>(schedule), metadataState);
+            Debug.Assert(schedule != null);
+
+            await AssertVirtual<TContext>(Helpers.DoScheduling<TContext>(schedule), metadataState).ConfigureAwait(false);
         }
 
         #endregion
@@ -147,6 +166,9 @@ namespace Reaqtor.Remoting.TestingFramework
 
         public static void AssertObserverState<TObserver>(IReactivePlatform platform, params ObserverState<TObserver>[] observers)
         {
+            if (platform == null)
+                throw new ArgumentNullException(nameof(platform));
+
             foreach (var observer in observers)
             {
                 var testQE = platform.QueryEvaluators.First().GetInstance<TestQueryEvaluatorServiceConnection>();
@@ -209,7 +231,7 @@ namespace Reaqtor.Remoting.TestingFramework
         private static void AssertExpressionEquals(Expression expected, Expression actual)
         {
             var comparer = new ExpressionEqualityComparer(() => new Comparator(new StructuralTypeEqualityComparator()));
-            Assert.IsTrue(comparer.Equals(expected, actual), string.Format("Expected expression: '{0}'. Actual expression: '{1}'", expected.ToTraceString(), actual.ToTraceString()));
+            Assert.IsTrue(comparer.Equals(expected, actual), string.Format(CultureInfo.InvariantCulture, "Expected expression: '{0}'. Actual expression: '{1}'", expected.ToTraceString(), actual.ToTraceString()));
         }
 
         #endregion
@@ -222,11 +244,11 @@ namespace Reaqtor.Remoting.TestingFramework
             using var environment = new TestReactiveEnvironment();
             using var platform = new TestReactivePlatform(environment);
 
-            await environment.StartAsync(CancellationToken.None);
+            await environment.StartAsync(CancellationToken.None).ConfigureAwait(false);
 
             platform.Configuration.SchedulerType = SchedulerType.Test;
 
-            await platform.StartAsync(CancellationToken.None);
+            await platform.StartAsync(CancellationToken.None).ConfigureAwait(false);
 
             new ReactivePlatformDeployer(platform, new TestDeployable(), new Reactor.Deployable(), new DomainFeedsDeployable()).Deploy();
 
@@ -235,7 +257,7 @@ namespace Reaqtor.Remoting.TestingFramework
 
             Debug.Assert(client.Context is TContext);
 
-            await task((TContext)client.Context, scheduler);
+            await task((TContext)client.Context, scheduler).ConfigureAwait(false);
 
             scheduler.Start();
 
@@ -248,8 +270,8 @@ namespace Reaqtor.Remoting.TestingFramework
             using var environment = new TestReactiveEnvironment();
             using var platform = new TestReactivePlatform(environment);
 
-            await environment.StartAsync(CancellationToken.None);
-            await platform.StartAsync(CancellationToken.None);
+            await environment.StartAsync(CancellationToken.None).ConfigureAwait(false);
+            await platform.StartAsync(CancellationToken.None).ConfigureAwait(false);
 
             new ReactivePlatformDeployer(platform, new TestDeployable(), new Reactor.Deployable(), new DomainFeedsDeployable()).Deploy();
 
@@ -257,7 +279,7 @@ namespace Reaqtor.Remoting.TestingFramework
 
             Debug.Assert(client.Context is TContext);
 
-            await task((TContext)client.Context);
+            await task((TContext)client.Context).ConfigureAwait(false);
 
             callback(client, platform);
         }
@@ -270,6 +292,8 @@ namespace Reaqtor.Remoting.TestingFramework
 
         private static readonly Action<IReactivePlatformConfiguration> DefaultConfiguration = c => c.SchedulerType = SchedulerType.Test;
 
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Client manages lifetime of the platform.)
+
         public ITestReactivePlatformClient CreateTestClient()
         {
             var platform = new InMemoryTestPlatform();
@@ -279,10 +303,17 @@ namespace Reaqtor.Remoting.TestingFramework
 
         public ITestReactivePlatformClient CreateTestClient(IReactiveEnvironment environment, Action<IReactivePlatformConfiguration> configure)
         {
+            if (environment == null)
+                throw new ArgumentNullException(nameof(environment));
+            if (configure == null)
+                throw new ArgumentNullException(nameof(configure));
+
             var platform = new InMemoryTestPlatform(environment);
             configure(platform.Configuration);
             return CreateTestClient(platform, sharedEnvironment: true);
         }
+
+#pragma warning restore CA2000
 
         private ITestReactivePlatformClient CreateTestClient(IReactivePlatform platform, bool sharedEnvironment)
         {

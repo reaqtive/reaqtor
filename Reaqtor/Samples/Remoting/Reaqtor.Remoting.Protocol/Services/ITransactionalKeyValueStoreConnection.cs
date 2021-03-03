@@ -17,7 +17,9 @@ namespace Reaqtor.Remoting.Protocol
         /// <param name="key">The key whose value is to be got.</param>
         /// <returns>The value for the key.</returns>
         /// <throws>An <see cref="System.ArgumentException" /> if the key does not exist.</throws>
+#pragma warning disable CA1819 // Properties should not return arrays. (Legacy design; kept for compat.)
         byte[] this[long transactionId, string tableName, string key] { get; }
+#pragma warning restore CA1819
 
         /// <summary>
         /// Add an item into a key value store transactionally.
@@ -58,7 +60,7 @@ namespace Reaqtor.Remoting.Protocol
         /// </summary>
         /// <param name="tableName">The table which is to be enumerated.</param>
         /// <returns>An enumerator that will enumerate the table.</returns>
-        List<KeyValuePair<string, byte[]>> GetEnumerator(long transactionId, string tableName);
+        IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(long transactionId, string tableName);
 
         /// <summary>
         /// Commits the transaction.

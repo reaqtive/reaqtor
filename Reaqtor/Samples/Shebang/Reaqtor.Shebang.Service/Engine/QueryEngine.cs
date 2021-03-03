@@ -19,19 +19,19 @@ namespace Reaqtor.Shebang.Service
     // Query engine implementation, specializing the Reaqtor query engine on a few facilities.
     //
 
-    public sealed class QueryEngine : CheckpointingQueryEngine
+    public sealed class SimplerCheckpointingQueryEngine : CheckpointingQueryEngine
     {
         private readonly IQueryEngineStateStore _store;
         private readonly IReadOnlyDictionary<string, object> _context;
 
-        public QueryEngine(Uri uri, IScheduler scheduler, IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context)
+        public SimplerCheckpointingQueryEngine(Uri uri, IScheduler scheduler, IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context)
              : base(uri, new NopReactiveServiceResolver(), scheduler, new EmptyReactiveMetadata(), store, SerializationPolicy.Default, new DefaultQuotedTypeConversionTargets())
         {
             _store = store;
             _context = context ?? new Dictionary<string, object>();
         }
 
-        public ClientContext GetClient() => new(new LocalReactiveServiceProvider(ServiceProvider));
+        public ClientContext Client => new(new LocalReactiveServiceProvider(ServiceProvider));
 
         public Task CheckpointAsync(CancellationToken token = default) => CheckpointAsync(_store.GetWriter(), token, progress: null);
 

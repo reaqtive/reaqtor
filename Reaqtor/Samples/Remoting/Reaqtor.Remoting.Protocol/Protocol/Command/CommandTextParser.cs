@@ -43,13 +43,19 @@ namespace Reaqtor.Remoting.Protocol
 
         public async Task<string> CreateResponseAsync<T>(IReactiveServiceCommand command, Task<T> task, CancellationToken token)
         {
-            var result = await task;
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+
+            var result = await task.ConfigureAwait(false);
             return _serializer.Serialize(result);
         }
 
         public async Task<string> CreateResponseAsync(IReactiveServiceCommand command, Task task, CancellationToken token)
         {
-            await task;
+            if (task == null)
+                throw new ArgumentNullException(nameof(task));
+
+            await task.ConfigureAwait(false);
             return "OK";
         }
     }

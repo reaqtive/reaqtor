@@ -22,7 +22,9 @@ namespace Reaqtor.Remoting.Protocol
         /// <summary>
         /// Denotes the default trace listener.
         /// </summary>
+#pragma warning disable CA1008 // Enums should have zero value. (Suggested name 'None' isn't great.)
         Default = 0,
+#pragma warning restore CA1008
 
         /// <summary>
         /// Denotes the console trace listener.

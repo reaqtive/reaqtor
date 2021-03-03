@@ -34,10 +34,10 @@ namespace Reaqtor.Remoting.Metadata
         /// <param name="underlyingDictionary">The underlying queryable dictionary for the metadata entities.</param>
         public AzureQueryableDictionary(AzureMetadataQueryProvider queryProvider, IQueryableDictionary<Uri, TMetadataInterface> underlyingDictionary)
         {
-            Contract.RequiresNotNull(queryProvider);
-            Contract.RequiresNotNull(underlyingDictionary);
+            if (underlyingDictionary == null)
+                throw new ArgumentNullException(nameof(underlyingDictionary));
 
-            _queryProvider = queryProvider;
+            _queryProvider = queryProvider ?? throw new ArgumentNullException(nameof(queryProvider));
             Expression = CastExpression(underlyingDictionary.Expression);
         }
 
@@ -58,7 +58,8 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>A task to await the add operation.</returns>
         public Task AddAsync(TMetadataEntity entity)
         {
-            Contract.RequiresNotNull(entity);
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
 
             return AddAsync(entity.Uri, entity);
         }
@@ -71,8 +72,10 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>A task to await the add operation.</returns>
         public Task AddAsync(Uri uri, TMetadataEntity entity)
         {
-            Contract.RequiresNotNull(uri);
-            Contract.RequiresNotNull(entity);
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
+            if (entity == null)
+                throw new ArgumentNullException(nameof(entity));
 
             var parameterExpression = Expression as ParameterExpression;
             var metadataCollectionUri = parameterExpression.Name;
@@ -86,7 +89,8 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>A task to await the return operation.</returns>
         public Task RemoveAsync(Uri uri)
         {
-            Contract.RequiresNotNull(uri);
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
 
             var parameterExpression = Expression as ParameterExpression;
             var metadataCollectionUri = parameterExpression.Name;

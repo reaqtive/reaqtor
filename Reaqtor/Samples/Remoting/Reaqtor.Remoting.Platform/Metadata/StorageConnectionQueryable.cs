@@ -71,11 +71,11 @@ namespace Reaqtor.Remoting.Metadata
                     break;
                 case EdmType.DateTime:
                     Assert(property.PropertyType, typeof(DateTimeOffset));
-                    property.SetValue(obj, new DateTimeOffset(new DateTime(long.Parse(data.Data), DateTimeKind.Utc)));
+                    property.SetValue(obj, new DateTimeOffset(new DateTime(long.Parse(data.Data, CultureInfo.InvariantCulture), DateTimeKind.Utc)));
                     break;
                 case EdmType.Double:
                     Assert(property.PropertyType, typeof(double));
-                    property.SetValue(obj, double.Parse(data.Data));
+                    property.SetValue(obj, double.Parse(data.Data, CultureInfo.InvariantCulture));
                     break;
                 case EdmType.Guid:
                     Assert(property.PropertyType, typeof(Guid));
@@ -83,11 +83,11 @@ namespace Reaqtor.Remoting.Metadata
                     break;
                 case EdmType.Int32:
                     Assert(property.PropertyType, typeof(int));
-                    property.SetValue(obj, int.Parse(data.Data));
+                    property.SetValue(obj, int.Parse(data.Data, CultureInfo.InvariantCulture));
                     break;
                 case EdmType.Int64:
                     Assert(property.PropertyType, typeof(long));
-                    property.SetValue(obj, long.Parse(data.Data));
+                    property.SetValue(obj, long.Parse(data.Data, CultureInfo.InvariantCulture));
                     break;
                 case EdmType.String:
                     Assert(property.PropertyType, typeof(string));

@@ -19,7 +19,9 @@ namespace Reaqtor.Remoting.Platform
         where TQueryEvaluator : IReactiveQueryEvaluatorConnection, new()
     {
         public InMemoryQueryEvaluator(IReactivePlatform platform)
+#pragma warning disable CA2000 // Dispose objects before losing scope. (Ownership transfer.)
             : base(platform, new InMemoryRunnable(CreateQueryEvaluator), ReactiveServiceType.QueryEvaluator)
+#pragma warning restore CA2000
         {
         }
 

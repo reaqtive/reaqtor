@@ -22,13 +22,15 @@ namespace Reaqtor.Remoting
         {
             Contract.RequiresNotNullOrEmpty(data);
 
+#pragma warning disable CA5350 // REVIEW: Do Not Use Weak Cryptographic Algorithms.
             using SHA1 sha = new SHA1CryptoServiceProvider();
+#pragma warning restore CA5350
 
             byte[] hashbyte = sha.ComputeHash(Encoding.UTF8.GetBytes(data));
 
             string hash = BitConverter.ToString(hashbyte).Replace("-", string.Empty);
 
-            return hash.ToLowerInvariant();
+            return hash.ToUpperInvariant();
         }
     }
 }

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 
 using Reaqtor.Reliable;
@@ -19,9 +20,9 @@ namespace Reaqtor.Remoting.QueryEvaluator.Operators
             Values = values;
         }
 
-        public T[] Values
+        public IReadOnlyList<T> Values
         {
-            get => (T[])AppDomain.CurrentDomain.GetData(_name);
+            get => (IReadOnlyList<T>)AppDomain.CurrentDomain.GetData(_name);
             private set => AppDomain.CurrentDomain.SetData(_name, value);
         }
 

@@ -31,7 +31,7 @@ namespace Reaqtor.Remoting.Metadata
         /// </summary>
         /// <param name="uri">URI identifying the resource represented by the table entity.</param>
         /// <param name="expression">Expression representation of the resource.</param>
-        public AsyncReactiveResourceTableEntity(Uri uri, Expression expression)
+        protected AsyncReactiveResourceTableEntity(Uri uri, Expression expression)
             : base(uri)
         {
             _expression = expression;

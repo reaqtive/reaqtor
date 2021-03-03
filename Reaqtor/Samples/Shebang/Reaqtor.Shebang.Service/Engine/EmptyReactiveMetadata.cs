@@ -39,7 +39,7 @@ namespace Reaqtor.Shebang.Service
 
         private sealed class EmptyQueryableDictionary<Key, Value> : IQueryableDictionary<Key, Value>
         {
-            public Value this[Key key] => throw new KeyNotFoundException();
+            public Value this[Key key] => throw new System.Collections.Generic.KeyNotFoundException();
 
             public IQueryable<Key> Keys => Enumerable.Empty<Key>().AsQueryable();
 

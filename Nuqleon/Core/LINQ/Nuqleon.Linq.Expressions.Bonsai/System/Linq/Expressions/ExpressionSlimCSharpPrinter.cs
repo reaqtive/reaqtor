@@ -916,7 +916,7 @@ namespace System.Linq.Expressions.Bonsai
 
         private static string EscapeFormat(string s)
         {
-#if NET5_0
+#if NET5_0 || NETSTANDARD2_1
             return s.Replace("{", "{{", StringComparison.Ordinal).Replace("}", "}}", StringComparison.Ordinal);
 #else
             return s.Replace("{", "{{").Replace("}", "}}");

@@ -11,6 +11,8 @@ using System.Runtime.Serialization.Formatters;
 using System.Threading;
 using System.Threading.Tasks;
 
+#pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
+
 namespace Reaqtor.Remoting.Platform
 {
     public class TcpRemoteServiceHost<T>
@@ -45,10 +47,10 @@ namespace Reaqtor.Remoting.Platform
 
         public void Start()
         {
-            var set = new AutoResetEvent(false);
-            var wait = new AutoResetEvent(false);
+            using var set = new AutoResetEvent(initialState: false);
+            using var wait = new AutoResetEvent(initialState: false);
 
-            Task.Run(() =>
+            var t = Task.Run(() =>
             {
                 Start(set, wait);
             });
@@ -57,6 +59,8 @@ namespace Reaqtor.Remoting.Platform
             Console.WriteLine("Press any key to exit...");
             Console.ReadKey();
             wait.Set();
+
+            t.Wait();
         }
 
         public void Start(EventWaitHandle wait)
@@ -66,6 +70,11 @@ namespace Reaqtor.Remoting.Platform
 
         public void Start(EventWaitHandle set, EventWaitHandle wait)
         {
+            if (set == null)
+                throw new ArgumentNullException(nameof(set));
+            if (wait == null)
+                throw new ArgumentNullException(nameof(wait));
+
             Console.Title = _remotedType.Name;
             Console.Write("{0} starting at '{1}'... ", _remotedType.Name, Helpers.GetTcpEndpoint(Helpers.Constants.Host, _port, _path));
 
