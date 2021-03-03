@@ -10,14 +10,17 @@
 
 using System.Collections.Concurrent;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq.CompilerServices;
+using System.Memory;
+using System.Runtime.CompilerServices;
 
 namespace System.Linq.Expressions
 {
     /// <summary>
     /// A concurrent cache for LINQ expression trees.
     /// </summary>
-    public class ExpressionInterningCache : IExpressionInterningCache
+    public class ExpressionInterningCache : IExpressionInterningCache, IClearable
     {
         private readonly ConcurrentDictionary<HashedNode, ITree<HashedNode>> _nodes = new();
         private readonly ExpressionToHashedExpressionTreeConverter _converter;
@@ -83,28 +86,38 @@ namespace System.Linq.Expressions
                 return res;
             }
 
-            var children = tree.Children;
-            if (children.Count > 0)
-            {
-                children = new List<ITree<HashedNode>>(children.Select(Prune));
-            }
+            var oldChildren = tree.Children;
 
-            var hasChanged = false;
-            for (int i = 0; i < tree.Children.Count; i++)
-            {
-                var @old = tree.Children[i];
-                var @new = children[i];
+            List<ITree<HashedNode>> newChildren = null;
 
-                if (@old.Value.Value != @new.Value.Value)
+            for (int i = 0, n = oldChildren.Count; i < n; i++)
+            {
+                var oldChild = oldChildren[i];
+                var newChild = Prune(oldChild);
+
+                if (newChildren != null)
                 {
-                    hasChanged = true;
-                    break;
+                    newChildren.Add(newChild);
+                }
+                else
+                {
+                    if (oldChild.Value.Value != newChild.Value.Value)
+                    {
+                        newChildren = new List<ITree<HashedNode>>(n);
+
+                        for (var j = 0; j < i; j++)
+                        {
+                            newChildren.Add(oldChildren[j]);
+                        }
+
+                        newChildren.Add(newChild);
+                    }
                 }
             }
 
-            if (hasChanged)
+            if (newChildren != null)
             {
-                tree = Update(tree, children);
+                tree = Update(tree, newChildren);
             }
 
             res = _nodes.GetOrAdd(tree.Value, tree);
@@ -116,8 +129,10 @@ namespace System.Linq.Expressions
         {
             var oldExpr = expr.Value.Value;
 
-            var newChildren = new object[children.Count];
-            for (int i = 0; i < children.Count; i++)
+            var n = children.Count;
+
+            var newChildren = new object[n];
+            for (int i = 0; i < n; i++)
             {
                 newChildren[i] = children[i].Value.Value;
             }
@@ -128,26 +143,37 @@ namespace System.Linq.Expressions
             {
                 HashedNodeType.Expression =>
                     new Tree<HashedNode>(
-                        new ExpressionHashedNode(_comparatorFactory) { Expression = (Expression)newExpr, Hash = expr.Value.Hash },
-                        children // TODO - need to update?
+                        new ExpressionHashedNode((Expression)newExpr, expr.Value.Hash, _comparatorFactory),
+                        children
                     ),
                 HashedNodeType.ElementInit =>
                     new Tree<HashedNode>(
-                        new ElementInitHashedNode(_comparatorFactory) { Initializer = (ElementInit)newExpr, Hash = expr.Value.Hash },
-                        children // TODO - need to update?
+                        new ElementInitHashedNode((ElementInit)newExpr, expr.Value.Hash, _comparatorFactory),
+                        children
                     ),
                 HashedNodeType.MemberBinding =>
                     new Tree<HashedNode>(
-                        new MemberBindingHashedNode(_comparatorFactory) { Binding = (MemberBinding)newExpr, Hash = expr.Value.Hash },
-                        children // TODO - need to update?
+                        new MemberBindingHashedNode((MemberBinding)newExpr, expr.Value.Hash, _comparatorFactory),
+                        children
                     ),
+                HashedNodeType.SwitchCase =>
+                    new Tree<HashedNode>(
+                        new SwitchCaseHashedNode((SwitchCase)newExpr, expr.Value.Hash, _comparatorFactory),
+                        children
+                    ),
+                HashedNodeType.CatchBlock =>
+                    new Tree<HashedNode>(
+                        new CatchBlockHashedNode((CatchBlock)newExpr, expr.Value.Hash, _comparatorFactory),
+                        children
+                    ),
+                // NB: LabelTarget and CallSiteBinder do not have children.
                 _ => throw new NotImplementedException(),
             };
         }
 
         private static object Update(object oldExpr, object[] newChildren) => new Subst(newChildren).VisitObject(oldExpr);
 
-        private sealed class Subst : ExpressionVisitor
+        private sealed class Subst : DynamicExpressionVisitor
         {
             private readonly object[] _newChildren;
 
@@ -157,93 +183,290 @@ namespace System.Linq.Expressions
             {
                 return o switch
                 {
-                    Expression e => base.Visit(e),
-                    ElementInit i => VisitElementInit(i),
-                    MemberBinding b => VisitMemberBinding(b),
+                    Expression expr => base.Visit(expr),
+                    ElementInit init => VisitElementInit(init),
+                    MemberBinding binding => VisitMemberBinding(binding),
+                    SwitchCase @case => VisitSwitchCase(@case),
+                    CatchBlock catchBlock => VisitCatchBlock(catchBlock),
+                    // NB: LabelTarget and CallSiteBinder do not have children.
                     _ => throw new NotImplementedException(),
                 };
             }
 
             protected override Expression VisitBinary(BinaryExpression node)
             {
-                var l = (Expression)_newChildren[0];
-                var r = (Expression)_newChildren[1];
-                var c = _newChildren.Length == 3 ? (LambdaExpression)_newChildren[2] : null;
-                return node.Update(l, c, r);
+                var i = 0;
+
+                var left = Get<Expression>(ref i);
+                var right = Get<Expression>(ref i);
+                var conversion = GetIfNotNull(node.Conversion, ref i);
+
+                return node.Update(left, conversion, right);
+            }
+
+            protected override Expression VisitBlock(BlockExpression node)
+            {
+                var i = 0;
+
+                var variables = Get(node.Variables, ref i);
+                var expressions = Get(node.Expressions, ref i);
+
+                return node.Update(variables, expressions);
             }
 
             protected override Expression VisitConditional(ConditionalExpression node)
             {
-                var c = (Expression)_newChildren[0];
-                var t = (Expression)_newChildren[1];
-                var f = (Expression)_newChildren[2];
-                return node.Update(c, t, f);
+                var test = (Expression)_newChildren[0];
+                var ifTrue = (Expression)_newChildren[1];
+                var ifFalse = (Expression)_newChildren[2];
+
+                return node.Update(test, ifTrue, ifFalse);
             }
 
-            protected override ElementInit VisitElementInit(ElementInit node) => node.Update(_newChildren.Cast<Expression>());
+            protected override Expression VisitDynamic(DynamicExpression node)
+            {
+                var i = 0;
+
+                var binder = Get<CallSiteBinder>(ref i);
+                var arguments = Get(node.Arguments, ref i);
+
+                return Expression.MakeDynamic(node.DelegateType, binder, arguments);
+            }
+
+            protected override ElementInit VisitElementInit(ElementInit node)
+            {
+                var arguments = _newChildren.Cast<Expression>();
+
+                return node.Update(arguments);
+            }
+
+            protected override Expression VisitGoto(GotoExpression node)
+            {
+                var i = 0;
+
+                var target = Get<LabelTarget>(ref i);
+                var value = GetIfNotNull(node.Value, ref i);
+
+                return node.Update(target, value);
+            }
 
             protected override Expression VisitInvocation(InvocationExpression node)
             {
-                var e = (Expression)_newChildren[0];
-                var o = _newChildren.Skip(1).Cast<Expression>();
-                return node.Update(e, o);
+                var i = 0;
+
+                var expression = Get<Expression>(ref i);
+                var arguments = Get(node.Arguments, ref i);
+
+                return node.Update(expression, arguments);
+            }
+
+            protected override Expression VisitLabel(LabelExpression node)
+            {
+                var i = 0;
+
+                var target = Get<LabelTarget>(ref i);
+                var defaultValue = GetIfNotNull(node.DefaultValue, ref i);
+
+                return node.Update(target, defaultValue);
             }
 
             protected override Expression VisitLambda<T>(Expression<T> node)
             {
-                var b = (Expression)_newChildren[0];
-                var p = _newChildren.Skip(1).Cast<ParameterExpression>();
-                return node.Update(b, p);
+                var i = 0;
+
+                var body = Get<Expression>(ref i);
+                var parameters = Get(node.Parameters, ref i);
+
+                return node.Update(body, parameters);
             }
 
             protected override Expression VisitListInit(ListInitExpression node)
             {
-                var n = (NewExpression)_newChildren[0];
-                var i = _newChildren.Skip(1).Cast<ElementInit>();
-                return node.Update(n, i);
+                var i = 0;
+
+                var newExpression = Get<NewExpression>(ref i);
+                var initializers = Get(node.Initializers, ref i);
+
+                return node.Update(newExpression, initializers);
+            }
+
+            protected override Expression VisitLoop(LoopExpression node)
+            {
+                var i = 0;
+
+                var body = Get<Expression>(ref i);
+                var breakLabel = GetIfNotNull(node.BreakLabel, ref i);
+                var continueLabel = GetIfNotNull(node.ContinueLabel, ref i);
+
+                return node.Update(breakLabel, continueLabel, body);
             }
 
             protected override Expression VisitMember(MemberExpression node)
             {
-                var e = node.Expression != null ? (Expression)_newChildren[0] : null;
-                return node.Update(e);
+                var i = 0;
+
+                var expression = GetIfNotNull(node.Expression, ref i);
+
+                return node.Update(expression);
             }
 
-            protected override MemberAssignment VisitMemberAssignment(MemberAssignment node) => node.Update((Expression)_newChildren[0]);
+            protected override MemberAssignment VisitMemberAssignment(MemberAssignment node)
+            {
+                var expression = (Expression)_newChildren[0];
+
+                return node.Update(expression);
+            }
 
             protected override MemberListBinding VisitMemberListBinding(MemberListBinding node)
             {
-                var i = _newChildren.Cast<ElementInit>();
-                return node.Update(i);
+                var initializers = _newChildren.Cast<ElementInit>();
+
+                return node.Update(initializers);
             }
 
             protected override MemberMemberBinding VisitMemberMemberBinding(MemberMemberBinding node)
             {
-                var b = _newChildren.Cast<MemberBinding>();
-                return node.Update(b);
+                var bindings = _newChildren.Cast<MemberBinding>();
+
+                return node.Update(bindings);
             }
 
             protected override Expression VisitMemberInit(MemberInitExpression node)
             {
-                var n = (NewExpression)_newChildren[0];
-                var b = _newChildren.Skip(1).Cast<MemberBinding>();
-                return node.Update(n, b);
+                var i = 0;
+
+                var newExpression = Get<NewExpression>(ref i);
+                var bindings = Get(node.Bindings, ref i);
+
+                return node.Update(newExpression, bindings);
             }
 
             protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                var o = node.Object != null ? (Expression)_newChildren[0] : null;
-                var a = node.Object != null ? _newChildren.Skip(1).Cast<Expression>() : _newChildren.Cast<Expression>();
-                return node.Update(o, a);
+                var i = 0;
+
+                var @object = GetIfNotNull(node.Object, ref i);
+                var arguments = Get(node.Arguments, ref i);
+
+                return node.Update(@object, arguments);
             }
 
-            protected override Expression VisitNew(NewExpression node) => node.Update(_newChildren.Cast<Expression>());
+            protected override Expression VisitNew(NewExpression node)
+            {
+                var arguments = _newChildren.Cast<Expression>();
 
-            protected override Expression VisitNewArray(NewArrayExpression node) => node.Update(_newChildren.Cast<Expression>());
+                return node.Update(arguments);
+            }
 
-            protected override Expression VisitTypeBinary(TypeBinaryExpression node) => node.Update((Expression)_newChildren[0]);
+            protected override Expression VisitNewArray(NewArrayExpression node)
+            {
+                var expressions = _newChildren.Cast<Expression>();
 
-            protected override Expression VisitUnary(UnaryExpression node) => node.Update((Expression)_newChildren[0]);
+                return node.Update(expressions);
+            }
+
+            protected override Expression VisitRuntimeVariables(RuntimeVariablesExpression node)
+            {
+                var variables = _newChildren.Cast<ParameterExpression>();
+
+                return node.Update(variables);
+            }
+
+            protected override Expression VisitSwitch(SwitchExpression node)
+            {
+                var i = 0;
+
+                var testValue = Get<Expression>(ref i);
+                var cases = Get(node.Cases, ref i);
+                var defaultBody = GetIfNotNull(node.DefaultBody, ref i);
+
+                return node.Update(testValue, cases, defaultBody);
+            }
+
+            protected override SwitchCase VisitSwitchCase(SwitchCase node)
+            {
+                var i = 0;
+
+                var body = Get<Expression>(ref i);
+                var testValues = Get(node.TestValues, ref i);
+
+                return node.Update(testValues, body);
+            }
+
+            protected override Expression VisitTry(TryExpression node)
+            {
+                var i = 0;
+
+                var body = Get<Expression>(ref i);
+                var handlers = Get(node.Handlers, ref i);
+                var @finally = GetIfNotNull(node.Finally, ref i);
+                var fault = GetIfNotNull(node.Fault, ref i);
+
+                return node.Update(body, handlers, @finally, fault);
+            }
+
+            protected override CatchBlock VisitCatchBlock(CatchBlock node)
+            {
+                var i = 0;
+
+                var body = Get<Expression>(ref i);
+                var variable = GetIfNotNull(node.Variable, ref i);
+                var filter = GetIfNotNull(node.Filter, ref i);
+
+                return node.Update(variable, filter, body);
+            }
+
+            protected override Expression VisitTypeBinary(TypeBinaryExpression node)
+            {
+                var expression = (Expression)_newChildren[0];
+
+                return node.Update(expression);
+            }
+
+            protected override Expression VisitUnary(UnaryExpression node)
+            {
+                var res = node;
+
+                if (node.Operand != null)
+                {
+                    var operand = (Expression)_newChildren[0];
+                    res = node.Update(operand);
+                }
+
+                return res;
+            }
+
+            private T Get<T>(ref int i)
+                where T : class
+            {
+                return (T)_newChildren[i++];
+            }
+
+            private T GetIfNotNull<T>(T expression, ref int i)
+                where T : class
+            {
+                if (expression != null)
+                {
+                    return (T)_newChildren[i++];
+                }
+
+                return expression;
+            }
+
+            private T[] Get<T>(ReadOnlyCollection<T> nodes, ref int i)
+                where T : class
+            {
+                var n = nodes.Count;
+
+                var res = new T[n];
+
+                for (var j = 0; j < n; j++)
+                {
+                    res[j] = (T)_newChildren[i++];
+                }
+
+                return res;
+            }
         }
     }
 }

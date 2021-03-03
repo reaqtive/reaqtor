@@ -36,7 +36,7 @@ namespace System.Linq.CompilerServices
 #if USE_SLIM
     public abstract class ScopedExpressionSlimVisitorBase : ExpressionVisitor
 #else
-    public abstract class ScopedExpressionVisitorBase : ExpressionVisitor
+    public abstract class ScopedExpressionVisitorBase : DynamicExpressionVisitor
 #endif
     {
         /// <summary>

@@ -28,14 +28,19 @@ namespace System.Linq.CompilerServices
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression));
 
-            return new Impl(inlineNonPublicMethods).Visit(expression);
+            var visitor = inlineNonPublicMethods ? Impl.InlineNonPublicMethods : Impl.NoInlineNonPublicMethods;
+
+            return visitor.Visit(expression);
         }
 
         private sealed class Impl : ExpressionVisitor
         {
+            public static readonly Impl NoInlineNonPublicMethods = new(inlineNonPublicMethods: false);
+            public static readonly Impl InlineNonPublicMethods = new(inlineNonPublicMethods: true);
+
             private readonly bool _inlineNonPublicMethods;
 
-            public Impl(bool inlineNonPublicMethods) => _inlineNonPublicMethods = inlineNonPublicMethods;
+            private Impl(bool inlineNonPublicMethods) => _inlineNonPublicMethods = inlineNonPublicMethods;
 
             protected override Expression VisitInvocation(InvocationExpression node)
             {
