@@ -69,7 +69,7 @@ namespace System.Linq.CompilerServices
 #else
     public class ExpressionEqualityComparator
 #endif
-        : IClearable, IEqualityComparer<Expression>, IEqualityComparer<MemberBinding>, IEqualityComparer<ElementInit>, IEqualityComparer<CatchBlock>, IEqualityComparer<SwitchCase>
+        : IClearable, IEqualityComparer<Expression>, IEqualityComparer<MemberBinding>, IEqualityComparer<ElementInit>, IEqualityComparer<CatchBlock>, IEqualityComparer<SwitchCase>, IEqualityComparer<CallSiteBinder>
     {
         private readonly IEqualityComparer<Type> _typeComparer;
         private readonly IEqualityComparer<MemberInfo> _memberInfoComparer;
@@ -121,6 +121,16 @@ namespace System.Linq.CompilerServices
         private Stack<IReadOnlyList<ParameterExpression>> EnvironmentLeft => _environmentLeft ??= new();
         private Stack<IReadOnlyList<ParameterExpression>> EnvironmentRight => _environmentRight ??= new();
         private LabelData BranchTrackingData => _labelData ??= new();
+
+        /// <summary>
+        /// Checks if any undefined labels were detected.
+        /// </summary>
+        public bool HasUndefinedLabels => _labelData?.HasUndefinedLabels ?? false;
+
+        /// <summary>
+        /// Checks if any usage of labels was detected.
+        /// </summary>
+        public bool HasLabels => _labelData?.HasLabels ?? false;
 
         /// <summary>
         /// Clears the internal data structures to enable reuse of the instance.
@@ -1059,7 +1069,7 @@ namespace System.Linq.CompilerServices
         /// <param name="x">First call site binder.</param>
         /// <param name="y">Second call site binder.</param>
         /// <returns>true if both call site binders are equal; otherwise, false.</returns>
-        protected bool Equals(CallSiteBinder x, CallSiteBinder y)
+        public virtual bool Equals(CallSiteBinder x, CallSiteBinder y)
         {
             return _callSiteBinderComparer.Equals(x, y);
         }
@@ -2026,7 +2036,7 @@ namespace System.Linq.CompilerServices
         /// </summary>
         /// <param name="obj">Call site binder to compute a hash code for.</param>
         /// <returns>Hash code for the given call site binder.</returns>
-        protected int GetHashCode(CallSiteBinder obj) => _callSiteBinderComparer.GetHashCode(obj);
+        public virtual int GetHashCode(CallSiteBinder obj) => _callSiteBinderComparer.GetHashCode(obj);
 
         /// <summary>
         /// Gets a hash code for the given extension expression.
@@ -2475,6 +2485,40 @@ namespace System.Linq.CompilerServices
             public Dictionary<LabelTarget, HashSet<LabelTarget>> DefinitionsRight { get; } = new();
             public Dictionary<LabelTarget, HashSet<LabelTarget>> GotosLeft { get; } = new();
             public Dictionary<LabelTarget, HashSet<LabelTarget>> GotosRight { get; } = new();
+
+            public bool HasUndefinedLabels
+            {
+                get
+                {
+                    return Core(DefinitionsLeft, GotosLeft) || Core(DefinitionsRight, GotosRight);
+
+                    static bool Core(Dictionary<LabelTarget, HashSet<LabelTarget>> definitions, Dictionary<LabelTarget, HashSet<LabelTarget>> gotos)
+                    {
+                        foreach (var kv in gotos)
+                        {
+                            if (!definitions.ContainsKey(kv.Key))
+                            {
+                                return true;
+                            }
+                        }
+
+                        return false;
+                    }
+                }
+            }
+
+            public bool HasLabels
+            {
+                get
+                {
+                    return Core(DefinitionsLeft, GotosLeft) || Core(DefinitionsRight, GotosRight);
+
+                    static bool Core(Dictionary<LabelTarget, HashSet<LabelTarget>> definitions, Dictionary<LabelTarget, HashSet<LabelTarget>> gotos)
+                    {
+                        return definitions.Count > 0 || gotos.Count > 0;
+                    }
+                }
+            }
 
             public void Clear()
             {
