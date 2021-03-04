@@ -1,4 +1,4 @@
-<#@include file="..\..\..\..\Common\IrpEventSource.tt" #>
+﻿<#@include file="..\..\..\..\Common\IrpEventSource.tt" #>
 
 <#+
 /***********************************************************************
