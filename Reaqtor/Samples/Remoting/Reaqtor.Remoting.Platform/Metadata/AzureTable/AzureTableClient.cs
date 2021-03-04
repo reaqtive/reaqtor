@@ -24,9 +24,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <param name="client">The Azure CloudTableClient.</param>
         public AzureTableClient(CloudTableClient client)
         {
-            Contract.RequiresNotNull(client);
-
-            _client = client;
+            _client = client ?? throw new ArgumentNullException(nameof(client));
         }
 
         /// <summary>
@@ -36,7 +34,8 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>The table.</returns>
         public ITable GetTableReference(string tableName)
         {
-            Contract.RequiresNotNullOrEmpty(tableName);
+            if (string.IsNullOrEmpty(tableName))
+                throw new ArgumentNullException(nameof(tableName));
 
             return new AzureTable(_client.GetTableReference(tableName));
         }

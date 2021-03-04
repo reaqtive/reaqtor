@@ -2,6 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+using System;
 using System.Linq;
 
 namespace Reaqtor.Remoting.Metadata
@@ -19,7 +20,8 @@ namespace Reaqtor.Remoting.Metadata
         /// <returns>Query object that hides the original query and causes further query composition to execute locally.</returns>
         public static IQueryable<T> ToLocal<T>(this IQueryable<T> source)
         {
-            Contract.RequiresNotNull(source);
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
 
             return source.AsEnumerable().Select(_ => _).AsQueryable();
         }

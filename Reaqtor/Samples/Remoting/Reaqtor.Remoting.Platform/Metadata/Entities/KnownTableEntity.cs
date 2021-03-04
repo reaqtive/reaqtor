@@ -27,7 +27,8 @@ namespace Reaqtor.Remoting.Metadata
         /// <param name="uri">URI identifying the resource represented by the table entity.</param>
         protected KnownTableEntity(Uri uri)
         {
-            Contract.RequiresNotNull(uri);
+            if (uri == null)
+                throw new ArgumentNullException(nameof(uri));
 
             RowKey = HashingHelper.ComputeHash(uri.ToCanonicalString());
             Id = uri.ToCanonicalString();
