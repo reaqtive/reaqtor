@@ -2,6 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+using System;
+
 using Microsoft.Azure.Cosmos.Table;
 
 namespace Reaqtor.Remoting.Metadata
@@ -18,9 +20,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <param name="type">The type of table operation.</param>
         protected TableOperationBase(ITableEntity entity, TableOperationType type)
         {
-            Contract.RequiresNotNull(entity);
-
-            Entity = entity;
+            Entity = entity ?? throw new ArgumentNullException(nameof(entity));
             Type = type;
         }
 

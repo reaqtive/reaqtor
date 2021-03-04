@@ -60,7 +60,8 @@ namespace Reaqtor.Remoting.QueryEvaluator
         /// <returns>The rewritten subscription expression that includes the cleanup hook.</returns>
         public static Expression GetExpressionWithSubscriptionCleanupHook(this Expression expression, bool throwWhenNotAttached)
         {
-            Contract.RequiresNotNull(expression);
+            if (expression == null)
+                throw new ArgumentNullException(nameof(expression));
 
             if (expression is not InvocationExpression invoke ||
                 invoke.Expression.NodeType != ExpressionType.Parameter ||

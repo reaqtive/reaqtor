@@ -64,7 +64,8 @@ namespace Reaqtor.Remoting.Metadata
 
             var queryableType = expression.Type.FindGenericType(typeof(IQueryable<>));
 
-            Contract.RequiresNotNull(queryableType);
+            if (queryableType == null)
+                throw new ArgumentException("Expression should be compatible with IQueryable<T>.", nameof(expression));
 
             var elementType = queryableType.GetGenericArguments()[0];
 
@@ -148,8 +149,8 @@ namespace Reaqtor.Remoting.Metadata
                 throw new ArgumentNullException(nameof(uri));
             if (entity == null)
                 throw new ArgumentNullException(nameof(entity));
-
-            Contract.RequiresNotNullOrEmpty(metadataCollectionUri);
+            if (string.IsNullOrEmpty(metadataCollectionUri))
+                throw new ArgumentNullException(nameof(metadataCollectionUri));
 
             var tableAddress = _storageResolver.ResolveTable(metadataCollectionUri);
 
@@ -173,8 +174,8 @@ namespace Reaqtor.Remoting.Metadata
         {
             if (uri == null)
                 throw new ArgumentNullException(nameof(uri));
-
-            Contract.RequiresNotNullOrEmpty(metadataCollectionUri);
+            if (string.IsNullOrEmpty(metadataCollectionUri))
+                throw new ArgumentNullException(nameof(metadataCollectionUri));
 
             var tableAddress = _storageResolver.ResolveTable(metadataCollectionUri);
 
@@ -215,7 +216,6 @@ namespace Reaqtor.Remoting.Metadata
         private static ParameterExpression FindSourceParameter(Expression expression)
         {
             var freeVariables = FreeVariableScanner.Scan(expression);
-            Contract.RequiresNotNull(freeVariables);
 
             var sources = freeVariables.ToArray();
 

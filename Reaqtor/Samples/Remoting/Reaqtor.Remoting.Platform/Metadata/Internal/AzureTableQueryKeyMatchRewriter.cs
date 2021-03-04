@@ -28,9 +28,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <param name="partitionResolver">Function to resolve partitions from a metadata entity URI.</param>
         public AzureTableQueryKeyMatchRewriter(Func<string, string> partitionResolver)
         {
-            Contract.RequiresNotNull(partitionResolver);
-
-            _partitionResolver = partitionResolver;
+            _partitionResolver = partitionResolver ?? throw new ArgumentNullException(nameof(partitionResolver));
         }
 
         /// <summary>

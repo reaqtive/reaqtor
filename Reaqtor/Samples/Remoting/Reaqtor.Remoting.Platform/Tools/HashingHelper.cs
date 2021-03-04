@@ -20,7 +20,8 @@ namespace Reaqtor.Remoting
         /// <returns>The data passed in as a hashed value.</returns>
         public static string ComputeHash(string data)
         {
-            Contract.RequiresNotNullOrEmpty(data);
+            if (string.IsNullOrEmpty(data))
+                throw new ArgumentNullException(nameof(data));
 
 #pragma warning disable CA5350 // REVIEW: Do Not Use Weak Cryptographic Algorithms.
             using SHA1 sha = new SHA1CryptoServiceProvider();
