@@ -198,6 +198,45 @@ namespace System.Linq.Expressions
                 (ulong i, ulong j) => i.Equals(j),
             }.ToReadOnly();
 
+#if NET5_0
+            /// <summary>
+            /// Gets a table of pure members on <see cref="global::System.Half" />.
+            /// </summary>
+            public static MemberTable Half { get; } = new MemberTable
+            {
+                () => global::System.Half.Epsilon,
+                () => global::System.Half.MaxValue,
+                () => global::System.Half.MinValue,
+                () => global::System.Half.NaN,
+                () => global::System.Half.NegativeInfinity,
+                () => global::System.Half.PositiveInfinity,
+
+                (global::System.Half i) => global::System.Half.IsFinite(i),
+                (global::System.Half i) => global::System.Half.IsInfinity(i),
+                (global::System.Half i) => global::System.Half.IsNaN(i),
+                (global::System.Half i) => global::System.Half.IsNegative(i),
+                (global::System.Half i) => global::System.Half.IsNegativeInfinity(i),
+                (global::System.Half i) => global::System.Half.IsNormal(i),
+                (global::System.Half i) => global::System.Half.IsPositiveInfinity(i),
+                (global::System.Half i) => global::System.Half.IsSubnormal(i),
+
+                (global::System.Half i, global::System.Half j) => i.CompareTo(j),
+                (global::System.Half i, global::System.Half j) => i.Equals(j),
+
+                (global::System.Half i) => (float)i,
+                (global::System.Half i) => (double)i,
+                (float i) => (global::System.Half)i,
+                (double i) => (global::System.Half)i,
+
+                (global::System.Half i, global::System.Half j) => i == j,
+                (global::System.Half i, global::System.Half j) => i != j,
+                (global::System.Half i, global::System.Half j) => i < j,
+                (global::System.Half i, global::System.Half j) => i <= j,
+                (global::System.Half i, global::System.Half j) => i > j,
+                (global::System.Half i, global::System.Half j) => i >= j,
+            }.ToReadOnly();
+#endif
+
             /// <summary>
             /// Gets a table of pure members on <see cref="global::System.Single" />.
             /// </summary>
@@ -210,6 +249,13 @@ namespace System.Linq.Expressions
 
                 (float i, float j) => i.CompareTo(j),
                 (float i, float j) => i.Equals(j),
+
+#if NET5_0 || NETSTANDARD2_1
+                (float i) => float.IsFinite(i),
+                (float i) => float.IsNegative(i),
+                (float i) => float.IsNormal(i),
+                (float i) => float.IsSubnormal(i),
+#endif
             }.ToReadOnly();
 
             /// <summary>
@@ -224,6 +270,13 @@ namespace System.Linq.Expressions
 
                 (double i, double j) => i.CompareTo(j),
                 (double i, double j) => i.Equals(j),
+
+#if NET5_0 || NETSTANDARD2_1
+                (double i) => double.IsFinite(i),
+                (double i) => double.IsNegative(i),
+                (double i) => double.IsNormal(i),
+                (double i) => double.IsSubnormal(i),
+#endif
             }.ToReadOnly();
 
             /// <summary>
@@ -388,6 +441,12 @@ namespace System.Linq.Expressions
 
                 (string s1, string s2) => s1 == s2,
                 (string s1, string s2) => s1 != s2,
+
+#if NET5_0 || NETSTANDARD2_1
+                (string s, char c) => s.Contains(c),
+                (string s, char c) => s.StartsWith(c),
+                (string s, char c) => s.EndsWith(c),
+#endif
             }.ToReadOnly();
 
             /// <summary>
@@ -587,6 +646,17 @@ namespace System.Linq.Expressions
                 (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 <= t2,
                 (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 > t2,
                 (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 >= t2,
+
+#if NET5_0 || NETSTANDARD2_1
+                (global::System.TimeSpan t, double divisor) => t.Divide(divisor),
+                (global::System.TimeSpan t, global::System.TimeSpan ts) => t.Divide(ts),
+                (global::System.TimeSpan t, double factor) => t.Multiply(factor),
+
+                (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 / t2,
+                (global::System.TimeSpan timeSpan, double divisor) => timeSpan / divisor,
+                (double factor, global::System.TimeSpan timeSpan) => factor * timeSpan,
+                (global::System.TimeSpan timeSpan, double factor) => timeSpan * factor,
+#endif
             }.ToReadOnly();
 
             /// <summary>
@@ -907,6 +977,9 @@ namespace System.Linq.Expressions
             {
                 () => global::System.Math.E,
                 () => global::System.Math.PI,
+#if NET5_0
+                () => global::System.Math.Tau,
+#endif
 
                 (double d) => global::System.Math.Acos(d),
                 (double d) => global::System.Math.Asin(d),
@@ -976,7 +1049,94 @@ namespace System.Linq.Expressions
                 (double value) => global::System.Math.Sign(value),
                 (decimal value) => global::System.Math.Sign(value),
                 (int a, int b) => global::System.Math.BigMul(a, b),
+
+#if NET5_0 || NETSTANDARD2_1
+                (double d) => global::System.Math.Acosh(d),
+                (double d) => global::System.Math.Asinh(d),
+                (double d) => global::System.Math.Atanh(d),
+                (double d) => global::System.Math.Cbrt(d),
+                (ulong value, ulong min, ulong max) => global::System.Math.Clamp(value, min, max),
+                (uint value, uint min, uint max) => global::System.Math.Clamp(value, min, max),
+                (ushort value, ushort min, ushort max) => global::System.Math.Clamp(value, min, max),
+                (byte value, byte min, byte max) => global::System.Math.Clamp(value, min, max),
+                (long value, long min, long max) => global::System.Math.Clamp(value, min, max),
+                (int value, int min, int max) => global::System.Math.Clamp(value, min, max),
+                (short value, short min, short max) => global::System.Math.Clamp(value, min, max),
+                (sbyte value, sbyte min, sbyte max) => global::System.Math.Clamp(value, min, max),
+                (double value, double min, double max) => global::System.Math.Clamp(value, min, max),
+                (float value, float min, float max) => global::System.Math.Clamp(value, min, max),
+                (decimal value, decimal min, decimal max) => global::System.Math.Clamp(value, min, max),
+#endif
+#if NET5_0
+                (double x) => global::System.Math.BitDecrement(x),
+                (double x) => global::System.Math.BitIncrement(x),
+                (double x) => global::System.Math.ILogB(x),
+                (double x) => global::System.Math.Log2(x),
+                (double x, double y) => global::System.Math.CopySign(x, y),
+                (double x, double y) => global::System.Math.MaxMagnitude(x, y),
+                (double x, double y) => global::System.Math.MinMagnitude(x, y),
+                (double x, int n) => global::System.Math.ScaleB(x, n),
+                (double x, double y, double z) => global::System.Math.FusedMultiplyAdd(x, y, z),
+#endif
             }.ToReadOnly();
+
+#if NET5_0 || NETSTANDARD2_1
+            /// <summary>
+            /// Gets a table of pure members on <see cref="global::System.MathF" />.
+            /// </summary>
+            public static MemberTable MathF { get; } = new MemberTable
+            {
+                () => global::System.MathF.E,
+                () => global::System.MathF.PI,
+
+                (float x) => global::System.MathF.Abs(x),
+                (float x) => global::System.MathF.Acos(x),
+                (float x) => global::System.MathF.Acosh(x),
+                (float x) => global::System.MathF.Asin(x),
+                (float x) => global::System.MathF.Asinh(x),
+                (float x) => global::System.MathF.Atan(x),
+                (float y, float x) => global::System.MathF.Atan2(y, x),
+                (float x) => global::System.MathF.Atanh(x),
+                (float x) => global::System.MathF.Cbrt(x),
+                (float x) => global::System.MathF.Ceiling(x),
+                (float x) => global::System.MathF.Cos(x),
+                (float x) => global::System.MathF.Cosh(x),
+                (float x) => global::System.MathF.Exp(x),
+                (float x) => global::System.MathF.Floor(x),
+                (float x, float y) => global::System.MathF.IEEERemainder(x, y),
+                (float x) => global::System.MathF.Log(x),
+                (float x, float y) => global::System.MathF.Log(x, y),
+                (float x) => global::System.MathF.Log10(x),
+                (float x, float y) => global::System.MathF.Max(x, y),
+                (float x, float y) => global::System.MathF.Min(x, y),
+                (float x, float y) => global::System.MathF.Pow(x, y),
+                (float x) => global::System.MathF.Round(x),
+                (float x, int digits) => global::System.MathF.Round(x, digits),
+                (float x, MidpointRounding mode) => global::System.MathF.Round(x, mode),
+                (float x, int digits, MidpointRounding mode) => global::System.MathF.Round(x, digits, mode),
+                (float x) => global::System.MathF.Sign(x),
+                (float x) => global::System.MathF.Sin(x),
+                (float x) => global::System.MathF.Sinh(x),
+                (float x) => global::System.MathF.Sqrt(x),
+                (float x) => global::System.MathF.Tan(x),
+                (float x) => global::System.MathF.Tanh(x),
+                (float x) => global::System.MathF.Truncate(x),
+
+#if NET5_0
+                () => global::System.MathF.Tau,
+
+                (float x) => global::System.MathF.BitDecrement(x),
+                (float x) => global::System.MathF.BitIncrement(x),
+                (float x, float y) => global::System.MathF.CopySign(x, y),
+                (float x, float y, float z) => global::System.MathF.FusedMultiplyAdd(x, y, z),
+                (float x) => global::System.MathF.ILogB(x),
+                (float x) => global::System.MathF.Log2(x),
+                (float x, float y) => global::System.MathF.MaxMagnitude(x, y),
+                (float x, float y) => global::System.MathF.MinMagnitude(x, y),
+                (float x, int n) => global::System.MathF.ScaleB(x, n),
+#endif
+            }.ToReadOnly();
+#endif
 
             /// <summary>
             /// Gets a table of pure members on <see cref="global::System.BitConverter" />.
@@ -1000,6 +1160,11 @@ namespace System.Linq.Expressions
                 (byte[] value) => global::System.BitConverter.ToString(value),
                 (byte[] value, int startIndex) => global::System.BitConverter.ToString(value, startIndex),
                 (byte[] value, int startIndex, int length) => global::System.BitConverter.ToString(value, startIndex, length),
+
+#if NET5_0 || NETSTANDARD2_1
+                (float value) => global::System.BitConverter.SingleToInt32Bits(value),
+                (int value) => global::System.BitConverter.Int32BitsToSingle(value),
+#endif
             }.ToReadOnly();
 
             /// <summary>
@@ -1222,6 +1387,11 @@ namespace System.Linq.Expressions
                 (byte[] inArray, int offset, int length) => global::System.Convert.ToBase64String(inArray, offset, length),
                 (byte[] inArray, int offset, int length, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, offset, length, options),
                 (byte[] inArray, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, options),
+
+#if NET5_0
+                (byte[] inArray) => global::System.Convert.ToHexString(inArray),
+                (byte[] inArray, int offset, int length) => global::System.Convert.ToHexString(inArray, offset, length),
+#endif
             }.ToReadOnly();
 
             /// <summary>
@@ -1268,6 +1438,51 @@ namespace System.Linq.Expressions
                 // NB: Methods with Predicate<T> parameters are ; the delegate may not be a pure function.
                 // REVIEW: In practice, it is assumed that predicates are pure. Should we provide a table including these members, so users can opt-in?
             }.ToReadOnly();
+
+#if NET5_0 || NETSTANDARD2_1
+            /// <summary>
+            /// Gets a table of pure members on <see cref="global::System.Index" />.
+            /// </summary>
+            public static MemberTable Index { get; } = new MemberTable
+            {
+                () => global::System.Index.End,
+                () => global::System.Index.Start,
+
+                (global::System.Index i) => i.IsFromEnd,
+                (global::System.Index i) => i.Value,
+
+                (int value, bool fromEnd) => new global::System.Index(value, fromEnd),
+
+                (int value) => (global::System.Index)value,
+
+                (int value) => global::System.Index.FromEnd(value),
+                (int value) => global::System.Index.FromStart(value),
+
+                (global::System.Index i, int length) => i.GetOffset(length),
+
+                (global::System.Index i, global::System.Index other) => i.Equals(other),
+            }.ToReadOnly();
+
+            /// <summary>
+            /// Gets a table of pure members on <see cref="global::System.Range" />.
+            /// </summary>
+            public static MemberTable Range { get; } = new MemberTable
+            {
+                () => global::System.Range.All,
+
+                (global::System.Index start, global::System.Index end) => new global::System.Range(start, end),
+
+                (global::System.Index start) => global::System.Range.StartAt(start),
+                (global::System.Index end) => global::System.Range.EndAt(end),
+
+                (global::System.Range r) => r.End,
+                (global::System.Range r) => r.Start,
+
+                // NB: GetOffsetAndLength is omitted because the ValueTuple<,> return type is not immutable.
+
+                (global::System.Range r, global::System.Range other) => r.Equals(other),
+            }.ToReadOnly();
+#endif
 
             /// <summary>
             /// Pure members in the System.Collections namespace.
@@ -1540,6 +1755,14 @@ namespace System.Linq.Expressions
                 BitConverter,
                 Convert,
                 Array,
+#if NET5_0
+                Half,
+#endif
+#if NET5_0 || NETSTANDARD2_1
+                Index,
+                Range,
+                MathF,
+#endif
             }.ToReadOnly();
 
             /// <summary>
