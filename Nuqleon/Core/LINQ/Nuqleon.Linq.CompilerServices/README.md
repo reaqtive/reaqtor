@@ -750,7 +750,7 @@ After interning both expressions, `expr2.Left` will be reference equal to `expr1
 
 To assist with logging or debugging of expression trees, this library provides a `ToCSharpString` extension method for `Expression` which produces C#-like syntax to represent the tree. Not all constructs in expression trees can be (correctly) represented in C# (e.g. `LoopExpression` having a result), so the resulting syntax just looks and feels like C#.
 
-An additional Boolean parameter called `allowCompilerGeneratedNames` can be passed to `ToCSharpString` to control whether the resulting string can contain compiler-generated names (otherwise, these get rewritten to human-readable names).
+An additional Boolean parameter called `allowCompilerGeneratedNames` can be passed to `ToCSharpString` to control whether the resulting string can contain compiler-generated names (otherwise, an exception will be thrown when encountering such a name).
 
 Alternatively, the `ToCSharp` method can be used which returns a `CSharpExpression`, providing additional information about the tree, alongside a string representation. This additional information includes a table of `Constants` as well as a list of `GlobalParameters`.
 
