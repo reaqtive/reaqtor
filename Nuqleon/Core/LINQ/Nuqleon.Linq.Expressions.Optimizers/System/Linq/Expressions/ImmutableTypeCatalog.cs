@@ -165,6 +165,14 @@ namespace System.Linq.Expressions
                 typeof(global::System.Tuple<,,,,,,,>),
 
                 // NB: ValueTuple types are mutable.
+
+#if NET5_0
+                typeof(Half),
+#endif
+#if NET5_0 || NETSTANDARD2_1
+                typeof(Index),
+                typeof(Range),
+#endif
             }.ToReadOnly();
 
             /// <summary>
