@@ -36,7 +36,7 @@ namespace Reaqtor.IoT
 
         private readonly IngressEgressManager _iemgr;
 
-        internal MiniQueryEngine(Uri uri, IScheduler scheduler, IKeyValueStore store, IngressEgressManager iemgr)
+        public MiniQueryEngine(Uri uri, IScheduler scheduler, IKeyValueStore store, IngressEgressManager iemgr)
              : base(uri, new Resolver(), scheduler, new Registry(), store, SerializationPolicy.Default, s_map)
         {
             _iemgr = iemgr;

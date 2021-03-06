@@ -12,7 +12,7 @@ namespace Reaqtor.IoT
     // Example of a stateless observer, just using the Rx IObserver<T> interface.
     //
 
-    internal sealed class ConsoleObserver<T> : IObserver<T>
+    public sealed class ConsoleObserver<T> : IObserver<T>
     {
         public void OnCompleted() => Console.WriteLine("OnCompleted()");
 

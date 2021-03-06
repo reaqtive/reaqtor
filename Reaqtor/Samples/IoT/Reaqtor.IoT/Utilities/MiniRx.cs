@@ -8,7 +8,7 @@ namespace Reaqtor.IoT
 {
     // Avoids taking dependency on Rx
 
-    internal static class MiniRx
+    public static class MiniRx
     {
         public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext)
         {

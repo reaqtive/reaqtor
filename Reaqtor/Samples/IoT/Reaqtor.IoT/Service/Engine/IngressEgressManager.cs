@@ -28,7 +28,7 @@ namespace Reaqtor.IoT
     // receive/send events (see IngressObservable<T> and EgressObserver<T>).
     //
 
-    internal sealed class IngressEgressManager
+    public sealed class IngressEgressManager
     {
         private readonly Dictionary<string, object> _subjects = new();
 
@@ -125,7 +125,7 @@ namespace Reaqtor.IoT
         }
     }
 
-    internal sealed class ReliableSubject<T> : IObservable<(long sequenceId, T item)>, IObserver<(long sequenceId, T item)>
+    public sealed class ReliableSubject<T> : IObservable<(long sequenceId, T item)>, IObserver<(long sequenceId, T item)>
     {
         private readonly object _gate = new();
         private readonly SortedDictionary<long, T> _values = new();

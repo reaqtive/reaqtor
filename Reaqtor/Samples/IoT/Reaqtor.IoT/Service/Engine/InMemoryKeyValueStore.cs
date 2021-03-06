@@ -32,7 +32,7 @@ namespace Reaqtor.IoT
     // to the required interfaces for checkpointing. This is the recommended way going forward.
     //
 
-    internal sealed class InMemoryKeyValueStore : IKeyValueStore
+    public sealed class InMemoryKeyValueStore : IKeyValueStore
     {
         private readonly Dictionary<string, Dictionary<string, byte[]>> _data = new();
 
