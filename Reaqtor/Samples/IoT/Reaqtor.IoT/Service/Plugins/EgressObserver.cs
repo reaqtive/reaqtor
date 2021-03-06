@@ -31,7 +31,7 @@ namespace Reaqtor.IoT
     // 7. When the artifact is disposed, Dispose is called.
     //
 
-    internal sealed class EgressObserver<T> : StatefulObserver<T>
+    public sealed class EgressObserver<T> : StatefulObserver<T>
     {
         private readonly string _name;
         private IngressEgressManager _iemgr;

@@ -16,7 +16,7 @@ namespace Reaqtor.IoT
     // using a visitor pattern for purposes of state saving and loading.
     //
 
-    internal sealed class TimerObservable : ISubscribable<DateTimeOffset>
+    public sealed class TimerObservable : ISubscribable<DateTimeOffset>
     {
         private readonly TimeSpan _period;
 

@@ -14,7 +14,7 @@ namespace Reaqtor.IoT
     // Similar to EgressObserver<T> but receives events from the outside world.
     //
 
-    internal sealed class IngressObservable<T> : ISubscribable<T>
+    public sealed class IngressObservable<T> : ISubscribable<T>
     {
         private readonly string _name;
 

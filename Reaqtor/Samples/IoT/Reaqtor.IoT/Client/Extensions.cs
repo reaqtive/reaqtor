@@ -26,7 +26,7 @@ namespace Reaqtor.IoT
     // engine (or custom artifacts provided by the environment).
     //
 
-    internal static class Extensions
+    public static class Extensions
     {
 #pragma warning disable IDE0060 // Remove unused parameter (these are used in expression trees)
         [KnownResource("rx://builtin/id")]
