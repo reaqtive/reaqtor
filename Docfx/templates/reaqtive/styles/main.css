@@ -167,6 +167,10 @@ a:hover {
 /* Header
 ============================= */
 
+.navbar {
+  min-height: 0;
+}
+
 .navbar .container {
   display: flex;
   flex-wrap: wrap;
@@ -203,6 +207,12 @@ header .subnav {
 .collapse.navbar-collapse {
   min-height: 79px;
   margin: 0;
+  width: 100%;
+  width: 100%;
+  opacity: 1;
+}
+.collapsing.navbar-collapse {
+  opacity: 0;
 }
 @media (min-width: 768px) {
   .navbar-collapse.collapse {
@@ -255,6 +265,7 @@ header .subnav {
 .navbar-inverse .navbar-collapse,
 .navbar-inverse .navbar-form {
   border: none;
+  width: 100%;
 }
 
 /* Nav links */
@@ -267,7 +278,6 @@ header .subnav {
   display: flex;
   align-items: center;
   color: var(--c-text);
-  justify-content: center;
   position: relative;
   padding: 0;
 }
@@ -291,6 +301,8 @@ header .subnav {
   grid-auto-flow: row;
   grid-gap: var(--margin);
   font-weight: var(--fw-bold);
+  /* height: 100%; */
+  /* width: 100%; */
 }
 
 @media only screen and (min-width: 48rem) {
@@ -303,7 +315,7 @@ header .subnav {
 @media only screen and (min-width: 56rem) {
   .navbar .nav.level1 {
     font-size: var(--fs-md);
-    grid-gap: var(--margin-lg);
+    grid-gap: var(--margin);
   }
 }
 @media only screen and (min-width: 62rem) {
@@ -314,9 +326,11 @@ header .subnav {
 
 .navbar .nav > li > a {
   padding: 0;
-  display: block;
-  text-align: left;
+  display: flex;
+  /* align-items: center; */
+  /* text-align: left; */
 }
+
 .navbar .nav a {
   display: flex;
   height: 100%;
@@ -326,21 +340,21 @@ header .subnav {
   position: relative;
   font-weight: var(--fw-bold);
 }
-.navbar .nav.level2:hover .nav.level3 {
+.navbar .nav li:hover > .nav.level2 {
   display: block;
 }
-.navbar .nav.level3 {
+.navbar .nav.level2 {
   display: none;
   background-color: white;
   position: absolute;
   top: 100%;
   box-shadow: var(--bxs-fat);
 }
-.navbar .nav.level3 a {
+.navbar .nav.level2 a {
   padding: var(--margin) var(--margin-lg) var(--margin) var(--margin);
   color: var(--c-text);
 }
-.navbar .nav.level3 a:hover {
+.navbar .nav.level2 a:hover {
   color: var(--c-brand);
 }
 
