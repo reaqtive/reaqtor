@@ -16,22 +16,20 @@ namespace Reaqtor.Shebang.Extensions
     // using a visitor pattern for purposes of state saving and loading.
     //
 
-    internal sealed class TimerObservable : ISubscribable<DateTimeOffset>
+    internal sealed class TimerObservable : SubscribableBase<DateTimeOffset>
     {
         private readonly TimeSpan _period;
 
         public TimerObservable(TimeSpan period) => _period = period;
 
-        public ISubscription Subscribe(IObserver<DateTimeOffset> observer) => new Subscription(_period, observer);
-
-        IDisposable IObservable<DateTimeOffset>.Subscribe(IObserver<DateTimeOffset> observer) => throw new NotSupportedException("Historical artifact for Rx compatibility.");
+        protected override ISubscription SubscribeCore(IObserver<DateTimeOffset> observer) => new Subscription(_period, observer);
 
         //
         // Use of ContextSwitchOperator base class such that calls to OnNext are correctly switched to
         // the engine's scheduler, which is critical to support checkpoint/recovery.
         //
 
-        private sealed class Subscription : ContextSwitchOperator<TimeSpan, DateTimeOffset>
+        private sealed class Subscription : ContextSwitchOperator<TimeSpan, DateTimeOffset>, IUnloadableOperator
         {
             private Timer _timer;
 
@@ -58,6 +56,8 @@ namespace Reaqtor.Shebang.Extensions
             }
 
             private void Tick(object state) => OnNext(DateTimeOffset.Now);
+
+            public void Unload() => _timer?.Dispose();
         }
     }
 }

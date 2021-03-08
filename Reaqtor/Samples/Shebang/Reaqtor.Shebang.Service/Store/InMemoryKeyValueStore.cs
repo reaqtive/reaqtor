@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
@@ -66,7 +67,8 @@ namespace Reaqtor.Shebang.Service
                             var rowSize = row.Value.Length + row.Key.Length * 2;
 
                             sb.AppendLine($"  Key '{row.Key}':");
-                            sb.AppendLine($"    Value = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
+                            sb.AppendLine($"    Bytes = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
+                            sb.AppendLine($"    ASCII = {new string(row.Value.Select(b => (char)b).ToArray())}");
                             sb.AppendLine($"    Size  = {rowSize}");
                             sb.AppendLine();
 
