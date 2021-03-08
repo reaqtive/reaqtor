@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -24,8 +25,8 @@ namespace Reaqtor.Shebang.Service
         private readonly IQueryEngineStateStore _store;
         private readonly IReadOnlyDictionary<string, object> _context;
 
-        public SimplerCheckpointingQueryEngine(Uri uri, IScheduler scheduler, IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context)
-             : base(uri, new NopReactiveServiceResolver(), scheduler, new EmptyReactiveMetadata(), store, SerializationPolicy.Default, new DefaultQuotedTypeConversionTargets())
+        public SimplerCheckpointingQueryEngine(Uri uri, IScheduler scheduler, IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context, TraceSource traceSource = null)
+             : base(uri, new NopReactiveServiceResolver(), scheduler, new EmptyReactiveMetadata(), store, SerializationPolicy.Default, new DefaultQuotedTypeConversionTargets(), traceSource)
         {
             _store = store;
             _context = context ?? new Dictionary<string, object>();

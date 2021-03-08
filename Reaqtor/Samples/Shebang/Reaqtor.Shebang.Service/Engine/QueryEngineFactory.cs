@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;
 using System.Threading;
@@ -22,13 +23,13 @@ namespace Reaqtor.Shebang.Service
 
         internal static PhysicalScheduler Scheduler => s_scheduler ??= PhysicalScheduler.Create();
 
-        public static async Task<SimplerCheckpointingQueryEngine> CreateNewAsync(IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null)
+        public static async Task<SimplerCheckpointingQueryEngine> CreateNewAsync(IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null, TraceSource traceSource = null)
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope. (Engine takes ownership.)
             var sch = new LogicalScheduler(Scheduler);
 #pragma warning restore CA2000
 
-            var engine = new SimplerCheckpointingQueryEngine(new Uri("reaqtor://engine/" + Guid.NewGuid().ToString("D")), sch, store, context);
+            var engine = new SimplerCheckpointingQueryEngine(new Uri("reaqtor://engine/" + Guid.NewGuid().ToString("D")), sch, store, context, traceSource);
 
             var ctx = engine.Client;
 
@@ -42,13 +43,13 @@ namespace Reaqtor.Shebang.Service
             return engine;
         }
 
-        public static async Task<SimplerCheckpointingQueryEngine> RecoverAsync(IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null)
+        public static async Task<SimplerCheckpointingQueryEngine> RecoverAsync(IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null, TraceSource traceSource = null)
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope. (Engine takes ownership.)
             var sch = new LogicalScheduler(Scheduler);
 #pragma warning restore CA2000
 
-            var engine = new SimplerCheckpointingQueryEngine(new Uri("reaqtor://engine/" + Guid.NewGuid().ToString("D")), sch, store, context);
+            var engine = new SimplerCheckpointingQueryEngine(new Uri("reaqtor://engine/" + Guid.NewGuid().ToString("D")), sch, store, context, traceSource);
 
             await engine.RecoverAsync().ConfigureAwait(false);
 
