@@ -1,4 +1,4 @@
-# `Nuqleon.Linq.CompilerServices`
+# Nuqleon.Linq.CompilerServices
 
 Provides expression tree utilities such as visitors, analyzers, rewriters, evaluators, and more.
 
@@ -167,7 +167,7 @@ In addition, an alternative `ExpressionUnsafeFactory` is provided which instanti
 
 **Note:** Unsafe expression factories have been used in some deployments of Nuqleon to speed up recovery times of query engines where a lot of expression tree deserialization operations take place.
 
-## `FuncletExpression`
+## FuncletExpression
 
 Funclets are custom extension expression tree nodes that evaluate a given expression to a constant upon reduction. They're useful for partial evaluation and can be generated in an expression visitor when encountering a subtree that cannot be processed by some remote system (e.g. in query translation or prior to expression tree shipping). By leaving a `FuncletExpression` wrapper around such a subtree in the tree, further visits to the tree will trigger a reduction that replaces the functlet by a `ConstantExpression` containing the result of evaluating the subtree.
 
@@ -904,7 +904,7 @@ To work with BURS, trees have to be implemented using the `ITree<T>` abstraction
 
 This section contains documentation for utilities that don't really fit in another other section.
 
-### `ReflectionHelpers`
+### ReflectionHelpers
 
 Provides a set of `InfoOf` methods that obtain a `MemberInfo` from an expression tree. This is a mechanism akin to `typeof` for types but targeting methods, properties, fields, and constructors instead (much like a hypothethical C# `infoof` operator could do). For example:
 
@@ -914,7 +914,7 @@ var m = (MethodInfo)ReflectionHelpers.InfoOf((string s, int x, int y) => s.Subst
 
 will return the `MethodInfo` representing `string.Substring(int, int)`.
 
-### `RuntimeCompiler`
+### RuntimeCompiler
 
 The runtime compiler uses `System.Reflection.Emit` to build anonymous types, closure types, and so-called record types.
 
@@ -949,7 +949,7 @@ public static Type CreateRecordType(IEnumerable<KeyValuePair<string, Type>> prop
 public static Type CreateRecordType(IEnumerable<StructuralFieldDeclaration> properties, bool valueEquality);
 ```
 
-#### `Define*` method variants
+#### Define* method variants
 
 In addition to the `Create*` methods illustrated above, variants with the `Define*` prefix are provided as well. Rather than returning a `Type`, these accept a `TypeBuilder` to define the type on. These variants are useful when trying to build recursive types (i.e. there's a cycle between declarations and uses of types), because one can use `TypeBuilder` instances for the types of the properties on the anonymous or record type being constructed. Once all types have been defined, the user can then call `CreateType` on the `TypeBuilder` instances. Examples of types with cycles are:
 

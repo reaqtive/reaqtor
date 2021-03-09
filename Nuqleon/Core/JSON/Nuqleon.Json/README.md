@@ -1,10 +1,10 @@
-# `Nuqleon.Json`
+# Nuqleon.Json
 
 Provides a simple object model for JSON, a parser, a printer, and visitors.
 
 > **Note:** The history of this assembly goes all the way back 2009, before `Newtonsoft.Json` became the de facto standard for JSON serialization on .NET. It also predates the `System.Text.Json` library in the BCL.
 
-## `Nuqleon.Json.Expressions.Expression`
+## Nuqleon.Json.Expressions.Expression
 
 The heart of the JSON library is an object model around JSON expressions, with `Expression` being the base class. The type also provides factories for the following:
 
@@ -17,13 +17,13 @@ The heart of the JSON library is an object model around JSON expressions, with `
 
 The `Expression` class also provides support to parse JSON using a `Parse(string)` method, and a way to print JSON using a `ToString()` and `ToString(StringBuilder)` method.
 
-## `Nuqleon.Json.Expressions.ExpressionVisitor`
+## Nuqleon.Json.Expressions.ExpressionVisitor
 
 The `ExpressionVisitor` base class can be used to visit the nodes of a JSON expression. An `ExpressionVisitor<T>` variant exists that can be used to convert a JSON expression to another object model.
 
 > **Note:** Visitors are used by other parts of Nuqleon to traverse a JSON expression.
 
-## `Nuqleon.Json.Serialization.JsonSerializer`
+## Nuqleon.Json.Serialization.JsonSerializer
 
 This namespace provides rudimentary support to JSON serialization and deserialization for .NET objects, including support for:
 

@@ -1,8 +1,8 @@
-# `Nuqleon.DataModel.Serialization.Json`
+# Nuqleon.DataModel.Serialization.Json
 
 JSON serialization for Nuqleon data model entity values.
 
-## `DataSerializer`
+## DataSerializer
 
 To serialize objects that are data model compliant (see `DataType.Check`), one can use the `DataSerializer` in this library. For historical reasons including earlier support for a BSON format in addition to JSON support, the `DataSerializer` is an abstract base class with various factory methods on it. Alternatively, the `JsonDataSerializer` class can be used directly.
 

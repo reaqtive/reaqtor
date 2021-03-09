@@ -1,4 +1,4 @@
-# `PartitionedSubject`
+# PartitionedSubject
 
 Prototype of partitioned subjects which were implemented in the Nuqleon query engine.
 

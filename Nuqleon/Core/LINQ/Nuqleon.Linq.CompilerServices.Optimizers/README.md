@@ -1,8 +1,8 @@
-# `Nuqleon.Linq.CompilerServices.Optimizers`
+# Nuqleon.Linq.CompilerServices.Optimizers
 
 Provides optimizers for LINQ query expressions.
 
-## `QueryTree`
+## QueryTree
 
 A central type in this library is `QueryTree` which represents a node in a query expression. It differentiates between known query operators (for which optimizations can be applied) versus opaque nodes representing other operators. For example, a node whose `QueryNodeType` is set to `QueryNodeType.Operator` represents a known query operator. Such a node will have a `QueryOperator` derived type which further has a `OperatorType` to differentiate between different known query operators such as `Where`, `Select`, `First`, `Take`, etc.
 
@@ -19,7 +19,13 @@ In order to use `QueryTree` expressions, one performs a conversion from an expre
 For example:
 
 ```csharp
-IQueryable<int> query = new int[] { 1, 2, 3 }.AsQueryable().Where(x => x % 2 == 0).Where(x => x < 10).Select(x => x * x).Select(y => y + 1).Take(2).Take(1);
+IQueryable<int> query = new int[] { 1, 2, 3 }.AsQueryable()
+                                             .Where(x => x % 2 == 0)
+                                             .Where(x => x < 10)
+                                             .Select(x => x * x)
+                                             .Select(y => y + 1)
+                                             .Take(2)
+                                             .Take(1);
 Expression expr = query.Expression;
 QueryTree queryTree = new QueryableToQueryTreeConverter().Convert(expr);
 ```

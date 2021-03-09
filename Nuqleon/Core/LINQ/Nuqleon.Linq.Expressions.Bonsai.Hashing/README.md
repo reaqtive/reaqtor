@@ -1,8 +1,8 @@
-# `Nuqleon.Linq.Expressions.Bonsai.Hashing`
+# Nuqleon.Linq.Expressions.Bonsai.Hashing
 
 Provides support to hash Bonsai expressions.
 
-## `ExpressionSlimHasher`
+## ExpressionSlimHasher
 
 To obtain a hash code for a Bonsai expression of type `ExpressionSlim`, the `ExpressionSlimHasher` class can be used. Hashes can be used to quickly check if two given expressions may be equal, or to get some signature for a given expression. Advanced scenarios can inherit from `ExpressionSlimHasher` to control some behaviors, as discussed later.
 

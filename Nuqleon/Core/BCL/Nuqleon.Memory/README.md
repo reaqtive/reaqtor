@@ -1,8 +1,8 @@
-# `Nuqleon.Memory`
+# Nuqleon.Memory
 
 Provides object pools, function memoization, and caching utilities.
 
-## `Tuplet<...>`
+## Tuplet<...>
 
 A value-type implementation of `System.Tuple<...>` with support for `IStructuralEquatable` and `IStructuralComparable`. The types are immutable.
 
@@ -15,7 +15,7 @@ Console.WriteLine(t.Item3);
 
 > **Note:** These types predate the introduction of `System.ValueType<...>` in .NET, which can provide a useful alternative.
 
-## `WeakReferenceExtensions`
+## WeakReferenceExtensions
 
 Provides a set of methods to work with `WeakReference<T>` objects. For example, supports creating `WeakReference<T>` objects that contain a `null` reference, and adds a `GetOrSetTarget` method uses a function to get or set the target in a way similar to `Lazy<T>`.
 
@@ -31,7 +31,7 @@ Console.WriteLine(s2);
 
 ## Object Pools
 
-### `ObjectPoolBase<T>`
+### ObjectPoolBase<T>
 
 Provides a base class for object pools. It provides two symmetric methods:
 
@@ -42,7 +42,7 @@ To make freeing objects easier, it also provides a `New` method which returns a 
 
 When objects get returned to a pool, and they implement an `IClearable` interface, a call to `Clear` is made to restore the object to a state for future reuse.
 
-### `ObjectPool<T>`
+### ObjectPool<T>
 
 Provides an implementation of an object pool using a `Func<T>` factory method to construct new instances of pooled objects. A pool also has a size of the number of objects to keep in the pool.
 
@@ -59,7 +59,7 @@ using (PooledObject<MyObject> obj2 = pool.New())
 }
 ```
 
-### `PooledXYZ` types
+### PooledXYZ types
 
 Specialized object pool implementations are provided for various .NET types:
 

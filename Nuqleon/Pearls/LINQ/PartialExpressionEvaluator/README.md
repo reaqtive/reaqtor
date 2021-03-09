@@ -1,4 +1,4 @@
-# `PartialExpressionEvaluator`
+# PartialExpressionEvaluator
 
 Early implementation of a partial evaluator of expression trees.
 

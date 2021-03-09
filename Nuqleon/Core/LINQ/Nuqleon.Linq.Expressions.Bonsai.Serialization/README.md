@@ -1,4 +1,4 @@
-# `Nuqleon.Linq.Expressions.Bonsai.Serialization`
+# Nuqleon.Linq.Expressions.Bonsai.Serialization
 
 Provides serialization of Bonsai expressions in JSON and binary form.
 
@@ -90,7 +90,10 @@ These are passed to the constructor and provide a place to plug in serializers f
 The constructor is shown below:
 
 ```csharp
-public ExpressionSlimBonsaiSerializer(Func<Type, Func<object, object>> liftFactory, Func<Type, Func<object, object>> reduceFactory, Version version)
+public ExpressionSlimBonsaiSerializer(
+    Func<Type, Func<object, object>> liftFactory, 
+    Func<Type, Func<object, object>> reduceFactory, 
+    Version version)
 ```
 
 Use the `Versioning.Default` value for the version of Bonsai to use (currently `0.9`). The lift and and reduce factories are higher-order functions that deal with the `ConstantExpression.Value` or `ConstantExpressionSlim.Value` to convert to/from the .NET object. If only primitve types are used, one can create an instance of `ObjectSerializer` and use its lift/reduce support:

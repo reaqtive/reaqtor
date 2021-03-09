@@ -1,4 +1,4 @@
-# `Nuqleon.Runtime.ExceptionServices.Extensions`
+# Nuqleon.Runtime.ExceptionServices.Extensions
 
 Provides support for exception filters and fault handlers.
 

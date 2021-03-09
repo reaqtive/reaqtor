@@ -1,4 +1,4 @@
-# `Reaqtive.Scheduler`
+# Reaqtive.Scheduler
 
 Provides a scheduler used to run reactive event processing queries with notions of time and support for pause and resume.
 
@@ -14,7 +14,7 @@ Logical schedulers can be thought of as managing groups of tasks that can be pau
 
 An implementation of `IScheduler` provided by this library is `LogicalScheduler`. It's layered on top of a *physical scheduler* implementation that provides a statically sized thread pool. The type implementing the physical scheduler is apropriately named as `PhysicalScheduler`.
 
-## `PhysicalScheduler`
+## PhysicalScheduler
 
 Physical schedulers own a set of threads on which scheduled tasks will get run. It is common for a host process to have a single instance of a `PhysicalScheduler`, with multiple `LogicalScheduler` instances on top of it. For example, when a single host process runs multiple query engine replicas that can fail over independently (e.g. due to failure of another node in the cluster, more replicas may be moved over, or due to rebalancing, replicas may be moved out), each of these would have its own `LogicalScheduler` that deposits work into the single shared `PhysicalScheduler`.
 

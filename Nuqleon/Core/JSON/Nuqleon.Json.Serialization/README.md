@@ -1,14 +1,14 @@
-# `Nuqleon.Json.Serialization`
+# Nuqleon.Json.Serialization
 
 Provides fast JSON serialization for objects using runtime code compilation for specialized parsers and printers.
 
 > **Note:** The functionality in this assembly has been used to provide high throughput serialization and deserialization using JSON, for objects of a given static type. It allows for efficient skipping of tokens that are irrevelant to the object being deserialized, beating performance of `Newtonsoft.Json` hands down. Alternatives with `System.Text.Json` have not been explored; this assembly predates the inclusion of JSON support in .NET by several years.
 
-## `FastJsonSerializerFactory`
+## FastJsonSerializerFactory
 
 The `FastJsonSerializerFactory` class acts as a factory for strongly-typed serializers and deserializers using the `CreateSerializer<T>` and `CreateDeserializer<T>` methods. Internally, these methods craft a specialized emitter (to produce JSON text) and a specialized parser (to read JSON text) guided by the shape of the specified type `T`. This runtime code generation is backed by `System.Linq.Expressions` expression trees and `System.Reflection.Emit`.
 
-### `CreateSerializer<T>`
+### CreateSerializer<T>
 
 The `CreateSerializer<T>` method is used to create a serializer for objects of the specified type `T`; its signature looks like:
 
@@ -30,7 +30,7 @@ string json = serializer.Serialize(new Person { Name = "Bart", Age = 21 });
 
 Another overload of `Serialize` accepts a `System.IO.TextWriter` to write into.
 
-### `CreateDeserializer<T>`
+### CreateDeserializer<T>
 
 The `CreateDeserializer<T>` method is analoous to the `CreateSerializer<T>` method; its signature looks like:
 

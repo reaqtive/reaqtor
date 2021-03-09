@@ -1,4 +1,4 @@
-# `Reaqtive.Interfaces`
+# Reaqtive.Interfaces
 
 Provides the essential interfaces used for in-memory reactive event processing.
 

@@ -1,10 +1,10 @@
-# `Nuqleon.StringSegment`
+# Nuqleon.StringSegment
 
 Provides a type providing a view into a `System.String` to avoid allocations when performing string operations, e.g. `Substring`.
 
 > **Note:** This type predates the introduction of `Span<T>` APIs in .NET, which may provide a valid alternative.
 
-## `StringSegment`
+## StringSegment
 
 A `StringSegment` is similar to an `ArraySegment<char>`. It provides a view over a `System.String` given an offset and a length. All accesses are bounds checked and get forwarded to the underlying string using the specified offset.
 

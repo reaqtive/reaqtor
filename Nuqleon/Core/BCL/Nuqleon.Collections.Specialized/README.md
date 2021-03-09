@@ -1,4 +1,4 @@
-# `Nuqleon.Collections.Specialized`
+# Nuqleon.Collections.Specialized
 
 Provides specialized collection types.
 

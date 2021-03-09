@@ -1,4 +1,4 @@
-# `Nuqleon.Reflection.Virtualization`
+# Nuqleon.Reflection.Virtualization
 
 Provides interfaces for the .NET reflection APIs, enabling the construction of wrappers, alternative implementations, mocks, etc. One example of a wrapper over reflection is a memoizing cache to speed up expensive reflection operations.
 

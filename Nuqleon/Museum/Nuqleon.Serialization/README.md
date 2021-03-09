@@ -1,4 +1,4 @@
-# `Nuqleon.Serialization`
+# Nuqleon.Serialization
 
 A legacy rule-driven serialization library.
 
