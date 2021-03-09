@@ -48,7 +48,7 @@ In here, we're creating a single-dimensional array of type `Foo`, defined in som
 
 > **Note:** An `AssemblySlim` is really a string representation of some "container" for types. While it borrows its nomenclature from .NET, this string has often been used to refer to virtual libraries. Upon serialization and deserialization, the name of a "slim assembly" can be bound to a concrete thing. In the case of .NET, this may be an assembly on disk, while for other languages it may correspond to importing a module. Note that Bonsai enables reduction of the amount of reflection information carried, so it's also possible to omit an assembly altogether (assuming the receiver of a Bonsai tree can perform some type of binding at runtime).
 
-## Conversions with `System.Linq.Expressions`
+## Conversions with System.Linq.Expressions
 
 While factories can be used to construct all constituents of a tree, this is often quite clunky in .NET. Moreover, one is often dealing with a traditional `System.Linq.Expressions.Expression` object and wants to leverage the capabilities of Bonsai trees, either to perform tree rewrites with a different approach to typing (or looser rules around type checking), or to prepare for serialization of an expression tree.
 

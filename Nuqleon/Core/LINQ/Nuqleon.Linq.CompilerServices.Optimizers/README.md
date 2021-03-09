@@ -19,7 +19,13 @@ In order to use `QueryTree` expressions, one performs a conversion from an expre
 For example:
 
 ```csharp
-IQueryable<int> query = new int[] { 1, 2, 3 }.AsQueryable().Where(x => x % 2 == 0).Where(x => x < 10).Select(x => x * x).Select(y => y + 1).Take(2).Take(1);
+IQueryable<int> query = new int[] { 1, 2, 3 }.AsQueryable()
+                                             .Where(x => x % 2 == 0)
+                                             .Where(x => x < 10)
+                                             .Select(x => x * x)
+                                             .Select(y => y + 1)
+                                             .Take(2)
+                                             .Take(1);
 Expression expr = query.Expression;
 QueryTree queryTree = new QueryableToQueryTreeConverter().Convert(expr);
 ```
