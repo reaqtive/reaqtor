@@ -24,12 +24,14 @@ namespace Reaqtor.Shebang.Service
     {
         private readonly IQueryEngineStateStore _store;
         private readonly IReadOnlyDictionary<string, object> _context;
+        private readonly IReadOnlyDictionary<string, object> _environmentServices;
 
-        public SimplerCheckpointingQueryEngine(Uri uri, IScheduler scheduler, IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context, TraceSource traceSource = null)
+        public SimplerCheckpointingQueryEngine(Uri uri, IScheduler scheduler, IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null, IIngressEgressManager ingressEgressManager = null, TraceSource traceSource = null)
              : base(uri, new NopReactiveServiceResolver(), scheduler, new EmptyReactiveMetadata(), store, SerializationPolicy.Default, new DefaultQuotedTypeConversionTargets(), traceSource)
         {
             _store = store;
             _context = context ?? new Dictionary<string, object>();
+            _environmentServices = new Dictionary<string, object> { { "IngressEgressManager", ingressEgressManager } };
         }
 
         public ClientContext Client => new(new LocalReactiveServiceProvider(ServiceProvider));
@@ -38,6 +40,13 @@ namespace Reaqtor.Shebang.Service
 
         public Task RecoverAsync(CancellationToken token = default) => RecoverAsync(_store.GetReader(), token, progress: null);
 
-        protected override IHostedOperatorContext CreateOperatorContext(Uri instanceId) => new CustomOperatorContext(base.CreateOperatorContext(instanceId), _context);
+        protected override IHostedOperatorContext CreateOperatorContext(Uri instanceId) =>
+            new CustomOperatorContext(
+                new CustomOperatorContext(
+                    base.CreateOperatorContext(instanceId),
+                    _context
+                ),
+                _environmentServices
+            );
     }
 }
