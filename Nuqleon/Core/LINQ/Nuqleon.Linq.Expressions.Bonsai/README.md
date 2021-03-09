@@ -80,7 +80,7 @@ Bonsai JSON -> ExpressionSlim -> Expression
 
 where additional rewrites can take place in any of the "domains" by leveraging expression visitors.
 
-# Visitors
+## Visitors
 
 Types in this library are inherently recursive and support visitors:
 
