@@ -34,7 +34,6 @@ namespace Reaqtor.IoT
     public sealed class EgressObserver<T> : StatefulObserver<T>
     {
         private readonly string _name;
-        private IngressEgressManager _iemgr;
         private IReliableObserver<T> _observer;
         private long _sequenceId;
 
@@ -49,7 +48,7 @@ namespace Reaqtor.IoT
                 throw new InvalidOperationException("Ingress/egress manager not found");
             }
 
-            _iemgr = iemgr;
+            _observer = iemgr.GetObserver<T>(_name);
         }
 
         public override string Name => "iot:Egress";
@@ -71,7 +70,6 @@ namespace Reaqtor.IoT
         {
             base.OnStart();
 
-            _observer = _iemgr.GetObserver<T>(_name);
             _observer.OnStarted();
         }
 

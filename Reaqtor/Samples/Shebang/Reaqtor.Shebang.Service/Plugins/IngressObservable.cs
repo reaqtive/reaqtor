@@ -27,7 +27,6 @@ namespace Reaqtor.Shebang.Extensions
 
         private sealed class Subscription : ContextSwitchOperator<IngressObservable<T>, T>, IReliableObserver<T>, IUnloadableOperator
         {
-            private IIngressEgressManager _iemgr;
             private IReliableSubscription _subscription;
             private long _sequenceId;
             private long _watermark;
@@ -53,14 +52,12 @@ namespace Reaqtor.Shebang.Extensions
                     throw new InvalidOperationException("Ingress/egress manager not found");
                 }
 
-                _iemgr = iemgr;
+                _subscription = iemgr.GetObservable<T>(Params._name).Subscribe(this);
             }
 
             protected override void OnStart()
             {
                 base.OnStart();
-
-                _subscription = _iemgr.GetObservable<T>(Params._name).Subscribe(this);
 
                 if (_sequenceId > long.MinValue)
                 {
