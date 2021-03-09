@@ -23,13 +23,13 @@ namespace Reaqtor.Shebang.Service
 
         internal static PhysicalScheduler Scheduler => s_scheduler ??= PhysicalScheduler.Create();
 
-        public static async Task<SimplerCheckpointingQueryEngine> CreateNewAsync(IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null, TraceSource traceSource = null)
+        public static async Task<SimplerCheckpointingQueryEngine> CreateNewAsync(IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null, IIngressEgressManager ingressEgressManager = null, TraceSource traceSource = null)
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope. (Engine takes ownership.)
             var sch = new LogicalScheduler(Scheduler);
 #pragma warning restore CA2000
 
-            var engine = new SimplerCheckpointingQueryEngine(new Uri("reaqtor://engine/" + Guid.NewGuid().ToString("D")), sch, store, context, traceSource);
+            var engine = new SimplerCheckpointingQueryEngine(new Uri("reaqtor://engine/" + Guid.NewGuid().ToString("D")), sch, store, context, ingressEgressManager, traceSource);
 
             var ctx = engine.Client;
 
@@ -38,18 +38,21 @@ namespace Reaqtor.Shebang.Service
             await ctx.DefineObserverAsync(new Uri("reaqtor://shebang/observers/cout"), ctx.Provider.CreateQbserver<T>(Expression.New(typeof(ConsoleObserver<T>))), null, CancellationToken.None).ConfigureAwait(false);
             await ctx.DefineObservableAsync<TimeSpan, DateTimeOffset>(new Uri("reaqtor://shebang/observables/timer"), t => new TimerObservable(t).AsAsyncQbservable(), null, CancellationToken.None).ConfigureAwait(false);
 
+            await ctx.DefineObserverAsync<string, T>(new Uri("reaqtor://shebang/observers/egress"), stream => new EgressObserver<T>(stream).AsAsyncQbserver(), null, CancellationToken.None).ConfigureAwait(false);
+            await ctx.DefineObservableAsync<string, T>(new Uri("reaqtor://shebang/observables/ingress"), stream => new IngressObservable<T>(stream).AsAsyncQbservable(), null, CancellationToken.None).ConfigureAwait(false);
+
             await engine.CheckpointAsync().ConfigureAwait(false);
 
             return engine;
         }
 
-        public static async Task<SimplerCheckpointingQueryEngine> RecoverAsync(IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null, TraceSource traceSource = null)
+        public static async Task<SimplerCheckpointingQueryEngine> RecoverAsync(IQueryEngineStateStore store, IReadOnlyDictionary<string, object> context = null, IIngressEgressManager ingressEgressManager = null, TraceSource traceSource = null)
         {
 #pragma warning disable CA2000 // Dispose objects before losing scope. (Engine takes ownership.)
             var sch = new LogicalScheduler(Scheduler);
 #pragma warning restore CA2000
 
-            var engine = new SimplerCheckpointingQueryEngine(new Uri("reaqtor://engine/" + Guid.NewGuid().ToString("D")), sch, store, context, traceSource);
+            var engine = new SimplerCheckpointingQueryEngine(new Uri("reaqtor://engine/" + Guid.NewGuid().ToString("D")), sch, store, context, ingressEgressManager, traceSource);
 
             await engine.RecoverAsync().ConfigureAwait(false);
 

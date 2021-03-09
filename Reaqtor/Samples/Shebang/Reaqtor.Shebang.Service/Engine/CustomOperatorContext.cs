@@ -44,8 +44,7 @@ namespace Reaqtor.Shebang.Service
                 return true;
             }
 
-            value = default;
-            return false;
+            return _parent.TryGetElement<T>(id, out value);
         }
     }
 }

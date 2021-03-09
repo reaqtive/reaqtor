@@ -37,7 +37,7 @@ namespace Reaqtor.Shebang.Extensions
             {
             }
 
-            public override string Name => "iot:Timer";
+            public override string Name => "sb:Timer";
 
             public override Version Version => new(1, 0, 0, 0);
 

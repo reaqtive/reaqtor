@@ -43,6 +43,12 @@ namespace Reaqtor.Shebang.Client
         [KnownResource("reaqtor://shebang/observables/timer")]
         public IAsyncReactiveQbservable<DateTimeOffset> Timer(TimeSpan period) => GetObservable<TimeSpan, DateTimeOffset>(new Uri("reaqtor://shebang/observables/timer"))(period);
 
+        [KnownResource("reaqtor://shebang/observables/ingress")]
+        public IAsyncReactiveQbservable<T> GetIngress<T>(string name) => GetObservable<string, T>(new Uri("reaqtor://shebang/observables/ingress"))(name);
+
+        [KnownResource("reaqtor://shebang/observers/egress")]
+        public IAsyncReactiveQbserver<T> GetEgress<T>(string name) => GetObserver<string, T>(new Uri("reaqtor://shebang/observers/egress"))(name);
+
         [KnownResource("reaqtor://shebang/observers/cout")]
         public IAsyncReactiveQbserver<string> ConsoleOut => GetObserver<string>(new Uri("reaqtor://shebang/observers/cout"));
 
