@@ -1,4 +1,4 @@
-# `Reaqtive.Linq`
+# Reaqtive.Linq
 
 Provides an implementation of the Rx query operators with support for state persistence.
 

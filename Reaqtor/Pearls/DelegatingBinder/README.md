@@ -1,4 +1,4 @@
-# `DelegatingBinder`
+# DelegatingBinder
 
 Prototype of delegation support to push down query operations into subjects within query engines.
 

@@ -1,8 +1,8 @@
-# `Nuqleon.Linq.Expressions.Optimizers`
+# Nuqleon.Linq.Expressions.Optimizers
 
 Provides optimizers for expression trees.
 
-## `ExpressionOptimizer`
+## ExpressionOptimizer
 
 The `ExpressionOptimizer` class is an expression tree visitor that rewrites an expression tree by performing various types of optimizations that can be configured by the user. To create an optimizer instance, the constructor accepts two parameters:
 

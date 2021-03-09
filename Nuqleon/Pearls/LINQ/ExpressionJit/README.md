@@ -1,4 +1,4 @@
-# `ExpressionJit`
+# ExpressionJit
 
 A just-in-time compiler for expression trees.
 

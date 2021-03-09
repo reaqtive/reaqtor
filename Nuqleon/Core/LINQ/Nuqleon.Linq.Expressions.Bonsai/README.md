@@ -1,4 +1,4 @@
-# `Nuqleon.Linq.Expressions.Bonsai`
+# Nuqleon.Linq.Expressions.Bonsai
 
 Provides a lightweight object model for expression trees with a lightweight representation of reflection.
 
@@ -17,7 +17,7 @@ For the second design goal, the resulting `ExpressionSlim`, `TypeSlim`, etc. obj
 
 > **Note:** The name Bonsai reflects on the compact nature of these trees. In fact, the specification allows for omission of reflection information, resulting in weakly typed or dynamically typed trees. These are useful in environments such as JavaScript. Typed execution environments can perform type inference after binding leaf nodes in such trees.
 
-## `ExpressionSlim`, `ObjectSlim`, `TypeSlim`, etc.
+## ExpressionSlim, ObjectSlim, TypeSlim, etc.
 
 The key types in this library are suffixes with `Slim` and are completely analogous to their corresponding non-`Slim` variants. In particular:
 

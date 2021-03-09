@@ -1,4 +1,4 @@
-# `BinaryExpressionSerialization`
+# BinaryExpressionSerialization
 
 Binary expression tree serialization for expression trees and Bonsai trees.
 

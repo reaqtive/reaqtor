@@ -1,4 +1,4 @@
-# `Nuqleon.DataModel`
+# Nuqleon.DataModel
 
 Provides a minimal set of types to declare Nuqleon data model compliant entity types.
 
@@ -96,7 +96,7 @@ Similarly, when deserializing a Bonsai tree followed by conversion from `Express
 
 To summarize, the serialiation and deserialization of expressions involving data model types is a two-step process. The first step is to convert between `Expression` and `ExpressionSlim` where support for structural typing is introduced. The next step is to convert to and from the Bonsai format. The conversions between `Expression` and `ExpressionSlim` involve detection of data model entity types to perform conversions between `Type` and `TypeSlim`.
 
-## `MappingAttribute`
+## MappingAttribute
 
 The `Nuqleon.DataModel` library has very few types, the most important of which is `MappingAttribute`. This custom attribute can be applied to fields, properties, and (constructor) parameters to perform a mapping from .NET field, property, or parameter names to an underlying name. These names are then used when referring to the properties in the `ExpressionSlim` and `TypeSlim` space. For example:
 
@@ -151,7 +151,7 @@ This is required to make expression tree rewrites that involve `new` expressions
 
 > **Note:** The `MappingAttribute`'s parameter is of type `string` but its corresponding property name is `Uri`. Nothing in the Nuqleon Data Model stack requires the string to represent a valid URI. However, many uses of mapping attributes have historically used ontologies such as schema.org to pick names for properties. This, too, is a remnant of the use of the Data Model for a graph and document database.
 
-## `KnownTypeAttribute`
+## KnownTypeAttribute
 
 The `KnownTypeAttribute` is used to annotate a type as "known", which means it isn't subject of expression tree rewrites during *anonymization* or *recordizaton* steps. As a result, uses of the type are treated as references to the nominal type rather than requiring a rewrite to the structurally equivalent representation. This allows for types to flow as-is through layers of expression tree shipping and is especially useful in deployment scenarios.
 
@@ -188,6 +188,6 @@ class WeatherObservable : ISubscribable<Weather>
 
 Types marked with `KnownType` are left untouched by expression rewrites.
 
-## `Unit`
+## Unit
 
 The `Unit` type is a .NET projection to conveniently represent an empty object akin to `{}` in JSON. All instances of `Unit` compare equal.

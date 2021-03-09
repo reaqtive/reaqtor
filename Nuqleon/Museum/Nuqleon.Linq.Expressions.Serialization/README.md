@@ -1,4 +1,4 @@
-# `Nuqleon.Linq.Expressions.Serialization`
+# Nuqleon.Linq.Expressions.Serialization
 
 A legacy rule-driven serialization library for expression trees.
 

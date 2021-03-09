@@ -1,4 +1,4 @@
-# `OperatorFusion`
+# OperatorFusion
 
 Prototype of reactive operator fusion.
 

@@ -1,4 +1,4 @@
-# `Nuqleon.Linq.Expressions.Bonsai.Serialization`
+# Nuqleon.Linq.Expressions.Bonsai.Serialization
 
 Provides serialization of Bonsai expressions in JSON and binary form.
 

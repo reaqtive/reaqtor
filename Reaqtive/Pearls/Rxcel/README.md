@@ -1,4 +1,4 @@
-# `Rxcel`
+# Rxcel
 
 An Rx-based implementation of a miniature Excel to demonstrate the concept of "reactive graphs".
 

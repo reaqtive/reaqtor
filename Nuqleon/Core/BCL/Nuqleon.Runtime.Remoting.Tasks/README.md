@@ -1,10 +1,10 @@
-# `Nuqleon.Runtime.Remoting.Tasks`
+# Nuqleon.Runtime.Remoting.Tasks
 
 Provides `Task<T>`-based async support for .NET Remoting including support for cancellation.
 
 > **Note:** .NET Remoting is considered a legacy technology. However, Nuqleon has a so-called "remoting stack" that's been used extensively for testing. This assembly provides base functionality to implement this "remoting stack".
 
-## `RemoteServiceBase`
+## RemoteServiceBase
 
 `RemoteServiceBase` provides a base class for .NET Remoting services (i.e. a `MarshalByRefObject`) that support async methods. It contains a single `Invoke` method for use by derived types. An example of a simple service is shown below:
 
@@ -28,7 +28,7 @@ Publicly exposed methods use a signature of the form `IDisposable Operation(/*ar
 
 The `Invoke` method converts a `Task<T>`-based async method with `CancellationToken` support to this calling convention.
 
-## `RemoteProxyBase`
+## RemoteProxyBase
 
 `RemoteProxyBase` provides a base class for .NET Remoting clients ("proxies") for corresponding `RemoteServiceBase`-derived serivces. It contains a single `Invoke` method for use by derived type. An example of a proxy for the service shown earlier:
 

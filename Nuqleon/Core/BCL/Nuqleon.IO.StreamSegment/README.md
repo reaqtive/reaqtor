@@ -1,10 +1,10 @@
-# `Nuqleon.IO.StreamSegment`
+# Nuqleon.IO.StreamSegment
 
 Provides a type providing a view into a `System.IO.Stream`.
 
 > **Note:** This type predates the introduction of `Span<T>` APIs in .NET, which may provide a valid alternative.
 
-## `StreamSegment`
+## StreamSegment
 
 A `StreamSegment` is similar to an `ArraySegment<T>`. It provides a view over a `System.IO.Stream` given an offset and a length. All accesses are bounds checked and get forwarded to the underlying stream using the specified offset.
 

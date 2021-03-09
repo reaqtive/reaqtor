@@ -1,4 +1,4 @@
-# `ProjectJohnnie`
+# ProjectJohnnie
 
 Memory diagnostics and optimizations for managed heaps at runtime.
 

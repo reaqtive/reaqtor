@@ -1,8 +1,8 @@
-# `Nuqleon.DataModel.Serialization.Binary`
+# Nuqleon.DataModel.Serialization.Binary
 
 Binary serialization for Nuqleon data model entity values.
 
-## `DataTypeBinarySerializer`
+## DataTypeBinarySerializer
 
 To serialize objects that are data model compliant (see `DataType.Check`), one can use the `DataTypeBinarySerializer` in this library. It provides an alternative to JSON serialization which can be more efficient both in terms of space and performance. Under the hood, this serializer generates efficient specialized serialization and deserialization code for data model types at runtime, using expression tree compilation.
 

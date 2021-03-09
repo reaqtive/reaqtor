@@ -1,4 +1,4 @@
-# `OperatorLocalStorage`
+# OperatorLocalStorage
 
 Fine-grained state management for query operators running in a checkpointing query engine.
 

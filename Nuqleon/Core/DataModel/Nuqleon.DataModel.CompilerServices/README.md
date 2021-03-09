@@ -1,4 +1,4 @@
-# `Nuqleon.DataModel.CompilerServices`
+# Nuqleon.DataModel.CompilerServices
 
 A set of utilities used to work with Nuqleon data model entity types.
 
@@ -178,7 +178,7 @@ That is, the elements in arrays are compared in a pairwise fashion, and properti
 
 > **Note:** This type of comparer is especially useful when implementing query operators that rely on value-based equality of data model compliant types. For example, an operator such as `DistinctUntilChanged` relies on correct value-based equality semantics. Note though that runtime-generated record types do have equality semantics built in through an `IEquatabl<T>` implementation, so the use of a specialized `IEqualityComparer<T>` is not always needed for such types. (Subtlety can arise when dealing with arrays or lists where equality is based on reference equality of the collections rather than a comparison of the elements.)
 
-## `KnownTypeBase<T>`
+## KnownTypeBase<T>
 
 The `KnownTypeBase<T>` base class implements `IEquatable<T>` in terms of `DataTypeEqualityComparer<T>` and can be used as the base class for `[KnownType]`-annotated data types in order to ensure that values have value-based equality. For example, when implementing a `WeatherObservable` as an `ISubscribable<Weather>`, it'd make sense to define `Weather` as follows:
 

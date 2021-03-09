@@ -1,4 +1,4 @@
-# `Reaqtive.Core`
+# Reaqtive.Core
 
 Provides a set of base classes and utilities used for in-memory reactive event processing.
 
