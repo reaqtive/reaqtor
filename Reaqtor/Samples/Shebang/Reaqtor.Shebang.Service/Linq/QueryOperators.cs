@@ -368,9 +368,6 @@ namespace Reaqtor.Shebang.Linq
             await ctx.UndefineObservableAsync(new Uri("rx://observable/window/count/skip"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/window/duration/count"), token).ConfigureAwait(false);
         }
-
-        private static Task DefineObservableAsync<TResult>(this ReactiveClientContextBase ctx, Uri uri, Expression<Func<IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default)
-            => ctx.DefineObservableAsync(uri, ctx.Provider.CreateQbservable<TResult>(observable.Body), state, token);
     }
 
     [TypeWildcard] internal sealed class TSource { }

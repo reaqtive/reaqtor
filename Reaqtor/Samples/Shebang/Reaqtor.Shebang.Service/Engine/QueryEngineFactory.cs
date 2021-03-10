@@ -10,6 +10,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+using Reaqtive;
 using Reaqtive.Scheduler;
 
 using Reaqtor.Shebang.Extensions;
@@ -40,6 +41,11 @@ namespace Reaqtor.Shebang.Service
 
             await ctx.DefineObserverAsync<string, T>(new Uri("reaqtor://shebang/observers/egress"), stream => new EgressObserver<T>(stream).AsAsyncQbserver(), null, CancellationToken.None).ConfigureAwait(false);
             await ctx.DefineObservableAsync<string, T>(new Uri("reaqtor://shebang/observables/ingress"), stream => new IngressObservable<T>(stream).AsAsyncQbservable(), null, CancellationToken.None).ConfigureAwait(false);
+
+            await ctx.DefineObservableAsync<IAsyncReactiveQbservable<object>, T>(new Uri("rx://observable/oftype"), source => source.Where(o => o is T).Select(o => (T)o), null, CancellationToken.None).ConfigureAwait(false);
+            await ctx.DefineObservableAsync<IAsyncReactiveQbservable<object>, T>(new Uri("rx://observable/cast"), source => source.Select(o => (T)o), null, CancellationToken.None).ConfigureAwait(false);
+
+            await ctx.DefineObserverAsync<T>(new Uri("reaqtor://shebang/observers/nop"), () => NopObserver<T>.Instance.AsAsyncQbserver(), null, CancellationToken.None).ConfigureAwait(false);
 
             await engine.CheckpointAsync().ConfigureAwait(false);
 
