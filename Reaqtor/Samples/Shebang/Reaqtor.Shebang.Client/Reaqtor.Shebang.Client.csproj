@@ -10,6 +10,10 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="ClientContext.Generated.tt">
+      <LastGenOutput>ClientContext.Generated.cs</LastGenOutput>
+      <Generator>TextTemplatingFileGenerator</Generator>
+    </None>
     <None Update="QueryOperators.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>QueryOperators.cs</LastGenOutput>
@@ -21,6 +25,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Update="ClientContext.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>ClientContext.Generated.tt</DependentUpon>
+    </Compile>
     <Compile Update="QueryOperators.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
