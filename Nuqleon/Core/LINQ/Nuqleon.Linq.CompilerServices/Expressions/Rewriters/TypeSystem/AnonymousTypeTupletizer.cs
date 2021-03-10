@@ -425,10 +425,15 @@ namespace System.Linq.CompilerServices
                     {
                         res = rewrite(originalValue, ConvertConstant);
                     }
+                    else
+                    {
+                        throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Cannot convert constant of type '{0}'.", t));
+                    }
                 }
 
                 return res;
             }
         }
     }
+
 }

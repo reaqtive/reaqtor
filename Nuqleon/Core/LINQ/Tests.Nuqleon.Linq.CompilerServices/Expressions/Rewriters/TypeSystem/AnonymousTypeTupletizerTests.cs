@@ -552,6 +552,66 @@ namespace Tests.System.Linq.CompilerServices
         }
 
         [TestMethod]
+        public void AnonymousTypeTupletizer_Constant_NotSupported()
+        {
+            var e = (NewExpression)((Expression<Func<object>>)(() => new { a = 42, b = new[] { new { c = 42 } } })).Body;
+
+            var arg0 = e.Arguments[0];
+            var arg1 = e.Arguments[1];
+
+            var a = e.Update(new Expression[] { arg0, Expression.Constant(arg1.Evaluate<object>(), arg1.Type) });
+
+            Assert.ThrowsException<InvalidOperationException>(() => _ = AnonymousTypeTupletizer.Tupletize(a, Expression.Constant(value: null)));
+        }
+
+        [TestMethod]
+        public void AnonymousTypeTupletizer_ManOrBoy()
+        {
+            var expr = (from x in Enumerable.Empty<object>().AsQueryable()
+                        group x by x into g
+                        let a = g.OfType<bool>()
+                        let b = g.OfType<string>()
+                        let z = Enumerable.Zip(a, b, (x, y) => new { x, y })
+                        from t in z
+                        select t.x ? t.y : "null")
+                       .Expression;
+
+            var res = AnonymousTypeTupletizer.Tupletize(expr, Expression.Constant(value: null));
+
+            var csharp = CompilerGeneratedNameEliminator.Prettify(res).ToCSharpString();
+
+            Assert.AreEqual(
+                StripWhitespace(@"
+                    __c0.GroupBy<object, object>((object x) => x)
+                        .Select<IGrouping<object, object>, Tuple<IGrouping<object, object>, IEnumerable<bool>>>(
+                            (IGrouping<object, object> g) =>
+                                new Tuple<IGrouping<object, object>, IEnumerable<bool>>(
+                                    g,
+                                    g.OfType<bool>()))
+                        .Select<Tuple<IGrouping<object, object>, IEnumerable<bool>>, Tuple<Tuple<IGrouping<object, object>, IEnumerable<bool>>, IEnumerable<string>>>(
+                            (Tuple<IGrouping<object, object>, IEnumerable<bool>> t) =>
+                                new Tuple<Tuple<IGrouping<object, object>, IEnumerable<bool>>, IEnumerable<string>>(
+                                    t,
+                                    t.Item1.OfType<string>()))
+                        .Select<Tuple<Tuple<IGrouping<object, object>, IEnumerable<bool>>, IEnumerable<string>>, Tuple<Tuple<Tuple<IGrouping<object, object>, IEnumerable<bool>>, IEnumerable<string>>, IEnumerable<Tuple<bool, string>>>>(
+                            (Tuple<Tuple<IGrouping<object, object>, IEnumerable<bool>>, IEnumerable<string>> t) =>
+                                new Tuple<Tuple<Tuple<IGrouping<object, object>, IEnumerable<bool>>, IEnumerable<string>>, IEnumerable<Tuple<bool, string>>>(
+                                    t,
+                                    t.Item1.Item2.Zip<bool, string, Tuple<bool, string>>(
+                                        t.Item2,
+                                        (bool x, string y) => new Tuple<bool, string>(x, y))))
+                        .SelectMany<Tuple<Tuple<Tuple<IGrouping<object, object>, IEnumerable<bool>>, IEnumerable<string>>, IEnumerable<Tuple<bool, string>>>, Tuple<bool, string>, string>(
+                            (Tuple<Tuple<Tuple<IGrouping<object, object>, IEnumerable<bool>>, IEnumerable<string>>, IEnumerable<Tuple<bool, string>>> t) =>
+                                t.Item2,
+                            (Tuple<Tuple<Tuple<IGrouping<object, object>, IEnumerable<bool>>, IEnumerable<string>>, IEnumerable<Tuple<bool, string>>> t, Tuple<bool, string> t0) =>
+                                t0.Item1 ? t0.Item2 : ""null"")"),
+                StripWhitespace(csharp)
+            );
+
+            static string StripWhitespace(string s) => s.Replace(" ", "").Replace("\t", "").Replace("\r\n", "").Replace("\n", "");
+        }
+
+        [TestMethod]
         public void AnonymousTypeTupletizer_Adhoc1()
         {
             var f = Expression.Property(Expression.Constant(new { x = 42, y = "Hello", z = 12.34 }), "x");
