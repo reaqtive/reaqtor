@@ -1,4 +1,4 @@
-# Common Subexpression Elimination
+# CSE
 
 Illustrates the concept of common subexpression elimination (CSE) applied to reactive expressions.
 
