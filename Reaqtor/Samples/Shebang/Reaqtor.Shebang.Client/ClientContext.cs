@@ -54,6 +54,9 @@ namespace Reaqtor.Shebang.Client
         [KnownResource("reaqtor://shebang/observers/cout")]
         public IAsyncReactiveQbserver<string> ConsoleOut => GetObserver<string>(new Uri("reaqtor://shebang/observers/cout"));
 
+        [KnownResource("reaqtor://shebang/observers/nop")]
+        public IAsyncReactiveQbserver<T> Nop<T>() => GetObserver<T>(new Uri("reaqtor://shebang/observers/nop"));
+
         //
         // Details of expression services are quite deep, but the essence is that these provide a place to
         // normalize and rewrite expression trees composed through the IReactive* interfaces exposed via the

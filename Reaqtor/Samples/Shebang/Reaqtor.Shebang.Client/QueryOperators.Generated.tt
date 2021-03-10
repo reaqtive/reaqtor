@@ -21,7 +21,7 @@ using System.Reflection;
 
 namespace Reaqtor.Shebang.Linq
 {
-    public static class QueryOperators
+    public static partial class QueryOperators
     {
 <#
 var toCSharp = default(Func<Type, string>);

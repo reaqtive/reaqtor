@@ -238,6 +238,8 @@ foreach (var method in methods)
 
         if (parameters[0].ParameterType.IsArray)
         {
+            uri += "/N";
+
             // NB: Skipping for now; some complexity around the array conversion in the code-gen below.
             continue;
         }
