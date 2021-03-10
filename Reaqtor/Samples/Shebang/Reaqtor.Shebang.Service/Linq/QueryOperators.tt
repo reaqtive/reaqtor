@@ -4,9 +4,9 @@
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="$(SolutionDir)\Reaqtive\Core\Reaqtive.Interfaces\bin\$(Configuration)\net472\Reaqtive.Interfaces.dll" #>
-<#@ assembly name="$(SolutionDir)\Reaqtive\Core\Reaqtive.Core\bin\$(Configuration)\net472\Reaqtive.Core.dll" #>
-<#@ assembly name="$(SolutionDir)\Reaqtive\Core\Reaqtive.Linq\bin\$(Configuration)\net472\Reaqtive.Linq.dll" #>
+<#@ assembly name="$(ProjectDir)\..\..\..\..\Reaqtive\Core\Reaqtive.Interfaces\bin\$(Configuration)\net472\Reaqtive.Interfaces.dll" #>
+<#@ assembly name="$(ProjectDir)\..\..\..\..\Reaqtive\Core\Reaqtive.Core\bin\$(Configuration)\net472\Reaqtive.Core.dll" #>
+<#@ assembly name="$(ProjectDir)\..\..\..\..\Reaqtive\Core\Reaqtive.Linq\bin\$(Configuration)\net472\Reaqtive.Linq.dll" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Linq.Expressions" #>
@@ -17,6 +17,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.CompilerServices.TypeSystem;
+using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -125,7 +126,7 @@ var toQuotedShallow = new Func<Type, string>(t =>
     return name;
 });
 
-var methods = typeof(Reaqtive.Subscribable).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.IsDefined(typeof(ExtensionAttribute))).Where(m => m.Name != "ToSubscribable" && !(m.Name == "CombineLatest" && m.GetGenericArguments().Length > 8)).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length);
+var methods = typeof(Reaqtive.Subscribable).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.Name != "ToSubscribable" && !(m.Name == "CombineLatest" && m.GetGenericArguments().Length > 8)).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length);
 
 var uris = new HashSet<string>();
 
@@ -234,6 +235,12 @@ foreach (var method in methods)
         {
             uri += "/2";
         }
+
+        if (parameters[0].ParameterType.IsArray)
+        {
+            // NB: Skipping for now; some complexity around the array conversion in the code-gen below.
+            continue;
+        }
     }
 
     if (method.Name == "Retry")
@@ -273,6 +280,27 @@ foreach (var method in methods)
         if (parameters.Any(p => p.Name == "comparer"))
         {
             uri += "/comparer";
+        }
+    }
+
+    if (method.Name == "Timer")
+    {
+        if (parameters.Length == 1)
+        {
+            uri += "/single";
+        }
+        else
+        {
+            uri += "/period";
+        }
+
+        if (parameters[0].ParameterType == typeof(TimeSpan))
+        {
+            uri += "/relative";
+        }
+        else
+        {
+            uri += "/absolute";
         }
     }
 
@@ -328,6 +356,9 @@ foreach (var kv in all)
 }
 #>
         }
+
+        private static Task DefineObservableAsync<TResult>(this ReactiveClientContextBase ctx, Uri uri, Expression<Func<IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default)
+            => ctx.DefineObservableAsync(uri, ctx.Provider.CreateQbservable<TResult>(observable.Body), state, token);
     }
 
 <#

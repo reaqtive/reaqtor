@@ -4,9 +4,9 @@
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="$(SolutionDir)\Reaqtive\Core\Reaqtive.Interfaces\bin\$(Configuration)\net472\Reaqtive.Interfaces.dll" #>
-<#@ assembly name="$(SolutionDir)\Reaqtive\Core\Reaqtive.Core\bin\$(Configuration)\net472\Reaqtive.Core.dll" #>
-<#@ assembly name="$(SolutionDir)\Reaqtive\Core\Reaqtive.Linq\bin\$(Configuration)\net472\Reaqtive.Linq.dll" #>
+<#@ assembly name="$(ProjectDir)\..\..\..\..\Reaqtive\Core\Reaqtive.Interfaces\bin\$(Configuration)\net472\Reaqtive.Interfaces.dll" #>
+<#@ assembly name="$(ProjectDir)\..\..\..\..\Reaqtive\Core\Reaqtive.Core\bin\$(Configuration)\net472\Reaqtive.Core.dll" #>
+<#@ assembly name="$(ProjectDir)\..\..\..\..\Reaqtive\Core\Reaqtive.Linq\bin\$(Configuration)\net472\Reaqtive.Linq.dll" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Linq.Expressions" #>
