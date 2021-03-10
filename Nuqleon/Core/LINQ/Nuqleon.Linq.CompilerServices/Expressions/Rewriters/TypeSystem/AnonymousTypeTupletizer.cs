@@ -10,6 +10,7 @@
 
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -133,6 +134,10 @@ namespace System.Linq.CompilerServices
 
         private sealed class TypeTupletizer : TypeVisitor
         {
+            private static ConstructorInfo s_invalidOperationExceptionCtor;
+
+            private static ConstructorInfo InvalidOperationExceptionCtor => s_invalidOperationExceptionCtor ??= typeof(InvalidOperationException).GetConstructor(new[] { typeof(string) });
+
             private readonly Expression _unit;
 
             public TypeTupletizer(IEnumerable<Type> subst, Expression unit)
@@ -261,6 +266,8 @@ namespace System.Linq.CompilerServices
                             }
                         }
 
+                        var ctorPars = ctor.GetParameters();
+
                         for (var j = 0; j < originalProps.Count; j++)
                         {
                             var prop = originalProps[j];
@@ -276,6 +283,18 @@ namespace System.Linq.CompilerServices
                             if (TypeMap.ContainsKey(prop.PropertyType))
                             {
                                 member = Expression.Convert(Expression.Invoke(convr, member), item.PropertyType);
+                            }
+                            else
+                            {
+                                var ctorParameterType = ctorPars[j].ParameterType;
+                                var argType = member.Type;
+
+                                if (!ctorParameterType.IsAssignableFrom(argType))
+                                {
+                                    var cantConvertMsg = string.Format(CultureInfo.InvariantCulture, "Can't convert constant of type '{0}' to '{1}'.", argType, ctorParameterType);
+                                    var cantConvertException = Expression.New(InvalidOperationExceptionCtor, Expression.Constant(cantConvertMsg));
+                                    member = Expression.Throw(cantConvertException, ctorParameterType);
+                                }
                             }
 
                             constArgs[j] = member;
