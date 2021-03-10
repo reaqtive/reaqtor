@@ -141,7 +141,8 @@ namespace Reaqtor
 
             protected override Expression MakeMethodCall(Expression instance, MethodInfo method, IEnumerable<Expression> arguments)
             {
-                var shouldRewrite = arguments.Last().Type == typeof(CancellationToken);
+                var lastArgument = arguments.LastOrDefault();
+                var shouldRewrite = lastArgument != null && lastArgument.Type == typeof(CancellationToken);
                 if (shouldRewrite)
                 {
                     var decl = method.DeclaringType;
