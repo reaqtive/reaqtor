@@ -11,6 +11,7 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 using Reaqtor.QueryEngine;
 
@@ -35,7 +36,11 @@ namespace Reaqtor.Shebang.Service
 
     public sealed class InMemoryKeyValueStore : IQueryEngineStateStore
     {
-        private readonly Dictionary<string, Dictionary<string, byte[]>> _data = new();
+        private readonly Dictionary<string, Dictionary<string, byte[]>> _data;
+
+        public InMemoryKeyValueStore() => _data = new();
+
+        private InMemoryKeyValueStore(Dictionary<string, Dictionary<string, byte[]>> data) => _data = data;
 
         public IKeyValueStoreTransaction CreateTransaction() => new Transaction(this);
 
@@ -44,6 +49,48 @@ namespace Reaqtor.Shebang.Service
         public IStateReader GetReader() => new Reader(this);
 
         public IStateWriter GetWriter() => new Writer(this);
+
+        public void Save(string fileName)
+        {
+            var doc =
+                new XDocument(
+                    new XElement("Tables",
+                        _data.Select(table =>
+                            new XElement("Table",
+                                new XAttribute("Name", table.Key),
+                                table.Value.Select(row =>
+                                    new XElement("Row",
+                                        new XAttribute("Key", row.Key),
+                                        new XCData(Convert.ToBase64String(row.Value))
+                                    )
+                                )
+                            )
+                        )
+                    )
+                );
+
+            doc.Save(fileName);
+        }
+
+        public static InMemoryKeyValueStore Load(string fileName)
+        {
+            var doc = XDocument.Load(fileName);
+
+            var data =
+                doc.Element("Tables").Elements("Table").Select(table =>
+                    new KeyValuePair<string, Dictionary<string, byte[]>>(
+                        table.Attribute("Name").Value,
+                        table.Elements("Row").Select(row =>
+                            new KeyValuePair<string, byte[]>(
+                                row.Attribute("Key").Value,
+                                Convert.FromBase64String(row.Value)
+                            )
+                        ).ToDictionary(kv => kv.Key, kv => kv.Value)
+                    )
+                ).ToDictionary(kv => kv.Key, kv => kv.Value);
+
+            return new InMemoryKeyValueStore(data);
+        }
 
         public string DebugView
         {
