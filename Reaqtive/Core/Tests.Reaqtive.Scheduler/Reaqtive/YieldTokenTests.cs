@@ -2,14 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Threading;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtive.Scheduler;
-
-using Test.Reaqtive.Scheduler.Tasks;
 
 namespace Test.Reaqtive.Scheduler
 {
@@ -76,7 +71,7 @@ namespace Test.Reaqtive.Scheduler
 
         private sealed class MyYieldTokenSource : IYieldTokenSource
         {
-            public YieldToken Token => new YieldToken(this);
+            public YieldToken Token => new(this);
 
             public bool IsYieldRequested { get; set; }
         }

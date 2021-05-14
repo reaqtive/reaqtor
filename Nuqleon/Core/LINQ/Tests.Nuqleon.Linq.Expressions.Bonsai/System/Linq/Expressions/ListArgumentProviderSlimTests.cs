@@ -16,8 +16,6 @@ using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-using Tests.System.Linq.Expressions.Bonsai;
-
 namespace Tests.System.Linq.Expressions
 {
     [TestClass]

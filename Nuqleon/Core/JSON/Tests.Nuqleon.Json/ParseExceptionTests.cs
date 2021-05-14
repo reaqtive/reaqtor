@@ -8,6 +8,8 @@
 // BD - May 2014 - Created this file.
 //
 
+#if !NET5_0 // https://aka.ms/binaryformatter
+
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 
@@ -20,7 +22,6 @@ namespace Tests.Nuqleon.Json
     [TestClass]
     public class ParseExceptionTests
     {
-#if !NET5_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void ParseException_Serialization()
         {
@@ -38,6 +39,7 @@ namespace Tests.Nuqleon.Json
             Assert.AreEqual(er.Error, ex.Error);
             Assert.AreEqual(er.Message, ex.Message);
         }
-#endif
     }
 }
+
+#endif

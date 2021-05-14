@@ -20,7 +20,7 @@ using RuntimeLib;
 
 namespace OperatorFusion
 {
-    static class Compiler
+    internal static class Compiler
     {
         public static Type Compile(Type inputElementType, params IFusionOperator[] chain)
         {
@@ -220,7 +220,7 @@ namespace OperatorFusion
             return ivt;
         }
 
-        static IEnumerable<IFusionOperator> Optimize(IFusionOperator[] chain)
+        private static IEnumerable<IFusionOperator> Optimize(IFusionOperator[] chain)
         {
             // TODO: these optimizations can be moved to the expression space above the plan
 

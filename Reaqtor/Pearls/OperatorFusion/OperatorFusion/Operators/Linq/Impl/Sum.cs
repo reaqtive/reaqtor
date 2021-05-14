@@ -16,14 +16,9 @@ namespace OperatorFusion
 {
     internal sealed class SumFactory : IFusionOperator
     {
-        private readonly Type _resultType;
+        public SumFactory(Type resultType) => OutputType = resultType;
 
-        public SumFactory(Type resultType)
-        {
-            _resultType = resultType;
-        }
-
-        public Type OutputType => _resultType;
+        public Type OutputType { get; }
 
         public HoistOperations Hoist => HoistOperations.OnError;
 
@@ -31,11 +26,11 @@ namespace OperatorFusion
 
         public void Initialize(ParameterExpression state, Func<Type, FieldInfo> defineField, Action<Expression> appendToCtor, Expression result, Expression disposable)
         {
-            sumFld = defineField(_resultType);
+            sumFld = defineField(OutputType);
             var sum = Expression.Field(state, sumFld);
 
             appendToCtor(
-                Expression.Assign(sum, Expression.Default(_resultType))
+                Expression.Assign(sum, Expression.Default(OutputType))
             );
         }
 

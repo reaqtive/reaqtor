@@ -74,7 +74,7 @@ namespace Reaqtor.Remoting.QueryEvaluator
         }
 
         protected virtual Dictionary<string, object> OperatorContextElements =>
-            new Dictionary<string, object>
+            new()
             {
                 { Platform.Constants.ContextKey.Name, s_qeId },
                 { MessageRouter.ContextHandle, new MessageRouter() },

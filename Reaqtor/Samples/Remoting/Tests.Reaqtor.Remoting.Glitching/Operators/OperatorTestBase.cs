@@ -18,7 +18,6 @@ using Reaqtor;
 using Reaqtor.Remoting.Protocol;
 using Reaqtor.Remoting.TestingFramework;
 
-using Tests.Reaqtor.Remoting.Glitching;
 using Tests.Reaqtor.Remoting.Glitching.Versioning;
 
 namespace Test.Reaqtive.Operators

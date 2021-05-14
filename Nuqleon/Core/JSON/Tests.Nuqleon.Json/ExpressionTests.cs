@@ -58,6 +58,8 @@ namespace Tests
             Assert.ThrowsException<ArgumentNullException>(() => Json.Expression.Array(e, e, e, e, e, n));
         }
 
+#pragma warning disable IDE0100 // Remove redundant equality (clarity for Boolean asserts)
+
         [TestMethod]
         public void Expression_Constant_Null()
         {
@@ -507,5 +509,7 @@ namespace Tests
 
             Assert.AreEqual(s1, s2);
         }
+
+#pragma warning restore IDE0100 // Remove redundant equality
     }
 }

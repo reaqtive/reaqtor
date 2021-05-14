@@ -19,9 +19,9 @@ using System.Reactive.Subjects;
 
 namespace OperatorFusion
 {
-    class Program
+    public static class Program
     {
-        static void Main()
+        public static void Main()
         {
             New();
 
@@ -29,7 +29,7 @@ namespace OperatorFusion
             Tests();
         }
 
-        static void New()
+        private static void New()
         {
             var res = QueryLanguage
                 .Source<int>("xs")
@@ -61,7 +61,7 @@ namespace OperatorFusion
             d.Dispose();
         }
 
-        static void Tests()
+        private static void Tests()
         {
             Where();
             WhereIndexed();
@@ -85,7 +85,7 @@ namespace OperatorFusion
             Last_Empty();
         }
 
-        static void Where()
+        private static void Where()
         {
             var wf = new WhereFactory
             {
@@ -128,7 +128,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void WhereIndexed()
+        private static void WhereIndexed()
         {
             var wf = new WhereIndexedFactory
             {
@@ -171,7 +171,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void Select()
+        private static void Select()
         {
             var sf = new SelectFactory
             {
@@ -211,7 +211,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void SelectIndexed()
+        private static void SelectIndexed()
         {
             var sf = new SelectIndexedFactory
             {
@@ -251,7 +251,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void Take()
+        private static void Take()
         {
             var tf = new TakeFactory
             {
@@ -293,7 +293,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void DistinctUntilChanged()
+        private static void DistinctUntilChanged()
         {
             var df = new DistinctUntilChangedFactory
             {
@@ -337,7 +337,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void Count()
+        private static void Count()
         {
             var cf = new CountFactory();
 
@@ -374,7 +374,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void LongCount()
+        private static void LongCount()
         {
             var cf = new LongCountFactory();
 
@@ -411,7 +411,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void SumInt32()
+        private static void SumInt32()
         {
             var sf = new SumFactory(typeof(int));
 
@@ -448,7 +448,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void First()
+        private static void First()
         {
             var af = new FirstFactory
             {
@@ -488,7 +488,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void First_Empty()
+        private static void First_Empty()
         {
             var af = new FirstFactory
             {
@@ -524,7 +524,7 @@ namespace OperatorFusion
             Assert(!fin);
         }
 
-        static void Last()
+        private static void Last()
         {
             var lf = new LastFactory
             {
@@ -564,7 +564,7 @@ namespace OperatorFusion
             Assert(fin);
         }
 
-        static void Last_Empty()
+        private static void Last_Empty()
         {
             var lf = new LastFactory
             {
@@ -600,13 +600,13 @@ namespace OperatorFusion
             Assert(!fin);
         }
 
-        static void Assert(bool b, string s = "")
+        private static void Assert(bool b, string s = "")
         {
             if (!b)
                 throw new InvalidOperationException(s);
         }
 
-        static void Old()
+        private static void Old()
         {
             // TODO: implement a few operators in terms of others and see fusion emit the same code
             //       e.g. xs.Last() == xs.Aggreggate((a, x) => x)
@@ -703,7 +703,7 @@ namespace OperatorFusion
             Test(ivt);
         }
 
-        static void Test(Type ivt)
+        private static void Test(Type ivt)
         {
             var time1 = default(TimeSpan);
             var size1 = default(long);

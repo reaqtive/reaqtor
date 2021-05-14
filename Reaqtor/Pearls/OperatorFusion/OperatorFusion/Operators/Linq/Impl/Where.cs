@@ -34,11 +34,7 @@ namespace OperatorFusion
             CompileDebugText();
         }
 
-        private static string DebugText
-        {
-            get
-            {
-                return @"
+        private static string DebugText => @"
 class Where<T>
 {
     public void OnNext(T value)
@@ -74,8 +70,6 @@ class Where<T>
     }
 }
 ";
-            }
-        }
 
         private void CompileDebugText()
         {

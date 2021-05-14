@@ -9,9 +9,7 @@
 //
 
 using System;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Threading;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

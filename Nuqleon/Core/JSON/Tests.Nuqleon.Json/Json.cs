@@ -20,6 +20,8 @@ namespace Tests
     [TestClass]
     public class JsonTests
     {
+#pragma warning disable IDE0100 // Remove redundant equality (clarity for Boolean asserts)
+
         [TestMethod]
         public void Constant_Null()
         {
@@ -147,5 +149,7 @@ namespace Tests
             Assert.IsTrue((string)((Json.ConstantExpression)obj.Members["Age"]).Value == "21");
             Assert.IsTrue((bool)((Json.ConstantExpression)obj.Members["Weird \"Property\" \t\r\n"]).Value == true);
         }
+
+#pragma warning restore IDE0100 // Remove redundant equality
     }
 }

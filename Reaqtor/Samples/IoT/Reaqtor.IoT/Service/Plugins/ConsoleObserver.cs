@@ -4,6 +4,7 @@
 
 using System;
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
 
 namespace Reaqtor.IoT

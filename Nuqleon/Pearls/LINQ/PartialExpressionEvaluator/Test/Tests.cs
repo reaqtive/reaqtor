@@ -62,6 +62,7 @@ namespace Test
                     E(() => "foo".ToUpper()),
                     Expression.Constant("FOO")
                 },
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable IDE0057 // Substring can be simplified. (https://github.com/dotnet/roslyn/issues/49347)
                 {
                     E(() => "bar".Substring(1)),
@@ -72,6 +73,7 @@ namespace Test
                     Expression.Constant("oba")
                 },
 #pragma warning restore IDE0057
+#pragma warning restore IDE0079
                 {
                     E(() => new TimeSpan(123L).Ticks),
                     Expression.Constant(123L)
@@ -174,6 +176,7 @@ namespace Test
                     E(() => "bar".ToUpper().ToLower()),
                     E(() => "bar".ToUpper().ToLower())
                 },
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable IDE0057 // Substring can be simplified. (https://github.com/dotnet/roslyn/issues/49347)
                 {
                     E(() => "foobar".Substring("foo".Length)),
@@ -188,6 +191,7 @@ namespace Test
                     E(() => "foobar".Substring("foo".Length, 2))
                 },
 #pragma warning restore IDE0057
+#pragma warning restore IDE0079
                 {
                     E(() => new TimeSpan(Value(1) * Value(2), Value(2) + Value(3), "bar".Length)),
                     E(() => new TimeSpan(2, 5, "bar".Length))

@@ -15,6 +15,7 @@ using System.Diagnostics;
 using Reaqtive.Scheduler;
 using Reaqtive.Storage;
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CA1051 // Do not declare visible instance fields. (We're okay with protected readonly fields here.)
 
 namespace Reaqtive.Operators

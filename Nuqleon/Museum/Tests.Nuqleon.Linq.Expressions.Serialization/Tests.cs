@@ -1331,8 +1331,8 @@ namespace Tests
         {
             public static bool operator true(Logi _) => true;
             public static bool operator false(Logi _) => true;
-            public static Logi operator &(Logi _1, Logi _2) => new Logi();
-            public static Logi operator |(Logi _1, Logi _2) => new Logi();
+            public static Logi operator &(Logi _1, Logi _2) => new();
+            public static Logi operator |(Logi _1, Logi _2) => new();
         }
 
         [TestMethod]

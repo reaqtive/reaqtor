@@ -8,8 +8,6 @@
 // ER - October 2013 - Created this file.
 //
 
-using Reaqtor.Remoting.Protocol;
-
 namespace Reaqtor.Remoting.Platform
 {
     public interface IReactiveQueryCoordinator : IReactiveService

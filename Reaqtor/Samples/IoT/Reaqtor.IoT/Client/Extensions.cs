@@ -6,8 +6,6 @@ using System;
 
 using Reaqtive;
 
-using Reaqtor;
-
 namespace Reaqtor.IoT
 {
     //

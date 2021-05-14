@@ -23,7 +23,7 @@ namespace Reaqtor.QueryEngine
     {
         private readonly IReactiveEntityCollection<TKey, TValue> _collection;
         private readonly ConcurrentDictionary<TValue, TKey> _invertedCollection;
-        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _lock = new();
         private bool _disposed;
 
         public InvertedLookupReactiveEntityCollection(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)

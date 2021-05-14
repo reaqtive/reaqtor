@@ -43,7 +43,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <remarks>
         /// This property provides a statically typed accessor over the underlying raw object model provided by IReactiveMetadata.
         /// </remarks>
-        public new AzureQueryableDictionary<IReactiveSubscriptionProcess, ReactiveSubscriptionTableEntity> Subscriptions => new AzureQueryableDictionary<IReactiveSubscriptionProcess, ReactiveSubscriptionTableEntity>(_queryProvider, base.Subscriptions);
+        public new AzureQueryableDictionary<IReactiveSubscriptionProcess, ReactiveSubscriptionTableEntity> Subscriptions => new(_queryProvider, base.Subscriptions);
 
         /// <summary>
         /// Gets a queryable dictionary of the observables that have been created in the service.
@@ -51,7 +51,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <remarks>
         /// This property provides a statically typed accessor over the underlying raw object model provided by IReactiveMetadata.
         /// </remarks>
-        public new AzureQueryableDictionary<IReactiveObservableDefinition, ReactiveObservableTableEntity> Observables => new AzureQueryableDictionary<IReactiveObservableDefinition, ReactiveObservableTableEntity>(_queryProvider, base.Observables);
+        public new AzureQueryableDictionary<IReactiveObservableDefinition, ReactiveObservableTableEntity> Observables => new(_queryProvider, base.Observables);
 
         /// <summary>
         /// Gets a queryable dictionary of the observers that have been created in the service.
@@ -59,7 +59,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <remarks>
         /// This property provides a statically typed accessor over the underlying raw object model provided by IReactiveMetadata.
         /// </remarks>
-        public new AzureQueryableDictionary<IReactiveObserverDefinition, ReactiveObserverTableEntity> Observers => new AzureQueryableDictionary<IReactiveObserverDefinition, ReactiveObserverTableEntity>(_queryProvider, base.Observers);
+        public new AzureQueryableDictionary<IReactiveObserverDefinition, ReactiveObserverTableEntity> Observers => new(_queryProvider, base.Observers);
 
         /// <summary>
         /// Gets a queryable dictionary of the stream factories that have been created in the service.
@@ -67,7 +67,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <remarks>
         /// This property provides a statically typed accessor over the underlying raw object model provided by IReactiveMetadata.
         /// </remarks>
-        public new AzureQueryableDictionary<IReactiveStreamFactoryDefinition, ReactiveStreamFactoryTableEntity> StreamFactories => new AzureQueryableDictionary<IReactiveStreamFactoryDefinition, ReactiveStreamFactoryTableEntity>(_queryProvider, base.StreamFactories);
+        public new AzureQueryableDictionary<IReactiveStreamFactoryDefinition, ReactiveStreamFactoryTableEntity> StreamFactories => new(_queryProvider, base.StreamFactories);
 
         /// <summary>
         /// Gets a queryable dictionary of the subscription factories that have been created in the service.
@@ -75,7 +75,7 @@ namespace Reaqtor.Remoting.Metadata
         /// <remarks>
         /// This property provides a statically typed accessor over the underlying raw object model provided by IReactiveMetadata.
         /// </remarks>
-        public new AzureQueryableDictionary<IReactiveSubscriptionFactoryDefinition, ReactiveSubscriptionFactoryTableEntity> SubscriptionFactories => new AzureQueryableDictionary<IReactiveSubscriptionFactoryDefinition, ReactiveSubscriptionFactoryTableEntity>(_queryProvider, base.SubscriptionFactories);
+        public new AzureQueryableDictionary<IReactiveSubscriptionFactoryDefinition, ReactiveSubscriptionFactoryTableEntity> SubscriptionFactories => new(_queryProvider, base.SubscriptionFactories);
 
         /// <summary>
         /// Gets a queryable dictionary of the streams that have been created in the service.
@@ -83,6 +83,6 @@ namespace Reaqtor.Remoting.Metadata
         /// <remarks>
         /// This property provides a statically typed accessor over the underlying raw object model provided by IReactiveMetadata.
         /// </remarks>
-        public new AzureQueryableDictionary<IReactiveStreamProcess, ReactiveStreamTableEntity> Streams => new AzureQueryableDictionary<IReactiveStreamProcess, ReactiveStreamTableEntity>(_queryProvider, base.Streams);
+        public new AzureQueryableDictionary<IReactiveStreamProcess, ReactiveStreamTableEntity> Streams => new(_queryProvider, base.Streams);
     }
 }

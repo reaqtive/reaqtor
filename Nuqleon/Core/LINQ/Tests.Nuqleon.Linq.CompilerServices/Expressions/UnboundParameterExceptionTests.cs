@@ -9,11 +9,14 @@
 //
 
 using System;
-using System.IO;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
+
+#if !NET5_0 // https://aka.ms/binaryformatter
+using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
+#endif
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

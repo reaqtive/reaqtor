@@ -82,7 +82,7 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
         public static implicit operator T(Holder<T> obj) => obj.obj;
 
-        public static implicit operator Holder<T>(T obj) => new Holder<T> { obj = obj };
+        public static implicit operator Holder<T>(T obj) => new() { obj = obj };
     }
 
     internal struct RefCounted<T> : IEquatable<RefCounted<T>>

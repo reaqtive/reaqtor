@@ -111,7 +111,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void InMemoryKeyValueStore_AllOperations_MultipleTransaction_SaveAndLoad() => InMemoryKeyValueStore_AllOperations_MultipleTransaction_Core(true);
 
-        private void InMemoryKeyValueStore_AllOperations_MultipleTransaction_Core(bool saveAndLoad)
+        private static void InMemoryKeyValueStore_AllOperations_MultipleTransaction_Core(bool saveAndLoad)
         {
             var kvs = new InMemoryKeyValueStore();
 

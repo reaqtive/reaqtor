@@ -1149,7 +1149,9 @@ namespace Tests.System.Reflection.Virtualization
 
 #pragma warning disable IDE0044 // Add readonly modifier
 #pragma warning disable IDE0051 // Remove unused private members
+#pragma warning disable IDE0052 // Remove unread private members
 #pragma warning disable CS0414 // Assigned but never used
+#pragma warning disable CA1822 // Mark members as static
         private sealed class C
         {
             private readonly int m_x = 42;
@@ -1193,7 +1195,9 @@ namespace Tests.System.Reflection.Virtualization
 
             public int Value { get; }
         }
+#pragma warning restore CA1822
 #pragma warning restore CS0414
+#pragma warning restore IDE0052
 #pragma warning restore IDE0051
 #pragma warning restore IDE0044
     }

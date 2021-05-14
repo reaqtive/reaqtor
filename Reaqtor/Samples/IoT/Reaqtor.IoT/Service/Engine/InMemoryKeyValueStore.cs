@@ -517,6 +517,7 @@ namespace Reaqtor.IoT
         }
     }
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CA1032 // Implement standard exception constructors. (Only constructed internally.)
     [Serializable]
     public sealed class TableNotFoundException : Exception
@@ -574,4 +575,5 @@ namespace Reaqtor.IoT
         }
     }
 #pragma warning restore CA1032
+#pragma warning restore IDE0079
 }

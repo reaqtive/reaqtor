@@ -207,9 +207,11 @@ namespace Engine
                 }
             }
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable IDE0057 // Substring can be simplified. (Suppressing here for simplicify with multi-targeting.)
             public IEnumerable<string> GetCategories() => _reader.GetCategories().Where(c => c.StartsWith(_prefix, StringComparison.Ordinal) && c.Length > _prefix.Length).Select(c => c.Substring(_prefix.Length));
 #pragma warning restore IDE0057
+#pragma warning restore IDE0079
 
             public bool TryGetItemKeys(string category, out IEnumerable<string> keys) => _reader.TryGetItemKeys(_prefix + category, out keys);
 

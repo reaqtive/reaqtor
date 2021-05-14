@@ -4,8 +4,6 @@
 
 using System.Linq.Expressions;
 
-using Reaqtive;
-
 using Reaqtor.Reliable.Client;
 
 namespace Reaqtor.Reliable.Expressions

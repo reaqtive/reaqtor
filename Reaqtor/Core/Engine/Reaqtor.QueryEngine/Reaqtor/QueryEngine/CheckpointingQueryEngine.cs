@@ -42,9 +42,11 @@ namespace Reaqtor.QueryEngine
         private readonly ReadOnlyMetadataServiceContext _operatorContextReactiveService;
         private readonly ExecutionEnvironment _executionEnvironment;
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CA2213 // Disposable fields should be disposed. (Async dispose takes care of it.)
         private readonly OperationTracker _tracker = new();
 #pragma warning restore CA2213
+#pragma warning restore IDE0079
         private bool _disposed;
 
         #region Constructors

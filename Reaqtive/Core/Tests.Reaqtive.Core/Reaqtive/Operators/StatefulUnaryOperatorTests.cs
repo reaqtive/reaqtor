@@ -182,7 +182,7 @@ namespace Test.Reaqtive
 
             public override string Name => "foo";
 
-            public override Version Version => new Version(1, 0, 0, 0);
+            public override Version Version => new(1, 0, 0, 0);
 
             public bool Done;
 

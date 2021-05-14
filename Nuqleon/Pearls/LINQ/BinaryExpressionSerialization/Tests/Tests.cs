@@ -307,10 +307,12 @@ namespace Tests
 
                 ((Expression<Func<string, string>>)(s => s.ToUpper())).Body,
 
+#pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable IDE0057 // Substring can be simplified. (https://github.com/dotnet/roslyn/issues/49347)
                 ((Expression<Func<string, string>>)(s => s.Substring(1))).Body,
                 ((Expression<Func<string, string>>)(s => s.Substring(1, 2))).Body,
 #pragma warning restore IDE0057
+#pragma warning restore IDE0079
 
                 // TODO: generic methods
             });

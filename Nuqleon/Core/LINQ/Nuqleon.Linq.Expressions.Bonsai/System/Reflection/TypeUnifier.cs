@@ -50,7 +50,7 @@ namespace System.Reflection
         /// <summary>
         /// Set of types unified as a result of calling Unify.
         /// </summary>
-        public ReadOnlyDictionary<TypeSlim, Type> Entries => new ReadOnlyDictionary<TypeSlim, Type>(_entries);
+        public ReadOnlyDictionary<TypeSlim, Type> Entries => new(_entries);
 
         /// <summary>
         /// Attempts to unify a CLR type and a slim type.

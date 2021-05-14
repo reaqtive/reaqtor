@@ -63,7 +63,7 @@ namespace Reaqtor.Remoting.Client
         private sealed class InvocationTupletizer : ScopedExpressionVisitor<ParameterExpression>
         {
             /// <summary>
-            /// Visits the children of the <see cref="T:System.Linq.Expressions.InvocationExpression" />.
+            /// Visits the children of the <see cref="InvocationExpression" />.
             /// </summary>
             /// <param name="node">The expression to visit.</param>
             /// <returns>

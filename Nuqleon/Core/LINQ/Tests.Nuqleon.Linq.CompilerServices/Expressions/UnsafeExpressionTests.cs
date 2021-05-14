@@ -25,7 +25,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Runtime.CompilerServices;
 
 using CS = Microsoft.CSharp.RuntimeBinder;
-using LE = System.Linq.Expressions;
 #endif
 
 namespace Tests.System.Linq.CompilerServices

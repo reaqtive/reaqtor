@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 
-using Reaqtive;
 using Reaqtive.Testing;
 
 namespace Reaqtive.TestingFramework.Mocks

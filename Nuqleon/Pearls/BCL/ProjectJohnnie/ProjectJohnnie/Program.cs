@@ -9,21 +9,21 @@ using System.Memory.Diagnostics;
 
 namespace ProjectJohnnie
 {
-    class Program
+    public static class Program
     {
-        static void Main()
+        public static void Main()
         {
             DemoStats();
             DemoOptimizer();
             DemoAnalyzer();
         }
 
-        static void DemoStats()
+        private static void DemoStats()
         {
             Console.WriteLine(GetStats(new KeyValuePair<string, int>[2, 2] { { new KeyValuePair<string, int>("bar", 1), new KeyValuePair<string, int>("foo", 2) }, { new KeyValuePair<string, int>("baz", 3), new KeyValuePair<string, int>("qux", 4) } }));
         }
 
-        static void DemoAnalyzer()
+        private static void DemoAnalyzer()
         {
             Expression<Func<string, int>> f = s => (s + "foo").Length * 2 - 1;
             Expression<Func<string, int>> g = s => (s + "foo").Length * 2 - 1;
@@ -56,7 +56,7 @@ namespace ProjectJohnnie
         }
 
 #if FALSE
-        static HashSet<object> AnalyzeFast(object obj)
+        private static HashSet<object> AnalyzeFast(object obj)
         {
             var a = new FastHeapReferenceWalker();
 
@@ -68,7 +68,7 @@ namespace ProjectJohnnie
         }
 #endif
 
-        static void DemoOptimizer()
+        private static void DemoOptimizer()
         {
             var obj1 = new Quxie
             {
@@ -138,7 +138,7 @@ namespace ProjectJohnnie
             DemoOptimizer(obj6);
         }
 
-        static void DemoOptimizer(object obj)
+        private static void DemoOptimizer(object obj)
         {
             var opt = new MyHeapOptimizer();
 
@@ -149,7 +149,7 @@ namespace ProjectJohnnie
             Console.WriteLine(GetStats(obj));
         }
 
-        static HeapStats GetStats(object obj)
+        private static HeapStats GetStats(object obj)
         {
             var a = new HeapUsageAnalyzer();
 
@@ -161,7 +161,7 @@ namespace ProjectJohnnie
         }
     }
 
-    class Quxie
+    public class Quxie
     {
         public string bar;
         public string foo;
@@ -171,7 +171,7 @@ namespace ProjectJohnnie
         public string[,] dave;
     }
 
-    struct Bar
+    public struct Bar
     {
         public Bar(string foo)
         {

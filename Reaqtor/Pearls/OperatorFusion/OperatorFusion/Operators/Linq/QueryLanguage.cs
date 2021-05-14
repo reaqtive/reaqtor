@@ -14,7 +14,7 @@ using System.Linq.Expressions;
 
 namespace OperatorFusion
 {
-    static class QueryLanguage
+    internal static class QueryLanguage
     {
         public static Operator<T> Source<T>(string name)
         {

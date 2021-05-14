@@ -11,9 +11,9 @@ using System.Reflection;
 
 namespace Playground
 {
-    class Program
+    public static class Program
     {
-        static void Main()
+        public static void Main()
         {
             var ev = new MyEvaluator();
 
@@ -39,7 +39,7 @@ namespace Playground
         }
     }
 
-    class Bar
+    internal class Bar
     {
         public Bar()
         {
@@ -51,7 +51,7 @@ namespace Playground
         public int Baz { get; set; }
     }
 
-    class MyEvaluator : PartialExpressionEvaluatorBase
+    internal class MyEvaluator : PartialExpressionEvaluatorBase
     {
         private static readonly HashSet<Type> s_types = new()
         {
