@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <Description>Query evaluator host for the IRP remoting stack.</Description>
+    <Description>Query evaluator host for the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

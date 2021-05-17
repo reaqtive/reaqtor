@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>IRP query operator library.</Description>
+    <Description>Provides implementations of Rx-style query operators.</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472</TargetFrameworks>
-    <Description>Reactive operators with operator local storage support.</Description>
+    <Description>Reaqtive operators with operator local storage support.</Description>
 
     <!-- TODODOC -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>

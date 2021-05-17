@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>In-memory key/value store implementation for the IRP query engine.</Description>
+    <Description>In-memory key/value store implementation for the Reaqtor query engine.</Description>
     <!-- TODODOC -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>

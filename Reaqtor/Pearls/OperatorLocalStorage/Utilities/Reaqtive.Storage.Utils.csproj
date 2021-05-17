@@ -6,7 +6,7 @@
     <AssemblyName>Reaqtor.QueryEngine.OperatorLocalStorage.Utilities</AssemblyName>
     <RootNamespace>Reaqtor.QueryEngine</RootNamespace>
 
-    <Description>Utilities for operator local storage.</Description>
+    <Description>Utilities used to implement operator local storage.</Description>
 
     <!-- TODODOC -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>

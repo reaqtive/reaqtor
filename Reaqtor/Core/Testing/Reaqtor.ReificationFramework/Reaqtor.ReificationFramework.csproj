@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>Reified operations for the IRP query operator library.</Description>
+    <Description>Reified operations for the Reaqtor query operator library.</Description>
   </PropertyGroup>
 
   <ItemGroup>

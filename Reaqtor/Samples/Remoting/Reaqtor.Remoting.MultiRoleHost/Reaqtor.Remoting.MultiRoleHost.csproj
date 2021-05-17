@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <Description>Host for various services in the IRP remoting stack.</Description>
+    <Description>Host for various services in the Reaqtor remoting stack.</Description>
     <AnalysisMode>Default</AnalysisMode>
   </PropertyGroup>
 

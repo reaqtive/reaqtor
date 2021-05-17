@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>IRP interfaces for reliable reactive programming.</Description>
+    <Description>Provides base classes and utilities to support reliable event delivery using sequence numbers.</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- TODODOC -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>

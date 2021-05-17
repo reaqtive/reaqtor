@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Event messaging in the IRP remoting stack.</Description>
+    <Description>Event messaging in the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>
