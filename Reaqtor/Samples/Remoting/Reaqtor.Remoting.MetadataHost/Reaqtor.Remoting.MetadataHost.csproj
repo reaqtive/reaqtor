@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <Description>Host for metadata storage for the IRP remoting stack.</Description>
+    <Description>Host for metadata storage for the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

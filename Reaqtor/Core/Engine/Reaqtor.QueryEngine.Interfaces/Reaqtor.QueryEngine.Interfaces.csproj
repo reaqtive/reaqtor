@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>Interfaces for an IRP service query engine.</Description>
+    <Description>Interfaces describing a Reaqtor query engine.</Description>
   </PropertyGroup>
 
   <ItemGroup>

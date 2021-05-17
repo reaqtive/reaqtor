@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Testing framework for the IRP remoting stack.</Description>
+    <Description>Testing framework for the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

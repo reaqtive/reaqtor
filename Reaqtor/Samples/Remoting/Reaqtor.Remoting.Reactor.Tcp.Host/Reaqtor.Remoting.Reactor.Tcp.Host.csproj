@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <Description>Host for a IRP remoting stack platform with process isolation and TCP/IP communication.</Description>
+    <Description>Host for a Reaqtor remoting stack platform with process isolation and TCP/IP communication.</Description>
   </PropertyGroup>
 
   <ItemGroup>

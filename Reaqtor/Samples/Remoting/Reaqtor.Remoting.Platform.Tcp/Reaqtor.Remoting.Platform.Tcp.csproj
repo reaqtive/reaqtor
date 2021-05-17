@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Implementation of the IRP remoting stack platform with process isolation and TCP/IP communication.</Description>
+    <Description>Implementation of the Reaqtor remoting stack platform with process isolation and TCP/IP communication.</Description>
   </PropertyGroup>
 
   <ItemGroup>

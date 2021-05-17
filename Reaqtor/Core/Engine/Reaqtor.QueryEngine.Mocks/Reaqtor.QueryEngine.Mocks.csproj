@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>Mocks for extensibility points in the IRP query engine.</Description>
+    <Description>Mocks for extensibility points in the Reaqtor query engine.</Description>
     <!-- TODODOC -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>

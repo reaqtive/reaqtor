@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Query coordinator used in the IRP remoting stack.</Description>
+    <Description>Query coordinator used in the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

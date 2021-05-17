@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Metadata storage for the IRP remoting stack.</Description>
+    <Description>Metadata storage for the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <Description>Host for event messaging in the IRP remoting stack.</Description>
+    <Description>Host for event messaging in the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

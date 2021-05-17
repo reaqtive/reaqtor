@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Client library for the IRP remoting stack with some Reactor artifacts.</Description>
+    <Description>Client library for the Reaqtor remoting stack with some pre-defined artifacts.</Description>
     <AnalysisMode>Default</AnalysisMode>
   </PropertyGroup>
 

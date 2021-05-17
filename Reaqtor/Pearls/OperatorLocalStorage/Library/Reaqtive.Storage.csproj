@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472</TargetFrameworks>
-    <Description>Operator local storage core implementation.</Description>
+    <Description>Core implementation of operator local storage.</Description>
   </PropertyGroup>
 
   <ItemGroup>
