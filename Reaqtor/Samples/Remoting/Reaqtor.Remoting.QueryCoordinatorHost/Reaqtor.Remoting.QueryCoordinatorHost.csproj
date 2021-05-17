@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <Description>Query coordinator host used in the IRP remoting stack.</Description>
+    <Description>Query coordinator host used in the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <Description>Host for the stat estore used by the query engine in the IRP remoting stack.</Description>
+    <Description>Host for the state store used by the query engine in the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

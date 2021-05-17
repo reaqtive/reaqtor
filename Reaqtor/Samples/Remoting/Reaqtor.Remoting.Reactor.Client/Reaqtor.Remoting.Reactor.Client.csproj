@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <Description>Client host for the IRP remoting stack with some Reactor artifacts.</Description>
+    <Description>Client host for the Reaqtor remoting stack with some pre-defined artifacts.</Description>
   </PropertyGroup>
 
   <ItemGroup>

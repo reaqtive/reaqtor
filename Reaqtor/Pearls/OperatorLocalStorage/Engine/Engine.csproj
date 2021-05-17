@@ -6,7 +6,7 @@
     <AssemblyName>Reaqtor.QueryEngine.OperatorLocalStorage</AssemblyName>
     <RootNamespace>Reaqtor.QueryEngine</RootNamespace>
 
-    <Description>IRP service query engine with operator local storage.</Description>
+    <Description>Reaqtor query engine with suppotr for operator local storage.</Description>
 
     <!-- TODODOC -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>

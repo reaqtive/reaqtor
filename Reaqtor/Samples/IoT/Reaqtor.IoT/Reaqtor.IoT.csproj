@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFrameworks>net472;net50</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <Description>Stand-alone sample of Nuqleon in an IoT edge context.</Description>
+    <Description>Stand-alone sample of Reaqtor in an IoT edge context.</Description>
     <IsPackable>false</IsPackable>
     <AnalysisMode>Default</AnalysisMode>
   </PropertyGroup>

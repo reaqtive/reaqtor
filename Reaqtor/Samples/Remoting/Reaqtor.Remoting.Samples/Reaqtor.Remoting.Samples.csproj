@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Samples for the IRP remoting stack.</Description>
+    <Description>Samples for the Reaqtor remoting stack.</Description>
     <AnalysisMode>Default</AnalysisMode>
   </PropertyGroup>
 

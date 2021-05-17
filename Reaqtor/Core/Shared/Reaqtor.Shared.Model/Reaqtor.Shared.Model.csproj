@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>IRP interfaces shared between client and service.</Description>
+    <Description>Provides a common set of interfaces shared by reactive event processing services and clients.</Description>
   </PropertyGroup>
 
 </Project>

@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>IRP interfaces for quoted reactive artifacts.</Description>
+    <Description>Provides interfaces to represent quoted reactive artifacts.</Description>
   </PropertyGroup>
 
   <ItemGroup>

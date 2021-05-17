@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>IRP interfaces for reactive programming.</Description>
+    <Description>Provides interfaces for local evaluation of reactive computations.</Description>
   </PropertyGroup>
 
   <ItemGroup>
