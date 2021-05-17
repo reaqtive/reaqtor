@@ -13,6 +13,7 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageProjectUrl>https://github.com/reaqtive/reaqtor</PackageProjectUrl>
     <PackageOutputPath>$(MSBuildThisFileDirectory)artifacts</PackageOutputPath>
+    <PackageTags>Reaqtor;Reaqtive;Nuqleon;reactive;reactor</PackageTags>
 
     <Copyright>Copyright (c) .NET Foundation and Contributors.</Copyright>
     <Authors>.NET Foundation and Contributors</Authors>

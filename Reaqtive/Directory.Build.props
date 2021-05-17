@@ -1,0 +1,10 @@
+<Project>
+  <Import Project="../Directory.Build.props" />
+  <PropertyGroup>
+    <PackageIcon>images/reaqtive.png</PackageIcon>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="$(MSBuildThisFileDirectory)../Resources/NuGetPackageIcons/reaqtive.png" Pack="true" PackagePath="images/"/>
+  </ItemGroup>
+</Project>
