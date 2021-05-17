@@ -10,14 +10,6 @@ pr:
     - main
     - rel/*
 
-schedules:
-- cron: "0 * * * *"
-  displayName: Hourly test bug bash build
-  branches:
-    include:
-    - main
-  always: true
-
 variables:
   BuildPlatform: Any CPU
   DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
