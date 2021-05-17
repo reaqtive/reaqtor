@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Framework for reified operations in the IRP remoting stack.</Description>
+    <Description>Framework for reified operations in the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

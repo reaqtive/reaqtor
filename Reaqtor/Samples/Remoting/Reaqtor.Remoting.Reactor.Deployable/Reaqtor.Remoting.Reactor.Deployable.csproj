@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Deployable artifacts from Reactor for the IRP remoting stack.</Description>
+    <Description>Deployable artifacts for the Reaqtor remoting stack.</Description>
     <AnalysisMode>Default</AnalysisMode>
   </PropertyGroup>
 

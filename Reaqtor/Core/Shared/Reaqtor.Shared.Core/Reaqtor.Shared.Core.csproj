@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>IRP utilities shared between client and service implementations.</Description>
+    <Description>Provides base classes and utilities used by reactive event processing services and clients.</Description>
   </PropertyGroup>
 
   <ItemGroup>

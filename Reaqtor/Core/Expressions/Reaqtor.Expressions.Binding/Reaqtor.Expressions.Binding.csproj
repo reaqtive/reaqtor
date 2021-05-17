@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>Various utilities for binding expressions.</Description>
+    <Description>Provides a set of utilities to perform binding of artifacts in reactive expressions.</Description>
   </PropertyGroup>
 
   <ItemGroup>

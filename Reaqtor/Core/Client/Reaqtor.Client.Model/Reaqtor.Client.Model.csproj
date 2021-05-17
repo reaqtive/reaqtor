@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net50</TargetFrameworks>
-    <Description>IRP interfaces for reactive client programming.</Description>
+    <Description>Provides interfaces used by clients of reactive event processing services.</Description>
   </PropertyGroup>
 
   <ItemGroup>

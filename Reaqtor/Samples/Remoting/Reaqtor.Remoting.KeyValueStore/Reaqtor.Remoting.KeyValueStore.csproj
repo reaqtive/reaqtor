@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Key/value store used by the query engine in the IRP remoting stack.</Description>
+    <Description>Key/value store used by the query engine in the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>

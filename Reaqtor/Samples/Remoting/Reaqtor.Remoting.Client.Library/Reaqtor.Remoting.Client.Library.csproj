@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFrameworks>net472</TargetFrameworks>
-    <Description>Client library for the IRP remoting stack.</Description>
+    <Description>Client library for the Reaqtor remoting stack.</Description>
   </PropertyGroup>
 
   <ItemGroup>
