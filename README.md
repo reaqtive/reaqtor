@@ -51,4 +51,4 @@ This project has adopted a code of conduct adapted from the [Contributor Covenan
 
 ## Acknowledgements 
 
-A list of people who have contributed to the development of Reaqtor is featured in [A History of Reaqtor](https://reaqtive.net/history), by [Bart De Smet](https://github.com/bartdesmet).
+A list of people who have contributed to the development of Reaqtor is featured in [A History of Reaqtor](https://reaqtive.net/#a-little-history-of-reaqtor), by [Bart De Smet](https://github.com/bartdesmet).
