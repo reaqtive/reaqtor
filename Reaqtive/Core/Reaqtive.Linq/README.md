@@ -61,7 +61,7 @@ The following traditional LINQ standard query operators are supported:
 
 > **Note:** The `SequenceEqual<T>` implementation does accumulate state in the form of queues because the receive rates on both sources can differ. To bound the state size, the operator supports a setting named `rx://operators/sequenceEqual/settings/maxQueueSize` which is obtained through the `IOperatorContext.TryGetElement` method. See remarks on `ToList<T>` for general information about state size manamgenet.
 
-Furhermore, the following higher-order operators are supported as well:
+Furthermore, the following higher-order operators are supported as well:
 
 * `SelectMany` with various overloads
 * `GroupBy` with various overloads, producing `IGroupedSubscribable<TKey, TSource>` sequences
