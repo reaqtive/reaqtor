@@ -32,12 +32,19 @@ namespace Reaqtive.Operators
 
         private sealed class _ : StatefulUnaryOperator<Distinct<TResult, TKey>, TResult>, IObserver<TResult>
         {
-            private readonly HashSet<TKey> _keySet;
+            private HashSet<TKey> _keySet;
 
             public _(Distinct<TResult, TKey> parent, IObserver<TResult> observer)
                 : base(parent, observer)
             {
-                _keySet = new HashSet<TKey>(parent._equalityComparer);
+            }
+
+            protected override void OnStart()
+            {
+                if (_keySet == null)
+                {
+                    _keySet = new HashSet<TKey>(Params._equalityComparer);
+                }
             }
 
             public override string Name => "rc:Distinct";
@@ -83,28 +90,14 @@ namespace Reaqtive.Operators
             {
                 base.LoadStateCore(reader);
 
-                _keySet.Clear();
-
-                var keyCount = reader.Read<int>();
-
-                for (int i = 0; i < keyCount; i++)
-                {
-                    var added = _keySet.Add(reader.Read<TKey>());
-
-                    Debug.Assert(added);
-                }
+                _keySet = reader.Read<HashSet<TKey>>();
             }
 
             protected override void SaveStateCore(IOperatorStateWriter writer)
             {
                 base.SaveStateCore(writer);
 
-                writer.Write(_keySet.Count);
-
-                foreach (TKey key in _keySet)
-                {
-                    writer.Write(key);
-                }
+                writer.Write(_keySet);
             }
 
             protected override ISubscription OnSubscribe()
