@@ -75,6 +75,24 @@ namespace Reaqtor.Remoting.Client
             }
 
             /// <summary>
+            /// Resource identifiers for Distinct operators.
+            /// </summary>
+            public static class Distinct
+            {
+                /// <summary>
+                /// The resource identifier for the Distinct signature that
+                /// takes a Func.
+                /// </summary>
+                public const string Func = "rx://operators/distinct/byKey";
+
+                /// <summary>
+                /// The resource identifier for the Distinct signature that
+                /// takes no arguments.
+                /// </summary>
+                public const string NoArgument = "rx://operators/distinct";
+            }
+
+            /// <summary>
             /// Resource identifiers for DistinctUntilChanged operators.
             /// </summary>
             public static class DistinctUntilChanged
