@@ -651,7 +651,7 @@ namespace Test.Reaqtive.Operators
                 OnSave(152, state)
             };
 
-            DateTimeOffset firstFire = DateTime.MinValue;
+            DateTimeOffset firstFire = new DateTimeOffset(DateTime.MinValue, TimeSpan.Zero);
 
             // Create new subscription allow the timer to fire twice.
             var res1 = Scheduler.CreateObserver<long>();
