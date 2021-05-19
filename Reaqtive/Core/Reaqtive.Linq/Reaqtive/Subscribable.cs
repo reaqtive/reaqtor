@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 
 using Reaqtive.Operators;
 
@@ -629,6 +630,68 @@ namespace Reaqtive
         #endregion
 
         #region Reactive Operators
+
+        #region Distinct
+        /// <summary>
+        /// Propagates distinct elements from the source sequence using the default comparer for elements.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <returns>Observable sequence containing distinct elements from the source sequence.</returns>
+        public static ISubscribable<TSource> Distinct<TSource>(this ISubscribable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new Distinct<TSource, TSource>(source, x => x, EqualityComparer<TSource>.Default);
+        }
+
+        /// <summary>
+        /// Propagates distinct elements from the source sequence using the default comparer for elements.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="comparer">Comparer used to compare whether an element is the same as any previously propagated elements.</param>
+        /// <returns>Observable sequence containing distinct elements from the source sequence.</returns>
+        public static ISubscribable<TSource> Distinct<TSource>(this ISubscribable<TSource> source, IEqualityComparer<TSource> comparer)
+        {
+            return Distinct(source, x => x, comparer);
+        }
+
+        /// <summary>
+        /// Propagates distinct elements from the source sequence using the default comparer for elements.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <typeparam name="TKey">Type of the keys to compare elements by.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="keySelector">Selector function to apply to each element to obtain a key used for equality comparison between elements.</param>
+        /// <returns>Observable sequence containing distinct elements from the source sequence.</returns>
+        public static ISubscribable<TSource> Distinct<TSource, TKey>(this ISubscribable<TSource> source, Func<TSource, TKey> keySelector)
+        {
+            return Distinct(source, keySelector, EqualityComparer<TKey>.Default);
+        }
+
+        /// <summary>
+        /// Propagates distinct elements from the source sequence using the default comparer for elements.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <typeparam name="TKey">Type of the keys to compare elements by.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="keySelector">Selector function to apply to each element to obtain a key used for equality comparison between elements.</param>
+        /// <param name="comparer">Comparer used to compare whether an element is the same as any previously propagated elements.</param>
+        /// <returns>Observable sequence containing distinct elements from the source sequence.</returns>
+        public static ISubscribable<TSource> Distinct<TSource, TKey>(this ISubscribable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (keySelector == null)
+                throw new ArgumentNullException(nameof(keySelector));
+            if (comparer == null)
+                throw new ArgumentNullException(nameof(comparer));
+
+            return new Distinct<TSource, TKey>(source, keySelector, comparer);
+        }
+        #endregion
 
         #region DistinctUntilChanged
 
