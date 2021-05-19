@@ -23,155 +23,155 @@ namespace Test.Reaqtive.Operators
             var xs = DummySubscribable<int>.Instance;
             var ns = default(ISubscribable<int>);
 
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, (_1, _2) => _1 + _2));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, (_1, _2) => _1 + _2));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, (_, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, (_, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, default(Func<int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, (_1, _2, _3) => _1 + _2 + _3));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, (_1, _2, _3) => _1 + _2 + _3));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, (_1, _2, _3) => _1 + _2 + _3));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, (_, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, (_, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, (_, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, default(Func<int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, (_1, _2, _3, _4) => _1 + _2 + _3 + _4));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, (_1, _2, _3, _4) => _1 + _2 + _3 + _4));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, (_1, _2, _3, _4) => _1 + _2 + _3 + _4));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, (_1, _2, _3, _4) => _1 + _2 + _3 + _4));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, (_, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, (_, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, (_, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, (_, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, default(Func<int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5) => _1 + _2 + _3 + _4 + _5));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5) => _1 + _2 + _3 + _4 + _5));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5) => _1 + _2 + _3 + _4 + _5));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5) => _1 + _2 + _3 + _4 + _5));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5) => _1 + _2 + _3 + _4 + _5));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, (_, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, (_, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, (_, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, (_, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, (_, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6) => _1 + _2 + _3 + _4 + _5 + _6));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6) => _1 + _2 + _3 + _4 + _5 + _6));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6) => _1 + _2 + _3 + _4 + _5 + _6));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6) => _1 + _2 + _3 + _4 + _5 + _6));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6) => _1 + _2 + _3 + _4 + _5 + _6));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6) => _1 + _2 + _3 + _4 + _5 + _6));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7) => _1 + _2 + _3 + _4 + _5 + _6 + _7));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7) => _1 + _2 + _3 + _4 + _5 + _6 + _7));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7) => _1 + _2 + _3 + _4 + _5 + _6 + _7));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7) => _1 + _2 + _3 + _4 + _5 + _6 + _7));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7) => _1 + _2 + _3 + _4 + _5 + _6 + _7));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7) => _1 + _2 + _3 + _4 + _5 + _6 + _7));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7) => _1 + _2 + _3 + _4 + _5 + _6 + _7));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7, _8) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8, _9) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>)));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15 + _16));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, xs, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
+            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, ns, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42));
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, xs, default(Func<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>)));
         }
 
@@ -180,7 +180,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_2()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -235,7 +235,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_3()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -290,7 +290,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_4()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -345,7 +345,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_5()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -400,7 +400,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_6()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -455,7 +455,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_7()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -510,7 +510,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_8()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -565,7 +565,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_9()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -620,7 +620,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_10()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -675,7 +675,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_11()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -730,7 +730,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_12()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -785,7 +785,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_13()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -840,7 +840,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_14()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -895,7 +895,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_15()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 
@@ -950,7 +950,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void CombineLatest_Optimization_16()
         {
-            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15, _16) => 0);
+            var res = Subscribable.CombineLatest(Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), Subscribable.Empty<int>(), (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 0);
 
             var sub = res.Subscribe(Observer.Create<int>(_ => { }));
 

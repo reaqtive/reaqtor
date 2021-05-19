@@ -190,7 +190,7 @@ namespace Test.Reaqtive.Operators
                 var e1 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, (_0, _1) => 42)
+                    e0.CombineLatest(e1, (_, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -218,7 +218,7 @@ namespace Test.Reaqtive.Operators
                 var e1 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(250) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, (_0, _1) => 42)
+                    e0.CombineLatest(e1, (_, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -243,7 +243,7 @@ namespace Test.Reaqtive.Operators
                 var e2 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, (_0, _1, _2) => 42)
+                    e0.CombineLatest(e1, e2, (_, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -270,7 +270,7 @@ namespace Test.Reaqtive.Operators
                 var e3 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, (_0, _1, _2, _3) => 42)
+                    e0.CombineLatest(e1, e2, e3, (_, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -298,7 +298,7 @@ namespace Test.Reaqtive.Operators
                 var e4 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, (_0, _1, _2, _3, _4) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, (_, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -327,7 +327,7 @@ namespace Test.Reaqtive.Operators
                 var e5 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, (_0, _1, _2, _3, _4, _5) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, (_, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -357,7 +357,7 @@ namespace Test.Reaqtive.Operators
                 var e6 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (_0, _1, _2, _3, _4, _5, _6) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (_, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -388,7 +388,7 @@ namespace Test.Reaqtive.Operators
                 var e7 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (_0, _1, _2, _3, _4, _5, _6, _7) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (_, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -420,7 +420,7 @@ namespace Test.Reaqtive.Operators
                 var e8 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (_0, _1, _2, _3, _4, _5, _6, _7, _8) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (_, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -453,7 +453,7 @@ namespace Test.Reaqtive.Operators
                 var e9 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (_, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -487,7 +487,7 @@ namespace Test.Reaqtive.Operators
                 var e10 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (_, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -522,7 +522,7 @@ namespace Test.Reaqtive.Operators
                 var e11 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (_, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -558,7 +558,7 @@ namespace Test.Reaqtive.Operators
                 var e12 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -595,7 +595,7 @@ namespace Test.Reaqtive.Operators
                 var e13 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -633,7 +633,7 @@ namespace Test.Reaqtive.Operators
                 var e14 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -672,7 +672,7 @@ namespace Test.Reaqtive.Operators
                 var e15 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(500, 2), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -706,7 +706,7 @@ namespace Test.Reaqtive.Operators
                 var e3 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(240, 4), OnCompleted<int>(400) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, (_0, _1, _2, _3) => 42)
+                    e0.CombineLatest(e1, e2, e3, (_, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -915,7 +915,7 @@ namespace Test.Reaqtive.Operators
                 var e1 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(220) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, (_0, _1) => 42)
+                    e0.CombineLatest(e1, (_, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -938,7 +938,7 @@ namespace Test.Reaqtive.Operators
                 var e2 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(230) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, (_0, _1, _2) => 42)
+                    e0.CombineLatest(e1, e2, (_, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -962,7 +962,7 @@ namespace Test.Reaqtive.Operators
                 var e3 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(240) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, (_0, _1, _2, _3) => 42)
+                    e0.CombineLatest(e1, e2, e3, (_, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -987,7 +987,7 @@ namespace Test.Reaqtive.Operators
                 var e4 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(250) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, (_0, _1, _2, _3, _4) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, (_, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1013,7 +1013,7 @@ namespace Test.Reaqtive.Operators
                 var e5 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(260) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, (_0, _1, _2, _3, _4, _5) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, (_, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1040,7 +1040,7 @@ namespace Test.Reaqtive.Operators
                 var e6 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(270) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (_0, _1, _2, _3, _4, _5, _6) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (_, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1068,7 +1068,7 @@ namespace Test.Reaqtive.Operators
                 var e7 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(280) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (_0, _1, _2, _3, _4, _5, _6, _7) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (_, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1097,7 +1097,7 @@ namespace Test.Reaqtive.Operators
                 var e8 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(290) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (_0, _1, _2, _3, _4, _5, _6, _7, _8) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (_, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1127,7 +1127,7 @@ namespace Test.Reaqtive.Operators
                 var e9 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(300) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (_, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1158,7 +1158,7 @@ namespace Test.Reaqtive.Operators
                 var e10 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(310) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (_, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1190,7 +1190,7 @@ namespace Test.Reaqtive.Operators
                 var e11 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(320) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (_, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1223,7 +1223,7 @@ namespace Test.Reaqtive.Operators
                 var e12 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(330) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1257,7 +1257,7 @@ namespace Test.Reaqtive.Operators
                 var e13 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(340) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1292,7 +1292,7 @@ namespace Test.Reaqtive.Operators
                 var e14 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(350) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1328,7 +1328,7 @@ namespace Test.Reaqtive.Operators
                 var e15 = client.CreateHotObservable(new[] { OnNext(150, 1), OnCompleted<int>(360) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1503,7 +1503,7 @@ namespace Test.Reaqtive.Operators
                 var e1 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest<int, int, int>(e1, (_0, _1) => 42)
+                    e0.CombineLatest<int, int, int>(e1, (_, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1524,7 +1524,7 @@ namespace Test.Reaqtive.Operators
                 var e2 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, (_0, _1, _2) => 42)
+                    e0.CombineLatest(e1, e2, (_, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1546,7 +1546,7 @@ namespace Test.Reaqtive.Operators
                 var e3 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, (_0, _1, _2, _3) => 42)
+                    e0.CombineLatest(e1, e2, e3, (_, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1569,7 +1569,7 @@ namespace Test.Reaqtive.Operators
                 var e4 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, (_0, _1, _2, _3, _4) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, (_, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1593,7 +1593,7 @@ namespace Test.Reaqtive.Operators
                 var e5 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, (_0, _1, _2, _3, _4, _5) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, (_, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1618,7 +1618,7 @@ namespace Test.Reaqtive.Operators
                 var e6 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (_0, _1, _2, _3, _4, _5, _6) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (_, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1644,7 +1644,7 @@ namespace Test.Reaqtive.Operators
                 var e7 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (_0, _1, _2, _3, _4, _5, _6, _7) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (_, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1671,7 +1671,7 @@ namespace Test.Reaqtive.Operators
                 var e8 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (_0, _1, _2, _3, _4, _5, _6, _7, _8) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (_, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1699,7 +1699,7 @@ namespace Test.Reaqtive.Operators
                 var e9 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (_, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1728,7 +1728,7 @@ namespace Test.Reaqtive.Operators
                 var e10 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (_, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1758,7 +1758,7 @@ namespace Test.Reaqtive.Operators
                 var e11 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (_, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1789,7 +1789,7 @@ namespace Test.Reaqtive.Operators
                 var e12 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (_, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1821,7 +1821,7 @@ namespace Test.Reaqtive.Operators
                 var e13 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1854,7 +1854,7 @@ namespace Test.Reaqtive.Operators
                 var e14 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -1888,7 +1888,7 @@ namespace Test.Reaqtive.Operators
                 var e15 = client.CreateHotObservable(new[] { OnNext(150, 1) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => 42)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => 42)
                 );
 
                 res.Messages.AssertEqual(
@@ -2280,7 +2280,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, (_0, _1) => f())
+                    e0.CombineLatest(e1, (_, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2306,7 +2306,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, (_0, _1, _2) => f())
+                    e0.CombineLatest(e1, e2, (_, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2333,7 +2333,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, (_0, _1, _2, _3) => f())
+                    e0.CombineLatest(e1, e2, e3, (_, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2361,7 +2361,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, (_0, _1, _2, _3, _4) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, (_, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2390,7 +2390,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, (_0, _1, _2, _3, _4, _5) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, (_, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2420,7 +2420,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (_0, _1, _2, _3, _4, _5, _6) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (_, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2451,7 +2451,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (_0, _1, _2, _3, _4, _5, _6, _7) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (_, _, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2483,7 +2483,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (_0, _1, _2, _3, _4, _5, _6, _7, _8) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (_, _, _, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2516,7 +2516,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (_, _, _, _, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2550,7 +2550,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (_, _, _, _, _, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2585,7 +2585,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (_, _, _, _, _, _, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2621,7 +2621,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (_, _, _, _, _, _, _, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2658,7 +2658,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (_, _, _, _, _, _, _, _, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2696,7 +2696,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -2735,7 +2735,7 @@ namespace Test.Reaqtive.Operators
                 int f() { throw ex; }
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => f())
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (_, _, _, _, _, _, _, _, _, _, _, _, _, _, _, _) => f())
                 );
 
                 res.Messages.AssertEqual(
@@ -3027,7 +3027,7 @@ namespace Test.Reaqtive.Operators
                 var e1 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(220, 2), OnNext(420, 4), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, (_0, _1) => _0 + _1)
+                    e0.CombineLatest(e1, (p0, p1) => p0 + p1)
                 );
 
                 res.Messages.AssertEqual(
@@ -3052,7 +3052,7 @@ namespace Test.Reaqtive.Operators
                 var e2 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(230, 3), OnNext(430, 6), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, (_0, _1, _2) => _0 + _1 + _2)
+                    e0.CombineLatest(e1, e2, (p0, p1, p2) => p0 + p1 + p2)
                 );
 
                 res.Messages.AssertEqual(
@@ -3079,7 +3079,7 @@ namespace Test.Reaqtive.Operators
                 var e3 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(240, 4), OnNext(440, 8), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, (_0, _1, _2, _3) => _0 + _1 + _2 + _3)
+                    e0.CombineLatest(e1, e2, e3, (p0, p1, p2, p3) => p0 + p1 + p2 + p3)
                 );
 
                 res.Messages.AssertEqual(
@@ -3108,7 +3108,7 @@ namespace Test.Reaqtive.Operators
                 var e4 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(250, 5), OnNext(450, 10), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, (_0, _1, _2, _3, _4) => _0 + _1 + _2 + _3 + _4)
+                    e0.CombineLatest(e1, e2, e3, e4, (p0, p1, p2, p3, p4) => p0 + p1 + p2 + p3 + p4)
                 );
 
                 res.Messages.AssertEqual(
@@ -3139,7 +3139,7 @@ namespace Test.Reaqtive.Operators
                 var e5 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(260, 6), OnNext(460, 12), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, (_0, _1, _2, _3, _4, _5) => _0 + _1 + _2 + _3 + _4 + _5)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, (p0, p1, p2, p3, p4, p5) => p0 + p1 + p2 + p3 + p4 + p5)
                 );
 
                 res.Messages.AssertEqual(
@@ -3172,7 +3172,7 @@ namespace Test.Reaqtive.Operators
                 var e6 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(270, 7), OnNext(470, 14), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (_0, _1, _2, _3, _4, _5, _6) => _0 + _1 + _2 + _3 + _4 + _5 + _6)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, (p0, p1, p2, p3, p4, p5, p6) => p0 + p1 + p2 + p3 + p4 + p5 + p6)
                 );
 
                 res.Messages.AssertEqual(
@@ -3207,7 +3207,7 @@ namespace Test.Reaqtive.Operators
                 var e7 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(280, 8), OnNext(480, 16), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (_0, _1, _2, _3, _4, _5, _6, _7) => _0 + _1 + _2 + _3 + _4 + _5 + _6 + _7)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, (p0, p1, p2, p3, p4, p5, p6, p7) => p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7)
                 );
 
                 res.Messages.AssertEqual(
@@ -3244,7 +3244,7 @@ namespace Test.Reaqtive.Operators
                 var e8 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(290, 9), OnNext(490, 18), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (_0, _1, _2, _3, _4, _5, _6, _7, _8) => _0 + _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, (p0, p1, p2, p3, p4, p5, p6, p7, p8) => p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8)
                 );
 
                 res.Messages.AssertEqual(
@@ -3283,7 +3283,7 @@ namespace Test.Reaqtive.Operators
                 var e9 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(300, 10), OnNext(500, 20), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9) => _0 + _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, (p0, p1, p2, p3, p4, p5, p6, p7, p8, p9) => p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9)
                 );
 
                 res.Messages.AssertEqual(
@@ -3324,7 +3324,7 @@ namespace Test.Reaqtive.Operators
                 var e10 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(310, 11), OnNext(510, 22), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10) => _0 + _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, (p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10) => p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10)
                 );
 
                 res.Messages.AssertEqual(
@@ -3367,7 +3367,7 @@ namespace Test.Reaqtive.Operators
                 var e11 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(320, 12), OnNext(520, 24), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11) => _0 + _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, (p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11) => p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10 + p11)
                 );
 
                 res.Messages.AssertEqual(
@@ -3412,7 +3412,7 @@ namespace Test.Reaqtive.Operators
                 var e12 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(330, 13), OnNext(530, 26), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12) => _0 + _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, (p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12) => p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10 + p11 + p12)
                 );
 
                 res.Messages.AssertEqual(
@@ -3459,7 +3459,7 @@ namespace Test.Reaqtive.Operators
                 var e13 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(340, 14), OnNext(540, 28), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13) => _0 + _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, (p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13) => p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10 + p11 + p12 + p13)
                 );
 
                 res.Messages.AssertEqual(
@@ -3508,7 +3508,7 @@ namespace Test.Reaqtive.Operators
                 var e14 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(350, 15), OnNext(550, 30), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14) => _0 + _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, (p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14) => p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10 + p11 + p12 + p13 + p14)
                 );
 
                 res.Messages.AssertEqual(
@@ -3559,7 +3559,7 @@ namespace Test.Reaqtive.Operators
                 var e15 = client.CreateHotObservable(new[] { OnNext(150, 1), OnNext(360, 16), OnNext(560, 32), OnCompleted<int>(800) });
 
                 var res = client.Start(() =>
-                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (_0, _1, _2, _3, _4, _5, _6, _7, _8, _9, _10, _11, _12, _13, _14, _15) => _0 + _1 + _2 + _3 + _4 + _5 + _6 + _7 + _8 + _9 + _10 + _11 + _12 + _13 + _14 + _15)
+                    e0.CombineLatest(e1, e2, e3, e4, e5, e6, e7, e8, e9, e10, e11, e12, e13, e14, e15, (p0, p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15) => p0 + p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8 + p9 + p10 + p11 + p12 + p13 + p14 + p15)
                 );
 
                 res.Messages.AssertEqual(

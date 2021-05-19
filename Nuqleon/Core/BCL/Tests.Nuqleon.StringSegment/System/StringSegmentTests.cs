@@ -3997,7 +3997,7 @@ namespace Tests
 
         private static void WithVariations(string value1, string value2, Action<StringSegment, StringSegment> test)
         {
-            WithVariations(value1, value2, (_1, val1, _2, val2) => test(val1, val2));
+            WithVariations(value1, value2, (_, val1, _, val2) => test(val1, val2));
         }
 
         private static void WithVariations(string value1, string value2, Action<string, StringSegment, string, StringSegment> test)
