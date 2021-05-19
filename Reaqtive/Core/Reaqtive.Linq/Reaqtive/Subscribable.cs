@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 
+using Reaqtive.Linq.Reaqtive.Operators;
 using Reaqtive.Operators;
 
 namespace Reaqtive
@@ -1152,6 +1153,76 @@ namespace Reaqtive
                 throw new ArgumentNullException(nameof(comparer));
 
             return new SequenceEqual<TSource>(left, right, comparer);
+        }
+
+        #endregion
+
+        #region SingleAsync
+
+        /// <summary>
+        /// Returns a sequence propagating the only element in the source sequence. If source sequence is empty or is containing more than one element, an InvalidOperationException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the only element for.</param>
+        /// <returns>Observable sequence propagating the only element in the source sequence.</returns>
+        public static ISubscribable<TSource> SingleAsync<TSource>(this ISubscribable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new SingleAsync<TSource>(source, predicate: null, throwOnEmpty: true);
+        }
+
+        /// <summary>
+        /// Returns a sequence propagating the only element in the source sequence that matches the specified predicate. If the source sequence has no element matching the predicate or has more than one element matching the predicate, an InvalidOperationException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the only element matching the predicate for.</param>
+        /// <param name="predicate">Predicate to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence propagating the only element in the source sequence that matches the specified predicate.</returns>
+        public static ISubscribable<TSource> SingleAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return new SingleAsync<TSource>(source, predicate, throwOnEmpty: true);
+        }
+
+        #endregion
+
+        #region SingleOrDefaultAsync
+
+        /// <summary>
+        /// Returns a sequence propagating the only element in the source sequence. If source sequence is empty, then a default value is produced. If source sequence contains more than one element, then an InvalidOperationException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the only element for.</param>
+        /// <returns>Observable sequence propagating the only element in the source sequence.</returns>
+        public static ISubscribable<TSource> SingleOrDefaultAsync<TSource>(this ISubscribable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new SingleAsync<TSource>(source, predicate: null, throwOnEmpty: false);
+        }
+
+        /// <summary>
+        /// Returns a sequence propagating the only element in the source sequence that matches the specified predicate. If the source sequence has no element matching the predicate, then default value is produced. If the source sequence has more than one element matching the predicate, then an InvalidOperationException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the only element for.</param>
+        /// <param name="predicate">Predicate to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence propagating the only element in the source sequence that matches the specified predicate.</returns>
+        public static ISubscribable<TSource> SingleOrDefaultAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return new SingleAsync<TSource>(source, predicate, throwOnEmpty: false);
         }
 
         #endregion
