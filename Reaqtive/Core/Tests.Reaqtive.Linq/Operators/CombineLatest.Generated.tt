@@ -36,8 +36,8 @@ for (var i = 2; i <= highestSupportedArity; i++)
     for (var j = 0; j < i; j++)
     {
         var args = string.Join(", ", Enumerable.Repeat("", i).Select((_, k) => k == j ? "ns" : "xs"));
-        var fargs = Enumerable.Range(1, i).Select(k => "_" + k);
-        var func = "(" + string.Join(", ", fargs) + ") => " + string.Join(" + ", fargs);
+        var fargs = Enumerable.Range(1, i).Select(_ => "_");
+        var func = "(" + string.Join(", ", fargs) + ") => 42";
 #>
             ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.CombineLatest(<#=args#>, <#=func#>));
 <#
@@ -57,7 +57,7 @@ for (var i = 2; i <= highestSupportedArity; i++)
 <#
 for (var i = 2; i <= highestSupportedArity; ++i) {
     var args = string.Join(", ", Enumerable.Repeat("Subscribable.Empty<int>()", i));
-    var f = "(" + string.Join(", ", Enumerable.Range(1, i).Select(j => "_" + j)) + ") => 0";
+    var f = "(" + string.Join(", ", Enumerable.Range(1, i).Select(_ => "_")) + ") => 0";
 #>
         [TestMethod]
         public void CombineLatest_Optimization_<#=i#>()

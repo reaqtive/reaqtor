@@ -922,11 +922,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             var f0 = Expression.Constant(ObjectOf(new Action(() => { })));
             var f1 = Expression.Constant(ObjectOf(new Action<int>(_ => { })));
-            var f2 = Expression.Constant(ObjectOf(new Action<int, int>((_1, _2) => { })));
-            var f3 = Expression.Constant(ObjectOf(new Action<int, int, int>((_1, _2, _3) => { })));
-            var f4 = Expression.Constant(ObjectOf(new Action<int, int, int, int>((_1, _2, _3, _4) => { })));
-            var f5 = Expression.Constant(ObjectOf(new Action<int, int, int, int, int>((_1, _2, _3, _4, _5) => { })));
-            var f6 = Expression.Constant(ObjectOf(new Action<int, int, int, int, int, int>((_1, _2, _3, _4, _5, _6) => { })));
+            var f2 = Expression.Constant(ObjectOf(new Action<int, int>((_, _) => { })));
+            var f3 = Expression.Constant(ObjectOf(new Action<int, int, int>((_, _, _) => { })));
+            var f4 = Expression.Constant(ObjectOf(new Action<int, int, int, int>((_, _, _, _) => { })));
+            var f5 = Expression.Constant(ObjectOf(new Action<int, int, int, int, int>((_, _, _, _, _) => { })));
+            var f6 = Expression.Constant(ObjectOf(new Action<int, int, int, int, int, int>((_, _, _, _, _, _) => { })));
 
             var a1 = Expression.Constant(ObjectOf(1));
             var a2 = Expression.Constant(ObjectOf(2));
