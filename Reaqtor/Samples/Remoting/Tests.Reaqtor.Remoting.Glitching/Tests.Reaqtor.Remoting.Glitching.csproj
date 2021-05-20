@@ -102,6 +102,9 @@
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\SequenceEqual.Declarative.cs">
       <Link>Operators\SequenceEqual.Declarative.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\SingleAsync.Declarative.cs">
+      <Link>Operators\SingleAsync.Declarative.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Skip.Declarative.cs">
       <Link>Operators\Skip.Declarative.cs</Link>
     </Compile>

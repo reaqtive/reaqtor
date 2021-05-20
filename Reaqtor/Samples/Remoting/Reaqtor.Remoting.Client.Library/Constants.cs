@@ -334,6 +334,42 @@ namespace Reaqtor.Remoting.Client
             }
 
             /// <summary>
+            /// Resource identifiers for SingleAsync operators.
+            /// </summary>
+            public static class SingleAsync
+            {
+                /// <summary>
+                /// The resource identifier for the SingleAsync signature that
+                /// takes no argument.
+                /// </summary>
+                public const string NoArgument = "rx://operators/single";
+
+                /// <summary>
+                /// The resource identifier for the SingleAsync signature that
+                /// takes a filter predicate as an argument.
+                /// </summary>
+                public const string Func = "rx://operators/single/filtered";
+            }
+
+            /// <summary>
+            /// Resource identifiers for SingleOrDefaultAsync
+            /// </summary>
+            public static class SingleOrDefaultAsync
+            {
+                /// <summary>
+                /// The resource identifier for the SingleOrDefaultAsync signature
+                /// that takes no argument.
+                /// </summary>
+                public const string NoArgument = "rx://operators/singleOrDefault";
+
+                /// <summary>
+                /// The resource identifier for the SingleOrDefaultAsync signature
+                /// that takes a filter predicate as an argument.
+                /// </summary>
+                public const string Func = "rx://operators/singleOrDefault/filtered";
+            }
+
+            /// <summary>
             /// Resource identifiers for Skip operators.
             /// </summary>
             public static class Skip

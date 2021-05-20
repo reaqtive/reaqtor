@@ -144,6 +144,10 @@ namespace Reaqtor.Shebang.Linq
             await ctx.DefineObservableAsync(new Uri("rx://observable/selectmany/result"), (IAsyncReactiveQbservable<TSource> source, Func<TSource, ISubscribable<TCollection>> collectionSelector, Func<TSource, TCollection, TResult> resultSelector) => Subscribable.SelectMany<TSource, TCollection, TResult>(source.AsSubscribable(), collectionSelector, resultSelector).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/sequenceequal"), (IAsyncReactiveQbservable<TSource> left, IAsyncReactiveQbservable<TSource> right) => Subscribable.SequenceEqual<TSource>(left.AsSubscribable(), right.AsSubscribable()).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/sequenceequal/comparer"), (IAsyncReactiveQbservable<TSource> left, IAsyncReactiveQbservable<TSource> right, IEqualityComparer<TSource> comparer) => Subscribable.SequenceEqual<TSource>(left.AsSubscribable(), right.AsSubscribable(), comparer).AsAsyncQbservable(), null, token).ConfigureAwait(false);
+            await ctx.DefineObservableAsync(new Uri("rx://observable/single"), (IAsyncReactiveQbservable<TSource> source) => Subscribable.SingleAsync<TSource>(source.AsSubscribable()).AsAsyncQbservable(), null, token).ConfigureAwait(false);
+            await ctx.DefineObservableAsync(new Uri("rx://observable/single/predicate"), (IAsyncReactiveQbservable<TSource> source, Func<TSource, bool> predicate) => Subscribable.SingleAsync<TSource>(source.AsSubscribable(), predicate).AsAsyncQbservable(), null, token).ConfigureAwait(false);
+            await ctx.DefineObservableAsync(new Uri("rx://observable/singleordefault"), (IAsyncReactiveQbservable<TSource> source) => Subscribable.SingleOrDefaultAsync<TSource>(source.AsSubscribable()).AsAsyncQbservable(), null, token).ConfigureAwait(false);
+            await ctx.DefineObservableAsync(new Uri("rx://observable/singleordefault/predicate"), (IAsyncReactiveQbservable<TSource> source, Func<TSource, bool> predicate) => Subscribable.SingleOrDefaultAsync<TSource>(source.AsSubscribable(), predicate).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/skip/count"), (IAsyncReactiveQbservable<TSource> source, int count) => Subscribable.Skip<TSource>(source.AsSubscribable(), count).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/skip/dueTime"), (IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime) => Subscribable.Skip<TSource>(source.AsSubscribable(), dueTime).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/skipuntil"), (IAsyncReactiveQbservable<TSource> source, IAsyncReactiveQbservable<TOther> triggeringSource) => Subscribable.SkipUntil<TSource, TOther>(source.AsSubscribable(), triggeringSource.AsSubscribable()).AsAsyncQbservable(), null, token).ConfigureAwait(false);
@@ -325,6 +329,10 @@ namespace Reaqtor.Shebang.Linq
             await ctx.UndefineObservableAsync(new Uri("rx://observable/selectmany/result"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/sequenceequal"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/sequenceequal/comparer"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/single"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/single/predicate"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/singleordefault"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/singleordefault/predicate"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/skip/count"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/skip/dueTime"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/skipuntil"), token).ConfigureAwait(false);

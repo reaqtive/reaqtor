@@ -907,6 +907,60 @@ namespace Reaqtor.Expressions.Core
 
         #endregion
 
+        #region SingleAsync
+
+        /// <summary>
+        /// Returns a sequence propagating the only element in the source sequence. If the source sequence is empty or is containing more than one element, an InvalidOperationException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate its only element for.</param>
+        /// <returns>Observable sequence propagating the only element of the source sequence.</returns>
+        public static IReactiveQbservable<TSource> SingleAsync<TSource>(this IReactiveQbservable<TSource> source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a sequence propagating the only element in the source sequence that matches the specified predicate. If the source sequence has no element matching the predicate or contains more than one element matching the predicate, an InvalidOperationException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate its only element matching the predicate for.</param>
+        /// <param name="predicate">Predicate to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence propagating the only element of the source sequence that matches the specified predicate.</returns>
+        public static IReactiveQbservable<TSource> SingleAsync<TSource>(this IReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region SingleOrDefaultAsync
+
+        /// <summary>
+        /// Returns a sequence propagating the only element of the source sequence. If the source sequence is empty, then a default value is produced. If the source sequence contains more than one element, then an InvalidOperationException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate its only element for.</param>
+        /// <returns>Observable sequence propagating the only element of the source sequence.</returns>
+        public static IReactiveQbservable<TSource> SingleOrDefaultAsync<TSource>(this IReactiveQbservable<TSource> source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a sequence propagating the only element of the source sequence that matches the specified predicate. If the source sequence has no element matching the predicate, then a default value is produced. If the source sequence has more than one element matching the predicate, then an InvalidOperationException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate its only element matching the predicate for.</param>
+        /// <param name="predicate">Predicate to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence propagating the only element of the source sequence that matches the specified predicate.</returns>
+        public static IReactiveQbservable<TSource> SingleOrDefaultAsync<TSource>(this IReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region Skip
 
         /// <summary>
