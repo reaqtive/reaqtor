@@ -32,6 +32,9 @@ namespace Reaqtive.Operators
 
         private sealed class _ : StatefulUnaryOperator<Distinct<TResult, TKey>, TResult>, IObserver<TResult>
         {
+            private const string MAXDISTINCTELEMENTS = "rx://operators/distinct/settings/maxDistinctElements";
+            private int _maxDistinctElements;
+
             private HashSet<TKey> _keySet;
 
             public _(Distinct<TResult, TKey> parent, IObserver<TResult> observer)
@@ -39,12 +42,16 @@ namespace Reaqtive.Operators
             {
             }
 
+            public override void SetContext(IOperatorContext context)
+            {
+                base.SetContext(context);
+
+                context.TryGetInt32CheckGreaterThanZeroOrUseMaxValue(MAXDISTINCTELEMENTS, out _maxDistinctElements);
+            }
+
             protected override void OnStart()
             {
-                if (_keySet == null)
-                {
-                    _keySet = new HashSet<TKey>(Params._equalityComparer);
-                }
+                _keySet ??= new HashSet<TKey>(Params._equalityComparer);
             }
 
             public override string Name => "rc:Distinct";
@@ -65,16 +72,18 @@ namespace Reaqtive.Operators
 
             public void OnNext(TResult value)
             {
-                TKey key;
                 var added = false;
                 try
                 {
-                    key = Params._keySelector(value);
-                    added = _keySet.Add(key);
+                    TKey key = Params._keySelector(value);
+
+                    // TODO: Should this operator silently stop propagating when it reaches max capacity? or should it throw exception?
+                    added = _keySet.Count < _maxDistinctElements && _keySet.Add(key);
                 }
                 catch (Exception exception)
                 {
                     OnError(exception);
+                    Dispose();
                     return;
                 }
 

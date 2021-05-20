@@ -4,7 +4,6 @@
 
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 
 using Reaqtive.Operators;
 
@@ -647,7 +646,7 @@ namespace Reaqtive
         }
 
         /// <summary>
-        /// Propagates distinct elements from the source sequence using the default comparer for elements.
+        /// Propagates distinct elements from the source sequence using the specified comparer for elements.
         /// </summary>
         /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
         /// <param name="source">Source sequence whose elements to propagate.</param>
@@ -672,7 +671,7 @@ namespace Reaqtive
         }
 
         /// <summary>
-        /// Propagates distinct elements from the source sequence using the default comparer for elements.
+        /// Propagates distinct elements from the source sequence using the specified comparer for elements.
         /// </summary>
         /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
         /// <typeparam name="TKey">Type of the keys to compare elements by.</typeparam>

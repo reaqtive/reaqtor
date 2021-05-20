@@ -238,6 +238,10 @@ namespace Reaqtor.Shebang.Linq
             await ctx.UndefineObservableAsync(new Uri("rx://observable/count/predicate"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/delaysubscription/absolute"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/delaysubscription/relative"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/distinct/"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/distinct/comparer"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/distinct/keySelector"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/distinct/keySelector/comparer"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/distinctuntilchanged/"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/distinctuntilchanged/comparer"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/distinctuntilchanged/keySelector"), token).ConfigureAwait(false);
