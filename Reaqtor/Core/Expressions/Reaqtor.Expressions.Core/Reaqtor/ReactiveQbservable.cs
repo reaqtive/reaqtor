@@ -502,6 +502,60 @@ namespace Reaqtor.Expressions.Core
 
         #region Reactive Operators
 
+        #region Distinct
+
+        /// <summary>
+        /// Propagates distinct elements from the source sequence using the default comparer for elements.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <returns>Observable sequence propagating the source sequence's distinct elements.</returns>
+        public static IReactiveQbservable<TSource> Distinct<TSource>(this IReactiveQbservable<TSource> source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Propagates distinct elements from the source sequence using the specified comparer for elements.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="comparer">Comparer used to compare whether an element is the same as any previously propagated elements.</param>
+        /// <returns>Observable sequence propagating the source sequence's distinct elements.</returns>
+        public static IReactiveQbservable<TSource> Distinct<TSource>(this IReactiveQbservable<TSource> source, IEqualityComparer<TSource> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Propagates distinct elements from the source sequence based on the comparison of a projected key and using the default comparer for keys.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <typeparam name="TKey">Type of the keys to compare elements by.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="keySelector">Selector function to apply to each element to obtain a key used for equality comparison between elements.</param>
+        /// <returns>Observable sequence propagating the source sequence's distinct elements.</returns>
+        public static IReactiveQbservable<TSource> Distinct<TSource, TKey>(this IReactiveQbservable<TSource> source, Expression<Func<TSource, TKey>> keySelector)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Propagates distinct elements from the source sequence based on the comparison of a projected key and using the specified comparer for keys.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <typeparam name="TKey">Type of the keys to compare elements by.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="keySelector">Selector function to apply to each element to obtain a key used for equality comparison between elements.</param>
+        /// <param name="comparer">Comparer used to compare whether an element is the same as any previously propagated elements based on the keys obtained for these elements.</param>
+        /// <returns>Observable sequence propagating the source sequence's distinct elements.</returns>
+        public static IReactiveQbservable<TSource> Distinct<TSource, TKey>(this IReactiveQbservable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IEqualityComparer<TKey> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region DistinctUntilChanged
 
         /// <summary>

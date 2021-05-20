@@ -57,6 +57,10 @@ namespace Reaqtor.Shebang.Linq
             await ctx.DefineObservableAsync(new Uri("rx://observable/count/predicate"), (IAsyncReactiveQbservable<TSource> source, Func<TSource, bool> predicate) => Subscribable.Count<TSource>(source.AsSubscribable(), predicate).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/delaysubscription/absolute"), (IAsyncReactiveQbservable<TSource> source, DateTimeOffset dueTime) => Subscribable.DelaySubscription<TSource>(source.AsSubscribable(), dueTime).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/delaysubscription/relative"), (IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime) => Subscribable.DelaySubscription<TSource>(source.AsSubscribable(), dueTime).AsAsyncQbservable(), null, token).ConfigureAwait(false);
+            await ctx.DefineObservableAsync(new Uri("rx://observable/distinct/"), (IAsyncReactiveQbservable<TSource> source) => Subscribable.Distinct<TSource>(source.AsSubscribable()).AsAsyncQbservable(), null, token).ConfigureAwait(false);
+            await ctx.DefineObservableAsync(new Uri("rx://observable/distinct/comparer"), (IAsyncReactiveQbservable<TSource> source, IEqualityComparer<TSource> comparer) => Subscribable.Distinct<TSource>(source.AsSubscribable(), comparer).AsAsyncQbservable(), null, token).ConfigureAwait(false);
+            await ctx.DefineObservableAsync(new Uri("rx://observable/distinct/keySelector"), (IAsyncReactiveQbservable<TSource> source, Func<TSource, TKey> keySelector) => Subscribable.Distinct<TSource, TKey>(source.AsSubscribable(), keySelector).AsAsyncQbservable(), null, token).ConfigureAwait(false);
+            await ctx.DefineObservableAsync(new Uri("rx://observable/distinct/keySelector/comparer"), (IAsyncReactiveQbservable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer) => Subscribable.Distinct<TSource, TKey>(source.AsSubscribable(), keySelector, comparer).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/distinctuntilchanged/"), (IAsyncReactiveQbservable<TSource> source) => Subscribable.DistinctUntilChanged<TSource>(source.AsSubscribable()).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/distinctuntilchanged/comparer"), (IAsyncReactiveQbservable<TSource> source, IEqualityComparer<TSource> comparer) => Subscribable.DistinctUntilChanged<TSource>(source.AsSubscribable(), comparer).AsAsyncQbservable(), null, token).ConfigureAwait(false);
             await ctx.DefineObservableAsync(new Uri("rx://observable/distinctuntilchanged/keySelector"), (IAsyncReactiveQbservable<TSource> source, Func<TSource, TKey> keySelector) => Subscribable.DistinctUntilChanged<TSource, TKey>(source.AsSubscribable(), keySelector).AsAsyncQbservable(), null, token).ConfigureAwait(false);
@@ -238,6 +242,10 @@ namespace Reaqtor.Shebang.Linq
             await ctx.UndefineObservableAsync(new Uri("rx://observable/count/predicate"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/delaysubscription/absolute"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/delaysubscription/relative"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/distinct/"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/distinct/comparer"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/distinct/keySelector"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/distinct/keySelector/comparer"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/distinctuntilchanged/"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/distinctuntilchanged/comparer"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/distinctuntilchanged/keySelector"), token).ConfigureAwait(false);
