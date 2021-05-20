@@ -312,11 +312,11 @@ namespace Test.Reaqtor.Operators
                     OnNext(210, 2),
                     OnNext(220, 3),
                     OnNext(230, 4),
-                    OnCompleted<int>(250)
+                    OnError<int>(240, e => e is InvalidOperationException)
                 );
 
                 xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
+                    Subscribe(200, 240)
                 );
 
                 Assert.AreEqual(0, env.ArtifactCount);

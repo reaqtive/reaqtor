@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace Reaqtive.Operators
 {
@@ -76,9 +77,7 @@ namespace Reaqtive.Operators
                 try
                 {
                     TKey key = Params._keySelector(value);
-
-                    // TODO: Should this operator silently stop propagating when it reaches max capacity? or should it throw exception?
-                    added = _keySet.Count < _maxDistinctElements && _keySet.Add(key);
+                    added = _keySet.Add(key);
                 }
                 catch (Exception exception)
                 {
@@ -89,9 +88,16 @@ namespace Reaqtive.Operators
 
                 if (added)
                 {
-                    StateChanged = true;
-
-                    Output.OnNext(value);
+                    if (_keySet.Count > _maxDistinctElements)
+                    {
+                        OnError(new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "The number of distinct elements produced by the Distinct operator exceeded {0} items. Please adjust the Distinct operator parameters to avoid exceeding this limit.", _maxDistinctElements)));
+                        Dispose();
+                    }
+                    else
+                    {
+                        StateChanged = true;
+                        Output.OnNext(value);
+                    }
                 }
             }
 
