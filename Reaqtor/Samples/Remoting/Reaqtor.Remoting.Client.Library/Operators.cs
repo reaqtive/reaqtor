@@ -1704,6 +1704,318 @@ namespace Reaqtor
         }
 
         /// <summary>
+        /// Single returns the only value in a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains the only element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements or if the source sequence contains more than one element,
+        /// an InvalidOperationException is propagated to signal the stream
+        /// was not containing exactly one single element.
+        /// </returns>
+        /// <remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        /// </remarks>
+        [KnownResource(Remoting.Client.Constants.Observable.SingleAsync.NoArgument)]
+#pragma warning disable CA1720 // Identifier contains type name
+        public static IAsyncReactiveQbservable<TSource> Single<TSource>(
+#pragma warning restore CA1720 // Identifier contains type name
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// SingleAsync returns the only value in a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains the only element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements or if the source sequence contains more than one element,
+        /// an InvalidOperationException is propagated to signal the stream
+        /// was not containing exactly one single element.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.SingleAsync.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> SingleAsync<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// Single returns the only value in a sequence that passes the
+        /// filter predicate.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="predicate">
+        /// A function to test each source element for a condition.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence which contains the only element
+        /// of the source sequence after applying the filter predicate. If the
+        /// source sequence does not contain any elements or if the source
+        /// contains more than one element, an InvalidOperationException
+        /// is propagated to signal the stream was not containing exactly one
+        /// single element.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> or <c>predicate</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.SingleAsync.Func)]
+#pragma warning disable CA1720 // Identifier contains type name
+        public static IAsyncReactiveQbservable<TSource> Single<TSource>(
+#pragma warning restore CA1720 // Identifier contains type name
+            this IAsyncReactiveQbservable<TSource> source,
+            Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    predicate));
+        }
+
+        /// <summary>
+        /// SingleAsync returns the only value in a sequence that passes the
+        /// filter predicate.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="predicate">
+        /// A function to test each source element for a condition.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence which contains the only element
+        /// of the source sequence after applying the filter predicate. If the
+        /// source sequence does not contain any elements or if the source
+        /// contains more than one element, an InvalidOperationException
+        /// is propagated to signal the stream was not containing exactly one
+        /// single element.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> or <c>predicate</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.SingleAsync.Func)]
+        public static IAsyncReactiveQbservable<TSource> SingleAsync<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    predicate));
+        }
+
+        /// <summary>
+        /// SingleOrDefault returns the only value in a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains the only element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, then a default value is propagated. If the source
+        /// contains more than one element, then an InvalidOperationException
+        /// is propagated to signal the stream contained more than one
+        /// element.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.SingleOrDefaultAsync.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> SingleOrDefault<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// SingleOrDefaultAsync returns the only value in a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains the only element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, then a default value is propagated. If the source
+        /// contains more than one element, then an InvalidOperationException
+        /// is propagated to signal the stream contained more than one
+        /// element.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.SingleOrDefaultAsync.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> SingleOrDefaultAsync<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// SingleOrDefault returns the only value in a sequence that passes
+        /// the filter predicate.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="predicate">
+        /// A function to test each source element for a condition.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence which contains the only element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, then a default value is propagated. If the source
+        /// sequence contains more than one element, then an
+        /// InvalidOperationException is propagated to signal the stream
+        /// contained more than one element.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> or <c>predicate</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.SingleOrDefaultAsync.Func)]
+        public static IAsyncReactiveQbservable<TSource> SingleOrDefault<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    predicate));
+        }
+
+        /// <summary>
+        /// SingleOrDefaultAsync returns the only value in a sequence that passes
+        /// the filter predicate.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="predicate">
+        /// A function to test each source element for a condition.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence which contains the only element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, then a default value is propagated. If the source
+        /// sequence contains more than one element, then an
+        /// InvalidOperationException is propagated to signal the stream
+        /// contained more than one element.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> or <c>predicate</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.SingleOrDefaultAsync.Func)]
+        public static IAsyncReactiveQbservable<TSource> SingleOrDefaultAsync<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    predicate));
+        }
+
+        /// <summary>
         /// Bypasses a specified number of values in an observable sequence and
         /// then returns the remaining values.
         /// </summary>
