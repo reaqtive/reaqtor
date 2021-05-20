@@ -48,6 +48,9 @@
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\DelaySubscription.Declarative.cs">
       <Link>Operators\DelaySubscription.Declarative.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Distinct.Declarative.cs">
+      <Link>Operators\Distinct.Declarative.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\DistinctUntilChanged.Declarative.cs">
       <Link>Operators\DistinctUntilChanged.Declarative.cs</Link>
     </Compile>

@@ -403,6 +403,86 @@ namespace Reaqtor
 
         /// <summary>
         /// Returns a query observable sequence that contains only distinct
+        /// elements.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">
+        /// A queryable observable sequence to retain distinct elements for.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence only containing the distinct
+        /// elements from the source query observable sequence.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.Distinct.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> Distinct<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// Returns a query observable sequence that contains only distinct
+        /// elements according to the keySelector.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <typeparam name="TKey">
+        /// The type of the discriminator key computed for each element in the
+        /// source sequence.
+        /// </typeparam>
+        /// <param name="source">
+        /// A queryable observable sequence to retain distinct elements for,
+        /// based on a computed key value.
+        /// </param>
+        /// <param name="keySelector">
+        /// A function to compute the comparison key for each element.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence only containing the distinct
+        /// elements, based on a computed key value, from the source
+        /// query observable sequence.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> or <c>keySelector</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.Distinct.Func)]
+        public static IAsyncReactiveQbservable<TSource> Distinct<TSource, TKey>(
+            this IAsyncReactiveQbservable<TSource> source,
+            Expression<Func<TSource, TKey>> keySelector)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (keySelector == null)
+            {
+                throw new ArgumentNullException(nameof(keySelector));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TKey)),
+                    source.Expression,
+                    keySelector));
+        }
+
+        /// <summary>
+        /// Returns a query observable sequence that contains only distinct
         /// contiguous elements.
         /// </summary>
         /// <typeparam name="TSource">
