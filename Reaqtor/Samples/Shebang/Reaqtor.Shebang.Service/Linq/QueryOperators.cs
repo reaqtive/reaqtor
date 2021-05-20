@@ -321,6 +321,10 @@ namespace Reaqtor.Shebang.Linq
             await ctx.UndefineObservableAsync(new Uri("rx://observable/selectmany/result"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/sequenceequal"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/sequenceequal/comparer"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/single"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/single/predicate"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/singleordefault"), token).ConfigureAwait(false);
+            await ctx.UndefineObservableAsync(new Uri("rx://observable/singleordefault/predicate"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/skip/count"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/skip/dueTime"), token).ConfigureAwait(false);
             await ctx.UndefineObservableAsync(new Uri("rx://observable/skipuntil"), token).ConfigureAwait(false);

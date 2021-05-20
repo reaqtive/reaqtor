@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 
-using Reaqtive.Linq.Reaqtive.Operators;
 using Reaqtive.Operators;
 
 namespace Reaqtive

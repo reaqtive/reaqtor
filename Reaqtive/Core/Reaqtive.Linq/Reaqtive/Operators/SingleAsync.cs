@@ -5,7 +5,7 @@
 using System;
 using System.Diagnostics;
 
-namespace Reaqtive.Linq.Reaqtive.Operators
+namespace Reaqtive.Operators
 {
     internal sealed class SingleAsync<TSource> : SubscribableBase<TSource>
     {

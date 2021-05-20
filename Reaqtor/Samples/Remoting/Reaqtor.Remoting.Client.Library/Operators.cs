@@ -1756,7 +1756,7 @@ namespace Reaqtor
         /// <exception cref="System.ArgumentNullException">
         /// <c>source</c> is null.
         /// </exception>
-        [KnownResource(Remoting.Client.Constants.Observable.FirstAsync.NoArgument)]
+        [KnownResource(Remoting.Client.Constants.Observable.SingleAsync.NoArgument)]
         public static IAsyncReactiveQbservable<TSource> SingleAsync<TSource>(
             this IAsyncReactiveQbservable<TSource> source)
         {
