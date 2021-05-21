@@ -63,6 +63,9 @@
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\GroupBy.Declarative.cs">
       <Link>Operators\GroupBy.Declarative.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\IgnoreElements.Declarative.cs">
+      <Link>Operators\IgnoreElements.Declarative.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\IsEmpty.Declarative.cs">
       <Link>Operators\IsEmpty.Declarative.cs</Link>
     </Compile>

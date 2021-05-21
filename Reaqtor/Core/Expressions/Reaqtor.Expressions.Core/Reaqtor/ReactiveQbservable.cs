@@ -610,6 +610,21 @@ namespace Reaqtor.Expressions.Core
 
         #endregion
 
+        #region IgnoreElements
+
+        /// <summary>
+        /// Suppresses all elements in the source sequence.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to suppress.</param>
+        /// <returns>Observable sequence propagating no element.</returns>
+        public static IReactiveQbservable<TSource> IgnoreElements<TSource>(this IReactiveQbservable<TSource> source)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region Sample
 
         /// <summary>

@@ -242,6 +242,18 @@ namespace Reaqtor.Remoting.Client
             }
 
             /// <summary>
+            /// Resource identifiers for the IgnoreElements operators.
+            /// </summary>
+            public static class IgnoreElements
+            {
+                /// <summary>
+                /// The resource identifier for the IgnoreElements signature
+                /// that takes no argument.
+                /// </summary>
+                public const string NoArgument = "rx://observable/ignoreElements";
+            }
+
+            /// <summary>
             /// Resource identifiers for Merge operators.
             /// </summary>
             public static class Merge

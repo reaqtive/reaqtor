@@ -1328,6 +1328,27 @@ namespace Reaqtor
         }
 
         /// <summary>
+        /// Suppresses all elements of the source observable sequence.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Observable sequence whose elements to suppress.</param>
+        /// <returns>Observable sequence with no element.</returns>
+        [KnownResource(Remoting.Client.Constants.Observable.IgnoreElements.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> IgnoreElements<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
         /// Flattens an observable sequence of observable sequences into a
         /// single observable sequence.
         /// </summary>

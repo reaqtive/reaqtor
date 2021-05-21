@@ -1091,6 +1091,24 @@ namespace Reaqtive
 
         #endregion
 
+        #region IgnoreElements
+
+        /// <summary>
+        /// Suppresses all of the elements propagated by the source sequence, but still propagates its OnCompleted or OnError notification.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to suppress.</param>
+        /// <returns>Observable sequence propagating only an OnCompleted or an OnError notification.</returns>
+        public static ISubscribable<TSource> IgnoreElements<TSource>(this ISubscribable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new IgnoreElements<TSource>(source);
+        }
+
+        #endregion
+
         #region Select
 
         /// <summary>
