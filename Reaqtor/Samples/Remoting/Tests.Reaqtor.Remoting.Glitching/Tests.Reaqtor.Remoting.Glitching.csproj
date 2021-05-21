@@ -42,17 +42,26 @@
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Buffer.Declarative.cs">
       <Link>Operators\Buffer.Declarative.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Contains.Declarative.cs">
+      <Link>Operators\Contains.Declarative.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Count.Declarative.cs">
       <Link>Operators\Count.Declarative.cs</Link>
     </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\DelaySubscription.Declarative.cs">
       <Link>Operators\DelaySubscription.Declarative.cs</Link>
     </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\DefaultIfEmpty.Declarative.cs">
+      <Link>Operators\DefaultIfEmpty.Declarative.cs</Link>
+    </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Distinct.Declarative.cs">
       <Link>Operators\Distinct.Declarative.cs</Link>
     </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\DistinctUntilChanged.Declarative.cs">
       <Link>Operators\DistinctUntilChanged.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\ElementAt.Declarative.cs">
+      <Link>Operators\ElementAt.Declarative.cs</Link>
     </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\Empty.Declarative.cs">
       <Link>Operators\Empty.Declarative.cs</Link>
@@ -65,6 +74,9 @@
     </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\IsEmpty.Declarative.cs">
       <Link>Operators\IsEmpty.Declarative.cs</Link>
+    </Compile>
+    <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\LastAsync.Declarative.cs">
+      <Link>Operators\LastAsync.Declarative.cs</Link>
     </Compile>
     <Compile Include="..\..\..\..\Reaqtive\Core\Tests.Reaqtive.Linq\Operators\LongCount.Declarative.cs">
       <Link>Operators\LongCount.Declarative.cs</Link>

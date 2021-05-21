@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Linq;
 
 using Reaqtive.Operators;
 
@@ -630,6 +631,24 @@ namespace Reaqtive
 
         #region Reactive Operators
 
+        #region DefaultIfEmpty
+
+        /// <summary>
+        /// Propagates all elements from the source sequence, or a default item if the source sequence emits nothing.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <returns>Observable sequence containing all elements from the source sequence, or a default item.</returns>
+        public static ISubscribable<TSource> DefaultIfEmpty<TSource>(this ISubscribable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new DefaultIfEmpty<TSource>(source);
+        }
+
+        #endregion
+
         #region Distinct
         /// <summary>
         /// Propagates distinct elements from the source sequence using the default comparer for elements.
@@ -927,9 +946,84 @@ namespace Reaqtive
 
         #region Standard Query Operators
 
-        //
-        // TODO: Last, Single, DefaultIfEmpty
-        //
+        #region Contains
+
+        /// <summary>
+        /// Propagates a boolean value determining whether the source sequence contains specified element or not using default comparer for elements.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence in which to locate the element.</param>
+        /// <param name="element">The element to locate in the source sequence.</param>
+        /// <returns>Observable sequence propagating a boolean value which determines whether the source sequence contains specified element or not.</returns>
+        public static ISubscribable<bool> Contains<TSource>(this ISubscribable<TSource> source, TSource element)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new Contains<TSource>(source, element, EqualityComparer<TSource>.Default);
+        }
+
+        /// <summary>
+        /// Propagates a boolean value determining whether the source sequence contains specified element or not using specified comparer for elements.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence in which to locate the element.</param>
+        /// <param name="element">The element to locate in the source sequence.</param>
+        /// <param name="comparer">Comparer used to compare whether an element is the same as the element being located.</param>
+        /// <returns>Observable sequence propagating a boolean value which determines whether the source sequence contains specified element or not.</returns>
+        public static ISubscribable<bool> Contains<TSource>(this ISubscribable<TSource> source, TSource element, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (comparer == null)
+                throw new ArgumentNullException(nameof(comparer));
+
+            return new Contains<TSource>(source, element, comparer);
+        }
+
+        #endregion
+
+        #region ElementAt
+
+        /// <summary>
+        /// Returns a sequence propagating the element at specified index. If the source sequence does not propagate element at specified index, an ArgumentOutOfRangeException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence in which to retrieve the element.</param>
+        /// <param name="index">The zero-based index of the element to retrieve.</param>
+        /// <returns>Observable sequence propagating the element at specified index.</returns>
+        public static ISubscribable<TSource> ElementAt<TSource>(this ISubscribable<TSource> source, int index)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            return new ElementAt<TSource>(source, index, throwIfNotFound: true);
+        }
+
+        #endregion
+
+        #region ElementAtOrDefault
+
+        /// <summary>
+        /// Returns a sequence propagating the element at specified index. If the source sequence does not propagate element at specified index, a default item is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence in which to retrieve the element.</param>
+        /// <param name="index">The zero-based index of the element to retrieve.</param>
+        /// <returns>Observable sequence propagating the element at specified index.</returns>
+        public static ISubscribable<TSource> ElementAtOrDefault<TSource>(this ISubscribable<TSource> source, int index)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (index < 0)
+                throw new ArgumentOutOfRangeException(nameof(index));
+
+            return new ElementAt<TSource>(source, index, throwIfNotFound: false);
+        }
+
+        #endregion
 
         #region FirstAsync
 
@@ -1087,6 +1181,76 @@ namespace Reaqtive
                 throw new ArgumentNullException(nameof(comparer));
 
             return new GroupBy<TSource, TKey, TElement>(source, keySelector, elementSelector, comparer);
+        }
+
+        #endregion
+
+        #region LastAsync
+
+        /// <summary>
+        /// Returns a sequence propagating the last element of the source sequence. If the source sequence is empty, an InvalidOperatingException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the last element for.</param>
+        /// <returns>Observable sequence propagating the last element of the source sequence.</returns>
+        public static ISubscribable<TSource> LastAsync<TSource>(this ISubscribable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new LastAsync<TSource>(source, predicate: null, throwOnEmpty: true);
+        }
+
+        /// <summary>
+        /// Returns a sequence propagating the last element of the source sequence that matches the specified predicate. If the source sequence has no element matching the predicate, an InvalidOperatingException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the last element matching the predicate for.</param>
+        /// <param name="predicate">Predicate to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence propagating the last element of the source sequence that matches the specified predicate.</returns>
+        public static ISubscribable<TSource> LastAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return new LastAsync<TSource>(source, predicate, throwOnEmpty: true);
+        }
+
+        #endregion
+
+        #region LastOrDefaultAsync
+
+        /// <summary>
+        /// Returns a sequence propagating the last element of the source sequence. If the source sequence is empty, a default value is produced.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the last element for.</param>
+        /// <returns>Observable sequence propagating the last element of the source sequence.</returns>
+        public static ISubscribable<TSource> LastOrDefaultAsync<TSource>(this ISubscribable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new LastAsync<TSource>(source, predicate: null, throwOnEmpty: false);
+        }
+
+        /// <summary>
+        /// Returns a sequence propagating the last element of the source sequence that matches the specified predicate. If the source sequence has no element matching the predicate, a default value is produced.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the last element matching the predicate for.</param>
+        /// <param name="predicate">Predicate to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence propagating the last element of the source sequence that matches the specified predicate.</returns>
+        public static ISubscribable<TSource> LastOrDefaultAsync<TSource>(this ISubscribable<TSource> source, Func<TSource, bool> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return new LastAsync<TSource>(source, predicate, throwOnEmpty: false);
         }
 
         #endregion
