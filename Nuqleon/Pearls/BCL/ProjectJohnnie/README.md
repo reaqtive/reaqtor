@@ -4,7 +4,7 @@ Memory diagnostics and optimizations for managed heaps at runtime.
 
 ## History
 
-The high density of reactive micro-computations in query engines has been one of the major selling points of Nuqleon, allowing for millions of standing queries processing thousands of events per seconds per physical process. In most deployments, the size of a single query engine instance is capped to an order of magnitude of tens of thousands standing queries, in order to allow for reasonable checkpoint and recovery times. As a result, we host tens to hundreds of query engines per physical process, as stateful service replicas where only the primary replica of a query evaluator service hydrates all of the query expressions and state. The only shared resource are:
+The high density of reactive micro-computations in query engines has been one of the major selling points of Reaqtor, allowing for millions of standing queries processing thousands of events per seconds per physical process. In most deployments, the size of a single query engine instance is capped to an order of magnitude of tens of thousands standing queries, in order to allow for reasonable checkpoint and recovery times. As a result, we host tens to hundreds of query engines per physical process, as stateful service replicas where only the primary replica of a query evaluator service hydrates all of the query expressions and state. The only shared resources are:
 
 * the physical scheduler (to cap the number of threads used);
 * compiled delegate caches;
