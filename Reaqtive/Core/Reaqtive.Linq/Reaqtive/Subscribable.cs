@@ -1104,7 +1104,7 @@ namespace Reaqtive
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return new Where<TSource>(source, x => false);
+            return new IgnoreElements<TSource>(source);
         }
 
         #endregion
