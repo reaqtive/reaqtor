@@ -468,6 +468,46 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(dueTime, typeof(TimeSpan))));
         }
 
+        [KnownResource("rx://observable/distinct")]
+        public static IAsyncReactiveQbservable<TSource> Distinct<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
+        }
+
+        [KnownResource("rx://observable/distinct/comparer")]
+        public static IAsyncReactiveQbservable<TSource> Distinct<TSource>(this IAsyncReactiveQbservable<TSource> source, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(comparer, typeof(IEqualityComparer<TSource>))));
+        }
+
+        [KnownResource("rx://observable/distinct/keySelector")]
+        public static IAsyncReactiveQbservable<TSource> Distinct<TSource, TKey>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TKey>> keySelector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (keySelector == null)
+                throw new ArgumentNullException(nameof(keySelector));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TKey)), source.Expression, keySelector));
+        }
+
+        [KnownResource("rx://observable/distinct/keySelector/comparer")]
+        public static IAsyncReactiveQbservable<TSource> Distinct<TSource, TKey>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TKey>> keySelector, IEqualityComparer<TKey> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (keySelector == null)
+                throw new ArgumentNullException(nameof(keySelector));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TKey)), source.Expression, keySelector, Expression.Constant(comparer, typeof(IEqualityComparer<TKey>))));
+        }
+
         [KnownResource("rx://observable/distinctuntilchanged/")]
         public static IAsyncReactiveQbservable<TSource> DistinctUntilChanged<TSource>(this IAsyncReactiveQbservable<TSource> source)
         {
@@ -677,6 +717,15 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(elementSelector));
 
             return source.Provider.CreateQbservable<IAsyncReactiveGroupedQbservable<TKey, TElement>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TKey), typeof(TElement)), source.Expression, keySelector, elementSelector, Expression.Constant(comparer, typeof(IEqualityComparer<TKey>))));
+        }
+
+        [KnownResource("rx://observable/ignoreelements")]
+        public static IAsyncReactiveQbservable<TSource> IgnoreElements<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
         }
 
         [KnownResource("rx://observable/isempty")]
@@ -1182,15 +1231,6 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(retryCount, typeof(int))));
         }
 
-        [KnownResource("rx://observable/sample/period")]
-        public static IAsyncReactiveQbservable<TSource> Sample<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan period)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(period, typeof(TimeSpan))));
-        }
-
         [KnownResource("rx://observable/sample")]
         public static IAsyncReactiveQbservable<TSource> Sample<TSource, TSample>(this IAsyncReactiveQbservable<TSource> source, IAsyncReactiveQbservable<TSample> sampler)
         {
@@ -1200,6 +1240,15 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(sampler));
 
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TSample)), source.Expression, sampler.Expression));
+        }
+
+        [KnownResource("rx://observable/sample/period")]
+        public static IAsyncReactiveQbservable<TSource> Sample<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan period)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(period, typeof(TimeSpan))));
         }
 
         [KnownResource("rx://observable/scan")]
@@ -1290,6 +1339,46 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(right));
 
             return left.Provider.CreateQbservable<bool>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), left.Expression, right.Expression, Expression.Constant(comparer, typeof(IEqualityComparer<TSource>))));
+        }
+
+        [KnownResource("rx://observable/single")]
+        public static IAsyncReactiveQbservable<TSource> SingleAsync<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
+        }
+
+        [KnownResource("rx://observable/single/predicate")]
+        public static IAsyncReactiveQbservable<TSource> SingleAsync<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
+        }
+
+        [KnownResource("rx://observable/singleordefault")]
+        public static IAsyncReactiveQbservable<TSource> SingleOrDefaultAsync<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
+        }
+
+        [KnownResource("rx://observable/singleordefault/predicate")]
+        public static IAsyncReactiveQbservable<TSource> SingleOrDefaultAsync<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
         [KnownResource("rx://observable/skip/count")]
