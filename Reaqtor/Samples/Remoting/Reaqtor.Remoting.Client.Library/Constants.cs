@@ -66,6 +66,12 @@ namespace Reaqtor.Remoting.Client
                 /// takes no argument.
                 /// </summary>
                 public const string NoArgument = "rx://operators/defaultIfEmpty";
+
+                /// <summary>
+                /// The resource identifier for the DefaultIfEmpty signature that
+                /// takes a default value.
+                /// </summary>
+                public const string DefaultValue = "rx://operators/defaultIfEmpty/defaultValue";
             }
 
             /// <summary>

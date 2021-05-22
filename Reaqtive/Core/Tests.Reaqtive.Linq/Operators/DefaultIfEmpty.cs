@@ -61,5 +61,34 @@ namespace Test.Reaqtive.Operators
                 OnCompleted<int>(310)
             );
         }
+
+        [TestMethod]
+        public void DefaultIfEmpty_SaveAndReload_Empty()
+        {
+            var state = Scheduler.CreateStateContainer();
+
+            var checkpoints = new[] {
+                OnSave(210, state),
+                OnLoad(220, state),
+            };
+
+            var xs = Scheduler.CreateHotObservable(
+                OnNext(150, 9),
+                // state saved @210
+                // state loaded @220
+                OnCompleted<int>(230)
+            );
+
+            var res = Scheduler.Start(() =>
+                xs.DefaultIfEmpty().Apply(Scheduler, checkpoints)
+            );
+
+            res.Messages.AssertEqual(
+                // state saved @210
+                // state reloaded @220
+                OnNext(230, 0),
+                OnCompleted<int>(230)
+            );
+        }
     }
 }

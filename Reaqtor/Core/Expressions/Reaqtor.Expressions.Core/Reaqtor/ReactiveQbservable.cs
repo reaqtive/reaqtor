@@ -544,6 +544,18 @@ namespace Reaqtor.Expressions.Core
             throw new NotImplementedException();
         }
 
+        /// <summary>
+        /// Propagates all elements from the source sequence, or a default value if source sequence contains no element.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="defaultValue">The default item to propagate when the source sequence emits nothing.</param>
+        /// <returns>Observable sequence propagating all of the source sequence's elements, or a default value.</returns>
+        public static IReactiveQbservable<TSource> DefaultIfEmpty<TSource>(this IReactiveQbservable<TSource> source, TSource defaultValue)
+        {
+            throw new NotImplementedException();
+        }
+
         #endregion
 
         #region Distinct

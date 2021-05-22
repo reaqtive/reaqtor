@@ -384,6 +384,36 @@ namespace Reaqtor
         }
 
         /// <summary>
+        /// Returns a query observable sequence that contains all elements, or a default
+        /// item if the source query observable sequence contains no element.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="defaultValue">
+        /// The default item to propagate when the source sequence emits nothing.
+        /// </param>
+        /// <returns>
+        /// Query observable sequence containing all elements from the source query observable
+        /// sequence, or a default item.
+        /// </returns>
+        [KnownResource(Remoting.Client.Constants.Observable.DefaultIfEmpty.DefaultValue)]
+        public static IAsyncReactiveQbservable<TSource> DefaultIfEmpty<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            TSource defaultValue)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    Expression.Constant(defaultValue)));
+        }
+
+        /// <summary>
         /// Time shifts the query observable sequence by delaying the
         /// subscription to the specified absolute time.
         /// </summary>

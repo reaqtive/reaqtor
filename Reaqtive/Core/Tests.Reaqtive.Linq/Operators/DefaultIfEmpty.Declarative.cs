@@ -45,6 +45,31 @@ namespace Test.Reaqtive.Operators
         }
 
         [TestMethod]
+        public void DefaultIfEmpty_Empty_DefaultValue()
+        {
+            Run(client =>
+            {
+                var xs = client.CreateHotObservable(
+                    OnNext(150, 1),
+                    OnCompleted<int>(250)
+                );
+
+                var res = client.Start(() =>
+                    xs.DefaultIfEmpty(defaultValue: 10)
+                );
+
+                res.Messages.AssertEqual(
+                    OnNext(250, 10),
+                    OnCompleted<int>(250)
+                );
+
+                xs.Subscriptions.AssertEqual(
+                    Subscribe(200, 250)
+                );
+            });
+        }
+
+        [TestMethod]
         public void DefaultIfEmpty_One()
         {
             Run(client =>

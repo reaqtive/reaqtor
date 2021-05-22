@@ -71,10 +71,7 @@ namespace Reaqtive.Operators
                 }
                 else
                 {
-                    checked
-                    {
-                        _currentIndex++;
-                    }
+                    _currentIndex++;
                     StateChanged = true;
                 }
             }

@@ -2,8 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-#nullable enable
-
 using System;
 using System.Diagnostics;
 
@@ -12,15 +10,15 @@ namespace Reaqtive.Operators
     internal sealed class LastAsync<TSource> : SubscribableBase<TSource>
     {
         private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, bool>? _predicateOrElseUseNoFilter;
+        private readonly Func<TSource, bool> _predicate;
         private readonly bool _throwOnEmpty;
 
-        public LastAsync(ISubscribable<TSource> source, Func<TSource, bool>? predicate, bool throwOnEmpty)
+        public LastAsync(ISubscribable<TSource> source, Func<TSource, bool> predicate, bool throwOnEmpty)
         {
             Debug.Assert(source != null);
 
-            _source = source!;
-            _predicateOrElseUseNoFilter = predicate;
+            _source = source;
+            _predicate = predicate ?? (_ => true);
             _throwOnEmpty = throwOnEmpty;
         }
 
@@ -75,9 +73,7 @@ namespace Reaqtive.Operators
 
                 try
                 {
-                    // If predicate is null then don't filter values
-
-                    b = Params._predicateOrElseUseNoFilter == null || Params._predicateOrElseUseNoFilter(value);
+                    b = Params._predicate(value);
                 }
                 catch (Exception ex)
                 {

@@ -295,6 +295,15 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int))));
         }
 
+        [KnownResource("rx://observable/buffer/duration/count")]
+        public static IAsyncReactiveQbservable<IList<TSource>> Buffer<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration, int count)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan)), Expression.Constant(count, typeof(int))));
+        }
+
         [KnownResource("rx://observable/buffer/duration/shift")]
         public static IAsyncReactiveQbservable<IList<TSource>> Buffer<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration, TimeSpan shift)
         {
@@ -311,15 +320,6 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(source));
 
             return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int)), Expression.Constant(skip, typeof(int))));
-        }
-
-        [KnownResource("rx://observable/buffer/duration/count")]
-        public static IAsyncReactiveQbservable<IList<TSource>> Buffer<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration, int count)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan)), Expression.Constant(count, typeof(int))));
         }
 
         [KnownResource("rx://observable/combinelatest/2")]
@@ -430,6 +430,24 @@ namespace Reaqtor.Shebang.Linq
             return source1.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource1), typeof(TSource2), typeof(TSource3), typeof(TSource4), typeof(TSource5), typeof(TSource6), typeof(TSource7), typeof(TResult)), source1.Expression, source2.Expression, source3.Expression, source4.Expression, source5.Expression, source6.Expression, source7.Expression, selector));
         }
 
+        [KnownResource("rx://observable/contains/element")]
+        public static IAsyncReactiveQbservable<bool> Contains<TSource>(this IAsyncReactiveQbservable<TSource> source, TSource element)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<bool>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(element, typeof(TSource))));
+        }
+
+        [KnownResource("rx://observable/contains/element/comparer")]
+        public static IAsyncReactiveQbservable<bool> Contains<TSource>(this IAsyncReactiveQbservable<TSource> source, TSource element, IEqualityComparer<TSource> comparer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<bool>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(element, typeof(TSource)), Expression.Constant(comparer, typeof(IEqualityComparer<TSource>))));
+        }
+
         [KnownResource("rx://observable/count")]
         public static IAsyncReactiveQbservable<int> Count<TSource>(this IAsyncReactiveQbservable<TSource> source)
         {
@@ -448,6 +466,24 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(predicate));
 
             return source.Provider.CreateQbservable<int>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
+        }
+
+        [KnownResource("rx://observable/defaultifempty")]
+        public static IAsyncReactiveQbservable<TSource> DefaultIfEmpty<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
+        }
+
+        [KnownResource("rx://observable/defaultifempty/defaultValue")]
+        public static IAsyncReactiveQbservable<TSource> DefaultIfEmpty<TSource>(this IAsyncReactiveQbservable<TSource> source, TSource defaultValue)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(defaultValue, typeof(TSource))));
         }
 
         [KnownResource("rx://observable/delaysubscription/absolute")]
@@ -620,6 +656,24 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, onNext, onError, onCompleted));
         }
 
+        [KnownResource("rx://observable/elementat/index")]
+        public static IAsyncReactiveQbservable<TSource> ElementAt<TSource>(this IAsyncReactiveQbservable<TSource> source, int index)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(index, typeof(int))));
+        }
+
+        [KnownResource("rx://observable/elementatordefault/index")]
+        public static IAsyncReactiveQbservable<TSource> ElementAtOrDefault<TSource>(this IAsyncReactiveQbservable<TSource> source, int index)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(index, typeof(int))));
+        }
+
         [KnownResource("rx://observable/finally")]
         public static IAsyncReactiveQbservable<TSource> Finally<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Action> action)
         {
@@ -735,6 +789,46 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(source));
 
             return source.Provider.CreateQbservable<bool>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
+        }
+
+        [KnownResource("rx://observable/last")]
+        public static IAsyncReactiveQbservable<TSource> LastAsync<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
+        }
+
+        [KnownResource("rx://observable/last/predicate")]
+        public static IAsyncReactiveQbservable<TSource> LastAsync<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
+        }
+
+        [KnownResource("rx://observable/lastordefault")]
+        public static IAsyncReactiveQbservable<TSource> LastOrDefaultAsync<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
+        }
+
+        [KnownResource("rx://observable/lastordefault/predicate")]
+        public static IAsyncReactiveQbservable<TSource> LastOrDefaultAsync<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (predicate == null)
+                throw new ArgumentNullException(nameof(predicate));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
         [KnownResource("rx://observable/longcount")]
@@ -1231,6 +1325,15 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(retryCount, typeof(int))));
         }
 
+        [KnownResource("rx://observable/sample/period")]
+        public static IAsyncReactiveQbservable<TSource> Sample<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan period)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(period, typeof(TimeSpan))));
+        }
+
         [KnownResource("rx://observable/sample")]
         public static IAsyncReactiveQbservable<TSource> Sample<TSource, TSample>(this IAsyncReactiveQbservable<TSource> source, IAsyncReactiveQbservable<TSample> sampler)
         {
@@ -1240,15 +1343,6 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(sampler));
 
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TSample)), source.Expression, sampler.Expression));
-        }
-
-        [KnownResource("rx://observable/sample/period")]
-        public static IAsyncReactiveQbservable<TSource> Sample<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan period)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(period, typeof(TimeSpan))));
         }
 
         [KnownResource("rx://observable/scan")]
@@ -1381,6 +1475,15 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
+        [KnownResource("rx://observable/skip/dueTime")]
+        public static IAsyncReactiveQbservable<TSource> Skip<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(dueTime, typeof(TimeSpan))));
+        }
+
         [KnownResource("rx://observable/skip/count")]
         public static IAsyncReactiveQbservable<TSource> Skip<TSource>(this IAsyncReactiveQbservable<TSource> source, int count)
         {
@@ -1390,13 +1493,13 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int))));
         }
 
-        [KnownResource("rx://observable/skip/dueTime")]
-        public static IAsyncReactiveQbservable<TSource> Skip<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime)
+        [KnownResource("rx://observable/skipuntil/absolute")]
+        public static IAsyncReactiveQbservable<TSource> SkipUntil<TSource>(this IAsyncReactiveQbservable<TSource> source, DateTimeOffset startTime)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(dueTime, typeof(TimeSpan))));
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(startTime, typeof(DateTimeOffset))));
         }
 
         [KnownResource("rx://observable/skipuntil")]
@@ -1408,15 +1511,6 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(triggeringSource));
 
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TOther)), source.Expression, triggeringSource.Expression));
-        }
-
-        [KnownResource("rx://observable/skipuntil/absolute")]
-        public static IAsyncReactiveQbservable<TSource> SkipUntil<TSource>(this IAsyncReactiveQbservable<TSource> source, DateTimeOffset startTime)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(startTime, typeof(DateTimeOffset))));
         }
 
         [KnownResource("rx://observable/skipwhile")]
@@ -1659,6 +1753,15 @@ namespace Reaqtor.Shebang.Linq
             return sources.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), sources.Expression));
         }
 
+        [KnownResource("rx://observable/take/dueTime")]
+        public static IAsyncReactiveQbservable<TSource> Take<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(dueTime, typeof(TimeSpan))));
+        }
+
         [KnownResource("rx://observable/take/count")]
         public static IAsyncReactiveQbservable<TSource> Take<TSource>(this IAsyncReactiveQbservable<TSource> source, int count)
         {
@@ -1668,13 +1771,13 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int))));
         }
 
-        [KnownResource("rx://observable/take/dueTime")]
-        public static IAsyncReactiveQbservable<TSource> Take<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime)
+        [KnownResource("rx://observable/takeuntil/absolute")]
+        public static IAsyncReactiveQbservable<TSource> TakeUntil<TSource>(this IAsyncReactiveQbservable<TSource> source, DateTimeOffset endTime)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(dueTime, typeof(TimeSpan))));
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(endTime, typeof(DateTimeOffset))));
         }
 
         [KnownResource("rx://observable/takeuntil")]
@@ -1686,15 +1789,6 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(triggeringSource));
 
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TOther)), source.Expression, triggeringSource.Expression));
-        }
-
-        [KnownResource("rx://observable/takeuntil/absolute")]
-        public static IAsyncReactiveQbservable<TSource> TakeUntil<TSource>(this IAsyncReactiveQbservable<TSource> source, DateTimeOffset endTime)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(endTime, typeof(DateTimeOffset))));
         }
 
         [KnownResource("rx://observable/takewhile")]
@@ -1719,6 +1813,15 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
+        [KnownResource("rx://observable/throttle/duration")]
+        public static IAsyncReactiveQbservable<TSource> Throttle<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan))));
+        }
+
         [KnownResource("rx://observable/throttle")]
         public static IAsyncReactiveQbservable<TSource> Throttle<TSource, TThrottle>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, IAsyncReactiveQbservable<TThrottle>>> throttleSelector)
         {
@@ -1728,15 +1831,6 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(throttleSelector));
 
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TThrottle)), source.Expression, throttleSelector));
-        }
-
-        [KnownResource("rx://observable/throttle/duration")]
-        public static IAsyncReactiveQbservable<TSource> Throttle<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan))));
         }
 
         [KnownResource("rx://observable/tolist")]

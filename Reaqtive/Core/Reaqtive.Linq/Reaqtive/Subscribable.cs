@@ -646,6 +646,21 @@ namespace Reaqtive
             return new DefaultIfEmpty<TSource>(source);
         }
 
+        /// <summary>
+        /// Propagates all elements from the source sequence, or a default item if the source sequence emits nothing.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="defaultValue">The default item to propagate when the source sequence emits nothing.</param>
+        /// <returns>Observable sequence containing all elements from the source sequence, or a default item.</returns>
+        public static ISubscribable<TSource> DefaultIfEmpty<TSource>(this ISubscribable<TSource> source, TSource defaultValue)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return new DefaultIfEmpty<TSource>(source, defaultValue);
+        }
+
         #endregion
 
         #region Distinct
@@ -948,12 +963,12 @@ namespace Reaqtive
         #region Contains
 
         /// <summary>
-        /// Propagates a boolean value determining whether the source sequence contains specified element or not using default comparer for elements.
+        /// Propagates a boolean value determining whether the source sequence contains the specified element or not using the default comparer for elements.
         /// </summary>
         /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
         /// <param name="source">Source sequence in which to locate the element.</param>
         /// <param name="element">The element to locate in the source sequence.</param>
-        /// <returns>Observable sequence propagating a boolean value which determines whether the source sequence contains specified element or not.</returns>
+        /// <returns>Observable sequence propagating a boolean value which determines whether the source sequence contains the specified element or not.</returns>
         public static ISubscribable<bool> Contains<TSource>(this ISubscribable<TSource> source, TSource element)
         {
             if (source == null)
@@ -963,13 +978,13 @@ namespace Reaqtive
         }
 
         /// <summary>
-        /// Propagates a boolean value determining whether the source sequence contains specified element or not using specified comparer for elements.
+        /// Propagates a boolean value determining whether the source sequence contains the specified element or not using the specified comparer for elements.
         /// </summary>
         /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
         /// <param name="source">Source sequence in which to locate the element.</param>
         /// <param name="element">The element to locate in the source sequence.</param>
         /// <param name="comparer">Comparer used to compare whether an element is the same as the element being located.</param>
-        /// <returns>Observable sequence propagating a boolean value which determines whether the source sequence contains specified element or not.</returns>
+        /// <returns>Observable sequence propagating a boolean value which determines whether the source sequence contains the specified element or not.</returns>
         public static ISubscribable<bool> Contains<TSource>(this ISubscribable<TSource> source, TSource element, IEqualityComparer<TSource> comparer)
         {
             if (source == null)

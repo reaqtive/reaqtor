@@ -203,6 +203,27 @@ foreach (var method in methods)
         uri += "/" + (parameters.Length - 1);
     }
 
+    if (method.Name == "Contains")
+    {
+        if (parameters.Any(p => p.Name == "element"))
+        {
+            uri += "/element";
+        }
+
+        if (parameters.Any(p => p.Name == "comparer"))
+        {
+            uri += "/comparer";
+        }
+    }
+
+    if (method.Name == "DefaultIfEmpty")
+    {
+        if (parameters.Any(p => p.Name == "defaultValue"))
+        {
+            uri += "/defaultValue";
+        }
+    }
+
     if (method.Name == "Distinct")
     {
         if (parameters.Any(p => p.Name == "keySelector"))
@@ -214,6 +235,11 @@ foreach (var method in methods)
         {
             uri += "/comparer";
         }
+    }
+
+    if (method.Name.StartsWith("ElementAt"))
+    {
+        uri += "/index";
     }
 
     if (method.Name == "Skip" || method.Name == "Take")

@@ -10,12 +10,14 @@ namespace Reaqtive.Operators
     internal sealed class DefaultIfEmpty<TSource> : SubscribableBase<TSource>
     {
         private readonly ISubscribable<TSource> _source;
+        private readonly TSource _defaultValue;
 
-        public DefaultIfEmpty(ISubscribable<TSource> source)
+        public DefaultIfEmpty(ISubscribable<TSource> source, TSource defaultValue = default)
         {
             Debug.Assert(source != null);
 
             _source = source;
+            _defaultValue = defaultValue;
         }
 
         protected override ISubscription SubscribeCore(IObserver<TSource> observer)
@@ -40,7 +42,7 @@ namespace Reaqtive.Operators
             {
                 if (!_isNotEmpty)
                 {
-                    Output.OnNext(default);
+                    Output.OnNext(Params._defaultValue);
                 }
                 Output.OnCompleted();
                 Dispose();
@@ -54,7 +56,11 @@ namespace Reaqtive.Operators
 
             public void OnNext(TSource value)
             {
-                _isNotEmpty |= (StateChanged = true);
+                if (!_isNotEmpty)
+                {
+                    _isNotEmpty = true;
+                    StateChanged = true;
+                }
                 Output.OnNext(value);
             }
 
