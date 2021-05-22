@@ -355,7 +355,7 @@ namespace Reaqtor
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
                     source.Expression,
-                    Expression.Constant(element)));
+                    Expression.Constant(element, typeof(TSource))));
         }
 
         /// <summary>
@@ -410,7 +410,7 @@ namespace Reaqtor
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
                     source.Expression,
-                    Expression.Constant(defaultValue)));
+                    Expression.Constant(defaultValue, typeof(TSource))));
         }
 
         /// <summary>
@@ -1004,7 +1004,7 @@ namespace Reaqtor
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
                     source.Expression,
-                    Expression.Constant(index)));
+                    Expression.Constant(index, typeof(int))));
         }
 
         /// <summary>
@@ -1047,7 +1047,7 @@ namespace Reaqtor
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
                     source.Expression,
-                    Expression.Constant(index)));
+                    Expression.Constant(index, typeof(int))));
         }
 
         /// <summary>
