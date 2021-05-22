@@ -14,6 +14,10 @@
       <LastGenOutput>ClientContext.Generated.cs</LastGenOutput>
       <Generator>TextTemplatingFileGenerator</Generator>
     </None>
+    <None Update="QueryOperators.Generated.tt">
+      <Generator>TextTemplatingFileGenerator</Generator>
+      <LastGenOutput>QueryOperators.Generated.cs</LastGenOutput>
+    </None>
     <None Update="QueryOperators.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>QueryOperators.cs</LastGenOutput>
@@ -34,6 +38,11 @@
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>QueryOperators.tt</DependentUpon>
+    </Compile>
+    <Compile Update="QueryOperators.Generated.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>QueryOperators.Generated.tt</DependentUpon>
     </Compile>
   </ItemGroup>
 
