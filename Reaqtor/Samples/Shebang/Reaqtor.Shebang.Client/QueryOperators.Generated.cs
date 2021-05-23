@@ -77,40 +77,13 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<bool>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
-        [KnownResource("rx://observable/average/int")]
-        public static IAsyncReactiveQbservable<double> Average(this IAsyncReactiveQbservable<int> source)
+        [KnownResource("rx://observable/average/nullable_decimal")]
+        public static IAsyncReactiveQbservable<decimal?> Average(this IAsyncReactiveQbservable<decimal?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/average/long")]
-        public static IAsyncReactiveQbservable<double> Average(this IAsyncReactiveQbservable<long> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/average/float")]
-        public static IAsyncReactiveQbservable<float> Average(this IAsyncReactiveQbservable<float> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<float>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/average/double")]
-        public static IAsyncReactiveQbservable<double> Average(this IAsyncReactiveQbservable<double> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<decimal?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/average/decimal")]
@@ -122,8 +95,8 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<decimal>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/average/nullable_int")]
-        public static IAsyncReactiveQbservable<double?> Average(this IAsyncReactiveQbservable<int?> source)
+        [KnownResource("rx://observable/average/nullable_double")]
+        public static IAsyncReactiveQbservable<double?> Average(this IAsyncReactiveQbservable<double?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -131,13 +104,13 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/average/nullable_long")]
-        public static IAsyncReactiveQbservable<double?> Average(this IAsyncReactiveQbservable<long?> source)
+        [KnownResource("rx://observable/average/double")]
+        public static IAsyncReactiveQbservable<double> Average(this IAsyncReactiveQbservable<double> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/average/nullable_float")]
@@ -149,8 +122,17 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<float?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/average/nullable_double")]
-        public static IAsyncReactiveQbservable<double?> Average(this IAsyncReactiveQbservable<double?> source)
+        [KnownResource("rx://observable/average/float")]
+        public static IAsyncReactiveQbservable<float> Average(this IAsyncReactiveQbservable<float> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<float>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
+        [KnownResource("rx://observable/average/nullable_int")]
+        public static IAsyncReactiveQbservable<double?> Average(this IAsyncReactiveQbservable<int?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -158,112 +140,31 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/average/nullable_decimal")]
-        public static IAsyncReactiveQbservable<decimal?> Average(this IAsyncReactiveQbservable<decimal?> source)
+        [KnownResource("rx://observable/average/int")]
+        public static IAsyncReactiveQbservable<double> Average(this IAsyncReactiveQbservable<int> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<decimal?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/average/selector/int")]
-        public static IAsyncReactiveQbservable<double> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int>> selector)
+        [KnownResource("rx://observable/average/nullable_long")]
+        public static IAsyncReactiveQbservable<double?> Average(this IAsyncReactiveQbservable<long?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/average/selector/long")]
-        public static IAsyncReactiveQbservable<double> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long>> selector)
+        [KnownResource("rx://observable/average/long")]
+        public static IAsyncReactiveQbservable<double> Average(this IAsyncReactiveQbservable<long> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/average/selector/float")]
-        public static IAsyncReactiveQbservable<float> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<float>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/average/selector/double")]
-        public static IAsyncReactiveQbservable<double> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/average/selector/decimal")]
-        public static IAsyncReactiveQbservable<decimal> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, decimal>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<decimal>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/average/selector/nullable_int")]
-        public static IAsyncReactiveQbservable<double?> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int?>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/average/selector/nullable_long")]
-        public static IAsyncReactiveQbservable<double?> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long?>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/average/selector/nullable_float")]
-        public static IAsyncReactiveQbservable<float?> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float?>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<float?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/average/selector/nullable_double")]
-        public static IAsyncReactiveQbservable<double?> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double?>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/average/selector/nullable_decimal")]
@@ -277,13 +178,103 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<decimal?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/buffer/duration")]
-        public static IAsyncReactiveQbservable<IList<TSource>> Buffer<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration)
+        [KnownResource("rx://observable/average/selector/decimal")]
+        public static IAsyncReactiveQbservable<decimal> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, decimal>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan))));
+            return source.Provider.CreateQbservable<decimal>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/average/selector/nullable_double")]
+        public static IAsyncReactiveQbservable<double?> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/average/selector/double")]
+        public static IAsyncReactiveQbservable<double> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/average/selector/nullable_float")]
+        public static IAsyncReactiveQbservable<float?> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<float?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/average/selector/float")]
+        public static IAsyncReactiveQbservable<float> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<float>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/average/selector/nullable_int")]
+        public static IAsyncReactiveQbservable<double?> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/average/selector/int")]
+        public static IAsyncReactiveQbservable<double> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/average/selector/nullable_long")]
+        public static IAsyncReactiveQbservable<double?> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/average/selector/long")]
+        public static IAsyncReactiveQbservable<double> Average<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("rx://observable/buffer/count")]
@@ -293,6 +284,24 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(source));
 
             return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int))));
+        }
+
+        [KnownResource("rx://observable/buffer/duration")]
+        public static IAsyncReactiveQbservable<IList<TSource>> Buffer<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan))));
+        }
+
+        [KnownResource("rx://observable/buffer/count/skip")]
+        public static IAsyncReactiveQbservable<IList<TSource>> Buffer<TSource>(this IAsyncReactiveQbservable<TSource> source, int count, int skip)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int)), Expression.Constant(skip, typeof(int))));
         }
 
         [KnownResource("rx://observable/buffer/duration/count")]
@@ -311,15 +320,6 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(source));
 
             return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan)), Expression.Constant(shift, typeof(TimeSpan))));
-        }
-
-        [KnownResource("rx://observable/buffer/count/skip")]
-        public static IAsyncReactiveQbservable<IList<TSource>> Buffer<TSource>(this IAsyncReactiveQbservable<TSource> source, int count, int skip)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<IList<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int)), Expression.Constant(skip, typeof(int))));
         }
 
         [KnownResource("rx://observable/combinelatest/2")]
@@ -604,19 +604,6 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, onNext));
         }
 
-        [KnownResource("rx://observable/do/onNext/onError")]
-        public static IAsyncReactiveQbservable<TSource> Do<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Action<TSource>> onNext, Expression<Action<Exception>> onError)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (onNext == null)
-                throw new ArgumentNullException(nameof(onNext));
-            if (onError == null)
-                throw new ArgumentNullException(nameof(onError));
-
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, onNext, onError));
-        }
-
         [KnownResource("rx://observable/do/onNext/onCompleted")]
         public static IAsyncReactiveQbservable<TSource> Do<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Action<TSource>> onNext, Expression<Action> onCompleted)
         {
@@ -630,15 +617,17 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, onNext, onCompleted));
         }
 
-        [KnownResource("rx://observable/do/selector/observer")]
-        public static IAsyncReactiveQbservable<TSource> Do<TSource, TNotification>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TNotification>> selector, IObserver<TNotification> observer)
+        [KnownResource("rx://observable/do/onNext/onError")]
+        public static IAsyncReactiveQbservable<TSource> Do<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Action<TSource>> onNext, Expression<Action<Exception>> onError)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
+            if (onNext == null)
+                throw new ArgumentNullException(nameof(onNext));
+            if (onError == null)
+                throw new ArgumentNullException(nameof(onError));
 
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TNotification)), source.Expression, selector, Expression.Constant(observer, typeof(IObserver<TNotification>))));
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, onNext, onError));
         }
 
         [KnownResource("rx://observable/do/onNext/onError/onCompleted")]
@@ -654,6 +643,17 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(onCompleted));
 
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, onNext, onError, onCompleted));
+        }
+
+        [KnownResource("rx://observable/do/selector/observer")]
+        public static IAsyncReactiveQbservable<TSource> Do<TSource, TNotification>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TNotification>> selector, IObserver<TNotification> observer)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TNotification)), source.Expression, selector, Expression.Constant(observer, typeof(IObserver<TNotification>))));
         }
 
         [KnownResource("rx://observable/elementat/index")]
@@ -851,49 +851,13 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<long>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
-        [KnownResource("rx://observable/max")]
-        public static IAsyncReactiveQbservable<TSource> Max<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        [KnownResource("rx://observable/max/nullable_decimal")]
+        public static IAsyncReactiveQbservable<decimal?> Max(this IAsyncReactiveQbservable<decimal?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
-        }
-
-        [KnownResource("rx://observable/max/int")]
-        public static IAsyncReactiveQbservable<int> Max(this IAsyncReactiveQbservable<int> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<int>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/max/long")]
-        public static IAsyncReactiveQbservable<long> Max(this IAsyncReactiveQbservable<long> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<long>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/max/float")]
-        public static IAsyncReactiveQbservable<float> Max(this IAsyncReactiveQbservable<float> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<float>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/max/double")]
-        public static IAsyncReactiveQbservable<double> Max(this IAsyncReactiveQbservable<double> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<decimal?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/max/decimal")]
@@ -905,22 +869,22 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<decimal>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/max/nullable_int")]
-        public static IAsyncReactiveQbservable<int?> Max(this IAsyncReactiveQbservable<int?> source)
+        [KnownResource("rx://observable/max/nullable_double")]
+        public static IAsyncReactiveQbservable<double?> Max(this IAsyncReactiveQbservable<double?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<int?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/max/nullable_long")]
-        public static IAsyncReactiveQbservable<long?> Max(this IAsyncReactiveQbservable<long?> source)
+        [KnownResource("rx://observable/max/double")]
+        public static IAsyncReactiveQbservable<double> Max(this IAsyncReactiveQbservable<double> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<long?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/max/nullable_float")]
@@ -932,22 +896,58 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<float?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/max/nullable_double")]
-        public static IAsyncReactiveQbservable<double?> Max(this IAsyncReactiveQbservable<double?> source)
+        [KnownResource("rx://observable/max/float")]
+        public static IAsyncReactiveQbservable<float> Max(this IAsyncReactiveQbservable<float> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<float>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/max/nullable_decimal")]
-        public static IAsyncReactiveQbservable<decimal?> Max(this IAsyncReactiveQbservable<decimal?> source)
+        [KnownResource("rx://observable/max/nullable_int")]
+        public static IAsyncReactiveQbservable<int?> Max(this IAsyncReactiveQbservable<int?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<decimal?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<int?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
+        [KnownResource("rx://observable/max/int")]
+        public static IAsyncReactiveQbservable<int> Max(this IAsyncReactiveQbservable<int> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<int>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
+        [KnownResource("rx://observable/max/nullable_long")]
+        public static IAsyncReactiveQbservable<long?> Max(this IAsyncReactiveQbservable<long?> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<long?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
+        [KnownResource("rx://observable/max/long")]
+        public static IAsyncReactiveQbservable<long> Max(this IAsyncReactiveQbservable<long> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<long>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
+        [KnownResource("rx://observable/max")]
+        public static IAsyncReactiveQbservable<TSource> Max<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
         }
 
         [KnownResource("rx://observable/max/comparer")]
@@ -959,48 +959,15 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(comparer, typeof(IComparer<TSource>))));
         }
 
-        [KnownResource("rx://observable/max/selector/int")]
-        public static IAsyncReactiveQbservable<int> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int>> selector)
+        [KnownResource("rx://observable/max/selector/nullable_decimal")]
+        public static IAsyncReactiveQbservable<decimal?> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, decimal?>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<int>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/max/selector/long")]
-        public static IAsyncReactiveQbservable<long> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<long>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/max/selector/float")]
-        public static IAsyncReactiveQbservable<float> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<float>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/max/selector/double")]
-        public static IAsyncReactiveQbservable<double> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<decimal?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("rx://observable/max/selector/decimal")]
@@ -1014,26 +981,26 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<decimal>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/max/selector/nullable_int")]
-        public static IAsyncReactiveQbservable<int?> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int?>> selector)
+        [KnownResource("rx://observable/max/selector/nullable_double")]
+        public static IAsyncReactiveQbservable<double?> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double?>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<int?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/max/selector/nullable_long")]
-        public static IAsyncReactiveQbservable<long?> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long?>> selector)
+        [KnownResource("rx://observable/max/selector/double")]
+        public static IAsyncReactiveQbservable<double> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<long?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("rx://observable/max/selector/nullable_float")]
@@ -1047,26 +1014,59 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<float?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/max/selector/nullable_double")]
-        public static IAsyncReactiveQbservable<double?> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double?>> selector)
+        [KnownResource("rx://observable/max/selector/float")]
+        public static IAsyncReactiveQbservable<float> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<float>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/max/selector/nullable_decimal")]
-        public static IAsyncReactiveQbservable<decimal?> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, decimal?>> selector)
+        [KnownResource("rx://observable/max/selector/nullable_int")]
+        public static IAsyncReactiveQbservable<int?> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int?>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<decimal?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<int?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/max/selector/int")]
+        public static IAsyncReactiveQbservable<int> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<int>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/max/selector/nullable_long")]
+        public static IAsyncReactiveQbservable<long?> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<long?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/max/selector/long")]
+        public static IAsyncReactiveQbservable<long> Max<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<long>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("rx://observable/merge")]
@@ -1089,49 +1089,13 @@ namespace Reaqtor.Shebang.Linq
             return first.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), first.Expression, second.Expression));
         }
 
-        [KnownResource("rx://observable/min")]
-        public static IAsyncReactiveQbservable<TSource> Min<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        [KnownResource("rx://observable/min/nullable_decimal")]
+        public static IAsyncReactiveQbservable<decimal?> Min(this IAsyncReactiveQbservable<decimal?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
-        }
-
-        [KnownResource("rx://observable/min/int")]
-        public static IAsyncReactiveQbservable<int> Min(this IAsyncReactiveQbservable<int> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<int>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/min/long")]
-        public static IAsyncReactiveQbservable<long> Min(this IAsyncReactiveQbservable<long> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<long>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/min/float")]
-        public static IAsyncReactiveQbservable<float> Min(this IAsyncReactiveQbservable<float> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<float>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/min/double")]
-        public static IAsyncReactiveQbservable<double> Min(this IAsyncReactiveQbservable<double> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<decimal?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/min/decimal")]
@@ -1143,22 +1107,22 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<decimal>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/min/nullable_int")]
-        public static IAsyncReactiveQbservable<int?> Min(this IAsyncReactiveQbservable<int?> source)
+        [KnownResource("rx://observable/min/nullable_double")]
+        public static IAsyncReactiveQbservable<double?> Min(this IAsyncReactiveQbservable<double?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<int?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/min/nullable_long")]
-        public static IAsyncReactiveQbservable<long?> Min(this IAsyncReactiveQbservable<long?> source)
+        [KnownResource("rx://observable/min/double")]
+        public static IAsyncReactiveQbservable<double> Min(this IAsyncReactiveQbservable<double> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<long?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/min/nullable_float")]
@@ -1170,22 +1134,58 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<float?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/min/nullable_double")]
-        public static IAsyncReactiveQbservable<double?> Min(this IAsyncReactiveQbservable<double?> source)
+        [KnownResource("rx://observable/min/float")]
+        public static IAsyncReactiveQbservable<float> Min(this IAsyncReactiveQbservable<float> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<float>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/min/nullable_decimal")]
-        public static IAsyncReactiveQbservable<decimal?> Min(this IAsyncReactiveQbservable<decimal?> source)
+        [KnownResource("rx://observable/min/nullable_int")]
+        public static IAsyncReactiveQbservable<int?> Min(this IAsyncReactiveQbservable<int?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<decimal?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<int?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
+        [KnownResource("rx://observable/min/int")]
+        public static IAsyncReactiveQbservable<int> Min(this IAsyncReactiveQbservable<int> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<int>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
+        [KnownResource("rx://observable/min/nullable_long")]
+        public static IAsyncReactiveQbservable<long?> Min(this IAsyncReactiveQbservable<long?> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<long?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
+        [KnownResource("rx://observable/min/long")]
+        public static IAsyncReactiveQbservable<long> Min(this IAsyncReactiveQbservable<long> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<long>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
+        [KnownResource("rx://observable/min")]
+        public static IAsyncReactiveQbservable<TSource> Min<TSource>(this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression));
         }
 
         [KnownResource("rx://observable/min/comparer")]
@@ -1197,48 +1197,15 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(comparer, typeof(IComparer<TSource>))));
         }
 
-        [KnownResource("rx://observable/min/selector/int")]
-        public static IAsyncReactiveQbservable<int> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int>> selector)
+        [KnownResource("rx://observable/min/selector/nullable_decimal")]
+        public static IAsyncReactiveQbservable<decimal?> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, decimal?>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<int>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/min/selector/long")]
-        public static IAsyncReactiveQbservable<long> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<long>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/min/selector/float")]
-        public static IAsyncReactiveQbservable<float> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<float>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/min/selector/double")]
-        public static IAsyncReactiveQbservable<double> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<decimal?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("rx://observable/min/selector/decimal")]
@@ -1252,26 +1219,26 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<decimal>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/min/selector/nullable_int")]
-        public static IAsyncReactiveQbservable<int?> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int?>> selector)
+        [KnownResource("rx://observable/min/selector/nullable_double")]
+        public static IAsyncReactiveQbservable<double?> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double?>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<int?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/min/selector/nullable_long")]
-        public static IAsyncReactiveQbservable<long?> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long?>> selector)
+        [KnownResource("rx://observable/min/selector/double")]
+        public static IAsyncReactiveQbservable<double> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<long?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("rx://observable/min/selector/nullable_float")]
@@ -1285,26 +1252,59 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<float?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/min/selector/nullable_double")]
-        public static IAsyncReactiveQbservable<double?> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double?>> selector)
+        [KnownResource("rx://observable/min/selector/float")]
+        public static IAsyncReactiveQbservable<float> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<float>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/min/selector/nullable_decimal")]
-        public static IAsyncReactiveQbservable<decimal?> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, decimal?>> selector)
+        [KnownResource("rx://observable/min/selector/nullable_int")]
+        public static IAsyncReactiveQbservable<int?> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int?>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
             if (selector == null)
                 throw new ArgumentNullException(nameof(selector));
 
-            return source.Provider.CreateQbservable<decimal?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+            return source.Provider.CreateQbservable<int?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/min/selector/int")]
+        public static IAsyncReactiveQbservable<int> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<int>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/min/selector/nullable_long")]
+        public static IAsyncReactiveQbservable<long?> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<long?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/min/selector/long")]
+        public static IAsyncReactiveQbservable<long> Min<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<long>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("rx://observable/retry")]
@@ -1367,8 +1367,8 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TResult)), source.Expression, Expression.Constant(seed, typeof(TResult)), accumulate));
         }
 
-        [KnownResource("rx://observable/select")]
-        public static IAsyncReactiveQbservable<TResult> Select<TSource, TResult>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TResult>> selector)
+        [KnownResource("rx://observable/select/indexed")]
+        public static IAsyncReactiveQbservable<TResult> Select<TSource, TResult>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int, TResult>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -1378,8 +1378,8 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource), typeof(TResult)), source.Expression, selector));
         }
 
-        [KnownResource("rx://observable/select/indexed")]
-        public static IAsyncReactiveQbservable<TResult> Select<TSource, TResult>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int, TResult>> selector)
+        [KnownResource("rx://observable/select")]
+        public static IAsyncReactiveQbservable<TResult> Select<TSource, TResult>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, TResult>> selector)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
@@ -1475,15 +1475,6 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
-        [KnownResource("rx://observable/skip/dueTime")]
-        public static IAsyncReactiveQbservable<TSource> Skip<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(dueTime, typeof(TimeSpan))));
-        }
-
         [KnownResource("rx://observable/skip/count")]
         public static IAsyncReactiveQbservable<TSource> Skip<TSource>(this IAsyncReactiveQbservable<TSource> source, int count)
         {
@@ -1491,6 +1482,15 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(source));
 
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int))));
+        }
+
+        [KnownResource("rx://observable/skip/dueTime")]
+        public static IAsyncReactiveQbservable<TSource> Skip<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(dueTime, typeof(TimeSpan))));
         }
 
         [KnownResource("rx://observable/skipuntil/absolute")]
@@ -1544,22 +1544,13 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(values, typeof(TSource[]))));
         }
 
-        [KnownResource("rx://observable/sum/float")]
-        public static IAsyncReactiveQbservable<float> Sum(this IAsyncReactiveQbservable<float> source)
+        [KnownResource("rx://observable/sum/nullable_decimal")]
+        public static IAsyncReactiveQbservable<decimal?> Sum(this IAsyncReactiveQbservable<decimal?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<float>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/sum/double")]
-        public static IAsyncReactiveQbservable<double> Sum(this IAsyncReactiveQbservable<double> source)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<decimal?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/sum/decimal")]
@@ -1571,22 +1562,22 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<decimal>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/sum/nullable_int")]
-        public static IAsyncReactiveQbservable<int?> Sum(this IAsyncReactiveQbservable<int?> source)
+        [KnownResource("rx://observable/sum/nullable_double")]
+        public static IAsyncReactiveQbservable<double?> Sum(this IAsyncReactiveQbservable<double?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<int?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/sum/nullable_long")]
-        public static IAsyncReactiveQbservable<long?> Sum(this IAsyncReactiveQbservable<long?> source)
+        [KnownResource("rx://observable/sum/double")]
+        public static IAsyncReactiveQbservable<double> Sum(this IAsyncReactiveQbservable<double> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<long?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<double>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/sum/nullable_float")]
@@ -1598,22 +1589,22 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<float?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/sum/nullable_double")]
-        public static IAsyncReactiveQbservable<double?> Sum(this IAsyncReactiveQbservable<double?> source)
+        [KnownResource("rx://observable/sum/float")]
+        public static IAsyncReactiveQbservable<float> Sum(this IAsyncReactiveQbservable<float> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<double?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<float>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
-        [KnownResource("rx://observable/sum/nullable_decimal")]
-        public static IAsyncReactiveQbservable<decimal?> Sum(this IAsyncReactiveQbservable<decimal?> source)
+        [KnownResource("rx://observable/sum/nullable_int")]
+        public static IAsyncReactiveQbservable<int?> Sum(this IAsyncReactiveQbservable<int?> source)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<decimal?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+            return source.Provider.CreateQbservable<int?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
         [KnownResource("rx://observable/sum/int")]
@@ -1625,6 +1616,15 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<int>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
         }
 
+        [KnownResource("rx://observable/sum/nullable_long")]
+        public static IAsyncReactiveQbservable<long?> Sum(this IAsyncReactiveQbservable<long?> source)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<long?>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
+        }
+
         [KnownResource("rx://observable/sum/long")]
         public static IAsyncReactiveQbservable<long> Sum(this IAsyncReactiveQbservable<long> source)
         {
@@ -1632,83 +1632,6 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(source));
 
             return source.Provider.CreateQbservable<long>(Expression.Call((MethodInfo)MethodBase.GetCurrentMethod(), source.Expression));
-        }
-
-        [KnownResource("rx://observable/sum/selector/float")]
-        public static IAsyncReactiveQbservable<float> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<float>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/sum/selector/double")]
-        public static IAsyncReactiveQbservable<double> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/sum/selector/decimal")]
-        public static IAsyncReactiveQbservable<decimal> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, decimal>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<decimal>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/sum/selector/nullable_int")]
-        public static IAsyncReactiveQbservable<int?> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int?>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<int?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/sum/selector/nullable_long")]
-        public static IAsyncReactiveQbservable<long?> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long?>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<long?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/sum/selector/nullable_float")]
-        public static IAsyncReactiveQbservable<float?> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float?>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<float?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
-        }
-
-        [KnownResource("rx://observable/sum/selector/nullable_double")]
-        public static IAsyncReactiveQbservable<double?> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double?>> selector)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-            if (selector == null)
-                throw new ArgumentNullException(nameof(selector));
-
-            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("rx://observable/sum/selector/nullable_decimal")]
@@ -1722,6 +1645,72 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<decimal?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
+        [KnownResource("rx://observable/sum/selector/decimal")]
+        public static IAsyncReactiveQbservable<decimal> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, decimal>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<decimal>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/sum/selector/nullable_double")]
+        public static IAsyncReactiveQbservable<double?> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/sum/selector/double")]
+        public static IAsyncReactiveQbservable<double> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, double>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<double>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/sum/selector/nullable_float")]
+        public static IAsyncReactiveQbservable<float?> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<float?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/sum/selector/float")]
+        public static IAsyncReactiveQbservable<float> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, float>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<float>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/sum/selector/nullable_int")]
+        public static IAsyncReactiveQbservable<int?> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<int?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
         [KnownResource("rx://observable/sum/selector/int")]
         public static IAsyncReactiveQbservable<int> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, int>> selector)
         {
@@ -1731,6 +1720,17 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(selector));
 
             return source.Provider.CreateQbservable<int>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
+        }
+
+        [KnownResource("rx://observable/sum/selector/nullable_long")]
+        public static IAsyncReactiveQbservable<long?> Sum<TSource>(this IAsyncReactiveQbservable<TSource> source, Expression<Func<TSource, long?>> selector)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+            if (selector == null)
+                throw new ArgumentNullException(nameof(selector));
+
+            return source.Provider.CreateQbservable<long?>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, selector));
         }
 
         [KnownResource("rx://observable/sum/selector/long")]
@@ -1753,15 +1753,6 @@ namespace Reaqtor.Shebang.Linq
             return sources.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), sources.Expression));
         }
 
-        [KnownResource("rx://observable/take/dueTime")]
-        public static IAsyncReactiveQbservable<TSource> Take<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(dueTime, typeof(TimeSpan))));
-        }
-
         [KnownResource("rx://observable/take/count")]
         public static IAsyncReactiveQbservable<TSource> Take<TSource>(this IAsyncReactiveQbservable<TSource> source, int count)
         {
@@ -1769,6 +1760,15 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(source));
 
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int))));
+        }
+
+        [KnownResource("rx://observable/take/dueTime")]
+        public static IAsyncReactiveQbservable<TSource> Take<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(dueTime, typeof(TimeSpan))));
         }
 
         [KnownResource("rx://observable/takeuntil/absolute")]
@@ -1864,15 +1864,6 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<TSource>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, predicate));
         }
 
-        [KnownResource("rx://observable/window/duration")]
-        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration)
-        {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
-
-            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan))));
-        }
-
         [KnownResource("rx://observable/window/count")]
         public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, int count)
         {
@@ -1882,13 +1873,13 @@ namespace Reaqtor.Shebang.Linq
             return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(count, typeof(int))));
         }
 
-        [KnownResource("rx://observable/window/duration/shift")]
-        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration, TimeSpan shift)
+        [KnownResource("rx://observable/window/duration")]
+        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration)
         {
             if (source == null)
                 throw new ArgumentNullException(nameof(source));
 
-            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan)), Expression.Constant(shift, typeof(TimeSpan))));
+            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan))));
         }
 
         [KnownResource("rx://observable/window/count/skip")]
@@ -1907,6 +1898,15 @@ namespace Reaqtor.Shebang.Linq
                 throw new ArgumentNullException(nameof(source));
 
             return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan)), Expression.Constant(count, typeof(int))));
+        }
+
+        [KnownResource("rx://observable/window/duration/shift")]
+        public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<TSource>> Window<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan duration, TimeSpan shift)
+        {
+            if (source == null)
+                throw new ArgumentNullException(nameof(source));
+
+            return source.Provider.CreateQbservable<IAsyncReactiveQbservable<TSource>>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)), source.Expression, Expression.Constant(duration, typeof(TimeSpan)), Expression.Constant(shift, typeof(TimeSpan))));
         }
 
     }

@@ -122,7 +122,15 @@ var toQuotedShallow = new Func<Type, string>(t =>
     return name;
 });
 
-var methods = typeof(Reaqtive.Subscribable).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.IsDefined(typeof(ExtensionAttribute))).Where(m => m.Name != "ToSubscribable" && !(m.Name == "CombineLatest" && m.GetGenericArguments().Length > 8)).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length);
+var methods = typeof(Reaqtive.Subscribable).GetMethods(BindingFlags.Public | BindingFlags.Static)
+                .Where(m => m.IsDefined(typeof(ExtensionAttribute)))
+                .Where(m => m.Name != "ToSubscribable" && !(m.Name == "CombineLatest" && m.GetGenericArguments().Length > 8))
+                .OrderBy(m => m.Name)
+                .ThenBy(m => m.IsGenericMethod ? m.GetGenericArguments().Length : 0)
+                .ThenBy(m => m.IsGenericMethod ? string.Join(", ", m.GetGenericArguments().Select(t => t.Name)) : "")
+                .ThenBy(m => m.GetParameters().Length)
+                .ThenBy(m => string.Join(", ", m.GetParameters().Select(p => p.Name)))
+                .ThenBy(m => string.Join(", ", m.GetParameters().Select(p => toCSharp(p.ParameterType))));
 
 var uris = new HashSet<string>();
 
