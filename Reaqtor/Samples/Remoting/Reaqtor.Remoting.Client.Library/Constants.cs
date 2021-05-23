@@ -39,6 +39,42 @@ namespace Reaqtor.Remoting.Client
             }
 
             /// <summary>
+            /// Resource identifiers for Contains operators.
+            /// </summary>
+            public static class Contains
+            {
+                /// <summary>
+                /// The resource identifier for the Contains signature that takes
+                /// an element.
+                /// </summary>
+                public const string Element = "rx://operators/contains/element";
+
+                /// <summary>
+                /// The resource identifier for the Contains signature that takes
+                /// an element and an IEqualityComparer.
+                /// </summary>
+                public const string ElementComparer = "rx://operators/contains/element/comparer";
+            }
+
+            /// <summary>
+            /// Resource identifiers for DefaultIfEmpty operators.
+            /// </summary>
+            public static class DefaultIfEmpty
+            {
+                /// <summary>
+                /// The resource identifier for the DefaultIfEmpty signature that
+                /// takes no argument.
+                /// </summary>
+                public const string NoArgument = "rx://operators/defaultIfEmpty";
+
+                /// <summary>
+                /// The resource identifier for the DefaultIfEmpty signature that
+                /// takes a default value.
+                /// </summary>
+                public const string DefaultValue = "rx://operators/defaultIfEmpty/defaultValue";
+            }
+
+            /// <summary>
             /// Resource identifiers for DelaySubscription operators.
             /// </summary>
             public static class DelaySubscription
@@ -153,6 +189,30 @@ namespace Reaqtor.Remoting.Client
             }
 
             /// <summary>
+            /// Resource identifiers for ElementAt operators.
+            /// </summary>
+            public static class ElementAt
+            {
+                /// <summary>
+                /// The resource identifier for the ElementAt signature that
+                /// takes an index.
+                /// </summary>
+                public const string Index = "rx://operators/elementAt/index";
+            }
+
+            /// <summary>
+            /// Resource identifiers for ElementAtOrDefault operators.
+            /// </summary>
+            public static class ElementAtOrDefault
+            {
+                /// <summary>
+                /// The resource identifier for the ElementAtOrDefault
+                /// signature that takes an index.
+                /// </summary>
+                public const string Index = "rx://operators/elementAtOrDefault/index";
+            }
+
+            /// <summary>
             /// Resource identifiers for Empty operators.
             /// </summary>
             public static class Empty
@@ -251,6 +311,42 @@ namespace Reaqtor.Remoting.Client
                 /// that takes no argument.
                 /// </summary>
                 public const string NoArgument = "rx://observable/ignoreElements";
+            }
+
+            /// <summary>
+            /// Resource identifiers for LastAsync operators.
+            /// </summary>
+            public static class LastAsync
+            {
+                /// <summary>
+                /// The resource identifier for the LastAsync signature that
+                /// takes no argument.
+                /// </summary>
+                public const string NoArgument = "rx://operators/last";
+
+                /// <summary>
+                /// The resource identifier for the LastAsync signature that
+                /// takes a filter predicate as an argument.
+                /// </summary>
+                public const string Func = "rx://operators/last/filtered";
+            }
+
+            /// <summary>
+            /// Resource identifiers for the LastOrDefaultAsync operators.
+            /// </summary>
+            public static class LastOrDefaultAsync
+            {
+                /// <summary>
+                /// The resource identifier for the LastAsync signature that
+                /// takes no argument.
+                /// </summary>
+                public const string NoArgument = "rx://operators/lastOrDefault";
+
+                /// <summary>
+                /// The resource identifier for the LastAsync signature that
+                /// takes a filter predicate as an argument.
+                /// </summary>
+                public const string Func = "rx://operators/lastOrDefault/filtered";
             }
 
             /// <summary>

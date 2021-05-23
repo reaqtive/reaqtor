@@ -331,6 +331,89 @@ namespace Reaqtor
         }
 
         /// <summary>
+        /// Checks whether the query observable sequence contains specified
+        /// element.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence in which to locate the element.</param>
+        /// <param name="element">The element to locate in the source sequence.</param>
+        /// <returns>
+        /// A queryable observable sequence containing a boolean value which determines
+        /// whether the source query observable sequence contains specified element or not.
+        /// </returns>
+        [KnownResource(Remoting.Client.Constants.Observable.Contains.Element)]
+        public static IAsyncReactiveQbservable<bool> Contains<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            TSource element)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<bool>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    Expression.Constant(element, typeof(TSource))));
+        }
+
+        /// <summary>
+        /// Returns a query observable sequence that contains all elements, or a default
+        /// item if the source query observable sequence contains no element.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <returns>
+        /// Query observable sequence containing all elements from the source query observable
+        /// sequence, or a default item.
+        /// </returns>
+        [KnownResource(Remoting.Client.Constants.Observable.DefaultIfEmpty.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> DefaultIfEmpty<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// Returns a query observable sequence that contains all elements, or a default
+        /// item if the source query observable sequence contains no element.
+        /// </summary>
+        /// <typeparam name="TSource">The type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="defaultValue">
+        /// The default item to propagate when the source sequence emits nothing.
+        /// </param>
+        /// <returns>
+        /// Query observable sequence containing all elements from the source query observable
+        /// sequence, or a default item.
+        /// </returns>
+        [KnownResource(Remoting.Client.Constants.Observable.DefaultIfEmpty.DefaultValue)]
+        public static IAsyncReactiveQbservable<TSource> DefaultIfEmpty<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            TSource defaultValue)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    Expression.Constant(defaultValue, typeof(TSource))));
+        }
+
+        /// <summary>
         /// Time shifts the query observable sequence by delaying the
         /// subscription to the specified absolute time.
         /// </summary>
@@ -882,6 +965,92 @@ namespace Reaqtor
         }
 
         /// <summary>
+        /// Returns element at specified index.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="index">The zero-based index of the element.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the element
+        /// of the source sequence at specified index. If the source sequence
+        /// does not propagate any element at specified index, an
+        /// ArgumentOutOfRangeException is propagated to signal the
+        /// index was out of range.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// <c>index</c> is not within sequence boundary.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.ElementAt.Index)]
+        public static IAsyncReactiveQbservable<TSource> ElementAt<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            int index)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    Expression.Constant(index, typeof(int))));
+        }
+
+        /// <summary>
+        /// Returns element at specified index, or a default item if sequence
+        /// does not propagate any element at specified index.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="index">The zero-based index of the element.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the element
+        /// of the source sequence at specified index. If the source sequence
+        /// does not propagate any element at specified index, a default item
+        /// is propagated.
+        /// </returns>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        /// <exception cref="System.ArgumentOutOfRangeException">
+        /// <c>index</c> is less than zero.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.ElementAtOrDefault.Index)]
+        public static IAsyncReactiveQbservable<TSource> ElementAtOrDefault<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            int index)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (index < 0)
+            {
+                throw new ArgumentOutOfRangeException(nameof(index));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    Expression.Constant(index, typeof(int))));
+        }
+
+        /// <summary>
         /// Returns a query observable sequence that has no elements.
         /// </summary>
         /// <typeparam name="TSource">
@@ -1346,6 +1515,326 @@ namespace Reaqtor
                 Expression.Call(
                     ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
                     source.Expression));
+        }
+
+        /// <summary>
+        /// Last returns the last value from a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the last element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, an InvalidOperationException is propagated to signal the
+        /// stream was empty.
+        /// </returns>
+        /// <remarks>
+        /// This operator is semantically close to Take(1), modulo the
+        /// exception behavior.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.LastAsync.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> Last<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// LastAsync returns the last value from a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the last element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, an InvalidOperationException is propagated to signal the
+        /// stream was empty.
+        /// </returns>
+        /// <remarks>
+        /// This operator is semantically close to Take(1), modulo the
+        /// exception behavior.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.LastAsync.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> LastAsync<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// Last returns the last value from a sequence that passes the
+        /// filter predicate.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="predicate">
+        /// A function to test each source element for a condition.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the last element
+        /// of the source sequence after applying the filter predicate. If the
+        /// source sequence does not contain any elements, an InvalidOperationException
+        /// is propagated to signal the stream was empty.
+        /// </returns>
+        /// <remarks>
+        /// This operator is semantically close to Take(1), modulo the
+        /// exception behavior.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> or <c>predicate</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.LastAsync.Func)]
+        public static IAsyncReactiveQbservable<TSource> Last<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    predicate));
+        }
+
+        /// <summary>
+        /// LastAsync returns the last value from a sequence that passes the
+        /// filter predicate.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="predicate">
+        /// A function to test each source element for a condition.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the last element
+        /// of the source sequence after applying the filter predicate. If the
+        /// source sequence does not contain any elements, an InvalidOperationException
+        /// is propagated to signal the stream was empty.
+        /// </returns>
+        /// <remarks>
+        /// This operator is semantically close to Take(1), modulo the
+        /// exception behavior.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> or <c>predicate</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.LastAsync.Func)]
+        public static IAsyncReactiveQbservable<TSource> LastAsync<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    predicate));
+        }
+
+        /// <summary>
+        /// LastOrDefault returns the last value from a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the last element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, a default value is propagated.
+        /// </returns>
+        /// <remarks>
+        /// This operator is semantically close to Take(1), modulo the
+        /// default value propagation behavior.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.LastOrDefaultAsync.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> LastOrDefault<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// LastOrDefaultAsync returns the last value from a sequence.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the last element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, a default value is propagated.
+        /// </returns>
+        /// <remarks>
+        /// This operator is semantically close to Take(1), modulo the
+        /// default value propagation behavior.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.LastOrDefaultAsync.NoArgument)]
+        public static IAsyncReactiveQbservable<TSource> LastOrDefaultAsync<TSource>(
+            this IAsyncReactiveQbservable<TSource> source)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression));
+        }
+
+        /// <summary>
+        /// LastOrDefault returns the last value from a sequence that passes
+        /// the filter predicate.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="predicate">
+        /// A function to test each source element for a condition.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the last element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, a default value is propagated.
+        /// </returns>
+        /// <remarks>
+        /// This operator is semantically close to Take(1), modulo the
+        /// default value propagation behavior.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> or <c>predicate</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.LastOrDefaultAsync.Func)]
+        public static IAsyncReactiveQbservable<TSource> LastOrDefault<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    predicate));
+        }
+
+        /// <summary>
+        /// LastOrDefaultAsync returns the last value from a sequence that passes
+        /// the filter predicate.
+        /// </summary>
+        /// <typeparam name="TSource">
+        /// The type of the elements in the source query observable sequence.
+        /// </typeparam>
+        /// <param name="source">The source query observable sequence.</param>
+        /// <param name="predicate">
+        /// A function to test each source element for a condition.
+        /// </param>
+        /// <returns>
+        /// A queryable observable sequence which contains only the last element
+        /// of the source sequence. If the source sequence does not contain any
+        /// elements, a default value is propagated.
+        /// </returns>
+        /// <remarks>
+        /// This operator is semantically close to Take(1), modulo the
+        /// default value propagation behavior.
+        /// </remarks>
+        /// <exception cref="System.ArgumentNullException">
+        /// <c>source</c> or <c>predicate</c> is null.
+        /// </exception>
+        [KnownResource(Remoting.Client.Constants.Observable.LastOrDefaultAsync.Func)]
+        public static IAsyncReactiveQbservable<TSource> LastOrDefaultAsync<TSource>(
+            this IAsyncReactiveQbservable<TSource> source,
+            Expression<Func<TSource, bool>> predicate)
+        {
+            if (source == null)
+            {
+                throw new ArgumentNullException(nameof(source));
+            }
+
+            if (predicate == null)
+            {
+                throw new ArgumentNullException(nameof(predicate));
+            }
+
+            return source.Provider.CreateQbservable<TSource>(
+                Expression.Call(
+                    ((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TSource)),
+                    source.Expression,
+                    predicate));
         }
 
         /// <summary>

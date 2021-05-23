@@ -109,6 +109,35 @@ namespace Reaqtor.Expressions.Core
 
         #endregion
 
+        #region Contains
+
+        /// <summary>
+        /// Aggregates the source sequence to a boolean value determining whether the source sequence contains specified element.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence in which to locate the element.</param>
+        /// <param name="element">The element to locate in the source sequence.</param>
+        /// <returns>Observable sequence containing a single boolean value which determines whether the source sequence contains specified element or not.</returns>
+        public static IReactiveQbservable<bool> Contains<TSource>(this IReactiveQbservable<TSource> source, TSource element)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Aggregates the source sequence to a boolean value determining whether the source sequence contains specified element.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence in which to locate the element.</param>
+        /// <param name="element">The element to locate in the source sequence.</param>
+        /// <param name="comparer">Comparer used to compare whether an element is the same as the element being located.</param>
+        /// <returns>Observable sequence containing a single boolean value which determines whether the source sequence contains specified element or not.</returns>
+        public static IReactiveQbservable<bool> Contains<TSource>(this IReactiveQbservable<TSource> source, TSource element, IEqualityComparer<TSource> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region Count
 
         /// <summary>
@@ -502,6 +531,33 @@ namespace Reaqtor.Expressions.Core
 
         #region Reactive Operators
 
+        #region DefaultIfEmpty
+
+        /// <summary>
+        /// Propagates all elements from the source sequence, or a default value if source sequence contains no element.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <returns>Observable sequence propagating all of the source sequence's elements, or a default value.</returns>
+        public static IReactiveQbservable<TSource> DefaultIfEmpty<TSource>(this IReactiveQbservable<TSource> source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Propagates all elements from the source sequence, or a default value if source sequence contains no element.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence whose elements to propagate.</param>
+        /// <param name="defaultValue">The default item to propagate when the source sequence emits nothing.</param>
+        /// <returns>Observable sequence propagating all of the source sequence's elements, or a default value.</returns>
+        public static IReactiveQbservable<TSource> DefaultIfEmpty<TSource>(this IReactiveQbservable<TSource> source, TSource defaultValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region Distinct
 
         /// <summary>
@@ -744,6 +800,38 @@ namespace Reaqtor.Expressions.Core
 
         #region Standard Query Operators
 
+        #region ElementAt
+
+        /// <summary>
+        /// Returns a sequence propagating the element at the specified index of the source sequence. If the source sequence does not propagate element at specified index, an ArgumentOutOfRange error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence in which to retrieve the element.</param>
+        /// <param name="index">The zero-based index of the element to retrieve.</param>
+        /// <returns>Observable sequence propagating the element at specified index.</returns>
+        public static IReactiveQbservable<TSource> ElementAt<TSource>(this IReactiveQbservable<TSource> source, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region ElementAtOrDefault
+
+        /// <summary>
+        /// Returns a sequence propagating the element at the specified index of the source sequence. If the source sequence does not propagate element at specified index, a default item is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence in which to retrieve the element.</param>
+        /// <param name="index">The zero-based index of the element to retrieve.</param>
+        /// <returns>Observable sequence propagating the element at specified index.</returns>
+        public static IReactiveQbservable<TSource> ElementAtOrDefault<TSource>(this IReactiveQbservable<TSource> source, int index)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
         #region FirstAsync
 
         /// <summary>
@@ -854,6 +942,60 @@ namespace Reaqtor.Expressions.Core
         /// <param name="comparer">Comparer used to compare keys for equality.</param>
         /// <returns>Observable sequence of groups, which are observable sequences themselves.</returns>
         public static IReactiveQbservable<IReactiveGroupedQbservable<TKey, TElement>> GroupBy<TSource, TKey, TElement>(this IReactiveQbservable<TSource> source, Expression<Func<TSource, TKey>> keySelector, Expression<Func<TSource, TElement>> elementSelector, IEqualityComparer<TKey> comparer)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region LastAsync
+
+        /// <summary>
+        /// Returns a sequence propagating the last element of the source sequence. If the source sequence is empty, an InvalidOperatingException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the last element for.</param>
+        /// <returns>Observable sequence propagating the last element of the source sequence.</returns>
+        public static IReactiveQbservable<TSource> LastAsync<TSource>(this IReactiveQbservable<TSource> source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a sequence propagating the last element of the source sequence that matches the specified predicate. If the source sequence has no element matching the predicate, an InvalidOperatingException error is propagated.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the last element matching the predicate for.</param>
+        /// <param name="predicate">Predicate to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence propagating the last element of the source sequence that matches the specified predicate.</returns>
+        public static IReactiveQbservable<TSource> LastAsync<TSource>(this IReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
+        {
+            throw new NotImplementedException();
+        }
+
+        #endregion
+
+        #region LastOrDefaultAsync
+
+        /// <summary>
+        /// Returns a sequence propagating the last element of the source sequence. If the source sequence is empty, a default value is produced.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the last element for.</param>
+        /// <returns>Observable sequence propagating the last element of the source sequence.</returns>
+        public static IReactiveQbservable<TSource> LastOrDefaultAsync<TSource>(this IReactiveQbservable<TSource> source)
+        {
+            throw new NotImplementedException();
+        }
+
+        /// <summary>
+        /// Returns a sequence propagating the last element of the source sequence that matches the specified predicate. If the source sequence has no element matching the predicate, a default value is produced.
+        /// </summary>
+        /// <typeparam name="TSource">Type of the elements in the source sequence.</typeparam>
+        /// <param name="source">Source sequence to propagate the last element matching the predicate for.</param>
+        /// <param name="predicate">Predicate to apply to each element in the source sequence.</param>
+        /// <returns>Observable sequence propagating the last element of the source sequence that matches the specified predicate.</returns>
+        public static IReactiveQbservable<TSource> LastOrDefaultAsync<TSource>(this IReactiveQbservable<TSource> source, Expression<Func<TSource, bool>> predicate)
         {
             throw new NotImplementedException();
         }
