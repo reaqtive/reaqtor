@@ -61,7 +61,7 @@ namespace Reaqtive.Operators
 
             public void OnNext(TSource value)
             {
-                var b = false;
+                bool b;
 
                 try
                 {
