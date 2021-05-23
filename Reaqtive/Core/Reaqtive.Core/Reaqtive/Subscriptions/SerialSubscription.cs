@@ -25,7 +25,7 @@ namespace Reaqtive
 
             set
             {
-                var shouldDispose = false;
+                bool shouldDispose;
 
                 var old = default(ISubscription);
                 lock (_gate)

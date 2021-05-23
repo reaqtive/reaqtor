@@ -73,7 +73,8 @@ namespace Reaqtive.Operators
 
             public void OnNext(TResult value)
             {
-                var added = false;
+                bool added;
+
                 try
                 {
                     TKey key = Params._keySelector(value);

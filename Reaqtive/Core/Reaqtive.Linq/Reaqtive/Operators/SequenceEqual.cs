@@ -158,10 +158,10 @@ namespace Reaqtive.Operators
                     {
                         if (Other._queue.Count > 0)
                         {
-                            var equal = false;
-
                             var other = Other._queue.Dequeue();
                             _parent.StateChanged = true;
+
+                            bool equal;
 
                             try
                             {

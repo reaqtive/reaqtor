@@ -44,6 +44,7 @@ namespace Reaqtive.Operators
                 {
                     Output.OnNext(Params._defaultValue);
                 }
+
                 Output.OnCompleted();
                 Dispose();
             }
@@ -61,6 +62,7 @@ namespace Reaqtive.Operators
                     _isNotEmpty = true;
                     StateChanged = true;
                 }
+
                 Output.OnNext(value);
             }
 
@@ -72,12 +74,14 @@ namespace Reaqtive.Operators
             protected override void LoadStateCore(IOperatorStateReader reader)
             {
                 base.LoadStateCore(reader);
+
                 _isNotEmpty = reader.Read<bool>();
             }
 
             protected override void SaveStateCore(IOperatorStateWriter writer)
             {
                 base.SaveStateCore(writer);
+
                 writer.Write(_isNotEmpty);
             }
         }

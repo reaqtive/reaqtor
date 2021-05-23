@@ -198,7 +198,8 @@ namespace Reaqtive
                     }
                     else
                     {
-                        var hasGroup = false;
+                        bool hasGroup;
+
                         try
                         {
                             hasGroup = _groups.TryGetValue(key, out entry);
