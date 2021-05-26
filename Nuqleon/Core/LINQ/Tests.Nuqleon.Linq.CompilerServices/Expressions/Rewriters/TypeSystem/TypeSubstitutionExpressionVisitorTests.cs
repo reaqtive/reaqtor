@@ -1165,7 +1165,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             protected override object ConvertConstant(object oldValue, Type newType)
             {
-                return newType == typeof(long) && oldValue is int i ? (long)i : base.ConvertConstant(oldValue, newType);
+                static object BoxInt64(long l) => l;
+                return newType == typeof(long) && oldValue is int i ? BoxInt64(i) : base.ConvertConstant(oldValue, newType);
             }
         }
 
@@ -1203,7 +1204,8 @@ namespace Tests.System.Linq.CompilerServices
 
             protected override object ConvertConstant(object oldValue, Type newType)
             {
-                return oldValue is int i && newType == typeof(long) ? (long)i : base.ConvertConstant(oldValue, newType);
+                static object BoxInt64(long l) => l;
+                return oldValue is int i && newType == typeof(long) ? BoxInt64(i) : base.ConvertConstant(oldValue, newType);
             }
         }
 

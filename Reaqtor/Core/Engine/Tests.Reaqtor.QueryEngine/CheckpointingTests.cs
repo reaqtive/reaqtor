@@ -2166,13 +2166,13 @@ namespace Tests.Reaqtor.QueryEngine
             // Assert -----------------------------------------------------------------
 
             Assert.IsTrue(final.TryGetItemKeys("Observers", out var obv));
-            Assert.AreEqual(0, obv.Where(x => !x.StartsWith("mgmt")).Count()); // none
+            Assert.AreEqual(0, obv.Count(x => !x.StartsWith("mgmt"))); // none
 
             Assert.IsTrue(final.TryGetItemKeys("Subjects", out var str));
-            Assert.AreEqual(1, str.Where(x => !x.StartsWith("mgmt")).Count()); // bridge
+            Assert.AreEqual(1, str.Count(x => !x.StartsWith("mgmt"))); // bridge
 
             Assert.IsTrue(final.TryGetItemKeys("Subscriptions", out var sub));
-            Assert.AreEqual(2, sub.Where(x => !x.StartsWith("mgmt")).Count()); // upstream + test
+            Assert.AreEqual(2, sub.Count(x => !x.StartsWith("mgmt"))); // upstream + test
 
             sub1.Dispose();
         }
@@ -4631,16 +4631,16 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreEqual(2, undefined.Count);
 
             Assert.IsTrue(final.TryGetItemKeys("Observables", out var obs));
-            Assert.AreEqual(1, obs.Where(x => !x.StartsWith("mgmt")).Count()); // upstream
+            Assert.AreEqual(1, obs.Count(x => !x.StartsWith("mgmt"))); // upstream
 
             Assert.IsTrue(final.TryGetItemKeys("Observers", out var obv));
-            Assert.AreEqual(0, obv.Where(x => !x.StartsWith("mgmt")).Count()); // none
+            Assert.AreEqual(0, obv.Count(x => !x.StartsWith("mgmt"))); // none
 
             Assert.IsTrue(final.TryGetItemKeys("Subjects", out var str));
-            Assert.AreEqual(1, str.Where(x => !x.StartsWith("mgmt")).Count()); // bridge
+            Assert.AreEqual(1, str.Count(x => !x.StartsWith("mgmt"))); // bridge
 
             Assert.IsTrue(final.TryGetItemKeys("Subscriptions", out var sub));
-            Assert.AreEqual(2, sub.Where(x => !x.StartsWith("mgmt")).Count()); // upstream + test
+            Assert.AreEqual(2, sub.Count(x => !x.StartsWith("mgmt"))); // upstream + test
         }
 
         private static InMemoryStateStore GetStore(string fileName)

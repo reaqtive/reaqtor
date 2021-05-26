@@ -795,7 +795,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             public static explicit operator Uri(UnaryOps? b) => b == null ? new Uri("http://bar.com") : new Uri("http://foo.com");
             public static explicit operator long(UnaryOps? b) => b == null ? 0L : 42L;
-            public static explicit operator byte?(UnaryOps? b) => b == null ? (byte?)0 : (byte?)42;
+            public static explicit operator byte?(UnaryOps? b) => b == null ? (byte?)0 : 42;
         }
 #pragma warning restore IDE0060 // Remove unused parameter
     }
