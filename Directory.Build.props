@@ -60,7 +60,7 @@
 
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
     <!--
-      NB: Trying to put these in a .csproj included through RrojectReference results in errors at runtime:
+      NB: Trying to put these in a .csproj included through ProjectReference results in errors at runtime:
 
             Testhost process exited with error: A fatal error was encountered. The library 'hostpolicy.dll'
             required to execute the application was not found in 'C:\Program Files\dotnet'.
@@ -69,10 +69,10 @@
           properly to the test project output folder, which then causes the test runner to treat the project
           as a "self-contained app".
     -->
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.8.3" />
-    <PackageReference Include="MSTest.TestAdapter" Version="2.1.2" />
-    <PackageReference Include="MSTest.TestFramework" Version="2.1.2" />
-    <PackageReference Include="coverlet.collector" Version="3.0.3-preview.6.ge4534aed18" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.2.4" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.4" />
+    <PackageReference Include="coverlet.collector" Version="3.0.3" PrivateAssets="all" />
     <Compile Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\AssertEx.cs" Link="AssertEx.cs" />
   </ItemGroup>
 
