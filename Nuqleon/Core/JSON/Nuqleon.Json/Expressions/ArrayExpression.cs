@@ -215,7 +215,17 @@ namespace Nuqleon.Json.Expressions
         /// <summary>
         /// Gets the first element.
         /// </summary>
-        protected Expression First => _element1 is ReadOnlyCollection<Expression> elements ? elements[0] : (Expression)_element1;
+        protected Expression First
+        {
+            get
+            {
+                var element1 = _element1;
+
+#pragma warning disable IDE0004 // Remove Unnecessary Cast (https://github.com/dotnet/roslyn/issues/53698)
+                return element1 is ReadOnlyCollection<Expression> elements ? elements[0] : (Expression)element1;
+#pragma warning restore IDE0004
+            }
+        }
 
         /// <summary>
         /// Appends the JSON fragment representing the array expression to the specified string builder.
