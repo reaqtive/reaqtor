@@ -42,7 +42,7 @@ namespace Reaqtor.Remoting.TestingFramework
         {
             return _useRelativeScheduling
                 ? new ColdTimelineSubscription(this, observer)
-                : (ISubscription)new HotTimelineSubscription(this, observer);
+                : new HotTimelineSubscription(this, observer);
         }
 
         private sealed class ColdTimelineSubscription : BaseTimelineSubscription

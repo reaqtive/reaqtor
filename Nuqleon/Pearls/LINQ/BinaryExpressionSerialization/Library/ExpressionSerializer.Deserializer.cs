@@ -79,154 +79,94 @@ namespace System.Linq.Expressions.Bonsai.Serialization.Binary
 
                 var nodeType = (ExpressionType)(b - 1);
 
-                switch (nodeType)
+                return nodeType switch
                 {
-                    case ExpressionType.Conditional:
-                        return DeserializeConditional();
-
-                    case ExpressionType.Constant:
-                        return DeserializeConstant();
-
-                    case ExpressionType.Default:
-                        return DeserializeDefault();
-
-                    case ExpressionType.TypeIs:
-                    case ExpressionType.TypeEqual:
-                        return DeserializeTypeBinary(nodeType);
-
-                    case ExpressionType.ArrayLength:
-                    case ExpressionType.Quote:
-                        return DeserializeUnary1(nodeType);
-
-                    case ExpressionType.Throw:
-                    case ExpressionType.TypeAs:
-                    case ExpressionType.Unbox:
-                        return DeserializeUnary2(nodeType);
-
-                    case ExpressionType.Negate:
-                    case ExpressionType.NegateChecked:
-                    case ExpressionType.Not:
-                    case ExpressionType.IsFalse:
-                    case ExpressionType.IsTrue:
-                    case ExpressionType.OnesComplement:
-                    case ExpressionType.UnaryPlus:
-                    case ExpressionType.Increment:
-                    case ExpressionType.Decrement:
-                    case ExpressionType.PreIncrementAssign:
-                    case ExpressionType.PreDecrementAssign:
-                    case ExpressionType.PostIncrementAssign:
-                    case ExpressionType.PostDecrementAssign:
-                        return DeserializeUnary3(nodeType);
-
-                    case ExpressionType.Convert:
-                    case ExpressionType.ConvertChecked:
-                        return DeserializeUnary4(nodeType);
-
-                    case ExpressionType.ArrayIndex:
-                    case ExpressionType.Assign:
-                        return DeserializeBinary1(nodeType);
-
-                    case ExpressionType.Add:
-                    case ExpressionType.AddChecked:
-                    case ExpressionType.Subtract:
-                    case ExpressionType.SubtractChecked:
-                    case ExpressionType.Multiply:
-                    case ExpressionType.MultiplyChecked:
-                    case ExpressionType.Divide:
-                    case ExpressionType.Modulo:
-                    case ExpressionType.Power:
-                    case ExpressionType.And:
-                    case ExpressionType.AndAlso:
-                    case ExpressionType.Or:
-                    case ExpressionType.OrElse:
-                    case ExpressionType.ExclusiveOr:
-                    case ExpressionType.RightShift:
-                    case ExpressionType.LeftShift:
-                        return DeserializeBinary2(nodeType);
-
-                    case ExpressionType.LessThan:
-                    case ExpressionType.LessThanOrEqual:
-                    case ExpressionType.GreaterThan:
-                    case ExpressionType.GreaterThanOrEqual:
-                    case ExpressionType.Equal:
-                    case ExpressionType.NotEqual:
-                        return DeserializeBinary3(nodeType);
-
-                    case ExpressionType.Coalesce:
-                        return DeserializeBinary4(nodeType);
-
-                    case ExpressionType.AddAssign:
-                    case ExpressionType.AddAssignChecked:
-                    case ExpressionType.SubtractAssign:
-                    case ExpressionType.SubtractAssignChecked:
-                    case ExpressionType.MultiplyAssign:
-                    case ExpressionType.MultiplyAssignChecked:
-                    case ExpressionType.DivideAssign:
-                    case ExpressionType.ModuloAssign:
-                    case ExpressionType.PowerAssign:
-                    case ExpressionType.AndAssign:
-                    case ExpressionType.OrAssign:
-                    case ExpressionType.ExclusiveOrAssign:
-                    case ExpressionType.RightShiftAssign:
-                    case ExpressionType.LeftShiftAssign:
-                        return DeserializeBinary5(nodeType);
-
-                    case ExpressionType.Block:
-                        return DeserializeBlock();
-
-                    case ExpressionType.Goto:
-                        return DeserializeGoto();
-
-                    case ExpressionType.Index:
-                        return DeserializeIndex();
-
-                    case ExpressionType.Invoke:
-                        return DeserializeInvocation();
-
-                    case ExpressionType.Lambda:
-                        return DeserializeLambda();
-
-                    case ExpressionType.ListInit:
-                        return DeserializeListInit();
-
-                    case ExpressionType.Loop:
-                        return DeserializeLoop();
-
-                    case ExpressionType.MemberAccess:
-                        return DeserializeMember();
-
-                    case ExpressionType.MemberInit:
-                        return DeserializeMemberInit();
-
-                    case ExpressionType.Call:
-                        return DeserializeMethodCall();
-
-                    case ExpressionType.New:
-                        return DeserializeNew();
-
-                    case ExpressionType.NewArrayBounds:
-                    case ExpressionType.NewArrayInit:
-                        return DeserializeNewArray(nodeType);
-
-                    case ExpressionType.Parameter:
-                        return DeserializeParameter();
-
+                    ExpressionType.Conditional => DeserializeConditional(),
+                    ExpressionType.Constant => DeserializeConstant(),
+                    ExpressionType.Default => DeserializeDefault(),
+                    ExpressionType.TypeIs or
+                    ExpressionType.TypeEqual => DeserializeTypeBinary(nodeType),
+                    ExpressionType.ArrayLength or
+                    ExpressionType.Quote => DeserializeUnary1(nodeType),
+                    ExpressionType.Throw or
+                    ExpressionType.TypeAs or
+                    ExpressionType.Unbox => DeserializeUnary2(nodeType),
+                    ExpressionType.Negate or
+                    ExpressionType.NegateChecked or
+                    ExpressionType.Not or
+                    ExpressionType.IsFalse or
+                    ExpressionType.IsTrue or
+                    ExpressionType.OnesComplement or
+                    ExpressionType.UnaryPlus or
+                    ExpressionType.Increment or
+                    ExpressionType.Decrement or
+                    ExpressionType.PreIncrementAssign or
+                    ExpressionType.PreDecrementAssign or
+                    ExpressionType.PostIncrementAssign or
+                    ExpressionType.PostDecrementAssign => DeserializeUnary3(nodeType),
+                    ExpressionType.Convert or
+                    ExpressionType.ConvertChecked => DeserializeUnary4(nodeType),
+                    ExpressionType.ArrayIndex or
+                    ExpressionType.Assign => DeserializeBinary1(nodeType),
+                    ExpressionType.Add or
+                    ExpressionType.AddChecked or
+                    ExpressionType.Subtract or
+                    ExpressionType.SubtractChecked or
+                    ExpressionType.Multiply or
+                    ExpressionType.MultiplyChecked or
+                    ExpressionType.Divide or
+                    ExpressionType.Modulo or
+                    ExpressionType.Power or
+                    ExpressionType.And or
+                    ExpressionType.AndAlso or
+                    ExpressionType.Or or
+                    ExpressionType.OrElse or
+                    ExpressionType.ExclusiveOr or
+                    ExpressionType.RightShift or
+                    ExpressionType.LeftShift => DeserializeBinary2(nodeType),
+                    ExpressionType.LessThan or
+                    ExpressionType.LessThanOrEqual or
+                    ExpressionType.GreaterThan or
+                    ExpressionType.GreaterThanOrEqual or
+                    ExpressionType.Equal or
+                    ExpressionType.NotEqual => DeserializeBinary3(nodeType),
+                    ExpressionType.Coalesce => DeserializeBinary4(nodeType),
+                    ExpressionType.AddAssign or
+                    ExpressionType.AddAssignChecked or
+                    ExpressionType.SubtractAssign or
+                    ExpressionType.SubtractAssignChecked or
+                    ExpressionType.MultiplyAssign or
+                    ExpressionType.MultiplyAssignChecked or
+                    ExpressionType.DivideAssign or
+                    ExpressionType.ModuloAssign or
+                    ExpressionType.PowerAssign or
+                    ExpressionType.AndAssign or
+                    ExpressionType.OrAssign or
+                    ExpressionType.ExclusiveOrAssign or
+                    ExpressionType.RightShiftAssign or
+                    ExpressionType.LeftShiftAssign => DeserializeBinary5(nodeType),
+                    ExpressionType.Block => DeserializeBlock(),
+                    ExpressionType.Goto => DeserializeGoto(),
+                    ExpressionType.Index => DeserializeIndex(),
+                    ExpressionType.Invoke => DeserializeInvocation(),
+                    ExpressionType.Lambda => DeserializeLambda(),
+                    ExpressionType.ListInit => DeserializeListInit(),
+                    ExpressionType.Loop => DeserializeLoop(),
+                    ExpressionType.MemberAccess => DeserializeMember(),
+                    ExpressionType.MemberInit => DeserializeMemberInit(),
+                    ExpressionType.Call => DeserializeMethodCall(),
+                    ExpressionType.New => DeserializeNew(),
+                    ExpressionType.NewArrayBounds or
+                    ExpressionType.NewArrayInit => DeserializeNewArray(nodeType),
+                    ExpressionType.Parameter => DeserializeParameter(),
+                    ExpressionType.Switch => DeserializeSwitch(),
+                    ExpressionType.Try => DeserializeTry(),
+                    ExpressionType.Label => DeserializeLabel(),
 #if !USE_SLIM
-                    case ExpressionType.RuntimeVariables:
-                        return DeserializeRuntimeVariables();
+                    ExpressionType.RuntimeVariables => DeserializeRuntimeVariables(),
 #endif
-
-                    case ExpressionType.Switch:
-                        return DeserializeSwitch();
-
-                    case ExpressionType.Try:
-                        return DeserializeTry();
-
-                    case ExpressionType.Label:
-                        return DeserializeLabel();
-                }
-
-                throw new NotImplementedException(nodeType.ToString());
+                    _ => throw new NotImplementedException(nodeType.ToString()),
+                };
             }
 
             private BinaryExpression DeserializeBinary1(ExpressionType nodeType)

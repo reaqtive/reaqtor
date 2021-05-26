@@ -106,154 +106,97 @@ namespace System.Linq.CompilerServices
                 return default;
             }
 
-            switch (node.NodeType)
+            return node.NodeType switch
             {
-                case ExpressionType.Add:
-                case ExpressionType.AddChecked:
-                case ExpressionType.And:
-                case ExpressionType.AndAlso:
-                case ExpressionType.ArrayIndex:
-                case ExpressionType.Coalesce:
-                case ExpressionType.Divide:
-                case ExpressionType.Equal:
-                case ExpressionType.ExclusiveOr:
-                case ExpressionType.GreaterThan:
-                case ExpressionType.GreaterThanOrEqual:
-                case ExpressionType.LeftShift:
-                case ExpressionType.LessThan:
-                case ExpressionType.LessThanOrEqual:
-                case ExpressionType.Modulo:
-                case ExpressionType.Multiply:
-                case ExpressionType.MultiplyChecked:
-                case ExpressionType.NotEqual:
-                case ExpressionType.Or:
-                case ExpressionType.OrElse:
-                case ExpressionType.Power:
-                case ExpressionType.RightShift:
-                case ExpressionType.Subtract:
-                case ExpressionType.SubtractChecked:
-                case ExpressionType.AddAssign:
-                case ExpressionType.AddAssignChecked:
-                case ExpressionType.AndAssign:
-                case ExpressionType.Assign:
-                case ExpressionType.DivideAssign:
-                case ExpressionType.ExclusiveOrAssign:
-                case ExpressionType.LeftShiftAssign:
-                case ExpressionType.ModuloAssign:
-                case ExpressionType.MultiplyAssign:
-                case ExpressionType.MultiplyAssignChecked:
-                case ExpressionType.OrAssign:
-                case ExpressionType.PowerAssign:
-                case ExpressionType.RightShiftAssign:
-                case ExpressionType.SubtractAssign:
-                case ExpressionType.SubtractAssignChecked:
-                    return VisitBinary((BinaryExpressionAlias)node);
-
-                case ExpressionType.Block:
-                    return VisitBlock((BlockExpressionAlias)node);
-
-                case ExpressionType.Call:
-                    return VisitMethodCall((MethodCallExpressionAlias)node);
-
-                case ExpressionType.Conditional:
-                    return VisitConditional((ConditionalExpressionAlias)node);
-
-                case ExpressionType.Constant:
-                    return VisitConstant((ConstantExpressionAlias)node);
-
+                ExpressionType.Add or
+                ExpressionType.AddChecked or
+                ExpressionType.And or
+                ExpressionType.AndAlso or
+                ExpressionType.ArrayIndex or
+                ExpressionType.Coalesce or
+                ExpressionType.Divide or
+                ExpressionType.Equal or
+                ExpressionType.ExclusiveOr or
+                ExpressionType.GreaterThan or
+                ExpressionType.GreaterThanOrEqual or
+                ExpressionType.LeftShift or
+                ExpressionType.LessThan or
+                ExpressionType.LessThanOrEqual or
+                ExpressionType.Modulo or
+                ExpressionType.Multiply or
+                ExpressionType.MultiplyChecked or
+                ExpressionType.NotEqual or
+                ExpressionType.Or or
+                ExpressionType.OrElse or
+                ExpressionType.Power or
+                ExpressionType.RightShift or
+                ExpressionType.Subtract or
+                ExpressionType.SubtractChecked or
+                ExpressionType.AddAssign or
+                ExpressionType.AddAssignChecked or
+                ExpressionType.AndAssign or
+                ExpressionType.Assign or
+                ExpressionType.DivideAssign or
+                ExpressionType.ExclusiveOrAssign or
+                ExpressionType.LeftShiftAssign or
+                ExpressionType.ModuloAssign or
+                ExpressionType.MultiplyAssign or
+                ExpressionType.MultiplyAssignChecked or
+                ExpressionType.OrAssign or
+                ExpressionType.PowerAssign or
+                ExpressionType.RightShiftAssign or
+                ExpressionType.SubtractAssign or
+                ExpressionType.SubtractAssignChecked => VisitBinary((BinaryExpressionAlias)node),
+                ExpressionType.Block => VisitBlock((BlockExpressionAlias)node),
+                ExpressionType.Call => VisitMethodCall((MethodCallExpressionAlias)node),
+                ExpressionType.Conditional => VisitConditional((ConditionalExpressionAlias)node),
+                ExpressionType.Constant => VisitConstant((ConstantExpressionAlias)node),
+                ExpressionType.Default => VisitDefault((DefaultExpressionAlias)node),
+                ExpressionType.Extension => VisitExtension(node),
+                ExpressionType.Goto => VisitGoto((GotoExpressionAlias)node),
+                ExpressionType.Index => VisitIndex((IndexExpressionAlias)node),
+                ExpressionType.Invoke => VisitInvocation((InvocationExpressionAlias)node),
+                ExpressionType.Label => VisitLabel((LabelExpressionAlias)node),
+                ExpressionType.Lambda => VisitLambda((LambdaExpressionAlias)node),
+                ExpressionType.ListInit => VisitListInit((ListInitExpressionAlias)node),
+                ExpressionType.Loop => VisitLoop((LoopExpressionAlias)node),
+                ExpressionType.MemberAccess => VisitMember((MemberExpressionAlias)node),
+                ExpressionType.MemberInit => VisitMemberInit((MemberInitExpressionAlias)node),
+                ExpressionType.New => VisitNew((NewExpressionAlias)node),
+                ExpressionType.NewArrayBounds or
+                ExpressionType.NewArrayInit => VisitNewArray((NewArrayExpressionAlias)node),
+                ExpressionType.Parameter => VisitParameter((ParameterExpressionAlias)node),
+                ExpressionType.Switch => VisitSwitch((SwitchExpressionAlias)node),
+                ExpressionType.Try => VisitTry((TryExpressionAlias)node),
+                ExpressionType.TypeEqual or
+                ExpressionType.TypeIs => VisitTypeBinary((TypeBinaryExpressionAlias)node),
+                ExpressionType.ArrayLength or
+                ExpressionType.Convert or
+                ExpressionType.ConvertChecked or
+                ExpressionType.Decrement or
+                ExpressionType.Increment or
+                ExpressionType.IsFalse or
+                ExpressionType.IsTrue or
+                ExpressionType.Negate or
+                ExpressionType.NegateChecked or
+                ExpressionType.Not or
+                ExpressionType.OnesComplement or
+                ExpressionType.PostDecrementAssign or
+                ExpressionType.PostIncrementAssign or
+                ExpressionType.PreDecrementAssign or
+                ExpressionType.PreIncrementAssign or
+                ExpressionType.Quote or
+                ExpressionType.Throw or
+                ExpressionType.TypeAs or
+                ExpressionType.UnaryPlus or
+                ExpressionType.Unbox => VisitUnary((UnaryExpressionAlias)node),
 #if !USE_SLIM
-                case ExpressionType.DebugInfo:
-                    return VisitDebugInfo((DebugInfoExpression)node);
+                ExpressionType.DebugInfo => VisitDebugInfo((DebugInfoExpression)node),
+                ExpressionType.Dynamic => VisitDynamic((DynamicExpression)node),
+                ExpressionType.RuntimeVariables => VisitRuntimeVariables((RuntimeVariablesExpression)node),
 #endif
-
-                case ExpressionType.Default:
-                    return VisitDefault((DefaultExpressionAlias)node);
-
-#if !USE_SLIM
-                case ExpressionType.Dynamic:
-                    return VisitDynamic((DynamicExpression)node);
-#endif
-
-                case ExpressionType.Extension:
-                    return VisitExtension(node);
-
-                case ExpressionType.Goto:
-                    return VisitGoto((GotoExpressionAlias)node);
-
-                case ExpressionType.Index:
-                    return VisitIndex((IndexExpressionAlias)node);
-
-                case ExpressionType.Invoke:
-                    return VisitInvocation((InvocationExpressionAlias)node);
-
-                case ExpressionType.Label:
-                    return VisitLabel((LabelExpressionAlias)node);
-
-                case ExpressionType.Lambda:
-                    return VisitLambda((LambdaExpressionAlias)node);
-
-                case ExpressionType.ListInit:
-                    return VisitListInit((ListInitExpressionAlias)node);
-
-                case ExpressionType.Loop:
-                    return VisitLoop((LoopExpressionAlias)node);
-
-                case ExpressionType.MemberAccess:
-                    return VisitMember((MemberExpressionAlias)node);
-
-                case ExpressionType.MemberInit:
-                    return VisitMemberInit((MemberInitExpressionAlias)node);
-
-                case ExpressionType.New:
-                    return VisitNew((NewExpressionAlias)node);
-
-                case ExpressionType.NewArrayBounds:
-                case ExpressionType.NewArrayInit:
-                    return VisitNewArray((NewArrayExpressionAlias)node);
-
-                case ExpressionType.Parameter:
-                    return VisitParameter((ParameterExpressionAlias)node);
-
-#if !USE_SLIM
-                case ExpressionType.RuntimeVariables:
-                    return VisitRuntimeVariables((RuntimeVariablesExpression)node);
-#endif
-
-                case ExpressionType.Switch:
-                    return VisitSwitch((SwitchExpressionAlias)node);
-
-                case ExpressionType.Try:
-                    return VisitTry((TryExpressionAlias)node);
-
-                case ExpressionType.TypeEqual:
-                case ExpressionType.TypeIs:
-                    return VisitTypeBinary((TypeBinaryExpressionAlias)node);
-
-                case ExpressionType.ArrayLength:
-                case ExpressionType.Convert:
-                case ExpressionType.ConvertChecked:
-                case ExpressionType.Decrement:
-                case ExpressionType.Increment:
-                case ExpressionType.IsFalse:
-                case ExpressionType.IsTrue:
-                case ExpressionType.Negate:
-                case ExpressionType.NegateChecked:
-                case ExpressionType.Not:
-                case ExpressionType.OnesComplement:
-                case ExpressionType.PostDecrementAssign:
-                case ExpressionType.PostIncrementAssign:
-                case ExpressionType.PreDecrementAssign:
-                case ExpressionType.PreIncrementAssign:
-                case ExpressionType.Quote:
-                case ExpressionType.Throw:
-                case ExpressionType.TypeAs:
-                case ExpressionType.UnaryPlus:
-                case ExpressionType.Unbox:
-                    return VisitUnary((UnaryExpressionAlias)node);
-
-                default:
-                    throw new NotSupportedException();
-            }
+                _ => throw new NotSupportedException(),
+            };
         }
 
 #if !USE_SLIM

@@ -1466,153 +1466,97 @@ namespace System.Linq.CompilerServices
                 return 17;
             }
 
-            switch (obj.NodeType)
+            return obj.NodeType switch
             {
-                case ExpressionType.Add:
-                case ExpressionType.AddChecked:
-                case ExpressionType.And:
-                case ExpressionType.AndAlso:
-                case ExpressionType.ArrayIndex:
-                case ExpressionType.Coalesce:
-                case ExpressionType.Divide:
-                case ExpressionType.Equal:
-                case ExpressionType.ExclusiveOr:
-                case ExpressionType.GreaterThan:
-                case ExpressionType.GreaterThanOrEqual:
-                case ExpressionType.LeftShift:
-                case ExpressionType.LessThan:
-                case ExpressionType.LessThanOrEqual:
-                case ExpressionType.Modulo:
-                case ExpressionType.Multiply:
-                case ExpressionType.MultiplyChecked:
-                case ExpressionType.NotEqual:
-                case ExpressionType.Or:
-                case ExpressionType.OrElse:
-                case ExpressionType.Power:
-                case ExpressionType.RightShift:
-                case ExpressionType.Subtract:
-                case ExpressionType.SubtractChecked:
-                case ExpressionType.AddAssign:
-                case ExpressionType.AddAssignChecked:
-                case ExpressionType.AndAssign:
-                case ExpressionType.Assign:
-                case ExpressionType.DivideAssign:
-                case ExpressionType.ExclusiveOrAssign:
-                case ExpressionType.LeftShiftAssign:
-                case ExpressionType.ModuloAssign:
-                case ExpressionType.MultiplyAssign:
-                case ExpressionType.MultiplyAssignChecked:
-                case ExpressionType.OrAssign:
-                case ExpressionType.PowerAssign:
-                case ExpressionType.RightShiftAssign:
-                case ExpressionType.SubtractAssign:
-                case ExpressionType.SubtractAssignChecked:
-                    return GetHashCodeBinary((BinaryExpression)obj);
-
-                case ExpressionType.Conditional:
-                    return GetHashCodeConditional((ConditionalExpression)obj);
-
-                case ExpressionType.Constant:
-                    return GetHashCodeConstant((ConstantExpression)obj);
-
-                case ExpressionType.Invoke:
-                    return GetHashCodeInvocation((InvocationExpression)obj);
-
-                case ExpressionType.Lambda:
-                    return GetHashCodeLambda((LambdaExpression)obj);
-
-                case ExpressionType.ListInit:
-                    return GetHashCodeListInit((ListInitExpression)obj);
-
-                case ExpressionType.MemberAccess:
-                    return GetHashCodeMember((MemberExpression)obj);
-
-                case ExpressionType.MemberInit:
-                    return GetHashCodeMemberInit((MemberInitExpression)obj);
-
-                case ExpressionType.Call:
-                    return GetHashCodeMethodCall((MethodCallExpression)obj);
-
-                case ExpressionType.New:
-                    return GetHashCodeNew((NewExpression)obj);
-
-                case ExpressionType.NewArrayBounds:
-                case ExpressionType.NewArrayInit:
-                    return GetHashCodeNewArray((NewArrayExpression)obj);
-
-                case ExpressionType.Parameter:
-                    return GetHashCodeParameter((ParameterExpression)obj);
-
-                case ExpressionType.TypeIs:
-                case ExpressionType.TypeEqual:
-                    return GetHashCodeTypeBinary((TypeBinaryExpression)obj);
-
-                case ExpressionType.ArrayLength:
-                case ExpressionType.Convert:
-                case ExpressionType.ConvertChecked:
-                case ExpressionType.Negate:
-                case ExpressionType.NegateChecked:
-                case ExpressionType.Not:
-                case ExpressionType.Quote:
-                case ExpressionType.TypeAs:
-                case ExpressionType.UnaryPlus:
-                case ExpressionType.Decrement:
-                case ExpressionType.Increment:
-                case ExpressionType.IsFalse:
-                case ExpressionType.IsTrue:
-                case ExpressionType.OnesComplement:
-                case ExpressionType.PostDecrementAssign:
-                case ExpressionType.PostIncrementAssign:
-                case ExpressionType.PreDecrementAssign:
-                case ExpressionType.PreIncrementAssign:
-                case ExpressionType.Throw:
-                case ExpressionType.Unbox:
-                    return GetHashCodeUnary((UnaryExpression)obj);
-
-                case ExpressionType.Block:
-                    return GetHashCodeBlock((BlockExpression)obj);
-
+                ExpressionType.Add or
+                ExpressionType.AddChecked or
+                ExpressionType.And or
+                ExpressionType.AndAlso or
+                ExpressionType.ArrayIndex or
+                ExpressionType.Coalesce or
+                ExpressionType.Divide or
+                ExpressionType.Equal or
+                ExpressionType.ExclusiveOr or
+                ExpressionType.GreaterThan or
+                ExpressionType.GreaterThanOrEqual or
+                ExpressionType.LeftShift or
+                ExpressionType.LessThan or
+                ExpressionType.LessThanOrEqual or
+                ExpressionType.Modulo or
+                ExpressionType.Multiply or
+                ExpressionType.MultiplyChecked or
+                ExpressionType.NotEqual or
+                ExpressionType.Or or
+                ExpressionType.OrElse or
+                ExpressionType.Power or
+                ExpressionType.RightShift or
+                ExpressionType.Subtract or
+                ExpressionType.SubtractChecked or
+                ExpressionType.AddAssign or
+                ExpressionType.AddAssignChecked or
+                ExpressionType.AndAssign or
+                ExpressionType.Assign or
+                ExpressionType.DivideAssign or
+                ExpressionType.ExclusiveOrAssign or
+                ExpressionType.LeftShiftAssign or
+                ExpressionType.ModuloAssign or
+                ExpressionType.MultiplyAssign or
+                ExpressionType.MultiplyAssignChecked or
+                ExpressionType.OrAssign or
+                ExpressionType.PowerAssign or
+                ExpressionType.RightShiftAssign or
+                ExpressionType.SubtractAssign or
+                ExpressionType.SubtractAssignChecked => GetHashCodeBinary((BinaryExpression)obj),
+                ExpressionType.Conditional => GetHashCodeConditional((ConditionalExpression)obj),
+                ExpressionType.Constant => GetHashCodeConstant((ConstantExpression)obj),
+                ExpressionType.Invoke => GetHashCodeInvocation((InvocationExpression)obj),
+                ExpressionType.Lambda => GetHashCodeLambda((LambdaExpression)obj),
+                ExpressionType.ListInit => GetHashCodeListInit((ListInitExpression)obj),
+                ExpressionType.MemberAccess => GetHashCodeMember((MemberExpression)obj),
+                ExpressionType.MemberInit => GetHashCodeMemberInit((MemberInitExpression)obj),
+                ExpressionType.Call => GetHashCodeMethodCall((MethodCallExpression)obj),
+                ExpressionType.New => GetHashCodeNew((NewExpression)obj),
+                ExpressionType.NewArrayBounds or
+                ExpressionType.NewArrayInit => GetHashCodeNewArray((NewArrayExpression)obj),
+                ExpressionType.Parameter => GetHashCodeParameter((ParameterExpression)obj),
+                ExpressionType.TypeIs or
+                ExpressionType.TypeEqual => GetHashCodeTypeBinary((TypeBinaryExpression)obj),
+                ExpressionType.ArrayLength or
+                ExpressionType.Convert or
+                ExpressionType.ConvertChecked or
+                ExpressionType.Negate or
+                ExpressionType.NegateChecked or
+                ExpressionType.Not or
+                ExpressionType.Quote or
+                ExpressionType.TypeAs or
+                ExpressionType.UnaryPlus or
+                ExpressionType.Decrement or
+                ExpressionType.Increment or
+                ExpressionType.IsFalse or
+                ExpressionType.IsTrue or
+                ExpressionType.OnesComplement or
+                ExpressionType.PostDecrementAssign or
+                ExpressionType.PostIncrementAssign or
+                ExpressionType.PreDecrementAssign or
+                ExpressionType.PreIncrementAssign or
+                ExpressionType.Throw or
+                ExpressionType.Unbox => GetHashCodeUnary((UnaryExpression)obj),
+                ExpressionType.Block => GetHashCodeBlock((BlockExpression)obj),
+                ExpressionType.Default => GetHashCodeDefault((DefaultExpression)obj),
+                ExpressionType.Extension => GetHashCodeExtension(obj),
+                ExpressionType.Goto => GetHashCodeGoto((GotoExpression)obj),
+                ExpressionType.Index => GetHashCodeIndex((IndexExpression)obj),
+                ExpressionType.Label => GetHashCodeLabel((LabelExpression)obj),
+                ExpressionType.Loop => GetHashCodeLoop((LoopExpression)obj),
+                ExpressionType.Switch => GetHashCodeSwitch((SwitchExpression)obj),
+                ExpressionType.Try => GetHashCodeTry((TryExpression)obj),
 #if !USE_SLIM
-                case ExpressionType.DebugInfo:
-                    return GetHashCodeDebugInfo((DebugInfoExpression)obj);
+                ExpressionType.DebugInfo => GetHashCodeDebugInfo((DebugInfoExpression)obj),
+                ExpressionType.Dynamic => GetHashCodeDynamic((DynamicExpression)obj),
+                ExpressionType.RuntimeVariables => GetHashCodeRuntimeVariables((RuntimeVariablesExpression)obj),
 #endif
-
-                case ExpressionType.Default:
-                    return GetHashCodeDefault((DefaultExpression)obj);
-
-#if !USE_SLIM
-                case ExpressionType.Dynamic:
-                    return GetHashCodeDynamic((DynamicExpression)obj);
-#endif
-
-                case ExpressionType.Extension:
-                    return GetHashCodeExtension(obj);
-
-                case ExpressionType.Goto:
-                    return GetHashCodeGoto((GotoExpression)obj);
-
-                case ExpressionType.Index:
-                    return GetHashCodeIndex((IndexExpression)obj);
-
-                case ExpressionType.Label:
-                    return GetHashCodeLabel((LabelExpression)obj);
-
-                case ExpressionType.Loop:
-                    return GetHashCodeLoop((LoopExpression)obj);
-
-#if !USE_SLIM
-                case ExpressionType.RuntimeVariables:
-                    return GetHashCodeRuntimeVariables((RuntimeVariablesExpression)obj);
-#endif
-
-                case ExpressionType.Switch:
-                    return GetHashCodeSwitch((SwitchExpression)obj);
-
-                case ExpressionType.Try:
-                    return GetHashCodeTry((TryExpression)obj);
-            }
-
-            return 1979;
+                _ => 1979,
+            };
         }
 
         /// <summary>
