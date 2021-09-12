@@ -1900,8 +1900,13 @@ namespace System.Linq.CompilerServices
                 GetHashCode(obj.Body)
             );
 
-        private static int GetHashCode(LabelTarget obj) =>
-            obj == null ? 17 : obj.GetHashCode();
+        /// <summary>
+        /// Gets a hash code for the given label target.
+        /// </summary>
+        /// <param name="obj">Label target to compute a hash code for.</param>
+        /// <returns>Hash code for the given label target.</returns>
+        protected virtual int GetHashCode(LabelTarget obj) =>
+            obj == null ? 17 : GetHashCode(obj.Type);
 
 #if !USE_SLIM
         /// <summary>
