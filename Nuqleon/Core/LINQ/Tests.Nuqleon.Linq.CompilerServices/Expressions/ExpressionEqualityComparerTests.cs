@@ -1725,7 +1725,6 @@ namespace Tests.System.Linq.CompilerServices
 
             Assert.IsFalse(eq.Equals(a, b));
             Assert.IsFalse(eq.Equals(b, a));
-            Assert.AreNotEqual(eq.GetHashCode(a), eq.GetHashCode(b));
         }
 
         private static void AssertProtectedNull<T>(T e)
