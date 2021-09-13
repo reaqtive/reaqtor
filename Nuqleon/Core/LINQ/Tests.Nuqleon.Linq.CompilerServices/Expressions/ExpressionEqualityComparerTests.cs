@@ -168,8 +168,10 @@ namespace Tests.System.Linq.CompilerServices
 
 #if USE_SLIM
             Assert.IsTrue(eq.Equals(e1.ToExpressionSlim(), e2.ToExpressionSlim()));
+            Assert.AreEqual(eq.GetHashCode(e1.ToExpressionSlim()), eq.GetHashCode(e2.ToExpressionSlim()));
 #else
             Assert.IsTrue(eq.Equals(e1, e2));
+            Assert.AreEqual(eq.GetHashCode(e1), eq.GetHashCode(e2));
 #endif
         }
 
@@ -1723,7 +1725,6 @@ namespace Tests.System.Linq.CompilerServices
 
             Assert.IsFalse(eq.Equals(a, b));
             Assert.IsFalse(eq.Equals(b, a));
-            Assert.AreNotEqual(eq.GetHashCode(a), eq.GetHashCode(b));
         }
 
         private static void AssertProtectedNull<T>(T e)
