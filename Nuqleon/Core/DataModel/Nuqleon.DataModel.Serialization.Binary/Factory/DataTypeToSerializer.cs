@@ -33,9 +33,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
         private static readonly Lazy<PropertyInfo> s_count = new(() => (PropertyInfo)ReflectionHelpers.InfoOf((IList l) => l.Count));
         private static readonly Lazy<PropertyInfo> s_expressionSerializer = new(() => (PropertyInfo)ReflectionHelpers.InfoOf((DataTypeBinarySerializer f) => f.ExpressionSerializer));
 
-        private static readonly Lazy<Expression> s_nullObject = new(() => Expression.Constant(value: null, typeof(object)));
-        private static readonly Lazy<Expression> s_zeroInt32 = new(() => Expression.Constant(0, typeof(int)));
-        private static readonly Lazy<Expression> s_nullValueFlag = new(() => Expression.Constant(Protocol.TYPE_FLAG_NULLVALUE, typeof(byte)));
+        private static readonly Lazy<Expression> s_nullObject = new(new Func<Expression>(() => Expression.Constant(value: null, typeof(object))));
+        private static readonly Lazy<Expression> s_zeroInt32 = new(new Func<Expression>(() => Expression.Constant(0, typeof(int))));
+        private static readonly Lazy<Expression> s_nullValueFlag = new(new Func<Expression>(() => Expression.Constant(Protocol.TYPE_FLAG_NULLVALUE, typeof(byte))));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
         private static readonly IReadOnlyDictionary<Type, byte> s_discriminators =
