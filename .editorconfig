@@ -153,6 +153,7 @@ dotnet_diagnostic.IDE0058.severity = none # `Expression value is never used` has
 dotnet_diagnostic.IDE0061.severity = none # `Use block body for local functions` is to be decided on a case-by-case basis.
 dotnet_diagnostic.IDE0065.severity = none # `Using directives must be placed outside of a namespace declaration` runs into places where we put aliases etc. inside a namespace.
 dotnet_diagnostic.IDE0072.severity = none # `Populate switch` gets unweildy for ExpressionType etc.
+dotnet_diagnostic.IDE0130.severity = none # Namespace does not match folder structure.
 
 ###############################
 # VB Coding Conventions       #
