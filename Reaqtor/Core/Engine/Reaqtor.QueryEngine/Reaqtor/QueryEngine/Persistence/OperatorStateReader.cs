@@ -72,7 +72,7 @@ namespace Reaqtor.QueryEngine
                 var lenBytes = new byte[8];
                 var readCount = stream.Read(lenBytes, 0, 8);
 
-                if (readCount != 8 && !(@operator is ITransitioningOperator))
+                if (readCount != 8 && @operator is not ITransitioningOperator)
                 {
                     var blob = stream.GetBase64Blob();
                     throw new InvalidDataException(string.Format(CultureInfo.InvariantCulture, "Missing length prefix. Operator = {0}/{1}, Position = {2}, State = {3}", _operator.Name, _operator.Version, _originalPosition, blob));

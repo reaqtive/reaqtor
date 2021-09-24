@@ -39,7 +39,9 @@ namespace System.Linq.CompilerServices
             if (cost < 0)
                 throw new ArgumentOutOfRangeException(nameof(cost));
 
+#pragma warning disable IDE0150 // Prefer 'null' check over type check. (`is` patterns can't be captured in expression trees.)
             AddCore(convert, node => node is TLeaf, cost);
+#pragma warning restore IDE0150
         }
 
         /// <summary>
