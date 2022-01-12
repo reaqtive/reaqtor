@@ -18,34 +18,39 @@ namespace System
     /// </summary>
     public abstract class AsyncDisposableBase : IAsyncDisposable
     {
+#pragma warning disable IDE0079 // Remove unnecessary suppressions.
+#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize. (Analyzer does not know about pre-netstandard2.1 IAsyncDisposable.)
+
 #if !NET5_0 && !NETSTANDARD2_1
         /// <summary>
         /// Disposes the resource asynchronously.
         /// </summary>
         /// <param name="token">Token to observe for cancellation of the disposal request.</param>
         /// <returns>Task representing the eventual completion of the disposal request.</returns>
-        public Task DisposeAsync(CancellationToken token)
+        public async Task DisposeAsync(CancellationToken token)
         {
             //
             // TODO: Enforce idempotent behavior? What about transient errors, cancellations, etc?
             //       Should be allow retry but no concurrent calls? Do we rely on DisposeAsyncCore
             //       being idempotent itself?
             //
-            return DisposeAsyncCore(token);
+            await DisposeAsyncCore(token).ConfigureAwait(false);
+            GC.SuppressFinalize(this);
         }
 #else
         /// <summary>
         /// Disposes the resource asynchronously.
         /// </summary>
         /// <returns>Task representing the eventual completion of the disposal request.</returns>
-        public ValueTask DisposeAsync()
+        public async ValueTask DisposeAsync()
         {
             //
             // TODO: Enforce idempotent behavior? What about transient errors, cancellations, etc?
             //       Should be allow retry but no concurrent calls? Do we rely on DisposeAsyncCore
             //       being idempotent itself?
             //
-            return new ValueTask(DisposeAsyncCore(default));
+            await DisposeAsyncCore(default).ConfigureAwait(false);
+            GC.SuppressFinalize(this);
         }
 #endif
 

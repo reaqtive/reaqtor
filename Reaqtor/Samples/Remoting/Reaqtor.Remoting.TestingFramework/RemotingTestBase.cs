@@ -168,6 +168,8 @@ namespace Reaqtor.Remoting.TestingFramework
         {
             if (platform == null)
                 throw new ArgumentNullException(nameof(platform));
+            if (observers == null)
+                throw new ArgumentNullException(nameof(observers));
 
             foreach (var observer in observers)
             {

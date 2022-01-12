@@ -24,7 +24,7 @@ namespace Reaqtor.TestingFramework
         public SequentialAssertionTestServiceProvider(IEqualityComparer<ServiceOperation> comparer, params ServiceOperation[] operations)
         {
             _comparer = comparer;
-            _operations = ((IEnumerable<ServiceOperation>)operations).GetEnumerator();
+            _operations = ((IEnumerable<ServiceOperation>)operations ?? throw new ArgumentNullException(nameof(operations))).GetEnumerator();
         }
 
         protected override void AssertCore(ServiceOperation operation)

@@ -4,5 +4,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("CodeQuality", "IDE0079:Remove unnecessary suppression", Justification = "Too much of a nuisance in test code that compiles for multiple platform targets.")]
 [assembly: SuppressMessage("Style", "IDE0004:Cast is redundant", Justification = "Only redundant on newer versions of C#, so we can't remove this while we continue to support .NET Framework and netstandard2.0")]

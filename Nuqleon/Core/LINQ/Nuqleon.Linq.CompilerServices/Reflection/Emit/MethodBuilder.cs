@@ -81,7 +81,7 @@ namespace Nuqleon.Reflection.Emit
 
         public ILGenerator GetILGenerator() => s_GetILGenerator(_method);
 
-        public override MethodInfo MakeGenericMethod(params Type[] typeArguments) => _method.MakeGenericMethod(typeArguments.Unwrap());
+        public override MethodInfo MakeGenericMethod(params Type[] typeArguments) => _method.MakeGenericMethod((typeArguments ?? throw new ArgumentNullException(nameof(typeArguments))).Unwrap());
 
         //
         // NB: The following APIs are omitted:

@@ -8,6 +8,9 @@
 // BD - November 2009 - Created this file.
 //
 
+#if NET5_0 || NETSTANDARD2_1
+using System;
+#endif
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -21,7 +24,7 @@ namespace Nuqleon.Json.Parser
     /// </summary>
     internal sealed class Tokenizer
     {
-        #region Private fields
+#region Private fields
 
         /// <summary>
         /// Interned strings for commonly used negative integer values of length 1.
@@ -56,9 +59,9 @@ namespace Nuqleon.Json.Parser
         /// </summary>
         private readonly string _input;
 
-        #endregion
+#endregion
 
-        #region Constructors
+#region Constructors
 
         /// <summary>
         /// Creates a new tokenizer for JSON code.
@@ -66,9 +69,9 @@ namespace Nuqleon.Json.Parser
         /// <param name="input">JSON code text.</param>
         public Tokenizer(string input) => _input = input;
 
-        #endregion
+#endregion
 
-        #region Methods
+#region Methods
 
         /// <summary>
         /// Tokenizes the input.
@@ -235,7 +238,11 @@ namespace Nuqleon.Json.Parser
                                                     }
                                                     else
                                                     {
+#if NET5_0 || NETSTANDARD2_1
+                                                        if (!int.TryParse(_input.AsSpan(i, 4), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int val))
+#else
                                                         if (!int.TryParse(_input.Substring(i, 4), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int val))
+#endif
                                                         {
                                                             throw new ParseException("Unrecognized Unicode escape sequence.", i, ParseError.InvalidToken);
                                                         }
@@ -524,6 +531,6 @@ namespace Nuqleon.Json.Parser
             return char.GetUnicodeCategory(c) == UnicodeCategory.Control;
         }
 
-        #endregion
+#endregion
     }
 }
