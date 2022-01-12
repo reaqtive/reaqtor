@@ -98,7 +98,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
         protected override bool AreStructurallyComparable(Type x, Type y)
         {
-            if (!DataType.IsStructuralEntityDataType(x) && (!DataType.TryFromType(x, allowCycles: true, out var dataType) || !(dataType is StructuralDataType)))
+            if (!DataType.IsStructuralEntityDataType(x) && (!DataType.TryFromType(x, allowCycles: true, out var dataType) || dataType is not StructuralDataType))
             {
                 return false;
             }

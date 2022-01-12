@@ -29,7 +29,9 @@ namespace Perf.System.Memory.Diagnostics
 
             var es = new Expression[]
             {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => 42),
+#pragma warning restore IDE0004
                 (Expression<Func<int, int>>)(x => x),
                 (Expression<Func<int, int>>)(x => x + 1),
                 (Expression<Func<string, int>>)(s => s.Length),

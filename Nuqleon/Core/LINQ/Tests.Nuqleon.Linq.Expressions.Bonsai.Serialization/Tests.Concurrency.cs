@@ -140,7 +140,9 @@ namespace Tests
                 Expression.Parameter(typeof(int), "p").Let(x => Expression.Lambda<Func<int, Func<int, int>>>(Expression.Lambda(p, p), x)),
                 Expression.Parameter(typeof(int)).Let(x => Expression.Lambda<Func<int, int>>(x, x)),
                 (Expression<Rec<int, int>>)(fib => n => n > 1 ? fib(fib)(n - 1) + fib(fib)(n - 2) : n),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => Q.Foo(() => new Foo())),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
                 #endregion
 
                 #region Calls
@@ -163,8 +165,10 @@ namespace Tests
                 (Expression<Func<Instancy, string>>)(i => i.Value),
                 (Expression<Func<Instancy, string>>)(i => i.Value),
                 (Expression<Func<Instancy, int>>)(i => i._field),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<string>>)(() => Staticy.Value),
                 (Expression<Func<int>>)(() => Staticy._field),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
                 (Expression<Func<string[], int, string>>)((ss, i) => /* ArrayIndex */ ss[i]),
                 #endregion
 
@@ -183,9 +187,11 @@ namespace Tests
                 #endregion
 
                 #region Object creation and initialization
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int[]>>)(() => new[] { 1, 2, 3 }),
                 (Expression<Func<List<int>>>)(() => new List<int> { 1, 2, 3 }),
                 (Expression<Func<Qux>>)(() => new Qux(42) { Baz = "Hello", Bar = { Zuz = 24 }, Foos = { 1, 2, 3 } }),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
                 Expression.Lambda(Expression.New(typeof(int))),
                 Expression.NewArrayBounds(typeof(int), Expression.Constant(1)),
                 #endregion

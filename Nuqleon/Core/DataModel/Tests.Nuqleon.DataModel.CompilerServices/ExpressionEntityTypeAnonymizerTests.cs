@@ -45,6 +45,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             foreach (var e in new Expression[]
             {
                 (Expression<Func<Qux, int>>)(q => q.Baz),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<Qux>>)(() => new Qux()),
                 (Expression<Func<Qux>>)(() => new Qux() { Baz = 1 }),
                 (Expression<Func<Qux>>)(() => new Qux(1) { Foo = "bar" }),
@@ -57,6 +58,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 (Expression<Func<Qux[]>>)(() => new Qux[] { new Qux(1), new Qux { Baz = 1 } }),
                 (Expression<Func<Tuple<Qux, int>>>)(() => new Tuple<Qux, int>(new Qux(1), 2)),
                 (Expression<Func<Holder<Qux>>>)(() => new Holder<Qux> { Value = new Qux(42) }),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
             })
             {
                 var eta = new ExpressionEntityTypeAnonymizer();
@@ -78,10 +80,12 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             foreach (var e in new Expression[]
             {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<Qux>>)(() => new Qux(1) { Baz = 1 }),
                 (Expression<Func<MissingMapping>>)(() => new MissingMapping(1)),
                 (Expression<Func<NonMatchingMapping>>)(() => new NonMatchingMapping(1)),
                 (Expression<Func<DuplicateMapping>>)(() => new DuplicateMapping(1, 2)),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
             })
             {
                 var eta = new ExpressionEntityTypeAnonymizer();
@@ -114,7 +118,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 42,
                 "bar",
                 (Expression<Func<Qux, Qux>>)(x => x),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<Qux[]>>)(() => new Qux[] { new Qux(123) }),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
                 new Tuple<Qux, int>(new Qux(), 42),
                 new { a = 1, b = new Qux(42), c = "bar" },
                 rec,

@@ -76,16 +76,20 @@ namespace Tests.System.Linq.CompilerServices
             };
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<List<int>>>)(() => new List<int>()),
                 (Expression<Func<HashSet<int>>>)(() => new HashSet<int>()),
                 (Expression<Func<HashSet<string>>>)(() => new HashSet<string>()),
+#pragma warning restore IDE0004
             })
             {
                 Assert.AreSame(e, ws.Visit(e));
             }
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<List<string>>>)(() => new List<string>()),
+#pragma warning restore IDE0004
             })
             {
                 Assert.ThrowsException<NotSupportedException>(() => ws.Visit(e));

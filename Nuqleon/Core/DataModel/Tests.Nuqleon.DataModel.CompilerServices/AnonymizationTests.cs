@@ -361,7 +361,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
             private static void Assign(IDictionary<string, Expression> dictionary, string key, Expression value)
             {
-                if (!dictionary.TryGetValue(key, out var replaced) || !(replaced is UnassignedExpression))
+                if (!dictionary.TryGetValue(key, out var replaced) || replaced is not UnassignedExpression)
                 {
                     var replacedStr = replaced?.ToCSharpString(allowCompilerGeneratedNames: true);
                     throw new InvalidOperationException(string.Format("Invalid assignment of '{0}' with '{1}'.", key, replacedStr));

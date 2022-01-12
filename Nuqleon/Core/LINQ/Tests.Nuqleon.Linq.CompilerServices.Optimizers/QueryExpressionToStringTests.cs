@@ -30,7 +30,9 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             var lambdaAbstraction = DefaultQueryExpressionFactory.Instance.LambdaAbstraction(Expression.Lambda(Expression.Default(typeof(IEnumerable<int>))));
             var lambdaAbstractionPredicate = DefaultQueryExpressionFactory.Instance.LambdaAbstraction((Expression<Func<Func<int, bool>>>)(() => _ => true));
             var lambdaAbstractionSelector = DefaultQueryExpressionFactory.Instance.LambdaAbstraction((Expression<Func<Func<int, int>>>)(() => _ => _));
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             var lambdaAbstractionCount = DefaultQueryExpressionFactory.Instance.LambdaAbstraction((Expression<Func<int>>)(() => 42));
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
 
             var monadMember = (MonadMember)new MonadAbstraction(type, lambdaAbstraction);
 

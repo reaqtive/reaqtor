@@ -59,14 +59,18 @@ namespace Tests.System.Linq.CompilerServices
             foreach (var e in new Expression[] {
                 (Expression<Func<string, string>>)(s => s.Substring(0, 1).ToUpper()),
                 (Expression<Func<string, int>>)(s => s.Length),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<string>>)(() => new string(' ', 1)),
+#pragma warning restore IDE0004
             })
             {
                 Assert.AreSame(e, ws.Visit(e));
             }
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
+#pragma warning restore IDE0004
             })
             {
                 Assert.ThrowsException<NotSupportedException>(() => ws.Visit(e));
@@ -89,7 +93,9 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<List<int>, int>>)(xs => xs.Count),
                 (Expression<Func<List<int>, int, bool>>)((xs, x) => xs.Contains(x)),
                 (Expression<Func<HashSet<int>, int, bool>>)((xs, x) => xs.Contains(x)),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<List<int>>>)(() => new List<int> { 2, 3, 5 }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.AreSame(e, ws.Visit(e));
@@ -179,7 +185,9 @@ namespace Tests.System.Linq.CompilerServices
             };
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<List<int>>>)(() => new List<int> { 2, 3, 5 }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.AreSame(e, ws.Visit(e));
@@ -207,17 +215,21 @@ namespace Tests.System.Linq.CompilerServices
             };
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<Bar2>>)(() => new Bar2(1) { Foo1 = { Xs = { 2, 3, 5 } }, Foo2 = { Baz = "" } }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.AreSame(e, ws.Visit(e));
             }
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<Bar3>>)(() => new Bar3 { Foo1 = { Baz = "" } }),
                 (Expression<Func<Bar3>>)(() => new Bar3 { Foo1 = { Xs = { 2, 3, 5 } } }),
                 (Expression<Func<Foo3>>)(() => new Foo3 { Xs = { 2, 3, 5 } }),
                 (Expression<Func<HashSet<int>>>)(() => new HashSet<int> { 2, 3, 5 }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.ThrowsException<NotSupportedException>(() => ws.Visit(e));
@@ -245,7 +257,7 @@ namespace Tests.System.Linq.CompilerServices
             foreach (var e in new Expression[] {
                 (Expression<Func<IEnumerator<int>, bool>>)(r => r.MoveNext() /* defined on IEnumerator */),
                 (Expression<Func<IEnumerator<int>, int>>)(r => (int)((IEnumerator)r).Current),
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Keeping inside expression tree.)
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<IEnumerator<int>, bool>>)(r => ((IEnumerator)r).MoveNext()),
 #pragma warning restore IDE0004
                 (Expression<Func<IEnumerator<string>, string>>)(r => r.Current),
@@ -271,7 +283,7 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<IEnumerator<int>, int>>)(r => r.Current),
                 (Expression<Func<IEnumerator<int>, bool>>)(r => r.MoveNext()),
                 (Expression<Func<IEnumerator<int>, int>>)(r => (int)((IEnumerator)r).Current),
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Keeping inside expression tree.)
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<IEnumerator<int>, bool>>)(r => ((IEnumerator)r).MoveNext()),
 #pragma warning restore IDE0004
                 (Expression<Func<IEnumerator<string>, bool>>)(r => r.MoveNext() /* defined on IEnumerator */),
@@ -311,7 +323,7 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<IEnumerator<int>, bool>>)(r => r.MoveNext() /* defined on IEnumerator */),
                 (Expression<Func<IEnumerator<string>, bool>>)(r => r.MoveNext() /* defined on IEnumerator */),
                 (Expression<Func<IEnumerator<int>, int>>)(r => (int)((IEnumerator)r).Current),
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Keeping inside expression tree.)
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<IEnumerator<int>, bool>>)(r => ((IEnumerator)r).MoveNext()),
 #pragma warning restore IDE0004
             })
@@ -337,7 +349,7 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<IEnumerator<int>, int>>)(r => (int)((IEnumerator)r).Current),
                 (Expression<Func<IEnumerator<int>, bool>>)(r => r.MoveNext()),
                 (Expression<Func<IEnumerator<string>, bool>>)(r => r.MoveNext()),
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Keeping inside expression tree.)
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<IEnumerator<int>, bool>>)(r => ((IEnumerator)r).MoveNext()),
 #pragma warning restore IDE0004
             })
@@ -459,8 +471,10 @@ namespace Tests.System.Linq.CompilerServices
             };
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => Environment.TickCount),
                 (Expression<Func<string>>)(() => Console.ReadLine()),
+#pragma warning restore IDE0004
                 (Expression<Func<string, int>>)(s => s.Length),
                 (Expression<Func<string, string>>)(s => s.Substring(7)),
             })
@@ -469,7 +483,9 @@ namespace Tests.System.Linq.CompilerServices
             }
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<string>>)(() => Environment.MachineName),
+#pragma warning restore IDE0004
                 (Expression<Func<string, string>>)(s => s.Substring(0, 1)),
             })
             {
@@ -520,8 +536,10 @@ namespace Tests.System.Linq.CompilerServices
             };
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => Activator.CreateInstance<int>()),
                 (Expression<Func<string>>)(() => Activator.CreateInstance<string>()),
+#pragma warning restore IDE0004
                 (Expression<Action<List<int>, int>>)((xs, x) => xs.Add(x)),
             })
             {
@@ -549,7 +567,9 @@ namespace Tests.System.Linq.CompilerServices
             };
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => Activator.CreateInstance<int>()),
+#pragma warning restore IDE0004
                 (Expression<Func<List<int>, int, bool>>)((xs, x) => xs.Contains(x)),
             })
             {
@@ -557,7 +577,9 @@ namespace Tests.System.Linq.CompilerServices
             }
 
             foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<string>>)(() => Activator.CreateInstance<string>()),
+#pragma warning restore IDE0004
                 (Expression<Func<List<string>, string, bool>>)((xs, x) => xs.Contains(x)),
                 (Expression<Func<List<int>, int>>)(xs => xs.Count),
             })

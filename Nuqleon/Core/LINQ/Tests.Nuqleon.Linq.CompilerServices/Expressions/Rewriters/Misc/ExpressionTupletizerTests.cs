@@ -113,7 +113,9 @@ namespace Tests.System.Linq.CompilerServices
 #endif
 
             foreach (var f in new LambdaExpression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => 42),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
                 (Expression<Func<string, int>>)(s => s.Length),
                 (Expression<Func<string, int, int>>)((s, i) => s.Length + i),
                 (Expression<Func<int, int, int, int>>)((a, b, c) => a * b + c),
@@ -170,7 +172,9 @@ namespace Tests.System.Linq.CompilerServices
 #endif
 
             foreach (var f in new LambdaExpression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => 42),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
                 (Expression<Func<string, int>>)(s => s.Length),
                 (Expression<Func<string, int, int>>)((s, i) => s.Length + i),
                 (Expression<Func<int, int, int, int>>)((a, b, c) => a * b + c),

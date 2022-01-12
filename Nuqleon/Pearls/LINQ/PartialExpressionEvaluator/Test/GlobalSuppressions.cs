@@ -4,4 +4,4 @@
 
 using System.Diagnostics.CodeAnalysis;
 
-[assembly: SuppressMessage("Style", "IDE0004:Cast is redundant", Justification = "Only redundant on newer versions of C#, so we can't remove this while we continue to support .NET Framework and netstandard2.0")]
+[assembly: SuppressMessage("Style", "IDE0150:Prefer 'null' check over type check", Justification = "Not available while we continue to support .NET Framework and netstandard2.0")]

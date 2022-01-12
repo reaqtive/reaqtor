@@ -61,11 +61,13 @@ namespace Tests.System.Linq.Expressions
 
                 (Expression<Func<int, int>>)(x => x),
 
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<DateTime>>)(() => DateTime.Now),
                 (Expression<Func<int>>)(() => "Bart".Length),
 
                 //(Expression<Func<TimeSpan>>)(() => new TimeSpan()), // REVIEW
                 (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
             };
 
             var eq = new ExpressionEqualityComparer();

@@ -39,8 +39,10 @@ namespace Tests.System.Linq.CompilerServices
             foreach (var e in new Expression[]
             {
                 Expression.Constant(1),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => DateTime.Now.Year),
                 (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
+#pragma warning restore IDE0004
                 (Expression<Func<IEnumerable<int>, IEnumerable<string>>>)(xs => from x in xs where x % 2 == 0 select x.ToString())
             })
             {

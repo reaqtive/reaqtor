@@ -120,8 +120,10 @@ namespace Test.Reaqtor.Operators
 
             var qyss = new ISubscribable<int>[]
             {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 new QuotedSubscribable<int>(ys1, Expression.Invoke((Expression<Func<ISubscribable<int>>>)(() => ys1))),
                 new QuotedSubscribable<int>(ys2, Expression.Invoke((Expression<Func<ISubscribable<int>>>)(() => ys2))),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
             };
 
             var getQuery = FromContext(client =>
@@ -201,8 +203,10 @@ namespace Test.Reaqtor.Operators
 
             var qyss = new ISubscribable<int>[]
             {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 new QuotedSubscribable<int>(ys1, Expression.Invoke((Expression<Func<ISubscribable<int>>>)(() => ys1))),
                 new QuotedSubscribable<int>(ys2, Expression.Invoke((Expression<Func<ISubscribable<int>>>)(() => ys2))),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
             };
 
             var getQuery = FromContext(client =>

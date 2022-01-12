@@ -160,7 +160,9 @@ namespace Reaqtor.QueryEngine
                 _subjectFactories.TryAdd(QueryEngineConstants.InputUri, new StreamFactoryDefinitionEntity(new Uri(QueryEngineConstants.InputUri), (Expression<Func<EdgeDescription, IReliableMultiSubject<T, T>>>)((edge) => new InputEdge<T>(edge, queryEngine._serviceResolver, queryEngine._reliableService)), null));
                 _subjectFactories.TryAdd(QueryEngineConstants.OutputUri, new StreamFactoryDefinitionEntity(new Uri(QueryEngineConstants.OutputUri), (Expression<Func<EdgeDescription, IReliableMultiSubject<T, T>>>)((edge) => new OutputEdge<T>(edge, queryEngine._serviceResolver, queryEngine._reliableService)), null));
                 _subjectFactories.TryAdd(QueryEngineConstants.BridgeUri, new StreamFactoryDefinitionEntity(new Uri(QueryEngineConstants.BridgeUri), (Expression<Func<Expression, IReliableMultiSubject<T, T>>>)((expr) => new Bridge<T>(queryEngine.Options.ExpressionPolicy.InMemoryCache.Create(expr))), null));
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 _subjectFactories.TryAdd(QueryEngineConstants.InnerSubjectUri, new StreamFactoryDefinitionEntity(new Uri(QueryEngineConstants.InnerSubjectUri), (Expression<Func<IReliableMultiSubject<T, T>>>)(() => new InnerSubject<T>()), null));
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
                 _subjectFactories.TryAdd(QueryEngineConstants.InnerSubjectRefCountUri, new StreamFactoryDefinitionEntity(new Uri(QueryEngineConstants.InnerSubjectRefCountUri), (Expression<Func<Uri, Uri, IReliableMultiSubject<T, T>>>)((refCountUri, collectorUri) => new RefCountSubject<T>(refCountUri, collectorUri)), null));
 
                 // Built-in subscription factory for observable.Subscribe(observer)
