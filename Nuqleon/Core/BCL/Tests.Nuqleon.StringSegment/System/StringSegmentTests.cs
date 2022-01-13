@@ -1083,7 +1083,6 @@ namespace Tests
         }
 
 #if NETFRAMEWORK
-#pragma warning disable CA2016
         [TestMethod]
         public void StringSegment_Concat_Object_Object_Object_Object_ArgIterator()
         {

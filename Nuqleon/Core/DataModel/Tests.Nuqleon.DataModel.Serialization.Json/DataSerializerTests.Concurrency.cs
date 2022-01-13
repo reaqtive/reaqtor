@@ -80,9 +80,11 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
                 FlatClass.Create(),
                 NestedClass.Create(),
                 RecursiveClass.Create(),
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable IDE0050 // Convert to tuple. (Test for anonymous types.)
                 new { CurrentTime = DateTime.UtcNow, Value = FlatClass.Create() },
 #pragma warning restore IDE0050 // Convert to tuple
+#pragma warning restore IDE0079
                 InheritedClass.Create(),
                 new Person { Name = "Bart", Age = 21 },
             };

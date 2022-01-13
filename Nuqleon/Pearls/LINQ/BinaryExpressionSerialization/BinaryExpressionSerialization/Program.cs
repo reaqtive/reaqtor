@@ -63,9 +63,11 @@ namespace BinaryExpressionSerialization
 
                 ((Expression<Func<int, int[]>>)(x => new int[x])).Body,
                 ((Expression<Func<int, int, int[,]>>)((x, y) => new int[x, y])).Body,
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable CA1825 // Avoid zero-length array allocations (use in expression tree)
                 ((Expression<Func<int[]>>)(() => new int[] {})).Body,
 #pragma warning restore CA1825 // Avoid zero-length array allocations
+#pragma warning restore IDE0079
                 ((Expression<Func<int, int[]>>)(x => new int[] { x })).Body,
                 ((Expression<Func<int, int, int[]>>)((x, y) => new int[] { x, y })).Body,
 
