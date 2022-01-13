@@ -4,6 +4,23 @@
     <TargetFrameworks>netcoreapp3.1;net472;net50</TargetFrameworks>
   </PropertyGroup>
 
+  <PropertyGroup Condition="$(TargetFramework) == 'net472'">
+    <!--
+      Some code analyzers choke on the __arglist that this project uses.
+      Just disabling the relevant warning (CA2016) doesn't work, because
+      the problem is a crash inside the analyzer. Just disabling
+      AnalysisModeReliability doesn't seem to work either, even though
+      that's the category for the problematic warning. Only turning off
+      analysis entirely seems to work.
+      Analysis will still run for other targets, so the impact of this
+      is that we don't get code analyzer rules executing for netfx-only
+      sections of code. Prior to .NET SDK 6.0, none of the relevant code
+      analyzer rules ran in any case, so this is not a regression for us,
+      although it would obviously be preferable to be able to let them run.
+    -->
+    <AnalysisMode>None</AnalysisMode>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\Nuqleon.StringSegment\Nuqleon.StringSegment.csproj" />
   </ItemGroup>
