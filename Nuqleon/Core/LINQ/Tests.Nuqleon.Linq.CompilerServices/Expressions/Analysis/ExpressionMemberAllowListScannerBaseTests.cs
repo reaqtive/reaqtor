@@ -173,7 +173,11 @@ namespace Tests.System.Linq.CompilerServices
             {
                 if (member.MemberType is MemberTypes.Property or MemberTypes.Method)
                 {
+#pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
+#pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
                     if (member.Name.Contains("e"))
+#pragma warning restore CA1847
+#pragma warning restore IDE0079
                     {
                         return visit(expression);
                     }
@@ -200,7 +204,11 @@ namespace Tests.System.Linq.CompilerServices
 
             protected override MemberBinding ResolveMemberBinding<T>(T binding, Func<T, MemberBinding> visit)
             {
+#pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
+#pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
                 if (binding.Member.Name.Contains("o"))
+#pragma warning restore CA1847
+#pragma warning restore IDE0079
                 {
                     return visit(binding);
                 }

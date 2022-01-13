@@ -151,7 +151,11 @@ namespace Tests.System.Linq.CompilerServices
 
             protected override Expression ResolveExpression<T>(T expression, Type type, Func<T, Expression> visit)
             {
+#pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
+#pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
                 if (typeof(Delegate).IsAssignableFrom(type) || type.Name.Contains("e"))
+#pragma warning restore CA1847
+#pragma warning restore IDE0079
                 {
                     return visit(expression);
                 }

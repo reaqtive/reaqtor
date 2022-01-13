@@ -437,9 +437,13 @@ namespace Tests.System.Reflection.Virtualization
         [TestMethod]
         public void Module_FindTypes() => WithProviders(p =>
         {
+#pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
+#pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
             CollectionAssert.AreEquivalent(
                 typeof(string).Module.FindTypes(new TypeFilter((t, _) => t.Name.Contains("q")), filterCriteria: null),
                 p.FindTypes(typeof(string).Module, new TypeFilter((t, _) => t.Name.Contains("q")), filterCriteria: null).ToArray()
+#pragma warning restore CA1847
+#pragma warning restore IDE0079
             );
         });
 

@@ -5035,7 +5035,7 @@ namespace Tests.Reaqtor.QueryEngine
                     var testInitialization = typeof(TTestClass)
                             .GetMethods()
                             .Single(m => m.GetCustomAttribute<TestInitializeAttribute>() != null);
-                    testInitialization.Invoke(testObjest, new object[] { });
+                    testInitialization.Invoke(testObjest, Array.Empty<object>());
 
                     var f = AppDomain.CurrentDomain.GetData("toInvoke") as Func<TTestClass, TState, TReturn>;
                     var result = f(testObjest, (TState)AppDomain.CurrentDomain.GetData("state"));
