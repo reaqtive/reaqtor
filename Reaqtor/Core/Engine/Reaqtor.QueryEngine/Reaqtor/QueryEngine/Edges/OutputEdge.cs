@@ -78,7 +78,6 @@ namespace Reaqtor.QueryEngine
         private readonly IReactiveServiceResolver _serviceResolver;
         private readonly IReliableReactive _parentReactiveService;
         private IReliableReactive _externalReactiveService;
-        private IReliableSubscription _externalSubscription;
         private IHostedOperatorContext _context;
 
         public OutputEdge(EdgeDescription edge, IReactiveServiceResolver serviceResolver, IReliableReactive reactiveService)
@@ -111,7 +110,7 @@ namespace Reaqtor.QueryEngine
         public override void Start()
         {
             base.Start();
-            _externalSubscription = CreateExternalSubscription();
+            _ = CreateExternalSubscription();
         }
 
         protected override Subscription CreateNewSubscription(IReliableObserver<T> observer)
