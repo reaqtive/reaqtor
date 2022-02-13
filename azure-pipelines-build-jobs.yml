@@ -25,16 +25,12 @@ jobs:
                 packageType: runtime
               displayName: Install .NET Core 2.1 runtime
 
-            - task: Bash@3
-              inputs:
-                displayName: Install NBGV tool
-                targetType: inline
-                script: |
-                  echo "Ensuring dotnet global tool '$1' is available"
-                  dotnet tool list -g | grep $1
-                  ret=$?
-                  [ $ret -eq 0 ] && echo "Global tool $1 already installed" || dotnet tool install -g $0
-                arguments: nbgv
+            - pwsh: |
+                $existing = & dotnet tool list -g | Select-String "nbgv" 
+                if (!$existing) {
+                    & dotnet tool install -g nbgv
+                }
+              displayName: Install NBGV tool
 
             - script: nbgv cloud -a
               displayName: Set Version
