@@ -34,7 +34,7 @@ stages:
         version: 5.x
         performMultiLevelLookup: true
 
-    - pwsh: |
+    - powershell: |
         $existing = & dotnet tool list -g | Select-String "nbgv" 
         if (!$existing) {
             & dotnet tool install -g nbgv
@@ -112,7 +112,7 @@ stages:
         version: 5.x
         performMultiLevelLookup: true
 
-    - pwsh: |
+    - powershell: |
         $existing = & dotnet tool list -g | Select-String "nbgv" 
         if (!$existing) {
             & dotnet tool install -g nbgv

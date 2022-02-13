@@ -25,7 +25,7 @@ jobs:
                 packageType: runtime
               displayName: Install .NET Core 2.1 runtime
 
-            - pwsh: |
+            - powershell: |
                 $existing = & dotnet tool list -g | Select-String "nbgv" 
                 if (!$existing) {
                     & dotnet tool install -g nbgv
