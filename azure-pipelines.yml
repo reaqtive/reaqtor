@@ -34,11 +34,15 @@ stages:
         version: 5.x
         performMultiLevelLookup: true
 
-    - task: DotNetCoreCLI@2
+    - task: Bash@3
       inputs:
-        command: custom
-        custom: tool
-        arguments: install -g nbgv
+        targetType: inline
+        script: |
+          echo "Ensuring dotnet global tool '$1' is available"
+          dotnet tool list -g | grep $1
+          ret=$?
+          [ $ret -eq 0 ] && echo "Global tool $1 already installed" || dotnet tool install -g $0
+        arguments: nbgv
       displayName: Install NBGV tool
 
     - script: nbgv cloud -a
@@ -112,11 +116,15 @@ stages:
         version: 5.x
         performMultiLevelLookup: true
 
-    - task: DotNetCoreCLI@2
+    - task: Bash@3
       inputs:
-        command: custom
-        custom: tool
-        arguments: install -g nbgv
+        targetType: inline
+        script: |
+          echo "Ensuring dotnet global tool '$1' is available"
+          dotnet tool list -g | grep $1
+          ret=$?
+          [ $ret -eq 0 ] && echo "Global tool $1 already installed" || dotnet tool install -g $0
+        arguments: nbgv
       displayName: Install NBGV tool
 
     - script: nbgv cloud -a
