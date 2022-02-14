@@ -25,11 +25,11 @@ jobs:
                 packageType: runtime
               displayName: Install .NET Core 2.1 runtime
 
-            - task: DotNetCoreCLI@2
-              inputs:
-                command: custom
-                custom: tool
-                arguments: install -g nbgv
+            - powershell: |
+                $existing = & dotnet tool list -g | Select-String "nbgv" 
+                if (!$existing) {
+                    & dotnet tool install -g nbgv
+                }
               displayName: Install NBGV tool
 
             - script: nbgv cloud -a

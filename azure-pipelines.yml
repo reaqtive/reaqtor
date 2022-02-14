@@ -34,11 +34,11 @@ stages:
         version: 5.x
         performMultiLevelLookup: true
 
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: custom
-        custom: tool
-        arguments: install -g nbgv
+    - powershell: |
+        $existing = & dotnet tool list -g | Select-String "nbgv" 
+        if (!$existing) {
+            & dotnet tool install -g nbgv
+        }
       displayName: Install NBGV tool
 
     - script: nbgv cloud -a
@@ -112,11 +112,11 @@ stages:
         version: 5.x
         performMultiLevelLookup: true
 
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: custom
-        custom: tool
-        arguments: install -g nbgv
+    - powershell: |
+        $existing = & dotnet tool list -g | Select-String "nbgv" 
+        if (!$existing) {
+            & dotnet tool install -g nbgv
+        }
       displayName: Install NBGV tool
 
     - script: nbgv cloud -a

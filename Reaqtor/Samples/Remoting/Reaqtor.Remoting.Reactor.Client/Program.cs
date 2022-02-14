@@ -837,7 +837,9 @@ namespace Reaqtor.Remoting
 
                     var ctx = platform.CreateClient().Context;
 
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                     var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IMultiSubject>>)(() => new PMS()));
+#pragma warning restore IDE0004
                     await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:partitionedFactory"), sf, null, CancellationToken.None);
 
                     var brk = (Expression<Func<IAsyncReactiveQbserver<T>>>)(() => new MyObserver<T>().To<IObserver<T>, IAsyncReactiveQbserver<T>>());

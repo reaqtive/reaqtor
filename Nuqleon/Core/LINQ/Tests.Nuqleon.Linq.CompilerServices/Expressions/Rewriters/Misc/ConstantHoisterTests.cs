@@ -116,7 +116,11 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ConstantHoister_ManOrBoy()
         {
+#pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
+#pragma warning disable CA1845  // Use span-based 'string.Concat' and 'AsSpan' instead of 'Substring'
             var e = (Expression<Func<IEnumerable<int>, IEnumerable<string>>>)(xs => from x in xs let y = x + 1 where y > 0 let s = x.ToString() where !s.EndsWith("Foo") select s.Substring(0, 1) + "Foo");
+#pragma warning restore CA1847
+#pragma warning restore IDE0079
             var c = ConstantHoister.Hoist(e, useDefaultForNull: false);
 
             Assert.AreEqual(3, c.Environment.Count);

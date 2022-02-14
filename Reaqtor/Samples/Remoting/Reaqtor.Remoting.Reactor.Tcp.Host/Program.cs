@@ -50,12 +50,14 @@ namespace Reaqtor.Remoting.Platform.Tcp.Host
                 var finished = await Task.WhenAny(Task.Delay(OutputDelay, token), readLine).ConfigureAwait(false);
                 if (finished == readLine)
                 {
+#pragma warning disable CA1849 // Call async methods when in an async method - analyzer hasn't understood that the task is complete
                     if (readLine.Result == null)
                     {
                         break;
                     }
 
                     Console.WriteLine(readLine.Result);
+#pragma warning restore CA1849 // Call async methods when in an async method
                     readLine = reader.ReadLineAsync();
                 }
             }

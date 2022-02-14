@@ -106,6 +106,7 @@ namespace Nuqleon.Serialization
         #endregion
 
 #pragma warning disable IDE0060 // Remove unused parameter (witness parameters for type inference)
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable CA1801 // Review unused parameters (same as above)
 
         #region Roundtrip function
@@ -381,6 +382,7 @@ namespace Nuqleon.Serialization
         #endregion
 
 #pragma warning restore CA1801
+#pragma warning restore IDE0079
 #pragma warning restore IDE0060
 
         #endregion

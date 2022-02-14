@@ -2,7 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
+#if !NET5_0
 using System;
+#endif
 using System.Collections.Generic;
 using System.Memory.Diagnostics;
 using System.Runtime.CompilerServices;

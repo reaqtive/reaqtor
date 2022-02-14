@@ -31,6 +31,7 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<int, int, int>>)((a, b) => a + b),
                 (Expression<Func<TimeSpan, TimeSpan>>)(t => -t),
                 (Expression<Func<DateTime, TimeSpan, DateTime>>)((d, t) => d + t),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<DateTime>>)(() => DateTime.Now),
                 (Expression<Func<DateTime, int>>)(d => d.Year),
                 (Expression<Func<string, string>>)(s => s.ToUpper()),
@@ -39,6 +40,7 @@ namespace Tests.System.Linq.CompilerServices
                 Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
                 (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
                 (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.AreSame(e, aps.Visit(e));
@@ -61,6 +63,7 @@ namespace Tests.System.Linq.CompilerServices
             foreach (var e in new Expression[] {
                 (Expression<Func<TimeSpan, TimeSpan>>)(t => -t),
                 (Expression<Func<DateTime, TimeSpan, DateTime>>)((d, t) => d + t),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<DateTime>>)(() => DateTime.Now),
                 (Expression<Func<DateTime, int>>)(d => d.Year),
                 (Expression<Func<string, string>>)(s => s.ToUpper()),
@@ -69,6 +72,7 @@ namespace Tests.System.Linq.CompilerServices
                 Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
                 (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
                 (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.ThrowsException<NotSupportedException>(() => aps.Visit(e));
@@ -84,11 +88,13 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<int, int>>)(x => -x),
                 (Expression<Func<int, int, int>>)((a, b) => a + b),
                 (Expression<Func<DateTime, TimeSpan, DateTime>>)((d, t) => d + t),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<DateTime>>)(() => DateTime.Now),
                 (Expression<Func<DateTime, int>>)(d => d.Year),
                 (Expression<Func<string, string>>)(s => s.ToUpper()),
                 (Expression<Func<string, bool>>)(s => string.IsNullOrEmpty(s)),
                 (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.AreSame(e, aps.Visit(e));
@@ -96,9 +102,11 @@ namespace Tests.System.Linq.CompilerServices
 
             foreach (var e in new Expression[] {
                 (Expression<Func<TimeSpan, TimeSpan>>)(t => -t),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
                 Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
                 (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.ThrowsException<NotSupportedException>(() => aps.Visit(e));
@@ -112,8 +120,10 @@ namespace Tests.System.Linq.CompilerServices
 
             foreach (var e in new Expression[] {
                 (Expression<Func<string, string>>)(s => s.ToLower()),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
                 (Expression<Func<List<int>>>)(() => new List<int> { 2 }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.AreSame(e, cps.Visit(e));
@@ -121,8 +131,10 @@ namespace Tests.System.Linq.CompilerServices
 
             foreach (var e in new Expression[] {
                 (Expression<Func<string, string>>)(s => s.TrimStart()),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<Bar>>)(() => new Bar { Qux = 1 }),
                 (Expression<Func<Dictionary<string, int>>>)(() => new Dictionary<string, int> { { "bar", 2 } }),
+#pragma warning restore IDE0004
             })
             {
                 Assert.ThrowsException<NotSupportedException>(() => cps.Visit(e));
@@ -161,7 +173,11 @@ namespace Tests.System.Linq.CompilerServices
             {
                 if (member.MemberType is MemberTypes.Property or MemberTypes.Method)
                 {
+#pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
+#pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
                     if (member.Name.Contains("e"))
+#pragma warning restore CA1847
+#pragma warning restore IDE0079
                     {
                         return visit(expression);
                     }
@@ -188,7 +204,11 @@ namespace Tests.System.Linq.CompilerServices
 
             protected override MemberBinding ResolveMemberBinding<T>(T binding, Func<T, MemberBinding> visit)
             {
+#pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
+#pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
                 if (binding.Member.Name.Contains("o"))
+#pragma warning restore CA1847
+#pragma warning restore IDE0079
                 {
                     return visit(binding);
                 }

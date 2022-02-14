@@ -927,9 +927,11 @@ namespace Tests
 
         private sealed class Indexy
         {
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable CA1822 // Mark members as static (https://github.com/dotnet/roslyn-analyzers/issues/4651)
             public int this[string s] => s.Length;
 #pragma warning restore CA1822
+#pragma warning restore IDE0079
         }
 
         #endregion
@@ -939,9 +941,11 @@ namespace Tests
         [TestMethod]
         public void AnonymousType_OriginalTypeReused()
         {
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable IDE0050 // Convert to tuple. (Test for anonymous types.)
             Expression<Func<object>> x = () => new { x = 1, y = 2 };
 #pragma warning restore IDE0050
+#pragma warning restore IDE0079
 
             var e = Roundtrip(x.Body);
             Assert.IsNotNull(e);
@@ -958,9 +962,11 @@ namespace Tests
         [TestMethod]
         public void AnonymousType_TypeReconstructed()
         {
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable IDE0050 // Convert to tuple. (Test for anonymous types.)
             Expression<Func<object>> x = () => new { x = 1, y = 2 };
 #pragma warning restore IDE0050
+#pragma warning restore IDE0079
 
             var ser = new ExpressionJsonSerializer();
             var s = ser.Serialize(x.Body);
@@ -1816,6 +1822,7 @@ namespace Tests
 
         #region End-to-end tests
 
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable IDE0050 // Convert to tuple. (Test for anonymous types.)
 
         [TestMethod]
@@ -1836,6 +1843,7 @@ namespace Tests
         }
 
 #pragma warning restore IDE0050 // Convert to tuple
+#pragma warning restore IDE0079
 
         [TestMethod]
         public void E2E_Meta()

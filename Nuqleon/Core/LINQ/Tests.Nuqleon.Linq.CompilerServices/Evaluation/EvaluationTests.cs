@@ -367,6 +367,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var es = new LambdaExpression[]
             {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => 42),
                 (Expression<Func<int, int>>)(x => x),
                 (Expression<Func<int, int>>)(x => x * 2),
@@ -380,6 +381,7 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<int>>)(() => 44),
                 (Expression<Func<int, int>>)(x => 1 + x),
                 (Expression<Func<int, int>>)(x => 2 + x),
+#pragma warning restore IDE0004
             };
 
             var nums = new[] { 7, 12, 64, 49, 18 };

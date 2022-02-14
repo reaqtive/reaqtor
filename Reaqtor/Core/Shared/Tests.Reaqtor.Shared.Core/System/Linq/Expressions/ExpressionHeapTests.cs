@@ -41,11 +41,13 @@ namespace Tests.Reaqtor.Shared.Core
                 Expression.Parameter(typeof(long), "foo"),
                 Expression.Parameter(typeof(double), "foo"),
                 Expression.Default(typeof(int)),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<int>>)(() => 42),
                 (Expression<Func<int, int>>)(x => x + 2),
                 (Expression<Func<double, int>>)(x => (int)Math.Round(x) + 2),
                 (Expression<Func<int[]>>)(() => new[] { 1, 2, 3 }),
                 (Expression<Func<string>>)(() => Tuple.Create(1, "foo").Item2),
+#pragma warning restore IDE0004
             };
 
             var heap = new ExpressionHeap();
@@ -65,11 +67,13 @@ namespace Tests.Reaqtor.Shared.Core
                 Expression.Parameter(typeof(long), "foo"),
                 Expression.Parameter(typeof(double), "foo"),
                 Expression.Default(typeof(int)),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Makes the intent clear.)
                 (Expression<Func<int>>)(() => 42),
                 (Expression<Func<int, int>>)(x => x + 2),
                 (Expression<Func<double, int>>)(x => (int)Math.Round(x) + 2),
                 (Expression<Func<int[]>>)(() => new[] { 1, 2, 3 }),
                 (Expression<Func<string>>)(() => Tuple.Create(1, "foo").Item2),
+#pragma warning restore IDE0004
             };
 
             var rand = new Random(17);

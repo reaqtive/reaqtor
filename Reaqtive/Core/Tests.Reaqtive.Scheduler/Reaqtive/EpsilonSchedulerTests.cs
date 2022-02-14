@@ -170,7 +170,7 @@ namespace Test.Reaqtive.Scheduler
                     {
                         lock (threadIds)
                         {
-                            threadIds.Add(Thread.CurrentThread.ManagedThreadId);
+                            threadIds.Add(Environment.CurrentManagedThreadId);
                             counter++;
 
                             if (counter == NumberOfTasks)

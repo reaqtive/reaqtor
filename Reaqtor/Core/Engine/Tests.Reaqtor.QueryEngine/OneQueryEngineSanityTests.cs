@@ -2096,7 +2096,9 @@ namespace Tests.Reaqtor.QueryEngine
             var streamUri = new Uri("test://stream");
             var upstreamUri = new Uri("test://upstream");
             var downstreamUri = new Uri("test://downstream");
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+#pragma warning restore IDE0004
             Context.DefineStreamFactory<T, T>(sfUri, sf, null);
             var stream = Context.GetStreamFactory<T, T>(sfUri).Create(streamUri, null);
 
@@ -2124,7 +2126,9 @@ namespace Tests.Reaqtor.QueryEngine
             var downstreamUri = new Uri("test://downstream");
             var dummyUri = new Uri("test://dummysub");
 
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+#pragma warning restore IDE0004
             Context.DefineStreamFactory<T, T>(sfUri, sf, null);
             var stream = Context.GetStreamFactory<T, T>(sfUri).Create(streamUri, null);
 
@@ -2153,7 +2157,9 @@ namespace Tests.Reaqtor.QueryEngine
             var downstreamUri = new Uri("test://downstream");
             var dummyUri = new Uri("test://dummysub");
 
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+#pragma warning restore IDE0004
             Context.DefineStreamFactory<T, T>(sfUri, sf, null);
             var stream = Context.GetStreamFactory<int, int>(sfUri).Create(streamUri, null);
 
@@ -2182,7 +2188,9 @@ namespace Tests.Reaqtor.QueryEngine
             var downstreamUri = new Uri("test://downstream");
             var dummyUri = new Uri("test://dummysub");
 
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+#pragma warning restore IDE0004
             Context.DefineStreamFactory<T, T>(sfUri, sf, null);
 
             // Note that the stream is defined over strings, but later subscribed to using int.
@@ -2211,7 +2219,9 @@ namespace Tests.Reaqtor.QueryEngine
             var streamUri = new Uri("test://stream");
             var dummyUri = new Uri("test://dummysub");
 
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+#pragma warning restore IDE0004
             Context.DefineStreamFactory<T, T>(sfUri, sf, null);
 
             var stream = Context.GetStreamFactory<string, string>(sfUri).Create(streamUri, null);
@@ -2276,7 +2286,9 @@ namespace Tests.Reaqtor.QueryEngine
                 }
                 i++;
 
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IAsyncReactiveQubject<T, T>>>)(() => (IAsyncReactiveQubject<T, T>)new SimpleSubject<T>()));
+#pragma warning restore IDE0004
                 await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:sf"), sf, null, CancellationToken.None);
 
                 if ((bool)choice[i])
@@ -2318,7 +2330,9 @@ namespace Tests.Reaqtor.QueryEngine
 
                 await ctx.DefineObservableAsync<T>(new Uri("custom:never"), ctx.Never<T>(), null, CancellationToken.None);
                 await ctx.DefineObserverAsync<T>(new Uri("custom:nop"), ctx.Nop<T>(), null, CancellationToken.None);
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IAsyncReactiveQubject>>)(() => (IAsyncReactiveQubject)new SimpleSubject()));
+#pragma warning restore IDE0004
                 await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:sf"), sf, null, CancellationToken.None);
                 var sub = await ctx.GetObservable<int>(new Uri("custom:never")).SubscribeAsync(ctx.GetObserver<int>(new Uri("custom:nop")), new Uri("custom:sub"), null, CancellationToken.None);
                 var subj = await sf.CreateAsync(new Uri("custom:stream"), null, CancellationToken.None);
@@ -2481,7 +2495,9 @@ namespace Tests.Reaqtor.QueryEngine
 
             await ctx.DefineObservableAsync<T>(new Uri("custom:never"), ctx.Never<T>(), null, CancellationToken.None);
             await ctx.DefineObserverAsync<T>(new Uri("custom:nop"), ctx.Nop<T>(), null, CancellationToken.None);
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IAsyncReactiveQubject>>)(() => (IAsyncReactiveQubject)new SimpleSubject()));
+#pragma warning restore IDE0004
             await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:sf"), sf, null, CancellationToken.None);
             await ctx.GetObservable<int>(new Uri("custom:never")).SubscribeAsync(ctx.GetObserver<int>(new Uri("custom:nop")), new Uri("custom:sub"), null, CancellationToken.None);
             await sf.CreateAsync(new Uri("custom:stream"), null, CancellationToken.None);

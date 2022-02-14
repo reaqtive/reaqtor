@@ -150,9 +150,11 @@ namespace Test.Reaqtor.Operators
 
             var qyss = new Dictionary<int, ISubscribable<string>>
             {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 { 2, new QuotedSubscribable<string>(ys2, Expression.Invoke((Expression<Func<ISubscribable<string>>>)(() => ys2))) },
                 { 3, new QuotedSubscribable<string>(ys3, Expression.Invoke((Expression<Func<ISubscribable<string>>>)(() => ys3))) },
                 { 5, new QuotedSubscribable<string>(ys5, Expression.Invoke((Expression<Func<ISubscribable<string>>>)(() => ys5))) },
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
             };
 
             var getQuery = FromContext(client =>

@@ -10,6 +10,7 @@
 
 namespace System.Runtime.CompilerServices
 {
+    [Diagnostics.CodeAnalysis.SuppressMessage("Naming", "CA1711:Identifiers should not have incorrect suffix", Justification = "This is the established name so we can't change it now.")]
     public partial class RuntimeOpsEx
     {
         /// <summary>

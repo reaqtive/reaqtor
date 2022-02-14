@@ -422,9 +422,11 @@ namespace Tests
 
         private sealed class Indexed
         {
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable CA1822 // Mark members as static (https://github.com/dotnet/roslyn-analyzers/issues/4651)
             public string this[int x] => "";
 #pragma warning restore CA1822
+#pragma warning restore IDE0079
         }
 
         [TestMethod]

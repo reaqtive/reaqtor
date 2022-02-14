@@ -169,9 +169,12 @@ namespace Reaqtor.Remoting.TestingFramework
 
         public void Dispose()
         {
-            CleanupQueryEvaluator();
-            CleanupEnvironment();
-            Platform.Dispose();
+            if (_cleanupEnvironment)
+            {
+                CleanupQueryEvaluator();
+                CleanupEnvironment();
+                Platform.Dispose();
+            }
         }
 
         #endregion

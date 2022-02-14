@@ -543,6 +543,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
             _jsonSerializer.Serialize(expected, _stream);
         }
 
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable IDE0050 // Convert to tuple. (Test for anonymous types.)
 
         /// <summary>
@@ -562,6 +563,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         }
 
 #pragma warning restore IDE0050
+#pragma warning restore IDE0079
 
         /// <summary>
         /// Testing record type.
@@ -603,6 +605,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
             Assert.AreEqual(expected, actual);
         }
 
+#pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
 #pragma warning disable IDE0050 // Convert to tuple. (Test for anonymous types.)
 
         /// <summary>
@@ -626,6 +629,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         }
 
 #pragma warning restore IDE0050
+#pragma warning restore IDE0079
 
         /// <summary>
         /// Tests the custom tuple serialization.

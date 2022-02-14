@@ -8,6 +8,9 @@
 // BD - November 2009 - Created this file.
 //
 
+#if NET5_0 || NETSTANDARD2_1
+using System;
+#endif
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -235,7 +238,11 @@ namespace Nuqleon.Json.Parser
                                                     }
                                                     else
                                                     {
+#if NET5_0 || NETSTANDARD2_1
+                                                        if (!int.TryParse(_input.AsSpan(i, 4), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int val))
+#else
                                                         if (!int.TryParse(_input.Substring(i, 4), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int val))
+#endif
                                                         {
                                                             throw new ParseException("Unrecognized Unicode escape sequence.", i, ParseError.InvalidToken);
                                                         }

@@ -87,7 +87,9 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             // Call
             yield return Expression.Call(typeof(Math).GetMethod(nameof(Math.Abs), new[] { typeof(int) }), Expression.Constant(1));
             yield return Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) }), Expression.Constant(1), Expression.Constant(2));
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             yield return ((Expression<Func<Bar>>)(() => Activator.CreateInstance<Bar>()));
+#pragma warning restore IDE0004
             yield return ((Expression<Func<IEnumerable<int>, Func<int, bool>, IEnumerable<int>>>)((xs, f) => xs.Where(f)));
             yield return ((Expression<Func<IEnumerable<string>, Func<string, int>, IEnumerable<int>>>)((xs, f) => xs.Select(f)));
 
@@ -131,7 +133,9 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             yield return Expression.Invoke(Expression.Parameter(typeof(Func<int, int>)), Expression.Constant(1));
 
             // Lambda
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             yield return (Expression<Func<int>>)(() => 1);
+#pragma warning restore IDE0004
             yield return (Expression<Func<int, int>>)(x => x);
             yield return (Expression<Func<long, long>>)(x => x);
             yield return (Expression<Func<int, int, int>>)((x, y) => x + y);
