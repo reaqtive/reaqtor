@@ -114,7 +114,7 @@ namespace Test.Reaqtor.Expressions
             values.Clear();
             e.Reset();
 
-            var d = ((IObservable<int>)q).Subscribe(values.Add, _ => Assert.Fail(), () => e.Set());
+            var d = q.Subscribe(values.Add, _ => Assert.Fail(), () => e.Set());
             new SubscriptionInitializeVisitor((ISubscription)d).Start();
             e.WaitOne();
 

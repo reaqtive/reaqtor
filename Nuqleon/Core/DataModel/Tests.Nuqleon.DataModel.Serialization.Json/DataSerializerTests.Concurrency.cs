@@ -76,7 +76,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
                 new TimeSpan(1, 3, 2, 3, 3),
                 new byte[] { 1, 2, 3, 4, 5 },
                 new ClassWithByteEnumMember(),
-                (int?)1,
+                1,
                 FlatClass.Create(),
                 NestedClass.Create(),
                 RecursiveClass.Create(),
