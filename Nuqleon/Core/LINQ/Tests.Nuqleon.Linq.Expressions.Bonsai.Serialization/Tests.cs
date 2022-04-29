@@ -3162,9 +3162,9 @@ namespace Tests
                 Assert.AreEqual(fc(iter), ec(iter));
         }
 
-#endregion
+        #endregion
 
-#region Null references
+        #region Null references
 
         [TestMethod]
         public void Bonsai_Serialize_Expression_Null1()
@@ -3252,9 +3252,9 @@ namespace Tests
             action(serializer, backCompatSerializer);
         }
 
-#endregion
+        #endregion
 
-#region Malformed inputs
+        #region Malformed inputs
 
         [TestMethod]
         public void Bonsai_Malformed_Parameter()
@@ -3599,9 +3599,9 @@ namespace Tests
             Assert.ThrowsException<BonsaiParseException>(() => serializer.Deserialize(bonsai));
         }
 
-#endregion
+        #endregion
 
-#region Memoization
+        #region Memoization
 
         [TestMethod]
         public void BonsaiSerialization_NoMemoization()
@@ -3638,9 +3638,9 @@ namespace Tests
             Assert.AreEqual(1, ser.GetConstantDeserializerHitCount[typeof(int)]);
         }
 
-#endregion
+        #endregion
 
-#region Helpers
+        #region Helpers
 
         private static readonly Version V08 = new(0, 8);
 
@@ -3772,10 +3772,10 @@ namespace Tests
             }
         }
 
-#endregion
+        #endregion
     }
 
-#region Helper types
+    #region Helper types
 
     public static class Ext
     {
@@ -3820,5 +3820,5 @@ namespace Tests
         }
     }
 
-#endregion
+    #endregion
 }
