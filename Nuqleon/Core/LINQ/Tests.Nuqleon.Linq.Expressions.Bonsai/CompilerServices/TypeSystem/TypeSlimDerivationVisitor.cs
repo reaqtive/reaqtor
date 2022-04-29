@@ -1299,6 +1299,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
             RoundtripAndAssert(f.Body);
         }
 
+#if NETFRAMEWORK
         [TestMethod]
         public void TypeSlimDerivationVisitor_E2E_Jacquard()
         {
@@ -1321,6 +1322,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
             RoundtripAndAssert(f);
         }
+#endif
 
         [TestMethod]
         public void TypeSlimDerivationVisitor_E2E_GenericParameterBindings()
@@ -1342,9 +1344,9 @@ namespace Tests.System.Linq.Expressions.Bonsai
             }
         }
 
-        #endregion
+#endregion
 
-        #region Man or boy tests
+#region Man or boy tests
 
         [TestMethod]
         public void TypeSlimDerivationVisitor_ManOrBoy1()
@@ -1399,9 +1401,9 @@ namespace Tests.System.Linq.Expressions.Bonsai
             }
         }
 
-        #endregion
+#endregion
 
-        #region Unsupported stuff
+#region Unsupported stuff
 
         [TestMethod]
         public void TypeSlimDerivationVisitor_Unsupported()
@@ -1409,9 +1411,9 @@ namespace Tests.System.Linq.Expressions.Bonsai
             new MyDeriver().Test();
         }
 
-        #endregion
+#endregion
 
-        #region Helpers
+#region Helpers
 
         private static TypeSlim Derive(ExpressionSlim e)
         {
@@ -1437,10 +1439,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
             Assert.IsTrue(StructuralTypeEqualityComparer.Default.Equals(roundtripSlim.ToType(), e.Type));
         }
 
-        #endregion
+#endregion
     }
 
-    #region Helper types
+#region Helper types
 
     public static class Ext
     {
@@ -1515,5 +1517,5 @@ namespace Tests.System.Linq.Expressions.Bonsai
         }
     }
 
-    #endregion
+#endregion
 }
