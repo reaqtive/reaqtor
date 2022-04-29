@@ -361,7 +361,7 @@ namespace Tests
             Assert.AreEqual(44, r[0]);
         }
 
-#if !NET5_0 // See RuntimeOps. Some functionality is currently not supported.
+#if !NET6_0 // See RuntimeOps. Some functionality is currently not supported.
         [TestMethod]
         public void Quote_RuntimeVariables_Hoisted3()
         {

@@ -14,7 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#if !NET5_0
+#if !NET6_0
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
@@ -203,7 +203,7 @@ namespace Tests
             }
         }
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void PooledHashSet_Serialization()
         {

@@ -124,7 +124,7 @@ namespace Nuqleon.Json.Interop.Newtonsoft
                         break;
                     case ExpressionType.Number:
                         var str = (string)((ConstantExpression)expr).Value;
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                         if (str.Contains('.', StringComparison.Ordinal))
 #else
                         if (str.IndexOf('.') >= 0)

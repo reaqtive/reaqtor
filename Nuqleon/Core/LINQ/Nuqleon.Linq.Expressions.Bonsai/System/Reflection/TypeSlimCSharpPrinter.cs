@@ -153,7 +153,7 @@ namespace System.Reflection
 
             if (i + 1 < type.Name.Length)
             {
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 arity = int.Parse(type.Name[(i + 1)..], CultureInfo.InvariantCulture);
 #else
                 arity = int.Parse(type.Name.Substring(i + 1), CultureInfo.InvariantCulture);

@@ -10,7 +10,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 
-#if !DEBUG && !NET5_0 // REVIEW: Some behavioral changes with finalization have been found in .NET 5.0 in Release builds.
+#if !DEBUG && !NET6_0 // REVIEW: Some behavioral changes with finalization have been found in .NET 5.0 in Release builds.
 using System.Runtime.CompilerServices;
 #endif
 
@@ -319,7 +319,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             Run(tests);
         }
 
-#if !DEBUG && !NET5_0 // REVIEW: Some behavioral changes with finalization have been found in .NET 5.0 in Release builds.
+#if !DEBUG && !NET6_0 // REVIEW: Some behavioral changes with finalization have been found in .NET 5.0 in Release builds.
         [TestMethod]
         public void DataModelSerializerFactory_GarbageCollectibleSerializerWithCycles()
         {

@@ -21,7 +21,7 @@ namespace System
 #pragma warning disable IDE0079 // Remove unnecessary suppressions.
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize. (Analyzer does not know about pre-netstandard2.1 IAsyncDisposable.)
 
-#if !NET5_0 && !NETSTANDARD2_1
+#if !NET6_0 && !NETSTANDARD2_1
         /// <summary>
         /// Disposes the resource asynchronously.
         /// </summary>

@@ -14,7 +14,7 @@ using System.Linq.Expressions.Bonsai.Serialization;
 
 using Json = Nuqleon.Json.Expressions;
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
@@ -34,7 +34,7 @@ namespace Tests
             Assert.AreEqual("foo", ex.Message);
             Assert.AreSame(json, ex.Node);
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
             var f = new BinaryFormatter();
 
             var ms = new MemoryStream();

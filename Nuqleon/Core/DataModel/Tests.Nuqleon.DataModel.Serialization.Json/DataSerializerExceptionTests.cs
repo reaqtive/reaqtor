@@ -10,7 +10,7 @@
 
 using System;
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
@@ -48,7 +48,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
             Assert.AreSame(err, ex.InnerException);
         }
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void DataSerializerException_Serialize()
         {

@@ -103,7 +103,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public async Task DefineUndefineObservableAsync()
         {
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using var qe = CreateQueryEngine();
@@ -147,7 +147,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public async Task DefineUndefineObserverAsync()
         {
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using var qe = CreateQueryEngine();
@@ -191,7 +191,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public async Task DefineUndefineStreamFactoryAsync()
         {
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using var qe = CreateQueryEngine();
@@ -298,7 +298,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public async Task SubscriptionLifecycleAsync()
         {
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using var qe = CreateQueryEngine();
@@ -534,7 +534,7 @@ namespace Tests.Reaqtor.QueryEngine
             }
 
             sub.DisposeAsync(CancellationToken.None)
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NETCOREAPP3_1
                 .AsTask()
 #endif
                 .Wait();
@@ -1099,7 +1099,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe1 = CreateQueryEngine(kvs))
@@ -1114,7 +1114,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe2 = CreateQueryEngine(kvs))
@@ -1134,7 +1134,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             InMemoryStateStore state;
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe1 = CreateQueryEngine(kvs))
@@ -1153,7 +1153,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe2 = CreateQueryEngine(kvs))
@@ -1171,7 +1171,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe1 = CreateQueryEngine(kvs))
@@ -1186,7 +1186,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe2 = CreateQueryEngine(kvs))
@@ -1200,7 +1200,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe3 = CreateQueryEngine(kvs))
@@ -1211,7 +1211,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() =>
                     ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None)
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NETCOREAPP3_1
                         .AsTask()
 #endif
                 );
@@ -1223,7 +1223,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe1 = CreateQueryEngine(kvs))
@@ -1238,7 +1238,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe2 = CreateQueryEngine(kvs))
@@ -1256,7 +1256,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe3 = CreateQueryEngine(kvs))
@@ -1276,7 +1276,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             InMemoryStateStore state;
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe1 = CreateQueryEngine(kvs))
@@ -1293,7 +1293,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe2 = CreateQueryEngine(kvs))
@@ -1311,7 +1311,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe3 = CreateQueryEngine(kvs))
@@ -1337,7 +1337,7 @@ namespace Tests.Reaqtor.QueryEngine
             var deleteCreate_delete_id = new Uri("test://sub4");
             var deleteCreate_deleteCreate_id = new Uri("test://sub5");
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe1 = CreateQueryEngine(kvs))
@@ -1381,7 +1381,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe2 = CreateQueryEngine(kvs))
@@ -1411,7 +1411,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe3 = CreateQueryEngine(kvs))
@@ -1434,7 +1434,7 @@ namespace Tests.Reaqtor.QueryEngine
                 // First create an engine persist a subscription creation in the state store
                 var kvs1 = new InMemoryKeyValueStore();
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
 #endif
                 using (var qe1 = CreateQueryEngine(kvs1))
@@ -1455,7 +1455,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var kvs2 = new InMemoryKeyValueStore();
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
 #endif
                 using (var qe2 = CreateQueryEngine(kvs2))
@@ -1472,7 +1472,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Now create engine with first state store (the one that has sub) and second kvs (also has sub)
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
 #endif
                 using (var qe3 = CreateQueryEngine(kvs2))
@@ -1488,7 +1488,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Do it again but handle the exception
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
 #endif
                 using (var qe4 = CreateQueryEngine(kvs2))
@@ -1516,7 +1516,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var kvs = new InMemoryKeyValueStore();
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
 #endif
                 using (var qe1 = CreateQueryEngine(kvs))
@@ -1530,7 +1530,7 @@ namespace Tests.Reaqtor.QueryEngine
                     await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
                 }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
 #endif
                 using (var qe2 = CreateQueryEngine(kvs))
@@ -1545,7 +1545,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Unhandled
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
 #endif
                 using (var qe3 = CreateQueryEngine(kvs))
@@ -1561,7 +1561,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Handled
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
 #endif
                 using (var qe4 = CreateQueryEngine(kvs))
@@ -1593,7 +1593,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             InMemoryStateStore state;
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe1 = CreateQueryEngine(kvs))
@@ -1615,7 +1615,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe2 = CreateQueryEngine(kvs))
@@ -1633,7 +1633,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using (var qe = CreateQueryEngine(kvs))
@@ -1652,7 +1652,7 @@ namespace Tests.Reaqtor.QueryEngine
                 kvs.StartingOperation += fail;
                 await AssertEx.ThrowsExceptionAsync<MyException>(() =>
                     test.DisposeAsync(CancellationToken.None)
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NETCOREAPP3_1
                         .AsTask()
 #endif
                     ,
@@ -2233,13 +2233,13 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(actx.Streams.TryGetValue(streamUri, out p));
 
             sub.DisposeAsync(CancellationToken.None)
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NETCOREAPP3_1
                 .AsTask()
 #endif
                 .Wait();
 
             actx.GetStream<string, string>(streamUri).DisposeAsync(CancellationToken.None)
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NETCOREAPP3_1
                 .AsTask()
 #endif
                 .Wait();
@@ -2485,7 +2485,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET5_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
+#if NET6_0 || NETCOREAPP3_1 // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
 #endif
             using var qe = CreateQueryEngine(kvs);

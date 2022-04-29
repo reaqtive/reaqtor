@@ -330,7 +330,7 @@ namespace Tests.System.Reflection
             {
                 if (type.Name.StartsWith("System.Func`"))
                 {
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NETCOREAPP3_1
                     var action = "System.Action`" + type.Name["System.Func`".Length..];
 #else
                     var action = "System.Action`" + type.Name.Substring("System.Func`".Length);

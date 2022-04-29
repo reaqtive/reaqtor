@@ -51,7 +51,7 @@ namespace System.Linq.Expressions
             get
             {
                 Debug.Assert(Expressions.Count > 0);
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 return Expressions[^1];
 #else
                 return Expressions[Expressions.Count - 1];

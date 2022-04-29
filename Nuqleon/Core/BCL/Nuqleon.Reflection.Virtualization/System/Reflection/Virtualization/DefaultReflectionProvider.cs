@@ -201,7 +201,7 @@ namespace System.Reflection
         /// <returns>A <see cref="MethodBase" /> object representing the method or constructor specified by <paramref name="handle" />, in the generic type specified by <paramref name="declaringType" />.</returns>
         public override MethodBase GetMethodFromHandle(RuntimeMethodHandle handle, RuntimeTypeHandle declaringType) => MethodBase.GetMethodFromHandle(handle, declaringType);
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
         /// </summary>
@@ -224,7 +224,7 @@ namespace System.Reflection
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         public override MethodInfo GetEntryPoint(Assembly assembly) => assembly.EntryPoint;
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets the URI, including escape characters, that represents the codebase.
         /// </summary>
@@ -249,7 +249,7 @@ namespace System.Reflection
         /// <returns>The display name of the assembly.</returns>
         public override string GetFullName(Assembly assembly) => assembly.FullName;
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
         /// </summary>
@@ -1621,7 +1621,7 @@ namespace System.Reflection
         /// <returns>An array of <see cref="MemberInfo" /> objects representing all members defined for the specified type that match the specified binding constraints.-or- An empty array of type <see cref="MemberInfo" />, if no members are defined for the specified type, or if none of the defined members match the binding constraints.</returns>
         public override IReadOnlyList<MemberInfo> GetMembers(Type type, BindingFlags bindingAttr) => type.GetMembers(bindingAttr);
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
         /// <summary>
         /// Searches for the specified method whose parameters match the specified generic parameter count, argument types and modifiers, using the specified binding constraints and the specified calling convention.
         /// </summary>

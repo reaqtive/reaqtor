@@ -1184,7 +1184,7 @@ namespace Tests
             );
         }
 
-#if !NET5_0
+#if !NET6_0
         [TestMethod]
         public void StringSegment_Copy_StringSegment_ArgumentChecking()
         {

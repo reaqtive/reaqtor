@@ -466,7 +466,7 @@ namespace Reaqtor.ReificationFramework
 
                 protected override int GetHashCodeGlobalParameter(ParameterExpression obj)
                 {
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                     var hash = obj.Name.GetHashCode(StringComparison.Ordinal);
 #else
                     var hash = obj.Name.GetHashCode();
