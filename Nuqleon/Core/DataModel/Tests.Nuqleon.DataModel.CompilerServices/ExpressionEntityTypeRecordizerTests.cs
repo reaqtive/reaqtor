@@ -538,7 +538,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 @"{""Context"":{""Types"":[[""::"",""System.String"",0],[""{;}"",[[""contoso://entities/parent/typestring"",0],[""contoso://entities/parent/recursive"",1]]]],""Assemblies"":[""STD""],""Version"":""0.9.0.0""},""Expression"":["":"",{""contoso://entities/parent/typestring"":""Hello"",""contoso://entities/parent/recursive"":{""contoso://entities/parent/typestring"":"","",""contoso://entities/parent/recursive"":{""contoso://entities/parent/typestring"":""World"",""contoso://entities/parent/recursive"":null}}},1]}",
                 json
                     .Replace("System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", "STD")
-                    .Replace("System.Private.CoreLib, Version=5.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", "STD")
+                    .Replace("System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", "STD")
                     .Replace("mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", "STD")
             );
         }
