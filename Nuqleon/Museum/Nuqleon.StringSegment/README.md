@@ -17,3 +17,7 @@ StringSegment res = segment.Substring(1, 3);
 ```
 
 > This type is useful when building efficient parsers.
+
+## Why is this in the Museum?
+
+Changes were made to how [System.String.Remove](https://github.com/reaqtive/reaqtor/issues/124) works in .NET 6.0. This caused breaking changes in Nuqleon.StringSegment. As `StringSegment` is not actively used in the Reaqtor codebase, and was included as possible a building block. `StringSegment` has been superseded by `Span<T>`. the decision was made to not 

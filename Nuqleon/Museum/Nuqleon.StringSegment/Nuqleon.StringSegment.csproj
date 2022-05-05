@@ -6,11 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Nuqleon.Memory\Nuqleon.Memory.csproj" />
+    <ProjectReference Include="..\..\Core\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj" />
   </ItemGroup>
 
   <ItemGroup>
-    <Compile Include="..\..\..\..\Common\Marvin.cs" Link="System\Marvin.cs" />
+    <Compile Include="..\..\..\Common\Marvin.cs" Link="System\Marvin.cs" />
   </ItemGroup>
 
 </Project>
