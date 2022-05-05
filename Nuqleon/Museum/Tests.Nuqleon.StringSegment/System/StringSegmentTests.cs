@@ -1601,10 +1601,10 @@ namespace Tests
         {
             WithVariations("bar", s =>
             {
-                var s1 = new string(((IEnumerable)s).Cast<char>().ToArray());
+                var s1 = new string(s.Cast<char>().ToArray());
                 Assert.AreEqual("bar", s1);
 
-                var s2 = new string(((IEnumerable<char>)s).ToArray());
+                var s2 = new string(s.ToArray());
                 Assert.AreEqual("bar", s2);
             });
         }

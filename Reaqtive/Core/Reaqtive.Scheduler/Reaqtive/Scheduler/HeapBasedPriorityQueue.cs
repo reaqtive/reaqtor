@@ -208,9 +208,7 @@ namespace Reaqtive.Scheduler
 
             if (IsHigherPriority(index, parent))
             {
-                var temp = _items[index];
-                _items[index] = _items[parent];
-                _items[parent] = temp;
+                (_items[parent], _items[index]) = (_items[index], _items[parent]);
                 return Percolate(parent);
             }
 
@@ -241,9 +239,7 @@ namespace Reaqtive.Scheduler
 
             if (first != index)
             {
-                var temp = _items[index];
-                _items[index] = _items[first];
-                _items[first] = temp;
+                (_items[first], _items[index]) = (_items[index], _items[first]);
                 Heapify(first);
             }
         }

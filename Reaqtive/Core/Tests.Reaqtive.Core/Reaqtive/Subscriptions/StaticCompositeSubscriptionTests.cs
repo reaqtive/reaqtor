@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -68,7 +67,7 @@ namespace Test.Reaqtive
             Assert.AreEqual(3, cs.Count);
 
             Assert.IsTrue(new[] { s1, s2, s3 }.SequenceEqual(cs));
-            Assert.IsTrue(new[] { s1, s2, s3 }.SequenceEqual(((IEnumerable)cs).CastNotSmart<ISubscription>()));
+            Assert.IsTrue(new[] { s1, s2, s3 }.SequenceEqual(cs.CastNotSmart<ISubscription>()));
 
             cs.Dispose();
 
@@ -78,7 +77,7 @@ namespace Test.Reaqtive
             Assert.AreEqual(3, cs.Count);
 
             Assert.IsTrue(new[] { s1, s2, s3 }.SequenceEqual(cs));
-            Assert.IsTrue(new[] { s1, s2, s3 }.SequenceEqual(((IEnumerable)cs).CastNotSmart<ISubscription>()));
+            Assert.IsTrue(new[] { s1, s2, s3 }.SequenceEqual(cs.CastNotSmart<ISubscription>()));
 
             // Dispose is idempotent
             cs.Dispose();

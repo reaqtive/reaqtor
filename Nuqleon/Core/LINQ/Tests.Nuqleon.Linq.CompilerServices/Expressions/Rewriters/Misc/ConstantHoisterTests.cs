@@ -178,7 +178,7 @@ namespace Tests.System.Linq.CompilerServices
             AssertEx.ThrowsException<ArgumentException>(() =>
             {
                 ConstantHoister.Create(false,
-                    (Expression<Func<string>>)(() => string.Format("bar", default(object[])))
+                    () => string.Format("bar", default(object[]))
                 );
             }, ex =>
             {
