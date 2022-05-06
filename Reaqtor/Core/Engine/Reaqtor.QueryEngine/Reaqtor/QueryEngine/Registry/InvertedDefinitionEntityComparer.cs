@@ -50,7 +50,7 @@ namespace Reaqtor.QueryEngine
             protected override int GetHashCodeGlobalParameter(ParameterExpression obj)
             {
                 var hash = obj.Name != null
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                     ? obj.Name.GetHashCode(System.StringComparison.Ordinal)
 #else
                     ? obj.Name.GetHashCode()

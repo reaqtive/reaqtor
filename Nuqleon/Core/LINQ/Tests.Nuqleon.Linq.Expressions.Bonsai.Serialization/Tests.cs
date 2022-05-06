@@ -3007,6 +3007,7 @@ namespace Tests
             Assert.AreEqual(f.Body.ToString(), e08.ToString());
         }
 
+#if NETFRAMEWORK
         [TestMethod]
         public void Bonsai_E2E_Jacquard()
         {
@@ -3036,6 +3037,7 @@ namespace Tests
 
             Assert.IsTrue(new ExpressionEqualityComparer(factory).Equals(f, e08));
         }
+#endif
 
         [TestMethod]
         public void Bonsai_E2E_GenericParameterBindings()

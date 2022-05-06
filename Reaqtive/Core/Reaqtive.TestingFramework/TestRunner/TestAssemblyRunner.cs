@@ -43,7 +43,7 @@ namespace Reaqtive.TestingFramework.TestRunner
             _testClasses.ForEach(r => r.Dispose());
         }
 
-#if NET5_0
+#if NET6_0
         [Obsolete("This Remoting API is not supported and throws PlatformNotSupportedException.")]
 #endif
         public override object InitializeLifetimeService() => null;

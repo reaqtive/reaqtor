@@ -17,3 +17,9 @@ StringSegment res = segment.Substring(1, 3);
 ```
 
 > This type is useful when building efficient parsers.
+
+## Why is this in the Museum?
+
+Microsoft made a [breaking change](https://github.com/reaqtive/reaqtor/issues/124) to `string` that broke a `StringSegment` test, and we then wondered whether we should be introducing a matching breaking change to Nuqleon.StringSegment, since its behaviour is meant to be equivalent to string.
+
+But since we realised nothing uses this (with the possible exception of external users consuming the preview Nuqleon library builds) we decided that instead of introducing a breaking change, we didn't actually have to fix this, and could just move it to the museum instead.

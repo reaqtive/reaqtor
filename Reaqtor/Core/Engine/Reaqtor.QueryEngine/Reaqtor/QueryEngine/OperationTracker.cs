@@ -79,7 +79,7 @@ namespace Reaqtor.QueryEngine
         /// Disposes the component by draining the remaining work. This call blocks until all work has
         /// completed.
         /// </summary>
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
         public async ValueTask DisposeAsync()
 #else
         public async Task DisposeAsync(CancellationToken token)

@@ -26,7 +26,7 @@ namespace System.Reflection
     [GeneratedCode("", "1.0.0.0")] // NB: A mirror image of System.Reflection APIs, so considering this to be "generated".
     public interface IAssemblyIntrospectionProvider
     {
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
         /// </summary>
@@ -49,7 +49,7 @@ namespace System.Reflection
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         MethodInfo GetEntryPoint(Assembly assembly);
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets the URI, including escape characters, that represents the codebase.
         /// </summary>
@@ -74,7 +74,7 @@ namespace System.Reflection
         /// <returns>The display name of the assembly.</returns>
         string GetFullName(Assembly assembly);
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
         /// </summary>

@@ -11,6 +11,7 @@
 using System.Linq.CompilerServices.TypeSystem;
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
+#pragma warning disable IDE0049 // Remove name can be simplified
 #pragma warning disable CA1034 // Do not nest types.
 #pragma warning disable CA1720 // Identifier X contains type name.
 #pragma warning disable CA1724 // Using System.* namespaces by design here.
@@ -198,7 +199,7 @@ namespace System.Linq.Expressions
                 (ulong i, ulong j) => i.Equals(j),
             }.ToReadOnly();
 
-#if NET5_0
+#if NET6_0
             /// <summary>
             /// Gets a table of pure members on <see cref="global::System.Half" />.
             /// </summary>
@@ -250,7 +251,7 @@ namespace System.Linq.Expressions
                 (float i, float j) => i.CompareTo(j),
                 (float i, float j) => i.Equals(j),
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 (float i) => float.IsFinite(i),
                 (float i) => float.IsNegative(i),
                 (float i) => float.IsNormal(i),
@@ -271,7 +272,7 @@ namespace System.Linq.Expressions
                 (double i, double j) => i.CompareTo(j),
                 (double i, double j) => i.Equals(j),
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 (double i) => double.IsFinite(i),
                 (double i) => double.IsNegative(i),
                 (double i) => double.IsNormal(i),
@@ -442,7 +443,7 @@ namespace System.Linq.Expressions
                 (string s1, string s2) => s1 == s2,
                 (string s1, string s2) => s1 != s2,
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 (string s, char c) => s.Contains(c),
                 (string s, char c) => s.StartsWith(c),
                 (string s, char c) => s.EndsWith(c),
@@ -647,7 +648,7 @@ namespace System.Linq.Expressions
                 (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 > t2,
                 (global::System.TimeSpan t1, global::System.TimeSpan t2) => t1 >= t2,
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 (global::System.TimeSpan t, double divisor) => t.Divide(divisor),
                 (global::System.TimeSpan t, global::System.TimeSpan ts) => t.Divide(ts),
                 (global::System.TimeSpan t, double factor) => t.Multiply(factor),
@@ -742,7 +743,6 @@ namespace System.Linq.Expressions
                 (char character) => global::System.Uri.IsHexDigit(character),
                 (string pattern, int index) => global::System.Uri.IsHexEncoding(pattern, index),
                 (string stringToEscape) => global::System.Uri.EscapeDataString(stringToEscape),
-                (string stringToEscape) => global::System.Uri.EscapeUriString(stringToEscape),
                 (string stringToUnescape) => global::System.Uri.UnescapeDataString(stringToUnescape),
                 (string uriString, global::System.UriKind uriKind) => global::System.Uri.IsWellFormedUriString(uriString, uriKind),
 
@@ -977,7 +977,7 @@ namespace System.Linq.Expressions
             {
                 () => global::System.Math.E,
                 () => global::System.Math.PI,
-#if NET5_0
+#if NET6_0
                 () => global::System.Math.Tau,
 #endif
 
@@ -1050,7 +1050,7 @@ namespace System.Linq.Expressions
                 (decimal value) => global::System.Math.Sign(value),
                 (int a, int b) => global::System.Math.BigMul(a, b),
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 (double d) => global::System.Math.Acosh(d),
                 (double d) => global::System.Math.Asinh(d),
                 (double d) => global::System.Math.Atanh(d),
@@ -1067,7 +1067,7 @@ namespace System.Linq.Expressions
                 (float value, float min, float max) => global::System.Math.Clamp(value, min, max),
                 (decimal value, decimal min, decimal max) => global::System.Math.Clamp(value, min, max),
 #endif
-#if NET5_0
+#if NET6_0
                 (double x) => global::System.Math.BitDecrement(x),
                 (double x) => global::System.Math.BitIncrement(x),
                 (double x) => global::System.Math.ILogB(x),
@@ -1080,7 +1080,7 @@ namespace System.Linq.Expressions
 #endif
             }.ToReadOnly();
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
             /// <summary>
             /// Gets a table of pure members on <see cref="global::System.MathF" />.
             /// </summary>
@@ -1122,7 +1122,7 @@ namespace System.Linq.Expressions
                 (float x) => global::System.MathF.Tanh(x),
                 (float x) => global::System.MathF.Truncate(x),
 
-#if NET5_0
+#if NET6_0
                 () => global::System.MathF.Tau,
 
                 (float x) => global::System.MathF.BitDecrement(x),
@@ -1161,7 +1161,7 @@ namespace System.Linq.Expressions
                 (byte[] value, int startIndex) => global::System.BitConverter.ToString(value, startIndex),
                 (byte[] value, int startIndex, int length) => global::System.BitConverter.ToString(value, startIndex, length),
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 (float value) => global::System.BitConverter.SingleToInt32Bits(value),
                 (int value) => global::System.BitConverter.Int32BitsToSingle(value),
 #endif
@@ -1388,7 +1388,7 @@ namespace System.Linq.Expressions
                 (byte[] inArray, int offset, int length, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, offset, length, options),
                 (byte[] inArray, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, options),
 
-#if NET5_0
+#if NET6_0
                 (byte[] inArray) => global::System.Convert.ToHexString(inArray),
                 (byte[] inArray, int offset, int length) => global::System.Convert.ToHexString(inArray, offset, length),
 #endif
@@ -1439,7 +1439,7 @@ namespace System.Linq.Expressions
                 // REVIEW: In practice, it is assumed that predicates are pure. Should we provide a table including these members, so users can opt-in?
             }.ToReadOnly();
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
             /// <summary>
             /// Gets a table of pure members on <see cref="global::System.Index" />.
             /// </summary>
@@ -1755,10 +1755,10 @@ namespace System.Linq.Expressions
                 BitConverter,
                 Convert,
                 Array,
-#if NET5_0
+#if NET6_0
                 Half,
 #endif
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 Index,
                 Range,
                 MathF,

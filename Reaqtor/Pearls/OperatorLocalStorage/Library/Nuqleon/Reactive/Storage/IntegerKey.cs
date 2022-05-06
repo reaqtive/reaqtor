@@ -152,10 +152,7 @@ namespace Reaqtive.Storage
 
             while (b < e)
             {
-                var t = sb[b];
-                sb[b] = sb[e];
-                sb[e] = t;
-
+                (sb[e], sb[b]) = (sb[b], sb[e]);
                 b++;
                 e--;
             }

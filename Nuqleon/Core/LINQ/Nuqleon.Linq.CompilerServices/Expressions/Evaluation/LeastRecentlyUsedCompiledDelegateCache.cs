@@ -137,7 +137,7 @@ namespace System.Linq.Expressions
 
             lock (_cache)
             {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
                 if (_cache.TryAdd(key, cacheEntry)) // PERF: expensive comparer (2)
                 {
 #else

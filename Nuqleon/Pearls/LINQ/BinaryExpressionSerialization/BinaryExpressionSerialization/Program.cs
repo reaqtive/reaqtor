@@ -335,7 +335,9 @@ namespace BinaryExpressionSerialization
         {
             _ = t;
             var ms = new MemoryStream();
+#pragma warning disable SYSLIB0011 // Type or member is obsolete - this pearl is a historical illustration, so its use of BinaryFormatter is the point
             s_formatter.Serialize(ms, o);
+#pragma warning restore SYSLIB0011
             return Nuqleon.Json.Expressions.Expression.String(Convert.ToBase64String(ms.ToArray()));
         }
 
@@ -344,7 +346,9 @@ namespace BinaryExpressionSerialization
             _ = t;
             var bs = Convert.FromBase64String((string)((Nuqleon.Json.Expressions.ConstantExpression)j).Value);
             var ms = new MemoryStream(bs);
+#pragma warning disable SYSLIB0011 // Type or member is obsolete - this pearl is a historical illustration, so its use of BinaryFormatter is the point
             return s_formatter.Deserialize(ms);
+#pragma warning restore SYSLIB0011
         }
     }
 }

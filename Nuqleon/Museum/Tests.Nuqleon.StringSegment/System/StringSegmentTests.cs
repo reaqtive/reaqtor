@@ -1184,7 +1184,6 @@ namespace Tests
             );
         }
 
-#if !NET5_0
         [TestMethod]
         public void StringSegment_Copy_StringSegment_ArgumentChecking()
         {
@@ -1204,7 +1203,6 @@ namespace Tests
             var s4 = StringSegment.Copy(s3);
             Assert.AreNotSame(s3.String, s4.String);
         }
-#endif
 
         [TestMethod]
         public void StringSegment_CopyTo_Int32_CharArray_Int32_Int32_ArgumentChecking()
@@ -1599,6 +1597,7 @@ namespace Tests
         [TestMethod]
         public void StringSegment_GetEnumerator2()
         {
+#pragma warning disable IDE0004 // Cast is added for expressiveness.
             WithVariations("bar", s =>
             {
                 var s1 = new string(((IEnumerable)s).Cast<char>().ToArray());
@@ -1607,6 +1606,7 @@ namespace Tests
                 var s2 = new string(((IEnumerable<char>)s).ToArray());
                 Assert.AreEqual("bar", s2);
             });
+#pragma warning restore IDE0004
         }
 
         [TestMethod]

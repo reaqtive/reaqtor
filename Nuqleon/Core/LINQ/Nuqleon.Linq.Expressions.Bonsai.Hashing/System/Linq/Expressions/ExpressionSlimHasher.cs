@@ -111,7 +111,7 @@ namespace System.Linq.Expressions
         /// <param name="value">The string value to get the hash code for.</param>
         /// <returns>A hash code for the specified string <paramref name="value"/>.</returns>
         protected virtual int GetHashCode(string value) =>
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
             value?.GetHashCode(StringComparison.Ordinal) ?? 0
 #else
             value?.GetHashCode() ?? 0

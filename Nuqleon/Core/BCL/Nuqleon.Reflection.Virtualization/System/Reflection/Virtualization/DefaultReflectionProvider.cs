@@ -84,21 +84,33 @@ namespace System.Reflection
         /// </summary>
         /// <param name="assemblyString">The display name of the assembly, as returned by the <see cref="AssemblyName.FullName" /> property.</param>
         /// <returns>The loaded assembly.</returns>
+#if NETFRAMEWORK
         public override Assembly ReflectionOnlyLoad(string assemblyString) => Assembly.ReflectionOnlyLoad(assemblyString);
+#else
+        public override Assembly ReflectionOnlyLoad(string assemblyString) => throw new PlatformNotSupportedException();
+#endif
 
         /// <summary>
         /// Loads the assembly from a common object file format (COFF)-based image containing an emitted assembly. The assembly is loaded into the reflection-only context of the caller's application domain.
         /// </summary>
         /// <param name="rawAssembly">A byte array that is a COFF-based image containing an emitted assembly.</param>
         /// <returns>The loaded assembly.</returns>
+#if NETFRAMEWORK
         public override Assembly ReflectionOnlyLoad(byte[] rawAssembly) => Assembly.ReflectionOnlyLoad(rawAssembly);
+#else
+        public override Assembly ReflectionOnlyLoad(byte[] rawAssembly) => throw new PlatformNotSupportedException();
+#endif
 
         /// <summary>
         /// Loads an assembly into the reflection-only context, given its path.
         /// </summary>
         /// <param name="assemblyFile">The path of the file that contains the manifest of the assembly.</param>
         /// <returns>The loaded assembly.</returns>
+#if NETFRAMEWORK
         public override Assembly ReflectionOnlyLoadFrom(string assemblyFile) => Assembly.ReflectionOnlyLoadFrom(assemblyFile);
+#else
+        public override Assembly ReflectionOnlyLoadFrom(string assemblyFile) => throw new PlatformNotSupportedException();
+#endif
 
         /// <summary>
         /// Loads an assembly into the load-from context, bypassing some security checks.
@@ -144,7 +156,11 @@ namespace System.Reflection
         /// <param name="throwIfNotFound">true to throw a <see cref="TypeLoadException" /> if the type cannot be found; false to return null if the type cannot be found. Specifying false also suppresses some other exception conditions, but not all of them. See the Exceptions section.</param>
         /// <param name="ignoreCase">true to perform a case-insensitive search for <paramref name="typeName" />; false to perform a case-sensitive search for <paramref name="typeName" />. </param>
         /// <returns>The type with the specified name, if found; otherwise, null. If the type is not found, the <paramref name="throwIfNotFound" /> parameter specifies whether null is returned or an exception is thrown. In some cases, an exception is thrown regardless of the value of <paramref name="throwIfNotFound" />. See the Exceptions section.</returns>
+#if NETFRAMEWORK
         public override Type ReflectionOnlyGetType(string typeName, bool throwIfNotFound, bool ignoreCase) => Type.ReflectionOnlyGetType(typeName, throwIfNotFound, ignoreCase);
+#else
+        public override Type ReflectionOnlyGetType(string typeName, bool throwIfNotFound, bool ignoreCase) => throw new PlatformNotSupportedException();
+#endif
 
         /// <summary>
         /// Gets the type associated with the specified class identifier (CLSID) from the specified server, specifying whether to throw an exception if an error occurs while loading the type.
@@ -201,7 +217,7 @@ namespace System.Reflection
         /// <returns>A <see cref="MethodBase" /> object representing the method or constructor specified by <paramref name="handle" />, in the generic type specified by <paramref name="declaringType" />.</returns>
         public override MethodBase GetMethodFromHandle(RuntimeMethodHandle handle, RuntimeTypeHandle declaringType) => MethodBase.GetMethodFromHandle(handle, declaringType);
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
         /// </summary>
@@ -224,7 +240,7 @@ namespace System.Reflection
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         public override MethodInfo GetEntryPoint(Assembly assembly) => assembly.EntryPoint;
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets the URI, including escape characters, that represents the codebase.
         /// </summary>
@@ -249,7 +265,7 @@ namespace System.Reflection
         /// <returns>The display name of the assembly.</returns>
         public override string GetFullName(Assembly assembly) => assembly.FullName;
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
         /// </summary>
@@ -1621,7 +1637,7 @@ namespace System.Reflection
         /// <returns>An array of <see cref="MemberInfo" /> objects representing all members defined for the specified type that match the specified binding constraints.-or- An empty array of type <see cref="MemberInfo" />, if no members are defined for the specified type, or if none of the defined members match the binding constraints.</returns>
         public override IReadOnlyList<MemberInfo> GetMembers(Type type, BindingFlags bindingAttr) => type.GetMembers(bindingAttr);
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
         /// <summary>
         /// Searches for the specified method whose parameters match the specified generic parameter count, argument types and modifiers, using the specified binding constraints and the specified calling convention.
         /// </summary>

@@ -166,10 +166,10 @@ namespace System.Linq.Expressions
 
                 // NB: ValueTuple types are mutable.
 
-#if NET5_0
+#if NET6_0
                 typeof(Half),
 #endif
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                 typeof(Index),
                 typeof(Range),
 #endif

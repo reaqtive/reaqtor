@@ -11,7 +11,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+#if NETFRAMEWORK
 using System.IO;
+#endif
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.Bonsai;
@@ -78,7 +80,6 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
             RoundtripAndAssert(ce);
         }
-
 
         #endregion
 
@@ -1299,6 +1300,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
             RoundtripAndAssert(f.Body);
         }
 
+#if NETFRAMEWORK
         [TestMethod]
         public void TypeSlimDerivationVisitor_E2E_Jacquard()
         {
@@ -1321,6 +1323,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
             RoundtripAndAssert(f);
         }
+#endif
 
         [TestMethod]
         public void TypeSlimDerivationVisitor_E2E_GenericParameterBindings()

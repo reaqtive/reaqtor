@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -166,7 +165,7 @@ namespace Test.Reaqtive
             Assert.AreEqual(3, cs.Count);
 
             Assert.IsTrue(new[] { s1, s2, s3 }.SequenceEqual(cs));
-            Assert.IsTrue(new[] { s1, s2, s3 }.SequenceEqual(((IEnumerable)cs).CastNotSmart<ISubscription>()));
+            Assert.IsTrue(new[] { s1, s2, s3 }.SequenceEqual(cs.CastNotSmart<ISubscription>()));
 
             cs.Dispose();
 
@@ -176,7 +175,7 @@ namespace Test.Reaqtive
             Assert.AreEqual(0, cs.Count);
 
             Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs));
-            Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(((IEnumerable)cs).CastNotSmart<ISubscription>()));
+            Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs.CastNotSmart<ISubscription>()));
 
             var s4 = new MySub();
             cs.Add(s4);
@@ -185,7 +184,7 @@ namespace Test.Reaqtive
             Assert.AreEqual(0, cs.Count);
 
             Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs));
-            Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(((IEnumerable)cs).CastNotSmart<ISubscription>()));
+            Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs.CastNotSmart<ISubscription>()));
 
             cs.AddRange(new ISubscription[] { s1, s2, s3, s4 });
 
@@ -196,7 +195,7 @@ namespace Test.Reaqtive
             Assert.AreEqual(0, cs.Count);
 
             Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs));
-            Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(((IEnumerable)cs).CastNotSmart<ISubscription>()));
+            Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs.CastNotSmart<ISubscription>()));
 
             cs.Dispose();
 
@@ -207,7 +206,7 @@ namespace Test.Reaqtive
             Assert.AreEqual(0, cs.Count);
 
             Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs));
-            Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(((IEnumerable)cs).CastNotSmart<ISubscription>()));
+            Assert.IsTrue(Enumerable.Empty<ISubscription>().SequenceEqual(cs.CastNotSmart<ISubscription>()));
         }
 
         [TestMethod]

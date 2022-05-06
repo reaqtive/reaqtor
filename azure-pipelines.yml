@@ -29,9 +29,9 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 5.x SDK
+      displayName: Use .NET Core 6.x SDK
       inputs:
-        version: 5.x
+        version: 6.x
         performMultiLevelLookup: true
 
     - powershell: |
@@ -87,9 +87,9 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 5.x SDK
+      displayName: Use .NET Core 6.x SDK
       inputs:
-        version: 5.x
+        version: 6.x
         performMultiLevelLookup: true
 
     - task: DotNetCoreCLI@2
@@ -107,9 +107,9 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 5.x SDK
+      displayName: Use .NET Core 6.x SDK
       inputs:
-        version: 5.x
+        version: 6.x
         performMultiLevelLookup: true
 
     - powershell: |

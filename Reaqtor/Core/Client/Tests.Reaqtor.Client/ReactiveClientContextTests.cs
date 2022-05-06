@@ -75,7 +75,7 @@ namespace Tests.Reaqtor.Client
         [TestMethod]
         public void ReactiveClientContext_Qubscription_ArgumentChecking()
         {
-#if !NET5_0 && !NETCOREAPP3_1
+#if !NET6_0 && !NETCOREAPP3_1
             Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).DisposeAsync());
 #endif
             Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).AsDisposable());
@@ -886,7 +886,7 @@ namespace Tests.Reaqtor.Client
                     var s1 = ctx.GetSubscription(new Uri(Constants.Subscription.SUB2));
                     var s2 = ctx.GetSubscription(new Uri(Constants.Subscription.SUB3));
 
-#if NET5_0 || NETCOREAPP3_1 // Suppresses CA2012
+#if NET6_0 || NETCOREAPP3_1 // Suppresses CA2012
                     s.DisposeAsync(CancellationToken.None).AsTask();
                     s1.DisposeAsync().AsTask();
 #else
@@ -923,7 +923,7 @@ namespace Tests.Reaqtor.Client
                     qubject.SubscribeAsync(ctx.GetObserver<int>(new Uri(Constants.Observer.OB)), new Uri(Constants.Subscription.SUB), null, CancellationToken.None);
 
                     ctx.GetStream<int, int>(new Uri(Constants.Stream.FOO)).DisposeAsync()
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NETCOREAPP3_1
                         .AsTask()
 #endif
                         .Wait();
@@ -995,7 +995,7 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Subscription.SUB1), null).Wait();
 
                     ctx.GetSubscription(new Uri(Constants.Subscription.SUB1)).DisposeAsync()
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NETCOREAPP3_1
                         .AsTask()
 #endif
                         .Wait();

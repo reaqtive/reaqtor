@@ -5,7 +5,7 @@
 
 using System;
 
-#if !NET5_0
+#if !NET6_0
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
@@ -66,7 +66,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(inner, ex.InnerException);
         }
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void EntityAlreadyExistsException_Serialization()
         {
@@ -141,7 +141,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(inner, ex.InnerException);
         }
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void EntityNotFoundException_Serialization()
         {
@@ -207,7 +207,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(inner, ex.InnerException);
         }
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void EntityLoadFailedException_Serialization()
         {
@@ -269,7 +269,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(inner, ex.InnerException);
         }
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void EntitySaveFailedException_Serialization()
         {
@@ -331,7 +331,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreEqual("foo", ex.Message);
         }
 
-#if !NET5_0 // https://aka.ms/binaryformatter
+#if !NET6_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void EngineUnloadedException_Serialize()
         {

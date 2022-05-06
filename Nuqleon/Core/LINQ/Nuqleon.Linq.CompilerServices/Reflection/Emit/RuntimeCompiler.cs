@@ -617,7 +617,7 @@ namespace System.Linq.CompilerServices
         {
             var asmn = new AssemblyName("__GeneratedTypes_" + Guid.NewGuid());
 
-#if NETSTANDARD || NET5_0
+#if NETSTANDARD || NET6_0
             var asmb = AssemblyBuilder.DefineDynamicAssembly(
 #else
             var asmb = AppDomain.CurrentDomain.DefineDynamicAssembly(
@@ -881,7 +881,7 @@ namespace System.Linq.CompilerServices
                 {
                     var name = property.Name;
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
                     var nameHash = name.GetHashCode(StringComparison.Ordinal);
 #else
                     var nameHash = name.GetHashCode();

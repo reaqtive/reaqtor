@@ -192,7 +192,7 @@ namespace System.Reflection
         /// <returns>A <see cref="MethodBase" /> object representing the method or constructor specified by <paramref name="handle" />, in the generic type specified by <paramref name="declaringType" />.</returns>
         public abstract MethodBase GetMethodFromHandle(RuntimeMethodHandle handle, RuntimeTypeHandle declaringType);
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
         /// </summary>
@@ -215,7 +215,7 @@ namespace System.Reflection
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         public abstract MethodInfo GetEntryPoint(Assembly assembly);
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets the URI, including escape characters, that represents the codebase.
         /// </summary>
@@ -240,7 +240,7 @@ namespace System.Reflection
         /// <returns>The display name of the assembly.</returns>
         public abstract string GetFullName(Assembly assembly);
 
-#if !NET5_0
+#if !NET6_0
         /// <summary>
         /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
         /// </summary>
@@ -611,7 +611,7 @@ namespace System.Reflection
         /// <returns>An array of type <see cref="FieldInfo" /> representing the global fields defined on the module that match the specified binding flags; if no global fields match the binding flags, an empty array is returned.</returns>
         public abstract IReadOnlyList<FieldInfo> GetFields(Module module, BindingFlags bindingFlags);
 
-#if NET5_0 || NETSTANDARD2_1
+#if NET6_0 || NETSTANDARD2_1
         /// <summary>
         /// Searches for the specified method whose parameters match the specified generic parameter count, argument types and modifiers, using the specified binding constraints and the specified calling convention.
         /// </summary>

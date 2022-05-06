@@ -2140,7 +2140,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given expression sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<Expression> obj)
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2177,7 +2177,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given parameter expression sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<ParameterExpression> obj)
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2214,7 +2214,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given member binding sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<MemberBinding> obj)
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2251,7 +2251,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given element initializer sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<ElementInit> obj)
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2288,7 +2288,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given switch case sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<SwitchCase> obj)
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2325,7 +2325,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given catch block sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<CatchBlock> obj)
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2363,7 +2363,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code composed from the specified values.</returns>
         protected static int Hash(int a, int b)
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             return HashCode.Combine(a, b);
 #else
             unchecked
@@ -2385,7 +2385,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code composed from the specified values.</returns>
         protected static int Hash(int a, int b, int c)
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             return HashCode.Combine(a, b, c);
 #else
             unchecked
@@ -2409,7 +2409,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code composed from the specified values.</returns>
         protected static int Hash(int a, int b, int c, int d)
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             return HashCode.Combine(a, b, c, d);
 #else
             unchecked

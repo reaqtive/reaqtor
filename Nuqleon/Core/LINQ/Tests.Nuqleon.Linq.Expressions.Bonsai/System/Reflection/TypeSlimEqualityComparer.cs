@@ -234,7 +234,7 @@ namespace Tests.System.Reflection
             Assert.IsTrue(true);
         }
 
-#if NET5_0 || NETCOREAPP3_1
+#if NET6_0 || NETCOREAPP3_1
         [Ignore] // See NB comment below; the implementation detail changed in .NET Core 3.1 and above.
 #endif
         [TestMethod]

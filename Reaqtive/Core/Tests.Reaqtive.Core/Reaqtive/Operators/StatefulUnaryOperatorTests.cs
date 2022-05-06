@@ -147,7 +147,7 @@ namespace Test.Reaqtive
 
             // Seems a bit inconsistent that the subscription has zero inputs
             // but it returns a nop subscription from its unary property..
-            Assert.AreEqual(0, ((IOperator)mo).Inputs.Count());
+            Assert.AreEqual(0, mo.Inputs.Count());
             Assert.IsNotNull(mo.Input);
         }
 

@@ -602,7 +602,7 @@ namespace System.Linq.Expressions
 
         private struct Hasher
         {
-#if NET5_0 || NETSTANDARD3_1
+#if NET6_0 || NETSTANDARD3_1
             private HashCode _hashCode;
 
             public void Add(int h) => _hashCode.Add(h);

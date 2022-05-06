@@ -177,7 +177,7 @@ in  t1
             var y = s.CreateInstance(new object[1] { null });
             Assert.IsNull(y);
 
-            var z = s.CreateInstance((int?)42);
+            var z = s.CreateInstance(42);
             Assert.AreEqual(42, z);
         }
 
