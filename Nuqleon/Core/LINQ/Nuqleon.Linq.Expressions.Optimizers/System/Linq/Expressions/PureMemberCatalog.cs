@@ -11,6 +11,7 @@
 using System.Linq.CompilerServices.TypeSystem;
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
+#pragma warning disable IDE0049 // Remove name can be simplified
 #pragma warning disable CA1034 // Do not nest types.
 #pragma warning disable CA1720 // Identifier X contains type name.
 #pragma warning disable CA1724 // Using System.* namespaces by design here.
