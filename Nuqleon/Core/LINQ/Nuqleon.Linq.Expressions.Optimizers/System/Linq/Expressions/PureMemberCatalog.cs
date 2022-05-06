@@ -743,7 +743,6 @@ namespace System.Linq.Expressions
                 (char character) => global::System.Uri.IsHexDigit(character),
                 (string pattern, int index) => global::System.Uri.IsHexEncoding(pattern, index),
                 (string stringToEscape) => global::System.Uri.EscapeDataString(stringToEscape),
-                //(string stringToEscape) => global::System.Uri.EscapeUriString(stringToEscape),
                 (string stringToUnescape) => global::System.Uri.UnescapeDataString(stringToUnescape),
                 (string uriString, global::System.UriKind uriKind) => global::System.Uri.IsWellFormedUriString(uriString, uriKind),
 
