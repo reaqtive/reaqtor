@@ -1599,14 +1599,16 @@ namespace Tests
         [TestMethod]
         public void StringSegment_GetEnumerator2()
         {
+#pragma warning disable IDE0004 // Cast is added for expressiveness.
             WithVariations("bar", s =>
             {
-                var s1 = new string(s.Cast<char>().ToArray());
+                var s1 = new string(((IEnumerable)s).Cast<char>().ToArray());
                 Assert.AreEqual("bar", s1);
 
-                var s2 = new string(s.ToArray());
+                var s2 = new string(((IEnumerable<char>)s).ToArray());
                 Assert.AreEqual("bar", s2);
             });
+#pragma warning restore IDE0004
         }
 
         [TestMethod]

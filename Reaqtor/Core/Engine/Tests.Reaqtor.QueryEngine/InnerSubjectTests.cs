@@ -68,7 +68,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var xs = new List<int>();
 
-            var s = (ISubscription)subject.Subscribe(xs.Add);
+            var s = (ISubscription)((IObservable<int>)subject).Subscribe(xs.Add);
 
             var o = subject.CreateObserver();
             o.OnNext(41);
