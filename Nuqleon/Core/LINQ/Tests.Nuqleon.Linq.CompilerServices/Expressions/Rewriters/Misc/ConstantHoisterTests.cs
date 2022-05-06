@@ -153,6 +153,7 @@ namespace Tests.System.Linq.CompilerServices
         public void ConstantHoister_Exclusions_Checks()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
+#pragma warning disable IDE0004 // Cast is redundant.
             AssertEx.ThrowsException<ArgumentException>(() =>
             {
                 ConstantHoister.Create(false,
@@ -208,6 +209,7 @@ namespace Tests.System.Linq.CompilerServices
                 Assert.IsTrue(ex.Message.Contains("used multiple times"));
             });
 #pragma warning restore IDE0034 // Simplify 'default' expression
+#pragma warning restore IDE0004 // Cast is redundant.
         }
 
         [TestMethod]

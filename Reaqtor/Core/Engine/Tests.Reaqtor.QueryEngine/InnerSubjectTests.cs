@@ -67,9 +67,9 @@ namespace Tests.Reaqtor.QueryEngine
             var subject = GetSubject(id, svc);
 
             var xs = new List<int>();
-
+#pragma warning disable IDE0004 // Cast is redundant.
             var s = (ISubscription)((IObservable<int>)subject).Subscribe(xs.Add);
-
+#pragma warning restore IDE0004 // Cast is redundant.
             var o = subject.CreateObserver();
             o.OnNext(41);
 
