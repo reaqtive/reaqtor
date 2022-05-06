@@ -20,4 +20,6 @@ StringSegment res = segment.Substring(1, 3);
 
 ## Why is this in the Museum?
 
-Changes were made to how [System.String.Remove](https://github.com/reaqtive/reaqtor/issues/124) works in .NET 6.0. This caused breaking changes in Nuqleon.StringSegment. As `StringSegment` is not actively used in the Reaqtor codebase, and was included as possible a building block. `StringSegment` has been superseded by `Span<T>`. the decision was made to not 
+Microsoft made a [breaking change](https://github.com/reaqtive/reaqtor/issues/124) to `string` that broke a `StringSegment` test, and we then wondered whether we should be introducing a matching breaking change to Nuqleon.StringSegment, since its behaviour is meant to be equivalent to string.
+
+But since we realised nothing uses this (with the possible exception of external users consuming the preview Nuqleon library builds) we decided that instead of introducing a breaking change, we didn't actually have to fix this, and could just move it to the museum instead.
