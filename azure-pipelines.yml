@@ -1,4 +1,4 @@
-trigger:
+﻿trigger:
   branches:
     include:
       - main
@@ -29,9 +29,9 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 6.x SDK
+      displayName: Use .NET Core 7.x SDK
       inputs:
-        version: 6.x
+        version: 7.x
         performMultiLevelLookup: true
 
     - powershell: |
