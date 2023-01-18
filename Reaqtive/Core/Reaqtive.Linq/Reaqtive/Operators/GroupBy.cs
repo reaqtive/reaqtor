@@ -174,7 +174,7 @@ namespace Reaqtive
                     return;
                 }
 
-                var entry = default(Entry);
+                Entry entry;
                 lock (_gate)
                 {
                     if (key == null)
