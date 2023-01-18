@@ -19,7 +19,9 @@ namespace Tests
     [TestClass]
     public class PooledMemoryStreamTests : TestBase
     {
+#pragma warning disable IDE0230 // Use UTF-8 string literal. Not actually a UTF-8 string.
         private static readonly byte[] bytes = new byte[] { 0x42, 0xDE, 0xAD, 0x43 };
+#pragma warning restore IDE0230
 
         [TestMethod]
         public void PooledMemoryStream_ArgumentChecking()
