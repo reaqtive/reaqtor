@@ -15,15 +15,15 @@
 
             - task: UseDotNet@2
               inputs:
-                version: '3.1.x'
+                version: '6.x'
                 packageType: runtime
-              displayName: Install .NET Core 3.1 runtime
+              displayName: Install .NET 6.0 runtime
 
             - task: UseDotNet@2
               inputs:
-                version: '2.1.x'
+                version: '3.1.x'
                 packageType: runtime
-              displayName: Install .NET Core 2.1 runtime
+              displayName: Install .NET Core 3.1 runtime
 
             - powershell: |
                 $existing = & dotnet tool list -g | Select-String "nbgv" 
