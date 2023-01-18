@@ -155,7 +155,9 @@ namespace System.Linq.CompilerServices
             var translateToExpressionTree = new Func<ExpressionTreeBase[], ExpressionTreeBase>(wildcards =>
             {
                 var map = new Dictionary<ParameterExpression, ExpressionTree<ParameterExpression>>();
+#pragma warning disable IDE0220 // Add explicit cast. (Wants wildcards.Cast<ExpressionTreeWildcard>().) Not a performance-neutral change.
                 foreach (ExpressionTreeWildcard wildcard in wildcards)
+#pragma warning restore IDE0220
                 {
                     map[wildcard.Expression] = wildcard;
                 }

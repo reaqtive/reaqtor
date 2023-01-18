@@ -120,7 +120,9 @@ namespace Nuqleon.Linq.Expressions.Serialization
                         res = Activator.CreateInstance(type);
                         ctx.Heap.Add(adr, res);
 
+#pragma warning disable IDE0220 // Add explicit cast. (Wants Elements.Cast<ObjectExpression>().) Not a performance-neutral change.
                         foreach (Json.ObjectExpression data in ((Json.ArrayExpression)raw.Members["Data"]).Elements)
+#pragma warning restore IDE0220
                         {
                             var name = (string)deserialize(data.Members["Name"], ctx);
                             var value = deserialize(data.Members["Value"], ctx);
