@@ -173,7 +173,9 @@ namespace Reaqtor.QueryEngine.Mocks
                 private readonly Reliable<T> _parent;
                 private readonly IReliableObserver<T> _observer;
 
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
                 private IDisposable _disposable;
+#pragma warning restore CA2213
 
                 public Sub(Reliable<T> parent, IReliableObserver<T> observer)
                 {
@@ -224,7 +226,9 @@ namespace Reaqtor.QueryEngine.Mocks
 
             private sealed class Sub : Operator<Typed<T>, T>
             {
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood OnDispose
                 private IDisposable _disposable;
+#pragma warning restore CA2213
 
                 public Sub(Typed<T> parent, IObserver<T> observer)
                     : base(parent, observer)
@@ -329,7 +333,9 @@ namespace Reaqtor.QueryEngine.Mocks
 
                 private sealed class _ : Operator<IO<T>, T>
                 {
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood OnDispose
                     private IDisposable _disposable;
+#pragma warning restore CA2213
 
                     public _(IO<T> parent, IObserver<T> observer)
                         : base(parent, observer)

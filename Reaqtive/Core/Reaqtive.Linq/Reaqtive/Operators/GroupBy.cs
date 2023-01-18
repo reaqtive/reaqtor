@@ -24,7 +24,9 @@ namespace Reaqtive
             where TParam : GroupByBase<TSource, TKey, TElement>
         {
             private bool _recovered;
+#pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private RefCountSubscription _subscription;
+#pragma warning restore CA2213
 
             public SinkBase(TParam parent, IObserver<IGroupedSubscribable<TKey, TElement>> observer)
                 : base(parent, observer)

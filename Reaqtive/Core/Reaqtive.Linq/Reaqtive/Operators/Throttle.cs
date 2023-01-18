@@ -33,7 +33,9 @@ namespace Reaqtive.Operators
 
         private sealed class _ : HigherOrderInputStatefulOperator<Throttle<TSource, TThrottle>, TSource>, IObserver<TSource>
         {
+#pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private SerialSubscription _cancelable;
+#pragma warning restore CA2213
 
             private TSource _value;
             private bool _hasValue;

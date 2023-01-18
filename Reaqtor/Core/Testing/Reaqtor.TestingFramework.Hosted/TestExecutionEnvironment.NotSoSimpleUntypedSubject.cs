@@ -14,7 +14,9 @@ namespace Reaqtor.TestingFramework
     {
         private class NotSoSimpleUntypedSubject<T> : MultiSubjectBase, IReactiveQubject<T>, ISealable, IDisposable
         {
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood OnDispose
             private readonly SimpleSubject<T> _subject = new();
+#pragma warning restore CA2213
 
             private readonly TestExecutionEnvironment _parent;
             private readonly Uri _streamUri;
@@ -51,6 +53,7 @@ namespace Reaqtor.TestingFramework
             {
                 base.Dispose();
                 _parent.RemoveArtifact(_streamUri);
+                _subject.Dispose();
             }
 
             private sealed class Impl<TOutput> : SubscribableBase<TOutput>

@@ -94,7 +94,9 @@ namespace System.Memory
 
             internal abstract class ImplBase<T, R> : MemoizationCacheBase<T, R>, IServiceProvider
             {
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
                 protected readonly ThreadLocal<IMemoizationCache<T, R>> _cache;
+#pragma warning restore CA2213, IDE0079
 
                 public ImplBase(Func<IMemoizationCache<T, R>> factory) => _cache = new ThreadLocal<IMemoizationCache<T, R>>(factory, trackAllValues: true);
 

@@ -69,7 +69,9 @@ namespace System.Memory
 
                 private readonly ConditionalWeakTable<T, ILruCacheEntry<WeakReference<T>, R>>.CreateValueCallback _function;
                 private readonly IWeakCacheDictionary<T, ILruCacheEntry<WeakReference<T>, R>> _cache;
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
                 private readonly ReaderWriterLockSlim _lock;
+#pragma warning restore CA2213
                 private readonly int _maxCapacity;
                 private readonly bool _cacheError;
 

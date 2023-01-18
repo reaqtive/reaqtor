@@ -48,7 +48,9 @@ namespace Reaqtor.QueryEngine
 
         private sealed class _ : StatefulOperator<ReliableSubscriptionInput<T>, T>, IReliableObserver<T>
         {
+#pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private IReliableSubscription _subscription;
+#pragma warning restore CA2213
 
             public _(ReliableSubscriptionInput<T> parent, IObserver<T> observer)
                 : base(parent, observer)
@@ -140,6 +142,7 @@ namespace Reaqtor.QueryEngine
         // TODO: Reduce duplicated code.
         private sealed class _ContextSwitched : ContextSwitchOperator<ReliableSubscriptionInput<T>, T>, IReliableObserver<T>
         {
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood that OnCompleted and On
             private IReliableSubscription _subscription;
             private IOperatorContext _context;
 

@@ -17,7 +17,9 @@ namespace System.IO
     /// </summary>
     public sealed class StreamSegment : Stream
     {
+#pragma warning disable CA2213 // "Change the Dispose method to call Close or Dispose on this field." We don't own the underlying stream, so this is an inappropriate suggestion.
         private readonly Stream _stream;
+#pragma warning restore CA2213
         private readonly long _offset;
         private long _count;
 

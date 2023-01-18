@@ -23,7 +23,9 @@ namespace Reaqtive.Operators
         protected abstract class Sink<TParam> : HigherOrderOutputStatefulOperator<TParam, TSource>
             where TParam : Window<TSource>
         {
+#pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private RefCountSubscription _subscription;
+#pragma warning restore CA2213
 
             public Sink(TParam parent, IObserver<ISubscribable<TSource>> observer)
                 : base(parent, observer)

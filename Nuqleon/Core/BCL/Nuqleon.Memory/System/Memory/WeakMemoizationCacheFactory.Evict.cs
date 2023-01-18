@@ -77,7 +77,9 @@ namespace System.Memory
             {
                 private readonly ConditionalWeakTable<T, IMetricsCacheEntry<WeakReference<T>, R>>.CreateValueCallback _function;
                 private readonly IWeakCacheDictionary<T, IMetricsCacheEntry<WeakReference<T>, R>> _cache;
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
                 private readonly ReaderWriterLockSlim _lock;
+#pragma warning restore CA2213
                 private readonly HashSet<IMetricsCacheEntry<WeakReference<T>, R>> _entries;
                 private readonly IStopwatch _stopwatch;
                 private readonly IEnumerable<IMetricsCacheEntry<WeakReference<T>, R>> _ranker;
