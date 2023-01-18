@@ -155,6 +155,20 @@ dotnet_diagnostic.IDE0065.severity = none # `Using directives must be placed out
 dotnet_diagnostic.IDE0072.severity = none # `Populate switch` gets unweildy for ExpressionType etc.
 dotnet_diagnostic.IDE0130.severity = none # Namespace does not match folder structure.
 
+# IDE0074 is the "Use compound assignment" rule. With .NET SDK 7, it has started suggesting its use
+# for properties, e.g. for this:
+# if (o.Prop == null) { o.Prop = val; }
+# it suggests this:
+# o.Prop ??= val;
+# We've already been using ??= for field initialization. I'm not so sure we want it for
+# ensuring properties are set, because it currently appears to generate code that JIT
+# compiles to something less efficient. The IL defines two unnecessary extra local variables,
+# and at least for the initial JIT, this results in code with a longer preamble. It's
+# possible that with tiered JIT the difference would eventually go away, but since this is
+# more than just a syntax change, we shouldn't adopt this without a before/after benchmark
+# to find out whether the IL differences have a measurable performance impact.
+dotnet_diagnostic.IDE0074.severity = suggestion
+
 ###############################
 # VB Coding Conventions       #
 ###############################
