@@ -31,7 +31,7 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
                 var exp = string.Join(", ", expList);
                 var act = string.Join(", ", actList);
 
-                return $"Expected = {{{ exp }}}{Environment.NewLine}  Actual = {{{ act }}}";
+                return $"Expected = {{{exp}}}{Environment.NewLine}  Actual = {{{act}}}";
             }
         }
 
