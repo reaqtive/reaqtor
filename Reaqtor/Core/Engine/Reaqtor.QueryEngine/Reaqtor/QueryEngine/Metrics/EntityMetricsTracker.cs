@@ -196,7 +196,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <summary>
         /// Representation of a running measurement.
         /// </summary>
-        internal struct MetricMeasurement : IDisposable, IEquatable<MetricMeasurement>
+        internal readonly struct MetricMeasurement : IDisposable, IEquatable<MetricMeasurement>
         {
             private readonly IReactiveResource _entity;
             private readonly EntityMetric _metric;

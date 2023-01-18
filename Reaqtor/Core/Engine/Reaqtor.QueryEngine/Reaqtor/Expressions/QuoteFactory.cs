@@ -173,7 +173,7 @@ namespace Reaqtor.Expressions
         /// passed to a quote instantiation call. Equality semantics are based on pairwise equality of these
         /// argument types.
         /// </summary>
-        private struct ArgTypes : IEquatable<ArgTypes>
+        private readonly struct ArgTypes : IEquatable<ArgTypes>
         {
             /// <summary>
             /// A shared instance of a <see cref="ParameterExpression"/> of with <see cref="Expression.Type"/>

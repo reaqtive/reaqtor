@@ -330,7 +330,7 @@ namespace System.Reflection
         /// <summary>
         /// Slim representation of an assembly name and type name pair.
         /// </summary>
-        private struct SlimName : IEquatable<SlimName>
+        private readonly struct SlimName : IEquatable<SlimName>
         {
             public SlimName(string assemblyName, string typeName)
             {

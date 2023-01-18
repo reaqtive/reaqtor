@@ -13,7 +13,7 @@ namespace Nuqleon.Json.Parser
     /// <summary>
     /// JSON token.
     /// </summary>
-    internal struct Token
+    internal readonly struct Token
     {
         #region Constructors
 

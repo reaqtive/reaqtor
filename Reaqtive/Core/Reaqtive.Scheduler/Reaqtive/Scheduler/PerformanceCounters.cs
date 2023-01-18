@@ -148,7 +148,7 @@ namespace Reaqtive.Scheduler
         /// <summary>
         /// Accountant for scheduler infrastructure activity.
         /// </summary>
-        public struct KernelAccountant : IDisposable
+        public readonly struct KernelAccountant : IDisposable
         {
             /// <summary>
             /// The parent performance counters object to report the measurement to.

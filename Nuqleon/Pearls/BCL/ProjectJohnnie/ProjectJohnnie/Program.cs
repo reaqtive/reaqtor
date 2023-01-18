@@ -171,7 +171,7 @@ namespace ProjectJohnnie
         public string[,] dave;
     }
 
-    public struct Bar
+    public readonly struct Bar
     {
         public Bar(string foo)
         {

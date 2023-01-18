@@ -9,7 +9,7 @@ namespace Reaqtive.Scheduler
     /// <summary>
     /// Token to observe requests to yield execution.
     /// </summary>
-    public struct YieldToken : IEquatable<YieldToken>
+    public readonly struct YieldToken : IEquatable<YieldToken>
     {
         /// <summary>
         /// The yield token source used to check for yield requests. For the default instance

@@ -131,7 +131,7 @@ namespace System.Memory
             return (IReadOnlyIndexed)create.Invoke(obj: null, values);
         }
 
-        private struct EmptyBundle : IReadOnlyIndexed
+        private readonly struct EmptyBundle : IReadOnlyIndexed
         {
             public static readonly IReadOnlyIndexed Instance = new EmptyBundle();
 

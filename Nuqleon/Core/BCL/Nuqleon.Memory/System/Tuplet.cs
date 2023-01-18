@@ -36,7 +36,7 @@ namespace System
     /// <typeparam name="T15">Type of the tuple's fifteenth component.</typeparam>
     /// <typeparam name="T16">Type of the tuple's sixteenth component.</typeparam>
     /// <typeparam name="TRest">Any generic Tuplet object that defines the types of the tuple's remaining components.</typeparam>
-    public struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TRest> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TRest>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TRest>>, IStructuralEquatable, IStructuralComparable
+    public readonly struct Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TRest> : ITuplet, IEquatable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TRest>>, IComparable, IComparable<Tuplet<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TRest>>, IStructuralEquatable, IStructuralComparable
     {
         /// <summary>
         /// Creates a value representing an n-tuple, where n is 17 or greater.

@@ -14,7 +14,7 @@ namespace Reaqtive.Storage
     /// Struct representing a value or the absence of a value.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    internal struct Maybe<T>
+    internal readonly struct Maybe<T>
     {
         /// <summary>
         /// Creates a new instance of <see cref="Maybe{T}"/> with the specified value.

@@ -33,7 +33,7 @@ namespace Reaqtor.Remoting.Deployable.Streams
             return Sublist(list, offset, list.Count - offset);
         }
 
-        public struct ReadOnlyListSegment<T> : IReadOnlyList<T>, IEquatable<ReadOnlyListSegment<T>>
+        public readonly struct ReadOnlyListSegment<T> : IReadOnlyList<T>, IEquatable<ReadOnlyListSegment<T>>
         {
             public ReadOnlyListSegment(IReadOnlyList<T> list)
             {

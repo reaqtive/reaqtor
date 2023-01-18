@@ -301,7 +301,7 @@ namespace BinaryExpressionSerialization
         public GarbageCollectionStats Elapsed => new(GC.CollectionCount(0) - _gen0, GC.CollectionCount(1) - _gen1, GC.CollectionCount(2) - _gen2);
     }
 
-    internal struct GarbageCollectionStats
+    internal readonly struct GarbageCollectionStats
     {
         public GarbageCollectionStats(int gen0, int gen1, int gen2)
         {
