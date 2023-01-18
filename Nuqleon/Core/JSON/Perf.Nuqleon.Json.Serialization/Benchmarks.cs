@@ -68,7 +68,7 @@ namespace Perf.Nuqleon.Json.Serialization
         {
             _nucleusDeserializer = FastJsonSerializerFactory.CreateDeserializer<Person>(DefaultNameResolver.Instance, FastJsonConcurrencyMode.SingleThreaded);
             _jsonDeserializer = Newtonsoft.Json.JsonSerializer.CreateDefault();
-            _json = "{ \"Name\": \"Bart\", \"Age\": 21 }";
+            _json = /*lang=json,strict*/ "{ \"Name\": \"Bart\", \"Age\": 21 }";
         }
 
         [Benchmark]

@@ -19,7 +19,7 @@ stages:
   jobs:
   - template: azure-pipelines-build-jobs.yml
     parameters:
-      pools: [ { name: 'Windows', pool: 'windows-latest' }, { name: 'Linux', pool: { vmImage: 'ubuntu-latest' } } ]
+      pools: [ { name: 'Windows', pool: 'vs2019-preview' }, { name: 'Linux', pool: { vmImage: 'ubuntu-latest' } } ]
       projects: [ 'Nuqleon', 'Reaqtive', 'Reaqtor' ]
       configurations: [ 'Debug', 'Release' ]
 

@@ -293,8 +293,8 @@ namespace Tests
             AssertSerialize<PersonClass>(new Asserts<PersonClass>
             {
                 { null, "null" },
-                { new PersonClass(), "{\"Age\":0,\"Name\":null,\"Qux\":0}" },
-                { new PersonClass { Age = 21, Name = "Bart" }, "{\"Age\":21,\"Name\":\"Bart\",\"Qux\":0}" },
+                { new PersonClass(), """{"Age":0,"Name":null,"Qux":0}""" },
+                { new PersonClass { Age = 21, Name = "Bart" }, """{"Age":21,"Name":"Bart","Qux":0}""" },
             });
         }
 
@@ -303,8 +303,8 @@ namespace Tests
         {
             AssertSerialize<PersonStruct>(new Asserts<PersonStruct>
             {
-                { new PersonStruct(), "{\"Age\":0,\"Name\":null}" },
-                { new PersonStruct { Age = 21, Name = "Bart" }, "{\"Age\":21,\"Name\":\"Bart\"}" },
+                { new PersonStruct(), """{"Age":0,"Name":null}""" },
+                { new PersonStruct { Age = 21, Name = "Bart" }, """{"Age":21,"Name":"Bart"}""" },
             });
         }
 
@@ -314,8 +314,8 @@ namespace Tests
             AssertSerialize<PersonStruct?>(new Asserts<PersonStruct?>
             {
                 { null, "null" },
-                { new PersonStruct(), "{\"Age\":0,\"Name\":null}" },
-                { new PersonStruct { Age = 21, Name = "Bart" }, "{\"Age\":21,\"Name\":\"Bart\"}" },
+                { new PersonStruct(), """{"Age":0,"Name":null}""" },
+                { new PersonStruct { Age = 21, Name = "Bart" }, """{"Age":21,"Name":"Bart"}""" },
             });
         }
 
@@ -328,14 +328,14 @@ namespace Tests
 
             AssertSerialize<PersonWithParent>(new Asserts<PersonWithParent>
             {
-                { new PersonWithParent(), "{\"Age\":0,\"Name\":null,\"Parent\":null}" },
-                { bart, "{\"Age\":21,\"Name\":\"Bart\",\"Parent\":{\"Age\":40,\"Name\":\"Homer\",\"Parent\":null}}" },
-                { lisa, "{\"Age\":16,\"Name\":\"Lisa\",\"Parent\":{\"Age\":40,\"Name\":\"Homer\",\"Parent\":null}}" },
+                { new PersonWithParent(), """{"Age":0,"Name":null,"Parent":null}""" },
+                { bart, """{"Age":21,"Name":"Bart","Parent":{"Age":40,"Name":"Homer","Parent":null}}""" },
+                { lisa, """{"Age":16,"Name":"Lisa","Parent":{"Age":40,"Name":"Homer","Parent":null}}""" },
             });
 
             AssertSerialize<PersonWithParent[]>(new Asserts<PersonWithParent[]>
             {
-                { new[] { bart, lisa }, "[{\"Age\":21,\"Name\":\"Bart\",\"Parent\":{\"Age\":40,\"Name\":\"Homer\",\"Parent\":null}},{\"Age\":16,\"Name\":\"Lisa\",\"Parent\":{\"Age\":40,\"Name\":\"Homer\",\"Parent\":null}}]" },
+                { new[] { bart, lisa }, """[{"Age":21,"Name":"Bart","Parent":{"Age":40,"Name":"Homer","Parent":null}},{"Age":16,"Name":"Lisa","Parent":{"Age":40,"Name":"Homer","Parent":null}}]""" },
             });
         }
 
@@ -361,27 +361,27 @@ namespace Tests
             {
                 { null, "null" },
                 { new Dictionary<string, int> { }, "{}" },
-                { new Dictionary<string, int> { { "bar", 42 } }, "{\"bar\":42}" },
-                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 } }, "{\"bar\":42,\"foo\":43}" },
-                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 }, { "qux", 44 } }, "{\"bar\":42,\"foo\":43,\"qux\":44}" },
+                { new Dictionary<string, int> { { "bar", 42 } }, """{"bar":42}""" },
+                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 } }, """{"bar":42,"foo":43}""" },
+                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 }, { "qux", 44 } }, """{"bar":42,"foo":43,"qux":44}""" },
             });
 
             AssertSerialize<IDictionary<string, int>>(new Asserts<IDictionary<string, int>>
             {
                 { null, "null" },
                 { new Dictionary<string, int> { }, "{}" },
-                { new Dictionary<string, int> { { "bar", 42 } }, "{\"bar\":42}" },
-                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 } }, "{\"bar\":42,\"foo\":43}" },
-                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 }, { "qux", 44 } }, "{\"bar\":42,\"foo\":43,\"qux\":44}" },
+                { new Dictionary<string, int> { { "bar", 42 } }, """{"bar":42}""" },
+                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 } }, """{"bar":42,"foo":43}""" },
+                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 }, { "qux", 44 } }, """{"bar":42,"foo":43,"qux":44}""" },
             });
 
             AssertSerialize<IReadOnlyDictionary<string, int>>(new Asserts<IReadOnlyDictionary<string, int>>
             {
                 { null, "null" },
                 { new Dictionary<string, int> { }, "{}" },
-                { new Dictionary<string, int> { { "bar", 42 } }, "{\"bar\":42}" },
-                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 } }, "{\"bar\":42,\"foo\":43}" },
-                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 }, { "qux", 44 } }, "{\"bar\":42,\"foo\":43,\"qux\":44}" },
+                { new Dictionary<string, int> { { "bar", 42 } }, """{"bar":42}""" },
+                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 } }, """{"bar":42,"foo":43}""" },
+                { new Dictionary<string, int> { { "bar", 42 }, { "foo", 43 }, { "qux", 44 } }, """{"bar":42,"foo":43,"qux":44}""" },
             });
         }
 
@@ -390,7 +390,7 @@ namespace Tests
         {
             AssertSerialize<IDictionary<string, int>>(new Asserts<IDictionary<string, int>>
             {
-                { new NullableDictionary<string, int> { { "bar", 42 }, { "foo", 43 } }, "{\"bar\":42,\"foo\":43}" },
+                { new NullableDictionary<string, int> { { "bar", 42 }, { "foo", 43 } }, """{"bar":42,"foo":43}""" },
             });
         }
 
@@ -431,10 +431,10 @@ namespace Tests
                 { new DateTimeOffset(2016, 2, 11, 12, 34, 56, 789, new TimeSpan(8, 0, 0)), "\"2016-02-11T12:34:56.789+08:00\"" },
 
                 { new int[] { 1, 2, 3 }, "[1,2,3]" },
-                { new object[] { 1, true, "bar", null }, "[1,true,\"bar\",null]" },
+                { new object[] { 1, true, "bar", null }, """[1,true,"bar",null]""" },
 
-                { new PersonStruct { Age = 21, Name = "Bart" }, "{\"Age\":21,\"Name\":\"Bart\"}" },
-                { new PersonClass { Age = 21, Name = "Bart" }, "{\"Age\":21,\"Name\":\"Bart\",\"Qux\":0}" },
+                { new PersonStruct { Age = 21, Name = "Bart" }, """{"Age":21,"Name":"Bart"}""" },
+                { new PersonClass { Age = 21, Name = "Bart" }, """{"Age":21,"Name":"Bart","Qux":0}""" },
             });
         }
 
