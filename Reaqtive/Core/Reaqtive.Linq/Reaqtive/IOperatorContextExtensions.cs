@@ -45,10 +45,7 @@ namespace Reaqtive
                 if (!success)
                 {
                     var trace = context.TraceSource;
-                    if (trace != null)
-                    {
-                        trace.Invalid_Setting(key, res.ToString(CultureInfo.InvariantCulture), context.InstanceId, defaultValue.ToString(CultureInfo.InvariantCulture), message);
-                    }
+                    trace?.Invalid_Setting(key, res.ToString(CultureInfo.InvariantCulture), context.InstanceId, defaultValue.ToString(CultureInfo.InvariantCulture), message);
                 }
             }
 

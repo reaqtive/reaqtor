@@ -164,10 +164,7 @@ namespace Reaqtive
                 }
 #endif
 
-                if (_scheduler != null)
-                {
-                    _scheduler.VerifyAccess();
-                }
+                _scheduler?.VerifyAccess();
             }
 
             [MethodImpl(MethodImplOptions.AggressiveInlining)]

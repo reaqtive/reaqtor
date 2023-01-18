@@ -46,10 +46,7 @@ namespace Reaqtor.Reactive
         {
             base.OnStart();
 
-            if (_observerAsOperator != null)
-            {
-                _observerAsOperator.Start();
-            }
+            _observerAsOperator?.Start();
         }
 
         protected override void OnDispose()

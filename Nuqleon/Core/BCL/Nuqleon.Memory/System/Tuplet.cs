@@ -11,9 +11,6 @@
 using System.Collections;
 using System.Collections.Generic;
 
-#pragma warning disable IDE0079 // Remove unnecessary suppression.
-#pragma warning disable CA1508 // False positive on Item1?.ToString() usage. These can be null.
-
 namespace System
 {
     /// <summary>

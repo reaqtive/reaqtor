@@ -245,11 +245,8 @@ namespace Reaqtor.QueryEngine
                         // If the subscription failed to load runtime state or to start, the instance may have been created, but
                         // not been assigned to the Instance property of the RuntimeEntity.  If that is the case, the call to
                         // `DeleteSubscription` will not result in the instance being disposed.
-                        if (instance != null)
-                        {
-                            // Disposing the instance deletes the edges, too.
-                            instance.Dispose();
-                        }
+                        // Disposing the instance deletes the edges, too.
+                        instance?.Dispose();
                     }
                 }
             }
@@ -760,10 +757,7 @@ namespace Reaqtor.QueryEngine
                         // If the subject failed to load runtime state or to start, the instance may have been created, but
                         // not been assigned to the Instance property of the RuntimeEntity.  If that is the case, the call to
                         // `DeleteStream` will not result in the instance being disposed.
-                        if (instance != null)
-                        {
-                            instance.Dispose();
-                        }
+                        instance?.Dispose();
                     }
                 }
             }

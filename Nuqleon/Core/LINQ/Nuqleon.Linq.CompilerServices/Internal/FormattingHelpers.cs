@@ -33,10 +33,7 @@ namespace System
                     sb.Append(c);
                 }
 
-                if (sb != null)
-                {
-                    sb.Append(c);
-                }
+                sb?.Append(c);
             }
 
             return sb?.ToString() ?? s;

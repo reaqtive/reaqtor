@@ -157,10 +157,7 @@ namespace Reaqtor.QueryEngine
                 {
                     var subscription = Volatile.Read(ref _subscription);
 
-                    if (subscription != null)
-                    {
-                        subscription.OnNext(item, _lowWatermark);
-                    }
+                    subscription?.OnNext(item, _lowWatermark);
 
                     // Since the bridge has a single subscription and they are both checkpointed together
                     // we assume each OnNext is followed by Ack.

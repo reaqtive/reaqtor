@@ -334,10 +334,7 @@ namespace Reaqtor.ReificationFramework
                             operations.Add(link.Operation);
                             operations.AddRange(link.Rest);
                         }
-                        else if (operations != null)
-                        {
-                            operations.Add(op);
-                        }
+                        else operations?.Add(op);
 
                         count++;
                     }

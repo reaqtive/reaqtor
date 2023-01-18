@@ -224,10 +224,7 @@ namespace Reaqtor.QueryEngine
 
                 _subscription.AcknowledgeRange(CheckpointWatermark);
 
-                if (_context != null)
-                {
-                    _context.TraceSource.ReliableSubscriptionInput_OnStateSaved(_context.InstanceId, CheckpointWatermark);
-                }
+                _context?.TraceSource.ReliableSubscriptionInput_OnStateSaved(_context.InstanceId, CheckpointWatermark);
             }
 
             protected override IEnumerable<ISubscription> OnSubscribe()
@@ -242,10 +239,7 @@ namespace Reaqtor.QueryEngine
             {
                 _subscription.Start(CheckpointWatermark + 1);
 
-                if (_context != null)
-                {
-                    _context.TraceSource.ReliableSubscriptionInput_OnStart(_context.InstanceId, CheckpointWatermark + 1);
-                }
+                _context?.TraceSource.ReliableSubscriptionInput_OnStart(_context.InstanceId, CheckpointWatermark + 1);
             }
         }
     }

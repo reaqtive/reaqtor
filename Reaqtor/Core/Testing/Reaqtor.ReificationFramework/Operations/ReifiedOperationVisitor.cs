@@ -115,10 +115,7 @@ namespace Reaqtor.ReificationFramework
                     rest = new List<ReifiedOperation>(operation.Rest.Take(count));
                 }
 
-                if (rest != null)
-                {
-                    rest.Add(op);
-                }
+                rest?.Add(op);
 
                 count++;
             }

@@ -433,10 +433,7 @@ namespace Reaqtive.Scheduler
                 child.Dispose();
             }
 
-            if (_parent != null)
-            {
-                _parent.Remove(this);
-            }
+            _parent?.Remove(this);
 
             _counters.Dispose();
         }

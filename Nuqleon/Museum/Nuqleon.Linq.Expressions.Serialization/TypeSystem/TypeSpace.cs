@@ -111,10 +111,7 @@ namespace Nuqleon.Linq.Expressions.Serialization.TypeSystem
             // special treatment of this assembly in order to shorten names in serialization
             // payload.
             //
-            if (typeResolutionService != null)
-            {
-                typeResolutionService.ReferenceAssembly(typeof(int).Assembly.GetName() /* mscorlib */);
-            }
+            typeResolutionService?.ReferenceAssembly(typeof(int).Assembly.GetName() /* mscorlib */);
 
             //
             // Inverse of ToJson.

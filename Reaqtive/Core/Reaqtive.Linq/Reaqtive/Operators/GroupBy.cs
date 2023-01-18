@@ -126,10 +126,7 @@ namespace Reaqtive
             {
                 lock (_gate)
                 {
-                    if (_nullGroup != null)
-                    {
-                        _nullGroup.Observer.OnCompleted();
-                    }
+                    _nullGroup?.Observer.OnCompleted();
 
                     foreach (var group in _groups.Values.ToList())
                     {
@@ -145,10 +142,7 @@ namespace Reaqtive
             {
                 lock (_gate)
                 {
-                    if (_nullGroup != null)
-                    {
-                        _nullGroup.Observer.OnError(error);
-                    }
+                    _nullGroup?.Observer.OnError(error);
 
                     foreach (var group in _groups.Values.ToList())
                     {
@@ -236,10 +230,7 @@ namespace Reaqtive
                         return;
                     }
 
-                    if (entry != null)
-                    {
-                        entry.Observer.OnNext(element);
-                    }
+                    entry?.Observer.OnNext(element);
                 }
             }
 

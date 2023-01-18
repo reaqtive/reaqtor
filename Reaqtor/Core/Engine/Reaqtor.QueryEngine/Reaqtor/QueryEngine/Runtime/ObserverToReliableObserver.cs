@@ -63,10 +63,7 @@ namespace Reaqtor.QueryEngine
 
         public void SetContext(IOperatorContext context)
         {
-            if (_asOperator != null)
-            {
-                _asOperator.SetContext(context);
-            }
+            _asOperator?.SetContext(context);
         }
 
         public void Start()
@@ -92,10 +89,7 @@ namespace Reaqtor.QueryEngine
             {
                 _asSubscription.Dispose();
             }
-            else if (_asOperator != null)
-            {
-                _asOperator.Dispose();
-            }
+            else _asOperator?.Dispose();
         }
 
         #endregion

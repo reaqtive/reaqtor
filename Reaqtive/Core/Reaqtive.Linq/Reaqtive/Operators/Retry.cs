@@ -87,10 +87,7 @@ namespace Reaqtive.Operators
                     }
                     catch (Exception ex)
                     {
-                        if (subscription != null)
-                        {
-                            subscription.Dispose();
-                        }
+                        subscription?.Dispose();
 
                         Output.OnError(ex);
                         Dispose();
@@ -171,10 +168,7 @@ namespace Reaqtive.Operators
                 }
                 catch (Exception ex)
                 {
-                    if (subscription != null)
-                    {
-                        subscription.Dispose();
-                    }
+                    subscription?.Dispose();
 
                     Output.OnError(ex);
                     Dispose();
