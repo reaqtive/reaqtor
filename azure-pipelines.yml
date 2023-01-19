@@ -1,4 +1,4 @@
-﻿trigger:
+trigger:
   branches:
     include:
       - main
@@ -25,7 +25,7 @@ stages:
 
   - job: Reaqtor_Glitching_Tests
     displayName: Run Reaqtor Remoting Glitching Tests
-    pool: vs2019-preview
+    pool: windows-latest
 
     steps:
     - task: UseDotNet@2
