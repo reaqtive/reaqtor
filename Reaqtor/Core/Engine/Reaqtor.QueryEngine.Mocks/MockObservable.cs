@@ -26,9 +26,9 @@ namespace Reaqtor.QueryEngine.Mocks
         {
             lock (_observables)
             {
-                if (_observables.ContainsKey(id))
+                if (_observables.TryGetValue(id, out object value))
                 {
-                    return _observables[id] as IObservable<T>;
+                    return value as IObservable<T>;
                 }
 
                 var obs = new MockObservable<T>(id);

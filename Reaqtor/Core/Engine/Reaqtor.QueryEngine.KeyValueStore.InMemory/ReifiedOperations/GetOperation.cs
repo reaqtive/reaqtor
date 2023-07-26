@@ -20,9 +20,9 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             if (dictionary == null)
                 throw new ArgumentNullException(nameof(dictionary));
 
-            if (dictionary.ContainsKey(Key))
+            if (dictionary.TryGetValue(Key, out Sequenced<TValue> value))
             {
-                return new GetOperationResult<TKey, TValue>(dictionary[Key], keyNotFound: false);
+                return new GetOperationResult<TKey, TValue>(value, keyNotFound: false);
             }
 
             return new GetOperationResult<TKey, TValue>(default, keyNotFound: true);
