@@ -155,6 +155,7 @@ dotnet_diagnostic.IDE0065.severity = none # `Using directives must be placed out
 dotnet_diagnostic.IDE0072.severity = none # `Populate switch` gets unweildy for ExpressionType etc.
 dotnet_diagnostic.IDE0130.severity = none # Namespace does not match folder structure.
 dotnet_diagnostic.IDE0200.severity = suggestion # Lambda expression can be removed. Compact, but borders on the obscure.
+dotnet_diagnostic.IDE0270.severity = suggestion # Use null coallesce. As per https://github.com/dotnet/roslyn/issues/68313 we consider it a false positive when it's for throwing an exception.
 
 # IDE0074 is the "Use compound assignment" rule. With .NET SDK 7, it has started suggesting its use
 # for properties, e.g. for this:
