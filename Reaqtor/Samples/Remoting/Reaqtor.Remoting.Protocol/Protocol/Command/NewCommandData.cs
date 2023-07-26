@@ -48,7 +48,7 @@ namespace Reaqtor.Remoting.Protocol
         /// </summary>
         /// <param name="other">The other instance.</param>
         /// <returns>True if the current instance equals the other instance, false otherwise.</returns>
-        public bool Equals(NewCommandData<TExpression> other) =>
+        public readonly bool Equals(NewCommandData<TExpression> other) =>
                Uri == other.Uri
             && EqualityComparer<TExpression>.Default.Equals(Expression, other.Expression)
             && State == other.State;
@@ -58,13 +58,13 @@ namespace Reaqtor.Remoting.Protocol
         /// </summary>
         /// <param name="obj">The other object.</param>
         /// <returns>True if the current instance equals the other object, false otherwise.</returns>
-        public override bool Equals(object obj) => obj is NewCommandData<TExpression> data && Equals(data);
+        public override readonly bool Equals(object obj) => obj is NewCommandData<TExpression> data && Equals(data);
 
         /// <summary>
         /// Gets a hash code for the bundle.
         /// </summary>
         /// <returns>The hash code.</returns>
-        public override int GetHashCode()
+        public override readonly int GetHashCode()
         {
             var hash = Uri.GetHashCode();
             unchecked

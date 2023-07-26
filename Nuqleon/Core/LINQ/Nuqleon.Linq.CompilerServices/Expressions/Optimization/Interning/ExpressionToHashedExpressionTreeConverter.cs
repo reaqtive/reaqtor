@@ -613,7 +613,7 @@ namespace System.Linq.Expressions
 
             public void Add(int h) => _hashCode = _hashCode * 31 + h;
 
-            public int ToHashCode() => _hashCode;
+            public readonly int ToHashCode() => _hashCode;
 #endif
 
             public void Add<T>(T obj)

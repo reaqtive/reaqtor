@@ -8,11 +8,11 @@ namespace System.Collections.Specialized
     {
         private byte b0;
 
-        public int Length => 1;
+        public readonly int Length => 1;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 _ => throw new ArgumentOutOfRangeException(nameof(index))
@@ -37,11 +37,11 @@ namespace System.Collections.Specialized
         private byte b0;
         private byte b1;
 
-        public int Length => 2;
+        public readonly int Length => 2;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,
@@ -71,11 +71,11 @@ namespace System.Collections.Specialized
         private byte b1;
         private byte b2;
 
-        public int Length => 3;
+        public readonly int Length => 3;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,
@@ -110,11 +110,11 @@ namespace System.Collections.Specialized
         private byte b2;
         private byte b3;
 
-        public int Length => 4;
+        public readonly int Length => 4;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,
@@ -154,11 +154,11 @@ namespace System.Collections.Specialized
         private byte b3;
         private byte b4;
 
-        public int Length => 5;
+        public readonly int Length => 5;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,
@@ -203,11 +203,11 @@ namespace System.Collections.Specialized
         private byte b4;
         private byte b5;
 
-        public int Length => 6;
+        public readonly int Length => 6;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,
@@ -257,11 +257,11 @@ namespace System.Collections.Specialized
         private byte b5;
         private byte b6;
 
-        public int Length => 7;
+        public readonly int Length => 7;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,
@@ -316,11 +316,11 @@ namespace System.Collections.Specialized
         private byte b6;
         private byte b7;
 
-        public int Length => 8;
+        public readonly int Length => 8;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,
@@ -380,11 +380,11 @@ namespace System.Collections.Specialized
         private byte b7;
         private byte b8;
 
-        public int Length => 9;
+        public readonly int Length => 9;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,
@@ -449,11 +449,11 @@ namespace System.Collections.Specialized
         private byte b8;
         private byte b9;
 
-        public int Length => 10;
+        public readonly int Length => 10;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,
@@ -523,11 +523,11 @@ namespace System.Collections.Specialized
         private byte b9;
         private byte b10;
 
-        public int Length => 11;
+        public readonly int Length => 11;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
                 0 => b0,
                 1 => b1,

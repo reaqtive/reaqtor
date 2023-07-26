@@ -953,17 +953,17 @@ namespace Tests
             public string Name;
             public int Age { get; set; }
 
-            public override bool Equals(object obj)
+            public override readonly bool Equals(object obj)
             {
                 return obj is PersonStruct person && Equals(person);
             }
 
-            public override int GetHashCode()
+            public override readonly int GetHashCode()
             {
                 return 0;
             }
 
-            public bool Equals(PersonStruct other)
+            public readonly bool Equals(PersonStruct other)
             {
                 return other.Name == Name && other.Age == Age;
             }

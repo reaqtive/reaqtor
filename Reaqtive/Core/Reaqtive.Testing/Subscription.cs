@@ -19,7 +19,7 @@ namespace Reaqtive.Testing
 #if !NO_SERIALIZABLE
     [Serializable]
 #endif
-    public struct Subscription : IEquatable<Subscription>
+    public readonly struct Subscription : IEquatable<Subscription>
     {
         /// <summary>
         /// Infinite virtual time value, used to indicate an unsubscription never took place.

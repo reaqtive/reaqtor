@@ -873,20 +873,20 @@ namespace System.Linq.Expressions
             /// </summary>
             /// <param name="other">The value to compare the current value to.</param>
             /// <returns><c>true</c> if the current value equals the <paramref name="other"/> value; otherwise, <c>false</c>.</returns>
-            public bool Equals(Unary other) => ExpressionType == other.ExpressionType && OperandType == other.OperandType && ResultType == other.ResultType;
+            public readonly bool Equals(Unary other) => ExpressionType == other.ExpressionType && OperandType == other.OperandType && ResultType == other.ResultType;
 
             /// <summary>
             /// Checks whether the specified object is equal to the current value.
             /// </summary>
             /// <param name="obj">The object to compare the current value to.</param>
             /// <returns><c>true</c> if the current value equals the specified object; otherwise, <c>false</c>.</returns>
-            public override bool Equals(object obj) => obj is Unary unary && Equals(unary);
+            public override readonly bool Equals(object obj) => obj is Unary unary && Equals(unary);
 
             /// <summary>
             /// Gets a hash code for the current value.
             /// </summary>
             /// <returns>A hash code for the current value.</returns>
-            public override int GetHashCode() => HashHelpers.Combine((int)ExpressionType, OperandType.GetHashCode(), ResultType.GetHashCode());
+            public override readonly int GetHashCode() => HashHelpers.Combine((int)ExpressionType, OperandType.GetHashCode(), ResultType.GetHashCode());
         }
     }
 }

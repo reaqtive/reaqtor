@@ -90,11 +90,11 @@ namespace Reaqtor.Remoting.Deployable.Streams
         public T value;
         public long refcount;
 
-        public bool Equals(RefCounted<T> other) => refcount == other.refcount;
+        public readonly bool Equals(RefCounted<T> other) => refcount == other.refcount;
 
-        public override bool Equals(object obj) => obj is RefCounted<T> counted && Equals(counted);
+        public override readonly bool Equals(object obj) => obj is RefCounted<T> counted && Equals(counted);
 
-        public override int GetHashCode() => (int)(EqualityComparer<T>.Default.GetHashCode(value) * 37 + refcount);
+        public override readonly int GetHashCode() => (int)(EqualityComparer<T>.Default.GetHashCode(value) * 37 + refcount);
     }
 
     internal sealed class WrappedEqualityComparer<T> : IEqualityComparer<Holder<T>>

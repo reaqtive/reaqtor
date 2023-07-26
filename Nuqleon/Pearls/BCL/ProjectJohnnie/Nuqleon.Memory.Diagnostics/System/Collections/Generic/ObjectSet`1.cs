@@ -1481,7 +1481,9 @@ namespace System.Collections.Generic
             /// <summary>
             /// Disposes the enumerator.
             /// </summary>
+#pragma warning disable IDE0251 // Make member 'readonly' - not appropriate for Dispose, because if this ever gets a non-empty implementation, it would stop being readonly
             public void Dispose()
+#pragma warning restore IDE0251 // Make member 'readonly'
             {
             }
 
@@ -1532,7 +1534,7 @@ namespace System.Collections.Generic
             /// <summary>
             /// Gets the current value.
             /// </summary>
-            object IEnumerator.Current
+            readonly object IEnumerator.Current
             {
                 get
                 {

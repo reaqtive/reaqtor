@@ -47,7 +47,7 @@ namespace System
         /// <summary>
         /// Gets the current character in the enumeration.
         /// </summary>
-        public char Current
+        public readonly char Current
         {
             get
             {
@@ -68,7 +68,7 @@ namespace System
         /// <summary>
         /// Gets the current character in the enumeration.
         /// </summary>
-        object IEnumerator.Current => Current;
+        readonly object IEnumerator.Current => Current;
 
         /// <summary>
         /// Disposes the enumerator.

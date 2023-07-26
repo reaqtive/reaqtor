@@ -95,7 +95,7 @@ namespace Reaqtive.Scheduler
         /// </summary>
         public Duration UserTime
         {
-            get => _userTime;
+            readonly get => _userTime;
             private set => _userTime = value;
         }
 
@@ -104,7 +104,7 @@ namespace Reaqtive.Scheduler
         /// </summary>
         public Duration KernelTime
         {
-            get => _kernelTime;
+            readonly get => _kernelTime;
             private set => _kernelTime = value;
         }
 
@@ -177,7 +177,7 @@ namespace Reaqtive.Scheduler
         /// </summary>
         /// <param name="counters">The performance counter to add.</param>
         /// <returns>A performance counter object representing the sum of the given performance counters.</returns>
-        public SchedulerPerformanceCounters Add(SchedulerPerformanceCounters counters) => this + counters;
+        public readonly SchedulerPerformanceCounters Add(SchedulerPerformanceCounters counters) => this + counters;
 
         /// <summary>
         /// Subtracts two performance counter instances using pairwise subtraction of counter values.
@@ -200,7 +200,7 @@ namespace Reaqtive.Scheduler
         /// </summary>
         /// <param name="counters">The performance counter to subtract.</param>
         /// <returns>A performance counter object representing the subtraciton of the given performance counters.</returns>
-        public SchedulerPerformanceCounters Subtract(SchedulerPerformanceCounters counters) => this - counters;
+        public readonly SchedulerPerformanceCounters Subtract(SchedulerPerformanceCounters counters) => this - counters;
 
         /// <summary>
         /// Checks whether the current counters and the specified counters are equal.

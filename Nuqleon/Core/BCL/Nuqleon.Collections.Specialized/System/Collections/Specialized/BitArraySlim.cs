@@ -28,11 +28,11 @@ namespace System.Collections.Specialized
             _size = (byte)size;
         }
 
-        public int Count => _size;
+        public readonly int Count => _size;
 
         public bool this[int index]
         {
-            get
+            readonly get
             {
                 if (index >= _size || index < 0)
                 {

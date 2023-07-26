@@ -20,11 +20,11 @@ namespace Reaqtor.Remoting.TestingFramework
         public Action<TContext> Event { get; set; }
         public Func<TContext, Task> AsyncEvent { get; set; }
 
-        public override bool Equals(object obj) => obj is VirtualTimeEvent<TContext> other && Equals(other);
+        public override readonly bool Equals(object obj) => obj is VirtualTimeEvent<TContext> other && Equals(other);
 
-        public bool Equals(VirtualTimeEvent<TContext> other) => Time == other.Time && IsAsync == other.IsAsync && Event == other.Event && AsyncEvent == other.AsyncEvent;
+        public readonly bool Equals(VirtualTimeEvent<TContext> other) => Time == other.Time && IsAsync == other.IsAsync && Event == other.Event && AsyncEvent == other.AsyncEvent;
 
-        public override int GetHashCode() => HashCombine(Time.GetHashCode(), IsAsync.GetHashCode(), Event?.GetHashCode() ?? 0, AsyncEvent?.GetHashCode() ?? 0);
+        public override readonly int GetHashCode() => HashCombine(Time.GetHashCode(), IsAsync.GetHashCode(), Event?.GetHashCode() ?? 0, AsyncEvent?.GetHashCode() ?? 0);
 
         public static bool operator ==(VirtualTimeEvent<TContext> left, VirtualTimeEvent<TContext> right) => left.Equals(right);
 

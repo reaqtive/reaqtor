@@ -28,7 +28,7 @@ namespace Reaqtive
             // of the operator. The remaining flags will signify that the
             // operator is dirty if the `StateChanged` property was set
             // explicitly to true, or the last checkpoint did not succeed.
-            get => !_savedOnce || _stateChanged || _lastCheckpointNoSuccess;
+            readonly get => !_savedOnce || _stateChanged || _lastCheckpointNoSuccess;
             set => _stateChanged = value;
         }
 
