@@ -80,10 +80,7 @@ namespace Nuqleon.DataModel.TypeSystem
                 {
                     get
                     {
-                        if (_errors == null)
-                        {
-                            _errors = new List<string>();
-                        }
+                        _errors ??= new List<string>();
 
                         return _errors;
                     }

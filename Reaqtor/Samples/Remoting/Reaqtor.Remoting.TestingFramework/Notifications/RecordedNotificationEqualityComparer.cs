@@ -38,10 +38,7 @@ namespace Reaqtor.Remoting.TestingFramework
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new RecordedNotificationEqualityComparer<T>(DataTypeObjectEqualityComparer.Default);
-                }
+                _instance ??= new RecordedNotificationEqualityComparer<T>(DataTypeObjectEqualityComparer.Default);
                 return _instance;
             }
         }

@@ -355,10 +355,7 @@ namespace System.Linq.CompilerServices
 
                     convertConstant = (cst, visit) =>
                     {
-                        if (convd == null)
-                        {
-                            convd = convf.Compile();
-                        }
+                        convd ??= convf.Compile();
 
                         return convd.DynamicInvoke(cst, visit);
                     };

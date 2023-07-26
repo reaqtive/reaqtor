@@ -344,10 +344,7 @@ namespace System.Reflection
                     //
                     // First, create a map of slim type and CLR type representations of generic arguments.
                     //
-                    if (genericParameterMap == null)
-                    {
-                        genericParameterMap = new Dictionary<TypeSlim, Type>(arity);
-                    }
+                    genericParameterMap ??= new Dictionary<TypeSlim, Type>(arity);
 
                     for (var i = 0; i < arity; i++)
                     {

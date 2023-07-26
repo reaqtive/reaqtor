@@ -146,10 +146,7 @@ namespace Reaqtor.Remoting.Deployable.Streams
                         var pi = CheckSingle(predicate, parameter);
                         if (pi.HasValue)
                         {
-                            if (infos == null)
-                            {
-                                infos = new List<PartitionInfo>();
-                            }
+                            infos ??= new List<PartitionInfo>();
 
                             infos.Add(pi.Value);
                         }

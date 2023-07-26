@@ -313,10 +313,7 @@ namespace Nuqleon.Linq.Expressions.Serialization
             //
             // If the parameter is not found, we add it to the table of globals.
             //
-            if (name == null)
-            {
-                name = _globals.GetOrAdd(parameter);
-            }
+            name ??= _globals.GetOrAdd(parameter);
 
             return name;
         }

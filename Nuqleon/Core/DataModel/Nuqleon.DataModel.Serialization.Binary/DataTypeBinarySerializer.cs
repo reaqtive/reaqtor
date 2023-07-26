@@ -44,10 +44,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
         {
             get
             {
-                if (_getDeserializerCore == null)
-                {
-                    _getDeserializerCore = GetDeserializerCore;
-                }
+                _getDeserializerCore ??= GetDeserializerCore;
 
                 return _getDeserializerCore;
             }
@@ -57,10 +54,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
         {
             get
             {
-                if (_getSerializerCore == null)
-                {
-                    _getSerializerCore = GetSerializerCore;
-                }
+                _getSerializerCore ??= GetSerializerCore;
 
                 return _getSerializerCore;
             }

@@ -286,10 +286,7 @@ namespace Reaqtor.QueryEngine.Mocks
                 {
                     lock (_subjectGate)
                     {
-                        if (_subject == null)
-                        {
-                            _subject = new Subject<T>();
-                        }
+                        _subject ??= new Subject<T>();
                     }
                 }
 

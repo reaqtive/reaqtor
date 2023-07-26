@@ -42,10 +42,7 @@ namespace System.Reflection
         {
             get
             {
-                if (_instance == null)
-                {
-                    _instance = new StructuralMemberInfoEqualityComparer();
-                }
+                _instance ??= new StructuralMemberInfoEqualityComparer();
                 return _instance;
             }
         }

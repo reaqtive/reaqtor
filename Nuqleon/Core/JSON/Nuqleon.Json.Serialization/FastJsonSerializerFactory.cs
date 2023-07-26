@@ -44,10 +44,7 @@ namespace Nuqleon.Json.Serialization
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            if (provider == null)
-            {
-                provider = DefaultNameProvider.Instance;
-            }
+            provider ??= DefaultNameProvider.Instance;
 
             //
             // CONSIDER: Caching of serializers per type in a ConditionalWeakTable. However, we have to ensure different configurations
@@ -107,10 +104,7 @@ namespace Nuqleon.Json.Serialization
                 throw new ArgumentNullException(nameof(settings));
             }
 
-            if (resolver == null)
-            {
-                resolver = DefaultNameResolver.Instance;
-            }
+            resolver ??= DefaultNameResolver.Instance;
 
             //
             // CONSIDER: Caching of deserializers per type in a ConditionalWeakTable. However, we have to ensure different configurations

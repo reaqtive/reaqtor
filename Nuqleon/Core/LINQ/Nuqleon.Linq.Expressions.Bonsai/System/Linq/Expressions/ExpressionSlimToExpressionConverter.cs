@@ -113,10 +113,7 @@ namespace System.Linq.Expressions
                 }
             }
 
-            if (res == null)
-            {
-                res = _factory.MakeBinary(node.NodeType, left, right, node.IsLiftedToNull, method, conversion);
-            }
+            res ??= _factory.MakeBinary(node.NodeType, left, right, node.IsLiftedToNull, method, conversion);
 
             return res;
         }

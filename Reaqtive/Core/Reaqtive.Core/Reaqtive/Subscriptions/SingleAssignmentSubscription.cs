@@ -66,10 +66,7 @@ namespace Reaqtive
                 {
                     value.Dispose();
 
-                    if (Disposed.DisposedSubscription == null)
-                    {
-                        Disposed.DisposedSubscription = value;
-                    }
+                    Disposed.DisposedSubscription ??= value;
                 }
             }
         }

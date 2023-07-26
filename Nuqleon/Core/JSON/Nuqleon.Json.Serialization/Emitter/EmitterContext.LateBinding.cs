@@ -36,10 +36,7 @@ namespace Nuqleon.Json.Serialization
                 //     to Emitter.EmitAny for a type that's not well-known.
                 //
 
-                if (_siteString == null)
-                {
-                    _siteString = new LateBoundSiteString();
-                }
+                _siteString ??= new LateBoundSiteString();
 
                 return _siteString.Action;
             }
@@ -58,10 +55,7 @@ namespace Nuqleon.Json.Serialization
                 //     to Emitter.EmitAny for a type that's not well-known.
                 //
 
-                if (_siteWriter == null)
-                {
-                    _siteWriter = new LateBoundSiteWriter();
-                }
+                _siteWriter ??= new LateBoundSiteWriter();
 
                 return _siteWriter.Action;
             }

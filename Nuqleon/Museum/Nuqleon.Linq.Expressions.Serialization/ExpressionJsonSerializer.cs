@@ -100,10 +100,7 @@ namespace Nuqleon.Linq.Expressions.Serialization
                 // No double-locking pattern; don't care about having different instances, as the main
                 // cost is in the rule tables, where we do guard against this.
                 //
-                if (s_instance == null)
-                {
-                    s_instance = new ExpressionJsonSerializer(RuleOptions.Default | RuleOptions.ReadOnly, typeResolutionService: null);
-                }
+                s_instance ??= new ExpressionJsonSerializer(RuleOptions.Default | RuleOptions.ReadOnly, typeResolutionService: null);
 
                 return s_instance;
             }

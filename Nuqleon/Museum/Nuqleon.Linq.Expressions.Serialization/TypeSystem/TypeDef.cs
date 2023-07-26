@@ -383,16 +383,14 @@ namespace Nuqleon.Linq.Expressions.Serialization.TypeSystem
         /// <returns>The requested CLR type if the type is known; otherwise, null.</returns>
         private static Type TryResolveSlow(string typeName)
         {
-            if (s_knownTypes == null)
-            {
-                //
-                // This is a list of types that are commonly used and have been relocated to different
-                // assemblies during the evolution of the BCL. Notice this is only used as a fallback
-                // resolution strategy that's triggered in case of deserialization of a type table on
-                // another runtime version. If proper full-blown type resolution interception is needed,
-                // one can hook up AppDomain events.
-                //
-                s_knownTypes = new List<Type>
+            //
+            // This is a list of types that are commonly used and have been relocated to different
+            // assemblies during the evolution of the BCL. Notice this is only used as a fallback
+            // resolution strategy that's triggered in case of deserialization of a type table on
+            // another runtime version. If proper full-blown type resolution interception is needed,
+            // one can hook up AppDomain events.
+            //
+            s_knownTypes ??= new List<Type>
                 {
                     typeof(Func<>),
                     typeof(Func<,>),
@@ -403,7 +401,6 @@ namespace Nuqleon.Linq.Expressions.Serialization.TypeSystem
                     typeof(Action<,,>),
                     typeof(Action<,,,>),
                 }.ToDictionary(t => t.FullName, t => t);
-            }
 
             if (s_knownTypes.TryGetValue(typeName, out Type res))
                 return res;

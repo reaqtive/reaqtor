@@ -52,10 +52,7 @@ namespace Nuqleon.Linq.Expressions.Serialization
                 {
                     lock (s_singletonLock)
                     {
-                        if (s_instance == null)
-                        {
-                            s_instance = new StatementTreeRuleTable();
-                        }
+                        s_instance ??= new StatementTreeRuleTable();
                     }
                 }
 

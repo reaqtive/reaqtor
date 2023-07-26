@@ -38,10 +38,7 @@ namespace Nuqleon.Linq.Expressions.Serialization
         {
             get
             {
-                if (s_instance == null)
-                {
-                    s_instance = new ClosureRuleTable().AsReadOnly();
-                }
+                s_instance ??= new ClosureRuleTable().AsReadOnly();
 
                 return s_instance;
             }

@@ -359,10 +359,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             else
             {
                 Debug.Assert(innerSerialize.Parameters.Count == 3);
-                if (serializerParameter == null)
-                {
-                    serializerParameter = Expression.Parameter(typeof(DataTypeBinarySerializer), "serializer");
-                }
+                serializerParameter ??= Expression.Parameter(typeof(DataTypeBinarySerializer), "serializer");
 
                 return Expression.Invoke(innerSerialize, serializerParameter, streamParameter, valueExpression);
             }
