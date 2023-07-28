@@ -5,7 +5,8 @@
         - job:
           displayName: ${{ format('{0} {1} {2}', pool.name, project, configuration) }}
           timeoutInMinutes: 120
-          pool: ${{ pool.pool }}
+          pool:
+            vmImage: ${{ pool.vmImage }}
           steps:
             - task: UseDotNet@2
               displayName: Use .NET Core 7.x SDK

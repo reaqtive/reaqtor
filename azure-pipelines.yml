@@ -1,4 +1,4 @@
-trigger:
+﻿trigger:
   branches:
     include:
       - main
@@ -19,13 +19,14 @@ stages:
   jobs:
   - template: azure-pipelines-build-jobs.yml
     parameters:
-      pools: [ { name: 'Windows', pool: 'windows-latest' }, { name: 'Linux', pool: { vmImage: 'ubuntu-latest' } } ]
+      pools: [ { name: 'Windows', vmImage: 'windows-latest' }, { name: 'Linux', vmImage: 'ubuntu-latest' } ]
       projects: [ 'Nuqleon', 'Reaqtive', 'Reaqtor' ]
       configurations: [ 'Debug', 'Release' ]
 
   - job: Reaqtor_Glitching_Tests
     displayName: Run Reaqtor Remoting Glitching Tests
-    pool: windows-latest
+    pool:
+      vmImage: windows-latest
 
     steps:
     - task: UseDotNet@2
@@ -83,7 +84,8 @@ stages:
 
   - job: Reaqtor_Dotnet_Format
     displayName: Run dotnet-format checks
-    pool: vs2019-preview
+    pool:
+      vmImage: windows-latest
 
     steps:
     - task: UseDotNet@2
@@ -103,7 +105,8 @@ stages:
       displayName: Run dotnet-format
 
   - job: Build_and_Pack
-    pool: vs2019-preview
+    pool:
+      vmImage: windows-latest
 
     steps:
     - task: UseDotNet@2
