@@ -201,10 +201,7 @@ namespace System.Memory
                     list.First.Previous = node;
                 }
 
-                if (list.Last == null)
-                {
-                    list.Last = node;
-                }
+                list.Last ??= node;
 
                 node.Next = list.First;
                 node.Previous = null;

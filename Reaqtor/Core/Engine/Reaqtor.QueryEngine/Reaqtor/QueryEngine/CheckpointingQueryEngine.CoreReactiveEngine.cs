@@ -245,11 +245,8 @@ namespace Reaqtor.QueryEngine
                         // If the subscription failed to load runtime state or to start, the instance may have been created, but
                         // not been assigned to the Instance property of the RuntimeEntity.  If that is the case, the call to
                         // `DeleteSubscription` will not result in the instance being disposed.
-                        if (instance != null)
-                        {
-                            // Disposing the instance deletes the edges, too.
-                            instance.Dispose();
-                        }
+                        // Disposing the instance deletes the edges, too.
+                        instance?.Dispose();
                     }
                 }
             }
@@ -475,6 +472,7 @@ namespace Reaqtor.QueryEngine
 
                 EdgeDescription outputEdge = default;
 
+#pragma warning disable CA1851 // Possible multiple enumerations of 'IEnumerable' collection - review
                 if (edges == null || !edges.Any())
                 {
                     return null;
@@ -482,6 +480,7 @@ namespace Reaqtor.QueryEngine
 
                 // TODO: In case of failure, delete the already created edges before (re)throwing.
                 foreach (var edge in edges)
+#pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
                 {
                     Debug.Assert(edge.Expression != null);
                     Debug.Assert(edge.Expression.Type.IsGenericType);
@@ -760,10 +759,7 @@ namespace Reaqtor.QueryEngine
                         // If the subject failed to load runtime state or to start, the instance may have been created, but
                         // not been assigned to the Instance property of the RuntimeEntity.  If that is the case, the call to
                         // `DeleteStream` will not result in the instance being disposed.
-                        if (instance != null)
-                        {
-                            instance.Dispose();
-                        }
+                        instance?.Dispose();
                     }
                 }
             }

@@ -16,8 +16,6 @@ using Reaqtor;
 
 namespace Playground
 {
-#pragma warning disable IDE0060 // Remove unused parameter (used in expression trees)
-
     /// <summary>
     /// Helper methods to make definition of artifacts more fluent.
     /// </summary>
@@ -36,6 +34,4 @@ namespace Playground
         [KnownResource("rx://builtin/id")]
         public static IReactiveQbserver<T> ToQbserver<T>(this IObserver<T> observer) => throw new NotImplementedException();
     }
-
-#pragma warning restore IDE0060 // Remove unused parameter
 }

@@ -2648,10 +2648,7 @@ namespace Tests.Reaqtor.QueryEngine
                 {
                     lock (_gate)
                     {
-                        if (_singleton == null)
-                        {
-                            _singleton = new Subject<T>();
-                        }
+                        _singleton ??= new Subject<T>();
                     }
                 }
 

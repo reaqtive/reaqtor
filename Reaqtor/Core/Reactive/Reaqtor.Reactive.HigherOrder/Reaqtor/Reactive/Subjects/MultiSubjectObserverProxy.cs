@@ -11,7 +11,9 @@ namespace Reaqtor.Reactive
 {
     internal sealed class MultiSubjectObserverProxy<T> : Observer<T>
     {
+#pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
         private readonly StableCompositeSubscription _inputs = new();
+#pragma warning restore CA2213
         private readonly Uri _uri;
 
         private IObserver<T> _observer;
@@ -46,10 +48,7 @@ namespace Reaqtor.Reactive
         {
             base.OnStart();
 
-            if (_observerAsOperator != null)
-            {
-                _observerAsOperator.Start();
-            }
+            _observerAsOperator?.Start();
         }
 
         protected override void OnDispose()

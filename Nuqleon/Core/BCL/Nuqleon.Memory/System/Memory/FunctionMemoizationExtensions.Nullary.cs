@@ -236,10 +236,7 @@ namespace System.Memory
                 {
                     CheckDisposed();
 
-                    if (_value == null)
-                    {
-                        _value = value;
-                    }
+                    _value ??= value;
 
                     return value.Value;
                 }

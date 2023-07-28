@@ -17,7 +17,7 @@ namespace Reaqtive.Scheduler
     /// <summary>
     /// Accountant for execution of user code.
     /// </summary>
-    internal struct Accountant : IDisposable
+    internal readonly struct Accountant : IDisposable
     {
         /// <summary>
         /// The accountable object to report the measurement to.

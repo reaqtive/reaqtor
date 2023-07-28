@@ -54,10 +54,7 @@ namespace Nuqleon.Linq.Expressions.Serialization
                 {
                     lock (s_singletonLock)
                     {
-                        if (s_instance == null)
-                        {
-                            s_instance = new CSharpDynamicRuleTable();
-                        }
+                        s_instance ??= new CSharpDynamicRuleTable();
                     }
                 }
 

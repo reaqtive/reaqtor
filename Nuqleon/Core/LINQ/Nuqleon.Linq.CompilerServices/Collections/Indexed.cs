@@ -18,7 +18,7 @@ namespace System.Linq.CompilerServices
     /// The interpretation of the index is contextual and extrinsic to the object.
     /// </summary>
     /// <typeparam name="T">Type of the object to associate with an index.</typeparam>
-    public struct Indexed<T> : IEquatable<Indexed<T>>
+    public readonly struct Indexed<T> : IEquatable<Indexed<T>>
     {
         /// <summary>
         /// Creates a new indexed object association.

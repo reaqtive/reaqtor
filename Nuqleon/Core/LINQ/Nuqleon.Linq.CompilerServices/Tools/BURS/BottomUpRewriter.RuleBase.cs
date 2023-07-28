@@ -50,7 +50,7 @@ namespace System.Linq.CompilerServices
             return _paths.Select(traversal => new WildcardBinding<T>(traversal.Wildcard, traversal.Get<T>(tree)));
         }
 
-        internal struct WildcardBinding<T>
+        internal readonly struct WildcardBinding<T>
         {
             public readonly TSource Wildcard;
             public readonly ITree<T> Tree;

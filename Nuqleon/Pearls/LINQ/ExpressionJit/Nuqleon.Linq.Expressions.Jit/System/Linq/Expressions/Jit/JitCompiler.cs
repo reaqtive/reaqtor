@@ -549,7 +549,7 @@ namespace System.Linq.Expressions.Jit
             /// <summary>
             /// Struct containing information about an inner lambda expression.
             /// </summary>
-            private struct LambdaInfo
+            private readonly struct LambdaInfo
             {
                 /// <summary>
                 /// The rewritten inner lambda expression which can be passed to the constructor

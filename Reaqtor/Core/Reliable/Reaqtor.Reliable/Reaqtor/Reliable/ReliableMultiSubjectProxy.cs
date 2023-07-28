@@ -105,10 +105,12 @@ namespace Reaqtor.Reliable
         {
             private readonly Uri _uri;
             private readonly IReliableObserver<TOutput> _observer;
-            private readonly SingleAssignmentSubscription _subscription = new();
             private readonly IEnumerable<ISubscription> _inputs;
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
+            private readonly SingleAssignmentSubscription _subscription = new();
 
             private volatile IReliableSubscription _reliableSubscription;
+#pragma warning restore CA2213
 
             public SubscriptionProxy(Uri uri, IReliableObserver<TOutput> observer)
             {

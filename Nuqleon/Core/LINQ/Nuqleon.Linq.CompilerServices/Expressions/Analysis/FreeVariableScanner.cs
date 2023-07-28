@@ -76,10 +76,7 @@ namespace System.Linq.CompilerServices
 
             protected override void AddFreeVariable(ParameterExpression node)
             {
-                if (Free == null)
-                {
-                    Free = new HashSet<ParameterExpression>();
-                }
+                Free ??= new HashSet<ParameterExpression>();
 
                 Free.Add(node);
             }

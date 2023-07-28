@@ -42,7 +42,9 @@ namespace Reaqtive.Operators
             /// </summary>
             private bool _atSourceEnd;
 
+#pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private ISubscription _sourceSubscription;
+#pragma warning restore CA2213
 
             public _(Sample<TSource, TSample> parent, IObserver<TSource> observer)
                 : base(parent, observer)

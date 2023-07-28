@@ -115,7 +115,7 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         Variable,
     }
 
-    internal struct StrWildcards : IWildcardFactory<StrTree>
+    internal readonly struct StrWildcards : IWildcardFactory<StrTree>
     {
         public StrTree CreateWildcard(ParameterExpression hole) => new VariableStrTree(hole);
     }

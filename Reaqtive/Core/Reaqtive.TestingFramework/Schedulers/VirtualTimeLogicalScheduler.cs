@@ -192,10 +192,7 @@ namespace Reaqtive.TestingFramework
                 _tasks.ForEach(t => Physical.Cancel(t));
                 _tasks.Clear();
 
-                if (_parent != null)
-                {
-                    _parent._children.Remove(this);
-                }
+                _parent?._children.Remove(this);
             }
         }
 

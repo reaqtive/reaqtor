@@ -90,10 +90,7 @@ namespace Reaqtor.Remoting.Platform
 
         private static ReactiveServiceType[][] Validate(params ReactiveServiceType[][] groups)
         {
-            if (groups == null)
-            {
-                groups = Array.Empty<ReactiveServiceType[]>();
-            }
+            groups ??= Array.Empty<ReactiveServiceType[]>();
 
             var roles = new HashSet<ReactiveServiceType>();
             var missingRoles = new List<ReactiveServiceType>();

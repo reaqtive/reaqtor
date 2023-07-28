@@ -21,7 +21,7 @@ namespace Reaqtive.Testing
 #if !NO_SERIALIZABLE
     [Serializable]
 #endif
-    public struct Recorded<T> : IEquatable<Recorded<T>>
+    public readonly struct Recorded<T> : IEquatable<Recorded<T>>
     {
         /// <summary>
         /// Gets the virtual time the value was produced on.

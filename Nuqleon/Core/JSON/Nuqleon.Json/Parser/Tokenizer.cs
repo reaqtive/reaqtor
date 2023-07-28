@@ -262,10 +262,7 @@ namespace Nuqleon.Json.Parser
                                         {
                                             throw new ParseException("Unrecognized token.", i, ParseError.InvalidToken);
                                         }
-                                        if (sb != null)
-                                        {
-                                            sb.Append(d);
-                                        }
+                                        sb?.Append(d);
                                         i++;
                                         break;
                                 }

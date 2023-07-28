@@ -88,7 +88,7 @@ namespace System.Memory
         /// </summary>
         /// <param name="other">The object to compare to.</param>
         /// <returns>true if the objects are equal; otherwise, false.</returns>
-        public bool Equals(PooledObject<T> other) =>
+        public readonly bool Equals(PooledObject<T> other) =>
             _pool == other._pool &&
             _releaser == other._releaser &&
             EqualityComparer<T>.Default.Equals(Object, other.Object);
@@ -98,13 +98,13 @@ namespace System.Memory
         /// </summary>
         /// <param name="obj">The object to compare to.</param>
         /// <returns>true if the objects are equal; otherwise, false.</returns>
-        public override bool Equals(object obj) => obj is PooledObject<T> o && Equals(o);
+        public override readonly bool Equals(object obj) => obj is PooledObject<T> o && Equals(o);
 
         /// <summary>
         /// Gets a hash code for the current object.
         /// </summary>
         /// <returns>A hash code for the current object.</returns>
-        public override int GetHashCode() =>
+        public override readonly int GetHashCode() =>
             HashHelpers.Combine(
                 _pool?.GetHashCode() ?? 0,
                 _releaser?.GetHashCode() ?? 0,

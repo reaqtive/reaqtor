@@ -300,7 +300,7 @@ namespace System.Linq.Expressions
             protected override ParameterExpression GetState(ParameterExpression parameter) => parameter;
         }
 
-        private struct SlotValue
+        private readonly struct SlotValue
         {
             public SlotValue(object value, SlotKind kind)
             {

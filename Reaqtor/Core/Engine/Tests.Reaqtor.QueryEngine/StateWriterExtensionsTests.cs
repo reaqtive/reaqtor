@@ -85,10 +85,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             public Task CommitAsync(CancellationToken token, IProgress<int> progress)
             {
-                if (progress != null)
-                {
-                    progress.Report(42);
-                }
+                progress?.Report(42);
 
                 return CommitAsyncTask.Task;
             }

@@ -16,7 +16,7 @@ namespace System.Linq.CompilerServices
     /// <summary>
     /// Binding of a parameter expression to a value.
     /// </summary>
-    public struct Binding : IEquatable<Binding>
+    public readonly struct Binding : IEquatable<Binding>
     {
         /// <summary>
         /// Creates a new binding with the specified parameter and value.

@@ -31,7 +31,9 @@ namespace Reaqtor.Shebang.Extensions
 
         private sealed class Subscription : ContextSwitchOperator<TimeSpan, DateTimeOffset>, IUnloadableOperator
         {
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
             private Timer _timer;
+#pragma warning restore CA2213
 
             public Subscription(TimeSpan parent, IObserver<DateTimeOffset> observer) : base(parent, observer)
             {

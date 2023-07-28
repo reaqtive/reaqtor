@@ -142,9 +142,7 @@ namespace Reaqtor.Remoting
             public Action /* TODO make disposable */ Subscribe<T>(IObserver<T> obv)
             {
                 var guid = Guid.NewGuid();
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 _map[guid] = new Tuple<Type, object, Action, Action<Exception>>(typeof(T), (Action<T>)obv.OnNext, obv.OnCompleted, obv.OnError);
-#pragma warning restore IDE0004
 
                 return () =>
                 {

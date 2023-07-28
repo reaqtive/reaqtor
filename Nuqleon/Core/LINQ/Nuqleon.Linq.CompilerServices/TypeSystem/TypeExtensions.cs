@@ -1009,10 +1009,7 @@ namespace System
                 {
                     if (kv.Value == null)
                     {
-                        if (unbound == null)
-                        {
-                            unbound = new List<string>();
-                        }
+                        unbound ??= new List<string>();
 
                         unbound.Add(kv.Key.Name);
                     }
@@ -1102,10 +1099,7 @@ namespace System
 
                     if (!base.Equals(x, y))
                     {
-                        if (Error == null)
-                        {
-                            Error = new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Unification failed. Cannot unify {0} with type {1}. The types are not structurally identical.", x, y));
-                        }
+                        Error ??= new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Unification failed. Cannot unify {0} with type {1}. The types are not structurally identical.", x, y));
 
                         return false;
                     }
@@ -1233,10 +1227,7 @@ namespace System
 
                 if (!base.Equals(x, y))
                 {
-                    if (Error == null)
-                    {
-                        Error = new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Unification failed. Cannot unify {0} with type {1}. The types are not structurally identical.", x, y));
-                    }
+                    Error ??= new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Unification failed. Cannot unify {0} with type {1}. The types are not structurally identical.", x, y));
 
                     return false;
                 }

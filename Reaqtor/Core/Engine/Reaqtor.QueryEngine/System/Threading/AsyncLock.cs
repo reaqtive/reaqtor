@@ -22,7 +22,11 @@ namespace System.Threading
 
         public void Dispose() => _lock.Dispose();
 
-        public struct Releaser : IDisposable
+        public
+#if !DEBUG
+            readonly
+#endif
+            struct Releaser : IDisposable
         {
             private readonly AsyncLock _lock;
 #if DEBUG

@@ -313,10 +313,7 @@ namespace Nuqleon.Linq.Expressions.Serialization
             //
             // If the parameter is not found, we add it to the table of globals.
             //
-            if (name == null)
-            {
-                name = _globals.GetOrAdd(parameter);
-            }
+            name ??= _globals.GetOrAdd(parameter);
 
             return name;
         }
@@ -366,7 +363,9 @@ namespace Nuqleon.Linq.Expressions.Serialization
             _parameters = new List<ParameterExpression>();
             _mapping = new Dictionary<string, ParameterExpression>();
 
+#pragma warning disable IDE0220 // Add explicit cast. (Wants Elements.Cast<ObjectExpression>().) Not a performance-neutral change.
             foreach (Json.ObjectExpression p in ((Json.ArrayExpression)json).Elements)
+#pragma warning restore IDE0220
             {
                 //
                 // Note: keep in sync with SerializationFrame::ToJson code.

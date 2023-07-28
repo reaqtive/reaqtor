@@ -102,7 +102,7 @@ namespace Reaqtive.Scheduler
         /// </summary>
         /// <param name="duration">The duration to add.</param>
         /// <returns>A duration representing the sum of the current duration and the specified <paramref name="duration"/>.</returns>
-        public Duration Add(Duration duration) => this + duration;
+        public readonly Duration Add(Duration duration) => this + duration;
 
         /// <summary>
         /// Subtracts two durations using pairwise subtraction of timing values.
@@ -121,7 +121,7 @@ namespace Reaqtive.Scheduler
         /// </summary>
         /// <param name="duration">The duration to substract.</param>
         /// <returns>A duration representing the subtraction of the current duration and the specified <paramref name="duration"/>.</returns>
-        public Duration Subtract(Duration duration) => this - duration;
+        public readonly Duration Subtract(Duration duration) => this - duration;
 
         /// <summary>
         /// Checks whether the current duration and the specified duration are equal.

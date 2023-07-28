@@ -23,7 +23,9 @@ namespace Reaqtive.Operators
         protected abstract class Sink<TParam> : HigherOrderOutputStatefulOperator<TParam, TSource>
             where TParam : Window<TSource>
         {
+#pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private RefCountSubscription _subscription;
+#pragma warning restore CA2213
 
             public Sink(TParam parent, IObserver<ISubscribable<TSource>> observer)
                 : base(parent, observer)
@@ -114,10 +116,7 @@ namespace Reaqtive.Operators
                 lock (_gate)
                 {
                     var currentWindow = _currentWindow;
-                    if (currentWindow != null)
-                    {
-                        currentWindow.OnCompleted();
-                    }
+                    currentWindow?.OnCompleted();
 
                     // Concurrency with OnNextWindow
                     Output.OnCompleted();
@@ -131,10 +130,7 @@ namespace Reaqtive.Operators
                 lock (_gate)
                 {
                     var currentWindow = _currentWindow;
-                    if (currentWindow != null)
-                    {
-                        currentWindow.OnError(error);
-                    }
+                    currentWindow?.OnError(error);
 
                     // Concurrency with OnNextWindow
                     Output.OnError(error);
@@ -148,10 +144,7 @@ namespace Reaqtive.Operators
                 lock (_gate)
                 {
                     var currentWindow = _currentWindow;
-                    if (currentWindow != null)
-                    {
-                        currentWindow.OnNext(value);
-                    }
+                    currentWindow?.OnNext(value);
 
                     OnNextCore();
                 }
@@ -205,10 +198,7 @@ namespace Reaqtive.Operators
                 lock (_gate)
                 {
                     var currentWindow = _currentWindow;
-                    if (currentWindow != null)
-                    {
-                        currentWindow.OnCompleted();
-                    }
+                    currentWindow?.OnCompleted();
 
                     _currentWindow = null;
                 }
@@ -308,10 +298,7 @@ namespace Reaqtive.Operators
                     foreach (var window in _currentWindows)
                     {
                         var observer = window.Observer;
-                        if (observer != null)
-                        {
-                            observer.OnCompleted();
-                        }
+                        observer?.OnCompleted();
                     }
 
                     // Concurrency with OnNextWindow
@@ -328,10 +315,7 @@ namespace Reaqtive.Operators
                     foreach (var window in _currentWindows)
                     {
                         var observer = window.Observer;
-                        if (observer != null)
-                        {
-                            observer.OnError(error);
-                        }
+                        observer?.OnError(error);
                     }
 
                     // Concurrency with OnNextWindow
@@ -348,10 +332,7 @@ namespace Reaqtive.Operators
                     foreach (var window in _currentWindows)
                     {
                         var observer = window.Observer;
-                        if (observer != null)
-                        {
-                            observer.OnNext(value);
-                        }
+                        observer?.OnNext(value);
                     }
 
                     OnNextCore();
@@ -411,10 +392,7 @@ namespace Reaqtive.Operators
                     StateChanged = true;
 
                     var observer = window.Observer;
-                    if (observer != null)
-                    {
-                        observer.OnCompleted();
-                    }
+                    observer?.OnCompleted();
                 }
             }
 

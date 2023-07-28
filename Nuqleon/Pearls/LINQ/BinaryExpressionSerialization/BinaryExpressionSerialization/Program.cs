@@ -73,9 +73,7 @@ namespace BinaryExpressionSerialization
 
                 ((Expression<Func<string>>)(() => Console.ReadLine())).Body,
                 ((Expression<Func<string, string>>)(s => s.ToUpper())).Body,
-#pragma warning disable IDE0057 // Use range operator (https://github.com/dotnet/roslyn/issues/49347)
                 ((Expression<Func<string, int, string>>)((s, i) => s.Substring(i))).Body,
-#pragma warning restore IDE0057 // Use range operator
                 ((Expression<Func<string, int, int, string>>)((s, i, j) => s.Substring(i, j))).Body,
 
                 ((Expression<Func<int, int>>)(x => -x)).Body,
@@ -301,7 +299,7 @@ namespace BinaryExpressionSerialization
         public GarbageCollectionStats Elapsed => new(GC.CollectionCount(0) - _gen0, GC.CollectionCount(1) - _gen1, GC.CollectionCount(2) - _gen2);
     }
 
-    internal struct GarbageCollectionStats
+    internal readonly struct GarbageCollectionStats
     {
         public GarbageCollectionStats(int gen0, int gen1, int gen2)
         {

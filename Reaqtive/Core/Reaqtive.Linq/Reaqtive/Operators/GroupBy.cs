@@ -24,7 +24,9 @@ namespace Reaqtive
             where TParam : GroupByBase<TSource, TKey, TElement>
         {
             private bool _recovered;
+#pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private RefCountSubscription _subscription;
+#pragma warning restore CA2213
 
             public SinkBase(TParam parent, IObserver<IGroupedSubscribable<TKey, TElement>> observer)
                 : base(parent, observer)
@@ -126,10 +128,7 @@ namespace Reaqtive
             {
                 lock (_gate)
                 {
-                    if (_nullGroup != null)
-                    {
-                        _nullGroup.Observer.OnCompleted();
-                    }
+                    _nullGroup?.Observer.OnCompleted();
 
                     foreach (var group in _groups.Values.ToList())
                     {
@@ -145,10 +144,7 @@ namespace Reaqtive
             {
                 lock (_gate)
                 {
-                    if (_nullGroup != null)
-                    {
-                        _nullGroup.Observer.OnError(error);
-                    }
+                    _nullGroup?.Observer.OnError(error);
 
                     foreach (var group in _groups.Values.ToList())
                     {
@@ -178,7 +174,7 @@ namespace Reaqtive
                     return;
                 }
 
-                var entry = default(Entry);
+                Entry entry;
                 lock (_gate)
                 {
                     if (key == null)
@@ -236,10 +232,7 @@ namespace Reaqtive
                         return;
                     }
 
-                    if (entry != null)
-                    {
-                        entry.Observer.OnNext(element);
-                    }
+                    entry?.Observer.OnNext(element);
                 }
             }
 

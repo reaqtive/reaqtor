@@ -81,7 +81,7 @@ namespace Tests
                 @"[1,[2],3]",
 
                 @"{}",
-                @"{""bar"":42,""qux"":""foo""}",
+                /*lang=json,strict*/ """{"bar":42,"qux":"foo"}""",
             })
             {
                 var res = JsonParser.Parse(json, ensureTopLevelObjectOrArray: false).ToString();

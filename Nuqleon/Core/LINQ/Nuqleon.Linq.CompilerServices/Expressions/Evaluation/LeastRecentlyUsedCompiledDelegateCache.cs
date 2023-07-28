@@ -212,7 +212,7 @@ namespace System.Linq.Expressions
             public int GetHashCode(Expression obj) => _comparer.GetHashCode(obj);
         }
 
-        private struct ExpressionWithHashCode : IEquatable<ExpressionWithHashCode>
+        private readonly struct ExpressionWithHashCode : IEquatable<ExpressionWithHashCode>
         {
             private readonly int _hashCode;
 

@@ -679,7 +679,7 @@ namespace System.Reflection
             _typeFindMembers?.Cache.Clear();
         }
 
-        private struct MakeGenericTypeParams : IEquatable<MakeGenericTypeParams>
+        private readonly struct MakeGenericTypeParams : IEquatable<MakeGenericTypeParams>
         {
             public MakeGenericTypeParams(Type definition, Type[] arguments)
             {
@@ -699,7 +699,7 @@ namespace System.Reflection
             public override int GetHashCode() => Utils.GetHashCode(Definition, Arguments);
         }
 
-        private struct MakeGenericMethodParams : IEquatable<MakeGenericMethodParams>
+        private readonly struct MakeGenericMethodParams : IEquatable<MakeGenericMethodParams>
         {
             public MakeGenericMethodParams(MethodInfo definition, Type[] arguments)
             {

@@ -62,6 +62,7 @@ namespace Reaqtor.Expressions.Binding
 
             var freeVariables = FreeVariableScanner.Scan(expression);
 
+#pragma warning disable CA1851 // Possible multiple enumerations of 'IEnumerable' collection - review
             if (!freeVariables.Any())
             {
                 return expression;
@@ -70,6 +71,7 @@ namespace Reaqtor.Expressions.Binding
             var bindings = new Dictionary<ParameterExpression, Expression>();
 
             foreach (var variable in freeVariables)
+#pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
             {
                 Expression value = Lookup(variable);
                 if (value == null)

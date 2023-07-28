@@ -22,7 +22,9 @@ namespace Utilities
     /// </summary>
     public sealed class LoggingStateWriter : LoggingStateReaderWriterBase, IStateWriter
     {
+#pragma warning disable CA2213 // "Change the Dispose method to call Close or Dispose on this field." We don't own the underlying stream, so this is an inappropriate suggestion.
         private readonly IStateWriter _writer;
+#pragma warning restore CA2213
 
         public LoggingStateWriter(IStateWriter writer, TextWriter log, bool keepOpen = true)
             : base(log, keepOpen)

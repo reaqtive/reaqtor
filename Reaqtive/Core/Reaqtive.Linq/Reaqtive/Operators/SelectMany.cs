@@ -36,8 +36,10 @@ namespace Reaqtive.Operators
 
             private readonly object _lock = new();
             private bool _isStopped;
+#pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private ISubscription _sourceSubscription;
             private CompositeSubscription _innerSubscriptions;
+#pragma warning restore CA2213
             private IOperatorContext _context;
 
             public _(SelectMany<TSource, TCollection, TResult> parent, IObserver<TResult> observer)

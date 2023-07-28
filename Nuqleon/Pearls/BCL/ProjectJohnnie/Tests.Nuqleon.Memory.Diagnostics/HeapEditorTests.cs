@@ -153,7 +153,7 @@ namespace Tests
             public int Age { get; }
         }
 
-        private struct Pair<T1, T2>
+        private readonly struct Pair<T1, T2>
         {
             public Pair(T1 t1, T2 t2) => (First, Second) = (t1, t2);
 

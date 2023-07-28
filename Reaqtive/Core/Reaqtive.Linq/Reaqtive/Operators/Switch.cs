@@ -24,8 +24,10 @@ namespace Reaqtive.Operators
         private sealed class _ : HigherOrderInputStatefulOperator<Switch<TSource>, TSource>, IObserver<ISubscribable<TSource>>
         {
             private object _lock;
+#pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private ISubscription _subscription;
             private SerialSubscription _innerSubscription;
+#pragma warning restore CA2213
             private ulong _latest;
             private bool _isStopped;
             private bool _hasLatest;

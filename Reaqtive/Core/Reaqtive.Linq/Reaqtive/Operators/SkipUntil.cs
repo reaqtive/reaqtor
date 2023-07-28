@@ -32,7 +32,9 @@ namespace Reaqtive.Operators
         private sealed class _ : StatefulOperator<SkipUntil<TSource, TOther>, TSource>, IObserver<TSource>
         {
             private OtherObserver _otherObserver;
+#pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private SingleAssignmentSubscription _firstSubscription;
+#pragma warning restore CA2213
 
             public _(SkipUntil<TSource, TOther> parent, IObserver<TSource> observer)
                 : base(parent, observer)

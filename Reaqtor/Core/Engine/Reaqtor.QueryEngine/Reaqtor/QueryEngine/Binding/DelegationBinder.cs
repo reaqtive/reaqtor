@@ -126,7 +126,7 @@ namespace Reaqtor.QueryEngine
                 public LinkedList<InvocationAndState> Invocations { get; set; }
             }
 
-            private struct InvocationAndState
+            private readonly struct InvocationAndState
             {
                 private InvocationAndState(InvocationSubtreeState state, ParameterExpression delegationTarget)
                 {

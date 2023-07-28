@@ -101,10 +101,7 @@ namespace Reaqtor.Remoting.QueryEvaluator
 
             _logicalScheduler.Dispose();
 
-            if (_terminator != null)
-            {
-                _terminator.Dispose();
-            }
+            _terminator?.Dispose();
         }
 
         public bool CheckAccess()

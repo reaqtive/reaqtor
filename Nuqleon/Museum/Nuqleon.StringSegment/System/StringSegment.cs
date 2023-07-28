@@ -2039,7 +2039,15 @@ namespace System
 
             CheckCompareArguments(strA, indexA, strB, indexB, length, out var lengthA, out var lengthB);
 
+#if NET47_OR_GREATER || NETSTANDARD2_0 || true
+            // Due to https://developercommunity.visualstudio.com/t/InvariantCultureCompareInfoCompare-mis/10425014?ftype=problem&q=InvariantCulture.CompareInfo+compare+inconsistent
+            // we can't currently use the in-place substring comparison in .NET FX, because it produces incorrect results in 64-bit processes
+            // for empty strings in some cases. (It's fine on .NET 6.0.) So we just have to tolerate lower performance on .NET FX here until
+            // the class library is fixed.
+            return culture.CompareInfo.Compare(strA.String.Substring(strA.StartIndex + indexA, lengthA), strB.String.Substring(strB.StartIndex + indexB, lengthB), options);
+#else
             return culture.CompareInfo.Compare(strA.String, strA.StartIndex + indexA, lengthA, strB.String, strB.StartIndex + indexB, lengthB, options);
+#endif
         }
 
         /// <summary>
@@ -2091,7 +2099,15 @@ namespace System
         {
             var num = CheckCompareArguments(strA, indexA, strB, indexB, length, out var lengthA, out var lengthB);
 
+#if NET47_OR_GREATER || NETSTANDARD2_0 || true
+            // Due to https://developercommunity.visualstudio.com/t/InvariantCultureCompareInfoCompare-mis/10425014?ftype=problem&q=InvariantCulture.CompareInfo+compare+inconsistent
+            // we can't currently use the in-place substring comparison in .NET FX, because it produces incorrect results in 64-bit processes
+            // for empty strings in some cases. (It's fine on .NET 6.0.) So we just have to tolerate lower performance on .NET FX here until
+            // the class library is fixed.
+            var res = string.CompareOrdinal(strA.String.Substring(strA.StartIndex + indexA, lengthA), 0, strB.String.Substring(strB.StartIndex + indexB), 0, num);
+#else
             var res = string.CompareOrdinal(strA.String, strA.StartIndex + indexA, strB.String, strB.StartIndex + indexB, num);
+#endif
 
             if (res == 0 && (lengthA != length || lengthB != length))
             {

@@ -19,7 +19,7 @@ namespace Nuqleon.DataModel
     /// <summary>
     /// Type to represent the singleton empty value (like void).
     /// </summary>
-    public struct Unit : IEquatable<Unit>
+    public readonly struct Unit : IEquatable<Unit>
     {
         /// <summary>
         /// Compares two unit values for equality. Always returns true.

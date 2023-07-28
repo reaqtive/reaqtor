@@ -17,7 +17,7 @@ namespace System.Memory
     /// </summary>
     /// <typeparam name="TCached">Type of the cached component.</typeparam>
     /// <typeparam name="TNonCached">Type of the non-cached component.</typeparam>
-    public struct Deconstructed<TCached, TNonCached> : IEquatable<Deconstructed<TCached, TNonCached>>
+    public readonly struct Deconstructed<TCached, TNonCached> : IEquatable<Deconstructed<TCached, TNonCached>>
     {
         /// <summary>
         /// Creates the deconstructed cached value;

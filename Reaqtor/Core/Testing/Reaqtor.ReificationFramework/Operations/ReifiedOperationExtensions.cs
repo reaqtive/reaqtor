@@ -326,18 +326,12 @@ namespace Reaqtor.ReificationFramework
                     {
                         if (op is Chain link)
                         {
-                            if (operations == null)
-                            {
-                                operations = new List<ReifiedOperation>(chain.Rest.Take(count));
-                            }
+                            operations ??= new List<ReifiedOperation>(chain.Rest.Take(count));
 
                             operations.Add(link.Operation);
                             operations.AddRange(link.Rest);
                         }
-                        else if (operations != null)
-                        {
-                            operations.Add(op);
-                        }
+                        else operations?.Add(op);
 
                         count++;
                     }

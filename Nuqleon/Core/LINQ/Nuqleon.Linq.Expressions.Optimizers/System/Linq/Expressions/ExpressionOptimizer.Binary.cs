@@ -1026,20 +1026,20 @@ namespace System.Linq.Expressions
             /// </summary>
             /// <param name="other">The value to compare the current value to.</param>
             /// <returns><c>true</c> if the current value equals the <paramref name="other"/> value; otherwise, <c>false</c>.</returns>
-            public bool Equals(Binary other) => ExpressionType == other.ExpressionType && LeftType == other.LeftType && RightType == other.RightType && LiftToNull == other.LiftToNull;
+            public readonly bool Equals(Binary other) => ExpressionType == other.ExpressionType && LeftType == other.LeftType && RightType == other.RightType && LiftToNull == other.LiftToNull;
 
             /// <summary>
             /// Checks whether the specified object is equal to the current value.
             /// </summary>
             /// <param name="obj">The object to compare the current value to.</param>
             /// <returns><c>true</c> if the current value equals the specified object; otherwise, <c>false</c>.</returns>
-            public override bool Equals(object obj) => obj is Binary binary && Equals(binary);
+            public override readonly bool Equals(object obj) => obj is Binary binary && Equals(binary);
 
             /// <summary>
             /// Gets a hash code for the current value.
             /// </summary>
             /// <returns>A hash code for the current value.</returns>
-            public override int GetHashCode() => HashHelpers.Combine((int)ExpressionType, LeftType.GetHashCode(), RightType.GetHashCode(), LiftToNull ? 1 : 0);
+            public override readonly int GetHashCode() => HashHelpers.Combine((int)ExpressionType, LeftType.GetHashCode(), RightType.GetHashCode(), LiftToNull ? 1 : 0);
         }
     }
 }

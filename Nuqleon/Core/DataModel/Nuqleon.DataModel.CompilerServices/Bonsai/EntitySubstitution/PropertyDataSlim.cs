@@ -10,7 +10,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
     /// <summary>
     /// Container for structural type property data.
     /// </summary>
-    public struct PropertyDataSlim : IEquatable<PropertyDataSlim>
+    public readonly struct PropertyDataSlim : IEquatable<PropertyDataSlim>
     {
         /// <summary>
         /// Instantiates a property data container for structural types.

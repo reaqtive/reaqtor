@@ -27,9 +27,9 @@ namespace Reaqtor.QueryEngine.Mocks
         {
             lock (_observers)
             {
-                if (_observers.ContainsKey(id))
+                if (_observers.TryGetValue(id, out object value))
                 {
-                    return _observers[id] as IObserver<T>;
+                    return value as IObserver<T>;
                 }
 
                 var o = new MockObserver<T>();
@@ -75,8 +75,10 @@ namespace Reaqtor.QueryEngine.Mocks
         private long _currentCount;
 
         private readonly object _lock = new();
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood OnDispose
         private readonly ManualResetEvent _completed = new(false);
         private readonly ManualResetEvent _error = new(false);
+#pragma warning restore CA2213
 
 
         public IList<T> Values => _values;
@@ -169,5 +171,11 @@ namespace Reaqtor.QueryEngine.Mocks
         public bool WaitForCompleted(TimeSpan t) => _completed.WaitOne(t);
 
         public bool WaitForError(TimeSpan t) => _error.WaitOne(t);
+
+        protected override void OnDispose()
+        {
+            _completed.Dispose();
+            _error.Dispose();
+        }
     }
 }

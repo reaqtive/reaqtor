@@ -40,7 +40,9 @@ namespace Reaqtive.Operators
 
         private abstract class _ : StatefulUnaryOperator<DelaySubscription<T>, T>, IObserver<T>
         {
+#pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private readonly SingleAssignmentSubscription _subscription = new();
+#pragma warning restore CA2213
             private IOperatorContext _context;
             private bool _subscribed;
 

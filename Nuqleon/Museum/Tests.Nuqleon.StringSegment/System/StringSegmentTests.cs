@@ -652,7 +652,21 @@ namespace Tests
                             AssertWithVariations(
                                 new[] { "", "bar", "baz", "foo", "foobar", "BaR" },
                                 new[] { "", "bar", "baz", "foo", "foobar", "BaR" },
+#if NET47_OR_GREATER || NETSTANDARD2_0 || true
+                                // Due to https://developercommunity.visualstudio.com/t/InvariantCultureCompareInfoCompare-mis/10425014?ftype=problem&q=InvariantCulture.CompareInfo+compare+inconsistent
+                                // in-place substring comparison is currently broken on .NET FX, because it produces incorrect results in 64-bit processes
+                                // for empty strings in some cases. (It's fine on .NET 6.0.) So we just have to tolerate lower performance on .NET FX here until
+                                // the class library is fixed.
+#if !NET47_OR_GREATER
+#pragma warning disable IDE0057 // Use range operator. Not available on .NET FX.
+#endif
+                                (l, r) => string.Compare(l.Substring(startIndexA), 0, r.Substring(startIndexB), 0, length, CultureInfo.InvariantCulture, options),
+#if !NET47_OR_GREATER
+#pragma warning restore IDE0057 // Use range operator
+#endif
+#else
                                 (l, r) => string.Compare(l, startIndexA, r, startIndexB, length, CultureInfo.InvariantCulture, options),
+#endif
                                 (l, r) => StringSegment.Compare(l, startIndexA, r, startIndexB, length, CultureInfo.InvariantCulture, options),
                                 (e, a) => Math.Sign(e) == Math.Sign(a) // TODO: Do we need to guarantee an exact output, e.g. ("", "bar") -> -98 due to use of '\0'.
                             );
@@ -713,7 +727,21 @@ namespace Tests
                         AssertWithVariations(
                             new[] { "", "bar", "baz", "foo", "foobar", "BaR" },
                             new[] { "", "bar", "baz", "foo", "foobar", "BaR" },
+#if NET47_OR_GREATER || NETSTANDARD2_0 || true
+                            // Due to https://developercommunity.visualstudio.com/t/InvariantCultureCompareInfoCompare-mis/10425014?ftype=problem&q=InvariantCulture.CompareInfo+compare+inconsistent
+                            // in-place substring comparison is currently broken on .NET FX, because it produces incorrect results in 64-bit processes
+                            // for empty strings in some cases. (It's fine on .NET 6.0.) So we just have to tolerate lower performance on .NET FX here until
+                            // the class library is fixed.
+#if !NET47_OR_GREATER
+#pragma warning disable IDE0057 // Use range operator. Not available on .NET FX.
+#endif
+                            (l, r) => string.CompareOrdinal(l.Substring(startIndexA), 0, r.Substring(startIndexB), 0, length),
+#if !NET47_OR_GREATER
+#pragma warning restore IDE0057 // Use range operator
+#endif
+#else
                             (l, r) => string.CompareOrdinal(l, startIndexA, r, startIndexB, length),
+#endif
                             (l, r) => StringSegment.CompareOrdinal(l, startIndexA, r, startIndexB, length),
                             (e, a) => Math.Sign(e) == Math.Sign(a) // TODO: Do we need to guarantee an exact output, e.g. ("", "bar") -> -98 due to use of '\0'.
                         );

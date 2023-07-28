@@ -116,10 +116,7 @@ namespace System.Reflection
                     _returnType = GetReturnType(typeSubstitutor);
                 }
 
-                if (_parameterTypes == null)
-                {
-                    _parameterTypes = GetParameterTypes(typeSubstitutor);
-                }
+                _parameterTypes ??= GetParameterTypes(typeSubstitutor);
             }
         }
 

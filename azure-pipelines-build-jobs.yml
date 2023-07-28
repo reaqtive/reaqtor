@@ -1,29 +1,30 @@
-jobs:
+﻿jobs:
   - ${{ each pool in parameters.pools }}:
     - ${{ each project in parameters.projects }}:
       - ${{ each configuration in parameters.configurations }}:
         - job:
           displayName: ${{ format('{0} {1} {2}', pool.name, project, configuration) }}
           timeoutInMinutes: 120
-          pool: ${{ pool.pool }}
+          pool:
+            vmImage: ${{ pool.vmImage }}
           steps:
             - task: UseDotNet@2
-              displayName: Use .NET Core 6.x SDK
+              displayName: Use .NET Core 7.x SDK
               inputs:
-                version: 6.x
+                version: 7.x
                 performMultiLevelLookup: true
+
+            - task: UseDotNet@2
+              inputs:
+                version: '6.x'
+                packageType: runtime
+              displayName: Install .NET 6.0 runtime
 
             - task: UseDotNet@2
               inputs:
                 version: '3.1.x'
                 packageType: runtime
               displayName: Install .NET Core 3.1 runtime
-
-            - task: UseDotNet@2
-              inputs:
-                version: '2.1.x'
-                packageType: runtime
-              displayName: Install .NET Core 2.1 runtime
 
             - powershell: |
                 $existing = & dotnet tool list -g | Select-String "nbgv" 

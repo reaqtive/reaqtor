@@ -493,10 +493,10 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         public void JsonExpressionWriter_NaN_Float()
         {
             var jsonDefault = Serialize(FloatFormatHandling.DefaultValue, new { a = float.NaN }).ToString();
-            Assert.AreEqual("{\"a\":0.0}", jsonDefault);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":0.0}""", jsonDefault);
 
             var jsonString = Serialize(FloatFormatHandling.String, new { a = float.NaN }).ToString();
-            Assert.AreEqual("{\"a\":\"NaN\"}", jsonString);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":"NaN"}""", jsonString);
 
             Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = float.NaN }));
         }
@@ -505,10 +505,10 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         public void JsonExpressionWriter_NaN_Float_Nullable()
         {
             var jsonDefault = Serialize(FloatFormatHandling.DefaultValue, new { a = (float?)float.NaN }).ToString();
-            Assert.AreEqual("{\"a\":null}", jsonDefault);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":null}""", jsonDefault);
 
             var jsonString = Serialize(FloatFormatHandling.String, new { a = (float?)float.NaN }).ToString();
-            Assert.AreEqual("{\"a\":\"NaN\"}", jsonString);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":"NaN"}""", jsonString);
 
             Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (float?)float.NaN }));
         }
@@ -517,10 +517,10 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         public void JsonExpressionWriter_NaN_Double()
         {
             var jsonDefault = Serialize(FloatFormatHandling.DefaultValue, new { a = double.NaN }).ToString();
-            Assert.AreEqual("{\"a\":0.0}", jsonDefault);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":0.0}""", jsonDefault);
 
             var jsonString = Serialize(FloatFormatHandling.String, new { a = double.NaN }).ToString();
-            Assert.AreEqual("{\"a\":\"NaN\"}", jsonString);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":"NaN"}""", jsonString);
 
             Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = double.NaN }));
         }
@@ -529,10 +529,10 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         public void JsonExpressionWriter_NaN_Double_Nullable()
         {
             var jsonDefault = Serialize(FloatFormatHandling.DefaultValue, new { a = (double?)double.NaN }).ToString();
-            Assert.AreEqual("{\"a\":null}", jsonDefault);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":null}""", jsonDefault);
 
             var jsonString = Serialize(FloatFormatHandling.String, new { a = (double?)double.NaN }).ToString();
-            Assert.AreEqual("{\"a\":\"NaN\"}", jsonString);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":"NaN"}""", jsonString);
 
             Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (double?)double.NaN }));
         }
@@ -541,10 +541,10 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         public void JsonExpressionWriter_Infinity_Float()
         {
             var jsonDefault = Serialize(FloatFormatHandling.DefaultValue, new { a = float.PositiveInfinity }).ToString();
-            Assert.AreEqual("{\"a\":0.0}", jsonDefault);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":0.0}""", jsonDefault);
 
             var jsonString = Serialize(FloatFormatHandling.String, new { a = float.PositiveInfinity }).ToString();
-            Assert.AreEqual("{\"a\":\"Infinity\"}", jsonString);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":"Infinity"}""", jsonString);
 
             Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = float.PositiveInfinity }));
         }
@@ -553,10 +553,10 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         public void JsonExpressionWriter_Infinity_Float_Nullable()
         {
             var jsonDefault = Serialize(FloatFormatHandling.DefaultValue, new { a = (float?)float.PositiveInfinity }).ToString();
-            Assert.AreEqual("{\"a\":null}", jsonDefault);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":null}""", jsonDefault);
 
             var jsonString = Serialize(FloatFormatHandling.String, new { a = (float?)float.PositiveInfinity }).ToString();
-            Assert.AreEqual("{\"a\":\"Infinity\"}", jsonString);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":"Infinity"}""", jsonString);
 
             Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (float?)float.PositiveInfinity }));
         }
@@ -565,10 +565,10 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         public void JsonExpressionWriter_Infinity_Double()
         {
             var jsonDefault = Serialize(FloatFormatHandling.DefaultValue, new { a = double.PositiveInfinity }).ToString();
-            Assert.AreEqual("{\"a\":0.0}", jsonDefault);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":0.0}""", jsonDefault);
 
             var jsonString = Serialize(FloatFormatHandling.String, new { a = double.PositiveInfinity }).ToString();
-            Assert.AreEqual("{\"a\":\"Infinity\"}", jsonString);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":"Infinity"}""", jsonString);
 
             Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = double.PositiveInfinity }));
         }
@@ -577,10 +577,10 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         public void JsonExpressionWriter_Infinity_Double_Nullable()
         {
             var jsonDefault = Serialize(FloatFormatHandling.DefaultValue, new { a = (double?)double.PositiveInfinity }).ToString();
-            Assert.AreEqual("{\"a\":null}", jsonDefault);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":null}""", jsonDefault);
 
             var jsonString = Serialize(FloatFormatHandling.String, new { a = (double?)double.PositiveInfinity }).ToString();
-            Assert.AreEqual("{\"a\":\"Infinity\"}", jsonString);
+            Assert.AreEqual(/*lang=json,strict*/ """{"a":"Infinity"}""", jsonString);
 
             Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (double?)double.PositiveInfinity }));
         }

@@ -165,10 +165,7 @@ namespace System.Linq.Expressions
                         }
                     }
                 }
-                else if (newExpressions != null)
-                {
-                    newExpressions.Add(expr);
-                }
+                else newExpressions?.Add(expr);
             }
 
             if (newExpressions == null)

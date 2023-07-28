@@ -810,7 +810,7 @@ namespace System.Memory
                 };
             }
 
-            public override string ToString()
+            public override readonly string ToString()
             {
                 return string.Format(
                     CultureInfo.InvariantCulture,

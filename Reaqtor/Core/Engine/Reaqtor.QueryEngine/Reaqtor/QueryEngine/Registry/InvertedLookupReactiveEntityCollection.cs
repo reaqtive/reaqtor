@@ -133,7 +133,7 @@ namespace Reaqtor.QueryEngine
             }
         }
 
-        private struct ReadLock : IDisposable
+        private readonly struct ReadLock : IDisposable
         {
             private readonly ReaderWriterLockSlim _lock;
 
@@ -146,7 +146,7 @@ namespace Reaqtor.QueryEngine
             public void Dispose() => _lock.ExitReadLock();
         }
 
-        private struct WriteLock : IDisposable
+        private readonly struct WriteLock : IDisposable
         {
             private readonly ReaderWriterLockSlim _lock;
 

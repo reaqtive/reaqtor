@@ -59,7 +59,9 @@ namespace Reaqtor.Remoting.Deployable
             /// <summary>
             /// late bound subscription to the underlying ZeroMQ based firehose
             /// </summary>
+#pragma warning disable CA2213 // "Change the Dispose method to call Close or Dispose on this field." We don't own the underlying stream, so this is an inappropriate suggestion.
             private readonly SingleAssignmentDisposable _lateBoundSubscription = new();
+#pragma warning restore CA2213
 
             /// <summary>
             /// the context for the current subscription

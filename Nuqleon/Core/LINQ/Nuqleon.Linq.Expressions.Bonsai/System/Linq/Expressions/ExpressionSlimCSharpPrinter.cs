@@ -240,9 +240,7 @@ namespace System.Linq.Expressions.Bonsai
         {
             get
             {
-                if (s_numericConstantToString == null)
-                {
-                    s_numericConstantToString = new Dictionary<Type, Func<object, string>>
+                s_numericConstantToString ??= new Dictionary<Type, Func<object, string>>
                     {
                         {
                             typeof(char), value =>
@@ -351,7 +349,6 @@ namespace System.Linq.Expressions.Bonsai
                             }
                         },
                     };
-                }
 
                 return s_numericConstantToString;
             }

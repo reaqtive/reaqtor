@@ -118,7 +118,9 @@ namespace System.Memory
             {
                 private volatile IWeakCacheDictionary<T, object> _cache;
 #if DEBUG
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
                 private readonly ThreadLocal<bool> _isNew; // assumes the function is not recursive
+#pragma warning restore CA2213
 #endif
                 private readonly ConditionalWeakTable<T, object>.CreateValueCallback _function;
 
@@ -173,6 +175,12 @@ namespace System.Memory
                     //
                     _cache = new WeakCacheDictionary<T, object>();
                 }
+#if DEBUG
+                protected override void DisposeCore()
+                {
+                    _isNew.Dispose();
+                }
+#endif
             }
 
             /// <summary>
@@ -185,8 +193,11 @@ namespace System.Memory
             {
                 private volatile IWeakCacheDictionary<T, IValueOrError<R>> _cache;
 #if DEBUG
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
                 private readonly ThreadLocal<bool> _isNew; // assumes the function is not recursive
+#pragma warning restore CA2213
 #endif
+
                 private readonly ConditionalWeakTable<T, IValueOrError<R>>.CreateValueCallback _function;
 
                 public CacheWithException(Func<T, R> function)
@@ -267,6 +278,13 @@ namespace System.Memory
                     //
                     _cache = new WeakCacheDictionary<T, IValueOrError<R>>();
                 }
+
+#if DEBUG
+                protected override void DisposeCore()
+                {
+                    _isNew.Dispose();
+                }
+#endif
             }
         }
     }

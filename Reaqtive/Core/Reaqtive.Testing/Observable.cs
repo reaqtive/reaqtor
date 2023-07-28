@@ -62,7 +62,7 @@ namespace Reaqtive.Linq
         public static IEnumerable<T> ToEnumerable<T>(this IObservable<T> source)
         {
             var xs = new List<T>();
-            var e = new ManualResetEvent(false);
+            using var e = new ManualResetEvent(false);
             var error = default(Exception);
 
             var d = source.Subscribe(xs.Add, ex => { error = ex; e.Set(); }, () => { e.Set(); });
@@ -95,7 +95,9 @@ namespace Reaqtive.Linq
                 {
                     return _subscribe(observer);
                 }
+#pragma warning disable CA1031 // Do not catch general exception types
                 catch (Exception ex)
+#pragma warning restore CA1031
                 {
                     observer.OnError(ex);
                     return Disposable.Empty;

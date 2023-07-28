@@ -508,9 +508,7 @@ namespace System.Reflection
             // NB: This method does not check for enum types unlike Type.GetTypeCode,
             //     hence the suffix "Exact" in its name.
 
-            if (s_typeCodes == null)
-            {
-                s_typeCodes =
+            s_typeCodes ??=
                     new Dictionary<SimpleTypeSlim, TypeCode>()
                     {
                         { _bool,     TypeCode.Boolean  },
@@ -529,7 +527,6 @@ namespace System.Reflection
                         { _char,     TypeCode.Char     },
                         { _string,   TypeCode.String   },
                     };
-            }
 
             if (s_typeCodes.TryGetValue(typeSlim, out TypeCode typeCode))
             {

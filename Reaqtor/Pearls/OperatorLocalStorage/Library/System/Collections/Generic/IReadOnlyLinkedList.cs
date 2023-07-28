@@ -14,7 +14,9 @@ namespace System.Collections.Generic
     /// Interface representing a read-only linked list.
     /// </summary>
     /// <typeparam name="T">The type of the elements stored in the linked list.</typeparam>
+#pragma warning disable CA1710 // Identifiers should have correct suffix. List is an appropriate suffix.
     public interface IReadOnlyLinkedList<out T> : IReadOnlyCollection<T>
+#pragma warning restore CA1710
     {
         /// <summary>
         /// Gets the first node of the linked list, or <c>null</c> if the linked list is empty.

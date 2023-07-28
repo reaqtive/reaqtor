@@ -117,7 +117,7 @@ namespace ExpressionJit
 
             int i = 0;
 
-            foreach (Thunk t in mt.Closure.Thunks)
+            foreach (Thunk t in mt.Closure.Thunks.Cast<Thunk>())
             {
                 PrintTitle($"Thunk {i}", ConsoleColor.Cyan);
                 Console.WriteLine();

@@ -23,10 +23,7 @@ namespace Reaqtive.TestingFramework.TestRunner
 
         public void Configure(string assemblyName)
         {
-            if (_testClasses != null)
-            {
-                _testClasses.ForEach(r => r.Dispose());
-            }
+            _testClasses?.ForEach(r => r.Dispose());
 
             _testClasses = CreateTestClassRunners(Assembly.LoadFrom(assemblyName));
         }

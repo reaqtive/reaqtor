@@ -38,7 +38,7 @@ namespace Reaqtive.Storage
         /// </summary>
         public bool StateChanged
         {
-            get => !_savedOnce || _stateChanged || _lastCheckpointNoSuccess;
+            readonly get => !_savedOnce || _stateChanged || _lastCheckpointNoSuccess;
             set => _stateChanged = value;
         }
 

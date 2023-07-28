@@ -111,7 +111,7 @@ namespace System.Threading
             toWake?.SetResult(new Releaser(this, toWakeIsWriter));
         }
 
-        public struct Releaser : IDisposable
+        public readonly struct Releaser : IDisposable
         {
             private readonly AsyncReaderWriterLock m_toRelease;
             private readonly bool m_writer;

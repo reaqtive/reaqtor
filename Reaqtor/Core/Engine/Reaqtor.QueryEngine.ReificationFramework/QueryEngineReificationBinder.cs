@@ -182,6 +182,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
                 parameter = Expression.Parameter(expression.Type);
 
                 var optimizedPairs = default(List<OptimizedPair>);
+#pragma warning disable CA1851 // Possible multiple enumerations of 'IEnumerable' collection - review
                 if (fvs.Any(p => !TryLookup(p, out optimizedPairs)))
                 {
                     parameter = null;
@@ -190,6 +191,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
 
                 var op = new OptimizedPair(parameter, expression);
                 foreach (var fv in fvs)
+#pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
                 {
                     TryLookup(fv, out optimizedPairs);
                     optimizedPairs.Add(op);

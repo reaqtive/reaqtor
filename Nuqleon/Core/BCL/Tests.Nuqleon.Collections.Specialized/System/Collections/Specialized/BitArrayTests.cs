@@ -218,11 +218,11 @@ namespace Tests.System.Collections.Specialized
 
         private struct ByteArrayGinormous : IByteArray
         {
-            public int Length => 300;
+            public readonly int Length => 300;
 
             public byte this[int index]
             {
-                get => throw new NotImplementedException();
+                readonly get => throw new NotImplementedException();
                 set => throw new NotImplementedException();
             }
         }

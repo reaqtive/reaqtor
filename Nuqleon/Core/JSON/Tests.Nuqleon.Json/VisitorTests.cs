@@ -27,7 +27,7 @@ namespace Tests.Nuqleon.Json
                 JsonParser.Parse("17", ensureTopLevelObjectOrArray: false),
                 JsonParser.Parse("\"foo\"", ensureTopLevelObjectOrArray: false),
                 JsonParser.Parse("[1, 3, [5, 7], 9]"),
-                JsonParser.Parse("{ \"foo\": 123, \"bar\": [-1, -3, -5] }"),
+                JsonParser.Parse("""{ "foo": 123, "bar": [-1, -3, -5] }"""),
             })
             {
                 var res = visitor.Visit(json);
@@ -40,7 +40,7 @@ namespace Tests.Nuqleon.Json
         {
             var visitor = new MyVisitor();
 
-            var json = @"{ ""foo"":   123, ""bar"": [  1, 2, 3 ],    ""qux"": 8}";
+            var json = """{ "foo":   123, "bar": [  1, 2, 3 ],    "qux": 8}""";
 
             var res = visitor.Visit(JsonParser.Parse(json));
 

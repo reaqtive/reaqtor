@@ -112,10 +112,12 @@ namespace Reaqtor.QueryEngine
         private readonly IReactiveServiceResolver _serviceResolver;
         private readonly IReliableReactive _parentReactiveService;
         private IReliableReactive _externalReactiveService;
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood SubscriptionDispose
         private IReliableSubscription _externalSubscription;
+        private IScheduler _scheduler;
+#pragma warning restore CA2213
         private Uri _resubscribeUri;
         private IOperatorContext _context;
-        private IScheduler _scheduler;
         private ProcessingTask _task;
 
         public InputEdge(EdgeDescription edge, IReactiveServiceResolver serviceResolver, IReliableReactive reactiveService)

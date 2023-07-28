@@ -499,11 +499,13 @@ namespace System.Linq.CompilerServices
 
             if (keys != null)
             {
+#pragma warning disable CA1851 // Possible multiple enumerations of 'IEnumerable' collection - review
                 var propertyNames = new HashSet<string>(properties.Select(p => p.Name));
                 if (!keys.All(propertyNames.Contains))
                     throw new ArgumentException("One or more specified keys do not appear in the properties list.", nameof(keys));
 
                 propertyDeclarations = properties.Select(p =>
+#pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
                 {
                     var isKey = keys.Contains(p.Name);
                     return new PropertyDeclaration { Name = p.Name, Type = p.PropertyType, CustomAttributes = p.CustomAttributes, IsKey = isKey, CanRead = true, CanWrite = !isKey };

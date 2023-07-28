@@ -81,10 +81,7 @@ namespace Pearls.Reaqtor.CSE
 
             var logger = Logger;
 
-            if (logger != null)
-            {
-                logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Creating subscription {0} = {1}.", n, expression));
-            }
+            logger?.WriteLine(string.Format(CultureInfo.InvariantCulture, "Creating subscription {0} = {1}.", n, expression));
 
             var expr = expression;
             var artifacts = Array.Empty<HotArtifact>().AsEnumerable();
@@ -101,25 +98,16 @@ namespace Pearls.Reaqtor.CSE
 
                 artifacts = s.Artifacts;
 
-                if (logger != null)
-                {
-                    logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Rewritten subscription {0} to {1}.", n, expr));
-                }
+                logger?.WriteLine(string.Format(CultureInfo.InvariantCulture, "Rewritten subscription {0} to {1}.", n, expr));
             }
 
             var b = (Expression<Func<IDisposable>>)new Binder(Registry).Visit(expr);
 
-            if (logger != null)
-            {
-                logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Bound subscription {0} as {1}.", n, b));
-            }
+            logger?.WriteLine(string.Format(CultureInfo.InvariantCulture, "Bound subscription {0} as {1}.", n, b));
 
             var d = b.Compile()();
 
-            if (logger != null)
-            {
-                logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Created subscription {0}.", n));
-            }
+            logger?.WriteLine(string.Format(CultureInfo.InvariantCulture, "Created subscription {0}.", n));
 
             return new Disposable(this, d, artifacts);
         }
@@ -136,10 +124,7 @@ namespace Pearls.Reaqtor.CSE
                 if (--artifact.RefCount == 0)
                 {
                     var logger = Logger;
-                    if (logger != null)
-                    {
-                        logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Removing CSE node {0}", artifact.Id), ConsoleColor.Red);
-                    }
+                    logger?.WriteLine(string.Format(CultureInfo.InvariantCulture, "Removing CSE node {0}", artifact.Id), ConsoleColor.Red);
 
                     _hotArtifacts.Remove(artifact.Expression);
                     Registry.Remove(artifact.Id);
@@ -254,10 +239,7 @@ namespace Pearls.Reaqtor.CSE
                         res = Expression.Invoke(Expression.Parameter(typeof(Func<>).MakeGenericType(node.Type), entry.Id)); // TODO: relax binder
 
                         var logger = _parent.Logger;
-                        if (logger != null)
-                        {
-                            logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Rewriting {0} to {1}", node, res), ConsoleColor.Green);
-                        }
+                        logger?.WriteLine(string.Format(CultureInfo.InvariantCulture, "Rewriting {0} to {1}", node, res), ConsoleColor.Green);
 
                         return res;
                     }
@@ -289,10 +271,7 @@ namespace Pearls.Reaqtor.CSE
                             _artifacts.Add(entry);
 
                             var logger = _parent.Logger;
-                            if (logger != null)
-                            {
-                                logger.WriteLine(string.Format(CultureInfo.InvariantCulture, "Creating CSE node {0} for {1}", id, res), ConsoleColor.Yellow);
-                            }
+                            logger?.WriteLine(string.Format(CultureInfo.InvariantCulture, "Creating CSE node {0} for {1}", id, res), ConsoleColor.Yellow);
 
                             var obv = Expression.Constant(sub, obvType);
                             var exp = Expression.Lambda<Func<IDisposable>>(Expression.Call(res, obsType.GetMethod("Subscribe"), obv));

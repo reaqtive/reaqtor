@@ -32,7 +32,9 @@ namespace Reaqtor.Remoting.QueryEvaluator
         private IReactiveMetadataCache _metadata;
         private IKeyValueStore _keyValueStore;
         private CommandTextParser<Expression> _commandTextParser;
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
         private CheckpointingQueryEngine _engine;
+#pragma warning restore CA2213, IDE0079
 
         public IScheduler Scheduler { get; private set; }
 

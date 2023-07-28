@@ -1410,10 +1410,7 @@ namespace Reaqtive.Storage
                             // NB: The node may have been removed from the list causing List to be set to null.
                             //
 
-                            if (List != null)
-                            {
-                                List._storage.Edit(Key, NodeEditKind.Value);
-                            }
+                            List?._storage.Edit(Key, NodeEditKind.Value);
                         }
                     }
 

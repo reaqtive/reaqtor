@@ -43,10 +43,7 @@ namespace System.Runtime.Remoting.Tasks
         public void Dispose()
         {
             var provider = Interlocked.Exchange(ref _provider, null);
-            if (provider != null)
-            {
-                provider.Cancel(_guid);
-            }
+            provider?.Cancel(_guid);
         }
     }
 }

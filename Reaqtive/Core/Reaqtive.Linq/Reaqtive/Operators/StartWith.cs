@@ -30,7 +30,9 @@ namespace Reaqtive.Operators
         private sealed class _ : StatefulUnaryOperator<StartWith<T>, T>, IObserver<T>
         {
             private volatile int _valuesIndex;
+#pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private SingleAssignmentSubscription _subscription;
+#pragma warning restore CA2213
             private IOperatorContext _context;
 
             public _(StartWith<T> parent, IObserver<T> observer)
