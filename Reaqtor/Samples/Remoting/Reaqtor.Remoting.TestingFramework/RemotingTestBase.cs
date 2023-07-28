@@ -294,7 +294,9 @@ namespace Reaqtor.Remoting.TestingFramework
 
         private static readonly Action<IReactivePlatformConfiguration> DefaultConfiguration = c => c.SchedulerType = SchedulerType.Test;
 
+#if !NET472_OR_GREATER
 #pragma warning disable CA2000 // Dispose objects before losing scope. (Client manages lifetime of the platform.)
+#endif
 
         public ITestReactivePlatformClient CreateTestClient()
         {
@@ -315,7 +317,9 @@ namespace Reaqtor.Remoting.TestingFramework
             return CreateTestClient(platform, sharedEnvironment: true);
         }
 
+#if !NET472_OR_GREATER
 #pragma warning restore CA2000
+#endif
 
         private ITestReactivePlatformClient CreateTestClient(IReactivePlatform platform, bool sharedEnvironment)
         {

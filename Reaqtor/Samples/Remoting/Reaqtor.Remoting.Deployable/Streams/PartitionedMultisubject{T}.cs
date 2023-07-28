@@ -332,7 +332,9 @@ namespace Reaqtor.Remoting.Deployable.Streams
 
             internal class PartitionedMultiSubjectSubscriptionProxy : UnaryOperator<Tuple<Uri, IReadOnlyList<TypeErasedKeyBinding<T>>>, T>
             {
+#pragma warning disable CA2213 // "Change the Dispose method to call Close or Dispose on this field." We don't own the underlying stream, so this is an inappropriate suggestion.
                 private readonly SingleAssignmentSubscription _subscription = new();
+#pragma warning restore CA2213
 
                 public PartitionedMultiSubjectSubscriptionProxy(Tuple<Uri, IReadOnlyList<TypeErasedKeyBinding<T>>> args, IObserver<T> observer)
                     : base(args, observer)

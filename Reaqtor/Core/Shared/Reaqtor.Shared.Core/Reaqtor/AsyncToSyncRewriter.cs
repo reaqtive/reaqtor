@@ -143,6 +143,7 @@ namespace Reaqtor
 
             protected override Expression MakeMethodCall(Expression instance, MethodInfo method, IEnumerable<Expression> arguments)
             {
+#pragma warning disable CA1851 // Possible multiple enumerations of 'IEnumerable' collection - review
                 var lastArgument = arguments.LastOrDefault();
                 var shouldRewrite = lastArgument != null && lastArgument.Type == typeof(CancellationToken);
                 if (shouldRewrite)
@@ -153,6 +154,7 @@ namespace Reaqtor
                         var count = arguments.Count();
                         arguments = arguments.Take(count - 1);
                     }
+#pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
                 }
 
                 return base.MakeMethodCall(instance, method, arguments);

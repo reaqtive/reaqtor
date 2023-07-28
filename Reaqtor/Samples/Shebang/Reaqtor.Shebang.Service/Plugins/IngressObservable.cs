@@ -27,7 +27,9 @@ namespace Reaqtor.Shebang.Extensions
 
         private sealed class Subscription : ContextSwitchOperator<IngressObservable<T>, T>, IReliableObserver<T>, IUnloadableOperator
         {
+#pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
             private IReliableSubscription _subscription;
+#pragma warning restore CA2213
             private long _sequenceId;
             private long _watermark;
 

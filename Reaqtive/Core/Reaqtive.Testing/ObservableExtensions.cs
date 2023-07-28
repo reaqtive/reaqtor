@@ -41,6 +41,7 @@ namespace System
         /// <param name="onError">The action to invoke for an error produced by the sequence.</param>
         /// <param name="onCompleted">The action to invoke upon successful termination of the sequence.</param>
         /// <returns>A disposable object used to unsubscribe from the observable sequence.</returns>
-        public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext, Action<Exception> onError, Action onCompleted) => source.Subscribe(new AnonymousObserver<T>(onNext, onError, onCompleted));
+        public static IDisposable Subscribe<T>(this IObservable<T> source, Action<T> onNext, Action<Exception> onError, Action onCompleted) =>
+            (source ?? throw new ArgumentNullException(nameof(source))).Subscribe(new AnonymousObserver<T>(onNext, onError, onCompleted));
     }
 }

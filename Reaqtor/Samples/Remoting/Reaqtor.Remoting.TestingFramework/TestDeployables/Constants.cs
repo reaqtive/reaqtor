@@ -10,7 +10,9 @@
 
 using System;
 
+#if !NET472_OR_GREATER
 #pragma warning disable CA1034 // Nested types should not be visible. (Legacy approach; kept for compat.)
+#endif
 #pragma warning disable CA1720 // Identifier contains type name. (Legacy approach; kept for compat.)
 
 namespace Reaqtor.Remoting.TestingFramework

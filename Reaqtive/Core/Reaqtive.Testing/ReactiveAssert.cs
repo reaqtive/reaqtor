@@ -130,7 +130,9 @@ namespace Reaqtive.Testing
             catch (TException)
             {
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
+#pragma warning restore CA1031
             {
                 Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0} threw {1}.\r\n\r\nStack trace:\r\n{2}", typeof(TException).Name, ex.GetType().Name, ex.StackTrace));
             }
@@ -160,7 +162,9 @@ namespace Reaqtive.Testing
             catch (TException)
             {
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch
+#pragma warning restore CA1031
             {
                 Assert.Fail(message);
             }
@@ -191,7 +195,9 @@ namespace Reaqtive.Testing
             {
                 Assert.AreSame(exception, ex);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch (Exception ex)
+#pragma warning restore CA1031
             {
                 Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0} threw {1}.\r\n\r\nStack trace:\r\n{2}", typeof(TException).Name, ex.GetType().Name, ex.StackTrace));
             }
@@ -223,8 +229,10 @@ namespace Reaqtive.Testing
             {
                 Assert.AreSame(exception, ex);
             }
+#pragma warning disable CA1031 // Do not catch general exception types
             catch
             {
+#pragma warning restore CA1031 // Do not catch general exception types
                 Assert.Fail(message);
             }
 

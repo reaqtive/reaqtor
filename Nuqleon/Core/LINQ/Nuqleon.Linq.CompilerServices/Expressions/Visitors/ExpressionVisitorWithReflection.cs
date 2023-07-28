@@ -272,7 +272,13 @@ namespace System.Linq.CompilerServices
         /// <param name="value">Value of the constant expression.</param>
         /// <param name="type">Type of the constant expression.</param>
         /// <returns>New constant expression node.</returns>
+#if !USE_SLIM
+#pragma warning disable IDE0049 // Simplify Names. "Object" here is ObjectSlim when USE_SLIM is true, and System.Object otherwise, so we can't use "object".
+#endif
         protected virtual Expression MakeConstant(Object value, Type type) => Expression.Constant(value, type);
+#if !USE_SLIM
+#pragma warning restore IDE0049
+#endif
 
         #endregion
 

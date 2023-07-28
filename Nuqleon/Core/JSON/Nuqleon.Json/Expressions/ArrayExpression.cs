@@ -221,9 +221,7 @@ namespace Nuqleon.Json.Expressions
             {
                 var element1 = _element1;
 
-#pragma warning disable IDE0004 // Remove Unnecessary Cast (https://github.com/dotnet/roslyn/issues/53698)
                 return element1 is ReadOnlyCollection<Expression> elements ? elements[0] : (Expression)element1;
-#pragma warning restore IDE0004
             }
         }
 

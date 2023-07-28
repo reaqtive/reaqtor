@@ -73,9 +73,7 @@ namespace BinaryExpressionSerialization
 
                 ((Expression<Func<string>>)(() => Console.ReadLine())).Body,
                 ((Expression<Func<string, string>>)(s => s.ToUpper())).Body,
-#pragma warning disable IDE0057 // Use range operator (https://github.com/dotnet/roslyn/issues/49347)
                 ((Expression<Func<string, int, string>>)((s, i) => s.Substring(i))).Body,
-#pragma warning restore IDE0057 // Use range operator
                 ((Expression<Func<string, int, int, string>>)((s, i, j) => s.Substring(i, j))).Body,
 
                 ((Expression<Func<int, int>>)(x => -x)).Body,

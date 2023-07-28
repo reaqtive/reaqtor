@@ -472,6 +472,7 @@ namespace Reaqtor.QueryEngine
 
                 EdgeDescription outputEdge = default;
 
+#pragma warning disable CA1851 // Possible multiple enumerations of 'IEnumerable' collection - review
                 if (edges == null || !edges.Any())
                 {
                     return null;
@@ -479,6 +480,7 @@ namespace Reaqtor.QueryEngine
 
                 // TODO: In case of failure, delete the already created edges before (re)throwing.
                 foreach (var edge in edges)
+#pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
                 {
                     Debug.Assert(edge.Expression != null);
                     Debug.Assert(edge.Expression.Type.IsGenericType);

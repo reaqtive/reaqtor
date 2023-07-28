@@ -20,11 +20,13 @@ namespace Reaqtor.ReificationFramework
             {
                 throw new ArgumentNullException(nameof(rest));
             }
+#pragma warning disable CA1851 // Possible multiple enumerations of 'IEnumerable' collection - review
             else if (rest.FirstOrDefault() == null)
             {
                 throw new ArgumentException("Expected at least one operation in the chain.", nameof(rest));
             }
             else if (rest.Any(o => o == null))
+#pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
             {
                 throw new ArgumentException("Chained operations must not be null.", nameof(rest));
             }

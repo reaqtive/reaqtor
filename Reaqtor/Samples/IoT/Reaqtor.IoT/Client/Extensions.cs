@@ -26,7 +26,6 @@ namespace Reaqtor.IoT
 
     public static class Extensions
     {
-#pragma warning disable IDE0060 // Remove unused parameter (these are used in expression trees)
         [KnownResource("rx://builtin/id")]
         public static IReactiveQbservable<T> AsQbservable<T>(this ISubscribable<T> observable) => throw new NotImplementedException();
 
@@ -44,6 +43,5 @@ namespace Reaqtor.IoT
 
         [KnownResource("rx://builtin/id")]
         public static ISubscribable<T> AsSubscribable<T>(this IAsyncReactiveQbservable<T> observable) => throw new NotImplementedException();
-#pragma warning restore IDE0060 // Remove unused parameter
     }
 }
