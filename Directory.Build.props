@@ -71,7 +71,7 @@
           properly to the test project output folder, which then causes the test runner to treat the project
           as a "self-contained app".
     -->
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.10.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="MSTest.TestAdapter" Version="2.2.4" />
     <PackageReference Include="MSTest.TestFramework" Version="2.2.4" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" PrivateAssets="all" />
