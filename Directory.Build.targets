@@ -1,3 +1,9 @@
 ﻿<Project>
 
+  <!--
+  This is a workaround for problems caused by https://github.com/dotnet/roslyn/issues/41640
+  -->
+  <PropertyGroup Condition="'$(GenerateDocumentationFile)' == 'false'">
+    <NoWarn>$(NoWarn);IDE0005</NoWarn>
+  </PropertyGroup>
 </Project>
