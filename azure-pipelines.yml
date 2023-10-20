@@ -94,7 +94,14 @@ stages:
         version: 7.x
         performMultiLevelLookup: true
 
-    - script: dotnet format --verify-no-changes All.sln
+    - task: DotNetCoreCLI@2
+      displayName: Restore
+      inputs:
+        command: custom
+        custom: restore
+        arguments: $(solutionDir) --configfile $(Build.SourcesDirectory)/src/NuGet.config /property:Configuration=$(buildConfiguration) 
+     
+    - script: dotnet format --no-restore --verify-no-changes  --verbosity diagnostic All.sln
       displayName: Run dotnet-format
 
   - job: Build_and_Pack
