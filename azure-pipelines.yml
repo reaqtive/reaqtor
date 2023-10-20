@@ -99,7 +99,7 @@ stages:
       inputs:
         command: custom
         custom: restore
-        arguments: $(solutionDir) --configfile $(Build.SourcesDirectory)/src/NuGet.config /property:Configuration=$(buildConfiguration) 
+        arguments: -c Release All.sln
      
     - script: dotnet format --no-restore --verify-no-changes  --verbosity diagnostic All.sln
       displayName: Run dotnet-format
