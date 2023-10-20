@@ -932,7 +932,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
 
-#if NET6_0 || NETCOREAPP3_1 // Suppresses CA2012
+#if NET6_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();

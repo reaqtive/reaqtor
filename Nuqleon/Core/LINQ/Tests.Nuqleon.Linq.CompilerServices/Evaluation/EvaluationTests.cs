@@ -338,7 +338,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void CachedLambdaCompiler_TooManyConstantsForLCGTypes()
         {
-#if NETCOREAPP2_1 || NETCOREAPP3_1 || NET6_0
+#if NET6_0
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("EvalTests_foo"), AssemblyBuilderAccess.RunAndCollect);
 #else
             var asm = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("EvalTests_foo"), AssemblyBuilderAccess.RunAndCollect);
