@@ -82,26 +82,29 @@ stages:
       displayName: Publish Build Logs
       condition: always()
 
-  - job: Reaqtor_Dotnet_Format
-    displayName: Run dotnet-format checks
-    pool:
-      vmImage: windows-latest
+  # See https://github.com/reaqtive/reaqtor/issues/138
+  # The current implementation of IDE0001 runs extremely slowly, causing builds to fail,
+  # and we've been unable to find any workaround, so we have to disable this step for now.
+  # - job: Reaqtor_Dotnet_Format
+  #   displayName: Run dotnet-format checks
+  #   pool:
+  #     vmImage: windows-latest
 
-    steps:
-    - task: UseDotNet@2
-      displayName: Use .NET Core 7.x SDK
-      inputs:
-        version: 7.x
-        performMultiLevelLookup: true
+  #   steps:
+  #   - task: UseDotNet@2
+  #     displayName: Use .NET Core 7.x SDK
+  #     inputs:
+  #       version: 7.x
+  #       performMultiLevelLookup: true
 
-    - task: DotNetCoreCLI@2
-      displayName: Restore
-      inputs:
-        command: restore
-        projects: All.sln
+  #   - task: DotNetCoreCLI@2
+  #     displayName: Restore
+  #     inputs:
+  #       command: restore
+  #       projects: All.sln
      
-    - script: dotnet format --no-restore --verify-no-changes  --verbosity diagnostic All.sln
-      displayName: Run dotnet-format
+  #   - script: dotnet format --no-restore --verify-no-changes  --verbosity diagnostic All.sln
+  #     displayName: Run dotnet-format
 
   - job: Build_and_Pack
     pool:
