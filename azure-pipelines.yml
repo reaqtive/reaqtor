@@ -94,14 +94,7 @@ stages:
         version: 7.x
         performMultiLevelLookup: true
 
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: custom
-        custom: tool
-        arguments: install -g dotnet-format
-      displayName: Install dotnet-format tool
-
-    - script: dotnet-format --check All.sln
+    - script: dotnet-format --verify-no-changes All.sln
       displayName: Run dotnet-format
 
   - job: Build_and_Pack
