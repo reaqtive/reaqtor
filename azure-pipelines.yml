@@ -97,9 +97,8 @@ stages:
     - task: DotNetCoreCLI@2
       displayName: Restore
       inputs:
-        command: custom
-        custom: restore
-        arguments: -c Release All.sln
+        command: restore
+        projects: All.sln
      
     - script: dotnet format --no-restore --verify-no-changes  --verbosity diagnostic All.sln
       displayName: Run dotnet-format
