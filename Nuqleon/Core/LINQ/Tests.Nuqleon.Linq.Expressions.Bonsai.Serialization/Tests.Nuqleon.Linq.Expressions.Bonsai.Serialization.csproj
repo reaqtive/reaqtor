@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net472;net6.0</TargetFrameworks>
+    <TargetFrameworks>net472;net6.0</TargetFrameworks>
 
     <!-- JSON002 Probable JSON string detected. We don't really want the JSON string literal support because the oddities in the JSON in this project are deliberate. -->
     <NoWarn>$(NoWarn);JSON002</NoWarn>

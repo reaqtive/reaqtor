@@ -84,6 +84,7 @@ stages:
 
   - job: Reaqtor_Dotnet_Format
     displayName: Run dotnet-format checks
+    condition: eq(1,2) # disable this job
     pool:
       vmImage: windows-latest
 
@@ -95,13 +96,16 @@ stages:
         performMultiLevelLookup: true
 
     - task: DotNetCoreCLI@2
+      displayName: Restore
       inputs:
-        command: custom
-        custom: tool
-        arguments: install -g dotnet-format
-      displayName: Install dotnet-format tool
-
-    - script: dotnet-format --check All.sln
+        command: restore
+        projects: All.sln
+     
+    # See https://github.com/reaqtive/reaqtor/issues/138
+    # The current implementation of IDE0001 runs extremely slowly, causing builds to fail,
+    # and we've been unable to find any workaround, so we have to disable this for
+    # certain projects now.
+    - script: dotnet format --no-restore --verify-no-changes --exclude Nuqleon\Core\LINQ\Nuqleon.Linq.Expressions.Optimizers --verbosity diagnostic All.sln
       displayName: Run dotnet-format
 
   - job: Build_and_Pack
