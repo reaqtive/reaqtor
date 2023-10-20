@@ -94,7 +94,7 @@ stages:
         version: 7.x
         performMultiLevelLookup: true
 
-    - script: dotnet-format --verify-no-changes All.sln
+    - script: dotnet format --verify-no-changes All.sln
       displayName: Run dotnet-format
 
   - job: Build_and_Pack
