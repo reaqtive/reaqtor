@@ -8,7 +8,7 @@
 // BD - June 2013 - Created this file.
 //
 
-#if !NET6_0 && !NETSTANDARD2_1
+#if !NET8_0 && !NETSTANDARD2_1
 
 using System.Threading;
 using System.Threading.Tasks;

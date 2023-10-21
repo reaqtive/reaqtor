@@ -23,7 +23,7 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         private static readonly object s_lock = new();
 
-#if NET6_0
+#if NET8_0
         //
         // NB: Deals with the following exception:
         //

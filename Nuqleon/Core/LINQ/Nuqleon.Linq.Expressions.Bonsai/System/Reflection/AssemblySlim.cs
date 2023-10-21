@@ -68,7 +68,7 @@ namespace System.Reflection
         /// </summary>
         /// <returns>A hash code for the current instance.</returns>
         public override int GetHashCode() =>
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
             Name.GetHashCode(StringComparison.Ordinal);
 #else
             Name.GetHashCode();

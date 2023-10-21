@@ -561,7 +561,7 @@ namespace System.Linq.Expressions
             {
                 if (n.EndsWith("()", StringComparison.Ordinal))
                 {
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                     n = n[0..^2];
 #else
                     n = n.Substring(0, n.Length - 2);
@@ -626,7 +626,7 @@ namespace System.Linq.Expressions
             {
                 if (n.EndsWith("()", StringComparison.Ordinal))
                 {
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                     n = n[0..^2];
 #else
                     n = n.Substring(0, n.Length - 2);

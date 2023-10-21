@@ -13,7 +13,7 @@ using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
-#if !NET6_0 // https://aka.ms/binaryformatter
+#if !NET8_0 // https://aka.ms/binaryformatter
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
@@ -44,7 +44,7 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(p.SequenceEqual(ex.Parameters));
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
+#if !NET8_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void UnboundParameterException_Serialize()
         {

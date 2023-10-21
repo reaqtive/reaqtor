@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net8.0</TargetFrameworks>
     <Description>Testing framework for Reaqtive query operators.</Description>
     <!-- TODODOC -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>

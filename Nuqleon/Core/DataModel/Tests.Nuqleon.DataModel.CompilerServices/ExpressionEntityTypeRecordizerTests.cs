@@ -51,13 +51,13 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 (Expression<Func<Qux>>)(() => new Qux()),
                 (Expression<Func<Qux>>)(() => new Qux() { Baz = 1 }),
                 (Expression<Func<Qux>>)(() => new Qux(1) { Foo = "bar" }),
-                (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new Foo { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
-                (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new Qux(1) { Foo = "bar" } })),
+                (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new() { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
+                (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new(1) { Foo = "bar" } })),
                 (Expression<Func<IQueryable<Bar>, IQueryable<Foo>>>)(xs => from x in xs from y in x.Foos select y),
                 (Expression<Func<Qux>>)(() => Activator.CreateInstance<Qux>()),
                 (Expression<Action>)(() => FooIt<Qux>()),
                 (Expression<Func<Qux[]>>)(() => new Qux[1]),
-                (Expression<Func<Qux[]>>)(() => new Qux[] { new Qux(1), new Qux { Baz = 1 } }),
+                (Expression<Func<Qux[]>>)(() => new Qux[] { new(1), new() { Baz = 1 } }),
                 (Expression<Func<Tuple<Qux, int>>>)(() => new Tuple<Qux, int>(new Qux(1), 2)),
                 (Expression<Func<Holder<Qux>>>)(() => new Holder<Qux> { Value = new Qux(42) }),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
@@ -117,14 +117,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 new Qux(1),
                 new Qux(1) { Foo = "bar" },
                 new Qux[1],
-                new Qux[] { new Qux(1), new Qux(2) },
-                new List<Qux> { new Qux(1), new Qux(2) },
+                new Qux[] { new(1), new(2) },
+                new List<Qux> { new(1), new(2) },
                 new Func<int, int>(x => x),
                 42,
                 "bar",
                 (Expression<Func<Qux, Qux>>)(x => x),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<Qux[]>>)(() => new Qux[] { new Qux(123) }),
+                (Expression<Func<Qux[]>>)(() => new Qux[] { new(123) }),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
                 new Tuple<Qux, int>(new Qux(), 42),
                 new { a = 1, b = new Qux(42), c = "bar" },
@@ -154,7 +154,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void ExpressionEntityTypeRecordizer_Constants_ManOrBoy1()
         {
-            var c = Expression.Constant(new A { B = new B { Cs = new C[] { new C { D = 42, Es = new List<E> { new E { F = 42 } } } } } });
+            var c = Expression.Constant(new A { B = new B { Cs = new C[] { new() { D = 42, Es = new List<E> { new() { F = 42 } } } } } });
 
             var eta = new ExpressionEntityTypeRecordizer();
 
@@ -177,17 +177,17 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                                                                          from c in b.Cs
                                                                          let d = c.D
                                                                          where d > 0
-                                                                         let e = new A { B = new B { Cs = new C[] { c, new C { D = d + 1, Es = new List<E> { new E { F = d * d } } } } } }
-                                                                         let z = new A { B = { Cs = new C[] { c, new C { D = d + 1, Es = { new E { F = d * d } } } } } }
+                                                                         let e = new A { B = new B { Cs = new C[] { c, new() { D = d + 1, Es = new List<E> { new() { F = d * d } } } } } }
+                                                                         let z = new A { B = { Cs = new C[] { c, new() { D = d + 1, Es = { new E { F = d * d } } } } } }
                                                                          where e.B.Cs[1].Es[0].F == z.B.Cs[1].Es[0].F
                                                                          select 7 * e.B.Cs.Sum(y => y.D);
 
             var g = f.Compile();
 
             var res = g(new[] {
-                new A { B = new B { Cs = new C[] { new C { D = 23 } } } },
-                new A { B = new B { Cs = new C[] { new C { D = -1 } } } },
-                new A { B = new B { Cs = new C[] { new C { D = 87 } } } },
+                new A { B = new B { Cs = new C[] { new() { D = 23 } } } },
+                new A { B = new B { Cs = new C[] { new() { D = -1 } } } },
+                new A { B = new B { Cs = new C[] { new() { D = 87 } } } },
             });
 
             var eta = new ExpressionEntityTypeRecordizer();

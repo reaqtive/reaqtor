@@ -17,7 +17,7 @@ using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
 
-#if !NET6_0
+#if !NET8_0
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
@@ -789,7 +789,7 @@ namespace Tests.System.Collections.Specialized
             Z = ushort.MaxValue,
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
+#if !NET8_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void EnumSizeResolutionException_Serialization()
         {

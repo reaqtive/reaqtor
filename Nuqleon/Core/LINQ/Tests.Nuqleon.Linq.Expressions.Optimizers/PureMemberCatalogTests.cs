@@ -64,7 +64,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             { typeof(Array), new HashSet<object> { Array.Empty<int>(), Array.Empty<string>(), new int[] { 1 }, new int[] { 1, 2, 3, 4, 5 } } }, // TODO: Add multi-dimensional arrays
 
-#if NET6_0
+#if NET8_0
             { typeof(Index), new HashSet<object> { (Index)0, ^0, (Index)1, ^2 } },
             { typeof(Range), new HashSet<object> { .., 0.., ..0, 1.., ..1, ^1.., ..^1, 1..2, ^2..^1 } },
 

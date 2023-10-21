@@ -22,17 +22,17 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void LabeledTree_ToString()
         {
-            var tree = new Tree<int>(42,
+            Tree<int> tree = new Tree<int>(42,
                 new Tree<int>(19),
                 new Tree<int>(23,
                     new Tree<int>(7)
                 )
             );
 
-            var ltre = new LabeledTree<int>(new Label<int>(tree, new List<Match> { new Match(1) }), new LabeledTree<int>[] {
-                new LabeledTree<int>(new Label<int>(tree.Children[0], new List<Match> { new Match(2) }), Array.Empty<LabeledTree<int>>()),
-                new LabeledTree<int>(new Label<int>(tree.Children[1], new List<Match> { new Match(3) }), new LabeledTree<int>[] {
-                    new LabeledTree<int>(new Label<int>(tree.Children[1].Children[0], new List<Match> { new Match(4) }), Array.Empty<LabeledTree<int>>())
+            LabeledTree<int> ltre = new LabeledTree<int>(new Label<int>(tree, new List<Match> { new(1) }), new LabeledTree<int>[] {
+                new(new Label<int>(tree.Children[0], new List<Match> { new(2) }), Array.Empty<LabeledTree<int>>()),
+                new(new Label<int>(tree.Children[1], new List<Match> { new(3) }), new LabeledTree<int>[] {
+                    new(new Label<int>(tree.Children[1].Children[0], new List<Match> { new(4) }), Array.Empty<LabeledTree<int>>())
                 }),
             });
 

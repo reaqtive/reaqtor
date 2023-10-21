@@ -28,7 +28,7 @@ namespace Tests
 
             var objs1 = new object[] { anon1, new KeyValuePair<string, int>(name, 21), arr1 };
             var objs2 = new object[] { anon2, new Tuple<string, int>(name, 21), arr2 };
-            var objs3 = new object[] { new object() };
+            var objs3 = new object[] { new() };
 
             Assert.ThrowsException<ArgumentNullException>(() => a.AddPartition(null, objs1));
             Assert.ThrowsException<ArgumentNullException>(() => a.AddPartition("foo", null));

@@ -89,8 +89,8 @@ namespace Reaqtor.Remoting.Samples
                         ArrivalTime = arrivalTime,
                         RouteWayPoints = new WayPoint[]
                         {
-                            new WayPoint { Address = "Bellevue, WA" },
-                            new WayPoint { Address = "Redmond, WA" }
+                            new() { Address = "Bellevue, WA" },
+                            new() { Address = "Redmond, WA" }
                         }
                     });
         }

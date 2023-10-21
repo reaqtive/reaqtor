@@ -298,7 +298,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
 
             public DateTimeOffset CreationTime => DateTimeOffset.Now;
 
-#if NET6_0
+#if NET8_0
             public ValueTask DisposeAsync() => throw new NotImplementedException();
 #else
             public Task DisposeAsync(System.Threading.CancellationToken token) => throw new NotImplementedException();

@@ -8,6 +8,8 @@
 // BD - June 2013 - Created this file.
 //
 
+#pragma warning disable IDE0049 // Simplify Names
+
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -68,6 +70,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             { typeof(String), json => (string)((Json.ConstantExpression)json).Value },
             { typeof(Boolean), json => (bool)((Json.ConstantExpression)json).Value },
 #endif
+
             { typeof(Single), json => float.Parse((string)((Json.ConstantExpression)json).Value, CultureInfo.InvariantCulture) },
             { typeof(Int64), json => long.Parse((string)((Json.ConstantExpression)json).Value, CultureInfo.InvariantCulture) },
             { typeof(SByte), json => sbyte.Parse((string)((Json.ConstantExpression)json).Value, CultureInfo.InvariantCulture) },
@@ -211,3 +214,4 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         }
     }
 }
+#pragma warning restore IDE0049 // Simplify Names

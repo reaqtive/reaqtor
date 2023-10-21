@@ -8,7 +8,7 @@
 // BD - November 2009 - Created this file.
 //
 
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
 using System;
 #endif
 using System.Collections.Generic;
@@ -238,7 +238,7 @@ namespace Nuqleon.Json.Parser
                                                     }
                                                     else
                                                     {
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                                                         if (!int.TryParse(_input.AsSpan(i, 4), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int val))
 #else
                                                         if (!int.TryParse(_input.Substring(i, 4), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int val))
@@ -454,7 +454,7 @@ namespace Nuqleon.Json.Parser
                 }
             }
 
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
             return Token.Number(b, _input[b..i]);
 #else
             return Token.Number(b, _input.Substring(b, i - b));
@@ -487,7 +487,7 @@ namespace Nuqleon.Json.Parser
                 }
             }
 
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
             return Token.Number(b, _input[b..i]);
 #else
             return Token.Number(b, _input.Substring(b, i - b));

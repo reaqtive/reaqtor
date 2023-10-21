@@ -238,7 +238,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
 
             public DateTimeOffset CreationTime => throw new NotImplementedException();
 
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
             public ValueTask DisposeAsync() => throw new NotImplementedException();
 #else
             public Task DisposeAsync(System.Threading.CancellationToken token) => throw new NotImplementedException();

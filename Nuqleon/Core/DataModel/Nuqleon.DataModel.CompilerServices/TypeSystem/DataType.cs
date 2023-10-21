@@ -340,7 +340,7 @@ namespace Nuqleon.DataModel.TypeSystem
                 var sortedTypes =
                     _namedTypes.OrderBy(kv =>
                         int.Parse(
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                             kv.Value.Name[TYPEPREFIX.Length..],
 #else
                             kv.Value.Name.Substring(TYPEPREFIX.Length),

@@ -557,7 +557,7 @@ namespace System.Linq.Expressions.Bonsai
             {
                 if (n.EndsWith("()", StringComparison.Ordinal))
                 {
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                     n = n[0..^2];
 #else
                     n = n.Substring(0, n.Length - 2);
@@ -635,7 +635,7 @@ namespace System.Linq.Expressions.Bonsai
                 {
                     if (n.EndsWith("()", StringComparison.Ordinal))
                     {
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                         n = n[0..^2];
 #else
                         n = n.Substring(0, n.Length - 2);
@@ -913,7 +913,7 @@ namespace System.Linq.Expressions.Bonsai
 
         private static string EscapeFormat(string s)
         {
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
             return s.Replace("{", "{{", StringComparison.Ordinal).Replace("}", "}}", StringComparison.Ordinal);
 #else
             return s.Replace("{", "{{").Replace("}", "}}");

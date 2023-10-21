@@ -107,7 +107,7 @@ namespace Nuqleon.Json.Serialization
                     case '"':
                         var end = i;
                         i++;
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                         return str[start..end];
 #else
                         return str.Substring(start, end - start);

@@ -403,7 +403,7 @@ namespace Tests.System.Linq.CompilerServices
         public void AnonymousType_Visibility()
         {
             var props = new[] { new KeyValuePair<string, Type>("bar", typeof(Bar)) };
-            var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
+            var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
             var props3 = new[] { new StructuralFieldDeclaration("bar", typeof(Bar)) };
 
             Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
@@ -420,7 +420,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void AnonymousType_PropertyAttribute_NoMatchingConstructor()
         {
-            var props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
+            StructuralFieldDeclaration[] props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
 
             Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
         }
@@ -716,7 +716,7 @@ namespace Tests.System.Linq.CompilerServices
         public void RecordType_Visibility()
         {
             var props = new[] { new KeyValuePair<string, Type>("bar", typeof(Bar)) };
-            var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
+            var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
             var props3 = new[] { new StructuralFieldDeclaration("bar", typeof(Bar)) };
 
             Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
@@ -732,7 +732,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void RecordType_PropertyAttribute_NoMatchingConstructor()
         {
-            var props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
+            var props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
 
             Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
         }

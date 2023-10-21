@@ -48,13 +48,13 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 (Expression<Func<Qux>>)(() => new Qux()),
                 (Expression<Func<Qux>>)(() => new Qux() { Baz = 1 }),
                 (Expression<Func<Qux>>)(() => new Qux(1) { Foo = "bar" }),
-                (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new Foo { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
-                (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new Qux(1) { Foo = "bar" } })),
+                (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new() { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
+                (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new(1) { Foo = "bar" } })),
                 (Expression<Func<IQueryable<Bar>, IQueryable<Foo>>>)(xs => from x in xs from y in x.Foos select y),
                 (Expression<Func<Qux>>)(() => Activator.CreateInstance<Qux>()),
                 (Expression<Action>)(() => FooIt<Qux>()),
                 (Expression<Func<Qux[]>>)(() => new Qux[1]),
-                (Expression<Func<Qux[]>>)(() => new Qux[] { new Qux(1), new Qux { Baz = 1 } }),
+                (Expression<Func<Qux[]>>)(() => new Qux[] { new(1), new() { Baz = 1 } }),
                 (Expression<Func<Tuple<Qux, int>>>)(() => new Tuple<Qux, int>(new Qux(1), 2)),
                 (Expression<Func<Holder<Qux>>>)(() => new Holder<Qux> { Value = new Qux(42) }),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
@@ -68,13 +68,13 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 // instances of array types are created.
                 //Expression.Constant(new Qux[1]),
 
-                Expression.Constant(new Qux[] { new Qux(1), new Qux(2) }),
-                Expression.Constant(new List<Qux> { new Qux(1), new Qux(2) }),
+                Expression.Constant(new Qux[] { new(1), new(2) }),
+                Expression.Constant(new List<Qux> { new(1), new(2) }),
                 Expression.Constant(42),
                 Expression.Constant("bar"),
                 Expression.Constant((Expression<Func<Qux, Qux>>)(x => x)),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                Expression.Constant((Expression<Func<Qux[]>>)(() => new Qux[] { new Qux(123) })),
+                Expression.Constant((Expression<Func<Qux[]>>)(() => new Qux[] { new(123) })),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
                 Expression.Constant(new Tuple<Qux, int>(new Qux(), 42)),
 
@@ -86,15 +86,15 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
                 Expression.Constant(value: null, typeof(Qux)),
 
-                Expression.Constant(new A { B = new B { Cs = new C[] { new C { D = 42, Es = new List<E> { new E { F = 42 } } } } } }),
+                Expression.Constant(new A { B = new B { Cs = new C[] { new() { D = 42, Es = new List<E> { new() { F = 42 } } } } } }),
 
                 (Expression<Func<IEnumerable<A>, IEnumerable<int>>>)(xs => from x in xs
                                                                          let b = x.B
                                                                          from c in b.Cs
                                                                          let d = c.D
                                                                          where d > 0
-                                                                         let e = new A { B = new B { Cs = new C[] { c, new C { D = d + 1, Es = new List<E> { new E { F = d * d } } } } } }
-                                                                         let z = new A { B = { Cs = new C[] { c, new C { D = d + 1, Es = { new E { F = d * d } } } } } }
+                                                                         let e = new A { B = new B { Cs = new C[] { c, new() { D = d + 1, Es = new List<E> { new() { F = d * d } } } } } }
+                                                                         let z = new A { B = { Cs = new C[] { c, new() { D = d + 1, Es = { new E { F = d * d } } } } } }
                                                                          where e.B.Cs[1].Es[0].F == z.B.Cs[1].Es[0].F
                                                                          select 7 * e.B.Cs.Sum(y => y.D)),
 
@@ -111,7 +111,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 (Expression<Func<ListPropertyTest>>)(() => new ListPropertyTest { List = { 1, 2, 3 } }),
                 (Expression<Func<Star>>)(() => new Star(new List<int> { 1, 2, 3 }) { Planets = { new Planet(10) } }),
                 (Expression<Func<UnchangedNewPropertyTest>>)(() => new UnchangedNewPropertyTest { Foo = new string("bar".ToArray()) }),
-                (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new SimplePropertyTest(1) } } }),
+                (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new(1) } } }),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
                 (Expression<Func<List<SimplePropertyTest>, MemberMemberListPropertyTest>>)(list => new MemberMemberListPropertyTest { Container = { List = list } }),
 

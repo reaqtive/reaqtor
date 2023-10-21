@@ -8172,7 +8172,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8210,7 +8210,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8249,7 +8249,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8289,7 +8289,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8330,7 +8330,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8372,7 +8372,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8415,7 +8415,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8459,7 +8459,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8504,7 +8504,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8550,7 +8550,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8597,7 +8597,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8645,7 +8645,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8694,7 +8694,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
@@ -8744,7 +8744,7 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
+#if NET8_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
 #else
                     sub.DisposeAsync().Wait();
