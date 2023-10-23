@@ -25,11 +25,11 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Int32>(10, 42),
-                    OnNext<Int32>(20, Int32.MaxValue - 100),
-                    OnNext<Int32>(30, 100 - 42 + 1),
-                    OnNext<Int32>(40, -17),
-                    OnCompleted<Int32>(50)
+                    OnNext<int>(10, 42),
+                    OnNext<int>(20, int.MaxValue - 100),
+                    OnNext<int>(30, 100 - 42 + 1),
+                    OnNext<int>(40, -17),
+                    OnCompleted<int>(50)
                 );
 
                 var res = client.Start(() =>
@@ -37,7 +37,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Int32>(230, e => e is OverflowException)
+                    OnError<int>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -52,11 +52,11 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Int32>(10, -42),
-                    OnNext<Int32>(20, Int32.MinValue + 100),
-                    OnNext<Int32>(30, -(100 - 42 + 1)),
-                    OnNext<Int32>(40, 17),
-                    OnCompleted<Int32>(50)
+                    OnNext<int>(10, -42),
+                    OnNext<int>(20, int.MinValue + 100),
+                    OnNext<int>(30, -(100 - 42 + 1)),
+                    OnNext<int>(40, 17),
+                    OnCompleted<int>(50)
                 );
 
                 var res = client.Start(() =>
@@ -64,7 +64,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Int32>(230, e => e is OverflowException)
+                    OnError<int>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -79,12 +79,12 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Int32?>(10, 42),
-                    OnNext<Int32?>(20, Int32.MaxValue - 100),
-                    OnNext<Int32?>(25, default(Int32?)),
-                    OnNext<Int32?>(30, 100 - 42 + 1),
-                    OnNext<Int32?>(40, -17),
-                    OnCompleted<Int32?>(50)
+                    OnNext<int?>(10, 42),
+                    OnNext<int?>(20, int.MaxValue - 100),
+                    OnNext<int?>(25, default(int?)),
+                    OnNext<int?>(30, 100 - 42 + 1),
+                    OnNext<int?>(40, -17),
+                    OnCompleted<int?>(50)
                 );
 
                 var res = client.Start(() =>
@@ -92,7 +92,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Int32?>(230, e => e is OverflowException)
+                    OnError<int?>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -107,12 +107,12 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Int32?>(10, -42),
-                    OnNext<Int32?>(20, Int32.MinValue + 100),
-                    OnNext<Int32?>(25, default(Int32?)),
-                    OnNext<Int32?>(30, -(100 - 42 + 1)),
-                    OnNext<Int32?>(40, 17),
-                    OnCompleted<Int32?>(50)
+                    OnNext<int?>(10, -42),
+                    OnNext<int?>(20, int.MinValue + 100),
+                    OnNext<int?>(25, default(int?)),
+                    OnNext<int?>(30, -(100 - 42 + 1)),
+                    OnNext<int?>(40, 17),
+                    OnCompleted<int?>(50)
                 );
 
                 var res = client.Start(() =>
@@ -120,7 +120,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Int32?>(230, e => e is OverflowException)
+                    OnError<int?>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -135,11 +135,11 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Int64>(10, 42L),
-                    OnNext<Int64>(20, Int64.MaxValue - 100L),
-                    OnNext<Int64>(30, 100L - 42L + 1L),
-                    OnNext<Int64>(40, -17L),
-                    OnCompleted<Int64>(50)
+                    OnNext<long>(10, 42L),
+                    OnNext<long>(20, long.MaxValue - 100L),
+                    OnNext<long>(30, 100L - 42L + 1L),
+                    OnNext<long>(40, -17L),
+                    OnCompleted<long>(50)
                 );
 
                 var res = client.Start(() =>
@@ -147,7 +147,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Int64>(230, e => e is OverflowException)
+                    OnError<long>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -162,11 +162,11 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Int64>(10, -42L),
-                    OnNext<Int64>(20, Int64.MinValue + 100L),
-                    OnNext<Int64>(30, -(100L - 42L + 1L)),
-                    OnNext<Int64>(40, 17L),
-                    OnCompleted<Int64>(50)
+                    OnNext<long>(10, -42L),
+                    OnNext<long>(20, long.MinValue + 100L),
+                    OnNext<long>(30, -(100L - 42L + 1L)),
+                    OnNext<long>(40, 17L),
+                    OnCompleted<long>(50)
                 );
 
                 var res = client.Start(() =>
@@ -174,7 +174,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Int64>(230, e => e is OverflowException)
+                    OnError<long>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -189,12 +189,12 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Int64?>(10, 42L),
-                    OnNext<Int64?>(20, Int64.MaxValue - 100L),
-                    OnNext<Int64?>(25, default(Int64?)),
-                    OnNext<Int64?>(30, 100L - 42L + 1L),
-                    OnNext<Int64?>(40, -17L),
-                    OnCompleted<Int64?>(50)
+                    OnNext<long?>(10, 42L),
+                    OnNext<long?>(20, long.MaxValue - 100L),
+                    OnNext<long?>(25, default(long?)),
+                    OnNext<long?>(30, 100L - 42L + 1L),
+                    OnNext<long?>(40, -17L),
+                    OnCompleted<long?>(50)
                 );
 
                 var res = client.Start(() =>
@@ -202,7 +202,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Int64?>(230, e => e is OverflowException)
+                    OnError<long?>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -217,12 +217,12 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Int64?>(10, -42L),
-                    OnNext<Int64?>(20, Int64.MinValue + 100L),
-                    OnNext<Int64?>(25, default(Int64?)),
-                    OnNext<Int64?>(30, -(100L - 42L + 1L)),
-                    OnNext<Int64?>(40, 17L),
-                    OnCompleted<Int64?>(50L)
+                    OnNext<long?>(10, -42L),
+                    OnNext<long?>(20, long.MinValue + 100L),
+                    OnNext<long?>(25, default(long?)),
+                    OnNext<long?>(30, -(100L - 42L + 1L)),
+                    OnNext<long?>(40, 17L),
+                    OnCompleted<long?>(50L)
                 );
 
                 var res = client.Start(() =>
@@ -230,7 +230,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Int64?>(230, e => e is OverflowException)
+                    OnError<long?>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -245,11 +245,11 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Decimal>(10, 42m),
-                    OnNext<Decimal>(20, Decimal.MaxValue - 100m),
-                    OnNext<Decimal>(30, 100m - 42m + 1m),
-                    OnNext<Decimal>(40, -17m),
-                    OnCompleted<Decimal>(50)
+                    OnNext<decimal>(10, 42m),
+                    OnNext<decimal>(20, decimal.MaxValue - 100m),
+                    OnNext<decimal>(30, 100m - 42m + 1m),
+                    OnNext<decimal>(40, -17m),
+                    OnCompleted<decimal>(50)
                 );
 
                 var res = client.Start(() =>
@@ -257,7 +257,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Decimal>(230, e => e is OverflowException)
+                    OnError<decimal>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -272,11 +272,11 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Decimal>(10, -42m),
-                    OnNext<Decimal>(20, Decimal.MinValue + 100m),
-                    OnNext<Decimal>(30, -(100m - 42m + 1m)),
-                    OnNext<Decimal>(40, 17m),
-                    OnCompleted<Decimal>(50)
+                    OnNext<decimal>(10, -42m),
+                    OnNext<decimal>(20, decimal.MinValue + 100m),
+                    OnNext<decimal>(30, -(100m - 42m + 1m)),
+                    OnNext<decimal>(40, 17m),
+                    OnCompleted<decimal>(50)
                 );
 
                 var res = client.Start(() =>
@@ -284,7 +284,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Decimal>(230, e => e is OverflowException)
+                    OnError<decimal>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -299,12 +299,12 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Decimal?>(10, 42m),
-                    OnNext<Decimal?>(20, Decimal.MaxValue - 100m),
-                    OnNext<Decimal?>(25, default(Decimal?)),
-                    OnNext<Decimal?>(30, 100m - 42m + 1m),
-                    OnNext<Decimal?>(40, -17m),
-                    OnCompleted<Decimal?>(50)
+                    OnNext<decimal?>(10, 42m),
+                    OnNext<decimal?>(20, decimal.MaxValue - 100m),
+                    OnNext<decimal?>(25, default(decimal?)),
+                    OnNext<decimal?>(30, 100m - 42m + 1m),
+                    OnNext<decimal?>(40, -17m),
+                    OnCompleted<decimal?>(50)
                 );
 
                 var res = client.Start(() =>
@@ -312,7 +312,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Decimal?>(230, e => e is OverflowException)
+                    OnError<decimal?>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -327,12 +327,12 @@ namespace Test.Reaqtive.Operators
             Run(client =>
             {
                 var xs = client.CreateColdObservable(
-                    OnNext<Decimal?>(10, -42m),
-                    OnNext<Decimal?>(20, Decimal.MinValue + 100m),
-                    OnNext<Decimal?>(25, default(Decimal?)),
-                    OnNext<Decimal?>(30, -(100m - 42m + 1m)),
-                    OnNext<Decimal?>(40, 17m),
-                    OnCompleted<Decimal?>(50)
+                    OnNext<decimal?>(10, -42m),
+                    OnNext<decimal?>(20, decimal.MinValue + 100m),
+                    OnNext<decimal?>(25, default(decimal?)),
+                    OnNext<decimal?>(30, -(100m - 42m + 1m)),
+                    OnNext<decimal?>(40, 17m),
+                    OnCompleted<decimal?>(50)
                 );
 
                 var res = client.Start(() =>
@@ -340,7 +340,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnError<Decimal?>(230, e => e is OverflowException)
+                    OnError<decimal?>(230, e => e is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
