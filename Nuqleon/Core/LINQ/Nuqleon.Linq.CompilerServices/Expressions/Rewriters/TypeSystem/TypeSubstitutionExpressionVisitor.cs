@@ -10,6 +10,7 @@
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1062 // Omitted null checks similar to expression tree visitors.
+#pragma warning disable IDE0049 // Name can be simplified - the analyzer doesn't know we use Object instead of object to enabling aliasing
 
 using System.Collections.Generic;
 using System.Diagnostics;

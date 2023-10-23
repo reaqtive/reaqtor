@@ -40,7 +40,7 @@ namespace Test.Reaqtive.Operators
                     OnCompleted<int>(50)
                 );
 
-                var res = client.CreateObserver<Double>();
+                var res = client.CreateObserver<double>();
 
                 client.ScheduleAbsolute(default(object), 200, (s, _) =>
                 {
@@ -64,7 +64,7 @@ namespace Test.Reaqtive.Operators
                 client.Start();
 
                 res.Messages.AssertEqual(
-                    OnError<Double>(230, ex => ex is OverflowException)
+                    OnError<double>(230, ex => ex is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(
@@ -86,7 +86,7 @@ namespace Test.Reaqtive.Operators
                     OnCompleted<int>(50)
                 );
 
-                var res = client.CreateObserver<Double>();
+                var res = client.CreateObserver<double>();
 
                 client.ScheduleAbsolute(default(object), 200, (s, _) =>
                 {
@@ -110,7 +110,7 @@ namespace Test.Reaqtive.Operators
                 client.Start();
 
                 res.Messages.AssertEqual(
-                    OnError<Double>(230, ex => ex is OverflowException)
+                    OnError<double>(230, ex => ex is OverflowException)
                 );
 
                 xs.Subscriptions.AssertEqual(

@@ -86,7 +86,6 @@ stages:
 
   - job: Reaqtor_Dotnet_Format
     displayName: Run dotnet-format checks
-    condition: eq(1,2) # disable this job
     pool:
       vmImage: windows-latest
 

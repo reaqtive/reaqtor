@@ -35,7 +35,7 @@ namespace Reaqtive.Scheduler
         public bool IsYieldRequested => _source != null && _source.IsYieldRequested;
 
         /// <summary>
-        /// Determines whether the current <see cref="YieldToken" /> instance is equal to the specified <see cref="Object" />.
+        /// Determines whether the current <see cref="YieldToken" /> instance is equal to the specified <see cref="object" />.
         /// </summary>
         /// <param name="other">The other <see cref="YieldToken" /> to which to compare this instance.</param>
         /// <returns>
@@ -45,7 +45,7 @@ namespace Reaqtive.Scheduler
         public bool Equals(YieldToken other) => _source == other._source;
 
         /// <summary>
-        /// Determines whether the current <see cref="YieldToken" /> instance is equal to the specified <see cref="Object" />.
+        /// Determines whether the current <see cref="YieldToken" /> instance is equal to the specified <see cref="object" />.
         /// </summary>
         /// <param name="obj">The other object to which to compare this instance.</param>
         /// <returns>

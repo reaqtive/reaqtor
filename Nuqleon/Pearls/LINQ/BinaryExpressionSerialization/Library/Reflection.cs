@@ -8,6 +8,8 @@
 // BD - December 2014 - Created this file.
 //
 
+#pragma warning disable IDE0049 // Name can be simplified - in files sometimes compiled with USE_SLIM, we use the CLR names because in some cases (although not this particular file) we introduce aliases such as Object = ObjectSlim.
+
 using System.Collections.Generic;
 using System.Reflection;
 
