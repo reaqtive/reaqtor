@@ -9,14 +9,16 @@
             vmImage: ${{ pool.vmImage }}
           steps:
             - task: UseDotNet@2
-              displayName: Use .NET Core 8.x SDK
+              displayName: Install .NET 8.0 SDK
               inputs:
-                version: 8.x
+                packageType: 'sdk'
+                version: '8.0.x'
+                includePreviewVersions: true
                 performMultiLevelLookup: true
 
             - task: UseDotNet@2
               inputs:
-                version: '8.x'
+                version: '8.0.x'
                 packageType: runtime
               displayName: Install .NET 8.0 runtime
 
