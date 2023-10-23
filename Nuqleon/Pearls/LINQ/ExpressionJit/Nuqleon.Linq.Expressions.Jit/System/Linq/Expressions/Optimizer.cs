@@ -341,7 +341,7 @@ namespace System.Linq.Expressions
                             //
                             // Stuff the result in the last expression slot.
                             //
-#if NET6_0
+#if NET8_0
                             outerBlock[^1] = result;
 #else
                             outerBlock[outerBlock.Length - 1] = result;

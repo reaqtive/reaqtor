@@ -9,22 +9,19 @@
             vmImage: ${{ pool.vmImage }}
           steps:
             - task: UseDotNet@2
-              displayName: Use .NET Core 7.x SDK
+              displayName: Install .NET 8.0 SDK
               inputs:
-                version: 7.x
+                packageType: 'sdk'
+                version: '8.0.x'
+                includePreviewVersions: true
                 performMultiLevelLookup: true
 
             - task: UseDotNet@2
+              displayName: Install .NET 8.0 runtime
               inputs:
-                version: '6.x'
                 packageType: runtime
-              displayName: Install .NET 6.0 runtime
-
-            - task: UseDotNet@2
-              inputs:
-                version: '3.1.x'
-                packageType: runtime
-              displayName: Install .NET Core 3.1 runtime
+                version: '8.0.x'
+                includePreviewVersions: true
 
             - powershell: |
                 $existing = & dotnet tool list -g | Select-String "nbgv" 

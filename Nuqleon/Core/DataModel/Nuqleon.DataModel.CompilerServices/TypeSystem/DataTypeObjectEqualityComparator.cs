@@ -384,7 +384,7 @@ namespace Nuqleon.DataModel.TypeSystem
                     }
 #else
                     hash = (int)(hash * Prime) +
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                         property.Name.GetHashCode(StringComparison.Ordinal)
 #else
                         property.Name.GetHashCode()

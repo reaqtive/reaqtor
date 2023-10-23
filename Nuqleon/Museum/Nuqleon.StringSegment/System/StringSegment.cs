@@ -780,7 +780,7 @@ namespace System
                     count--;
 
                 if (value.Length == 0 && count >= 0 && minIndex >= 0)
-#if NET6_0 // https://github.com/dotnet/runtime/issues/13383
+#if NET8_0 // https://github.com/dotnet/runtime/issues/13383
                     return startIndex + 1;
 #else
                     return startIndex;
@@ -791,7 +791,7 @@ namespace System
                 throw new ArgumentOutOfRangeException(nameof(count));
 
             if (value.Length == 0)
-#if NET6_0 // https://github.com/dotnet/runtime/issues/13383
+#if NET8_0 // https://github.com/dotnet/runtime/issues/13383
                 return startIndex + 1;
 #else
                 return startIndex;
@@ -2594,7 +2594,7 @@ namespace System
         /// <returns>The concatenated members in values.</returns>
         public static StringSegment Concat<T>(IEnumerable<T> values) => typeof(T) == typeof(StringSegment) ? Concat((IEnumerable<StringSegment>)values) : string.Concat(values);
 
-#if !NET6_0 // https://github.com/dotnet/runtime/issues/27515
+#if !NET8_0 // https://github.com/dotnet/runtime/issues/27515
         /// <summary>
         /// Creates a string segment containing new instance of a System.String with the same value as a specified string segment.
         /// </summary>
@@ -3013,7 +3013,7 @@ namespace System
             }
         }
 
-#if NET6_0
+#if NET8_0
         /// <summary>
         /// Creates a new read-only span over the string segment.
         /// </summary>

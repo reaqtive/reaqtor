@@ -50,7 +50,7 @@ namespace System.Linq.Expressions
 
             if (name != null && (_options & StableExpressionSlimHashingOptions.UseAssemblySimpleName) != 0)
             {
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                 var comma = name.IndexOf(',', StringComparison.Ordinal);
 #else
                 var comma = name.IndexOf(',');

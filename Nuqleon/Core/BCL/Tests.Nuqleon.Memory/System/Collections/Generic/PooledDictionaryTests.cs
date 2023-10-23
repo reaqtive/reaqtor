@@ -14,7 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-#if !NET6_0
+#if !NET8_0
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif
@@ -215,7 +215,7 @@ namespace Tests
             }
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
+#if !NET8_0 // https://aka.ms/binaryformatter
         [TestMethod]
         public void PooledDictionary_Serialization()
         {

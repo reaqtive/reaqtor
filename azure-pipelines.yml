@@ -30,9 +30,11 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 7.x SDK
+      displayName: Install .NET 8.0 SDK
       inputs:
-        version: 7.x
+        packageType: 'sdk'
+        version: '8.0.x'
+        includePreviewVersions: true
         performMultiLevelLookup: true
 
     - powershell: |
@@ -89,9 +91,11 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 7.x SDK
+      displayName: Install .NET 8.0 SDK
       inputs:
-        version: 7.x
+        packageType: 'sdk'
+        version: '8.0.x'
+        includePreviewVersions: true
         performMultiLevelLookup: true
 
     - task: DotNetCoreCLI@2
@@ -113,9 +117,11 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 7.x SDK
+      displayName: Install .NET 8.0 SDK
       inputs:
-        version: 7.x
+        packageType: 'sdk'
+        version: '8.0.x'
+        includePreviewVersions: true
         performMultiLevelLookup: true
 
     - powershell: |

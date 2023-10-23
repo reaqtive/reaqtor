@@ -18,7 +18,7 @@ namespace System
     /// </summary>
     public static class AsyncDisposableExtensions
     {
-#if !NET6_0 && !NETSTANDARD2_1
+#if !NET8_0 && !NETSTANDARD2_1
         /// <summary>
         /// Disposes the resource asynchronously.
         /// </summary>
@@ -74,7 +74,7 @@ namespace System
                 // No idempotency enforcement. Left to the underlying IAsyncDisposable implementation.
                 //
                 _disposable.DisposeAsync(CancellationToken.None)
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                     .AsTask()
 #endif
                     .Wait();

@@ -26,7 +26,7 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         private static class ThunkTypeCompiler
         {
-#if !NET6_0
+#if !NET8_0
             /// <summary>
             /// The lock to protect against double-initialization of the module builder.
             /// </summary>
@@ -126,7 +126,7 @@ namespace System.Runtime.CompilerServices
             /// </summary>
             private static readonly MethodInfo s_interlockedIncrement = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), new[] { typeof(int).MakeByRefType() });
 
-#if !NET6_0
+#if !NET8_0
             /// <summary>
             /// Gets the module builder used to emit dynamically generated thunk (and related) types.
             /// </summary>

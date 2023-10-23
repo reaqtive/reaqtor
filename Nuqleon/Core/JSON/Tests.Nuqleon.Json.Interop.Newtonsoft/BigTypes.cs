@@ -8,6 +8,8 @@
 // BD - December 2016 - Created this file.
 //
 
+#pragma warning disable IDE0090 // Use 'new(...)'
+
 namespace Tests.Nuqleon.Json.Interop.Newtonsoft
 {
     internal sealed class Big1
@@ -78,6 +80,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
 
         public static readonly Big5[] Values = new[]
         {
+
             new Big5 { Item1 = new Big4 { Item1 = 42, Item2 = "", Item3 = 0.0, Item4 = new Big3 { Item1 = 2.25, Item2 = new double[] { -1.5, -1.5, -1.5 }, Item3 = new string[] { "", "foobar" } } }, Item2 = new Big4[] { new Big4 { Item1 = 0, Item2 = null, Item3 = -1.5, Item4 = new Big3 { Item1 = 2.25, Item2 = new double[] { -1.5, -1.5, -1.5 }, Item3 = new string[] { "", "foobar" } } }, new Big4 { Item1 = 42, Item2 = "", Item3 = 0.0, Item4 = new Big3 { Item1 = 2.25, Item2 = new double[] { -1.5, -1.5, -1.5 }, Item3 = new string[] { "", "foobar" } } } }, Item3 = new Big2 { Item1 = new double[] { 0.0, 2.25 }, Item2 = true }, Item4 = new Big1[] { new Big1 { Item1 = new bool[] { true, true } } }, Item5 = 0 },
             new Big5 { Item1 = new Big4 { Item1 = -1, Item2 = "foobar", Item3 = 2.25, Item4 = new Big3 { Item1 = 2.25, Item2 = new double[] { -1.5, -1.5, -1.5 }, Item3 = new string[] { "", "foobar" } } }, Item2 = new Big4[] { new Big4 { Item1 = 42, Item2 = null, Item3 = -1.5, Item4 = new Big3 { Item1 = 2.25, Item2 = new double[] { -1.5, -1.5, -1.5 }, Item3 = new string[] { "", "foobar" } } }, new Big4 { Item1 = 42, Item2 = null, Item3 = -1.5, Item4 = new Big3 { Item1 = 2.25, Item2 = new double[] { -1.5, -1.5, -1.5 }, Item3 = new string[] { "", "foobar" } } } }, Item3 = new Big2 { Item1 = new double[] { 2.25, 1.0, 1.0 }, Item2 = true }, Item4 = new Big1[] { new Big1 { Item1 = new bool[] { true, false } } }, Item5 = -1 },
             new Big5 { Item1 = new Big4 { Item1 = 0, Item2 = null, Item3 = -1.5, Item4 = new Big3 { Item1 = 2.25, Item2 = new double[] { -1.5, -1.5, -1.5 }, Item3 = new string[] { "", "foobar" } } }, Item2 = new Big4[] { new Big4 { Item1 = 42, Item2 = "", Item3 = 0.0, Item4 = new Big3 { Item1 = 2.25, Item2 = new double[] { -1.5, -1.5, -1.5 }, Item3 = new string[] { "", "foobar" } } }, new Big4 { Item1 = -1, Item2 = "foobar", Item3 = 2.25, Item4 = new Big3 { Item1 = 2.25, Item2 = new double[] { -1.5, -1.5, -1.5 }, Item3 = new string[] { "", "foobar" } } } }, Item3 = new Big2 { Item1 = new double[] { 1.0, 0.0 }, Item2 = true }, Item4 = new Big1[] { new Big1 { Item1 = new bool[] { true } } }, Item5 = 42 },
@@ -143,3 +146,4 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
     }
 
 }
+#pragma warning restore IDE0090 // Use 'new(...)'

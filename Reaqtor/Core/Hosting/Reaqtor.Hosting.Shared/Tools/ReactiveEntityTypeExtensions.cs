@@ -132,7 +132,7 @@ namespace Reaqtor.Hosting.Shared.Tools
                 {
                     var args = type.GenericTypeArguments;
 
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
                     var lastArg = args[^1];
 #else
                     var lastArg = args[args.Length - 1];

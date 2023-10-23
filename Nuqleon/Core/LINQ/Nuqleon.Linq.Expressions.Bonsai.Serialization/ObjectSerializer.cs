@@ -8,6 +8,8 @@
 // BD - June 2013 - Created this file.
 //
 
+#pragma warning disable IDE0049 // Simplify Names
+
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -211,3 +213,4 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         }
     }
 }
+#pragma warning restore IDE0049 // Simplify Names

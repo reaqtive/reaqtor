@@ -2,7 +2,7 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-#if !NET6_0
+#if !NET8_0
 using System;
 #endif
 using System.Collections.Generic;
@@ -100,7 +100,7 @@ namespace Tests
             Assert.AreEqual("FOO", p.Value.t.s);
         }
 
-#if !NET6_0 // NB: Broken due to change to KeyValuePair<K, V> where fields are now read-only (where they weren't before). See test case below.
+#if !NET8_0 // NB: Broken due to change to KeyValuePair<K, V> where fields are now read-only (where they weren't before). See test case below.
         [TestMethod]
         public void HeapEditor_Basics_Struct_Nested2()
         {

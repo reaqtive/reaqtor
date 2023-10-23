@@ -297,7 +297,7 @@ namespace System.Reflection
         /// <returns>An object representing the method that matches the specified requirements, if found; otherwise, null.</returns>
         public static MethodInfo GetMethod(this ITypeIntrospectionProvider provider, Type type, string name) => NotNull(NotNull(provider)).GetMethod(type, name, BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public);
 
-#if NET6_0 || NETSTANDARD2_1
+#if NET8_0 || NETSTANDARD2_1
         /// <summary>
         /// Searches for the specified public method whose parameters match the specified generic parameter count and argument types.
         /// </summary>
