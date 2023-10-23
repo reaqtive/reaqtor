@@ -281,7 +281,7 @@ namespace System.Reflection
         /// Gets the path or UNC location of the loaded file that contains the manifest.
         /// </summary>
         /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>The location of the loaded file that contains the manifest. If the loaded file was shadow-copied, the location is that of the file after being shadow-copied. If the assembly is loaded from a byte array, such as when using the <see cref="System.Reflection.Assembly.Load(System.Byte[])" /> method overload, the value returned is an empty string ("").</returns>
+        /// <returns>The location of the loaded file that contains the manifest. If the loaded file was shadow-copied, the location is that of the file after being shadow-copied. If the assembly is loaded from a byte array, such as when using the <see cref="System.Reflection.Assembly.Load(byte[])" /> method overload, the value returned is an empty string ("").</returns>
         public abstract string GetLocation(Assembly assembly);
 
         /// <summary>
