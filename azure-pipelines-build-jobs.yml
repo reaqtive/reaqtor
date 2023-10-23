@@ -17,10 +17,11 @@
                 performMultiLevelLookup: true
 
             - task: UseDotNet@2
-              inputs:
-                version: '8.0.x'
-                packageType: runtime
               displayName: Install .NET 8.0 runtime
+              inputs:
+                packageType: runtime
+                version: '8.0.x'
+                includePreviewVersions: true
 
             - powershell: |
                 $existing = & dotnet tool list -g | Select-String "nbgv" 

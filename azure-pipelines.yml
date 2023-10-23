@@ -30,9 +30,11 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 8.x SDK
+      displayName: Install .NET 8.0 SDK
       inputs:
-        version: 8.x
+        packageType: 'sdk'
+        version: '8.0.x'
+        includePreviewVersions: true
         performMultiLevelLookup: true
 
     - powershell: |
@@ -90,9 +92,11 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 8.x SDK
+      displayName: Install .NET 8.0 SDK
       inputs:
-        version: 8.x
+        packageType: 'sdk'
+        version: '8.0.x'
+        includePreviewVersions: true
         performMultiLevelLookup: true
 
     - task: DotNetCoreCLI@2
