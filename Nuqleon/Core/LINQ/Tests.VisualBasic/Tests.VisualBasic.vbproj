@@ -3,6 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
     <IsTestProject>false</IsTestProject>
+    <LangVersion>16</LangVersion>
   </PropertyGroup>
 
 </Project>

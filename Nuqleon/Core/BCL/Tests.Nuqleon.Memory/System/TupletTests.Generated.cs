@@ -60,8 +60,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -139,8 +139,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -234,8 +234,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -345,8 +345,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -472,8 +472,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -615,8 +615,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -774,8 +774,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -949,8 +949,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -1140,8 +1140,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -1347,8 +1347,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -1570,8 +1570,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -1809,8 +1809,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -2064,8 +2064,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -2335,8 +2335,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -2622,8 +2622,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -2925,8 +2925,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -3032,8 +3032,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -3155,8 +3155,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -3294,8 +3294,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -3449,8 +3449,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -3620,8 +3620,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -3807,8 +3807,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -4010,8 +4010,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -4229,8 +4229,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -4464,8 +4464,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -4715,8 +4715,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -4982,8 +4982,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -5265,8 +5265,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -5564,8 +5564,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -5879,8 +5879,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -6210,8 +6210,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));
@@ -6557,8 +6557,8 @@ namespace Tests
             Assert.IsFalse(args1 == args2);
             Assert.IsTrue(args1 != args2);
 
-            Assert.AreNotEqual(args1, "foo");
-            Assert.AreNotEqual(args1, null);
+            Assert.AreNotEqual<object>(args1, "foo");
+            Assert.AreNotEqual<object>(args1, null);
 
             var seq1 = (IStructuralEquatable)args1;
             Assert.AreEqual(args1.GetHashCode(), seq1.GetHashCode(EqualityComparer<object>.Default));

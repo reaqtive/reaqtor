@@ -58,8 +58,8 @@ namespace Tests
             Assert.IsFalse(s1 != s2);
 
             Assert.IsFalse(s1.Equals(o));
-            Assert.AreNotEqual(s1, o);
-            Assert.AreNotEqual(o, s2);
+            Assert.AreNotEqual<object>(s1, o);
+            Assert.AreNotEqual<object>(o, s2);
 
             Assert.IsFalse(s1 == null);
             Assert.IsFalse(null == s1);
