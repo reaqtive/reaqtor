@@ -1,8 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <!-- NB: Uses System.Reflection.Emit APIs that aren't in .NET Standard 2.0. -->
-    <TargetFrameworks>net472</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <Description>Legacy serialization for the LINQ expressions API.</Description>
   </PropertyGroup>
 

@@ -2,9 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
+//
+// Revision history:
+//
+// IG - 2025/12 - Remove CLR serialization.
+//
+
 using System;
 using System.Globalization;
-using System.Runtime.Serialization;
 
 namespace Reaqtor.QueryEngine
 {
@@ -72,21 +77,6 @@ namespace Reaqtor.QueryEngine
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="EntityAlreadyExistsException"/> class from serialized state.
-        /// </summary>
-        /// <param name="info">Serialization information to deserialize state from.</param>
-        /// <param name="context">Streaming context to deserialize state from.</param>
-        protected EntityAlreadyExistsException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            // NB: Names kept for backwards compat.
-
-            QueryEngineUri = (Uri)info.GetValue("QeId", typeof(Uri));
-            EntityUri = (Uri)info.GetValue("EntityUri", typeof(Uri));
-            EntityType = (ReactiveEntityKind)info.GetValue("EntityKind", typeof(ReactiveEntityKind));
-        }
-
-        /// <summary>
         /// Gets the URI identifying the query engine whose registry already contains an entity with <see cref="EntityUri"/> as the entity URI.
         /// </summary>
         public Uri QueryEngineUri { get; }
@@ -100,22 +90,6 @@ namespace Reaqtor.QueryEngine
         /// Gets the entity kind of the reactive entity that already exists.
         /// </summary>
         public ReactiveEntityKind EntityType { get; }
-
-        /// <summary>
-        /// Sets the <see cref="System.Runtime.Serialization.SerializationInfo" /> object with the parameter name and additional exception information.
-        /// </summary>
-        /// <param name="info">The object that holds the serialized object data.</param>
-        /// <param name="context">The contextual information about the source or destination.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-
-            // NB: Names and order kept for backwards compat.
-
-            info.AddValue("EntityUri", EntityUri, typeof(Uri));
-            info.AddValue("EntityKind", EntityType, typeof(ReactiveEntityKind));
-            info.AddValue("QeId", QueryEngineUri, typeof(Uri));
-        }
 
         private static string GetMessage(Uri uri, ReactiveEntityKind type, Uri qeId)
         {

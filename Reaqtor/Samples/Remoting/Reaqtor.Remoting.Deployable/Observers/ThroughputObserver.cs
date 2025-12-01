@@ -47,7 +47,7 @@ namespace Reaqtor.Remoting.Deployable
 
         private sealed class Countable : ICountable
         {
-            private long _count;
+            private readonly long _count;
 
             public long Count => _count;
 

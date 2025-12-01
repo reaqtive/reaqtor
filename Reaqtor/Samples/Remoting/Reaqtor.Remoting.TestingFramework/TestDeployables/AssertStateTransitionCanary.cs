@@ -33,9 +33,9 @@ namespace Reaqtor.Remoting.TestingFramework
 
         private sealed class _ : UnaryOperator<AssertStateTransitionCanary<T>, T>, IStatefulOperator
         {
-            private int subscribed = 0;
-            private int contextSet = 0;
-            private int started = 0;
+            private readonly int subscribed = 0;
+            private readonly int contextSet = 0;
+            private readonly int started = 0;
             private int stateSavedOnce = 0;
 
             public _(AssertStateTransitionCanary<T> parent, IObserver<T> observer)

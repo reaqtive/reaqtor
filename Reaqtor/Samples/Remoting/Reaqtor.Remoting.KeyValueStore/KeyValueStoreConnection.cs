@@ -15,7 +15,7 @@ namespace Reaqtor.Remoting.KeyValueStore
 {
     public class KeyValueStoreConnection : ReactiveConnectionBase, ITransactionalKeyValueStoreConnection
     {
-        private long _transactionId = 0;
+        private readonly long _transactionId = 0;
         private InMemoryKeyValueStore _kvs;
 
         private readonly ConcurrentDictionary<long, IKeyValueStoreTransaction> _transactionMap;

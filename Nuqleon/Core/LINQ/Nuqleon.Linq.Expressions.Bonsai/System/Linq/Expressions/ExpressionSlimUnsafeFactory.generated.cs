@@ -352,6 +352,16 @@ namespace System.Linq.Expressions
             return ExpressionSlimUnsafe.Block(variables, expressions);
         }
 
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpressionSlim" /> that contains the given variables and expressions.</summary>
+        /// <param name="type">The result type of the block.</param>
+        /// <param name="variables">The variables in the block.</param>
+        /// <param name="expressions">The expressions in the block.</param>
+        /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpressionSlim" />.</returns>
+        public BlockExpressionSlim Block(TypeSlim type, IEnumerable<ParameterExpressionSlim> variables, IEnumerable<ExpressionSlim> expressions)
+        {
+            return ExpressionSlimUnsafe.Block(type, variables, expressions);
+        }
+
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpressionSlim" /> that contains three expressions and has no variables.</summary>
         /// <param name="arg0">The first expression in the block.</param>
         /// <param name="arg1">The second expression in the block.</param>
@@ -368,16 +378,6 @@ namespace System.Linq.Expressions
         /// <param name="expressions">The expressions in the block.</param>
         /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpressionSlim" />.</returns>
         public BlockExpressionSlim Block(TypeSlim type, IEnumerable<ParameterExpressionSlim> variables, ExpressionSlim[] expressions)
-        {
-            return ExpressionSlimUnsafe.Block(type, variables, expressions);
-        }
-
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpressionSlim" /> that contains the given variables and expressions.</summary>
-        /// <param name="type">The result type of the block.</param>
-        /// <param name="variables">The variables in the block.</param>
-        /// <param name="expressions">The expressions in the block.</param>
-        /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpressionSlim" />.</returns>
-        public BlockExpressionSlim Block(TypeSlim type, IEnumerable<ParameterExpressionSlim> variables, IEnumerable<ExpressionSlim> expressions)
         {
             return ExpressionSlimUnsafe.Block(type, variables, expressions);
         }
@@ -2704,18 +2704,6 @@ namespace System.Linq.Expressions
             return ExpressionSlimUnsafe.Switch(switchValue, defaultBody, comparison, cases);
         }
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpressionSlim" /> that represents a <see langword="switch" /> statement that has a default case.</summary>
-        /// <param name="type">The result type of the switch.</param>
-        /// <param name="switchValue">The value to be tested against each case.</param>
-        /// <param name="defaultBody">The result of the switch if <paramref name="switchValue" /> does not match any of the cases.</param>
-        /// <param name="comparison">The equality comparison method to use.</param>
-        /// <param name="cases">The set of cases for this switch expression.</param>
-        /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpressionSlim" />.</returns>
-        public SwitchExpressionSlim Switch(TypeSlim type, ExpressionSlim switchValue, ExpressionSlim defaultBody, MethodInfoSlim comparison, IEnumerable<SwitchCaseSlim> cases)
-        {
-            return ExpressionSlimUnsafe.Switch(type, switchValue, defaultBody, comparison, cases);
-        }
-
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpressionSlim" /> that represents a <see langword="switch" /> statement that has a default case..</summary>
         /// <param name="type">The result type of the switch.</param>
         /// <param name="switchValue">The value to be tested against each case.</param>
@@ -2724,6 +2712,18 @@ namespace System.Linq.Expressions
         /// <param name="cases">The set of cases for this switch expression.</param>
         /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpressionSlim" />.</returns>
         public SwitchExpressionSlim Switch(TypeSlim type, ExpressionSlim switchValue, ExpressionSlim defaultBody, MethodInfoSlim comparison, SwitchCaseSlim[] cases)
+        {
+            return ExpressionSlimUnsafe.Switch(type, switchValue, defaultBody, comparison, cases);
+        }
+
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpressionSlim" /> that represents a <see langword="switch" /> statement that has a default case.</summary>
+        /// <param name="type">The result type of the switch.</param>
+        /// <param name="switchValue">The value to be tested against each case.</param>
+        /// <param name="defaultBody">The result of the switch if <paramref name="switchValue" /> does not match any of the cases.</param>
+        /// <param name="comparison">The equality comparison method to use.</param>
+        /// <param name="cases">The set of cases for this switch expression.</param>
+        /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpressionSlim" />.</returns>
+        public SwitchExpressionSlim Switch(TypeSlim type, ExpressionSlim switchValue, ExpressionSlim defaultBody, MethodInfoSlim comparison, IEnumerable<SwitchCaseSlim> cases)
         {
             return ExpressionSlimUnsafe.Switch(type, switchValue, defaultBody, comparison, cases);
         }

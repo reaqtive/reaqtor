@@ -1,10 +1,8 @@
 ﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT license.
 
-#if NET6_0
-
 //
-// NB: These are stubs on .NET 5.0 because these APIs are no longer public. We could reimplement RuntimeVariables support
+// NB: These are stubs on modern .NET because these APIs are no longer public. We could reimplement RuntimeVariables support
 //     entirely if we wish to do so.
 //
 
@@ -56,5 +54,3 @@ namespace System.Runtime.CompilerServices
         }
     }
 }
-
-#endif

@@ -4,7 +4,6 @@
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ assembly name="System.Core" #>
-<#@ assembly name="System.Xml" #>
 <#@ assembly name="System.Xml.Linq" #>
 <#@ assembly name="$(ProjectDir)\..\Nuqleon.Documentation\bin\Debug\net472\Nuqleon.Documentation.dll" #>
 <#@ import namespace="System.Collections" #>

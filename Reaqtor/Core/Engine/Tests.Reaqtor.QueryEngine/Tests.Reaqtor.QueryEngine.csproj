@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net6.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,10 +12,6 @@
   <ItemGroup>
     <EmbeddedResource Include="Data\storewithmissingbridge.txt" LogicalName="$(AssemblyName).Data.storewithmissingbridge.txt" />
     <EmbeddedResource Include="Data\storewithorphanedbridges.txt" LogicalName="$(AssemblyName).Data.storewithorphanedbridges.txt" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
   </ItemGroup>
 
   <ItemGroup>

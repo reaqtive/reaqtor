@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net6.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <Description>Provides interfaces for local evaluation of reactive computations.</Description>
   </PropertyGroup>
 
@@ -53,6 +53,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>IReactiveSubscriptionFactory.Generic.HigherArities.tt</DependentUpon>
     </Compile>
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="System\" />
   </ItemGroup>
 
 </Project>

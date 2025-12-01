@@ -789,31 +789,6 @@ namespace Tests.System.Collections.Specialized
             Z = ushort.MaxValue,
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void EnumSizeResolutionException_Serialization()
-        {
-            var ex = new EnumSizeResolutionException(EnumSizeResolutionError.UnderlyingTypeIsNotIntOrSmaller);
-            var formatter = new BinaryFormatter();
-            var stream = new MemoryStream();
-            formatter.Serialize(stream, ex);
-            stream.Seek(0, SeekOrigin.Begin);
-            var exRoundTripped = (EnumSizeResolutionException)formatter.Deserialize(stream);
-
-            Assert.AreEqual(exRoundTripped.ErrorCode, EnumSizeResolutionError.UnderlyingTypeIsNotIntOrSmaller);
-
-            try
-            {
-                ex.GetObjectData(info: null, context: default);
-                Assert.Fail();
-            }
-            catch (ArgumentNullException e)
-            {
-                Assert.AreEqual("info", e.ParamName);
-            }
-        }
-#endif
-
         [TestMethod]
         public void EnumDictionary_ModificationDuringEnumeration()
         {

@@ -36,13 +36,13 @@ namespace Reaqtor.Remoting.QueryEvaluator
         private readonly Action _onRollback;
         private readonly ConcurrentBag<StagedChange> _stagedChanges;
         private readonly IReactiveStateStoreConnection _connection;
-        private long _openedStreamCount;
+        private readonly long _openedStreamCount;
         private volatile bool _disposed;
 
         /// <summary>
         /// Set to 1 once Commit or Rollback has been called.
         /// </summary>
-        private int _sealed;
+        private readonly int _sealed;
 
         #endregion
 

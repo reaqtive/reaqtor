@@ -2,7 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System.Runtime.Serialization;
+//
+// Revision history:
+//
+// IG - 2025/12 - Remove CLR serialization support.
+//
 
 using Json = Nuqleon.Json.Expressions;
 
@@ -12,7 +16,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
     /// Exception describing an error while parsing a Bonsai expression.
     /// </summary>
     [Serializable]
-    public class BonsaiParseException : Exception, ISerializable
+    public class BonsaiParseException : Exception
     {
         /// <summary>
         /// Creates a new Bonsai parsing exception.
@@ -64,35 +68,8 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         }
 
         /// <summary>
-        /// Creates a new Bonsai parsing exception during deserialization.
-        /// </summary>
-        /// <param name="info">Serialization info.</param>
-        /// <param name="context">Serialization streaming context.</param>
-        protected BonsaiParseException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            Node = Json.Expression.Parse(info.GetString(nameof(Node)), ensureTopLevelObjectOrArray: false);
-        }
-
-        /// <summary>
         /// Gets the node where the parsing failure occurred.
         /// </summary>
         public Json.Expression Node { get; }
-
-        /// <summary>
-        /// Gets object data during serialization.
-        /// </summary>
-        /// <param name="info">Serialization info.</param>
-        /// <param name="context">Serialization streaming context.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-
-            // PERF: ToString is a heavy allocator. We assume exception serialization is rare enough
-            //       so we don't have to worry about this too much. If it turns out this is not the
-            //       case, we can consider passing in a pooled StringBuilder instance.
-
-            info.AddValue(nameof(Node), Node.ToString());
-        }
     }
 }

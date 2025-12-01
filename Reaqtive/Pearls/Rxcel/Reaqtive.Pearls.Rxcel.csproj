@@ -1,18 +1,24 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup Condition="$(NETCoreSdkRuntimeIdentifier.StartsWith('win'))">
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net6.0-windows</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
   <PropertyGroup Condition="!$(NETCoreSdkRuntimeIdentifier.StartsWith('win'))">
     <OutputType>Exe</OutputType>
-    <TargetFramework>net6.0</TargetFramework>
+    <TargetFramework>net10.0</TargetFramework>
     <DefineConstants>$(DefineConstants);NO_UI</DefineConstants>
   </PropertyGroup>
   <PropertyGroup>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <IsPackable>false</IsPackable>
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
+    <TargetFramework>net10.0-windows7.0</TargetFramework>
+
+    <!--
+    IDG TODO: this suppresses warnings relating to NO_UI. Determine what scenarios NO_UI is actually used in.
+    -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="System.Reactive" Version="6.0.0" />

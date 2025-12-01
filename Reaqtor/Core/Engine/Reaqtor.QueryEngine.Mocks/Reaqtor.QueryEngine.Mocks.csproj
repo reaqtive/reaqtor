@@ -1,15 +1,11 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net472;net6.0</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <Description>Mocks for extensibility points in the Reaqtor query engine.</Description>
     <!-- TODODOC -->
     <GenerateDocumentationFile>false</GenerateDocumentationFile>
   </PropertyGroup>
-
-  <ItemGroup>
-    <PackageReference Include="System.Collections.Immutable" Version="6.0.0" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Reaqtor.QueryEngine\Reaqtor.QueryEngine.csproj" />

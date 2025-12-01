@@ -338,11 +338,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void CachedLambdaCompiler_TooManyConstantsForLCGTypes()
         {
-#if NET6_0
             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("EvalTests_foo"), AssemblyBuilderAccess.RunAndCollect);
-#else
-            var asm = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName("EvalTests_foo"), AssemblyBuilderAccess.RunAndCollect);
-#endif
             var mod = asm.DefineDynamicModule("mod");
             var typ = mod.DefineType("qux", TypeAttributes.Class);
             var qux = typ.CreateType();

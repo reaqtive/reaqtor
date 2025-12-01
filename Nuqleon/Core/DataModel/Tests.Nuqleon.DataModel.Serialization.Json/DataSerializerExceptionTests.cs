@@ -47,21 +47,5 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
             Assert.AreEqual("foo", ex.Message);
             Assert.AreSame(err, ex.InnerException);
         }
-
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void DataSerializerException_Serialize()
-        {
-            var ex = new DataSerializerException("foo");
-
-            var bf = new BinaryFormatter();
-            var ms = new MemoryStream();
-            bf.Serialize(ms, ex);
-            ms.Position = 0;
-            var res = (DataSerializerException)bf.Deserialize(ms);
-
-            Assert.AreEqual(ex.Message, res.Message);
-        }
-#endif
     }
 }

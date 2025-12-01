@@ -25,7 +25,7 @@ namespace Reaqtor.Remoting.TestingFramework
         private readonly SerializationHelpers _helpers;
         private readonly Uri _name;
 
-        private TestObserverStoreConnection _observerStore;
+        private readonly TestObserverStoreConnection _observerStore;
 
         public TestObserver(Uri name)
         {

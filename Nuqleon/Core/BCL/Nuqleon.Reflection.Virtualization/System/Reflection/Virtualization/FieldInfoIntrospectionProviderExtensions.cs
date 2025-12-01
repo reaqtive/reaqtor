@@ -71,6 +71,7 @@ namespace System.Reflection
         /// <param name="provider">The reflection introspection provider.</param>
         /// <param name="field">The field to inspect.</param>
         /// <returns>true if the field has the NotSerialized attribute set; otherwise, false.</returns>
+        [Obsolete("CLR binary serialization is obsolete")]
         public static bool IsNotSerialized(this IFieldInfoIntrospectionProvider provider, FieldInfo field) => (NotNull(provider).GetAttributes(field) & FieldAttributes.NotSerialized) > FieldAttributes.PrivateScope;
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.

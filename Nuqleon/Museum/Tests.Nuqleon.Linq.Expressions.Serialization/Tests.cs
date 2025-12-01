@@ -1858,16 +1858,13 @@ namespace Tests
         [TestMethod]
         public void E2E_Jacquard()
         {
+            using System.Net.Http.HttpClient client = new();
+            client.DefaultRequestHeaders.UserAgent.ParseAdd("Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)");
+
             Expression<Func<IQueryable<string>, IQueryable<string>>> f = urlsToSearch =>
                 from url in urlsToSearch
-                let client = new System.Net.WebClient
-                {
-                    Headers =
-                    {
-                        { "user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)" }
-                    }
-                }
-                let data = client.OpenRead(url)
+                let request = client.Send(new System.Net.Http.HttpRequestMessage(System.Net.Http.HttpMethod.Get, url))
+                let data = request.Content.ReadAsStream()
                 let reader = new System.IO.StreamReader(data)
                 let s = reader.ReadToEnd()
                 where s.Substring(0, 64).Dump(url)

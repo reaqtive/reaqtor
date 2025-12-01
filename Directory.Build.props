@@ -10,6 +10,10 @@
     This NoWarn line should be removed when we do https://github.com/reaqtive/reaqtor/issues/143 -->
     <NoWarn>$(NoWarn);IDE0079;IDE0090;CA1305;CA1822;CA1854</NoWarn>
     
+    <!-- IDG TODO: temporarily disabling these warnings to get the post-.NET-FX build succeeding, but
+    we need to deal with all of these properly. -->
+    <NoWarn>$(NoWarn);CA1061;CA1065;CA1307;CA1846;CA2249;SYSLIB0051;IDE0120;IDE0031;IDE0034;IDE0055;IDE0056;IDE0057;IDE1056;IDE0251;IDE0350;CS0618;CS8981</NoWarn>
+    
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -81,10 +85,6 @@
     <PackageReference Include="MSTest.TestFramework" Version="3.1.1" />
     <PackageReference Include="coverlet.collector" Version="6.0.0" PrivateAssets="all" />
     <Compile Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\AssertEx.cs" Link="AssertEx.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
   <ItemGroup Condition="!$(AssemblyName.StartsWith('Tests.')) And !$(AssemblyName.StartsWith('Perf.')) And !$(AssemblyName.EndsWith('.Perf')) And !$(AssemblyName.Contains('Playground'))">

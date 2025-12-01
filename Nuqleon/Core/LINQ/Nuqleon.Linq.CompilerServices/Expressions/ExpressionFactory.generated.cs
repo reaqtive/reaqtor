@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -297,6 +297,13 @@ namespace System.Linq.Expressions
         /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpression" />.</returns>
         public virtual BlockExpression Block(IEnumerable<ParameterExpression> variables, IEnumerable<Expression> expressions) => Expression.Block(variables, expressions);
 
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpression" /> that contains the given variables and expressions.</summary>
+        /// <param name="type">The result type of the block.</param>
+        /// <param name="variables">The variables in the block.</param>
+        /// <param name="expressions">The expressions in the block.</param>
+        /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpression" />.</returns>
+        public virtual BlockExpression Block(Type type, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> expressions) => Expression.Block(type, variables, expressions);
+
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpression" /> that contains three expressions and has no variables.</summary>
         /// <param name="arg0">The first expression in the block.</param>
         /// <param name="arg1">The second expression in the block.</param>
@@ -310,13 +317,6 @@ namespace System.Linq.Expressions
         /// <param name="expressions">The expressions in the block.</param>
         /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpression" />.</returns>
         public virtual BlockExpression Block(Type type, IEnumerable<ParameterExpression> variables, Expression[] expressions) => Expression.Block(type, variables, expressions);
-
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpression" /> that contains the given variables and expressions.</summary>
-        /// <param name="type">The result type of the block.</param>
-        /// <param name="variables">The variables in the block.</param>
-        /// <param name="expressions">The expressions in the block.</param>
-        /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpression" />.</returns>
-        public virtual BlockExpression Block(Type type, IEnumerable<ParameterExpression> variables, IEnumerable<Expression> expressions) => Expression.Block(type, variables, expressions);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpression" /> that contains four expressions and has no variables.</summary>
         /// <param name="arg0">The first expression in the block.</param>
@@ -2420,15 +2420,6 @@ namespace System.Linq.Expressions
         /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpression" />.</returns>
         public virtual SwitchExpression Switch(Expression switchValue, Expression defaultBody, MethodInfo comparison, IEnumerable<SwitchCase> cases) => Expression.Switch(switchValue, defaultBody, comparison, cases);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpression" /> that represents a <see langword="switch" /> statement that has a default case.</summary>
-        /// <param name="type">The result type of the switch.</param>
-        /// <param name="switchValue">The value to be tested against each case.</param>
-        /// <param name="defaultBody">The result of the switch if <paramref name="switchValue" /> does not match any of the cases.</param>
-        /// <param name="comparison">The equality comparison method to use.</param>
-        /// <param name="cases">The set of cases for this switch expression.</param>
-        /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpression" />.</returns>
-        public virtual SwitchExpression Switch(Type type, Expression switchValue, Expression defaultBody, MethodInfo comparison, IEnumerable<SwitchCase> cases) => Expression.Switch(type, switchValue, defaultBody, comparison, cases);
-
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpression" /> that represents a <see langword="switch" /> statement that has a default case..</summary>
         /// <param name="type">The result type of the switch.</param>
         /// <param name="switchValue">The value to be tested against each case.</param>
@@ -2437,6 +2428,15 @@ namespace System.Linq.Expressions
         /// <param name="cases">The set of cases for this switch expression.</param>
         /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpression" />.</returns>
         public virtual SwitchExpression Switch(Type type, Expression switchValue, Expression defaultBody, MethodInfo comparison, SwitchCase[] cases) => Expression.Switch(type, switchValue, defaultBody, comparison, cases);
+
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpression" /> that represents a <see langword="switch" /> statement that has a default case.</summary>
+        /// <param name="type">The result type of the switch.</param>
+        /// <param name="switchValue">The value to be tested against each case.</param>
+        /// <param name="defaultBody">The result of the switch if <paramref name="switchValue" /> does not match any of the cases.</param>
+        /// <param name="comparison">The equality comparison method to use.</param>
+        /// <param name="cases">The set of cases for this switch expression.</param>
+        /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpression" />.</returns>
+        public virtual SwitchExpression Switch(Type type, Expression switchValue, Expression defaultBody, MethodInfo comparison, IEnumerable<SwitchCase> cases) => Expression.Switch(type, switchValue, defaultBody, comparison, cases);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchCase" /> for use in a <see cref="T:System.Linq.Expressions.SwitchExpression" />.</summary>
         /// <param name="body">The body of the case.</param>

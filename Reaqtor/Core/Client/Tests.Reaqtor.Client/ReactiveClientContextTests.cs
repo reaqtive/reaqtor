@@ -923,9 +923,7 @@ namespace Tests.Reaqtor.Client
                     qubject.SubscribeAsync(ctx.GetObserver<int>(new Uri(Constants.Observer.OB)), new Uri(Constants.Subscription.SUB), null, CancellationToken.None);
 
                     ctx.GetStream<int, int>(new Uri(Constants.Stream.FOO)).DisposeAsync()
-#if NET6_0
                         .AsTask()
-#endif
                         .Wait();
                 },
                 new CreateStream(new Uri(Constants.Stream.FOO), createStreamExpression, null),
@@ -995,9 +993,7 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Subscription.SUB1), null).Wait();
 
                     ctx.GetSubscription(new Uri(Constants.Subscription.SUB1)).DisposeAsync()
-#if NET6_0
                         .AsTask()
-#endif
                         .Wait();
                 },
                 new CreateSubscription(new Uri(Constants.Subscription.SUB1), createSubscriptionExpression, null),

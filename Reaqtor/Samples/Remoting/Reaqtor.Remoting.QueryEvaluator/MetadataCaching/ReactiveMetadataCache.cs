@@ -110,7 +110,7 @@ namespace Reaqtor.Remoting.QueryEvaluator
 
         private sealed class CompositeDisposable : IDisposable
         {
-            private IDisposable[] _disposables;
+            private readonly IDisposable[] _disposables;
 
             public CompositeDisposable(params IDisposable[] disposables)
             {

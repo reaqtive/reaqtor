@@ -534,9 +534,7 @@ namespace Tests.Reaqtor.QueryEngine
             }
 
             sub.DisposeAsync(CancellationToken.None)
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             AssertResult(v1, 10, (i, v) => Assert.AreEqual(i * i, v));
@@ -1211,9 +1209,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() =>
                     ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None)
-#if NET6_0
                         .AsTask()
-#endif
                 );
             }
         }
@@ -1652,10 +1648,7 @@ namespace Tests.Reaqtor.QueryEngine
                 kvs.StartingOperation += fail;
                 await AssertEx.ThrowsExceptionAsync<MyException>(() =>
                     test.DisposeAsync(CancellationToken.None)
-#if NET6_0
-                        .AsTask()
-#endif
-                    ,
+                        .AsTask(),
                     e => Assert.AreSame(ex, e));
 
                 kvs.StartingOperation -= fail;
@@ -2233,15 +2226,11 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(actx.Streams.TryGetValue(streamUri, out p));
 
             sub.DisposeAsync(CancellationToken.None)
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             actx.GetStream<string, string>(streamUri).DisposeAsync(CancellationToken.None)
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             Assert.IsFalse(actx.Streams.TryGetValue(streamUri, out p));

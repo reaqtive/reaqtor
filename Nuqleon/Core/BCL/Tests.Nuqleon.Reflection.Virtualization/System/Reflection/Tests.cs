@@ -89,7 +89,9 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(t.IsSecurityCritical, p.IsSecurityCritical(t));
                 Assert.AreEqual(t.IsSecuritySafeCritical, p.IsSecuritySafeCritical(t));
                 Assert.AreEqual(t.IsSecurityTransparent, p.IsSecurityTransparent(t));
+#pragma warning disable SYSLIB0050 // Type or member is obsolete
                 Assert.AreEqual(t.IsSerializable, p.IsSerializable(t));
+#pragma warning restore SYSLIB0050 // Type or member is obsolete
 
                 Assert.AreEqual(t.ContainsGenericParameters, p.ContainsGenericParameters(t));
                 Assert.AreEqual(t.HasElementType, p.HasElementType(t));
@@ -561,7 +563,9 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(f.IsFamilyOrAssembly, p.IsFamilyOrAssembly(f));
                 Assert.AreEqual(f.IsInitOnly, p.IsInitOnly(f));
                 Assert.AreEqual(f.IsLiteral, p.IsLiteral(f));
+#pragma warning disable SYSLIB0050 // Type or member is obsolete
                 Assert.AreEqual(f.IsNotSerialized, p.IsNotSerialized(f));
+#pragma warning restore SYSLIB0050 // Type or member is obsolete
                 Assert.AreEqual(f.IsPinvokeImpl, p.IsPinvokeImpl(f));
                 Assert.AreEqual(f.IsPrivate, p.IsPrivate(f));
                 Assert.AreEqual(f.IsPublic, p.IsPublic(f));
@@ -1067,12 +1071,6 @@ namespace Tests.System.Reflection.Virtualization
         public void Assembly_Properties() => WithProviders(p =>
         {
             var asm = typeof(string).Assembly;
-
-#if !NET6_0
-            Assert.AreEqual(asm.CodeBase, p.GetCodeBase(asm));
-            Assert.AreEqual(asm.EscapedCodeBase, p.GetEscapedCodeBase(asm));
-            Assert.AreEqual(asm.GlobalAssemblyCache, p.GetGlobalAssemblyCache(asm));
-#endif
 
             Assert.AreEqual(asm.FullName, p.GetFullName(asm));
             Assert.AreEqual(asm.HostContext, p.GetHostContext(asm));

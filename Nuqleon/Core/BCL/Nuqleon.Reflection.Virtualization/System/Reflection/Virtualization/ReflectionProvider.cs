@@ -43,17 +43,6 @@ namespace System.Reflection
         /// <returns>The loaded assembly.</returns>
         public abstract Assembly Load(AssemblyName assemblyRef);
 
-#if NET472
-        /// <summary>
-        /// Loads the assembly with a common object file format (COFF)-based image containing an emitted assembly, optionally including symbols and specifying the source for the security context. The assembly is loaded into the application domain of the caller.
-        /// </summary>
-        /// <param name="rawAssembly">A byte array that is a COFF-based image containing an emitted assembly.</param>
-        /// <param name="rawSymbolStore">A byte array that contains the raw bytes representing the symbols for the assembly.</param>
-        /// <param name="securityContextSource">The source of the security context.</param>
-        /// <returns>The loaded assembly.</returns>
-        public abstract Assembly Load(byte[] rawAssembly, byte[] rawSymbolStore, SecurityContextSource securityContextSource);
-#endif
-
         /// <summary>
         /// Loads the contents of an assembly file on the specified path.
         /// </summary>
@@ -68,6 +57,7 @@ namespace System.Reflection
         /// <param name="hashValue">The value of the computed hash code.</param>
         /// <param name="hashAlgorithm">The hash algorithm used for hashing files and for generating the strong name.</param>
         /// <returns>The loaded assembly.</returns>
+        [Obsolete("LoadFrom with a custom AssemblyHashAlgorithm is obsolete. Use overloads without an AssemblyHashAlgorithm.")]
         public abstract Assembly LoadFrom(string assemblyFile, byte[] hashValue, System.Configuration.Assemblies.AssemblyHashAlgorithm hashAlgorithm);
 
         /// <summary>
@@ -192,15 +182,6 @@ namespace System.Reflection
         /// <returns>A <see cref="MethodBase" /> object representing the method or constructor specified by <paramref name="handle" />, in the generic type specified by <paramref name="declaringType" />.</returns>
         public abstract MethodBase GetMethodFromHandle(RuntimeMethodHandle handle, RuntimeTypeHandle declaringType);
 
-#if !NET6_0
-        /// <summary>
-        /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>The location of the assembly as specified originally.</returns>
-        public abstract string GetCodeBase(Assembly assembly);
-#endif
-
         /// <summary>
         /// Gets the types defined in the specified <paramref name="assembly"/>.
         /// </summary>
@@ -215,39 +196,12 @@ namespace System.Reflection
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         public abstract MethodInfo GetEntryPoint(Assembly assembly);
 
-#if !NET6_0
-        /// <summary>
-        /// Gets the URI, including escape characters, that represents the codebase.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>A URI with escape characters.</returns>
-        public abstract string GetEscapedCodeBase(Assembly assembly);
-#endif
-
-#if NET472
-        /// <summary>
-        /// Gets the evidence for the specified <paramref name="assembly"/>.
-        /// </summary>
-        /// <param name="assembly">The assembly to get evidence for.</param>
-        /// <returns>The evidence for the specified <paramref name="assembly"/>.</returns>
-        public abstract Evidence GetEvidence(Assembly assembly);
-#endif
-
         /// <summary>
         /// Gets the display name of the assembly.
         /// </summary>
         /// <param name="assembly">The assembly to get the display name for.</param>
         /// <returns>The display name of the assembly.</returns>
         public abstract string GetFullName(Assembly assembly);
-
-#if !NET6_0
-        /// <summary>
-        /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
-        /// </summary>
-        /// <param name="assembly">The assembly to check.</param>
-        /// <returns>true if the assembly was loaded from the global assembly cache; otherwise, false.</returns>
-        public abstract bool GetGlobalAssemblyCache(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets the host context with which the assembly was loaded.
@@ -290,15 +244,6 @@ namespace System.Reflection
         /// <param name="assembly">The assembly to get the manifest module for.</param>
         /// <returns>The module that contains the manifest for the assembly.</returns>
         public abstract Module GetManifestModule(Assembly assembly);
-
-#if NET472
-        /// <summary>
-        /// Gets the grant set of the specified <paramref name="assembly"/>.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the grant set for.</param>
-        /// <returns>The grant set of the specified <paramref name="assembly"/>.</returns>
-        public abstract PermissionSet GetPermissionSet(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets a <see cref="bool" /> value indicating whether specified <paramref name="assembly"/> was loaded into the reflection-only context.
@@ -972,6 +917,7 @@ namespace System.Reflection
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <returns>true if the specified <paramref name="type"/> is serializable; otherwise, false.</returns>
+        [Obsolete("CLR binary serialization is obsolete")]
         public abstract bool IsSerializable(Type type);
 
         /// <summary>

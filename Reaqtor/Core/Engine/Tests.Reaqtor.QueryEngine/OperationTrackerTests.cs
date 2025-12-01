@@ -38,10 +38,7 @@ namespace Tests.Reaqtor.QueryEngine
             //
 
             var d = o.DisposeAsync()
-#if NET6_0
-                .AsTask()
-#endif
-                ;
+                .AsTask();
 
             Assert.IsFalse(d.IsCompleted);
 
@@ -87,10 +84,7 @@ namespace Tests.Reaqtor.QueryEngine
             //
 
             var d1 = o.DisposeAsync()
-#if NET6_0
-                .AsTask()
-#endif
-                ;
+                .AsTask();
 
             Assert.IsFalse(d1.IsCompleted);
 
@@ -105,10 +99,7 @@ namespace Tests.Reaqtor.QueryEngine
             //
 
             var d2 = o.DisposeAsync()
-#if NET6_0
-                .AsTask()
-#endif
-                ;
+                .AsTask();
 
             Assert.IsFalse(d2.IsCompleted);
 
@@ -151,9 +142,7 @@ namespace Tests.Reaqtor.QueryEngine
             //
 
             o.DisposeAsync()
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             //
@@ -212,9 +201,7 @@ namespace Tests.Reaqtor.QueryEngine
             //
 
             t.DisposeAsync()
-#if NET6_0
                 .AsTask()
-#endif
                 .Wait();
 
             //

@@ -286,20 +286,11 @@ namespace Reaqtor.QueryEngine
 #pragma warning disable IDE0079 // Remove unnecessary suppressions.
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize. (Analyzer does not yet know about IAsyncDisposable.)
 
-#if NET6_0 || NETSTANDARD2_1
         /// <summary>
         /// Disposes resources asynchronously.
         /// </summary>
         /// <returns>A task to await the completion of the dispose operation.</returns>
         public async ValueTask DisposeAsync()
-#else
-        /// <summary>
-        /// Disposes resources asynchronously.
-        /// </summary>
-        /// <param name="token">Cancellation token.</param>
-        /// <returns>A task to await the completion of the dispose operation.</returns>
-        public async Task DisposeAsync(CancellationToken token)
-#endif
         {
             await DisposeAsyncCore().ConfigureAwait(false);
 
@@ -359,9 +350,7 @@ namespace Reaqtor.QueryEngine
 
                     UnloadAsync().Wait();
                     _tracker.DisposeAsync()
-#if NET6_0 || NETSTANDARD2_1
                         .AsTask()
-#endif
                         .Wait();
 
                     _checkpointManager.Dispose();

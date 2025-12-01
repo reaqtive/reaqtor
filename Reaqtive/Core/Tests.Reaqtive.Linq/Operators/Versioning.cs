@@ -32,7 +32,7 @@ namespace Test.Reaqtive.Operators
                          where typeof(IVersioned).IsAssignableFrom(i)
                          where !i.IsAbstract
                          let j = i.IsGenericTypeDefinition ? i.MakeGenericType(i.GetGenericArguments().Select(_ => typeof(object)).ToArray()) : i
-                         let v = (IVersioned)FormatterServices.GetSafeUninitializedObject(j)
+                         let v = (IVersioned)Activator.CreateInstance(j)
                          select (Operator: o, Sink: i, v.Version, v.Name))
                         .ToArray();
 

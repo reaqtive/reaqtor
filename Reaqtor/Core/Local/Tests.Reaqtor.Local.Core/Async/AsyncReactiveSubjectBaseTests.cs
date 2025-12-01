@@ -114,11 +114,7 @@ namespace Tests
             var disposed = false;
             s.DisposeImpl = async (ct) => { disposed = true; await Task.Yield(); };
 
-#if NET6_0
             s.DisposeAsync().AsTask().Wait();
-#else
-            s.DisposeAsync().Wait();
-#endif
 
             Assert.IsTrue(disposed);
         }

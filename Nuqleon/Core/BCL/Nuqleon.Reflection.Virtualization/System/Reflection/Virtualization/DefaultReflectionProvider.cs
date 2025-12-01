@@ -77,6 +77,7 @@ namespace System.Reflection
         /// <param name="hashValue">The value of the computed hash code.</param>
         /// <param name="hashAlgorithm">The hash algorithm used for hashing files and for generating the strong name.</param>
         /// <returns>The loaded assembly.</returns>
+        [Obsolete("LoadFrom with a custom AssemblyHashAlgorithm is obsolete. Use overloads without an AssemblyHashAlgorithm.")]
         public override Assembly LoadFrom(string assemblyFile, byte[] hashValue, System.Configuration.Assemblies.AssemblyHashAlgorithm hashAlgorithm) => Assembly.LoadFrom(assemblyFile, hashValue, hashAlgorithm);
 
         /// <summary>
@@ -217,15 +218,6 @@ namespace System.Reflection
         /// <returns>A <see cref="MethodBase" /> object representing the method or constructor specified by <paramref name="handle" />, in the generic type specified by <paramref name="declaringType" />.</returns>
         public override MethodBase GetMethodFromHandle(RuntimeMethodHandle handle, RuntimeTypeHandle declaringType) => MethodBase.GetMethodFromHandle(handle, declaringType);
 
-#if !NET6_0
-        /// <summary>
-        /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>The location of the assembly as specified originally.</returns>
-        public override string GetCodeBase(Assembly assembly) => assembly.CodeBase;
-#endif
-
         /// <summary>
         /// Gets the types defined in the specified <paramref name="assembly"/>.
         /// </summary>
@@ -240,39 +232,12 @@ namespace System.Reflection
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         public override MethodInfo GetEntryPoint(Assembly assembly) => assembly.EntryPoint;
 
-#if !NET6_0
-        /// <summary>
-        /// Gets the URI, including escape characters, that represents the codebase.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>A URI with escape characters.</returns>
-        public override string GetEscapedCodeBase(Assembly assembly) => assembly.EscapedCodeBase;
-#endif
-
-#if NET472
-        /// <summary>
-        /// Gets the evidence for the specified <paramref name="assembly"/>.
-        /// </summary>
-        /// <param name="assembly">The assembly to get evidence for.</param>
-        /// <returns>The evidence for the specified <paramref name="assembly"/>.</returns>
-        public override Evidence GetEvidence(Assembly assembly) => assembly.Evidence;
-#endif
-
         /// <summary>
         /// Gets the display name of the assembly.
         /// </summary>
         /// <param name="assembly">The assembly to get the display name for.</param>
         /// <returns>The display name of the assembly.</returns>
         public override string GetFullName(Assembly assembly) => assembly.FullName;
-
-#if !NET6_0
-        /// <summary>
-        /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
-        /// </summary>
-        /// <param name="assembly">The assembly to check.</param>
-        /// <returns>true if the assembly was loaded from the global assembly cache; otherwise, false.</returns>
-        public override bool GetGlobalAssemblyCache(Assembly assembly) => assembly.GlobalAssemblyCache;
-#endif
 
         /// <summary>
         /// Gets the host context with which the assembly was loaded.
@@ -998,6 +963,7 @@ namespace System.Reflection
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <returns>true if the specified <paramref name="type"/> is serializable; otherwise, false.</returns>
+        [Obsolete("CLR binary serialization is obsolete")]
         public override bool IsSerializable(Type type) => type.IsSerializable;
 
         /// <summary>

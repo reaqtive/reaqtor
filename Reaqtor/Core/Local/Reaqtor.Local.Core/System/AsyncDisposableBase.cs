@@ -21,23 +21,6 @@ namespace System
 #pragma warning disable IDE0079 // Remove unnecessary suppressions.
 #pragma warning disable CA1816 // Dispose methods should call SuppressFinalize. (Analyzer does not know about pre-netstandard2.1 IAsyncDisposable.)
 
-#if !NET6_0 && !NETSTANDARD2_1
-        /// <summary>
-        /// Disposes the resource asynchronously.
-        /// </summary>
-        /// <param name="token">Token to observe for cancellation of the disposal request.</param>
-        /// <returns>Task representing the eventual completion of the disposal request.</returns>
-        public async Task DisposeAsync(CancellationToken token)
-        {
-            //
-            // TODO: Enforce idempotent behavior? What about transient errors, cancellations, etc?
-            //       Should be allow retry but no concurrent calls? Do we rely on DisposeAsyncCore
-            //       being idempotent itself?
-            //
-            await DisposeAsyncCore(token).ConfigureAwait(false);
-            GC.SuppressFinalize(this);
-        }
-#else
         /// <summary>
         /// Disposes the resource asynchronously.
         /// </summary>
@@ -52,7 +35,6 @@ namespace System
             await DisposeAsyncCore(default).ConfigureAwait(false);
             GC.SuppressFinalize(this);
         }
-#endif
 
         /// <summary>
         /// Disposes the resource asynchronously.

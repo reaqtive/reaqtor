@@ -6,13 +6,13 @@
 // Revision history:
 //
 // BD - November 2009 - Created this file.
+// IG - 2025/12       - Remove CLR serialization support.
 //
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1032 // Implement standard exception constructors. (Only meant to be instantiated by this library.)
 
 using System;
-using System.Runtime.Serialization;
 
 namespace Nuqleon.Json.Parser
 {
@@ -20,7 +20,7 @@ namespace Nuqleon.Json.Parser
     /// Parser exception signaling a parsing error in the input stream.
     /// </summary>
     [Serializable]
-    public class ParseException : Exception, ISerializable
+    public class ParseException : Exception
     {
         /// <summary>
         /// Creates a new parser exception signaling an error in the input stream at the given position.
@@ -36,18 +36,6 @@ namespace Nuqleon.Json.Parser
         }
 
         /// <summary>
-        /// Creates a new parser exception during deserialization.
-        /// </summary>
-        /// <param name="info">Serialization info.</param>
-        /// <param name="context">serialization streaming context.</param>
-        protected ParseException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            Position = info.GetInt32(nameof(Position));
-            Error = (ParseError)info.GetInt32(nameof(Error));
-        }
-
-        /// <summary>
         /// Gets the position in the input stream where the parsing error occurred.
         /// </summary>
         public int Position { get; }
@@ -56,18 +44,5 @@ namespace Nuqleon.Json.Parser
         /// Gets the parser error.
         /// </summary>
         public ParseError Error { get; }
-
-        /// <summary>
-        /// Gets object data during serialization.
-        /// </summary>
-        /// <param name="info">Serialization info.</param>
-        /// <param name="context">serialization streaming context.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-
-            info.AddValue(nameof(Position), Position);
-            info.AddValue(nameof(Error), (int)Error);
-        }
     }
 }

@@ -215,41 +215,6 @@ namespace Tests
             }
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void PooledDictionary_Serialization()
-        {
-            var ms = new MemoryStream();
-
-            using (var obj = PooledDictionary<string, int>.New())
-            {
-                var map = obj.Dictionary;
-
-                map.Add("qux", 42);
-                map.Add("foo", 43);
-                map.Add("bar", 44);
-                map.Add("baz", 45);
-
-                var fmt = new BinaryFormatter();
-                fmt.Serialize(ms, map);
-            }
-
-            ms.Position = 0;
-
-            {
-                var fmt = new BinaryFormatter();
-                var map = (PooledDictionary<string, int>)fmt.Deserialize(ms);
-
-                Assert.IsTrue(map.TryGetValue("qux", out var val1) && val1 == 42);
-                Assert.IsTrue(map.TryGetValue("foo", out var val2) && val2 == 43);
-                Assert.IsTrue(map.TryGetValue("bar", out var val3) && val3 == 44);
-                Assert.IsTrue(map.TryGetValue("baz", out var val4) && val4 == 45);
-
-                map.Free(); // no-op but doesn't throw
-            }
-        }
-#endif
-
         [TestMethod]
         public void PooledDictionary_GottenTooBig()
         {

@@ -619,11 +619,7 @@ namespace System.Linq.CompilerServices
         {
             var asmn = new AssemblyName("__GeneratedTypes_" + Guid.NewGuid());
 
-#if NETSTANDARD || NET6_0
             var asmb = AssemblyBuilder.DefineDynamicAssembly(
-#else
-            var asmb = AppDomain.CurrentDomain.DefineDynamicAssembly(
-#endif
                 asmn,
                 AssemblyBuilderAccess.RunAndCollect
             );

@@ -98,11 +98,7 @@ namespace System.Runtime.CompilerServices
             // Define a dynamic assembly and module only usable for execution of dynamic code at runtime.
             //
 
-#if NETSTANDARD || NET6_0
             var asm = AssemblyBuilder.DefineDynamicAssembly(
-#else
-            var asm = AppDomain.CurrentDomain.DefineDynamicAssembly(
-#endif
                 new AssemblyName(asmModName),
                 AssemblyBuilderAccess.Run
             );

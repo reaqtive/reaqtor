@@ -18,20 +18,6 @@ namespace System
     /// </summary>
     public static class AsyncDisposableExtensions
     {
-#if !NET6_0 && !NETSTANDARD2_1
-        /// <summary>
-        /// Disposes the resource asynchronously.
-        /// </summary>
-        /// <param name="disposable">Object to dispose.</param>
-        /// <returns>Task representing the eventual completion of the disposal request.</returns>
-        public static Task DisposeAsync(this IAsyncDisposable disposable)
-        {
-            if (disposable == null)
-                throw new ArgumentNullException(nameof(disposable));
-
-            return disposable.DisposeAsync(CancellationToken.None);
-        }
-#else
         /// <summary>
         /// Disposes the resource asynchronously.
         /// </summary>
@@ -47,7 +33,6 @@ namespace System
 
             return disposable.DisposeAsync();
         }
-#endif
 
         /// <summary>
         /// Converts an IAsyncDisposable to a standard IDisposable.
@@ -74,9 +59,7 @@ namespace System
                 // No idempotency enforcement. Left to the underlying IAsyncDisposable implementation.
                 //
                 _disposable.DisposeAsync(CancellationToken.None)
-#if NET6_0 || NETSTANDARD2_1
                     .AsTask()
-#endif
                     .Wait();
             }
         }

@@ -18,7 +18,7 @@ namespace System.Runtime.Remoting.Tasks
     public sealed class RemoteCancellationDisposable : MarshalByRefObject, IDisposable
     {
         private ICancellationProvider _provider;
-        private Guid _guid;
+        private readonly Guid _guid;
 
         /// <summary>
         /// Instantiates the disposable.

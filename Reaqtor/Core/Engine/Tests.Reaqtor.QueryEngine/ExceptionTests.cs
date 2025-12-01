@@ -66,32 +66,6 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(inner, ex.InnerException);
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void EntityAlreadyExistsException_Serialization()
-        {
-            var id = new Uri("bar://foo");
-            var qe = new Uri("qe://qux");
-            var kind = ReactiveEntityKind.Observable;
-            var param = "baz";
-
-            var ex = new EntityAlreadyExistsException(id, kind, qe, param);
-
-            var bf = new BinaryFormatter();
-            var ms = new MemoryStream();
-            bf.Serialize(ms, ex);
-            ms.Position = 0;
-
-            ex = (EntityAlreadyExistsException)bf.Deserialize(ms);
-
-            Assert.AreEqual(id, ex.EntityUri);
-            Assert.AreEqual(qe, ex.QueryEngineUri);
-            Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
-            Assert.AreEqual(param, ex.ParamName);
-            Assert.IsTrue(ex.Message.Contains("already exists"));
-        }
-#endif
-
         #endregion
 
         #region EntityNotFoundException
@@ -141,32 +115,6 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(inner, ex.InnerException);
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void EntityNotFoundException_Serialization()
-        {
-            var id = new Uri("bar://foo");
-            var qe = new Uri("qe://qux");
-            var kind = ReactiveEntityKind.Observable;
-            var param = "baz";
-
-            var ex = new EntityNotFoundException(id, kind, qe, param);
-
-            var bf = new BinaryFormatter();
-            var ms = new MemoryStream();
-            bf.Serialize(ms, ex);
-            ms.Position = 0;
-
-            ex = (EntityNotFoundException)bf.Deserialize(ms);
-
-            Assert.AreEqual(id, ex.EntityUri);
-            Assert.AreEqual(qe, ex.QueryEngineUri);
-            Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
-            Assert.AreEqual(param, ex.ParamName);
-            Assert.IsTrue(ex.Message.Contains("could not be found"));
-        }
-#endif
-
         #endregion
 
         #region EntityLoadFailedException
@@ -206,28 +154,6 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(ex.Message.Contains("failed to load"));
             Assert.AreSame(inner, ex.InnerException);
         }
-
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void EntityLoadFailedException_Serialization()
-        {
-            var id = new Uri("bar://foo");
-            var kind = ReactiveEntityKind.Observable;
-
-            var ex = new EntityLoadFailedException(id, kind);
-
-            var bf = new BinaryFormatter();
-            var ms = new MemoryStream();
-            bf.Serialize(ms, ex);
-            ms.Position = 0;
-
-            ex = (EntityLoadFailedException)bf.Deserialize(ms);
-
-            Assert.AreEqual(id, ex.EntityUri);
-            Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
-            Assert.IsTrue(ex.Message.Contains("failed to load"));
-        }
-#endif
 
         #endregion
 
@@ -269,28 +195,6 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(inner, ex.InnerException);
         }
 
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void EntitySaveFailedException_Serialization()
-        {
-            var id = new Uri("bar://foo");
-            var kind = ReactiveEntityKind.Observable;
-
-            var ex = new EntitySaveFailedException(id, kind);
-
-            var bf = new BinaryFormatter();
-            var ms = new MemoryStream();
-            bf.Serialize(ms, ex);
-            ms.Position = 0;
-
-            ex = (EntitySaveFailedException)bf.Deserialize(ms);
-
-            Assert.AreEqual(id, ex.EntityUri);
-            Assert.AreEqual(ReactiveEntityKind.Observable, ex.EntityType);
-            Assert.IsTrue(ex.Message.Contains("failed to save"));
-        }
-#endif
-
         #endregion
 
         #region EngineUnloadedException
@@ -330,24 +234,6 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(ie, ex.InnerException);
             Assert.AreEqual("foo", ex.Message);
         }
-
-#if !NET6_0 // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void EngineUnloadedException_Serialize()
-        {
-            var bf = new BinaryFormatter();
-
-            var ex = new EngineUnloadedException();
-
-            var ms = new MemoryStream();
-            bf.Serialize(ms, ex);
-
-            ms.Position = 0;
-            var ef = (EngineUnloadedException)bf.Deserialize(ms);
-
-            Assert.IsTrue(ef.Message.Contains("unloaded"));
-        }
-#endif
 
         #endregion
     }

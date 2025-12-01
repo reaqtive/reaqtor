@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -573,22 +572,7 @@ namespace Reaqtor.Shebang.Service
             TableName = tableName;
         }
 
-        private TableNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        {
-            TableName = serializationInfo.GetString(nameof(TableName));
-        }
-
         public string TableName { get; }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            info.AddValue(nameof(TableName), TableName);
-
-            base.GetObjectData(info, context);
-        }
     }
 
     [Serializable]
@@ -600,25 +584,8 @@ namespace Reaqtor.Shebang.Service
             Key = key;
         }
 
-        private KeyNotFoundException(SerializationInfo serializationInfo, StreamingContext streamingContext)
-        {
-            TableName = serializationInfo.GetString(nameof(TableName));
-            Key = serializationInfo.GetString(nameof(Key));
-        }
-
         public string TableName { get; }
         public string Key { get; }
-
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            if (info == null)
-                throw new ArgumentNullException(nameof(info));
-
-            info.AddValue(nameof(TableName), TableName);
-            info.AddValue(nameof(Key), Key);
-
-            base.GetObjectData(info, context);
-        }
     }
 #pragma warning restore CA1032
 }

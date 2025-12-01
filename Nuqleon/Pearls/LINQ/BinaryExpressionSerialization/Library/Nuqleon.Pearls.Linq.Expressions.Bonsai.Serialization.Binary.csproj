@@ -1,11 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net472</TargetFrameworks>
+    <TargetFrameworks>net10.0</TargetFrameworks>
     <Description>Prototype of binary expression tree serialization.</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- NB: Also supports non-slim expressions. Currently not enabled in build. -->
     <DefineConstants>$(DefineConstants);USE_SLIM</DefineConstants>
+
+    <!--
+    IDG TODO: get to build without warnings...in the long run we need to work out whether this project can usefully continue to exist.
+    -->
+    <NoWarn>$(NoWarn);SYSLIB0011</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

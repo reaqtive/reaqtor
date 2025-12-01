@@ -30,7 +30,7 @@ namespace Reaqtor.Remoting.TestingFramework
     {
         private readonly Uri _uri;
         private readonly bool _useRelativeScheduling;
-        private int _eventIndex;
+        private readonly int _eventIndex;
 
         public TimelineObservable(Uri uri, bool useRelativeScheduling)
         {
@@ -140,7 +140,7 @@ namespace Reaqtor.Remoting.TestingFramework
         {
             private int _subscriptionIndex = -1;
             private IList<Recorded<INotification<string>>> _events;
-            private TestSubscriptionStoreConnection _subscriptionStore;
+            private readonly TestSubscriptionStoreConnection _subscriptionStore;
 
             protected ITestScheduler _scheduler;
 
