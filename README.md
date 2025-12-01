@@ -1,3 +1,5 @@
+**NOTE**: this branch marks the final point at which .NET Framework support was retained. We decided in December 2025 to move entirely onto .NET, because continued support for .NET Framework was preventing us from taking advantage of newer runtime and language features.
+
 ![https://reaqtive.net](reaqtor-header.svg)
 
 [![.NET Foundation](https://img.shields.io/badge/.NET%20Foundation-blueviolet.svg)](https://www.dotnetfoundation.org/)
