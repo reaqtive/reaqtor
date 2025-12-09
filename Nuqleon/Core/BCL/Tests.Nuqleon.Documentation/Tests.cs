@@ -6,22 +6,47 @@
 // Revision history:
 //
 //   BD - 07/20/2014 - Added tests.
+//   IG - 2025/12    - Updated after changes made in migrating from .NET FX to .NET.
 //
 
 using System;
 using System.Collections.Generic;
 using System.Documentation;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {
     [TestClass]
-    public class Tests
+    public class Tests : IDisposable
     {
-        // NB: This assembly is only supported on .NET Framework because it relies on finding reference assemblies in a certain location.
+        private readonly MetadataLoadContext mlc;
+        private Type metadataDelegateType;
+
+        // NB: This assembly is only supported on .NET (and not .NET FX) because of how it locates reference assemblies.
+
+        public Tests()
+        {
+            // Only types visible in reference assemblies have XML docs, so this test should only be asking
+            // about those. That means GetType can't just use typeof(int).Assembly, because that returns
+            // the runtime assembly, which turns out to define various public types that are really
+            // internal (because they're not in the reference assemblies), and thus don't have XML docs.
+            var referenceAssembliesFolder = Nuqleon.Documentation.Tests.RuntimeInfo.ReferenceAssembliesFolder;
+            var referenceAssemblies = Directory.Exists(referenceAssembliesFolder)
+                ? Directory.GetFiles(referenceAssembliesFolder, "*.dll", SearchOption.AllDirectories)
+                : Array.Empty<string>();
+            var resolver = new PathAssemblyResolver(referenceAssemblies);
+            mlc = new MetadataLoadContext(resolver);
+        }
+
+        public void Dispose()
+        {
+            mlc.Dispose();
+        }
 
         private static bool RunningOnMono => Type.GetType("Mono.Runtime") != null;
 
@@ -60,7 +85,7 @@ namespace Tests
             var res = from t in GetTypes()
                       from m in t.GetMethods(BindingFlags.Public | BindingFlags.Instance | BindingFlags.Static)
                       where !forbiddenPrefixes.Any(p => m.Name.StartsWith(p))
-                      where !(typeof(Delegate).IsAssignableFrom(m.DeclaringType) && m.Name.Contains("Invoke"))
+                      where !(metadataDelegateType.IsAssignableFrom(m.DeclaringType) && m.Name.Contains("Invoke"))
                       select m;
 
             var exclude = new Dictionary<Type, List<string>>
@@ -83,7 +108,12 @@ namespace Tests
 
                 Assert.IsNotNull(d, m.ToString() + " on " + m.DeclaringType.ToString());
 
-                foreach (var p in m.GetParameters())
+                bool isExtensionMethod = m.GetCustomAttributesData().Any(ad =>
+                    ad.AttributeType.FullName == "System.Runtime.CompilerServices.ExtensionAttribute");
+                var parametersWithDocumentation = isExtensionMethod
+                    ? m.GetParameters().Skip(1)
+                    : m.GetParameters();
+                foreach (var p in parametersWithDocumentation)
                 {
                     var e = XmlDocumentation.GetXmlDoc(p);
                     Assert.IsNotNull(e);
@@ -166,7 +196,7 @@ namespace Tests
             }
 
             var res = from t in GetTypes()
-                      where !typeof(Delegate).IsAssignableFrom(t)
+                      where !metadataDelegateType.IsAssignableFrom(t)
                       from c in t.GetConstructors()
                       select c;
 
@@ -183,19 +213,35 @@ namespace Tests
             }
         }
 
-        private static IEnumerable<Type> GetTypes()
+        private IEnumerable<Type> GetTypes()
         {
-            var blackList = new[] { "System.__ComObject", "System.AppContext", "System.FormattableString" };
+            var blackList = new[]
+            {
+                "System.__ComObject", "System.AppContext", "System.FormattableString",
+
+                // Until either the TextTransformCore tool supports .NET 10, or we're able to move
+                // off T4, we need to skip types that are only present in .NET 10, because the
+                // Nuqleon.Documentation assembly needs to be built against a version of .NET that
+                // T4 can use. That means it is unable to find XML docs for newer types.
+                // (To date, none of the templates have ever generated anything that wasn't present
+                // in .NET FX, so this shouldn't be a problem in practice. It just means this test
+                // needs to be careful about what it asks for.)
+                "System.EventHandler`2", "System.Collections.Generic.IAlternateEqualityComparer`2"
+            };
+
+            var systemRuntime = mlc.LoadFromAssemblyName("System.Runtime");
+            var systemLinq = mlc.LoadFromAssemblyName("System.Linq");
+            metadataDelegateType = systemRuntime.GetType("System.Delegate");
 
             var res =
-                from t in typeof(int).Assembly.GetTypes()
+                from t in systemRuntime.GetTypes()
                 where t.Namespace is "System" or "System.Collections" or "System.Collections.Generic"
                 where t.IsPublic
                 where !blackList.Contains(t.FullName)
                 select t;
 
             res = res.Concat(
-                from t in typeof(Enumerable).Assembly.GetTypes()
+                from t in systemLinq.GetTypes()
                 where t.Namespace == "System.Linq"
                 where t.IsPublic
                 where !blackList.Contains(t.FullName)

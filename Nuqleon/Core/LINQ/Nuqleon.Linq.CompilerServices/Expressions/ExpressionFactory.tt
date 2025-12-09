@@ -3,10 +3,13 @@
 // See the LICENSE file in the project root for more information.
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ assembly name="System.Xml" #>
-<#@ assembly name="System.Xml.Linq" #>
-<#@ assembly name="$(ProjectDir)\..\..\BCL\Nuqleon.Documentation\bin\Debug\net472\Nuqleon.Documentation.dll" #>
+<#@ assembly name="System.Collections.Immutable" #>
+<#@ assembly name="System.Linq" #>
+<#@ assembly name="System.Linq.Expressions" #>
+<#@ assembly name="System.Runtime" #>
+<#@ assembly name="System.Xml.XDocument" #>
+<#@ assembly name="System.Private.Xml.Linq" #>
+<#@ assembly name="..\..\BCL\Nuqleon.Documentation\bin\Debug\net8.0\Nuqleon.Documentation.dll" #>
 <#@ import namespace="System.Documentation" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Linq.Expressions" #>
@@ -65,7 +68,7 @@ namespace System.Linq.Expressions
 <#
 foreach (var m in typeof(Expression).GetMethods().Where(m => m.IsStatic && m.DeclaringType == typeof(Expression)).Where(m => !exclude.Contains(m.Name)).OrderBy(m => m.Name).ThenBy(m => m.GetParameters().Length))
 {
-    var xml = string.Join("\r\n", m.GetXmlDoc().Elements().Select(e => e.ToString()));
+    var xml = string.Join("\r\n", m.GetXmlDoc()?.Elements().Select(e => e.ToString()) ?? Enumerable.Empty<string>());
     var xmlLines = xml.ToString().Split('\n');
     var docSb = new StringBuilder();
     foreach (var line in xmlLines)

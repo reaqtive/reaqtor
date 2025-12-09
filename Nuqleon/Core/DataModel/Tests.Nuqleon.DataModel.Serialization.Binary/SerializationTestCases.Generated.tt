@@ -2,7 +2,8 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 <#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Linq" #>
+<#@ assembly name="System.Collections" #>
 <#@ assembly name="System.Globalization" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Globalization" #>

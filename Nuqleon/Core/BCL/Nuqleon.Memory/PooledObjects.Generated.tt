@@ -3,9 +3,14 @@
 // See the LICENSE file in the project root for more information.
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Collections" #>
+<#@ assembly name="System.Collections.Concurrent" #>
+<#@ assembly name="System.Collections.NonGeneric" #>
+<#@ assembly name="System.Linq" #>
 <#@ assembly name="System.Xml.Linq" #>
-<#@ assembly name="$(ProjectDir)\..\Nuqleon.Documentation\bin\Debug\net472\Nuqleon.Documentation.dll" #>
+<#@ assembly name="System.Xml.XDocument" #>
+<#@ assembly name="System.Private.Xml.Linq" #>
+<#@ assembly name="..\Nuqleon.Documentation\bin\Debug\net8.0\Nuqleon.Documentation.dll" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Concurrent" #>
 <#@ import namespace="System.Collections.Generic" #>

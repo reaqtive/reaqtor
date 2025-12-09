@@ -90,4 +90,13 @@
   <ItemGroup Condition="!$(AssemblyName.StartsWith('Tests.')) And !$(AssemblyName.StartsWith('Perf.')) And !$(AssemblyName.EndsWith('.Perf')) And !$(AssemblyName.Contains('Playground'))">
     <InternalsVisibleTo Include="Tests.$(AssemblyName)" />
   </ItemGroup>
+
+  <ItemGroup>
+    <TextTemplates Include="**\*.tt">
+      <GeneratedOutput Condition="Exists('%(RootDir)%(Directory)%(Filename).generated.cs')">%(Filename).generated.cs</GeneratedOutput>
+      <GeneratedOutput Condition="%(GeneratedOutput) == ''">%(Filename).cs</GeneratedOutput>
+      <GeneratedOutputRelativePath>%(RelativeDir)%(GeneratedOutput)</GeneratedOutputRelativePath>
+    </TextTemplates>
+  </ItemGroup>
+
 </Project>

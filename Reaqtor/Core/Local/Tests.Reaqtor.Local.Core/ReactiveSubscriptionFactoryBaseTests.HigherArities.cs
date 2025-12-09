@@ -4,9 +4,9 @@
 
 using System;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtor;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests
 {

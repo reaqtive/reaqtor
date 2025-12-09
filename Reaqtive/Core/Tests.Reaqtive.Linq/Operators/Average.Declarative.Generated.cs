@@ -1345,7 +1345,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single>(200 + 50, avg => Math.Abs((Single)(avg - -2.815001f)) < 0.0001f),
+                    OnNext<Single>(200 + 50, avg => Math.Abs((Single)(avg - -2.8150005f)) < 0.0001f),
                     OnCompleted<Single>(200 + 50)
                 );
 
@@ -1373,7 +1373,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single>(200 + 50, avg => Math.Abs((Single)(avg - -2.815001f)) < 0.0001f),
+                    OnNext<Single>(200 + 50, avg => Math.Abs((Single)(avg - -2.8150005f)) < 0.0001f),
                     OnCompleted<Single>(200 + 50)
                 );
 
@@ -1570,7 +1570,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single?>(200 + 50, avg => Math.Abs((Single)(avg - -2.815001f)) < 0.0001f),
+                    OnNext<Single?>(200 + 50, avg => Math.Abs((Single)(avg - -2.8150005f)) < 0.0001f),
                     OnCompleted<Single?>(200 + 50)
                 );
 
@@ -1598,7 +1598,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single?>(200 + 50, avg => Math.Abs((Single)(avg - -2.815001f)) < 0.0001f),
+                    OnNext<Single?>(200 + 50, avg => Math.Abs((Single)(avg - -2.8150005f)) < 0.0001f),
                     OnCompleted<Single?>(200 + 50)
                 );
 
@@ -1677,7 +1677,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single?>(200 + 80, avg => Math.Abs((Single)(avg - -2.815001f)) < 0.0001f),
+                    OnNext<Single?>(200 + 80, avg => Math.Abs((Single)(avg - -2.8150005f)) < 0.0001f),
                     OnCompleted<Single?>(200 + 80)
                 );
 
@@ -1708,7 +1708,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single?>(200 + 80, avg => Math.Abs((Single)(avg - -2.815001f)) < 0.0001f),
+                    OnNext<Single?>(200 + 80, avg => Math.Abs((Single)(avg - -2.8150005f)) < 0.0001f),
                     OnCompleted<Single?>(200 + 80)
                 );
 
@@ -1903,7 +1903,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double>(200 + 50, avg => Math.Abs((Double)(avg - -2.815d)) < 0.0001d),
+                    OnNext<Double>(200 + 50, avg => Math.Abs((Double)(avg - -2.8149999999999995d)) < 0.0001d),
                     OnCompleted<Double>(200 + 50)
                 );
 
@@ -1931,7 +1931,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double>(200 + 50, avg => Math.Abs((Double)(avg - -2.815d)) < 0.0001d),
+                    OnNext<Double>(200 + 50, avg => Math.Abs((Double)(avg - -2.8149999999999995d)) < 0.0001d),
                     OnCompleted<Double>(200 + 50)
                 );
 
@@ -2128,7 +2128,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double?>(200 + 50, avg => Math.Abs((Double)(avg - -2.815d)) < 0.0001d),
+                    OnNext<Double?>(200 + 50, avg => Math.Abs((Double)(avg - -2.8149999999999995d)) < 0.0001d),
                     OnCompleted<Double?>(200 + 50)
                 );
 
@@ -2156,7 +2156,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double?>(200 + 50, avg => Math.Abs((Double)(avg - -2.815d)) < 0.0001d),
+                    OnNext<Double?>(200 + 50, avg => Math.Abs((Double)(avg - -2.8149999999999995d)) < 0.0001d),
                     OnCompleted<Double?>(200 + 50)
                 );
 
@@ -2235,7 +2235,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double?>(200 + 80, avg => Math.Abs((Double)(avg - -2.815d)) < 0.0001d),
+                    OnNext<Double?>(200 + 80, avg => Math.Abs((Double)(avg - -2.8149999999999995d)) < 0.0001d),
                     OnCompleted<Double?>(200 + 80)
                 );
 
@@ -2266,7 +2266,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double?>(200 + 80, avg => Math.Abs((Double)(avg - -2.815d)) < 0.0001d),
+                    OnNext<Double?>(200 + 80, avg => Math.Abs((Double)(avg - -2.8149999999999995d)) < 0.0001d),
                     OnCompleted<Double?>(200 + 80)
                 );
 

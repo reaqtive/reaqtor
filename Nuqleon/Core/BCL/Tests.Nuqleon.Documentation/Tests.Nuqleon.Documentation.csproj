@@ -1,11 +1,38 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0</TargetFrameworks>
+    <!--
+    Using .NET 8.0 not .NET 10 because Nuqleon.Documentation needs to be on .NET 8.0 (because of T4).
+    Since these tests build lists of types and members based on the available reference assemblies,
+    we need to build against the same version of .NET so that we don't ask for documentation that
+    Nuqleon.Documentation can't see.
+    -->
+    <TargetFrameworks>net8.0</TargetFrameworks>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Nuqleon.Documentation\Nuqleon.Documentation.csproj" />
   </ItemGroup>
+
+  <Target Name="_GenerateReferenceAssemblyFolderHelper" AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <SystemRuntimeReference Include="@(ReferencePath)" Condition="$([System.String]::Copy('%(Identity)').EndsWith('System.Runtime.dll'))" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <RuntimeReferenceAssembliesFolder>%(SystemRuntimeReference.RootDir)%(SystemRuntimeReference.Directory)</RuntimeReferenceAssembliesFolder>
+
+      <GeneratedCodeDir>$(IntermediateOutputPath)Generated</GeneratedCodeDir>
+      <GeneratedCodeFile>$(GeneratedCodeDir)\RuntimeInfo.cs</GeneratedCodeFile>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(GeneratedCodeDir)" />
+    <WriteLinesToFile File="$(GeneratedCodeFile)" Lines="#pragma warning disable CS1591&#xD;&#xA;namespace Nuqleon.Documentation.Tests&#xD;&#xA;{&#xD;&#xA;    internal static class RuntimeInfo&#xD;&#xA;    {&#xD;&#xA;        public static string ReferenceAssembliesFolder =&gt; @&quot;$(RuntimeReferenceAssembliesFolder)&quot; %3b&#xD;&#xA;    }&#xD;&#xA;}" Overwrite="true" />
+
+    <!-- Add generated file to compilation -->
+    <ItemGroup>
+      <Compile Include="$(GeneratedCodeFile)" />
+    </ItemGroup>
+  </Target>
 
 </Project>

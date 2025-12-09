@@ -11,6 +11,7 @@ using System.Linq.Expressions;
 using Reaqtor.Expressions.Core;
 
 using ReactiveConstants = Reaqtor.Remoting.Client.Constants;
+using PlatformConstants = Reaqtor.Remoting.Platform.Constants;
 
 namespace Reaqtor.QueryEngine.ReificationFramework
 {

@@ -5,7 +5,7 @@
 // #define USE_VALUETUPLE // REVIEW: Is the use of ValueTuple desirable? Cf. the implementation of GetHashCode for arity >= 8.
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Linq" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>

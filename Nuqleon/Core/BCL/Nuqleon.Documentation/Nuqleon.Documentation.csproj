@@ -1,8 +1,36 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net10.0</TargetFrameworks>
+    <!-- Using .NET 8.0 not .NET 10 because as of 2025/12, TextTransformCore.exe (the T4 runner) still uses .NET 8.0. -->
+    <TargetFrameworks>net8.0</TargetFrameworks>
     <Description>Contains utilities to read XML documentation for types and members at runtime.</Description>
   </PropertyGroup>
+
+
+  <!-- Make the .NET SDK reference assembly folder available to the code. -->
+  <Target Name="_GenerateReferenceAssemblyFolderHelper" AfterTargets="ResolveReferences">
+    <ItemGroup>
+      <SystemRuntimeReference Include="@(ReferencePath)" Condition="$([System.String]::Copy('%(Identity)').EndsWith('System.Runtime.dll'))" />
+    </ItemGroup>
+
+    <PropertyGroup>
+      <RuntimeReferenceAssembliesFolder>%(SystemRuntimeReference.RootDir)%(SystemRuntimeReference.Directory)</RuntimeReferenceAssembliesFolder>
+
+      <GeneratedCodeDir>$(IntermediateOutputPath)Generated</GeneratedCodeDir>
+      <GeneratedCodeFile>$(GeneratedCodeDir)\RuntimeInfo.cs</GeneratedCodeFile>
+    </PropertyGroup>
+
+    <MakeDir Directories="$(GeneratedCodeDir)" />
+    <WriteLinesToFile File="$(GeneratedCodeFile)" Lines="#pragma warning disable CS1591&#xD;&#xA;namespace Nuqleon.Documentation&#xD;&#xA;{&#xD;&#xA;    internal static class RuntimeInfo&#xD;&#xA;    {&#xD;&#xA;        public static string ReferenceAssembliesFolder =&gt; @&quot;$(RuntimeReferenceAssembliesFolder)&quot; %3b&#xD;&#xA;    }&#xD;&#xA;}" Overwrite="true" />
+
+    <!-- Add generated file to compilation -->
+    <ItemGroup>
+      <Compile Include="$(GeneratedCodeFile)" />
+    </ItemGroup>
+  </Target>
+
+  <ItemGroup>
+    <PackageReference Include="System.Reflection.MetadataLoadContext" Version="10.0.0" />
+  </ItemGroup>
 
 </Project>

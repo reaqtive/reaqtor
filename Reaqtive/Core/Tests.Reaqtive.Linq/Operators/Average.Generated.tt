@@ -3,7 +3,8 @@
 // See the LICENSE file in the project root for more information.
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Collections" #>
+<#@ assembly name="System.Linq" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections" #>

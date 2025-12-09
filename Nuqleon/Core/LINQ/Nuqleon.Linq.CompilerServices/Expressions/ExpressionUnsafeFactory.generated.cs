@@ -1,4 +1,4 @@
-// Licensed to the .NET Foundation under one or more agreements.
+﻿// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -171,6 +171,13 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual IndexExpression ArrayAccess(Expression array, IEnumerable<Expression> indexes) => ExpressionUnsafe.ArrayAccess(array, indexes);
 
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents applying an array index operator to an array of rank one.</summary>
+        /// <param name="array">A <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> property equal to.</param>
+        /// <param name="index">A <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> property equal to.</param>
+        /// <returns>A <see cref="T:System.Linq.Expressions.BinaryExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ArrayIndex" /> and the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> and <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> properties set to the specified values.</returns>
+        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
+        public virtual BinaryExpression ArrayIndex(Expression array, Expression index) => ExpressionUnsafe.ArrayIndex(array, index);
+
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.MethodCallExpression" /> that represents applying an array index operator to a multidimensional array.</summary>
         /// <param name="array">An array of <see cref="T:System.Linq.Expressions.Expression" /> instances - indexes for the array index operation.</param>
         /// <param name="indexes">An array of <see cref="T:System.Linq.Expressions.Expression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.MethodCallExpression.Arguments" /> collection.</param>
@@ -184,13 +191,6 @@ namespace System.Linq.Expressions
         /// <returns>A <see cref="T:System.Linq.Expressions.MethodCallExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.Call" /> and the <see cref="P:System.Linq.Expressions.MethodCallExpression.Object" /> and <see cref="P:System.Linq.Expressions.MethodCallExpression.Arguments" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual MethodCallExpression ArrayIndex(Expression array, IEnumerable<Expression> indexes) => ExpressionUnsafe.ArrayIndex(array, indexes);
-
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents applying an array index operator to an array of rank one.</summary>
-        /// <param name="array">A <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> property equal to.</param>
-        /// <param name="index">A <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> property equal to.</param>
-        /// <returns>A <see cref="T:System.Linq.Expressions.BinaryExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ArrayIndex" /> and the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> and <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> properties set to the specified values.</returns>
-        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public virtual BinaryExpression ArrayIndex(Expression array, Expression index) => ExpressionUnsafe.ArrayIndex(array, index);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.UnaryExpression" /> that represents an expression for obtaining the length of a one-dimensional array.</summary>
         /// <param name="array">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.UnaryExpression.Operand" /> property equal to.</param>
@@ -417,7 +417,7 @@ namespace System.Linq.Expressions
         public virtual MethodCallExpression Call(Expression instance, String methodName, Type[] typeArguments, Expression[] arguments) => ExpressionUnsafe.Call(instance, methodName, typeArguments, arguments);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.MethodCallExpression" /> that represents a call to a <see langword="static" /> (<see langword="Shared" /> in Visual Basic) method by calling the appropriate factory method.</summary>
-        /// <param name="type">The <see cref="T:System.Type" /> that specifies the type that contains the specified <see langword="static" /> (<see langword="Shared" /> in Visual Basic) method.</param>
+        /// <param name="type">The type that contains the specified <see langword="static" /> (<see langword="Shared" /> in Visual Basic) method.</param>
         /// <param name="methodName">The name of the method.</param>
         /// <param name="typeArguments">An array of <see cref="T:System.Type" /> objects that specify the type parameters of the generic method. This argument should be null when methodName specifies a non-generic method.</param>
         /// <param name="arguments">An array of <see cref="T:System.Linq.Expressions.Expression" /> objects that represent the arguments to the method.</param>
@@ -488,7 +488,7 @@ namespace System.Linq.Expressions
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.DebugInfoExpression" /> for clearing a sequence point.</summary>
         /// <param name="document">The <see cref="T:System.Linq.Expressions.SymbolDocumentInfo" /> that represents the source file.</param>
-        /// <returns>An instance of <see cref="T:System.Linq.Expressions.DebugInfoExpression" /> for clearning a sequence point.</returns>
+        /// <returns>An instance of <see cref="T:System.Linq.Expressions.DebugInfoExpression" /> for clearing a sequence point.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual DebugInfoExpression ClearDebugInfo(SymbolDocumentInfo document) => ExpressionUnsafe.ClearDebugInfo(document);
 
@@ -654,7 +654,7 @@ namespace System.Linq.Expressions
         /// <param name="arguments">The arguments to the dynamic operation.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.DynamicExpression" /> that has <see cref="P:System.Linq.Expressions.Expression.NodeType" /> equal to <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> and has the <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> and <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public virtual DynamicExpression Dynamic(CallSiteBinder binder, Type returnType, Expression[] arguments) => ExpressionUnsafe.Dynamic(binder, returnType, arguments);
+        public virtual DynamicExpression Dynamic(CallSiteBinder binder, Type returnType, IEnumerable<Expression> arguments) => ExpressionUnsafe.Dynamic(binder, returnType, arguments);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.DynamicExpression" /> that represents a dynamic operation bound by the provided <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />.</summary>
         /// <param name="binder">The runtime binder for the dynamic operation.</param>
@@ -670,7 +670,7 @@ namespace System.Linq.Expressions
         /// <param name="arguments">The arguments to the dynamic operation.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.DynamicExpression" /> that has <see cref="P:System.Linq.Expressions.Expression.NodeType" /> equal to <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> and has the <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" /> and <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public virtual DynamicExpression Dynamic(CallSiteBinder binder, Type returnType, IEnumerable<Expression> arguments) => ExpressionUnsafe.Dynamic(binder, returnType, arguments);
+        public virtual DynamicExpression Dynamic(CallSiteBinder binder, Type returnType, Expression[] arguments) => ExpressionUnsafe.Dynamic(binder, returnType, arguments);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.DynamicExpression" /> that represents a dynamic operation bound by the provided <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />.</summary>
         /// <param name="binder">The runtime binder for the dynamic operation.</param>
@@ -738,14 +738,14 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual BinaryExpression Equal(Expression left, Expression right, Boolean liftToNull, MethodInfo method) => ExpressionUnsafe.Equal(left, right, liftToNull, method);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise <see langword="XOR" /> operation, using op_ExclusiveOr for user-defined types.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise <see langword="XOR" /> operation, using <c>op_ExclusiveOr</c> for user-defined types.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> property equal to.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.BinaryExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ExclusiveOr" /> and the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> and <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual BinaryExpression ExclusiveOr(Expression left, Expression right) => ExpressionUnsafe.ExclusiveOr(left, right);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise <see langword="XOR" /> operation, using op_ExclusiveOr for user-defined types. The implementing method can be specified.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise <see langword="XOR" /> operation, using <c>op_ExclusiveOr</c> for user-defined types. The implementing method can be specified.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> property equal to.</param>
         /// <param name="method">A <see cref="T:System.Reflection.MethodInfo" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Method" /> property equal to.</param>
@@ -753,14 +753,14 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual BinaryExpression ExclusiveOr(Expression left, Expression right, MethodInfo method) => ExpressionUnsafe.ExclusiveOr(left, right, method);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise XOR assignment operation, using op_ExclusiveOr for user-defined types.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise XOR assignment operation, using <c>op_ExclusiveOr</c> for user-defined types.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> property equal to.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.BinaryExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ExclusiveOrAssign" /> and the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> and <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual BinaryExpression ExclusiveOrAssign(Expression left, Expression right) => ExpressionUnsafe.ExclusiveOrAssign(left, right);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise XOR assignment operation, using op_ExclusiveOr for user-defined types.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise XOR assignment operation, using <c>op_ExclusiveOr</c> for user-defined types.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> property equal to.</param>
         /// <param name="method">A <see cref="T:System.Reflection.MethodInfo" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Method" /> property equal to.</param>
@@ -768,7 +768,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual BinaryExpression ExclusiveOrAssign(Expression left, Expression right, MethodInfo method) => ExpressionUnsafe.ExclusiveOrAssign(left, right, method);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise XOR assignment operation, using op_ExclusiveOr for user-defined types.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpression" /> that represents a bitwise XOR assignment operation, using <c>op_ExclusiveOr</c> for user-defined types.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Right" /> property equal to.</param>
         /// <param name="method">A <see cref="T:System.Reflection.MethodInfo" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpression.Method" /> property equal to.</param>
@@ -966,7 +966,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LabelTarget Label(Type type, String name) => ExpressionUnsafe.Label(type, name);
 
-        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time.</summary>
+        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time, with an array of parameter expressions.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
         /// <typeparam name="TDelegate">A delegate type.</typeparam>
@@ -974,7 +974,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual Expression<TDelegate> Lambda<TDelegate>(Expression body, ParameterExpression[] parameters) => ExpressionUnsafe.Lambda<TDelegate>(body, parameters);
 
-        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time.</summary>
+        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time, with an enumerable collection of parameter expressions.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
         /// <typeparam name="TDelegate">A delegate type.</typeparam>
@@ -982,48 +982,48 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual Expression<TDelegate> Lambda<TDelegate>(Expression body, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda<TDelegate>(body, parameters);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> by first constructing a delegate type from the expression body, and an array of parameter expressions. It can be used when the delegate type is not known at compile time.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.LambdaExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.Lambda" /> and the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Expression body, ParameterExpression[] parameters) => ExpressionUnsafe.Lambda(body, parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> by first constructing a delegate type from the expression body, and an enumerable collection of parameter expressions. It can be used when the delegate type is not known at compile time.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.LambdaExpression" /> that has the <see cref="P:System.Linq.Expressions.LambdaExpression.NodeType" /> property equal to Lambda and the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Expression body, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda(body, parameters);
 
-        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time.</summary>
+        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time, with a parameter that indicates whether tail call optimization will be applied, and an array of parameter expressions.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression.</param>
         /// <param name="parameters">An array that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
-        /// <typeparam name="TDelegate">The delegate type. </typeparam>
+        /// <typeparam name="TDelegate">The delegate type.</typeparam>
         /// <returns>An <see cref="T:System.Linq.Expressions.Expression`1" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.Lambda" /> and the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual Expression<TDelegate> Lambda<TDelegate>(Expression body, Boolean tailCall, ParameterExpression[] parameters) => ExpressionUnsafe.Lambda<TDelegate>(body, tailCall, parameters);
 
-        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time.</summary>
+        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time, with a parameter that indicates whether tail call optimization will be applied, and an enumerable collection of parameter expressions.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
-        /// <typeparam name="TDelegate">The delegate type. </typeparam>
+        /// <typeparam name="TDelegate">The delegate type.</typeparam>
         /// <returns>An <see cref="T:System.Linq.Expressions.Expression`1" /> that has the <see cref="P:System.Linq.Expressions.LambdaExpression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.Lambda" /> and the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual Expression<TDelegate> Lambda<TDelegate>(Expression body, Boolean tailCall, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda<TDelegate>(body, tailCall, parameters);
 
-        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time.</summary>
+        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time, with the name for the lambda, and an enumerable collection of parameter expressions.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="name">The name of the lambda. Used for generating debugging information.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
-        /// <typeparam name="TDelegate">The delegate type. </typeparam>
+        /// <typeparam name="TDelegate">The delegate type.</typeparam>
         /// <returns>An <see cref="T:System.Linq.Expressions.Expression`1" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.Lambda" /> and the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual Expression<TDelegate> Lambda<TDelegate>(Expression body, String name, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda<TDelegate>(body, name, parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> by first constructing a delegate type from the expression body, a parameter that indicates whether tail call optimization will be applied, and an array of parameter expressions. It can be used when the delegate type is not known at compile time.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression.</param>
         /// <param name="parameters">An array that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
@@ -1031,7 +1031,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Expression body, Boolean tailCall, ParameterExpression[] parameters) => ExpressionUnsafe.Lambda(body, tailCall, parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> by first constructing a delegate type from the expression body, a parameter that indicates whether tail call optimization will be applied, and an enumerable collection of parameter expressions. It can be used when the delegate type is not known at compile time.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
@@ -1039,7 +1039,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Expression body, Boolean tailCall, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda(body, tailCall, parameters);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> by first constructing a delegate type. It can be used when the delegate type is not known at compile time.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> where the delegate type is known at compile time, with an array of parameter expressions.</summary>
         /// <param name="delegateType">A <see cref="T:System.Type" /> that represents a delegate signature for the lambda.</param>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
@@ -1047,7 +1047,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Type delegateType, Expression body, ParameterExpression[] parameters) => ExpressionUnsafe.Lambda(delegateType, body, parameters);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> by first constructing a delegate type. It can be used when the delegate type is not known at compile time.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> where the delegate type is known at compile time, with an enumerable collection of parameter expressions.</summary>
         /// <param name="delegateType">A <see cref="T:System.Type" /> that represents a delegate signature for the lambda.</param>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
@@ -1055,7 +1055,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Type delegateType, Expression body, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda(delegateType, body, parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> by first constructing a delegate type from the expression body, the name for the lambda, and an enumerable collection of parameter expressions. It can be used when the delegate type is not known at compile time.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="name">The name for the lambda. Used for emitting debug information.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
@@ -1063,17 +1063,17 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Expression body, String name, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda(body, name, parameters);
 
-        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time.</summary>
+        /// <summary>Creates an <see cref="T:System.Linq.Expressions.Expression`1" /> where the delegate type is known at compile time, with the name for the lambda, a parameter that indicates whether tail call optimization will be applied, and an enumerable collection of parameter expressions.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="name">The name of the lambda. Used for generating debugging info.</param>
         /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
-        /// <typeparam name="TDelegate">The delegate type. </typeparam>
+        /// <typeparam name="TDelegate">The delegate type.</typeparam>
         /// <returns>An <see cref="T:System.Linq.Expressions.Expression`1" /> that has the <see cref="P:System.Linq.Expressions.LambdaExpression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.Lambda" /> and the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual Expression<TDelegate> Lambda<TDelegate>(Expression body, String name, Boolean tailCall, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda<TDelegate>(body, name, tailCall, parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> where the delegate type is known at compile time, with a parameter that indicates whether tail call optimization will be applied, and an array of parameter expressions.</summary>
         /// <param name="delegateType">A <see cref="P:System.Linq.Expressions.Expression.Type" /> representing the delegate signature for the lambda.</param>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression.</param>
@@ -1082,7 +1082,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Type delegateType, Expression body, Boolean tailCall, ParameterExpression[] parameters) => ExpressionUnsafe.Lambda(delegateType, body, tailCall, parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> where the delegate type is known at compile time, with a parameter that indicates whether tail call optimization will be applied, and an enumerable collection of parameter expressions.</summary>
         /// <param name="delegateType">A <see cref="P:System.Linq.Expressions.Expression.Type" /> representing the delegate signature for the lambda.</param>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression.</param>
@@ -1091,7 +1091,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Type delegateType, Expression body, Boolean tailCall, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda(delegateType, body, tailCall, parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> by first constructing a delegate type from the expression body, the name for the lambda, a parameter that indicates whether tail call optimization will be applied, and an enumerable collection of parameter expressions. It can be used when the delegate type is not known at compile time.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="name">The name for the lambda. Used for emitting debug information.</param>
         /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression.</param>
@@ -1100,7 +1100,7 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Expression body, String name, Boolean tailCall, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda(body, name, tailCall, parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> where the delegate type is known at compile time, with the name for the lambda, and an enumerable collection of parameter expressions.</summary>
         /// <param name="delegateType">A <see cref="P:System.Linq.Expressions.Expression.Type" /> representing the delegate signature for the lambda.</param>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="name">The name for the lambda. Used for emitting debug information.</param>
@@ -1109,12 +1109,12 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Type delegateType, Expression body, String name, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda(delegateType, body, name, parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpression" /> where the delegate type is known at compile time, with the name for the lambda, a parameter that indicates whether tail call optimization will be applied, and an enumerable collection of parameter expressions.</summary>
         /// <param name="delegateType">A <see cref="P:System.Linq.Expressions.Expression.Type" /> representing the delegate signature for the lambda.</param>
-        /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to. </param>
+        /// <param name="body">An <see cref="T:System.Linq.Expressions.Expression" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> property equal to.</param>
         /// <param name="name">The name for the lambda. Used for emitting debug information.</param>
-        /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression. </param>
-        /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection. </param>
+        /// <param name="tailCall">A <see cref="T:System.Boolean" /> that indicates if tail call optimization will be applied when compiling the created expression.</param>
+        /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> collection.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.LambdaExpression" /> that has the <see cref="P:System.Linq.Expressions.LambdaExpression.NodeType" /> property equal to Lambda and the <see cref="P:System.Linq.Expressions.LambdaExpression.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpression.Parameters" /> properties set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual LambdaExpression Lambda(Type delegateType, Expression body, String name, Boolean tailCall, IEnumerable<ParameterExpression> parameters) => ExpressionUnsafe.Lambda(delegateType, body, name, tailCall, parameters);
@@ -1220,20 +1220,6 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual MemberListBinding ListBind(MethodInfo propertyAccessor, IEnumerable<ElementInit> initializers) => ExpressionUnsafe.ListBind(propertyAccessor, initializers);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.ListInitExpression" /> that uses specified <see cref="T:System.Linq.Expressions.ElementInit" /> objects to initialize a collection.</summary>
-        /// <param name="newExpression">A <see cref="T:System.Linq.Expressions.NewExpression" /> to set the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> property equal to.</param>
-        /// <param name="initializers">An array of <see cref="T:System.Linq.Expressions.ElementInit" /> objects to use to populate the <see cref="P:System.Linq.Expressions.ListInitExpression.Initializers" /> collection.</param>
-        /// <returns>A <see cref="T:System.Linq.Expressions.ListInitExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ListInit" /> and the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> and <see cref="P:System.Linq.Expressions.ListInitExpression.Initializers" /> properties set to the specified values.</returns>
-        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public virtual ListInitExpression ListInit(NewExpression newExpression, ElementInit[] initializers) => ExpressionUnsafe.ListInit(newExpression, initializers);
-
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.ListInitExpression" /> that uses specified <see cref="T:System.Linq.Expressions.ElementInit" /> objects to initialize a collection.</summary>
-        /// <param name="newExpression">A <see cref="T:System.Linq.Expressions.NewExpression" /> to set the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> property equal to.</param>
-        /// <param name="initializers">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ElementInit" /> objects to use to populate the <see cref="P:System.Linq.Expressions.ListInitExpression.Initializers" /> collection.</param>
-        /// <returns>A <see cref="T:System.Linq.Expressions.ListInitExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ListInit" /> and the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> and <see cref="P:System.Linq.Expressions.ListInitExpression.Initializers" /> properties set to the specified values.</returns>
-        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public virtual ListInitExpression ListInit(NewExpression newExpression, IEnumerable<ElementInit> initializers) => ExpressionUnsafe.ListInit(newExpression, initializers);
-
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.ListInitExpression" /> that uses a method named "Add" to add elements to a collection.</summary>
         /// <param name="newExpression">A <see cref="T:System.Linq.Expressions.NewExpression" /> to set the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> property equal to.</param>
         /// <param name="initializers">An array of <see cref="T:System.Linq.Expressions.Expression" /> objects to use to populate the <see cref="P:System.Linq.Expressions.ListInitExpression.Initializers" /> collection.</param>
@@ -1247,6 +1233,20 @@ namespace System.Linq.Expressions
         /// <returns>A <see cref="T:System.Linq.Expressions.ListInitExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ListInit" /> and the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> property set to the specified value.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual ListInitExpression ListInit(NewExpression newExpression, IEnumerable<Expression> initializers) => ExpressionUnsafe.ListInit(newExpression, initializers);
+
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.ListInitExpression" /> that uses specified <see cref="T:System.Linq.Expressions.ElementInit" /> objects to initialize a collection.</summary>
+        /// <param name="newExpression">A <see cref="T:System.Linq.Expressions.NewExpression" /> to set the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> property equal to.</param>
+        /// <param name="initializers">An array of <see cref="T:System.Linq.Expressions.ElementInit" /> objects to use to populate the <see cref="P:System.Linq.Expressions.ListInitExpression.Initializers" /> collection.</param>
+        /// <returns>A <see cref="T:System.Linq.Expressions.ListInitExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ListInit" /> and the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> and <see cref="P:System.Linq.Expressions.ListInitExpression.Initializers" /> properties set to the specified values.</returns>
+        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
+        public virtual ListInitExpression ListInit(NewExpression newExpression, ElementInit[] initializers) => ExpressionUnsafe.ListInit(newExpression, initializers);
+
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.ListInitExpression" /> that uses specified <see cref="T:System.Linq.Expressions.ElementInit" /> objects to initialize a collection.</summary>
+        /// <param name="newExpression">A <see cref="T:System.Linq.Expressions.NewExpression" /> to set the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> property equal to.</param>
+        /// <param name="initializers">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ElementInit" /> objects to use to populate the <see cref="P:System.Linq.Expressions.ListInitExpression.Initializers" /> collection.</param>
+        /// <returns>A <see cref="T:System.Linq.Expressions.ListInitExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ListInit" /> and the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> and <see cref="P:System.Linq.Expressions.ListInitExpression.Initializers" /> properties set to the specified values.</returns>
+        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
+        public virtual ListInitExpression ListInit(NewExpression newExpression, IEnumerable<ElementInit> initializers) => ExpressionUnsafe.ListInit(newExpression, initializers);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.ListInitExpression" /> that uses a specified method to add elements to a collection.</summary>
         /// <param name="newExpression">A <see cref="T:System.Linq.Expressions.NewExpression" /> to set the <see cref="P:System.Linq.Expressions.ListInitExpression.NewExpression" /> property equal to.</param>
@@ -1311,7 +1311,7 @@ namespace System.Linq.Expressions
         /// <param name="liftToNull">
         ///   <see langword="true" /> to set <see cref="P:System.Linq.Expressions.BinaryExpression.IsLiftedToNull" /> to <see langword="true" />; <see langword="false" /> to set <see cref="P:System.Linq.Expressions.BinaryExpression.IsLiftedToNull" /> to <see langword="false" />.</param>
         /// <param name="method">A <see cref="T:System.Reflection.MethodInfo" /> that specifies the implementing method.</param>
-        /// <param name="conversion">A <see cref="T:System.Linq.Expressions.LambdaExpression" /> that represents a type conversion function. This parameter is used only if <paramref name="binaryType" /> is <see cref="F:System.Linq.Expressions.ExpressionType.Coalesce" /> or compound assignment..</param>
+        /// <param name="conversion">A <see cref="T:System.Linq.Expressions.LambdaExpression" /> that represents a type conversion function. This parameter is used only if <paramref name="binaryType" /> is <see cref="F:System.Linq.Expressions.ExpressionType.Coalesce" /> or compound assignment.</param>
         /// <returns>The <see cref="T:System.Linq.Expressions.BinaryExpression" /> that results from calling the appropriate factory method.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual BinaryExpression MakeBinary(ExpressionType binaryType, Expression left, Expression right, Boolean liftToNull, MethodInfo method, LambdaExpression conversion) => ExpressionUnsafe.MakeBinary(binaryType, left, right, liftToNull, method, conversion);
@@ -1331,14 +1331,6 @@ namespace System.Linq.Expressions
         /// <param name="arguments">The arguments to the dynamic operation.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.DynamicExpression" /> that has <see cref="P:System.Linq.Expressions.Expression.NodeType" /> equal to <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> and has the <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />, and <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public virtual DynamicExpression MakeDynamic(Type delegateType, CallSiteBinder binder, Expression[] arguments) => ExpressionUnsafe.MakeDynamic(delegateType, binder, arguments);
-
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.DynamicExpression" /> that represents a dynamic operation bound by the provided <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />.</summary>
-        /// <param name="delegateType">The type of the delegate used by the <see cref="T:System.Runtime.CompilerServices.CallSite" />.</param>
-        /// <param name="binder">The runtime binder for the dynamic operation.</param>
-        /// <param name="arguments">The arguments to the dynamic operation.</param>
-        /// <returns>A <see cref="T:System.Linq.Expressions.DynamicExpression" /> that has <see cref="P:System.Linq.Expressions.Expression.NodeType" /> equal to <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> and has the <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />, and <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> set to the specified values.</returns>
-        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual DynamicExpression MakeDynamic(Type delegateType, CallSiteBinder binder, IEnumerable<Expression> arguments) => ExpressionUnsafe.MakeDynamic(delegateType, binder, arguments);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.DynamicExpression" /> that represents a dynamic operation bound by the provided <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> and one argument.</summary>
@@ -1348,6 +1340,14 @@ namespace System.Linq.Expressions
         /// <returns>A <see cref="T:System.Linq.Expressions.DynamicExpression" /> that has <see cref="P:System.Linq.Expressions.Expression.NodeType" /> equal to <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> and has the <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />, and <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> set to the specified values.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual DynamicExpression MakeDynamic(Type delegateType, CallSiteBinder binder, Expression arg0) => ExpressionUnsafe.MakeDynamic(delegateType, binder, arg0);
+
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.DynamicExpression" /> that represents a dynamic operation bound by the provided <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" />.</summary>
+        /// <param name="delegateType">The type of the delegate used by the <see cref="T:System.Runtime.CompilerServices.CallSite" />.</param>
+        /// <param name="binder">The runtime binder for the dynamic operation.</param>
+        /// <param name="arguments">The arguments to the dynamic operation.</param>
+        /// <returns>A <see cref="T:System.Linq.Expressions.DynamicExpression" /> that has <see cref="P:System.Linq.Expressions.Expression.NodeType" /> equal to <see cref="F:System.Linq.Expressions.ExpressionType.Dynamic" /> and has the <see cref="P:System.Linq.Expressions.DynamicExpression.DelegateType" />, <see cref="P:System.Linq.Expressions.DynamicExpression.Binder" />, and <see cref="P:System.Linq.Expressions.DynamicExpression.Arguments" /> set to the specified values.</returns>
+        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
+        public virtual DynamicExpression MakeDynamic(Type delegateType, CallSiteBinder binder, Expression[] arguments) => ExpressionUnsafe.MakeDynamic(delegateType, binder, arguments);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.DynamicExpression" /> that represents a dynamic operation bound by the provided <see cref="T:System.Runtime.CompilerServices.CallSiteBinder" /> and two arguments.</summary>
         /// <param name="delegateType">The type of the delegate used by the <see cref="T:System.Runtime.CompilerServices.CallSite" />.</param>
@@ -1391,7 +1391,7 @@ namespace System.Linq.Expressions
         /// <summary>Creates an <see cref="T:System.Linq.Expressions.IndexExpression" /> that represents accessing an indexed property in an object.</summary>
         /// <param name="instance">The object to which the property belongs. It should be null if the property is <see langword="static" /> (<see langword="shared" /> in Visual Basic).</param>
         /// <param name="indexer">An <see cref="T:System.Linq.Expressions.Expression" /> representing the property to index.</param>
-        /// <param name="arguments">An IEnumerable&lt;Expression&gt; (IEnumerable (Of Expression) in Visual Basic) that contains the arguments that will be used to index the property.</param>
+        /// <param name="arguments">An <c>IEnumerable&lt;Expression&gt;</c> (<c>IEnumerable (Of Expression)</c> in Visual Basic) that contains the arguments that will be used to index the property.</param>
         /// <returns>The created <see cref="T:System.Linq.Expressions.IndexExpression" />.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual IndexExpression MakeIndex(Expression instance, PropertyInfo indexer, IEnumerable<Expression> arguments) => ExpressionUnsafe.MakeIndex(instance, indexer, arguments);
@@ -1404,7 +1404,7 @@ namespace System.Linq.Expressions
         public virtual MemberExpression MakeMemberAccess(Expression expression, MemberInfo member) => ExpressionUnsafe.MakeMemberAccess(expression, member);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.TryExpression" /> representing a try block with the specified elements.</summary>
-        /// <param name="type">The result type of the try expression. If null, bodh and all handlers must have identical type.</param>
+        /// <param name="type">The result type of the try expression. If null, body and all handlers must have identical type.</param>
         /// <param name="body">The body of the try block.</param>
         /// <param name="finally">The body of the finally block. Pass null if the try block has no finally block associated with it.</param>
         /// <param name="fault">The body of the fault block. Pass null if the try block has no fault block associated with it.</param>
@@ -1907,14 +1907,6 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual MemberExpression Property(Expression expression, MethodInfo propertyAccessor) => ExpressionUnsafe.Property(expression, propertyAccessor);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.MemberExpression" /> accessing a property.</summary>
-        /// <param name="expression">The containing object of the property. This can be null for static properties.</param>
-        /// <param name="type">The <see cref="P:System.Linq.Expressions.Expression.Type" /> that contains the property.</param>
-        /// <param name="propertyName">The property to be accessed.</param>
-        /// <returns>The created <see cref="T:System.Linq.Expressions.MemberExpression" />.</returns>
-        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public virtual MemberExpression Property(Expression expression, Type type, String propertyName) => ExpressionUnsafe.Property(expression, type, propertyName);
-
         /// <summary>Creates an <see cref="T:System.Linq.Expressions.IndexExpression" /> representing the access to an indexed property.</summary>
         /// <param name="instance">The object to which the property belongs. If the property is static/shared, it must be null.</param>
         /// <param name="propertyName">The name of the indexer.</param>
@@ -1939,8 +1931,16 @@ namespace System.Linq.Expressions
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual IndexExpression Property(Expression instance, PropertyInfo indexer, IEnumerable<Expression> arguments) => ExpressionUnsafe.Property(instance, indexer, arguments);
 
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.MemberExpression" /> accessing a property.</summary>
+        /// <param name="expression">The containing object of the property. This can be null for static properties.</param>
+        /// <param name="type">The <see cref="P:System.Linq.Expressions.Expression.Type" /> that contains the property.</param>
+        /// <param name="propertyName">The property to be accessed.</param>
+        /// <returns>The created <see cref="T:System.Linq.Expressions.MemberExpression" />.</returns>
+        /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
+        public virtual MemberExpression Property(Expression expression, Type type, String propertyName) => ExpressionUnsafe.Property(expression, type, propertyName);
+
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.MemberExpression" /> that represents accessing a property or field.</summary>
-        /// <param name="expression">An <see cref="T:System.Linq.Expressions.Expression" /> whose <see cref="P:System.Linq.Expressions.Expression.Type" /> contains a property or field named <paramref name="propertyOrFieldName" />. This can be null for static members.</param>
+        /// <param name="expression">An <see cref="T:System.Linq.Expressions.Expression" /> whose <see cref="P:System.Linq.Expressions.Expression.Type" /> contains a property or field named <paramref name="propertyOrFieldName" />.</param>
         /// <param name="propertyOrFieldName">The name of a property or field to be accessed.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.MemberExpression" /> that has the <see cref="P:System.Linq.Expressions.Expression.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.MemberAccess" />, the <see cref="P:System.Linq.Expressions.MemberExpression.Expression" /> property set to <paramref name="expression" />, and the <see cref="P:System.Linq.Expressions.MemberExpression.Member" /> property set to the <see cref="T:System.Reflection.PropertyInfo" /> or <see cref="T:System.Reflection.FieldInfo" /> that represents the property or field denoted by <paramref name="propertyOrFieldName" />.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
@@ -2175,9 +2175,9 @@ namespace System.Linq.Expressions
         /// <param name="cases">The set of cases for this switch expression.</param>
         /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpression" />.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public virtual SwitchExpression Switch(Type type, Expression switchValue, Expression defaultBody, MethodInfo comparison, IEnumerable<SwitchCase> cases) => ExpressionUnsafe.Switch(type, switchValue, defaultBody, comparison, cases);
+        public virtual SwitchExpression Switch(Type type, Expression switchValue, Expression defaultBody, MethodInfo comparison, SwitchCase[] cases) => ExpressionUnsafe.Switch(type, switchValue, defaultBody, comparison, cases);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpression" /> that represents a <see langword="switch" /> statement that has a default case..</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpression" /> that represents a <see langword="switch" /> statement that has a default case.</summary>
         /// <param name="type">The result type of the switch.</param>
         /// <param name="switchValue">The value to be tested against each case.</param>
         /// <param name="defaultBody">The result of the switch if <paramref name="switchValue" /> does not match any of the cases.</param>
@@ -2185,7 +2185,7 @@ namespace System.Linq.Expressions
         /// <param name="cases">The set of cases for this switch expression.</param>
         /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpression" />.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
-        public virtual SwitchExpression Switch(Type type, Expression switchValue, Expression defaultBody, MethodInfo comparison, SwitchCase[] cases) => ExpressionUnsafe.Switch(type, switchValue, defaultBody, comparison, cases);
+        public virtual SwitchExpression Switch(Type type, Expression switchValue, Expression defaultBody, MethodInfo comparison, IEnumerable<SwitchCase> cases) => ExpressionUnsafe.Switch(type, switchValue, defaultBody, comparison, cases);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchCase" /> for use in a <see cref="T:System.Linq.Expressions.SwitchExpression" />.</summary>
         /// <param name="body">The body of the case.</param>
@@ -2316,7 +2316,7 @@ namespace System.Linq.Expressions
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.ParameterExpression" /> node that can be used to identify a parameter or a variable in an expression tree.</summary>
         /// <param name="type">The type of the parameter or variable.</param>
-        /// <returns>A <see cref="T:System.Linq.Expressions.ParameterExpression" /> node with the specified name and type</returns>
+        /// <returns>A <see cref="T:System.Linq.Expressions.ParameterExpression" /> node with the specified name and type.</returns>
         /// <remarks>This method does not provide any guarantees with regards to argument validation or type checking.</remarks>
         public virtual ParameterExpression Variable(Type type) => ExpressionUnsafe.Variable(type);
 

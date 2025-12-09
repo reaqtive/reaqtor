@@ -3,10 +3,14 @@
 // See the LICENSE file in the project root for more information.
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Linq" #>
+<#@ assembly name="System.Linq.Expressions" #>
+<#@ assembly name="System.Xml.XDocument" #>
+<#@ import namespace="System.Linq.Expressions" #>
 <#@ assembly name="System.Xml" #>
 <#@ assembly name="System.Xml.Linq" #>
-<#@ assembly name="$(ProjectDir)\..\..\BCL\Nuqleon.Documentation\bin\Debug\net472\Nuqleon.Documentation.dll" #>
+<#@ assembly name="System.Private.Xml.Linq" #>
+<#@ assembly name="..\..\BCL\Nuqleon.Documentation\bin\Debug\net8.0\Nuqleon.Documentation.dll" #>
 <#@ import namespace="System.Documentation" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Linq.Expressions" #>

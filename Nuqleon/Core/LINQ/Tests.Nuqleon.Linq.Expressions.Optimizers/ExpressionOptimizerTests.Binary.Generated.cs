@@ -1617,11 +1617,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -1645,15 +1645,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* 4.14 */
+                /* 4.1400003 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -1673,7 +1673,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 4.14 */
+                /* 4.1400003 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
@@ -1681,11 +1681,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -1701,15 +1701,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -1733,15 +1733,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -1892,11 +1892,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -1928,15 +1928,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* 4.14 */
+                /* 4.1400003 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -1964,7 +1964,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 4.14 */
+                /* 4.1400003 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
@@ -1972,11 +1972,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -2000,15 +2000,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -2040,15 +2040,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -2209,11 +2209,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -2237,15 +2237,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* 4.14 */
+                /* 4.140000000000001 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -2265,7 +2265,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 4.14 */
+                /* 4.140000000000001 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
@@ -2273,11 +2273,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -2293,15 +2293,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -2325,15 +2325,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -2484,11 +2484,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -2520,15 +2520,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* 4.14 */
+                /* 4.140000000000001 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -2556,7 +2556,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 4.14 */
+                /* 4.140000000000001 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
@@ -2564,11 +2564,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -2592,15 +2592,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -2632,15 +2632,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Add(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -4385,11 +4385,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -4413,15 +4413,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* 4.14 */
+                /* 4.1400003 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -4441,7 +4441,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 4.14 */
+                /* 4.1400003 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
@@ -4449,11 +4449,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -4469,15 +4469,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -4501,15 +4501,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -4660,11 +4660,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -4696,15 +4696,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* 4.14 */
+                /* 4.1400003 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -4732,7 +4732,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 4.14 */
+                /* 4.1400003 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
@@ -4740,11 +4740,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -4768,15 +4768,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -4808,15 +4808,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -4977,11 +4977,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -5005,15 +5005,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* 4.14 */
+                /* 4.140000000000001 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -5033,7 +5033,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 4.14 */
+                /* 4.140000000000001 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
@@ -5041,11 +5041,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -5061,15 +5061,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -5093,15 +5093,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -5252,11 +5252,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -5288,15 +5288,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* 4.14 */
+                /* 4.140000000000001 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -5324,7 +5324,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 4.14 */
+                /* 4.140000000000001 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
@@ -5332,11 +5332,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -5360,15 +5360,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -5400,15 +5400,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.AddChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -7153,11 +7153,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -7185,11 +7185,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -7217,11 +7217,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -7237,15 +7237,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -7269,15 +7269,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -7428,11 +7428,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -7468,11 +7468,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -7508,11 +7508,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -7536,15 +7536,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -7576,15 +7576,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -7745,11 +7745,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -7777,11 +7777,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -7809,11 +7809,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -7829,15 +7829,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -7861,15 +7861,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -8020,11 +8020,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -8060,11 +8060,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -8100,11 +8100,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -8128,15 +8128,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -8168,15 +8168,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Subtract(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -9921,11 +9921,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -9953,11 +9953,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -9985,11 +9985,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -10005,15 +10005,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -10037,15 +10037,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -10196,11 +10196,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -10236,11 +10236,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -10276,11 +10276,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -10304,15 +10304,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -10344,15 +10344,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -10513,11 +10513,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -10545,11 +10545,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -10577,11 +10577,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -10597,15 +10597,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -10629,15 +10629,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -10788,11 +10788,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -10828,11 +10828,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -10868,11 +10868,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -10896,15 +10896,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -10936,15 +10936,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.SubtractChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -12689,7 +12689,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
@@ -12721,11 +12721,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -12773,11 +12773,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
@@ -12809,7 +12809,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
@@ -12964,7 +12964,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
@@ -13004,11 +13004,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -13072,11 +13072,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
@@ -13116,7 +13116,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
@@ -13281,7 +13281,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
@@ -13313,11 +13313,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -13365,11 +13365,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
@@ -13401,7 +13401,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
@@ -13556,7 +13556,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
@@ -13596,11 +13596,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -13664,11 +13664,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
@@ -13708,7 +13708,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Multiply(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
@@ -15457,7 +15457,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
@@ -15489,11 +15489,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -15541,11 +15541,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
@@ -15577,7 +15577,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
@@ -15732,7 +15732,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
@@ -15772,11 +15772,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -15840,11 +15840,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)0, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
@@ -15884,7 +15884,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
@@ -16049,7 +16049,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
@@ -16081,11 +16081,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -16133,11 +16133,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
@@ -16169,7 +16169,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
@@ -16324,7 +16324,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
@@ -16364,11 +16364,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -16432,11 +16432,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)0, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
@@ -16476,7 +16476,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.MultiplyChecked(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
@@ -18225,7 +18225,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
@@ -18237,7 +18237,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.NegativeInfinity, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)0, typeof(float)), Expression.Constant((float)float.PositiveInfinity, typeof(float)))
@@ -18269,7 +18269,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.NegativeInfinity, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)1, typeof(float)), Expression.Constant((float)float.PositiveInfinity, typeof(float)))
@@ -18301,7 +18301,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.NegativeInfinity, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)3.14, typeof(float)), Expression.Constant((float)float.PositiveInfinity, typeof(float)))
@@ -18313,11 +18313,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* -1.083702e+38 */
+                /* -1.0837017e+38 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -18337,7 +18337,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.PositiveInfinity, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
@@ -18345,11 +18345,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
-                /* 1.083702e+38 */
+                /* 1.0837017e+38 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
@@ -18365,7 +18365,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)float.NegativeInfinity, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)float.PositiveInfinity, typeof(float)))
@@ -18500,7 +18500,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
@@ -18512,7 +18512,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.NegativeInfinity, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)0, typeof(float?)), Expression.Constant((float?)float.PositiveInfinity, typeof(float?)))//,
@@ -18552,7 +18552,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.NegativeInfinity, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)1, typeof(float?)), Expression.Constant((float?)float.PositiveInfinity, typeof(float?)))//,
@@ -18592,7 +18592,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.NegativeInfinity, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)3.14, typeof(float?)), Expression.Constant((float?)float.PositiveInfinity, typeof(float?)))//,
@@ -18612,11 +18612,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* -1.083702e+38 */
+                /* -1.0837017e+38 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -18636,7 +18636,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.PositiveInfinity, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)null, typeof(float?)), n)
@@ -18652,11 +18652,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
-                /* 1.083702e+38 */
+                /* 1.0837017e+38 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
@@ -18672,7 +18672,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)float.NegativeInfinity, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)float.PositiveInfinity, typeof(float?)))//,
@@ -18817,7 +18817,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
@@ -18829,7 +18829,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.NegativeInfinity, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)0, typeof(double)), Expression.Constant((double)double.PositiveInfinity, typeof(double)))
@@ -18845,15 +18845,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* 0.318471337579618 */
+                /* 0.3184713375796178 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -5.562684646268e-309 */
+                /* -5.562684646268003e-309 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 5.562684646268e-309 */
+                /* 5.562684646268003e-309 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -18861,7 +18861,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.NegativeInfinity, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)1, typeof(double)), Expression.Constant((double)double.PositiveInfinity, typeof(double)))
@@ -18881,11 +18881,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* -1.74668297892815e-308 */
+                /* -1.7466829789281534e-308 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 1.74668297892815e-308 */
+                /* 1.7466829789281534e-308 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -18893,7 +18893,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.NegativeInfinity, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)double.PositiveInfinity, typeof(double)))
@@ -18905,11 +18905,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* -5.72513737217298e+307 */
+                /* -5.725137372172979e+307 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -18929,7 +18929,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.PositiveInfinity, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
@@ -18937,11 +18937,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* 5.72513737217298e+307 */
+                /* 5.725137372172979e+307 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -18957,7 +18957,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.NegativeInfinity, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.PositiveInfinity, typeof(double)))
@@ -19092,7 +19092,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
@@ -19104,7 +19104,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.NegativeInfinity, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)0, typeof(double?)), Expression.Constant((double?)double.PositiveInfinity, typeof(double?)))//,
@@ -19128,15 +19128,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* 0.318471337579618 */
+                /* 0.3184713375796178 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -5.562684646268e-309 */
+                /* -5.562684646268003e-309 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 5.562684646268e-309 */
+                /* 5.562684646268003e-309 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -19144,7 +19144,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.NegativeInfinity, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)1, typeof(double?)), Expression.Constant((double?)double.PositiveInfinity, typeof(double?)))//,
@@ -19172,11 +19172,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* -1.74668297892815e-308 */
+                /* -1.7466829789281534e-308 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 1.74668297892815e-308 */
+                /* 1.7466829789281534e-308 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -19184,7 +19184,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.NegativeInfinity, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)double.PositiveInfinity, typeof(double?)))//,
@@ -19204,11 +19204,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* -5.72513737217298e+307 */
+                /* -5.725137372172979e+307 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -19228,7 +19228,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.PositiveInfinity, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)null, typeof(double?)), n)
@@ -19244,11 +19244,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* 5.72513737217298e+307 */
+                /* 5.725137372172979e+307 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -19264,7 +19264,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.NegativeInfinity, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Divide(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.PositiveInfinity, typeof(double?)))//,
@@ -21081,7 +21081,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)1, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)3.14, typeof(float)))
@@ -21089,11 +21089,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.MinValue, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.MaxValue, typeof(float)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.NaN, typeof(float)))
@@ -21101,11 +21101,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.NegativeInfinity, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MinValue, typeof(float)), Expression.Constant((float)float.PositiveInfinity, typeof(float)))
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)0, typeof(float)))
@@ -21133,11 +21133,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)float.NegativeInfinity, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.MaxValue, typeof(float)), Expression.Constant((float)float.PositiveInfinity, typeof(float)))
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float)float.NaN, typeof(float)), Expression.Constant((float)0, typeof(float)))
@@ -21380,7 +21380,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)1, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)3.14, typeof(float?)))//,
@@ -21388,11 +21388,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.MinValue, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.MaxValue, typeof(float?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.NaN, typeof(float?)))//,
@@ -21400,11 +21400,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.NegativeInfinity, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)float.MinValue, typeof(float?)), Expression.Constant((float?)float.PositiveInfinity, typeof(float?)))//,
-                /* -3.402823e+38 */
+                /* -3.4028235e+38 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)null, typeof(float?)), n)
@@ -21440,11 +21440,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)float.NegativeInfinity, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)float.MaxValue, typeof(float?)), Expression.Constant((float?)float.PositiveInfinity, typeof(float?)))//,
-                /* 3.402823e+38 */
+                /* 3.4028235e+38 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((float?)null, typeof(float?)), n)
@@ -21641,7 +21641,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 0.14 */
+                /* 0.14000000000000012 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)3.14, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
@@ -21673,19 +21673,19 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)1, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* -2.53223876964397 */
+                /* -2.532238769643969 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.MaxValue, typeof(double)))
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.NaN, typeof(double)))
@@ -21693,11 +21693,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.NegativeInfinity, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MinValue, typeof(double)), Expression.Constant((double)double.PositiveInfinity, typeof(double)))
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)0, typeof(double)))
@@ -21709,7 +21709,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)3.14, typeof(double)))
-                /* 2.53223876964397 */
+                /* 2.532238769643969 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.MinValue, typeof(double)))
@@ -21725,11 +21725,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.NegativeInfinity, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.MaxValue, typeof(double)), Expression.Constant((double)double.PositiveInfinity, typeof(double)))
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double)double.NaN, typeof(double)), Expression.Constant((double)0, typeof(double)))
@@ -21932,7 +21932,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 0.14 */
+                /* 0.14000000000000012 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)3.14, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
@@ -21972,19 +21972,19 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)1, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* -2.53223876964397 */
+                /* -2.532238769643969 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.MaxValue, typeof(double?)))//,
-                /* 0 */
+                /* -0 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.NaN, typeof(double?)))//,
@@ -21992,11 +21992,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.NegativeInfinity, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MinValue, typeof(double?)), Expression.Constant((double?)double.PositiveInfinity, typeof(double?)))//,
-                /* -1.79769313486232e+308 */
+                /* -1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)null, typeof(double?)), n)
@@ -22016,7 +22016,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)3.14, typeof(double?)))//,
-                /* 2.53223876964397 */
+                /* 2.532238769643969 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.MinValue, typeof(double?)))//,
@@ -22032,11 +22032,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.NegativeInfinity, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)double.MaxValue, typeof(double?)), Expression.Constant((double?)double.PositiveInfinity, typeof(double?)))//,
-                /* 1.79769313486232e+308 */
+                /* 1.7976931348623157e+308 */
             );
             AssertEval(
                 Expression.Modulo(Expression.Constant((double?)null, typeof(double?)), n)

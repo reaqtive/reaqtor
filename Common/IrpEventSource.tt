@@ -3,11 +3,10 @@
 // See the LICENSE file in the project root for more information.
 
 <#@ template debug="true" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
-<#@ assembly name="System.ServiceModel" #>
+<#@ assembly name="System.Linq" #>
+<#@ assembly name="System.Diagnostics.TraceSource" #>
 <#@ import namespace="System.Collections.Generic" #>
 <#@ import namespace="System.Linq" #>
-<#@ import namespace="System.ServiceModel.Description" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Text.RegularExpressions" #>
 <#@ import namespace="System.Diagnostics" #>

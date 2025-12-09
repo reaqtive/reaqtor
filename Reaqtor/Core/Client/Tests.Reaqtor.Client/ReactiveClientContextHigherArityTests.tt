@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Linq" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -932,11 +932,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null).Wait());
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).CreateAsync(subscriptionUri: null, <#=args#>, state: null, CancellationToken.None).Wait());
 
-#if NET6_0 // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
-#else
-                    sub.DisposeAsync().Wait();
-#endif
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),

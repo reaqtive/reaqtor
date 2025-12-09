@@ -367,7 +367,7 @@ namespace System.Collections.Generic
 namespace System.Collections.Generic
 {
     /// <summary>
-    /// Represents a set of values.To browse the .NET Framework source code for this type, see the Reference Source.
+    /// Represents a set of values.
     /// Instances of this type are kept in a pool for recycling.
     /// </summary>
     /// <typeparam name="T">The type of elements in the hash set.</typeparam>

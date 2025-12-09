@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 <#@ template debug="false" hostspecific="false" language="C#" #>
-<#@ assembly name="System.Core" #>
+<#@ assembly name="System.Linq" #>
 <#@ import namespace="System.Linq" #>
 <#@ import namespace="System.Text" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -25,11 +25,11 @@ for(var j = 0; j < i; j++)
 }
 #>
 
-        public int Length => <#=i#>;
+        public readonly int Length => <#=i#>;
 
         public byte this[int index]
         {
-            get => index switch
+            readonly get => index switch
             {
 <#
 for(var j = 0; j < i; j++)

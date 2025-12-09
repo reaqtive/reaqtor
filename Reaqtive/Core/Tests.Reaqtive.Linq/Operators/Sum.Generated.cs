@@ -240,7 +240,7 @@ namespace Test.Reaqtive.Operators
 			res.Messages.AssertEqual(
 				// state saved @225
                 // state reloaded @235
-				OnNext<Single>(250, sum => Math.Abs((Single)(sum - -14.76f)) < 0.0001f),
+				OnNext<Single>(250, sum => Math.Abs((Single)(sum - -14.760002f)) < 0.0001f),
 				OnCompleted<Single>(250)
 			);
 		}
@@ -283,7 +283,7 @@ namespace Test.Reaqtive.Operators
 			res.Messages.AssertEqual(
 				// state saved @225
                 // state reloaded @235
-				OnNext<Single?>(250, sum => Math.Abs((Single)(sum - -14.76f)) < 0.0001f),
+				OnNext<Single?>(250, sum => Math.Abs((Single)(sum - -14.760002f)) < 0.0001f),
 				OnCompleted<Single?>(250)
 			);
 		}
@@ -326,7 +326,7 @@ namespace Test.Reaqtive.Operators
 			res.Messages.AssertEqual(
 				// state saved @225
                 // state reloaded @235
-				OnNext<Double>(250, sum => Math.Abs((Double)(sum - -14.76d)) < 0.0001d),
+				OnNext<Double>(250, sum => Math.Abs((Double)(sum - -14.759999999999998d)) < 0.0001d),
 				OnCompleted<Double>(250)
 			);
 		}
@@ -369,7 +369,7 @@ namespace Test.Reaqtive.Operators
 			res.Messages.AssertEqual(
 				// state saved @225
                 // state reloaded @235
-				OnNext<Double?>(250, sum => Math.Abs((Double)(sum - -14.76d)) < 0.0001d),
+				OnNext<Double?>(250, sum => Math.Abs((Double)(sum - -14.759999999999998d)) < 0.0001d),
 				OnCompleted<Double?>(250)
 			);
 		}

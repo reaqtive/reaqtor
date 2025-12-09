@@ -2540,7 +2540,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             AssertEval(
                 Expression.Convert(Expression.Constant((int)-2147483648, typeof(int)), typeof(float))
-                /* -2.147484e+09 */
+                /* -2.1474836e+09 */
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int)-1, typeof(int)), typeof(float))
@@ -2560,7 +2560,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int)2147483647, typeof(int)), typeof(float))
-                /* 2.147484e+09 */
+                /* 2.1474836e+09 */
             );
         }
 
@@ -2830,7 +2830,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             AssertEval(
                 Expression.Convert(Expression.Constant((int)-2147483648, typeof(int)), typeof(float?))
-                /* -2.147484e+09 */
+                /* -2.1474836e+09 */
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int)-1, typeof(int)), typeof(float?))
@@ -2850,7 +2850,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int)2147483647, typeof(int)), typeof(float?))
-                /* 2.147484e+09 */
+                /* 2.1474836e+09 */
             );
         }
 
@@ -3068,7 +3068,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((uint)4294967295, typeof(uint)), typeof(float))
-                /* 4.294967e+09 */
+                /* 4.2949673e+09 */
             );
         }
 
@@ -3278,7 +3278,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((uint)4294967295, typeof(uint)), typeof(float?))
-                /* 4.294967e+09 */
+                /* 4.2949673e+09 */
             );
         }
 
@@ -3569,7 +3569,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             AssertEval(
                 Expression.Convert(Expression.Constant((long)-9223372036854775808, typeof(long)), typeof(double))
-                /* -9.22337203685478e+18 */
+                /* -9.223372036854776e+18 */
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long)-1, typeof(long)), typeof(double))
@@ -3589,7 +3589,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long)9223372036854775807, typeof(long)), typeof(double))
-                /* 9.22337203685478e+18 */
+                /* 9.223372036854776e+18 */
             );
         }
 
@@ -3859,7 +3859,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             AssertEval(
                 Expression.Convert(Expression.Constant((long)-9223372036854775808, typeof(long)), typeof(double?))
-                /* -9.22337203685478e+18 */
+                /* -9.223372036854776e+18 */
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long)-1, typeof(long)), typeof(double?))
@@ -3879,7 +3879,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long)9223372036854775807, typeof(long)), typeof(double?))
-                /* 9.22337203685478e+18 */
+                /* 9.223372036854776e+18 */
             );
         }
 
@@ -4068,7 +4068,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((ulong)18446744073709551615, typeof(ulong)), typeof(float))
-                /* 1.844674e+19 */
+                /* 1.8446744e+19 */
             );
         }
 
@@ -4089,7 +4089,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((ulong)18446744073709551615, typeof(ulong)), typeof(double))
-                /* 1.84467440737096e+19 */
+                /* 1.8446744073709552e+19 */
             );
         }
 
@@ -4278,7 +4278,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((ulong)18446744073709551615, typeof(ulong)), typeof(float?))
-                /* 1.844674e+19 */
+                /* 1.8446744e+19 */
             );
         }
 
@@ -4299,7 +4299,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((ulong)18446744073709551615, typeof(ulong)), typeof(double?))
-                /* 1.84467440737096e+19 */
+                /* 1.8446744073709552e+19 */
             );
         }
 
@@ -4469,7 +4469,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((float)3.14, typeof(float)), typeof(double))
-                /* 3.14000010490417 */
+                /* 3.140000104904175 */
             );
         }
 
@@ -4639,7 +4639,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((float)3.14, typeof(float)), typeof(double?))
-                /* 3.14000010490417 */
+                /* 3.140000104904175 */
             );
         }
 
@@ -7839,7 +7839,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int?)-2147483648, typeof(int?)), typeof(float))
-                /* -2.147484e+09 */
+                /* -2.1474836e+09 */
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int?)-1, typeof(int?)), typeof(float))
@@ -7859,7 +7859,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int?)2147483647, typeof(int?)), typeof(float))
-                /* 2.147484e+09 */
+                /* 2.1474836e+09 */
             );
         }
 
@@ -8159,7 +8159,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int?)-2147483648, typeof(int?)), typeof(float?))
-                /* -2.147484e+09 */
+                /* -2.1474836e+09 */
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int?)-1, typeof(int?)), typeof(float?))
@@ -8179,7 +8179,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((int?)2147483647, typeof(int?)), typeof(float?))
-                /* 2.147484e+09 */
+                /* 2.1474836e+09 */
             );
         }
 
@@ -8427,7 +8427,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((uint?)4294967295, typeof(uint?)), typeof(float))
-                /* 4.294967e+09 */
+                /* 4.2949673e+09 */
             );
         }
 
@@ -8667,7 +8667,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((uint?)4294967295, typeof(uint?)), typeof(float?))
-                /* 4.294967e+09 */
+                /* 4.2949673e+09 */
             );
         }
 
@@ -8991,7 +8991,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long?)-9223372036854775808, typeof(long?)), typeof(double))
-                /* -9.22337203685478e+18 */
+                /* -9.223372036854776e+18 */
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long?)-1, typeof(long?)), typeof(double))
@@ -9011,7 +9011,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long?)9223372036854775807, typeof(long?)), typeof(double))
-                /* 9.22337203685478e+18 */
+                /* 9.223372036854776e+18 */
             );
         }
 
@@ -9311,7 +9311,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long?)-9223372036854775808, typeof(long?)), typeof(double?))
-                /* -9.22337203685478e+18 */
+                /* -9.223372036854776e+18 */
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long?)-1, typeof(long?)), typeof(double?))
@@ -9331,7 +9331,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((long?)9223372036854775807, typeof(long?)), typeof(double?))
-                /* 9.22337203685478e+18 */
+                /* 9.223372036854776e+18 */
             );
         }
 
@@ -9547,7 +9547,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((ulong?)18446744073709551615, typeof(ulong?)), typeof(float))
-                /* 1.844674e+19 */
+                /* 1.8446744e+19 */
             );
         }
 
@@ -9571,7 +9571,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((ulong?)18446744073709551615, typeof(ulong?)), typeof(double))
-                /* 1.84467440737096e+19 */
+                /* 1.8446744073709552e+19 */
             );
         }
 
@@ -9787,7 +9787,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((ulong?)18446744073709551615, typeof(ulong?)), typeof(float?))
-                /* 1.844674e+19 */
+                /* 1.8446744e+19 */
             );
         }
 
@@ -9811,7 +9811,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((ulong?)18446744073709551615, typeof(ulong?)), typeof(double?))
-                /* 1.84467440737096e+19 */
+                /* 1.8446744073709552e+19 */
             );
         }
 
@@ -10011,7 +10011,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((float?)3.14, typeof(float?)), typeof(double))
-                /* 3.14000010490417 */
+                /* 3.140000104904175 */
             );
         }
 
@@ -10211,7 +10211,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.Convert(Expression.Constant((float?)3.14, typeof(float?)), typeof(double?))
-                /* 3.14000010490417 */
+                /* 3.140000104904175 */
             );
         }
 
@@ -13138,7 +13138,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int)-2147483648, typeof(int)), typeof(float))
-                /* -2.147484e+09 */
+                /* -2.1474836e+09 */
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int)-1, typeof(int)), typeof(float))
@@ -13158,7 +13158,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int)2147483647, typeof(int)), typeof(float))
-                /* 2.147484e+09 */
+                /* 2.1474836e+09 */
             );
         }
 
@@ -13428,7 +13428,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int)-2147483648, typeof(int)), typeof(float?))
-                /* -2.147484e+09 */
+                /* -2.1474836e+09 */
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int)-1, typeof(int)), typeof(float?))
@@ -13448,7 +13448,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int)2147483647, typeof(int)), typeof(float?))
-                /* 2.147484e+09 */
+                /* 2.1474836e+09 */
             );
         }
 
@@ -13666,7 +13666,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((uint)4294967295, typeof(uint)), typeof(float))
-                /* 4.294967e+09 */
+                /* 4.2949673e+09 */
             );
         }
 
@@ -13876,7 +13876,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((uint)4294967295, typeof(uint)), typeof(float?))
-                /* 4.294967e+09 */
+                /* 4.2949673e+09 */
             );
         }
 
@@ -14167,7 +14167,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long)-9223372036854775808, typeof(long)), typeof(double))
-                /* -9.22337203685478e+18 */
+                /* -9.223372036854776e+18 */
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long)-1, typeof(long)), typeof(double))
@@ -14187,7 +14187,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long)9223372036854775807, typeof(long)), typeof(double))
-                /* 9.22337203685478e+18 */
+                /* 9.223372036854776e+18 */
             );
         }
 
@@ -14457,7 +14457,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long)-9223372036854775808, typeof(long)), typeof(double?))
-                /* -9.22337203685478e+18 */
+                /* -9.223372036854776e+18 */
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long)-1, typeof(long)), typeof(double?))
@@ -14477,7 +14477,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long)9223372036854775807, typeof(long)), typeof(double?))
-                /* 9.22337203685478e+18 */
+                /* 9.223372036854776e+18 */
             );
         }
 
@@ -14666,7 +14666,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((ulong)18446744073709551615, typeof(ulong)), typeof(float))
-                /* 1.844674e+19 */
+                /* 1.8446744e+19 */
             );
         }
 
@@ -14687,7 +14687,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((ulong)18446744073709551615, typeof(ulong)), typeof(double))
-                /* 1.84467440737096e+19 */
+                /* 1.8446744073709552e+19 */
             );
         }
 
@@ -14876,7 +14876,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((ulong)18446744073709551615, typeof(ulong)), typeof(float?))
-                /* 1.844674e+19 */
+                /* 1.8446744e+19 */
             );
         }
 
@@ -14897,7 +14897,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((ulong)18446744073709551615, typeof(ulong)), typeof(double?))
-                /* 1.84467440737096e+19 */
+                /* 1.8446744073709552e+19 */
             );
         }
 
@@ -15067,7 +15067,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((float)3.14, typeof(float)), typeof(double))
-                /* 3.14000010490417 */
+                /* 3.140000104904175 */
             );
         }
 
@@ -15237,7 +15237,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((float)3.14, typeof(float)), typeof(double?))
-                /* 3.14000010490417 */
+                /* 3.140000104904175 */
             );
         }
 
@@ -18437,7 +18437,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int?)-2147483648, typeof(int?)), typeof(float))
-                /* -2.147484e+09 */
+                /* -2.1474836e+09 */
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int?)-1, typeof(int?)), typeof(float))
@@ -18457,7 +18457,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int?)2147483647, typeof(int?)), typeof(float))
-                /* 2.147484e+09 */
+                /* 2.1474836e+09 */
             );
         }
 
@@ -18757,7 +18757,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int?)-2147483648, typeof(int?)), typeof(float?))
-                /* -2.147484e+09 */
+                /* -2.1474836e+09 */
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int?)-1, typeof(int?)), typeof(float?))
@@ -18777,7 +18777,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((int?)2147483647, typeof(int?)), typeof(float?))
-                /* 2.147484e+09 */
+                /* 2.1474836e+09 */
             );
         }
 
@@ -19025,7 +19025,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((uint?)4294967295, typeof(uint?)), typeof(float))
-                /* 4.294967e+09 */
+                /* 4.2949673e+09 */
             );
         }
 
@@ -19265,7 +19265,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((uint?)4294967295, typeof(uint?)), typeof(float?))
-                /* 4.294967e+09 */
+                /* 4.2949673e+09 */
             );
         }
 
@@ -19589,7 +19589,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long?)-9223372036854775808, typeof(long?)), typeof(double))
-                /* -9.22337203685478e+18 */
+                /* -9.223372036854776e+18 */
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long?)-1, typeof(long?)), typeof(double))
@@ -19609,7 +19609,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long?)9223372036854775807, typeof(long?)), typeof(double))
-                /* 9.22337203685478e+18 */
+                /* 9.223372036854776e+18 */
             );
         }
 
@@ -19909,7 +19909,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long?)-9223372036854775808, typeof(long?)), typeof(double?))
-                /* -9.22337203685478e+18 */
+                /* -9.223372036854776e+18 */
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long?)-1, typeof(long?)), typeof(double?))
@@ -19929,7 +19929,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((long?)9223372036854775807, typeof(long?)), typeof(double?))
-                /* 9.22337203685478e+18 */
+                /* 9.223372036854776e+18 */
             );
         }
 
@@ -20145,7 +20145,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((ulong?)18446744073709551615, typeof(ulong?)), typeof(float))
-                /* 1.844674e+19 */
+                /* 1.8446744e+19 */
             );
         }
 
@@ -20169,7 +20169,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((ulong?)18446744073709551615, typeof(ulong?)), typeof(double))
-                /* 1.84467440737096e+19 */
+                /* 1.8446744073709552e+19 */
             );
         }
 
@@ -20385,7 +20385,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((ulong?)18446744073709551615, typeof(ulong?)), typeof(float?))
-                /* 1.844674e+19 */
+                /* 1.8446744e+19 */
             );
         }
 
@@ -20409,7 +20409,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((ulong?)18446744073709551615, typeof(ulong?)), typeof(double?))
-                /* 1.84467440737096e+19 */
+                /* 1.8446744073709552e+19 */
             );
         }
 
@@ -20609,7 +20609,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((float?)3.14, typeof(float?)), typeof(double))
-                /* 3.14000010490417 */
+                /* 3.140000104904175 */
             );
         }
 
@@ -20809,7 +20809,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             );
             AssertEval(
                 Expression.ConvertChecked(Expression.Constant((float?)3.14, typeof(float?)), typeof(double?))
-                /* 3.14000010490417 */
+                /* 3.140000104904175 */
             );
         }
 

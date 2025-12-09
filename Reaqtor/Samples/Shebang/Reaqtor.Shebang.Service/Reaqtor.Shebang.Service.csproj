@@ -15,22 +15,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Linq\QueryOperators.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <LastGenOutput>QueryOperators.cs</LastGenOutput>
-    </None>
-  </ItemGroup>
-
-  <ItemGroup>
-    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Compile Update="Linq\QueryOperators.cs">
-      <DesignTime>True</DesignTime>
-      <AutoGen>True</AutoGen>
-      <DependentUpon>QueryOperators.tt</DependentUpon>
-    </Compile>
+    <!--
+    Until TextTransformCore.exe supports .NET 10, this template can't execute. It
+    needs to reference Reaqtive.Interfaces, Reaqtive.Core, and Reaqtive.Linq, and
+    we can't build those for .NET 8.0 without effectively downgrading everything.
+    For the time being, nothing needs to change in the generated code, so we can
+    just continue to use the last generator output from back when we ran on
+    .NET FX, but we will want to reinstate this when possible.
+    (An alternative would be to move off T4.)
+    -->
+    <TextTemplates Remove="Linq\QueryOperators.tt" />
   </ItemGroup>
 
 </Project>

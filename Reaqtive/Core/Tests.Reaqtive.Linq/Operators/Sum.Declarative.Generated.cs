@@ -1038,7 +1038,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single>(200 + 50, sum => Math.Abs((Single)(sum - -11.26f)) < 0.0001f),
+                    OnNext<Single>(200 + 50, sum => Math.Abs((Single)(sum - -11.260002f)) < 0.0001f),
                     OnCompleted<Single>(200 + 50)
                 );
 
@@ -1066,7 +1066,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single>(200 + 50, sum => Math.Abs((Single)(sum - -11.26f)) < 0.0001f),
+                    OnNext<Single>(200 + 50, sum => Math.Abs((Single)(sum - -11.260002f)) < 0.0001f),
                     OnCompleted<Single>(200 + 50)
                 );
 
@@ -1215,7 +1215,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single?>(200 + 50, sum => Math.Abs((Single)(sum - -11.26f)) < 0.0001f),
+                    OnNext<Single?>(200 + 50, sum => Math.Abs((Single)(sum - -11.260002f)) < 0.0001f),
                     OnCompleted<Single?>(200 + 50)
                 );
 
@@ -1243,7 +1243,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single?>(200 + 50, sum => Math.Abs((Single)(sum - -11.26f)) < 0.0001f),
+                    OnNext<Single?>(200 + 50, sum => Math.Abs((Single)(sum - -11.260002f)) < 0.0001f),
                     OnCompleted<Single?>(200 + 50)
                 );
 
@@ -1274,7 +1274,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single?>(200 + 80, sum => Math.Abs((Single)(sum - -11.26f)) < 0.0001f),
+                    OnNext<Single?>(200 + 80, sum => Math.Abs((Single)(sum - -11.260002f)) < 0.0001f),
                     OnCompleted<Single?>(200 + 80)
                 );
 
@@ -1305,7 +1305,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Single?>(200 + 80, sum => Math.Abs((Single)(sum - -11.26f)) < 0.0001f),
+                    OnNext<Single?>(200 + 80, sum => Math.Abs((Single)(sum - -11.260002f)) < 0.0001f),
                     OnCompleted<Single?>(200 + 80)
                 );
 
@@ -1454,7 +1454,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double>(200 + 50, sum => Math.Abs((Double)(sum - -11.26d)) < 0.0001d),
+                    OnNext<Double>(200 + 50, sum => Math.Abs((Double)(sum - -11.259999999999998d)) < 0.0001d),
                     OnCompleted<Double>(200 + 50)
                 );
 
@@ -1482,7 +1482,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double>(200 + 50, sum => Math.Abs((Double)(sum - -11.26d)) < 0.0001d),
+                    OnNext<Double>(200 + 50, sum => Math.Abs((Double)(sum - -11.259999999999998d)) < 0.0001d),
                     OnCompleted<Double>(200 + 50)
                 );
 
@@ -1631,7 +1631,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double?>(200 + 50, sum => Math.Abs((Double)(sum - -11.26d)) < 0.0001d),
+                    OnNext<Double?>(200 + 50, sum => Math.Abs((Double)(sum - -11.259999999999998d)) < 0.0001d),
                     OnCompleted<Double?>(200 + 50)
                 );
 
@@ -1659,7 +1659,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double?>(200 + 50, sum => Math.Abs((Double)(sum - -11.26d)) < 0.0001d),
+                    OnNext<Double?>(200 + 50, sum => Math.Abs((Double)(sum - -11.259999999999998d)) < 0.0001d),
                     OnCompleted<Double?>(200 + 50)
                 );
 
@@ -1690,7 +1690,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double?>(200 + 80, sum => Math.Abs((Double)(sum - -11.26d)) < 0.0001d),
+                    OnNext<Double?>(200 + 80, sum => Math.Abs((Double)(sum - -11.259999999999998d)) < 0.0001d),
                     OnCompleted<Double?>(200 + 80)
                 );
 
@@ -1721,7 +1721,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<Double?>(200 + 80, sum => Math.Abs((Double)(sum - -11.26d)) < 0.0001d),
+                    OnNext<Double?>(200 + 80, sum => Math.Abs((Double)(sum - -11.259999999999998d)) < 0.0001d),
                     OnCompleted<Double?>(200 + 80)
                 );
 

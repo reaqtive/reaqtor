@@ -17,10 +17,10 @@ using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtor;
 using Reaqtor.TestingFramework;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.Client
 {
@@ -8242,7 +8242,6 @@ namespace Tests.Reaqtor.Client
                     Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
 
                     sub.DisposeAsync().AsTask().Wait();
-
                 },
                 new CreateSubscription(
                     new Uri(Constants.Subscription.SUB1),

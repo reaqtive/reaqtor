@@ -202,13 +202,6 @@ namespace System.Linq.Expressions
         /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpressionSlim" />.</returns>
         BlockExpressionSlim Block(IEnumerable<ParameterExpressionSlim> variables, IEnumerable<ExpressionSlim> expressions);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpressionSlim" /> that contains the given variables and expressions.</summary>
-        /// <param name="type">The result type of the block.</param>
-        /// <param name="variables">The variables in the block.</param>
-        /// <param name="expressions">The expressions in the block.</param>
-        /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpressionSlim" />.</returns>
-        BlockExpressionSlim Block(TypeSlim type, IEnumerable<ParameterExpressionSlim> variables, IEnumerable<ExpressionSlim> expressions);
-
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpressionSlim" /> that contains three expressions and has no variables.</summary>
         /// <param name="arg0">The first expression in the block.</param>
         /// <param name="arg1">The second expression in the block.</param>
@@ -222,6 +215,13 @@ namespace System.Linq.Expressions
         /// <param name="expressions">The expressions in the block.</param>
         /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpressionSlim" />.</returns>
         BlockExpressionSlim Block(TypeSlim type, IEnumerable<ParameterExpressionSlim> variables, params ExpressionSlim[] expressions);
+
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpressionSlim" /> that contains the given variables and expressions.</summary>
+        /// <param name="type">The result type of the block.</param>
+        /// <param name="variables">The variables in the block.</param>
+        /// <param name="expressions">The expressions in the block.</param>
+        /// <returns>The created <see cref="T:System.Linq.Expressions.BlockExpressionSlim" />.</returns>
+        BlockExpressionSlim Block(TypeSlim type, IEnumerable<ParameterExpressionSlim> variables, IEnumerable<ExpressionSlim> expressions);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.BlockExpressionSlim" /> that contains four expressions and has no variables.</summary>
         /// <param name="arg0">The first expression in the block.</param>
@@ -536,33 +536,33 @@ namespace System.Linq.Expressions
         /// <returns>A <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that has the <see cref="P:System.Linq.Expressions.ExpressionSlim.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.Equal" /> and the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" />, <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" />, <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.IsLiftedToNull" />, and <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Method" /> properties set to the specified values.</returns>
         BinaryExpressionSlim Equal(ExpressionSlim left, ExpressionSlim right, Boolean liftToNull, MethodInfoSlim method);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise <see langword="XOR" /> operation, using op_ExclusiveOr for user-defined types.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise <see langword="XOR" /> operation, using <c>op_ExclusiveOr</c> for user-defined types.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" /> property equal to.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that has the <see cref="P:System.Linq.Expressions.ExpressionSlim.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ExclusiveOr" /> and the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" /> and <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" /> properties set to the specified values.</returns>
         BinaryExpressionSlim ExclusiveOr(ExpressionSlim left, ExpressionSlim right);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise <see langword="XOR" /> operation, using op_ExclusiveOr for user-defined types. The implementing method can be specified.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise <see langword="XOR" /> operation, using <c>op_ExclusiveOr</c> for user-defined types. The implementing method can be specified.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" /> property equal to.</param>
         /// <param name="method">A <see cref="T:System.Reflection.MethodInfoSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Method" /> property equal to.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that has the <see cref="P:System.Linq.Expressions.ExpressionSlim.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ExclusiveOr" /> and the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" />, <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" />, and <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Method" /> properties set to the specified values.</returns>
         BinaryExpressionSlim ExclusiveOr(ExpressionSlim left, ExpressionSlim right, MethodInfoSlim method);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise XOR assignment operation, using op_ExclusiveOr for user-defined types.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise XOR assignment operation, using <c>op_ExclusiveOr</c> for user-defined types.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" /> property equal to.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that has the <see cref="P:System.Linq.Expressions.ExpressionSlim.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ExclusiveOrAssign" /> and the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" /> and <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" /> properties set to the specified values.</returns>
         BinaryExpressionSlim ExclusiveOrAssign(ExpressionSlim left, ExpressionSlim right);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise XOR assignment operation, using op_ExclusiveOr for user-defined types.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise XOR assignment operation, using <c>op_ExclusiveOr</c> for user-defined types.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" /> property equal to.</param>
         /// <param name="method">A <see cref="T:System.Reflection.MethodInfoSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Method" /> property equal to.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that has the <see cref="P:System.Linq.Expressions.ExpressionSlim.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.ExclusiveOrAssign" /> and the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" />, <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" />, and <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Method" /> properties set to the specified values.</returns>
         BinaryExpressionSlim ExclusiveOrAssign(ExpressionSlim left, ExpressionSlim right, MethodInfoSlim method);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise XOR assignment operation, using op_ExclusiveOr for user-defined types.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that represents a bitwise XOR assignment operation, using <c>op_ExclusiveOr</c> for user-defined types.</summary>
         /// <param name="left">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Left" /> property equal to.</param>
         /// <param name="right">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Right" /> property equal to.</param>
         /// <param name="method">A <see cref="T:System.Reflection.MethodInfoSlim" /> to set the <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.Method" /> property equal to.</param>
@@ -719,26 +719,26 @@ namespace System.Linq.Expressions
         /// <returns>The new <see cref="T:System.Linq.Expressions.LabelTargetSlim" />.</returns>
         LabelTargetSlim Label(TypeSlim type, String name);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> by first constructing a delegate type from the expression body, and an array of parameter expressions. It can be used when the delegate type is not known at compile time.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="T:System.Linq.Expressions.ParameterExpressionSlim" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Parameters" /> collection.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> that has the <see cref="P:System.Linq.Expressions.ExpressionSlim.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.Lambda" /> and the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Parameters" /> properties set to the specified values.</returns>
         LambdaExpressionSlim Lambda(ExpressionSlim body, params ParameterExpressionSlim[] parameters);
 
-        /// <summary>Creates a LambdaExpression by first constructing a delegate type.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> by first constructing a delegate type from the expression body, and an enumerable collection of parameter expressions. It can be used when the delegate type is not known at compile time.</summary>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Body" /> property equal to.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpressionSlim" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Parameters" /> collection.</param>
         /// <returns>A <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> that has the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.NodeType" /> property equal to Lambda and the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Parameters" /> properties set to the specified values.</returns>
         LambdaExpressionSlim Lambda(ExpressionSlim body, IEnumerable<ParameterExpressionSlim> parameters);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> by first constructing a delegate type. It can be used when the delegate type is not known at compile time.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> where the delegate type is known at compile time, with an array of parameter expressions.</summary>
         /// <param name="delegateType">A <see cref="T:System.Reflection.TypeSlim" /> that represents a delegate signature for the lambda.</param>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Body" /> property equal to.</param>
         /// <param name="parameters">An array of <see cref="T:System.Linq.Expressions.ParameterExpressionSlim" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Parameters" /> collection.</param>
         /// <returns>An object that represents a lambda expression which has the <see cref="P:System.Linq.Expressions.ExpressionSlim.NodeType" /> property equal to <see cref="F:System.Linq.Expressions.ExpressionType.Lambda" /> and the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Body" /> and <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Parameters" /> properties set to the specified values.</returns>
         LambdaExpressionSlim Lambda(TypeSlim delegateType, ExpressionSlim body, params ParameterExpressionSlim[] parameters);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> by first constructing a delegate type. It can be used when the delegate type is not known at compile time.</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> where the delegate type is known at compile time, with an enumerable collection of parameter expressions.</summary>
         /// <param name="delegateType">A <see cref="T:System.Reflection.TypeSlim" /> that represents a delegate signature for the lambda.</param>
         /// <param name="body">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> to set the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Body" /> property equal to.</param>
         /// <param name="parameters">An <see cref="T:System.Collections.Generic.IEnumerable`1" /> that contains <see cref="T:System.Linq.Expressions.ParameterExpressionSlim" /> objects to use to populate the <see cref="P:System.Linq.Expressions.LambdaExpressionSlim.Parameters" /> collection.</param>
@@ -889,7 +889,7 @@ namespace System.Linq.Expressions
         /// <param name="liftToNull">
         ///   <see langword="true" /> to set <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.IsLiftedToNull" /> to <see langword="true" />; <see langword="false" /> to set <see cref="P:System.Linq.Expressions.BinaryExpressionSlim.IsLiftedToNull" /> to <see langword="false" />.</param>
         /// <param name="method">A <see cref="T:System.Reflection.MethodInfoSlim" /> that specifies the implementing method.</param>
-        /// <param name="conversion">A <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> that represents a type conversion function. This parameter is used only if <paramref name="binaryType" /> is <see cref="F:System.Linq.Expressions.ExpressionType.Coalesce" /> or compound assignment..</param>
+        /// <param name="conversion">A <see cref="T:System.Linq.Expressions.LambdaExpressionSlim" /> that represents a type conversion function. This parameter is used only if <paramref name="binaryType" /> is <see cref="F:System.Linq.Expressions.ExpressionType.Coalesce" /> or compound assignment.</param>
         /// <returns>The <see cref="T:System.Linq.Expressions.BinaryExpressionSlim" /> that results from calling the appropriate factory method.</returns>
         BinaryExpressionSlim MakeBinary(ExpressionType binaryType, ExpressionSlim left, ExpressionSlim right, Boolean liftToNull, MethodInfoSlim method, LambdaExpressionSlim conversion);
 
@@ -912,7 +912,7 @@ namespace System.Linq.Expressions
         /// <summary>Creates an <see cref="T:System.Linq.Expressions.IndexExpressionSlim" /> that represents accessing an indexed property in an object.</summary>
         /// <param name="instance">The object to which the property belongs. It should be null if the property is <see langword="static" /> (<see langword="shared" /> in Visual Basic).</param>
         /// <param name="indexer">An <see cref="T:System.Linq.Expressions.ExpressionSlim" /> representing the property to index.</param>
-        /// <param name="arguments">An IEnumerable&lt;Expression&gt; (IEnumerable (Of Expression) in Visual Basic) that contains the arguments that will be used to index the property.</param>
+        /// <param name="arguments">An <c>IEnumerable&lt;Expression&gt;</c> (<c>IEnumerable (Of Expression)</c> in Visual Basic) that contains the arguments that will be used to index the property.</param>
         /// <returns>The created <see cref="T:System.Linq.Expressions.IndexExpressionSlim" />.</returns>
         IndexExpressionSlim MakeIndex(ExpressionSlim instance, PropertyInfoSlim indexer, IEnumerable<ExpressionSlim> arguments);
 
@@ -923,7 +923,7 @@ namespace System.Linq.Expressions
         MemberExpressionSlim MakeMemberAccess(ExpressionSlim expression, MemberInfoSlim member);
 
         /// <summary>Creates a <see cref="T:System.Linq.Expressions.TryExpressionSlim" /> representing a try block with the specified elements.</summary>
-        /// <param name="type">The result type of the try expression. If null, bodh and all handlers must have identical type.</param>
+        /// <param name="type">The result type of the try expression. If null, body and all handlers must have identical type.</param>
         /// <param name="body">The body of the try block.</param>
         /// <param name="finally">The body of the finally block. Pass null if the try block has no finally block associated with it.</param>
         /// <param name="fault">The body of the fault block. Pass null if the try block has no fault block associated with it.</param>
@@ -1528,7 +1528,7 @@ namespace System.Linq.Expressions
         /// <returns>The created <see cref="T:System.Linq.Expressions.SwitchExpressionSlim" />.</returns>
         SwitchExpressionSlim Switch(ExpressionSlim switchValue, ExpressionSlim defaultBody, MethodInfoSlim comparison, IEnumerable<SwitchCaseSlim> cases);
 
-        /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpressionSlim" /> that represents a <see langword="switch" /> statement that has a default case..</summary>
+        /// <summary>Creates a <see cref="T:System.Linq.Expressions.SwitchExpressionSlim" /> that represents a <see langword="switch" /> statement that has a default case.</summary>
         /// <param name="type">The result type of the switch.</param>
         /// <param name="switchValue">The value to be tested against each case.</param>
         /// <param name="defaultBody">The result of the switch if <paramref name="switchValue" /> does not match any of the cases.</param>

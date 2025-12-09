@@ -6,13 +6,13 @@
 // Revision history:
 //
 //   BD - 07/19/2014 - Created this type.
+//   IG - 2025/12    - Modified to work with .NET SDK reference assemblies.
 //
 
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Xml.Linq;
 
 namespace System.Documentation
@@ -24,11 +24,26 @@ namespace System.Documentation
     public static class XmlDocumentation
     {
         /// <summary>
-        /// Lazily loaded collection of XDocument objects for assemblies a member was queried for.
-        /// Notice the use of a CWT to ensure that the use of collectible assemblies with this
-        /// class's functionality doesn't cause them to become non-collectible.
+        /// Lazily loaded map from type names to reference assembly locations.
         /// </summary>
-        private static readonly ConditionalWeakTable<Assembly, XDocument> s_assemblies = new();
+        /// <remarks>
+        /// The T4 templates that use this class typically pass reflection objects based on runtime
+        /// types (and not from reflection-only assemblies). The runtime class libraries often use
+        /// type forwarders to enable them to put the runtime implementations of types in different
+        /// assemblies than the reference assemblies where they were originally defined, which
+        /// means that the <c>Assembly</c> objects reported by reflection won't necessarily
+        /// correspond to the reference assembly that defines the type. That's a problem because
+        /// the XML documentation files are associated with reference assemblies, not runtime ones.
+        /// So we need to be able to locate the reference assembly for any given type. And the only
+        /// way we can do that is to scan all of the reference assemblies. To avoid doing that for
+        /// every type lookup, we build a map from types to assemblies the first time we need it.
+        /// </remarks>
+        private static WeakReference<Dictionary<string, string>> s_typeNameToRefAssemblyLocation;
+
+        /// <summary>
+        /// Lazily loaded collection of XDocument objects for reference assemblies.
+        /// </summary>
+        private static WeakReference<Dictionary<string, XDocument>> s_assemblies;
 
         /// <summary>
         /// Gets the XML documentation for the specified parameter.
@@ -48,7 +63,7 @@ namespace System.Documentation
             var doc = GetXmlDoc(member);
             if (doc != null)
             {
-                res = doc.Elements("param").FirstOrDefault(m => m.Attribute("name").Value == parameter.Name);
+                res = doc.Elements(XNames.Param).FirstOrDefault(m => m.Attribute(XNames.Name).Value == parameter.Name);
             }
 
             return res;
@@ -67,20 +82,20 @@ namespace System.Documentation
 
             var res = default(XElement);
 
-            var asm = (member as Type ?? member.DeclaringType).Assembly;
+            var type = member as Type ?? member.DeclaringType;
 
-            var xml = GetXmlDocFile(asm);
+            var xml = GetXmlDocFile(type);
             if (xml != null)
             {
                 var mem = GetXmlDocNameImpl(member);
 
-                var doc = xml.Element("doc");
+                var doc = xml.Element(XNames.Doc);
                 if (doc != null)
                 {
-                    var ms = doc.Element("members");
+                    var ms = doc.Element(XNames.Members);
                     if (ms != null)
                     {
-                        res = ms.Elements("member").FirstOrDefault(m => m.Attribute("name").Value == mem);
+                        res = ms.Elements(XNames.Member).FirstOrDefault(m => m.Attribute(XNames.Name).Value == mem);
                     }
                 }
             }
@@ -152,11 +167,15 @@ namespace System.Documentation
                             a = "``" + margs.Length;
                         }
 
-                        res = "M:" + tdn + "." + Escape(m.Name) + a + GetParamsListDocName(m.GetParameters(), targs, margs);
+                        var isConversionOperator = m.Name is "op_Explicit" or "op_Implicit";
+                        res = "M:" + tdn + "." + Escape(m.Name) + a + GetParamsListDocName(m.GetParameters(), targs, margs, isConversionOperator);
 
-                        if (m.Name is "op_Explicit" or "op_Implicit")
+                        if (isConversionOperator)
                         {
-                            res += "~" + GetTypeDocName(m.ReturnType, targs, margs);
+                            var returnTypeText = m.ReturnType.IsGenericParameter
+                                ? m.ReturnType.Name
+                                : GetTypeDocName(m.ReturnType, targs, margs);
+                            res += "~" + returnTypeText;
                         }
                     }
                     break;
@@ -184,7 +203,7 @@ namespace System.Documentation
             return memberName.Replace(".", "#").Replace("<", "{").Replace(">", "}");
         }
 
-        private static string GetParamsListDocName(ParameterInfo[] parameters, Type[] genTypeArgs, Type[] genMtdArgs)
+        private static string GetParamsListDocName(ParameterInfo[] parameters, Type[] genTypeArgs, Type[] genMtdArgs, bool isConversionOperator = false)
         {
             if (parameters.Length == 0)
             {
@@ -192,7 +211,28 @@ namespace System.Documentation
             }
             else
             {
-                return "(" + string.Join(",", parameters.Select(p => GetTypeDocName(p.ParameterType, genTypeArgs, genMtdArgs))) + ")";
+                return "(" + string.Join(",", parameters.Select(p =>
+                {
+                    if (isConversionOperator)
+                    {
+                        // The implicit and explicit conversion operators use the type parameter name
+                        // instead of the positional form (`0, `1 etc) in the parameter list.
+                        if (p.ParameterType.IsArray)
+                        {
+                            var elementType = p.ParameterType.GetElementType();
+                            if (elementType.IsGenericParameter)
+                            {
+                                return elementType.Name + "[]";
+                            }
+                        }
+
+                        if (p.ParameterType.IsGenericParameter)
+                        {
+                            return p.ParameterType.Name;
+                        }
+                    }
+                    return GetTypeDocName(p.ParameterType, genTypeArgs, genMtdArgs);
+                })) + ")";
             }
         }
 
@@ -264,53 +304,94 @@ namespace System.Documentation
         }
 
         /// <summary>
-        /// Tries to locate the XML documentation file for the given assembly. If found,
-        /// the document is loaded and returned as an XDocument. If not found, null is
-        /// returned.
+        /// Tries to locate the XML documentation file for the reference assembly that defines
+        /// the given type. If found, the document is loaded and returned as an XDocument. If not
+        /// found, null is returned.
         /// </summary>
-        /// <param name="assembly">Assembly to find the XML documentation file for.</param>
-        /// <returns>XDocument containing the XML documentation for the specified assembly, if found; otherwise, null.</returns>
-        private static XDocument GetXmlDocFile(Assembly assembly)
+        /// <param name="type">
+        /// Type for which to find the containing reference assembly's XML documentation file.
+        /// </param>
+        /// <returns>
+        /// XDocument containing the XML documentation for the reference assembly that defines the
+        /// specified type, if found; otherwise, null.
+        /// </returns>
+        private static XDocument GetXmlDocFile(Type type)
         {
-            return s_assemblies.GetValue(assembly, asm =>
+            static string GetTypeKey(Type t) => t.Namespace + "." + t.Name; // FullName is null for generic types
+
+            if (s_typeNameToRefAssemblyLocation is null ||
+                !s_typeNameToRefAssemblyLocation.TryGetTarget(out var typesToRefAssemblyLocations))
             {
-                var res = default(XDocument);
-
-                var location = assembly.Location;
-                var fileName = Path.GetFileNameWithoutExtension(location);
-                var xmlDocFileName = fileName + ".xml";
-
-                var candidateDirectories = (IEnumerable<string>)new[]
+                var referenceAssembliesFolder = Nuqleon.Documentation.RuntimeInfo.ReferenceAssembliesFolder;
+                var referenceAssemblies = Directory.Exists(referenceAssembliesFolder)
+                    ? Directory.GetFiles(referenceAssembliesFolder, "*.dll", SearchOption.AllDirectories)
+                    : Array.Empty<string>();
+                var resolver = new PathAssemblyResolver(referenceAssemblies);
+                using var mlc = new MetadataLoadContext(resolver);
+                typesToRefAssemblyLocations = new Dictionary<string, string>();
+                foreach (var dll in referenceAssemblies)
                 {
-                    Path.GetDirectoryName(location),
-                };
-
-                var programFiles = Environment.GetFolderPath(Environment.Is64BitOperatingSystem ? Environment.SpecialFolder.ProgramFilesX86 : Environment.SpecialFolder.ProgramFiles);
-                var referenceAssemblies = Path.Combine(programFiles, @"Reference Assemblies\Microsoft\Framework\.NETFramework");
-
-                if (Directory.Exists(referenceAssemblies))
-                {
-                    candidateDirectories = candidateDirectories.Concat(
-                        from d in Directory.GetDirectories(referenceAssemblies)
-                        let f = Path.GetFileName(d)
-                        where f.StartsWith("v", StringComparison.Ordinal)
-                        orderby f descending
-                        select d
-                    );
-                }
-
-                foreach (var directory in candidateDirectories)
-                {
-                    var xmlDocFile = Path.Combine(directory, xmlDocFileName);
-                    if (File.Exists(xmlDocFile))
+                    var asm = mlc.LoadFromAssemblyPath(dll);
+                    foreach (var t in asm.GetTypes())
                     {
-                        res = XDocument.Load(xmlDocFile);
-                        break;
+                        typesToRefAssemblyLocations.TryAdd(GetTypeKey(t), asm.Location);
                     }
                 }
 
-                return res;
-            });
+                if (s_typeNameToRefAssemblyLocation is null)
+                {
+                    s_typeNameToRefAssemblyLocation = new(typesToRefAssemblyLocations);
+                }
+                else
+                {
+                    s_typeNameToRefAssemblyLocation.SetTarget(typesToRefAssemblyLocations);
+                }
+            }
+
+            if (!typesToRefAssemblyLocations.TryGetValue(GetTypeKey(type), out var assemblyLocation))
+            {
+                return null;
+            }
+
+            s_assemblies ??= new(new Dictionary<string, XDocument>());
+
+            if (!s_assemblies.TryGetTarget(out var assemblyLocationToXmlDoc))
+            {
+                assemblyLocationToXmlDoc = new();
+                s_assemblies.SetTarget(assemblyLocationToXmlDoc);
+            }
+
+            if (!assemblyLocationToXmlDoc.TryGetValue(assemblyLocation, out XDocument res))
+            {
+                var fileName = Path.GetFileNameWithoutExtension(assemblyLocation);
+                var xmlDocFileName = fileName + ".xml";
+
+                var referenceAssemblies = Nuqleon.Documentation.RuntimeInfo.ReferenceAssembliesFolder;
+
+                if (Directory.Exists(referenceAssemblies))
+                {
+                    var xmlDocFile = Path.Combine(referenceAssemblies, xmlDocFileName);
+                    if (File.Exists(xmlDocFile))
+                    {
+                        res = XDocument.Load(xmlDocFile);
+                        assemblyLocationToXmlDoc.Add(assemblyLocation, res);
+                    }
+                }
+            }
+
+            return res;
+        }
+
+        // Profiling shows that a surprising amount of time is spent in the implicit conversion
+        // from string to XName if we just pass string literals directly to XDocument APIs,
+        // so we cache the XName instances we need here.
+        private static class XNames
+        {
+            public static readonly XName Doc = XName.Get("doc");
+            public static readonly XName Member = XName.Get("member");
+            public static readonly XName Members = XName.Get("members");
+            public static readonly XName Name = XName.Get("name");
+            public static readonly XName Param = XName.Get("param");
         }
     }
 }
