@@ -879,7 +879,7 @@ namespace System.Linq.CompilerServices
                 {
                     var name = property.Name;
 
-#if NET6_0 || NETSTANDARD2_1
+#if NET10_0 || NETSTANDARD2_1
                     var nameHash = name.GetHashCode(StringComparison.Ordinal);
 #else
                     var nameHash = name.GetHashCode();

@@ -17,7 +17,6 @@ namespace Nuqleon.DataModel.TypeSystem
     /// <summary>
     /// Exception for data type violations, containing diagnostic information.
     /// </summary>
-    [Serializable]
     public class DataTypeException : Exception
     {
         /// <summary>

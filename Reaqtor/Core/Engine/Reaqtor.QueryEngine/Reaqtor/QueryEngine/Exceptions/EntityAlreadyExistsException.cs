@@ -16,7 +16,6 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Exception indicating that an entity with a given identifier already exists.
     /// </summary>
-    [Serializable]
     public class EntityAlreadyExistsException : ArgumentException
     {
         /// <summary>

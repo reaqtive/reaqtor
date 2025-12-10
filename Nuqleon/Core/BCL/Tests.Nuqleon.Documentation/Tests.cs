@@ -22,7 +22,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 namespace Tests
 {
     [TestClass]
-    public class Tests : IDisposable
+    public sealed class Tests : IDisposable
     {
         private readonly MetadataLoadContext mlc;
         private Type metadataDelegateType;

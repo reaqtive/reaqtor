@@ -16,7 +16,6 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Exception representing the failure to save a reactive entity.
     /// </summary>
-    [Serializable]
     public class EntitySaveFailedException : Exception
     {
         /// <summary>

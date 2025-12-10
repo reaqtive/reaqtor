@@ -8,6 +8,7 @@
 // BD - February 2017 - Created this file.
 //
 
+#pragma warning disable IDE0049 // Name can be simplified. IG - because of all the global:: but I'm not sure why those are present.
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1034 // Do not nest types.
 #pragma warning disable CA1305 // Use IFormatProvider does not apply in expression trees.
@@ -101,7 +102,7 @@ namespace System.Linq.Expressions
                 (byte[] inArray, int offset, int length, Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, offset, length, options),
                 (byte[] inArray, global::System.Base64FormattingOptions options) => global::System.Convert.ToBase64String(inArray, options),
 
-#if NET6_0
+#if NET10_0
                 (byte[] inArray) => global::System.Convert.ToHexString(inArray),
                 (byte[] inArray, int offset, int length) => global::System.Convert.ToHexString(inArray, offset, length),
 #endif

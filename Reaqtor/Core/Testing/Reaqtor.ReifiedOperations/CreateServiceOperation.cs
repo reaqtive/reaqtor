@@ -6,6 +6,7 @@
 // Revision history:
 //
 // BD - July 2013 - Created this file.
+// IG - 2025/12   - Remove CLR serialization support.
 //
 
 using System;
@@ -13,7 +14,6 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class CreateServiceOperation : ServiceOperation
     {
         public CreateServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, Expression expression, object state)
@@ -22,7 +22,6 @@ namespace Reaqtor.TestingFramework
             Expression = expression;
         }
 
-        [field: NonSerialized]
         public Expression Expression { get; }
 
         public override string ToString() => base.ToString() + " - " + Expression;

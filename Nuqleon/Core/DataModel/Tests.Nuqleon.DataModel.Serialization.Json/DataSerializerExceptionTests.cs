@@ -10,7 +10,7 @@
 
 using System;
 
-#if !NET6_0 // https://aka.ms/binaryformatter
+#if !NET10_0 // https://aka.ms/binaryformatter
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 #endif

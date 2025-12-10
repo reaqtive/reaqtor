@@ -6,6 +6,7 @@
 // Revision history:
 //
 // BD - July 2013 - Created this file.
+// IG - 2025/12   - Remove CLR serialization support.
 //
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
@@ -16,7 +17,6 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class CreateStream : CreateServiceOperation
     {
         public CreateStream(Uri streamUri)

@@ -17,7 +17,6 @@ namespace System.Collections.Specialized
     /// <summary>
     /// The exception representing a failure to determine the size needed for an EnumDictionary.
     /// </summary>
-    [Serializable]
     public sealed class EnumSizeResolutionException : Exception
     {
         /// <summary>

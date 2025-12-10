@@ -564,7 +564,6 @@ namespace Reaqtor.Shebang.Service
     }
 
 #pragma warning disable CA1032 // Implement standard exception constructors. (Only constructed internally.)
-    [Serializable]
     public sealed class TableNotFoundException : Exception
     {
         internal TableNotFoundException(string tableName)
@@ -575,7 +574,6 @@ namespace Reaqtor.Shebang.Service
         public string TableName { get; }
     }
 
-    [Serializable]
     public sealed class KeyNotFoundException : Exception
     {
         internal KeyNotFoundException(string tableName, string key)

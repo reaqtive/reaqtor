@@ -10,7 +10,6 @@ using System.Runtime.Serialization;
 
 namespace Reaqtor.QueryEngine
 {
-    [Serializable]
     internal class InvariantException : Exception
     {
         public InvariantException()

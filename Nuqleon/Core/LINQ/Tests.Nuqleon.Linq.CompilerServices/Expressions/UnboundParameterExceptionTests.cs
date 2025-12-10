@@ -6,17 +6,13 @@
 // Revision history:
 //
 // BD - May 2013 - Created this file.
+// IG - 2025/12  - Remove CLR serialization tests.
 //
 
 using System;
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
-
-#if !NET6_0 // https://aka.ms/binaryformatter
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 

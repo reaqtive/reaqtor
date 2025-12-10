@@ -7,7 +7,6 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
@@ -519,7 +518,6 @@ namespace Reaqtor.IoT
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression
 #pragma warning disable CA1032 // Implement standard exception constructors. (Only constructed internally.)
-    [Serializable]
     public sealed class TableNotFoundException : Exception
     {
         internal TableNotFoundException(string tableName)
@@ -530,7 +528,6 @@ namespace Reaqtor.IoT
         public string TableName { get; }
     }
 
-    [Serializable]
     public sealed class KeyNotFoundException : Exception
     {
         internal KeyNotFoundException(string tableName, string key)

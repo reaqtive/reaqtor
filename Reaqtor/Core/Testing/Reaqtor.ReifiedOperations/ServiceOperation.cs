@@ -6,6 +6,7 @@
 // Revision history:
 //
 // BD - July 2013 - Created this file.
+// IG - 2025/12   - Remove CLR serialization support.
 //
 
 using System;
@@ -13,7 +14,6 @@ using System.Globalization;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class ServiceOperation
     {
         public ServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, object state)

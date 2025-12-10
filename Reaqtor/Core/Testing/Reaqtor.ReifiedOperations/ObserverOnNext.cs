@@ -6,13 +6,13 @@
 // Revision history:
 //
 // BD - July 2013 - Created this file.
+// IG - 2025/12   - Remove CLR serialization support.
 //
 
 using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class ObserverOnNext : ObserverOperation
     {
         public ObserverOnNext(Uri observerUri, object value)
@@ -26,7 +26,6 @@ namespace Reaqtor.TestingFramework
         public override string ToString() => base.ToString() + " - " + Value;
     }
 
-    [Serializable]
     public class ObserverOnNext<T> : ObserverOnNext
     {
         public ObserverOnNext(Uri observerUri, T value)

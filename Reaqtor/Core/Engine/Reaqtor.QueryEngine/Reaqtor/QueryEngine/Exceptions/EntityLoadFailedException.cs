@@ -16,7 +16,6 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Exception representing the failure to load a reactive entity.
     /// </summary>
-    [Serializable]
     public class EntityLoadFailedException : Exception
     {
         /// <summary>

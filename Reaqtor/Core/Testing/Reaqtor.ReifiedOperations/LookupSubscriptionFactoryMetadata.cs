@@ -6,13 +6,13 @@
 // Revision history:
 //
 // BD - February 2016 - Created this file.
+// IG - 2025/12       - Remove CLR serialization support.
 //
 
 using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class LookupSubscriptionFactoryMetadata : LookupMetadataOperation
     {
         public LookupSubscriptionFactoryMetadata(Uri subscriptionFactoryUri)

@@ -6,6 +6,7 @@
 // Revision history:
 //
 //   PS - 10/17/2014 - Wrote these tests.
+//   IG - 2025/12    - Removed serialization code.
 //
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -16,11 +17,6 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
-
-#if !NET6_0
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
 
 namespace Tests.System.Collections.Specialized
 {

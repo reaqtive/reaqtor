@@ -84,6 +84,7 @@ namespace Nuqleon.Linq.Expressions.Serialization
         {
             var isCSharpBinder = new Func<CallSiteBinder, bool>(cb => cb.GetType().Assembly == typeof(CSharp.Binder).Assembly);
             var getPrivateProperty = new Func<Type, object, string, object>((type, obj, name) => type.GetProperty(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(obj));
+            var getPrivateField = new Func<Type, object, string, object>((type, obj, name) => type.GetField(name, BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).GetValue(obj));
 
             Add<System.Dynamic.BinaryOperationBinder>(
                 "CSharpBinaryOperationBinder", isCSharpBinder,
@@ -98,8 +99,15 @@ namespace Nuqleon.Linq.Expressions.Serialization
                         | (isChecked ? CSharp.CSharpBinderFlags.CheckedContext : 0)
                         | (isLogicalOperation ? CSharp.CSharpBinderFlags.BinaryOperationLogical : 0);
                     var operation = cb.Operation;
-                    var context = (Type)getPrivateProperty(t, cb, "CallingContext");
-                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateProperty(t, cb, "ArgumentInfo");
+
+                    // TODO: These used to fetch the CallingContext and ArgumentInfo properties, but these
+                    // no longer exist. CallingContext was removed in
+                    //  https://github.com/dotnet/runtime/commit/96c93497a0877820da0ed4a2a0dde468bfccfa84
+                    // There still seem to be fields, but we should find a way to serialize dynamic
+                    // expressions safely without relying on private implementation details, or we should
+                    // remove the functionality.
+                    var context = (Type)getPrivateField(t, cb, "_callingContext");
+                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateField(t, cb, "_argumentInfo");
 
                     return Json.Expression.Array(
                         serialize(flags, ctx),
@@ -137,7 +145,7 @@ namespace Nuqleon.Linq.Expressions.Serialization
                         | (@explicit ? CSharp.CSharpBinderFlags.ConvertExplicit : 0)
                         | (conversionKind == ArrayCreationConversion ? CSharp.CSharpBinderFlags.ConvertArrayIndex : 0);
                     var type = cb.Type;
-                    var context = (Type)getPrivateProperty(t, cb, "CallingContext");
+                    var context = (Type)getPrivateField(t, cb, "_callingContext");
 
                     return Json.Expression.Array(
                         serialize(flags, ctx),
@@ -163,8 +171,8 @@ namespace Nuqleon.Linq.Expressions.Serialization
                     var t = cb.GetType();
 
                     var flags = CSharp.CSharpBinderFlags.None;
-                    var context = (Type)getPrivateProperty(t, cb, "CallingContext");
-                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateProperty(t, cb, "ArgumentInfo");
+                    var context = (Type)getPrivateField(t, cb, "_callingContext");
+                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateField(t, cb, "_argumentInfo");
 
                     return Json.Expression.Array(
                         serialize(flags, ctx),
@@ -193,8 +201,8 @@ namespace Nuqleon.Linq.Expressions.Serialization
 
                     var flags = resultIndexed ? CSharp.CSharpBinderFlags.ResultIndexed : CSharp.CSharpBinderFlags.None;
                     var name = cb.Name;
-                    var context = (Type)getPrivateProperty(t, cb, "CallingContext");
-                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateProperty(t, cb, "ArgumentInfo");
+                    var context = (Type)getPrivateField(t, cb, "_callingContext");
+                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateField(t, cb, "_argumentInfo");
 
                     return Json.Expression.Array(
                         serialize(flags, ctx),
@@ -251,8 +259,8 @@ namespace Nuqleon.Linq.Expressions.Serialization
                 {
                     var t = cb.GetType();
 
-                    var context = (Type)getPrivateProperty(t, cb, "CallingContext");
-                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateProperty(t, cb, "ArgumentInfo");
+                    var context = (Type)getPrivateField(t, cb, "_callingContext");
+                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateField(t, cb, "_argumentInfo");
 
                     return Json.Expression.Array(
                         serialize(context, ctx),
@@ -320,7 +328,7 @@ namespace Nuqleon.Linq.Expressions.Serialization
                     var t = cb.GetType();
 
                     var name = (string)getPrivateProperty(t, cb, "Name");
-                    var context = (Type)getPrivateProperty(t, cb, "CallingContext");
+                    var context = (Type)getPrivateField(t, cb, "_callingContext");
 
                     return Json.Expression.Array(
                         serialize(name, ctx),
@@ -350,8 +358,8 @@ namespace Nuqleon.Linq.Expressions.Serialization
                     var flags = CSharp.CSharpBinderFlags.None
                         | (isChecked ? CSharp.CSharpBinderFlags.CheckedContext : 0)
                         | (isCompoundAssignment ? CSharp.CSharpBinderFlags.ValueFromCompoundAssignment : 0);
-                    var context = (Type)getPrivateProperty(t, cb, "CallingContext");
-                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateProperty(t, cb, "ArgumentInfo");
+                    var context = (Type)getPrivateField(t, cb, "_callingContext");
+                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateField(t, cb, "_argumentInfo");
 
                     return Json.Expression.Array(
                         serialize(flags, ctx),
@@ -383,8 +391,8 @@ namespace Nuqleon.Linq.Expressions.Serialization
                         | (isChecked ? CSharp.CSharpBinderFlags.CheckedContext : 0)
                         | (isCompoundAssignment ? CSharp.CSharpBinderFlags.ValueFromCompoundAssignment : 0);
                     var name = cb.Name;
-                    var context = (Type)getPrivateProperty(t, cb, "CallingContext");
-                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateProperty(t, cb, "ArgumentInfo");
+                    var context = (Type)getPrivateField(t, cb, "_callingContext");
+                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateField(t, cb, "_argumentInfo");
 
                     return Json.Expression.Array(
                         serialize(flags, ctx),
@@ -416,8 +424,8 @@ namespace Nuqleon.Linq.Expressions.Serialization
                     var flags = CSharp.CSharpBinderFlags.None
                         | (isChecked ? CSharp.CSharpBinderFlags.CheckedContext : 0);
                     var operation = cb.Operation;
-                    var context = (Type)getPrivateProperty(t, cb, "CallingContext");
-                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateProperty(t, cb, "ArgumentInfo");
+                    var context = (Type)getPrivateField(t, cb, "_callingContext");
+                    var argumentInfo = (IList<CSharp.CSharpArgumentInfo>)getPrivateField(t, cb, "_argumentInfo");
 
                     return Json.Expression.Array(
                         serialize(flags, ctx),

@@ -257,7 +257,7 @@ namespace Tests.System.Reflection.Virtualization
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null));
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, new[] { typeof(int), typeof(int) }, modifiers: null));
 
-#if NET6_0 || NETSTANDARD2_1
+#if NET10_0 || NETSTANDARD2_1
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, new[] { typeof(int), typeof(int) }));
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, new[] { typeof(int), typeof(int) }, modifiers: null));
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, BindingFlags.Public | BindingFlags.Instance, binder: null, new[] { typeof(int), typeof(int) }, modifiers: null));

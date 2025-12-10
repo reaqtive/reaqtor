@@ -6,13 +6,13 @@
 // Revision history:
 //
 // BD - July 2013 - Created this file.
+// IG - 2025/12   - Remove CLR serialization support.
 //
 
 using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class UndefineServiceOperation : ServiceOperation
     {
         public UndefineServiceOperation(ServiceOperationKind kind, Uri targetObjectUri)

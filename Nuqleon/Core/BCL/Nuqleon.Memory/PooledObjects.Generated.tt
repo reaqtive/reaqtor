@@ -178,7 +178,6 @@ foreach (var e in types) // <foreach-e-in-types>
     var ctors = e.Ctors;
     var forget = e.DiscardIf;
     var check = e.ClearCheck;
-    var ser = type.IsDefined(typeof(SerializableAttribute), true);
 
     //
     // Value types, why would you pool that? Time for a CLR lecture dude, I'm
@@ -233,10 +232,6 @@ foreach (var e in types) // <foreach-e-in-types>
 
             derive += typeName;
             derive += ", ";
-        }
-        else
-        {
-            ser = false;
         }
 
         derive += "IFreeable, IClearable";
@@ -352,33 +347,7 @@ namespace <#=type.Namespace#><#=test?".Test":""#>
 #>
     public partial class <#=pooledTypeName#><#=derive#>
     {
-<#
-        //
-        // If the original type is serializable, we're keeping that property
-        // but need to make sure not to serialize the pool instance. Upon
-        // deserializing a pooled instance, it will live on its own, rather
-        // than being adopted by a pool.
-        //
-        if (ser) // <if-ser>
-        {
-#>
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
-<#
-        } // </if-ser>
-#>
         private readonly <#=poolTypeName#> _pool;
-<#
-        if (ser) // <if-ser>
-        {
-#>
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
-<#
-        } // </if-ser>
-#>
         private readonly int _maxCapacity = 1024;
 
 <#
@@ -522,46 +491,6 @@ namespace <#=type.Namespace#><#=test?".Test":""#>
         } // </if-has-clear-method>
 #>
     }
-
-<#
-        //
-        // If the original type is serializable, we will keep that property
-        // on the derived type.
-        //
-        if (ser) // <if-ser>
-        {
-#>
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class <#=pooledTypeName#>
-    {
-<#
-            //
-            // Check whether we have a base constructor for deserialization. If
-            // so, we need to emit such a beast here too, and call the base.
-            //
-            if (type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(System.Runtime.Serialization.SerializationInfo), typeof(System.Runtime.Serialization.StreamingContext) }, null) != null) // <if-base-ctor-for-deserialize>
-            {
-                var pooledTypeNameDoc = pooledTypeName.Replace("<", "{").Replace(">", "}");
-                var pooledTypeNameDocCref = "<see cref=\"" + pooledTypeNameDoc + "\"/>";
-#>
-        /// <summary>
-        /// Initializes a new instance of the <#=pooledTypeNameDocCref#> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <#=pooledTypeNameDocCref#>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <#=pooledTypeNameDocCref#>.</param>
-        protected <#=pooledTypeNameShort#>(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
-<#
-            } // </if-base-ctor-for-deserialize>
-#>
-    }
-#endif
-<#
-        } // </if-ser>
-#>
 
     /// <summary>
     /// Object pool for <#=typeNameDocCref#> instances.

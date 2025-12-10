@@ -5,11 +5,6 @@
 
 using System;
 
-#if !NET6_0
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
-
 using Reaqtor.QueryEngine;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;

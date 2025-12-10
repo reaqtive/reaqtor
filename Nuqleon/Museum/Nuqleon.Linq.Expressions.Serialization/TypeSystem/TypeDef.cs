@@ -259,10 +259,10 @@ namespace Nuqleon.Linq.Expressions.Serialization.TypeSystem
         /// <returns>JSON representation of the type definition.</returns>
         public override Json.Expression ToJson()
         {
-            Debug.Assert(typeof(int).Assembly.FullName.StartsWith("mscorlib,", StringComparison.Ordinal));
+            Debug.Assert(typeof(int).Assembly.FullName.StartsWith("System.Private.CoreLib,", StringComparison.Ordinal));
 
             //
-            // We'll make mscorlib into a well-known assembly, so we don't have to transport the assembly name.
+            // We'll make System.Private.CoreLib into a well-known assembly, so we don't have to transport the assembly name.
             // Notice this assumes the same version of the framework is used on both sides. Resolution logic for
             // roll-forward is required to resolve type names across framework versions (similar to the CLR's).
             //

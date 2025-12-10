@@ -16,7 +16,6 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// Thread-safe in memory state store which holds key-value pair item sorted by categories
     /// and track items removal.
     /// </summary>
-    [Serializable]
     public sealed class InMemoryStateStore
     {
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>> _internalStore;
@@ -353,7 +352,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
                         foreach (var chunk in kv2.Value.Buffer(40))
                         {
                             var bytes = BitConverter.ToString(chunk)
-#if NET6_0 || NETSTANDARD2_1
+#if NET10_0 || NETSTANDARD2_1
                                 .Replace("-", " ", StringComparison.Ordinal)
 #else
                                 .Replace("-", " ")

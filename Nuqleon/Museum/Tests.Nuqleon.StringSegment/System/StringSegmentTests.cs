@@ -1212,6 +1212,7 @@ namespace Tests
             );
         }
 
+#if !NET10_0
         [TestMethod]
         public void StringSegment_Copy_StringSegment_ArgumentChecking()
         {
@@ -1231,6 +1232,7 @@ namespace Tests
             var s4 = StringSegment.Copy(s3);
             Assert.AreNotSame(s3.String, s4.String);
         }
+#endif
 
         [TestMethod]
         public void StringSegment_CopyTo_Int32_CharArray_Int32_Int32_ArgumentChecking()

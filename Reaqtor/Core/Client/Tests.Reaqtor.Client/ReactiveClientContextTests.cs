@@ -75,7 +75,7 @@ namespace Tests.Reaqtor.Client
         [TestMethod]
         public void ReactiveClientContext_Qubscription_ArgumentChecking()
         {
-#if !NET6_0
+#if !NET10_0
             Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).DisposeAsync());
 #endif
             Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).AsDisposable());
@@ -886,7 +886,7 @@ namespace Tests.Reaqtor.Client
                     var s1 = ctx.GetSubscription(new Uri(Constants.Subscription.SUB2));
                     var s2 = ctx.GetSubscription(new Uri(Constants.Subscription.SUB3));
 
-#if NET6_0 // Suppresses CA2012
+#if NET10_0 // Suppresses CA2012
                     s.DisposeAsync(CancellationToken.None).AsTask();
                     s1.DisposeAsync().AsTask();
 #else

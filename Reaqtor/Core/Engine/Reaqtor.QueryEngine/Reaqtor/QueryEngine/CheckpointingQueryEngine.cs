@@ -305,7 +305,7 @@ namespace Reaqtor.QueryEngine
         /// Disposes resources asynchronously.
         /// </summary>
         /// <returns>A task to await the completion of the dispose operation.</returns>
-#if NET6_0 || NETSTANDARD2_1
+#if NET10_0 || NETSTANDARD2_1
         protected virtual async ValueTask DisposeAsyncCore()
 #else
         protected virtual async Task DisposeAsyncCore()

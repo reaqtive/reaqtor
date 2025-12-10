@@ -6,6 +6,7 @@
 // Revision history:
 //
 // BD - December 2016 - Created this file.
+// IG - 2025/12       - Remove CLR serialization tests.
 //
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -13,11 +14,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Linq.Expressions.Bonsai.Serialization;
 
 using Json = Nuqleon.Json.Expressions;
-
-#if !NET6_0 // https://aka.ms/binaryformatter
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
 
 namespace Tests
 {
