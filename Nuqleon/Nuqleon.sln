@@ -91,12 +91,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Memory.Diagnostics"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Nuqleon.Memory.Diagnostics", "Pearls\BCL\ProjectJohnnie\Tests.Nuqleon.Memory.Diagnostics\Tests.Nuqleon.Memory.Diagnostics.csproj", "{0D85D5BD-5937-4B5E-A783-BF476613B747}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.Perf", "Pearls\LINQ\BinaryExpressionSerialization\BinaryExpressionSerialization\Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.Perf.csproj", "{7DE74424-44D3-4C12-9CAC-087913CB2F48}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary", "Pearls\LINQ\BinaryExpressionSerialization\Library\Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj", "{10DAA398-5BC8-446E-AED9-4896C031E7C5}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary", "Pearls\LINQ\BinaryExpressionSerialization\Tests\Tests.Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj", "{CF81976E-EE5D-431F-A18D-963D8729E2A1}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Linq.Expressions.Jit.Playground", "Pearls\LINQ\ExpressionJit\ExpressionJit\Nuqleon.Linq.Expressions.Jit.Playground.csproj", "{6DC179F8-E78B-40A7-8FA6-7874D94F1C91}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Linq.Expressions.Jit", "Pearls\LINQ\ExpressionJit\Nuqleon.Linq.Expressions.Jit\Nuqleon.Linq.Expressions.Jit.csproj", "{B1F463C2-A0CF-4611-B6CB-C8286A895C46}"
@@ -319,18 +313,6 @@ Global
 		{0D85D5BD-5937-4B5E-A783-BF476613B747}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0D85D5BD-5937-4B5E-A783-BF476613B747}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0D85D5BD-5937-4B5E-A783-BF476613B747}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7DE74424-44D3-4C12-9CAC-087913CB2F48}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7DE74424-44D3-4C12-9CAC-087913CB2F48}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7DE74424-44D3-4C12-9CAC-087913CB2F48}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7DE74424-44D3-4C12-9CAC-087913CB2F48}.Release|Any CPU.Build.0 = Release|Any CPU
-		{10DAA398-5BC8-446E-AED9-4896C031E7C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{10DAA398-5BC8-446E-AED9-4896C031E7C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{10DAA398-5BC8-446E-AED9-4896C031E7C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{10DAA398-5BC8-446E-AED9-4896C031E7C5}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CF81976E-EE5D-431F-A18D-963D8729E2A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CF81976E-EE5D-431F-A18D-963D8729E2A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CF81976E-EE5D-431F-A18D-963D8729E2A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CF81976E-EE5D-431F-A18D-963D8729E2A1}.Release|Any CPU.Build.0 = Release|Any CPU
 		{6DC179F8-E78B-40A7-8FA6-7874D94F1C91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{6DC179F8-E78B-40A7-8FA6-7874D94F1C91}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6DC179F8-E78B-40A7-8FA6-7874D94F1C91}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -410,9 +392,6 @@ Global
 		{568C5CFC-8C79-4F2C-B2C3-9B75B61134F6} = {DCDC55B3-35BE-497E-AA13-6C602E61AD85}
 		{209D786B-2C2F-40E8-B163-D1DC7D2BF892} = {A24A4F43-BE4E-4645-87FC-A2FB3552A0E3}
 		{0D85D5BD-5937-4B5E-A783-BF476613B747} = {21DB6A2C-2AEC-412E-9324-41735BD79CC7}
-		{7DE74424-44D3-4C12-9CAC-087913CB2F48} = {181E8202-74F4-4A0C-A77B-14B3112FEB16}
-		{10DAA398-5BC8-446E-AED9-4896C031E7C5} = {181E8202-74F4-4A0C-A77B-14B3112FEB16}
-		{CF81976E-EE5D-431F-A18D-963D8729E2A1} = {F23A4F1D-F7D4-448F-B735-FE18CFD41E7E}
 		{6DC179F8-E78B-40A7-8FA6-7874D94F1C91} = {181E8202-74F4-4A0C-A77B-14B3112FEB16}
 		{B1F463C2-A0CF-4611-B6CB-C8286A895C46} = {181E8202-74F4-4A0C-A77B-14B3112FEB16}
 		{D95E9D63-0751-4CAF-8891-CAE6D55137A4} = {F23A4F1D-F7D4-448F-B735-FE18CFD41E7E}

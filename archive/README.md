@@ -19,6 +19,7 @@ intra-archive references and the retained `.sln` files remain internally consist
 | `Reaqtor/Pearls/OperatorFusion/` | Experimental pearl, net472-only (save-based `System.Reflection.Emit`). |
 | `Reaqtor/Pearls/OperatorLocalStorage/OperatorLocalStorage/` + `…/Tests/` | net472-only playground + test harness for the `Reaqtive.Storage` pearl. The `Reaqtive.Storage` library itself was migrated and survives. |
 | `Nuqleon/Pearls/BCL/ProjectJohnnie/Perf.Nuqleon.Memory.Diagnostics/` + `…/ProjectJohnnie/` | net472-only perf/playground harnesses (Windows ETW/diagnostics). The `Nuqleon.Memory.Diagnostics` library and its tests were migrated and survive. |
+| `Nuqleon/Pearls/LINQ/BinaryExpressionSerialization/` | Prototype binary expression serializer whose default object serializer is built on **`BinaryFormatter`**, which is removed at runtime on .NET 9+. Leaf pearl; its raison d'être cannot function on modern .NET. |
 
 ## Resurrecting a project
 
