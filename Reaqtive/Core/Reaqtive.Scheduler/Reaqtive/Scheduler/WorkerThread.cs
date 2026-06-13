@@ -52,7 +52,10 @@ namespace Reaqtive.Scheduler
             _shouldStop = false;
             _canary = new ThreadLocal<bool>();
             _workProcessingFunction = workProcessingFunction;
-            _workerThread = new Thread(WorkLoop) { Name = name, Priority = priority };
+            // IsBackground: the scheduler's worker threads must not keep the process alive on their
+            // own. A host keeps the process running; an undisposed scheduler should never block exit
+            // (this also lets test executables on Microsoft.Testing.Platform terminate cleanly).
+            _workerThread = new Thread(WorkLoop) { Name = name, Priority = priority, IsBackground = true };
             _workExists = new MonitorAutoResetEvent();
             _workerThread.Start();
         }
