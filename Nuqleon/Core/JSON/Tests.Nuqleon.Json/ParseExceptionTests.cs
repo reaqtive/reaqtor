@@ -8,7 +8,7 @@
 // BD - May 2014 - Created this file.
 //
 
-#if !NET6_0 // https://aka.ms/binaryformatter
+#if !NET6_0_OR_GREATER // https://aka.ms/binaryformatter
 
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;

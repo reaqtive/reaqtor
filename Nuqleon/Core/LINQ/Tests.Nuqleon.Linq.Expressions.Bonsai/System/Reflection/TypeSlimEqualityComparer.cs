@@ -234,7 +234,7 @@ namespace Tests.System.Reflection
             Assert.IsTrue(true);
         }
 
-#if NET6_0
+#if NET6_0_OR_GREATER
         [Ignore] // See NB comment below; the implementation detail changed in .NET Core 3.1 and above.
 #endif
         [TestMethod]

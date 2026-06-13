@@ -20,7 +20,7 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         private static class ClosureTypeCompiler
         {
-#if !NET6_0
+#if !NET6_0_OR_GREATER
             /// <summary>
             /// The lock to protect against double-initialization of the module builder.
             /// </summary>

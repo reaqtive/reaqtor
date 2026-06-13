@@ -33,7 +33,7 @@ namespace System
 
         public static int GetHashCode<TDefinition>(TDefinition def, Type[] args)
         {
-#if NET6_0
+#if NET6_0_OR_GREATER
             HashCode h = new();
 
             h.Add(def);

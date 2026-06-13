@@ -23,7 +23,7 @@ namespace Tests
             var disposed = false;
             s.DisposeAsyncImpl = (token) => { disposed = true; return Task.CompletedTask; };
 
-#if !NET6_0
+#if !NET6_0_OR_GREATER
             s.DisposeAsync().Wait();
 #else
             s.DisposeAsync().AsTask().Wait();

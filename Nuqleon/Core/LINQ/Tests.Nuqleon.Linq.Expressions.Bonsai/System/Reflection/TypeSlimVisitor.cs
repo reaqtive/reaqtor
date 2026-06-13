@@ -330,7 +330,7 @@ namespace Tests.System.Reflection
             {
                 if (type.Name.StartsWith("System.Func`"))
                 {
-#if NET6_0
+#if NET6_0_OR_GREATER
                     var action = "System.Action`" + type.Name["System.Func`".Length..];
 #else
                     var action = "System.Action`" + type.Name.Substring("System.Func`".Length);
