@@ -13,6 +13,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations. (Prototype comparer that deliberately omits many expression cases.)
+
 namespace Pearls.Reaqtor.CSE
 {
     /// <summary>

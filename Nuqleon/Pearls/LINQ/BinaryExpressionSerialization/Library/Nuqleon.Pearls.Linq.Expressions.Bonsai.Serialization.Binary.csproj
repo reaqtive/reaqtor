@@ -1,11 +1,14 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;netstandard2.1;net472</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
     <Description>Prototype of binary expression tree serialization.</Description>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <!-- NB: Also supports non-slim expressions. Currently not enabled in build. -->
     <DefineConstants>$(DefineConstants);USE_SLIM</DefineConstants>
+    <!-- Experimental prototype whose default object serializer is built on BinaryFormatter, which is
+         obsolete and throws at runtime on .NET 10. Kept as reference; suppress the obsoletion. -->
+    <NoWarn>$(NoWarn);SYSLIB0011</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
