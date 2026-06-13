@@ -74,9 +74,7 @@ namespace Tests
 
             static string StripMscorlib(string bonsai) =>
                 bonsai
-                .Replace("mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089", "STD")
-                .Replace("System.Private.CoreLib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", "STD")
-                .Replace("System.Private.CoreLib, Version=6.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", "STD");
+                .Replace("System.Private.CoreLib, Version=10.0.0.0, Culture=neutral, PublicKeyToken=7cec85d7bea7798e", "STD");
         }
 
         [TestMethod]

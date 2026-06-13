@@ -21,9 +21,15 @@ namespace Tests
     [TestClass]
     public class Tests
     {
-        // NB: This assembly is only supported on .NET Framework because it relies on finding reference assemblies in a certain location.
+        // NB: The XmlDocumentation library reads the XML documentation file shipped next to an
+        //     assembly. The enumeration tests below use the BCL as their fixture; the runtime BCL
+        //     XML docs are present on .NET Framework but not alongside the modern .NET runtime, so
+        //     those tests are skipped when no BCL documentation can be located (the library's own
+        //     doc-name generation is still covered by the GetXmlDocName tests).
 
         private static bool RunningOnMono => Type.GetType("Mono.Runtime") != null;
+
+        private static bool DocsUnavailable => XmlDocumentation.GetXmlDoc(typeof(int)) == null;
 
         [TestMethod]
         public void XmlDocs_ArgumentChecking()
@@ -35,7 +41,7 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateTypes()
         {
-            if (RunningOnMono)
+            if (RunningOnMono || DocsUnavailable)
             {
                 return;
             }
@@ -50,7 +56,7 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateMethods()
         {
-            if (RunningOnMono)
+            if (RunningOnMono || DocsUnavailable)
             {
                 return;
             }
@@ -94,7 +100,7 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateProperties()
         {
-            if (RunningOnMono)
+            if (RunningOnMono || DocsUnavailable)
             {
                 return;
             }
@@ -121,7 +127,7 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateFields()
         {
-            if (RunningOnMono)
+            if (RunningOnMono || DocsUnavailable)
             {
                 return;
             }
@@ -141,7 +147,7 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateEvents()
         {
-            if (RunningOnMono)
+            if (RunningOnMono || DocsUnavailable)
             {
                 return;
             }
@@ -160,7 +166,7 @@ namespace Tests
         [TestMethod]
         public void XmlDocs_EnumerateConstructors()
         {
-            if (RunningOnMono)
+            if (RunningOnMono || DocsUnavailable)
             {
                 return;
             }
