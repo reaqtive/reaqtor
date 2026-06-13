@@ -1,0 +1,64 @@
+<Solution>
+  <Folder Name="/BCL/" />
+  <Folder Name="/BCL/src/">
+    <Project Path="BCL/Nuqleon.Collections.Specialized/Nuqleon.Collections.Specialized.csproj" />
+    <Project Path="BCL/Nuqleon.Documentation/Nuqleon.Documentation.csproj" />
+    <Project Path="BCL/Nuqleon.IO.StreamSegment/Nuqleon.IO.StreamSegment.csproj" />
+    <Project Path="BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="BCL/Nuqleon.Reflection.Virtualization/Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/BCL/test/">
+    <Project Path="BCL/Tests.Nuqleon.Collections.Specialized/Tests.Nuqleon.Collections.Specialized.csproj" />
+    <Project Path="BCL/Tests.Nuqleon.Documentation/Tests.Nuqleon.Documentation.csproj" />
+    <Project Path="BCL/Tests.Nuqleon.IO.StreamSegment/Tests.Nuqleon.IO.StreamSegment.csproj" />
+    <Project Path="BCL/Tests.Nuqleon.Memory/Tests.Nuqleon.Memory.csproj" />
+    <Project Path="BCL/Tests.Nuqleon.Reflection.Virtualization/Tests.Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="BCL/Tests.Nuqleon.Time/Tests.Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/DataModel/" />
+  <Folder Name="/DataModel/src/">
+    <Project Path="DataModel/Nuqleon.DataModel.CompilerServices/Nuqleon.DataModel.CompilerServices.csproj" />
+    <Project Path="DataModel/Nuqleon.DataModel.Serialization.Binary/Nuqleon.DataModel.Serialization.Binary.csproj" />
+    <Project Path="DataModel/Nuqleon.DataModel.Serialization.Json/Nuqleon.DataModel.Serialization.Json.csproj" />
+    <Project Path="DataModel/Nuqleon.DataModel/Nuqleon.DataModel.csproj" />
+  </Folder>
+  <Folder Name="/DataModel/test/">
+    <Project Path="DataModel/Tests.Nuqleon.DataModel.CompilerServices/Tests.Nuqleon.DataModel.CompilerServices.csproj" />
+    <Project Path="DataModel/Tests.Nuqleon.DataModel.Serialization.Binary/Tests.Nuqleon.DataModel.Serialization.Binary.csproj" />
+    <Project Path="DataModel/Tests.Nuqleon.DataModel.Serialization.Json/Tests.Nuqleon.DataModel.Serialization.Json.csproj" />
+    <Project Path="DataModel/Tests.Nuqleon.DataModel/Tests.Nuqleon.DataModel.csproj" />
+  </Folder>
+  <Folder Name="/JSON/" />
+  <Folder Name="/JSON/src/">
+    <Project Path="JSON/Nuqleon.Json.Interop.Newtonsoft/Nuqleon.Json.Interop.Newtonsoft.csproj" />
+    <Project Path="JSON/Nuqleon.Json.Serialization/Nuqleon.Json.Serialization.csproj" />
+    <Project Path="JSON/Nuqleon.Json/Nuqleon.Json.csproj" />
+  </Folder>
+  <Folder Name="/JSON/test/">
+    <Project Path="JSON/Perf.Nuqleon.Json.Serialization/Perf.Nuqleon.Json.Serialization.csproj" />
+    <Project Path="JSON/Tests.Nuqleon.Json.Interop.Newtonsoft/Tests.Nuqleon.Json.Interop.Newtonsoft.csproj" />
+    <Project Path="JSON/Tests.Nuqleon.Json.Serialization/Tests.Nuqleon.Json.Serialization.csproj" />
+    <Project Path="JSON/Tests.Nuqleon.Json/Tests.Nuqleon.Json.csproj" />
+  </Folder>
+  <Folder Name="/LINQ/" />
+  <Folder Name="/LINQ/src/">
+    <Project Path="LINQ/Nuqleon.Linq.CompilerServices.Optimizers/Nuqleon.Linq.CompilerServices.Optimizers.csproj" />
+    <Project Path="LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj" />
+    <Project Path="LINQ/Nuqleon.Linq.Expressions.Bonsai.Hashing/Nuqleon.Linq.Expressions.Bonsai.Hashing.csproj" />
+    <Project Path="LINQ/Nuqleon.Linq.Expressions.Bonsai.Serialization/Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <Project Path="LINQ/Nuqleon.Linq.Expressions.Bonsai/Nuqleon.Linq.Expressions.Bonsai.csproj" />
+    <Project Path="LINQ/Nuqleon.Linq.Expressions.Optimizers/Nuqleon.Linq.Expressions.Optimizers.csproj" />
+  </Folder>
+  <Folder Name="/LINQ/test/">
+    <Project Path="LINQ/SampleTrees/SampleTrees.csproj" />
+    <Project Path="LINQ/Tests.Nuqleon.Linq.CompilerServices.Optimizers/Tests.Nuqleon.Linq.CompilerServices.Optimizers.csproj" />
+    <Project Path="LINQ/Tests.Nuqleon.Linq.CompilerServices/Tests.Nuqleon.Linq.CompilerServices.csproj" />
+    <Project Path="LINQ/Tests.Nuqleon.Linq.Expressions.Bonsai.Hashing.Catalog/Tests.Nuqleon.Linq.Expressions.Bonsai.Hashing.Catalog.csproj" />
+    <Project Path="LINQ/Tests.Nuqleon.Linq.Expressions.Bonsai.Hashing/Tests.Nuqleon.Linq.Expressions.Bonsai.Hashing.csproj" />
+    <Project Path="LINQ/Tests.Nuqleon.Linq.Expressions.Bonsai.Serialization/Tests.Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <Project Path="LINQ/Tests.Nuqleon.Linq.Expressions.Bonsai/Tests.Nuqleon.Linq.Expressions.Bonsai.csproj" />
+    <Project Path="LINQ/Tests.Nuqleon.Linq.Expressions.Optimizers/Tests.Nuqleon.Linq.Expressions.Optimizers.csproj" />
+    <Project Path="LINQ/Tests.VisualBasic/Tests.VisualBasic.vbproj" />
+  </Folder>
+</Solution>

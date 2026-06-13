@@ -1,0 +1,6 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="OperatorFusion/Reaqtor.Pearls.Reactive.Fusion.Playground.csproj" />
+    <Project Path="RuntimeLib/Reaqtor.Pearls.Reactive.Fusion.csproj" />
+  </Folder>
+</Solution>

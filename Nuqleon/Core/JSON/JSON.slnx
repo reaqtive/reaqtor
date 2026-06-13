@@ -1,0 +1,18 @@
+<Solution>
+  <Folder Name="/deps/" />
+  <Folder Name="/deps/BCL/">
+    <Project Path="../BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="Nuqleon.Json.Interop.Newtonsoft/Nuqleon.Json.Interop.Newtonsoft.csproj" />
+    <Project Path="Nuqleon.Json.Serialization/Nuqleon.Json.Serialization.csproj" />
+    <Project Path="Nuqleon.Json/Nuqleon.Json.csproj" />
+    <Project Path="Perf.Nuqleon.Json.Serialization/Perf.Nuqleon.Json.Serialization.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="Tests.Nuqleon.Json.Interop.Newtonsoft/Tests.Nuqleon.Json.Interop.Newtonsoft.csproj" />
+    <Project Path="Tests.Nuqleon.Json.Serialization/Tests.Nuqleon.Json.Serialization.csproj" />
+    <Project Path="Tests.Nuqleon.Json/Tests.Nuqleon.Json.csproj" />
+  </Folder>
+</Solution>

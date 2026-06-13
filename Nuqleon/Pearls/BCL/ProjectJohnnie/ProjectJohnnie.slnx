@@ -1,0 +1,12 @@
+<Solution>
+  <Folder Name="/deps/">
+    <Project Path="../../../Core/BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../../../Core/BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="Nuqleon.Memory.Diagnostics/Nuqleon.Memory.Diagnostics.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="Tests.Nuqleon.Memory.Diagnostics/Tests.Nuqleon.Memory.Diagnostics.csproj" />
+  </Folder>
+</Solution>

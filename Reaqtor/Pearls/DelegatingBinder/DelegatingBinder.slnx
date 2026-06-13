@@ -1,0 +1,14 @@
+<Solution>
+  <Folder Name="/deps/" />
+  <Folder Name="/deps/Nuqleon/" />
+  <Folder Name="/deps/Nuqleon/BCL/">
+    <Project Path="../../../Nuqleon/Core/BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../../../Nuqleon/Core/BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/deps/Nuqleon/LINQ/">
+    <Project Path="../../../Nuqleon/Core/LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="Reaqtor.Pearls.DelegatingBinder.csproj" />
+  </Folder>
+</Solution>

@@ -16,26 +16,26 @@ test stack (MSTest)**.
 
 ## Results at a glance
 
-| Check | Result |
-|---|---|
-| `dotnet build All.sln` (Debug **and** Release) | ✅ 0 warnings, 0 errors |
-| Full test suite on Microsoft.Testing.Platform | ✅ **8,583 passing**, 0 failing |
-| `dotnet pack` (Release, `CreatePackage=true`) | ✅ **68** `net10.0` NuGet packages |
-| Surviving projects | **119** (118 `.csproj` + 1 `.vbproj`), all single-target `net10.0` (Rxcel `net10.0-windows`) |
-| Archived projects | **48** (moved to `archive/`, out of all solutions) |
+| Check                                          | Result                                                                                       |
+|------------------------------------------------|----------------------------------------------------------------------------------------------|
+| `dotnet build All.slnx` (Debug **and** Release) | ✅ 0 warnings, 0 errors                                                                       |
+| Full test suite on Microsoft.Testing.Platform  | ✅ **8,583 passing**, 0 failing                                                               |
+| `dotnet pack` (Release, `CreatePackage=true`)  | ✅ **68** `net10.0` NuGet packages                                                            |
+| Surviving projects                             | **119** (118 `.csproj` + 1 `.vbproj`), all single-target `net10.0` (Rxcel `net10.0-windows`) |
+| Archived projects                              | **48** (moved to `archive/`, out of all solutions)                                           |
 
 The work is split into **15 focused commits** (`git log 013e65a..HEAD`), one per phase, so each step is
 reviewable on its own and the build stays green across the sequence.
 
 ## Before → after
 
-| | Before | After |
-|---|---|---|
-| Target frameworks | `netstandard2.0;netstandard2.1;net472;net6.0` (+ a few variants) | **`net10.0`** (single); `net10.0-windows` for the one WPF/WinForms pearl |
-| Package versions | inline `Version=` in 100+ `.csproj` | **Central Package Management** (`Directory.Packages.props`) |
-| Test framework | MSTest 3.1.1 on the classic **VSTest** runner | MSTest **3.11.1** on **Microsoft.Testing.Platform (MTP)** |
-| Language | C# 11 | **C# 14** |
-| `.NET`-Framework-only code | built (net472 target) | **archived** (Remoting, CAS, `BinaryFormatter`, …) |
+|                            | Before                                                           | After                                                                    |
+|----------------------------|------------------------------------------------------------------|--------------------------------------------------------------------------|
+| Target frameworks          | `netstandard2.0;netstandard2.1;net472;net6.0` (+ a few variants) | **`net10.0`** (single); `net10.0-windows` for the one WPF/WinForms pearl |
+| Package versions           | inline `Version=` in 100+ `.csproj`                              | **Central Package Management** (`Directory.Packages.props`)              |
+| Test framework             | MSTest 3.1.1 on the classic **VSTest** runner                    | MSTest **3.11.1** on **Microsoft.Testing.Platform (MTP)**                |
+| Language                   | C# 11                                                            | **C# 14**                                                                |
+| `.NET`-Framework-only code | built (net472 target)                                            | **archived** (Remoting, CAS, `BinaryFormatter`, …)                       |
 
 ## Scope of changes (by phase)
 
@@ -46,7 +46,7 @@ reviewable on its own and the build stays green across the sequence.
 2. **Central Package Management** — `Directory.Packages.props`; deleted now-in-box packages
    (`System.Collections.Immutable`, `System.Buffers`); bumped library/build packages.
 3–4. **Collapse all surviving projects to `net10.0`**, area by area (Nuqleon → Reaqtive → Reaqtor),
-   each gated on its `*.Core.sln` building + testing green. `Nuqleon.Documentation` was **ported**
+   each gated on its `*.Core.slnx` building + testing green. `Nuqleon.Documentation` was **ported**
    (it only used portable APIs and was simply never multi-targeted), not archived.
 5. **Samples & Pearls** to `net10.0` (IoT, Shebang; CSE, DelegatingBinder, PartitionedSubject,
    OperatorLocalStorage's `Reaqtive.Storage`, the LINQ pearls). Rxcel keeps its Windows/headless split.
@@ -55,6 +55,11 @@ reviewable on its own and the build stays green across the sequence.
    `coverlet.runsettings` → `codecoverage.runsettings`.
 7. **C# 14** (`LangVersion`), removed the dead `net472` `Microsoft.CSharp` reference.
 8. Removed the **dead `netstandard2.0` Reflection.Emit polyfill** (13 whole-file shims).
+9. **Solution format → `.slnx`.** All 25 live solutions (and the 4 archived ones) were converted from
+   the classic GUID-based `.sln` to the modern XML `.slnx` format via `dotnet sln migrate`, and the
+   `.sln` files removed. `All.slnx` preserves all 119 projects and 84 solution folders and builds
+   clean; `dotnet build`/`dotnet test` auto-detect `.slnx`. **Requires** VS 2022 17.13+ / Rider
+   2024.3+ / `dotnet` SDK 9.0.200+ — older Visual Studio can no longer open these solutions.
 
 Plus a cross-cutting decision-4 change: **removed obsolete `ISerializable`/`BinaryFormatter`
 exception-serialization plumbing** repo-wide (it triggers `SYSLIB0051`/`SYSLIB0011`, which are
@@ -66,13 +71,13 @@ errors here).
 exist or does not function on .NET 10**. They are reference-only: removed from all solutions, not
 built, not shipped; their project references are not maintained. See `archive/README.md`.
 
-| Archived | Reason |
-|---|---|
-| `Reaqtor/Samples/Remoting/**` (~31 projects) | Built on **.NET Remoting** (`MarshalByRefObject`, remoting channels) + AppDomain sandboxing — removed in .NET Core/5+. |
-| `Nuqleon.Runtime.Remoting.Tasks` (+ tests) | Task-based async over **.NET Remoting**. No modern equivalent. |
-| `Nuqleon/Museum/**` | Explicitly legacy/superseded libraries (e.g. pre-Bonsai serialization). |
+| Archived                                                                                                   | Reason                                                                                                                                                         |
+|------------------------------------------------------------------------------------------------------------|----------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `Reaqtor/Samples/Remoting/**` (~31 projects)                                                               | Built on **.NET Remoting** (`MarshalByRefObject`, remoting channels) + AppDomain sandboxing — removed in .NET Core/5+.                                         |
+| `Nuqleon.Runtime.Remoting.Tasks` (+ tests)                                                                 | Task-based async over **.NET Remoting**. No modern equivalent.                                                                                                 |
+| `Nuqleon/Museum/**`                                                                                        | Explicitly legacy/superseded libraries (e.g. pre-Bonsai serialization).                                                                                        |
 | net472-only Pearls (OperatorFusion; ProjectJohnnie perf/playground; OperatorLocalStorage playground/tests) | Save-based `Reflection.Emit` / Windows-only diagnostics. The portable parts (e.g. `Reaqtive.Storage`, `Nuqleon.Memory.Diagnostics`) were migrated and survive. |
-| `Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary` (BinaryExpressionSerialization) | Its object serializer **is** `BinaryFormatter`, which is removed at runtime on .NET 9+ — the prototype cannot function on .NET 10. |
+| `Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary` (BinaryExpressionSerialization)              | Its object serializer **is** `BinaryFormatter`, which is removed at runtime on .NET 9+ — the prototype cannot function on .NET 10.                             |
 
 ## Key decisions
 
@@ -142,11 +147,11 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
 
 ## How it was verified
 
-- Per-area gates during the collapse: `dotnet build`/`dotnet test` on each `*.Core.sln` before moving on.
-- Full solution: `dotnet build All.sln -c Debug` **and** `-c Release` → clean.
-- Full test suite on MTP: `dotnet test All.sln --filter "TestCategory!~NonDeterministic_Strong"`
+- Per-area gates during the collapse: `dotnet build`/`dotnet test` on each `*.Core.slnx` before moving on.
+- Full solution: `dotnet build All.slnx -c Debug` **and** `-c Release` → clean.
+- Full test suite on MTP: `dotnet test All.slnx --filter "TestCategory!~NonDeterministic_Strong"`
   → **8,583 pass**, no hangs (with `--hangdump-timeout` as a safety net while diagnosing the hang above).
-- Packaging: `dotnet build All.sln -c Release /p:CreatePackage=true` → 68 packages, each containing
+- Packaging: `dotnet build All.slnx -c Release /p:CreatePackage=true` → 68 packages, each containing
   `lib/net10.0`.
 
 ## Notes for reviewers

@@ -1,0 +1,86 @@
+<Solution>
+  <Folder Name="/deps/" />
+  <Folder Name="/deps/Nuqleon/" />
+  <Folder Name="/deps/Nuqleon/BCL/">
+    <Project Path="../../../Nuqleon/Core/BCL/Nuqleon.Collections.Specialized/Nuqleon.Collections.Specialized.csproj" />
+    <Project Path="../../../Nuqleon/Core/BCL/Nuqleon.IO.StreamSegment/Nuqleon.IO.StreamSegment.csproj" />
+    <Project Path="../../../Nuqleon/Core/BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../../../Nuqleon/Core/BCL/Nuqleon.Reflection.Virtualization/Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="../../../Nuqleon/Core/BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+  </Folder>
+  <Folder Name="/deps/Nuqleon/DataModel/">
+    <Project Path="../../../Nuqleon/Core/DataModel/Nuqleon.DataModel.CompilerServices/Nuqleon.DataModel.CompilerServices.csproj" />
+    <Project Path="../../../Nuqleon/Core/DataModel/Nuqleon.DataModel.Serialization.Json/Nuqleon.DataModel.Serialization.Json.csproj" />
+    <Project Path="../../../Nuqleon/Core/DataModel/Nuqleon.DataModel/Nuqleon.DataModel.csproj" />
+  </Folder>
+  <Folder Name="/deps/Nuqleon/JSON/">
+    <Project Path="../../../Nuqleon/Core/JSON/Nuqleon.Json.Interop.Newtonsoft/Nuqleon.Json.Interop.Newtonsoft.csproj" />
+    <Project Path="../../../Nuqleon/Core/JSON/Nuqleon.Json/Nuqleon.Json.csproj" />
+  </Folder>
+  <Folder Name="/deps/Nuqleon/LINQ/">
+    <Project Path="../../../Nuqleon/Core/LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj" />
+    <Project Path="../../../Nuqleon/Core/LINQ/Nuqleon.Linq.Expressions.Bonsai.Serialization/Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <Project Path="../../../Nuqleon/Core/LINQ/Nuqleon.Linq.Expressions.Bonsai/Nuqleon.Linq.Expressions.Bonsai.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtive/">
+    <Project Path="../../../Reaqtive/Core/Reaqtive.Core/Reaqtive.Core.csproj" />
+    <Project Path="../../../Reaqtive/Core/Reaqtive.Interfaces/Reaqtive.Interfaces.csproj" />
+    <Project Path="../../../Reaqtive/Core/Reaqtive.Linq/Reaqtive.Linq.csproj" />
+    <Project Path="../../../Reaqtive/Core/Reaqtive.Quotation/Reaqtive.Quotation.csproj" />
+    <Project Path="../../../Reaqtive/Core/Reaqtive.Scheduler/Reaqtive.Scheduler.csproj" />
+    <Project Path="../../../Reaqtive/Core/Reaqtive.Testing/Reaqtive.Testing.csproj" />
+    <Project Path="../../../Reaqtive/Core/Reaqtive.TestingFramework/Reaqtive.TestingFramework.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtor/" />
+  <Folder Name="/deps/Reaqtor/Client/">
+    <Project Path="../Client/Reaqtor.Client.Core/Reaqtor.Client.Core.csproj" />
+    <Project Path="../Client/Reaqtor.Client.Model/Reaqtor.Client.Model.csproj" />
+    <Project Path="../Client/Reaqtor.Client/Reaqtor.Client.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtor/Expressions/">
+    <Project Path="../Expressions/Reaqtor.Expressions.Binding/Reaqtor.Expressions.Binding.csproj" />
+    <Project Path="../Expressions/Reaqtor.Expressions.Core/Reaqtor.Expressions.Core.csproj" />
+    <Project Path="../Expressions/Reaqtor.Expressions.Model/Reaqtor.Expressions.Model.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtor/Local/">
+    <Project Path="../Local/Reaqtor.Local.Core/Reaqtor.Local.Core.csproj" />
+    <Project Path="../Local/Reaqtor.Local.Model/Reaqtor.Local.Model.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtor/Metadata/">
+    <Project Path="../Metadata/Reaqtor.Metadata.Model/Reaqtor.Metadata.Model.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtor/Reactive/">
+    <Project Path="../Reactive/Reaqtor.Reactive.HigherOrder/Reaqtor.Reactive.HigherOrder.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtor/Reliable/">
+    <Project Path="../Reliable/Reaqtor.Reliable.Model/Reaqtor.Reliable.Model.csproj" />
+    <Project Path="../Reliable/Reaqtor.Reliable/Reaqtor.Reliable.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtor/Service/">
+    <Project Path="../Service/Reaqtor.Service.Contracts/Reaqtor.Service.Contracts.csproj" />
+    <Project Path="../Service/Reaqtor.Service.Core/Reaqtor.Service.Core.csproj" />
+    <Project Path="../Service/Reaqtor.Service.Model/Reaqtor.Service.Model.csproj" />
+    <Project Path="../Service/Reaqtor.Service/Reaqtor.Service.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtor/Shared/">
+    <Project Path="../Shared/Reaqtor.Shared.Core/Reaqtor.Shared.Core.csproj" />
+    <Project Path="../Shared/Reaqtor.Shared.Model/Reaqtor.Shared.Model.csproj" />
+  </Folder>
+  <Folder Name="/deps/Reaqtor/Testing/">
+    <Project Path="../Testing/Reaqtor.ReificationFramework/Reaqtor.ReificationFramework.csproj" />
+    <Project Path="../Testing/Reaqtor.ReifiedOperations/Reaqtor.ReifiedOperations.csproj" />
+    <Project Path="../Testing/Reaqtor.TestingFramework.Hosted/Reaqtor.TestingFramework.Hosted.csproj" />
+  </Folder>
+  <Folder Name="/src/">
+    <Project Path="Reaqtor.Engine.Contracts/Reaqtor.Engine.Contracts.csproj" />
+    <Project Path="Reaqtor.QueryEngine.Interfaces/Reaqtor.QueryEngine.Interfaces.csproj" />
+    <Project Path="Reaqtor.QueryEngine.KeyValueStore.InMemory/Reaqtor.QueryEngine.KeyValueStore.InMemory.csproj" />
+    <Project Path="Reaqtor.QueryEngine.Mocks/Reaqtor.QueryEngine.Mocks.csproj" />
+    <Project Path="Reaqtor.QueryEngine.ReificationFramework/Reaqtor.QueryEngine.ReificationFramework.csproj" />
+    <Project Path="Reaqtor.QueryEngine.Serialization.DataModel/Reaqtor.QueryEngine.Serialization.DataModel.csproj" />
+    <Project Path="Reaqtor.QueryEngine/Reaqtor.QueryEngine.csproj" />
+  </Folder>
+  <Folder Name="/test/">
+    <Project Path="Tests.Reaqtor.QueryEngine/Tests.Reaqtor.QueryEngine.csproj" />
+  </Folder>
+</Solution>
