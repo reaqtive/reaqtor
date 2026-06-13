@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Microsoft.Testing.Platform code-coverage settings (Microsoft.Testing.Extensions.CodeCoverage),
+  used via `dotnet test ... --coverage --coverage-settings codecoverage.runsettings`. This replaces
+  the coverlet `coverlet.runsettings` after the move to Microsoft.Testing.Platform.
+
+  Module exclusions mirror the previous coverlet exclusions: test/mocking infrastructure and sample
+  data are excluded from coverage. (The Reaqtor.Remoting exclusion is dropped — that tree is archived.)
+-->
+<RunSettings>
+  <DataCollectionRunSettings>
+    <DataCollectors>
+      <DataCollector friendlyName="Code Coverage" uri="datacollector://Microsoft/CodeCoverage/2.0">
+        <Configuration>
+          <CodeCoverage>
+            <ModulePaths>
+              <Exclude>
+                <ModulePath>.*Reaqtor\.TestingFramework.*\.dll$</ModulePath>
+                <ModulePath>.*Reaqtor\.ReifiedOperations.*\.dll$</ModulePath>
+                <ModulePath>.*\.Mocks\.dll$</ModulePath>
+                <ModulePath>.*Reaqtive\.Testing.*\.dll$</ModulePath>
+                <ModulePath>.*SampleTrees\.dll$</ModulePath>
+              </Exclude>
+            </ModulePaths>
+          </CodeCoverage>
+        </Configuration>
+      </DataCollector>
+    </DataCollectors>
+  </DataCollectionRunSettings>
+</RunSettings>

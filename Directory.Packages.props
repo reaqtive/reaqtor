@@ -18,11 +18,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <!-- Test stack (bumped to MSTest 4.x + Microsoft.Testing.Platform in Phase 6) -->
-    <PackageVersion Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
-    <PackageVersion Include="MSTest.TestAdapter" Version="3.1.1" />
-    <PackageVersion Include="MSTest.TestFramework" Version="3.1.1" />
-    <PackageVersion Include="coverlet.collector" Version="6.0.0" />
+    <!-- Test stack: MSTest on Microsoft.Testing.Platform (MTP). No Microsoft.NET.Test.Sdk
+         (VSTest host) and no coverlet; coverage/trx/hangdump are MTP extensions. -->
+    <!-- All Microsoft.Testing.* packages must share a Microsoft.Testing.Platform major version.
+         MSTest 3.11.1 depends on MTP 1.9.1, so the extensions are pinned to the aligned 1.x line
+         (CodeCoverage 17.x tracks MTP 1.x; the 18.x line targets MTP 2.x / MSTest 4.x). -->
+    <PackageVersion Include="MSTest.TestAdapter" Version="3.11.1" />
+    <PackageVersion Include="MSTest.TestFramework" Version="3.11.1" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.CodeCoverage" Version="17.14.2" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.TrxReport" Version="1.9.1" />
+    <PackageVersion Include="Microsoft.Testing.Extensions.HangDump" Version="1.9.1" />
   </ItemGroup>
 
   <ItemGroup>

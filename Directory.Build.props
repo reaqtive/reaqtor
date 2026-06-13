@@ -17,6 +17,13 @@
     reserved word"); suppress it to keep that intentional convention. -->
     <NoWarn>$(NoWarn);CS8981</NoWarn>
 
+    <!--
+    MSTest 3.11 ships a large set of analyzers that fire across the existing test suite
+    (e.g. MSTEST0039 ThrowsException->ThrowsExactly, which has different semantics and cannot be
+    auto-converted safely). Suppress them for the framework migration; adopting the MSTest analyzer
+    guidance is a separate test-code-modernization effort. -->
+    <NoWarn>$(NoWarn);MSTEST0006;MSTEST0036;MSTEST0037;MSTEST0039;MSTEST0053;MSTEST0055</NoWarn>
+
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
@@ -78,21 +85,23 @@
     <PackageReference Include="Nerdbank.GitVersioning" PrivateAssets="all" />
   </ItemGroup>
 
+  <!-- Test projects run on Microsoft.Testing.Platform (MTP): each builds as a self-contained executable. -->
+  <PropertyGroup Condition="'$(IsTestProject)' == 'true'">
+    <EnableMSTestRunner>true</EnableMSTestRunner>
+    <OutputType>Exe</OutputType>
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(IsTestProject)' == 'true'">
     <!--
-      NB: Trying to put these in a .csproj included through ProjectReference results in errors at runtime:
-
-            Testhost process exited with error: A fatal error was encountered. The library 'hostpolicy.dll'
-            required to execute the application was not found in 'C:\Program Files\dotnet'.
-
-          Apparently cross-referencing test projects causes 'testhost.runtimeconfig.json' to not get copied
-          properly to the test project output folder, which then causes the test runner to treat the project
-          as a "self-contained app".
+      NB: These belong here rather than in a ProjectReference'd .csproj. Cross-referencing test
+          projects breaks the per-project test runtime config. With MTP each test project is its
+          own executable, so this guidance is more important, not less.
     -->
-    <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="MSTest.TestAdapter" />
     <PackageReference Include="MSTest.TestFramework" />
-    <PackageReference Include="coverlet.collector" PrivateAssets="all" />
+    <PackageReference Include="Microsoft.Testing.Extensions.CodeCoverage" />
+    <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
+    <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
     <Compile Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\AssertEx.cs" Link="AssertEx.cs" />
   </ItemGroup>
 

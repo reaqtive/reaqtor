@@ -31,15 +31,19 @@
                 arguments: install -g dotnet-reportgenerator-globaltool
               displayName: Install ReportGenerator tool
 
+            # Tests run on Microsoft.Testing.Platform (see global.json "test.runner"). VSTest-style
+            # arguments are translated to their MTP equivalents: --collect "XPlat Code Coverage" ->
+            # --coverage (Microsoft.Testing.Extensions.CodeCoverage), --blame-hang-timeout ->
+            # --hangdump-timeout, coverlet.runsettings -> codecoverage.runsettings. --filter is unchanged.
             - task: DotNetCoreCLI@2
               inputs:
                 command: test
                 workingDirectory: ${{ project }}
-                arguments: -c ${{ configuration }} /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ pool.name }}.${{ project }}.${{ configuration }}.Test.binlog --settings $(Build.SourcesDirectory)/coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m --filter "TestCategory!~NonDeterministic_Strong"
+                arguments: -c ${{ configuration }} /bl:$(Build.ArtifactStagingDirectory)/Logs/${{ pool.name }}.${{ project }}.${{ configuration }}.Test.binlog --results-directory $(Agent.TempDirectory)/TestResults --filter "TestCategory!~NonDeterministic_Strong" --coverage --coverage-settings $(Build.SourcesDirectory)/codecoverage.runsettings --coverage-output-format cobertura --hangdump --hangdump-timeout 5m
                 testRunTitle: ${{ project }} ${{ configuration }}
               displayName: Run Unit Tests
 
-            - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/${{ pool.name }}.${{ project }}.${{ configuration }} -reporttypes:"Cobertura"
+            - script: reportgenerator -reports:$(Agent.TempDirectory)/**/*.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/${{ pool.name }}.${{ project }}.${{ configuration }} -reporttypes:"Cobertura"
               displayName: Consolidate Coverage Runs
               condition: succeededOrFailed()
 

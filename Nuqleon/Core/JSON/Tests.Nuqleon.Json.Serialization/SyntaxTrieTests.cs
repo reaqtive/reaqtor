@@ -258,7 +258,7 @@ namespace Tests
                     var i = 0;
 
                     var res = default(int);
-                    Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => trie.Eval(str, str.Length, i, ref i, out res));
+                    Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => trie.Eval(str, str.Length, i, ref i, out res));
                 }
             }
 
@@ -272,7 +272,7 @@ namespace Tests
                     var reader = new Reader(str);
 
                     var res = default(int);
-                    Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => trie.Eval(reader, out res));
+                    Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => trie.Eval(reader, out res));
                 }
             }
 #endif

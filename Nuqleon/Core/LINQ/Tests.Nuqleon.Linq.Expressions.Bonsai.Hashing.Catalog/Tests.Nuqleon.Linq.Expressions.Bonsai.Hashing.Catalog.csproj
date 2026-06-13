@@ -3,6 +3,9 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <IsTestProject>false</IsTestProject>
+    <!-- Catalog of test data (no test methods), referenced by the Hashing test project. Override the
+         Exe output type that Directory.Build.props applies by name to 'Tests.*' projects. -->
+    <OutputType>Library</OutputType>
   </PropertyGroup>
 
   <ItemGroup>

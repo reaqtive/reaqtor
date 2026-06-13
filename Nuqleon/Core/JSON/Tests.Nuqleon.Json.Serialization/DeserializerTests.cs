@@ -71,7 +71,7 @@ namespace Tests
 #if !NO_IO
             Assert.ThrowsException<ArgumentNullException>(() => des.Deserialize(default(System.IO.TextReader)));
 #endif
-            Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => des.Deserialize("42a"));
+            Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize("42a"));
 
             Assert.ThrowsException<ArgumentNullException>(() => FastJsonSerializerFactory.CreateDeserializer<int>(resolver: null, settings: null));
         }
@@ -901,10 +901,10 @@ namespace Tests
 
             foreach (var json in inputs)
             {
-                Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(json));
+                Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(json));
 
 #if !NO_IO
-                Assert.ThrowsException<Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(new System.IO.StringReader(json)));
+                Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(new System.IO.StringReader(json)));
 #endif
             }
         }
