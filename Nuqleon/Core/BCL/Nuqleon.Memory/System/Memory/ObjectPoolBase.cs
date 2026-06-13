@@ -445,11 +445,11 @@ namespace System.Memory
         /// tracker to become unreachable. When the leak tracker gets collected, its finalizer will run
         /// and log an error.
         /// </summary>
+        //
+        // NB: We're seeing sporadic failures on Mono where TryAdd fails with 'Key already in the list'
+        //     which seems related to https://github.com/mono/mono/issues/8700.
+        //
         private static readonly ConditionalWeakTable<T, LeakTracker> s_leakTrackers =
-            //
-            // NB: We're seeing sporadic failures on Mono where TryAdd fails with 'Key already in the list'
-            //     which seems related to https://github.com/mono/mono/issues/8700.
-            //
             Type.GetType("Mono.Runtime") == null ? new() : null;
 
         /// <summary>

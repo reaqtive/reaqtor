@@ -5,7 +5,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using System.Runtime.Serialization;
 
 namespace Reaqtor.Hosting.Shared.Tools
 {
@@ -32,16 +31,6 @@ namespace Reaqtor.Hosting.Shared.Tools
             Add(ReactiveEntityType.StreamFactory, new ReactiveEntitySet());
             Add(ReactiveEntityType.Subscription, new ReactiveEntitySet());
             Add(ReactiveEntityType.SubscriptionFactory, new ReactiveEntitySet());
-        }
-
-        /// <summary>
-        /// Initializes the dictionaries from serialized state.
-        /// </summary>
-        /// <param name="serializationInfo">Serialization information.</param>
-        /// <param name="streamingContext">Source of the serialized state.</param>
-        protected ReactiveEntities(SerializationInfo serializationInfo, StreamingContext streamingContext)
-            : base(serializationInfo, streamingContext)
-        {
         }
 
         /// <summary>

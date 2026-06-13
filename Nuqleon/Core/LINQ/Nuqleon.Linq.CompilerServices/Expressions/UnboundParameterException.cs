@@ -13,7 +13,6 @@ using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq.Expressions;
-using System.Runtime.Serialization;
 
 namespace System.Linq.CompilerServices
 {
@@ -44,16 +43,6 @@ namespace System.Linq.CompilerServices
 
             _expression = expression;
             _parameters = parameters.ToReadOnly();
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the UnboundParameterException class with serialized data.
-        /// </summary>
-        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
-        private UnboundParameterException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
         }
 
         /// <summary>
@@ -94,16 +83,6 @@ namespace System.Linq.CompilerServices
             {
                 throw new UnboundParameterException(message, expression, variables);
             }
-        }
-
-        /// <summary>
-        /// Sets the System.Runtime.Serialization.SerializationInfo with information about the exception.
-        /// </summary>
-        /// <param name="info">The System.Runtime.Serialization.SerializationInfo that holds the serialized object data about the exception being thrown.</param>
-        /// <param name="context">The System.Runtime.Serialization.StreamingContext that contains contextual information about the source or destination.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
         }
     }
 }

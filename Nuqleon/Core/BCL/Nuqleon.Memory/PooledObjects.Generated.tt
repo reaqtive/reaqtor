@@ -531,28 +531,6 @@ namespace <#=type.Namespace#><#=test?".Test":""#>
     [Serializable]
     partial class <#=pooledTypeName#>
     {
-<#
-            //
-            // Check whether we have a base constructor for deserialization. If
-            // so, we need to emit such a beast here too, and call the base.
-            //
-            if (type.GetConstructor(BindingFlags.NonPublic | BindingFlags.Instance, null, new[] { typeof(System.Runtime.Serialization.SerializationInfo), typeof(System.Runtime.Serialization.StreamingContext) }, null) != null) // <if-base-ctor-for-deserialize>
-            {
-                var pooledTypeNameDoc = pooledTypeName.Replace("<", "{").Replace(">", "}");
-                var pooledTypeNameDocCref = "<see cref=\"" + pooledTypeNameDoc + "\"/>";
-#>
-        /// <summary>
-        /// Initializes a new instance of the <#=pooledTypeNameDocCref#> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <#=pooledTypeNameDocCref#>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <#=pooledTypeNameDocCref#>.</param>
-        protected <#=pooledTypeNameShort#>(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
-<#
-            } // </if-base-ctor-for-deserialize>
-#>
     }
 #endif
 <#

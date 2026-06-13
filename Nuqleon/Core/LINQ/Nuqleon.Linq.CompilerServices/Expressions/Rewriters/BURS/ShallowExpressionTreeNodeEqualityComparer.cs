@@ -11,6 +11,8 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
+#pragma warning disable CA1065 // Do not raise exceptions in unexpected locations. (Defensive default arms over a closed set of node types; unreachable in practice.)
+
 namespace System.Linq.CompilerServices
 {
     internal sealed class ShallowExpressionTreeNodeEqualityComparer : IEqualityComparer<ExpressionTreeNode>

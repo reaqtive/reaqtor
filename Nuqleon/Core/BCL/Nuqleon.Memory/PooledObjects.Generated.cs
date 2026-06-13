@@ -78,15 +78,6 @@ namespace System.Collections.Generic
     [Serializable]
     partial class PooledDictionary<TKey, TValue>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledDictionary{TKey, TValue}"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledDictionary{TKey, TValue}"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledDictionary{TKey, TValue}"/>.</param>
-        protected PooledDictionary(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 #endif
 
@@ -424,15 +415,6 @@ namespace System.Collections.Generic
     [Serializable]
     partial class PooledHashSet<T>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledHashSet{T}"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledHashSet{T}"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledHashSet{T}"/>.</param>
-        protected PooledHashSet(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 #endif
 
@@ -2307,15 +2289,6 @@ namespace System.Collections
     [Serializable]
     partial class PooledHashtable
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledHashtable"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledHashtable"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledHashtable"/>.</param>
-        protected PooledHashtable(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 #endif
 
@@ -3465,15 +3438,6 @@ namespace System.Collections.Generic
     [Serializable]
     partial class PooledLinkedList<T>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledLinkedList{T}"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledLinkedList{T}"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledLinkedList{T}"/>.</param>
-        protected PooledLinkedList(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 #endif
 
@@ -4342,15 +4306,6 @@ namespace System.Collections.Generic
     [Serializable]
     partial class PooledSortedSet<T>
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="PooledSortedSet{T}"/> class with serialized data.
-        /// </summary>
-        /// <param name="info">A <see cref="System.Runtime.Serialization.SerializationInfo" /> object containing the information required to serialize the <see cref="PooledSortedSet{T}"/>.</param>
-        /// <param name="context">A <see cref="System.Runtime.Serialization.StreamingContext" /> structure containing the source and destination of the serialized stream associated with the <see cref="PooledSortedSet{T}"/>.</param>
-        protected PooledSortedSet(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context)
-            : base(info, context)
-        {
-        }
     }
 #endif
 

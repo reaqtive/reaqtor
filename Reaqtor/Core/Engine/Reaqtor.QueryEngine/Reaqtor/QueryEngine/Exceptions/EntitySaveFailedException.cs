@@ -4,7 +4,6 @@
 
 using System;
 using System.Globalization;
-using System.Runtime.Serialization;
 
 namespace Reaqtor.QueryEngine
 {
@@ -66,18 +65,6 @@ namespace Reaqtor.QueryEngine
         }
 
         /// <summary>
-        /// Creates a new instance of the <see cref="EntitySaveFailedException"/> type from serialized state.
-        /// </summary>
-        /// <param name="info">Serialization info to obtain the exception data from.</param>
-        /// <param name="context">Streaming context to obtain the exception data from.</param>
-        protected EntitySaveFailedException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
-        {
-            EntityUri = (Uri)info.GetValue("EntityUri", typeof(Uri));
-            EntityType = (ReactiveEntityKind)info.GetValue("EntityKind", typeof(ReactiveEntityKind));
-        }
-
-        /// <summary>
         /// Gets URI identifying the entity that failed to be saved.
         /// </summary>
         public Uri EntityUri { get; }
@@ -86,21 +73,6 @@ namespace Reaqtor.QueryEngine
         /// Gets the reactive entity kind of the entity that failed to be saved.
         /// </summary>
         public ReactiveEntityKind EntityType { get; }
-
-        /// <summary>
-        /// Sets the <see cref="System.Runtime.Serialization.SerializationInfo" /> object with the parameter name and additional exception information.
-        /// </summary>
-        /// <param name="info">The object that holds the serialized object data.</param>
-        /// <param name="context">The contextual information about the source or destination.</param>
-        public override void GetObjectData(SerializationInfo info, StreamingContext context)
-        {
-            base.GetObjectData(info, context);
-
-            // NB: Names kept for backwards compat.
-
-            info.AddValue("EntityUri", EntityUri, typeof(Uri));
-            info.AddValue("EntityKind", EntityType, typeof(ReactiveEntityKind));
-        }
 
         private static string GetMessage(Uri uri, ReactiveEntityKind type)
         {

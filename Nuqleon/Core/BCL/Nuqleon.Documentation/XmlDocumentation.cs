@@ -181,7 +181,7 @@ namespace System.Documentation
 
         private static string Escape(string memberName)
         {
-            return memberName.Replace(".", "#").Replace("<", "{").Replace(">", "}");
+            return memberName.Replace('.', '#').Replace('<', '{').Replace('>', '}');
         }
 
         private static string GetParamsListDocName(ParameterInfo[] parameters, Type[] genTypeArgs, Type[] genMtdArgs)
@@ -210,7 +210,7 @@ namespace System.Documentation
                 res = type.FullName;
             }
 
-            return res.Replace("&", "@").Replace("+", ".");
+            return res.Replace('&', '@').Replace('+', '.');
         }
 
         private static string GetTypeDocName(Type type, Type[] genTypeArgs, Type[] genMtdArgs)
@@ -221,7 +221,7 @@ namespace System.Documentation
             {
                 var d = type.GetGenericTypeDefinition();
                 var n = d.FullName;
-                n = n.Substring(0, n.LastIndexOf('`'));
+                n = n[..n.LastIndexOf('`')];
 
                 res = n + "{" + string.Join(",", type.GetGenericArguments().Select(t => GetTypeDocName(t, genTypeArgs, genMtdArgs))) + "}";
             }
@@ -260,7 +260,7 @@ namespace System.Documentation
                 res = type.FullName;
             }
 
-            return res.Replace("&", "@").Replace("+", ".");
+            return res.Replace('&', '@').Replace('+', '.');
         }
 
         /// <summary>

@@ -1,7 +1,9 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net472;net6.0</TargetFrameworks>
+    <TargetFramework>net10.0</TargetFramework>
+    <!-- Tests exercise the obsolete-but-functional reflection mirrors (IsSerializable, IsNotSerialized). -->
+    <NoWarn>$(NoWarn);SYSLIB0050;SYSLIB0056</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>

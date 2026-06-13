@@ -15,6 +15,5 @@ namespace Reaqtor.QueryEngine
         public BridgeCleanupException() { }
         public BridgeCleanupException(string message) : base(message) { }
         public BridgeCleanupException(string message, Exception inner) : base(message, inner) { }
-        protected BridgeCleanupException(System.Runtime.Serialization.SerializationInfo info, System.Runtime.Serialization.StreamingContext context) : base(info, context) { }
     }
 }

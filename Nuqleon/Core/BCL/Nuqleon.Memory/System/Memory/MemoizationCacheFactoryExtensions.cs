@@ -138,7 +138,7 @@ namespace System.Memory
                 {
                 }
 
-                protected override int CountCore => _cache.Values.Select(v => v.Count).Sum();
+                protected override int CountCore => _cache.Values.Sum(v => v.Count);
 
                 protected override string DebugViewCore
                 {

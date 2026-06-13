@@ -6,7 +6,6 @@
 #pragma warning disable CA1064 // Exceptions should be public. (Scoped to the query engine; should not escape.)
 
 using System;
-using System.Runtime.Serialization;
 
 namespace Reaqtor.QueryEngine
 {
@@ -24,11 +23,6 @@ namespace Reaqtor.QueryEngine
 
         public InvariantException(string message, Exception innerException)
             : base(message, innerException)
-        {
-        }
-
-        protected InvariantException(SerializationInfo info, StreamingContext context)
-            : base(info, context)
         {
         }
     }
