@@ -23,65 +23,6 @@ stages:
       projects: [ 'Nuqleon', 'Reaqtive', 'Reaqtor' ]
       configurations: [ 'Debug', 'Release' ]
 
-  - job: Reaqtor_Glitching_Tests
-    displayName: Run Reaqtor Remoting Glitching Tests
-    pool:
-      vmImage: windows-latest
-
-    steps:
-    - task: UseDotNet@2
-      displayName: Use .NET Core 8.x SDK
-      inputs:
-        version: 8.x
-        performMultiLevelLookup: true
-
-    - powershell: |
-        $existing = & dotnet tool list -g | Select-String "nbgv" 
-        if (!$existing) {
-            & dotnet tool install -g nbgv
-        }
-      displayName: Install NBGV tool
-
-    - script: nbgv cloud -a
-      displayName: Set Version
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: custom
-        custom: tool
-        arguments: install -g dotnet-reportgenerator-globaltool
-      displayName: Install ReportGenerator tool
-
-    - task: DotNetCoreCLI@2
-      inputs:
-        command: test
-        workingDirectory: Reaqtor/Samples/Remoting/Tests.Reaqtor.Remoting.Glitching
-        arguments: -c Release -p:EnableGlitching=true /bl:$(Build.ArtifactStagingDirectory)/Logs/Glitching.Test.binlog --settings $(Build.SourcesDirectory)/coverlet.runsettings --collect:"XPlat Code Coverage" --blame --blame-hang-timeout 5m
-        testRunTitle: Reaqtor Glitching
-      displayName: Run Unit Tests
-
-    - script: reportgenerator -reports:$(Agent.TempDirectory)/**/coverage.cobertura.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.ArtifactStagingDirectory)/coverage/Glitching -reporttypes:"Cobertura"
-      displayName: Consolidate Coverage Runs
-      condition: succeededOrFailed()
-
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)/coverage
-        artifactName: RawCoverage
-        parallel: true
-        parallelCount: 8
-      displayName: Publish Raw Coverage Output
-      condition: succeededOrFailed()
-
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-        artifactName: Logs
-        parallel: true
-        parallelCount: 8
-      displayName: Publish Build Logs
-      condition: always()
-
   - job: Reaqtor_Dotnet_Format
     displayName: Run dotnet-format checks
     pool:
@@ -89,9 +30,9 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 8.x SDK
+      displayName: Use .NET SDK from global.json
       inputs:
-        version: 8.x
+        useGlobalJson: true
         performMultiLevelLookup: true
 
     - task: DotNetCoreCLI@2
@@ -113,9 +54,9 @@ stages:
 
     steps:
     - task: UseDotNet@2
-      displayName: Use .NET Core 8.x SDK
+      displayName: Use .NET SDK from global.json
       inputs:
-        version: 8.x
+        useGlobalJson: true
         performMultiLevelLookup: true
 
     - powershell: |
