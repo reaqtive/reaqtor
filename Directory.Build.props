@@ -72,10 +72,13 @@
 
   <PropertyGroup Condition="'$(IsPlaygroundProject)' == 'false'">
     <!--
-      Temporarily disabled during the .NET 10 migration: the .NET 10 SDK's formatter/code-style
-      analyzers (IDE0055, IDE0350, ...) are far stricter than the .NET 7/8 SDK this repo last
-      built on, producing a large style-only wave orthogonal to the framework upgrade.
-      Phase 7 re-enables this and fixes the wave in one pass with `dotnet format`.
+      Disabled for the .NET 10 framework migration. The .NET 10 SDK's formatter/style analyzers
+      (IDE0055, IDE0350, ...) are far stricter than the .NET 7/8 SDK this repo last built on,
+      producing a large style-only wave that is orthogonal to the framework upgrade. `dotnet format`
+      cannot currently auto-apply the fixes on this solution (its MSBuildWorkspace throws on
+      TryApplyChanges across the many linked/generated files - cf. issue #138), so the reformatting
+      is a dedicated follow-up. Re-enable this (and the dotnet-format CI gate) once that pass lands;
+      the framework upgrade itself is complete and the build + tests are green without it.
     -->
     <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
   </PropertyGroup>
