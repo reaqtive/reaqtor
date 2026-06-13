@@ -388,3 +388,7 @@ FodyWeavers.xsd
 *.sln.iml
 
 .docs/
+.agents/
+.claude/
+.devcontainer/
+.endjin/

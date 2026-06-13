@@ -1,0 +1,4 @@
+{
+  "remote.containers.mountWaylandSocket": false,
+  "dotnet.preferCSharpExtension": true
+}

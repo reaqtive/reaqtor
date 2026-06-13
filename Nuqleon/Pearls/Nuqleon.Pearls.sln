@@ -1,3 +1,4 @@
+﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30523.141
@@ -23,10 +24,6 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Linq.Expressions.Bonsai.Serialization", "..\Core\LINQ\Nuqleon.Linq.Expressions.Bonsai.Serialization\Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj", "{73256C7F-71E5-4EA2-9600-FDA0670EC101}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Memory.Diagnostics", "BCL\ProjectJohnnie\Nuqleon.Memory.Diagnostics\Nuqleon.Memory.Diagnostics.csproj", "{7976B5BA-441D-4831-987D-C90391C30C99}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Perf.Nuqleon.Memory.Diagnostics", "BCL\ProjectJohnnie\Perf.Nuqleon.Memory.Diagnostics\Perf.Nuqleon.Memory.Diagnostics.csproj", "{CDA77795-0620-48DC-9354-88B6704A09C9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nuqleon.Memory.Diagnostics.Playground", "BCL\ProjectJohnnie\ProjectJohnnie\Nuqleon.Memory.Diagnostics.Playground.csproj", "{CD820876-FE17-4E60-B4BC-79ACF1B30649}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Nuqleon.Memory.Diagnostics", "BCL\ProjectJohnnie\Tests.Nuqleon.Memory.Diagnostics\Tests.Nuqleon.Memory.Diagnostics.csproj", "{3C9F646D-8D4B-4E66-851E-66BD56F29653}"
 EndProject
@@ -100,14 +97,6 @@ Global
 		{7976B5BA-441D-4831-987D-C90391C30C99}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7976B5BA-441D-4831-987D-C90391C30C99}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7976B5BA-441D-4831-987D-C90391C30C99}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CDA77795-0620-48DC-9354-88B6704A09C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CDA77795-0620-48DC-9354-88B6704A09C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CDA77795-0620-48DC-9354-88B6704A09C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CDA77795-0620-48DC-9354-88B6704A09C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CD820876-FE17-4E60-B4BC-79ACF1B30649}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CD820876-FE17-4E60-B4BC-79ACF1B30649}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CD820876-FE17-4E60-B4BC-79ACF1B30649}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CD820876-FE17-4E60-B4BC-79ACF1B30649}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3C9F646D-8D4B-4E66-851E-66BD56F29653}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{3C9F646D-8D4B-4E66-851E-66BD56F29653}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3C9F646D-8D4B-4E66-851E-66BD56F29653}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -161,8 +150,6 @@ Global
 		{F52B0C29-6032-459C-9D92-AF29B270063D} = {5F0814EE-1B44-49BE-A9EC-E5D6555D2E1D}
 		{73256C7F-71E5-4EA2-9600-FDA0670EC101} = {5F0814EE-1B44-49BE-A9EC-E5D6555D2E1D}
 		{7976B5BA-441D-4831-987D-C90391C30C99} = {B6CFDAA9-C6AB-4E6B-ABB3-625CCE88362D}
-		{CDA77795-0620-48DC-9354-88B6704A09C9} = {BCA14F4F-A2F9-4131-B1C1-88F63E1AEF6E}
-		{CD820876-FE17-4E60-B4BC-79ACF1B30649} = {B6CFDAA9-C6AB-4E6B-ABB3-625CCE88362D}
 		{3C9F646D-8D4B-4E66-851E-66BD56F29653} = {BCA14F4F-A2F9-4131-B1C1-88F63E1AEF6E}
 		{7F553E66-CBD7-4910-9A32-D1AE1369A031} = {C09A5A37-E11F-45AF-938D-84C8570713C1}
 		{E7E32326-D0D0-47F2-94ED-BC56F3049BFA} = {C09A5A37-E11F-45AF-938D-84C8570713C1}
