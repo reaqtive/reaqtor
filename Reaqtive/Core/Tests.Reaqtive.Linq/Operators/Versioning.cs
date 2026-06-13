@@ -5,7 +5,7 @@
 using System;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.Serialization;
+using System.Runtime.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -32,7 +32,7 @@ namespace Test.Reaqtive.Operators
                          where typeof(IVersioned).IsAssignableFrom(i)
                          where !i.IsAbstract
                          let j = i.IsGenericTypeDefinition ? i.MakeGenericType(i.GetGenericArguments().Select(_ => typeof(object)).ToArray()) : i
-                         let v = (IVersioned)FormatterServices.GetSafeUninitializedObject(j)
+                         let v = (IVersioned)RuntimeHelpers.GetUninitializedObject(j)
                          select (Operator: o, Sink: i, v.Version, v.Name))
                         .ToArray();
 

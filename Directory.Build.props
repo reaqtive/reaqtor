@@ -9,7 +9,14 @@
     Apparently setting AnalysisLevel isn't quite enough to avoid the new warnings we get in .NET SDK 8.0.
     This NoWarn line should be removed when we do https://github.com/reaqtive/reaqtor/issues/143 -->
     <NoWarn>$(NoWarn);IDE0079;IDE0090;CA1305;CA1822;CA1854</NoWarn>
-    
+
+    <!--
+    The Reaqtive/Reaqtor operators use a deliberate, long-standing convention of terse private
+    nested type names (e.g. '_' for the primary operator/observer and 'i' for a secondary inner
+    observer). The C# 14 compiler flags all-lower-case type names with CS8981 ("may become a
+    reserved word"); suppress it to keep that intentional convention. -->
+    <NoWarn>$(NoWarn);CS8981</NoWarn>
+
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>
