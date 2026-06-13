@@ -1,6 +1,6 @@
 ﻿<Project>
   <PropertyGroup>
-    <LangVersion>11.0</LangVersion>
+    <LangVersion>14.0</LangVersion>
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
@@ -103,10 +103,6 @@
     <PackageReference Include="Microsoft.Testing.Extensions.TrxReport" />
     <PackageReference Include="Microsoft.Testing.Extensions.HangDump" />
     <Compile Include="$(MSBuildThisFileDirectory)\Common\TestUtilities\AssertEx.cs" Link="AssertEx.cs" />
-  </ItemGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net472' ">
-    <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
   <ItemGroup Condition="!$(AssemblyName.StartsWith('Tests.')) And !$(AssemblyName.StartsWith('Perf.')) And !$(AssemblyName.EndsWith('.Perf')) And !$(AssemblyName.Contains('Playground'))">

@@ -92,7 +92,11 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                         let c = 2
                         let d = i + 1
                         let f = i - 3
-                        select string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}", i, x, y, z, a, b, c, d, f)
+                        // NB: explicit object[] forces the classic string.Format(string, object[]) overload.
+                        //     In C# 14 a bare argument list binds to the params ReadOnlySpan<object> overload,
+                        //     which a LINQ expression tree cannot represent (CS8640/CS9226). The expression
+                        //     produced here is identical to the previous params-array expansion.
+                        select string.Format("{0} {1} {2} {3} {4} {5} {6} {7} {8}", new object[] { i, x, y, z, a, b, c, d, f })
                     ).Body;
 
                 var converter = new EnumerableToQueryTreeConverter();
