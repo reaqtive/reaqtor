@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!--
   Microsoft.Testing.Platform code-coverage settings (Microsoft.Testing.Extensions.CodeCoverage),
-  used via `dotnet test ... --coverage --coverage-settings codecoverage.runsettings`. This replaces
+  used via `dotnet test ... -coverage -coverage-settings codecoverage.runsettings`. This replaces
   the coverlet `coverlet.runsettings` after the move to Microsoft.Testing.Platform.
+
+  NOTE: Due to XML limitations the above 'dotnet test' arguments cannot be correctly represented as
+  double-dashes are not permitted.
 
   Module exclusions mirror the previous coverlet exclusions: test/mocking infrastructure and sample
   data are excluded from coverage. (The Reaqtor.Remoting exclusion is dropped — that tree is archived.)
