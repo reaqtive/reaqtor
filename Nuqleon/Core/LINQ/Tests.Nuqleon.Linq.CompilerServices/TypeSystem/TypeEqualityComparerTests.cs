@@ -46,9 +46,9 @@ namespace Tests.System.Linq.CompilerServices
                         continue;
                     }
 
-                    Assert.IsTrue((bool)equals.Invoke(eq, new object[] { null, null }));
-                    Assert.IsFalse((bool)equals.Invoke(eq, new object[] { t, null }));
-                    Assert.IsFalse((bool)equals.Invoke(eq, new object[] { null, t }));
+                    Assert.IsTrue((bool)equals.Invoke(eq, [null, null]));
+                    Assert.IsFalse((bool)equals.Invoke(eq, [t, null]));
+                    Assert.IsFalse((bool)equals.Invoke(eq, [null, t]));
                 }
             }
 
@@ -59,7 +59,7 @@ namespace Tests.System.Linq.CompilerServices
                 {
                     if (ps[0].ParameterType == typeof(Type))
                     {
-                        Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, new object[] { null }));
+                        Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, [null]));
                     }
                 }
             }

@@ -12,13 +12,8 @@ using System.Collections.Generic;
 
 namespace System.Linq.CompilerServices
 {
-    internal sealed class LabeledTree<TSourceNodeType> : Tree<Label<TSourceNodeType>>
+    internal sealed class LabeledTree<TSourceNodeType>(Label<TSourceNodeType> nodeType, IEnumerable<LabeledTree<TSourceNodeType>> children) : Tree<Label<TSourceNodeType>>(nodeType, children)
     {
-        public LabeledTree(Label<TSourceNodeType> nodeType, IEnumerable<LabeledTree<TSourceNodeType>> children)
-            : base(nodeType, children)
-        {
-        }
-
         public override string ToString() => Children.Count == 0 ? Value.ToString(withValue: false) + " " + Value.Tree.ToString() : base.ToString();
 
         public override string ToString(int indent)

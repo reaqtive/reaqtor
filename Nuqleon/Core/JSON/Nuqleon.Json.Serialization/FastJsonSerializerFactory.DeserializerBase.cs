@@ -20,22 +20,16 @@ namespace Nuqleon.Json.Serialization
         /// Base class for JSON deserializers for objects of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
-        private abstract class DeserializerBase<T> : IFastJsonDeserializer<T>
+        /// <remarks>
+        /// Creates a new deserializer given the specified parser implementations.
+        /// </remarks>
+        /// <param name="parseString">The parser to use to deserialize JSON payloads from string inputs.</param>
+        /// <param name="parseReader">The parser to use to deserialize JSON payloads from text reader inputs.</param>
+        private abstract class DeserializerBase<T>(ParseStringFunc<T> parseString, ParseReaderFunc<T> parseReader) : IFastJsonDeserializer<T>
         {
 #if !NO_IO
-            protected readonly ParseStringFunc<T> _parseString;
-            protected readonly ParseReaderFunc<T> _parseReader;
-
-            /// <summary>
-            /// Creates a new deserializer given the specified parser implementations.
-            /// </summary>
-            /// <param name="parseString">The parser to use to deserialize JSON payloads from string inputs.</param>
-            /// <param name="parseReader">The parser to use to deserialize JSON payloads from text reader inputs.</param>
-            public DeserializerBase(ParseStringFunc<T> parseString, ParseReaderFunc<T> parseReader)
-            {
-                _parseString = parseString;
-                _parseReader = parseReader;
-            }
+            protected readonly ParseStringFunc<T> _parseString = parseString;
+            protected readonly ParseReaderFunc<T> _parseReader = parseReader;
 #else
             protected readonly ParseStringFunc<T> _parseString;
 

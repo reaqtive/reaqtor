@@ -64,20 +64,20 @@ namespace System.Linq.CompilerServices
 
             _wildcardFactory = new TWildcardFactory();
 
-            Leaves = new LeafCollection<TSource, TTarget>();
+            Leaves = [];
             Leaves.Added += OnLeafAdded;
-            Rules = new RuleCollection<TSource, TTarget>();
+            Rules = [];
             Rules.Added += OnRuleAdded;
-            Fallbacks = new FallbackCollection<TSource, TTarget>();
+            Fallbacks = [];
             Fallbacks.Added += OnFallbackAdded;
 
-            _forest = new Dictionary<TSource, int>();
+            _forest = [];
             _wildcards = new Dictionary<TSource, int>(new EqualityComparerByType<TSource>());
-            _constants = new Dictionary<TSource, int>();
+            _constants = [];
             _states = new Dictionary<TSourceNodeType, NAryMap<int, int>>(sourceNodeComparer);
-            _leafTests = new Dictionary<Func<TSource, bool>, int>();
-            _fallbackTests = new Dictionary<Func<TSource, bool>, int>();
-            _finals = new Dictionary<int, RuleBase<TSource, TTarget>>();
+            _leafTests = [];
+            _fallbackTests = [];
+            _finals = [];
         }
 
         #endregion
@@ -344,22 +344,16 @@ namespace System.Linq.CompilerServices
             return res;
         }
 
-        private sealed class State
+        private sealed class State(int state, WildcardTraversalMap<TSource> wildcardTraversals)
         {
             public State(int value)
                 : this(value, new WildcardTraversalMap<TSource>())
             {
             }
 
-            public State(int state, WildcardTraversalMap<TSource> wildcardTraversals)
-            {
-                Value = state;
-                WildcardTraversals = wildcardTraversals;
-            }
+            public int Value { get; } = state;
 
-            public int Value { get; }
-
-            public WildcardTraversalMap<TSource> WildcardTraversals { get; }
+            public WildcardTraversalMap<TSource> WildcardTraversals { get; } = wildcardTraversals;
         }
 
         #endregion

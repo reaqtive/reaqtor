@@ -16,15 +16,9 @@ using System.Threading.Tasks;
 
 namespace Reaqtor
 {
-    internal class QubscriptionFactory<TArg1, TArg2> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2>
+    internal class QubscriptionFactory<TArg1, TArg2>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state, CancellationToken token)
         {
@@ -32,15 +26,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, object state, CancellationToken token)
         {
@@ -48,15 +36,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, object state, CancellationToken token)
         {
@@ -64,15 +46,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, object state, CancellationToken token)
         {
@@ -80,15 +56,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, object state, CancellationToken token)
         {
@@ -96,15 +66,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, object state, CancellationToken token)
         {
@@ -112,15 +76,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, object state, CancellationToken token)
         {
@@ -128,15 +86,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, object state, CancellationToken token)
         {
@@ -144,15 +96,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, object state, CancellationToken token)
         {
@@ -160,15 +106,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, object state, CancellationToken token)
         {
@@ -176,15 +116,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, object state, CancellationToken token)
         {
@@ -192,15 +126,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, object state, CancellationToken token)
         {
@@ -208,15 +136,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, object state, CancellationToken token)
         {
@@ -224,15 +146,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, TArg15 arg15, object state, CancellationToken token)
         {

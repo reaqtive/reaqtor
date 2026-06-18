@@ -20,31 +20,23 @@ namespace System.Reflection
     /// <summary>
     /// A type slim visitor that recursively visits slim types and returns the CLR types they represent.
     /// </summary>
-    internal class TypeSlimToTypeConverter : TypeSlimVisitor<Type, Type, Type, Type, Type, Type, Type>
+    /// <remarks>
+    /// Instantiates a type slim to type converter.
+    /// </remarks>
+    /// <param name="provider">The reflection provider to use.</param>
+    internal class TypeSlimToTypeConverter(IReflectionProvider provider) : TypeSlimVisitor<Type, Type, Type, Type, Type, Type, Type>
     {
         #region Fields
 
-        private readonly IReflectionProvider _provider;
-        private readonly Dictionary<TypeSlim, Type> _typeMap;
-        private readonly Stack<Dictionary<TypeSlim, Type>> _genericParameterContext;
+        private readonly IReflectionProvider _provider = provider;
+        private readonly Dictionary<TypeSlim, Type> _typeMap = [];
+        private readonly Stack<Dictionary<TypeSlim, Type>> _genericParameterContext = new Stack<Dictionary<TypeSlim, Type>>();
 
         // TODO: Implement cache eviction policies
         private static readonly ConcurrentDictionary<SlimName, Type> s_simpleTypeCache = new();
 
         #endregion
-
         #region Constructors
-
-        /// <summary>
-        /// Instantiates a type slim to type converter.
-        /// </summary>
-        /// <param name="provider">The reflection provider to use.</param>
-        public TypeSlimToTypeConverter(IReflectionProvider provider)
-        {
-            _provider = provider;
-            _typeMap = new Dictionary<TypeSlim, Type>();
-            _genericParameterContext = new Stack<Dictionary<TypeSlim, Type>>();
-        }
 
         #endregion
 
@@ -167,7 +159,7 @@ namespace System.Reflection
             rtc.DefineAnonymousType(
                 typeBuilder,
                 newPropertyTypes,
-                keys.ToArray()
+                [.. keys]
             );
 
             var newType = typeBuilder.CreateType();
@@ -239,7 +231,7 @@ namespace System.Reflection
         /// <returns>CLR type represented by the type slim.</returns>
         protected override Type MakeGeneric(GenericTypeSlim type, Type typeDefinition, ReadOnlyCollection<Type> arguments)
         {
-            return _provider.MakeGenericType(typeDefinition, arguments.ToArray());
+            return _provider.MakeGenericType(typeDefinition, [.. arguments]);
         }
 
         /// <summary>
@@ -330,16 +322,10 @@ namespace System.Reflection
         /// <summary>
         /// Slim representation of an assembly name and type name pair.
         /// </summary>
-        private readonly struct SlimName : IEquatable<SlimName>
+        private readonly struct SlimName(string assemblyName, string typeName) : IEquatable<SlimName>
         {
-            public SlimName(string assemblyName, string typeName)
-            {
-                AssemblyName = assemblyName;
-                TypeName = typeName;
-            }
-
-            public string AssemblyName { get; }
-            public string TypeName { get; }
+            public string AssemblyName { get; } = assemblyName;
+            public string TypeName { get; } = typeName;
 
             public override bool Equals(object obj) => obj is SlimName name && Equals(name);
 

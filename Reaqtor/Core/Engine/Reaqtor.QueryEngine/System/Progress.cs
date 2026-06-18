@@ -378,7 +378,7 @@ namespace System
                 throw new ArgumentNullException(nameof(weights));
 
             if (weights.Length == 0)
-                return Array.Empty<IProgress<T>>();
+                return [];
 
             var totalWeight = weights.Aggregate(addWeight);
 
@@ -532,11 +532,9 @@ namespace System
 
         #endregion
 
-        private sealed class AnonymousProgress<T> : IProgress<T>
+        private sealed class AnonymousProgress<T>(Action<T> report) : IProgress<T>
         {
-            private readonly Action<T> _report;
-
-            public AnonymousProgress(Action<T> report) => _report = report;
+            private readonly Action<T> _report = report;
 
             public void Report(T value) => _report(value);
         }

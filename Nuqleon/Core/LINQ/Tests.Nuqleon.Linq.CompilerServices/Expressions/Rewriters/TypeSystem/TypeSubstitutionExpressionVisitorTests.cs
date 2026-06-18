@@ -519,9 +519,9 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp1 = (Expression<Func<Baz, int>>)((Baz b) => b.x);
-            var exp2 = (Expression<Func<Bar, int>>)((Bar b) => b.Wrong2);
-            var exp3 = (Expression<Func<Bar, int>>)((Bar b) => b.Wrong3);
+            var exp1 = (Expression<Func<Baz, int>>)(b => b.x);
+            var exp2 = (Expression<Func<Bar, int>>)(b => b.Wrong2);
+            var exp3 = (Expression<Func<Bar, int>>)(b => b.Wrong3);
 
             Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp1));
             Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp2));
@@ -533,7 +533,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp = (Expression<Func<Baz, int>>)((Baz b) => b.Y);
+            var exp = (Expression<Func<Baz, int>>)(b => b.Y);
 
             Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp));
         }
@@ -626,8 +626,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp1 = (Expression<Func<Baz, int>>)((Baz b) => b.Z(5));
-            var exp2 = (Expression<Func<Baz, int>>)((Baz b) => b.A<bool>(5));
+            var exp1 = (Expression<Func<Baz, int>>)(b => b.Z(5));
+            var exp2 = (Expression<Func<Baz, int>>)(b => b.A<bool>(5));
 
             Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp1));
             Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp2));
@@ -942,7 +942,7 @@ namespace Tests.System.Linq.CompilerServices
             var pers = typeof(Person);
             var query = (Expression<Func<IEnumerable<Person>, IEnumerable<string>>>)(xs => from x in xs where x.Age > 10 let name = x.Name where name.StartsWith("B") select name.ToUpper() + " is " + x.Age);
 
-            var check1 = new TypeErasureChecker(new[] { typeof(Person) });
+            var check1 = new TypeErasureChecker([typeof(Person)]);
             Assert.ThrowsException<InvalidOperationException>(() => check1.Visit(query));
 
 
@@ -961,15 +961,15 @@ namespace Tests.System.Linq.CompilerServices
 
             check1.Visit(res1);
 
-            var check2 = new TypeErasureChecker(new[] { anon });
+            var check2 = new TypeErasureChecker([anon]);
             Assert.ThrowsException<InvalidOperationException>(() => check2.Visit(res1));
 
 
             var f = ((LambdaExpression)res1).Compile();
 
             var cast = ((MethodInfo)ReflectionHelpers.InfoOf(() => Enumerable.Cast<int>(null))).GetGenericMethodDefinition().MakeGenericMethod(anon);
-            var peopleObj = new[] { Activator.CreateInstance(anon, new object[] { "Bart", 10 }), Activator.CreateInstance(anon, new object[] { "Lisa", 8 }), Activator.CreateInstance(anon, new object[] { "Bart", 21 }) };
-            var peopleAnon = cast.Invoke(obj: null, new object[] { peopleObj });
+            var peopleObj = new[] { Activator.CreateInstance(anon, ["Bart", 10]), Activator.CreateInstance(anon, ["Lisa", 8]), Activator.CreateInstance(anon, ["Bart", 21]) };
+            var peopleAnon = cast.Invoke(obj: null, [peopleObj]);
             var qres = (IEnumerable<string>)f.DynamicInvoke(peopleAnon);
             Assert.IsTrue(new[] { "BART is 21" }.SequenceEqual(qres));
 
@@ -1001,14 +1001,9 @@ namespace Tests.System.Linq.CompilerServices
 
         }
 
-        private sealed class TypeErasureChecker : ExpressionVisitor
+        private sealed class TypeErasureChecker(Type[] disallow) : ExpressionVisitor
         {
-            private readonly Checker _checker;
-
-            public TypeErasureChecker(Type[] disallow)
-            {
-                _checker = new Checker(disallow);
-            }
+            private readonly Checker _checker = new Checker(disallow);
 
             public override Expression Visit(Expression node)
             {
@@ -1020,14 +1015,9 @@ namespace Tests.System.Linq.CompilerServices
                 return base.Visit(node);
             }
 
-            private sealed class Checker : TypeVisitor
+            private sealed class Checker(Type[] disallow) : TypeVisitor
             {
-                private readonly Type[] _disallow;
-
-                public Checker(Type[] disallow)
-                {
-                    _disallow = disallow;
-                }
+                private readonly Type[] _disallow = disallow;
 
                 public override Type Visit(Type type)
                 {
@@ -1212,12 +1202,8 @@ namespace Tests.System.Linq.CompilerServices
 #pragma warning disable 0649
 #pragma warning disable IDE0060 // Remove unused parameter
 #pragma warning disable CA1822 // Mark static
-        private sealed class Bar
+        private sealed class Bar(int x)
         {
-            public Bar(int x)
-            {
-            }
-
             public int this[int x] => throw new NotImplementedException();
 
             public static string Baz;
@@ -1238,12 +1224,8 @@ namespace Tests.System.Linq.CompilerServices
             public static Bar operator -(Bar b) => throw new NotImplementedException();
         }
 
-        private sealed class Foo
+        private sealed class Foo(long x)
         {
-            public Foo(long x)
-            {
-            }
-
             public static string Baz;
             public long Qux { get; set; }
             public Foo Joey { get; private set; }
@@ -1262,12 +1244,8 @@ namespace Tests.System.Linq.CompilerServices
             public static Foo operator -(Foo b) => throw new NotImplementedException();
         }
 
-        private sealed class Baz
+        private sealed class Baz(int x)
         {
-            public Baz(int x)
-            {
-            }
-
             public int x;
             public int Y { get; private set; }
             public int Z(int x) { return 42; }

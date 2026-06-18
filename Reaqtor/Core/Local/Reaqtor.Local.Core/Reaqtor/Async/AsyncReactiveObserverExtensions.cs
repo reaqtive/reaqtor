@@ -33,11 +33,9 @@ namespace Reaqtor
             return new Observer<T>(observer);
         }
 
-        private sealed class Observer<T> : IReactiveObserver<T>
+        private sealed class Observer<T>(IAsyncReactiveObserver<T> observer) : IReactiveObserver<T>
         {
-            private readonly IAsyncReactiveObserver<T> _observer;
-
-            public Observer(IAsyncReactiveObserver<T> observer) => _observer = observer;
+            private readonly IAsyncReactiveObserver<T> _observer = observer;
 
             public void OnNext(T value) => _observer.OnNextAsync(value).Wait();
 

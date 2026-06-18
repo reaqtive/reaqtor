@@ -28,7 +28,7 @@ namespace System.Memory.Diagnostics
         /// <summary>
         /// The partitions managed by the analyzer.
         /// </summary>
-        private readonly Dictionary<string, HeapPartition> _partitions = new();
+        private readonly Dictionary<string, HeapPartition> _partitions = [];
 
         /// <summary>
         /// Adds a heap partition to the analyzer.

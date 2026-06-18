@@ -13,15 +13,9 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal class Qbservable<T> : ReactiveQbservableBase<T>
+    internal class Qbservable<T>(Expression expression, IReactiveQueryProvider provider) : ReactiveQbservableBase<T>(provider)
     {
-        public Qbservable(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription SubscribeCore(IReactiveQbserver<T> observer, Uri subscriptionUri, object state)
         {

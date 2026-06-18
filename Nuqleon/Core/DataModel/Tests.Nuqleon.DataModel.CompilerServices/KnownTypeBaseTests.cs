@@ -75,7 +75,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
     {
         public KTExample()
         {
-            Foos = new List<Foo>();
+            Foos = [];
         }
 
         [Mapping("mappedString")]
@@ -92,7 +92,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
     {
         public KTNested()
         {
-            Foos = new List<Foo>();
+            Foos = [];
         }
 
         [Mapping("mappedInt")]

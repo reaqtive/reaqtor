@@ -8,28 +8,18 @@ using Reaqtive.Tasks;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Throw<TResult> : SubscribableBase<TResult>
+    internal sealed class Throw<TResult>(Exception error) : SubscribableBase<TResult>
     {
-        private readonly Exception _error;
-
-        public Throw(Exception error)
-        {
-            _error = error;
-        }
+        private readonly Exception _error = error;
 
         protected override ISubscription SubscribeCore(IObserver<TResult> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<Throw<TResult>, TResult>
+        private sealed class _(Throw<TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<Throw<TResult>, TResult>(parent, observer)
         {
             private IOperatorContext _context;
-
-            public _(Throw<TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:Throw";
 

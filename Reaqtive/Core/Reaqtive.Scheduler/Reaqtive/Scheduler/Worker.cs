@@ -111,7 +111,7 @@ namespace Reaqtive.Scheduler
             _commands = new SnapshotCollection<List<Command>, Command>();
             _priorityRecalculations = new SnapshotCollection<HashSet<WorkItem>, WorkItem>();
             _readyTasks = new HeapBasedPriorityQueue<WorkItem>(Comparer<WorkItem>.Create((a, b) => a.Priority.CompareTo(b.Priority)));
-            _notReadyTasks = new HashSet<WorkItem>();
+            _notReadyTasks = [];
             _timeScheduledItems = new HeapBasedPriorityQueue<WorkItem>(Comparer<WorkItem>.Create((a, b) => a.CompareTo(b)));
 
             _addItem = AddItem;

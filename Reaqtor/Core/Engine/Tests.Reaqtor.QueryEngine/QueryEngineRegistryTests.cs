@@ -17,8 +17,8 @@ namespace Tests.Reaqtor.QueryEngine
     [TestClass]
     public class QueryEngineRegistryTests
     {
-        private static readonly string[] Keys = new[]
-        {
+        private static readonly string[] Keys =
+        [
             "test://key0",
             "test://key1",
             "test://key2",
@@ -27,10 +27,10 @@ namespace Tests.Reaqtor.QueryEngine
             "test://key5",
             "test://key6",
             "test://key7",
-        };
+        ];
 
-        private static readonly Expression[] Expressions = new Expression[]
-        {
+        private static readonly Expression[] Expressions =
+        [
             Expression.New(typeof(DummySubject)),
             Expression.Default(typeof(ISubscribable<int>)),
             Expression.Default(typeof(IObserver<int>)),
@@ -39,7 +39,7 @@ namespace Tests.Reaqtor.QueryEngine
             Expression.Default(typeof(DummySubscription)),
             Expression.New(typeof(DummyTypedSubject)),
             Expression.Default(typeof(DummySubject)),
-        };
+        ];
 
         [TestMethod]
         public void QueryEngineRegistry_ExecutionEnvironment_GetSubscription()

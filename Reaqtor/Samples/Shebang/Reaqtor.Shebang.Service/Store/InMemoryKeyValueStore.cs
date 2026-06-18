@@ -38,7 +38,7 @@ namespace Reaqtor.Shebang.Service
     {
         private readonly Dictionary<string, Dictionary<string, byte[]>> _data;
 
-        public InMemoryKeyValueStore() => _data = new();
+        public InMemoryKeyValueStore() => _data = [];
 
         private InMemoryKeyValueStore(Dictionary<string, Dictionary<string, byte[]>> data) => _data = data;
 
@@ -115,7 +115,7 @@ namespace Reaqtor.Shebang.Service
 
                             sb.AppendLine($"  Key '{row.Key}':");
                             sb.AppendLine($"    Bytes = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
-                            sb.AppendLine($"    ASCII = {new string(row.Value.Select(b => (char)b).ToArray())}");
+                            sb.AppendLine($"    ASCII = {new string([.. row.Value.Select(b => (char)b)])}");
                             sb.AppendLine($"    Size  = {rowSize}");
                             sb.AppendLine();
 
@@ -162,12 +162,10 @@ namespace Reaqtor.Shebang.Service
             }
         }
 
-        private sealed class Transaction : IKeyValueStoreTransaction
+        private sealed class Transaction(InMemoryKeyValueStore parent) : IKeyValueStoreTransaction
         {
-            private readonly InMemoryKeyValueStore _parent;
-            private readonly Dictionary<string, Dictionary<string, byte[]>> _edits = new();
-
-            public Transaction(InMemoryKeyValueStore parent) => _parent = parent;
+            private readonly InMemoryKeyValueStore _parent = parent;
+            private readonly Dictionary<string, Dictionary<string, byte[]>> _edits = [];
 
             public byte[] this[string tableName, string key]
             {
@@ -247,7 +245,7 @@ namespace Reaqtor.Shebang.Service
                             }
                         }
 
-                        _edits[tableName] = table = new Dictionary<string, byte[]>();
+                        _edits[tableName] = table = [];
 
                         table[key] = value;
                     }
@@ -264,7 +262,7 @@ namespace Reaqtor.Shebang.Service
                         {
                             if (!_parent._data.TryGetValue(table.Key, out var existingTable))
                             {
-                                _parent._data[table.Key] = existingTable = new Dictionary<string, byte[]>();
+                                _parent._data[table.Key] = existingTable = [];
                             }
 
                             foreach (var entry in table.Value)
@@ -394,7 +392,7 @@ namespace Reaqtor.Shebang.Service
                 {
                     if (!_edits.TryGetValue(tableName, out var table))
                     {
-                        _edits[tableName] = table = new Dictionary<string, byte[]>();
+                        _edits[tableName] = table = [];
                     }
 
                     if (table.TryGetValue(key, out var existingValue))
@@ -410,11 +408,9 @@ namespace Reaqtor.Shebang.Service
             }
         }
 
-        private sealed class Table : IKeyValueTable<string, byte[]>
+        private sealed class Table(string name) : IKeyValueTable<string, byte[]>
         {
-            private readonly string _name;
-
-            public Table(string name) => _name = name;
+            private readonly string _name = name;
 
             public ITransactedKeyValueTable<string, byte[]> Enter(IKeyValueStoreTransaction transaction) => new Impl(transaction, _name);
 
@@ -441,11 +437,9 @@ namespace Reaqtor.Shebang.Service
             }
         }
 
-        private sealed class Reader : IStateReader
+        private sealed class Reader(InMemoryKeyValueStore store) : IStateReader
         {
-            private readonly InMemoryKeyValueStore _store;
-
-            public Reader(InMemoryKeyValueStore store) => _store = store;
+            private readonly InMemoryKeyValueStore _store = store;
 
             public void Dispose() { }
 
@@ -500,12 +494,10 @@ namespace Reaqtor.Shebang.Service
             }
         }
 
-        private sealed class Writer : IStateWriter
+        private sealed class Writer(InMemoryKeyValueStore store) : IStateWriter
         {
-            private readonly InMemoryKeyValueStore _store;
-            private readonly Dictionary<(string, string), MemoryStream> _edits = new();
-
-            public Writer(InMemoryKeyValueStore store) => _store = store;
+            private readonly InMemoryKeyValueStore _store = store;
+            private readonly Dictionary<(string, string), MemoryStream> _edits = [];
 
             public CheckpointKind CheckpointKind => CheckpointKind.Differential;
 

@@ -21,13 +21,17 @@ namespace System.Linq.CompilerServices.Bonsai
     /// <summary>
     /// Expression slim visitor that recurses over the expression tree and attempts to return type information.
     /// </summary>
-    public class TypeSlimDerivationVisitor : ExpressionSlimVisitor<TypeSlim, TypeSlim, TypeSlim, TypeSlim, TypeSlim, TypeSlim>
+    /// <remarks>
+    /// Creates a new <see cref="TypeSlimDerivationVisitor"/> with the specified equality comparer for <see cref="TypeSlim"/> instances.
+    /// </remarks>
+    /// <param name="typeSlimEqualityComparer">The equality comparer to use for <see cref="TypeSlim"/> equality checks.</param>
+    public class TypeSlimDerivationVisitor(IEqualityComparer<TypeSlim> typeSlimEqualityComparer) : ExpressionSlimVisitor<TypeSlim, TypeSlim, TypeSlim, TypeSlim, TypeSlim, TypeSlim>
     {
         /// <summary>
         /// The equality comparer to use for type equality checks. Specifying a custom (pooled)
         /// comparer can significantly improve performance.
         /// </summary>
-        private readonly IEqualityComparer<TypeSlim> _typeEqualityComparer = TypeSlimEqualityComparer.Default;
+        private readonly IEqualityComparer<TypeSlim> _typeEqualityComparer = typeSlimEqualityComparer ?? throw new ArgumentNullException(nameof(typeSlimEqualityComparer));
 
         /// <summary>
         /// Creates a new <see cref="TypeSlimDerivationVisitor"/> with the default equality comparer for <see cref="TypeSlim"/> instances.
@@ -35,15 +39,6 @@ namespace System.Linq.CompilerServices.Bonsai
         public TypeSlimDerivationVisitor()
             : this(TypeSlimEqualityComparer.Default)
         {
-        }
-
-        /// <summary>
-        /// Creates a new <see cref="TypeSlimDerivationVisitor"/> with the specified equality comparer for <see cref="TypeSlim"/> instances.
-        /// </summary>
-        /// <param name="typeSlimEqualityComparer">The equality comparer to use for <see cref="TypeSlim"/> equality checks.</param>
-        public TypeSlimDerivationVisitor(IEqualityComparer<TypeSlim> typeSlimEqualityComparer)
-        {
-            _typeEqualityComparer = typeSlimEqualityComparer ?? throw new ArgumentNullException(nameof(typeSlimEqualityComparer));
         }
 
         /// <summary>

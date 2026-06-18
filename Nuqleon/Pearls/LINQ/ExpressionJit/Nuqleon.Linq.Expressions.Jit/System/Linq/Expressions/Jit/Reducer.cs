@@ -153,7 +153,7 @@ namespace System.Linq.Expressions.Jit
                 //
                 // Using Nullable<T>.HasValue to perform the null check.
                 //
-                var leftNotNull = Property(leftTemp, nameof(Nullable<int>.HasValue));
+                var leftNotNull = Property(leftTemp, nameof(Nullable<>.HasValue));
 
                 //
                 // If not null, we need to invoke the Conversion lambda but we may need to convert the
@@ -175,7 +175,7 @@ namespace System.Linq.Expressions.Jit
                     // NB: The use of GetValueOrDefault in lieu of Value avoids a null check and conditional
                     //     log to throw InvalidOperationException in case the nullable has no value.
                     //
-                    var getValueOrDefault = leftType.GetMethod(nameof(Nullable<int>.GetValueOrDefault), Type.EmptyTypes);
+                    var getValueOrDefault = leftType.GetMethod(nameof(Nullable<>.GetValueOrDefault), Type.EmptyTypes);
                     conversionArgument = Call(leftTemp, getValueOrDefault);
                 }
                 else

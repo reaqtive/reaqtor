@@ -12,27 +12,22 @@ namespace Reaqtive.Tasks
     /// <summary>
     /// Simple action task with yielding support.
     /// </summary>
-    public sealed class YieldableActionTask : ISchedulerTask, IYieldableSchedulerTask
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="ActionTask"/> class.
+    /// </remarks>
+    /// <param name="action">The action to execute.</param>
+    /// <remarks>
+    /// The return value of the <paramref name="action"/> indicates whether the task has been completed. If
+    /// a value of <c>true</c> is returned, the task won't be scheduled again. If a value of <c>false</c> is
+    /// returned, the task will be scheduled again. This is usable for tasks that support yielding and can
+    /// interrupt their work for it to be resumed later.
+    /// </remarks>
+    public sealed class YieldableActionTask(Func<YieldToken, bool> action) : ISchedulerTask, IYieldableSchedulerTask
     {
         /// <summary>
         /// The action to execute.
         /// </summary>
-        private readonly Func<YieldToken, bool> _action;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActionTask"/> class.
-        /// </summary>
-        /// <param name="action">The action to execute.</param>
-        /// <remarks>
-        /// The return value of the <paramref name="action"/> indicates whether the task has been completed. If
-        /// a value of <c>true</c> is returned, the task won't be scheduled again. If a value of <c>false</c> is
-        /// returned, the task will be scheduled again. This is usable for tasks that support yielding and can
-        /// interrupt their work for it to be resumed later.
-        /// </remarks>
-        public YieldableActionTask(Func<YieldToken, bool> action)
-        {
-            _action = action ?? throw new ArgumentNullException(nameof(action));
-        }
+        private readonly Func<YieldToken, bool> _action = action ?? throw new ArgumentNullException(nameof(action));
 
         /// <summary>
         /// Gets task priority.

@@ -17,28 +17,22 @@ namespace System.Runtime.CompilerServices
         /// Implementation of <see cref="IRuntimeVariables"/> providing access to closed over variables
         /// using indexes that encode parent traversal and slot indexing.
         /// </summary>
-        private sealed class RuntimeVariableList : IRuntimeVariables
+        /// <remarks>
+        /// Creates an <see cref="IRuntimeVariables"/> object providing access to closed over variables.
+        /// </remarks>
+        /// <param name="closure">The closure containing the variables.</param>
+        /// <param name="indexes">The indices into the closure where variables are found.</param>
+        private sealed class RuntimeVariableList(IRuntimeVariables closure, long[] indexes) : IRuntimeVariables
         {
             /// <summary>
             /// The closure containing the variables.
             /// </summary>
-            private readonly IRuntimeVariables _closure;
+            private readonly IRuntimeVariables _closure = closure;
 
             /// <summary>
             /// The indices into the closure where variables are found.
             /// </summary>
-            private readonly long[] _indexes;
-
-            /// <summary>
-            /// Creates an <see cref="IRuntimeVariables"/> object providing access to closed over variables.
-            /// </summary>
-            /// <param name="closure">The closure containing the variables.</param>
-            /// <param name="indexes">The indices into the closure where variables are found.</param>
-            public RuntimeVariableList(IRuntimeVariables closure, long[] indexes)
-            {
-                _closure = closure;
-                _indexes = indexes;
-            }
+            private readonly long[] _indexes = indexes;
 
             /// <summary>
             /// Gets or sets the variable at the specified index.

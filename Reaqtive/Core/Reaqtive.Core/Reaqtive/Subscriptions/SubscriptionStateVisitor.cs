@@ -9,18 +9,13 @@ namespace Reaqtive
     /// <summary>
     /// Visitor to act on operator state of a subscription.
     /// </summary>
-    public class SubscriptionStateVisitor
+    /// <remarks>
+    /// Creates a new subscription state visitor for the specified subscription.
+    /// </remarks>
+    /// <param name="subscription">Subscription visited by this visitor.</param>
+    public class SubscriptionStateVisitor(ISubscription subscription)
     {
-        private readonly ISubscription _subscription;
-
-        /// <summary>
-        /// Creates a new subscription state visitor for the specified subscription.
-        /// </summary>
-        /// <param name="subscription">Subscription visited by this visitor.</param>
-        public SubscriptionStateVisitor(ISubscription subscription)
-        {
-            _subscription = subscription ?? throw new ArgumentNullException(nameof(subscription));
-        }
+        private readonly ISubscription _subscription = subscription ?? throw new ArgumentNullException(nameof(subscription));
 
         /// <summary>
         /// Determines whether the state of any of the operators in the subscription has changed.
@@ -149,14 +144,9 @@ namespace Reaqtive
             }
         }
 
-        private sealed class SaveStateVisitor : SubscriptionVisitor
+        private sealed class SaveStateVisitor(IOperatorStateWriterFactory factory) : SubscriptionVisitor
         {
-            private readonly IOperatorStateWriterFactory _factory;
-
-            public SaveStateVisitor(IOperatorStateWriterFactory factory)
-            {
-                _factory = factory;
-            }
+            private readonly IOperatorStateWriterFactory _factory = factory;
 
             protected override void VisitCore(IOperator node)
             {
@@ -167,14 +157,9 @@ namespace Reaqtive
             }
         }
 
-        private sealed class LoadStateVisitor : SubscriptionVisitor
+        private sealed class LoadStateVisitor(IOperatorStateReaderFactory factory) : SubscriptionVisitor
         {
-            private readonly IOperatorStateReaderFactory _factory;
-
-            public LoadStateVisitor(IOperatorStateReaderFactory factory)
-            {
-                _factory = factory;
-            }
+            private readonly IOperatorStateReaderFactory _factory = factory;
 
             protected override void VisitCore(IOperator node)
             {

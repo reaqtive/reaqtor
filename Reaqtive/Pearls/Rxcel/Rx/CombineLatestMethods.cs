@@ -20,8 +20,8 @@ using System.Reflection;
 
 internal static class CombineLatestMethods
 {
-    public static readonly MethodInfo[] s_combineLatest = new[]
-    {
+    public static readonly MethodInfo[] s_combineLatest =
+    [
 #pragma warning disable IDE0034 // Simplify 'default' expression (documents signature)
         InfoOf(() => Observable.Select(default(IObservable<double?>), default(Func<double?, double?>))),
         InfoOf(() => Observable.CombineLatest(default(IObservable<double?>), default(IObservable<double?>), default(Func<double?, double?, double?>))),
@@ -39,7 +39,7 @@ internal static class CombineLatestMethods
         InfoOf(() => Observable.CombineLatest(default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(Func<double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?>))),
         InfoOf(() => Observable.CombineLatest(default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(IObservable<double?>), default(Func<double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?, double?>))),
 #pragma warning restore IDE0034 // Simplify 'default' expression
-    };
+    ];
 
     private static MethodInfo InfoOf<T>(Expression<Func<T>> f)
     {

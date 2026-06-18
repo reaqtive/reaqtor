@@ -13,16 +13,10 @@ using System.Text;
 
 namespace System.Memory
 {
-    internal class UnboundedMemoizationCacheBase<T, R> : MemoizationCacheBase<T, R>, IServiceProvider
+    internal class UnboundedMemoizationCacheBase<T, R>(Func<T, R> function, ICacheDictionary<T, R> cache) : MemoizationCacheBase<T, R>, IServiceProvider
     {
-        private readonly Func<T, R> _function;
-        private readonly ICacheDictionary<T, R> _cache;
-
-        public UnboundedMemoizationCacheBase(Func<T, R> function, ICacheDictionary<T, R> cache)
-        {
-            _function = function;
-            _cache = cache;
-        }
+        private readonly Func<T, R> _function = function;
+        private readonly ICacheDictionary<T, R> _cache = cache;
 
         protected override int CountCore => _cache.Count;
 

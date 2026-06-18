@@ -421,7 +421,7 @@ namespace Tests
         public void Expression_Array_Optimize0()
         {
             var arr0 = Json.Expression.Array();
-            var arr1 = Json.Expression.Array(Array.Empty<Json.Expression>());
+            var arr1 = Json.Expression.Array([]);
             var arr2 = Json.Expression.Array(new List<Json.Expression>());
             var arr3 = Json.Expression.Array(Enumerable.Empty<Json.Expression>());
 
@@ -456,7 +456,7 @@ namespace Tests
             var exprs = Enumerable.Range(0, n).Select(i => Json.Expression.Number(n.ToString())).Cast<Json.Expression>().ToArray();
 
             var arr1 = Json.Expression.Array(exprs.Select(e => e));
-            var arr2 = Json.Expression.Array(exprs.ToArray());
+            var arr2 = Json.Expression.Array([.. exprs]);
             var arr3 = Json.Expression.Array(exprs.ToList());
 
             foreach (var arr in new[] { arr1, arr2, arr3 })

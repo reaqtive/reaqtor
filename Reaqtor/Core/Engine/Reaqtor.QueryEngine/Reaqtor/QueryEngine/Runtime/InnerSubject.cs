@@ -38,7 +38,7 @@ namespace Reaqtor.QueryEngine
         private int _remainingSubscriptionsToRecover;
         private bool _wasSealed;
 
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
         private IObserver<T> _observer = s_empty;
 
         public InnerSubject()
@@ -56,11 +56,9 @@ namespace Reaqtor.QueryEngine
             return new Observer(this);
         }
 
-        private sealed class Observer : IObserver<T>
+        private sealed class Observer(InnerSubject<T> subject) : IObserver<T>
         {
-            private InnerSubject<T> _subject;
-
-            public Observer(InnerSubject<T> subject) => _subject = subject;
+            private InnerSubject<T> _subject = subject;
 
             public void OnCompleted()
             {
@@ -234,17 +232,11 @@ namespace Reaqtor.QueryEngine
             }
         }
 
-        private sealed class Subscription : ISubscription, IOperator
+        private sealed class Subscription(InnerSubject<T> subject, IObserver<T> observer) : ISubscription, IOperator
         {
-            private InnerSubject<T> _subject;
-            private IObserver<T> _observer;
+            private InnerSubject<T> _subject = subject;
+            private IObserver<T> _observer = observer;
             private int _started;
-
-            public Subscription(InnerSubject<T> subject, IObserver<T> observer)
-            {
-                _subject = subject;
-                _observer = observer;
-            }
 
             public void Accept(ISubscriptionVisitor visitor) => visitor.Visit(this);
 

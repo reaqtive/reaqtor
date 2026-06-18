@@ -34,13 +34,8 @@ namespace Tests.Reaqtor.Service
         }
     }
 
-    internal class MyContext : TestServiceContext
+    internal class MyContext(IReactiveEngineProvider provider) : TestServiceContext(provider)
     {
-        public MyContext(IReactiveEngineProvider provider)
-            : base(provider)
-        {
-        }
-
         [KnownResource(Constants.Observable.XS)]
         public IReactiveQbservable<int> Xs => GetObservable<int>(new Uri(Constants.Observable.XS));
     }

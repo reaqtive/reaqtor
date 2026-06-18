@@ -106,11 +106,9 @@ namespace System.Linq.CompilerServices
 
         private static Expression ReduceCore(Expression expression, BetaReductionNodeTypes nodeTypes, BetaReductionRestrictions restrictions) => new BetaReductionExpressionVisitor(nodeTypes, restrictions).Visit(expression);
 
-        private abstract class Entry
+        private abstract class Entry(Expression expression)
         {
-            public Entry(Expression expression) => Expression = expression;
-
-            public Expression Expression { get; }
+            public Expression Expression { get; } = expression;
 
             public virtual int Count => 0;
 
@@ -124,24 +122,14 @@ namespace System.Linq.CompilerServices
             }
         }
 
-        private sealed class Preservation : Entry
+        private sealed class Preservation(Expression expression) : Entry(expression)
         {
-            public Preservation(Expression expression)
-                : base(expression)
-            {
-            }
-
             public override bool ShouldSubstitute => false;
         }
 
-        private sealed class Substitution : Entry
+        private sealed class Substitution(Expression expression) : Entry(expression)
         {
             private int _count;
-
-            public Substitution(Expression expression)
-                : base(expression)
-            {
-            }
 
             public override void AddRef() => _count++;
 
@@ -298,19 +286,12 @@ namespace System.Linq.CompilerServices
                 return true;
             }
 
-            private sealed class CaptureAnalyzer : ScopedExpressionVisitor<ParameterExpression>
+            private sealed class CaptureAnalyzer(ParameterExpression parameter, IEnumerable<ParameterExpression> freeVariables) : ScopedExpressionVisitor<ParameterExpression>
             {
-                private readonly ParameterExpression _parameter;
-                private readonly IEnumerable<ParameterExpression> _freeVariables;
+                private readonly ParameterExpression _parameter = parameter;
+                private readonly IEnumerable<ParameterExpression> _freeVariables = freeVariables;
 
-                public CaptureAnalyzer(ParameterExpression parameter, IEnumerable<ParameterExpression> freeVariables)
-                {
-                    _parameter = parameter;
-                    _freeVariables = freeVariables;
-                    HasCapture = false;
-                }
-
-                public bool HasCapture { get; private set; }
+                public bool HasCapture { get; private set; } = false;
 
                 protected override ParameterExpression GetState(ParameterExpression parameter) => parameter;
 

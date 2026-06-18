@@ -156,7 +156,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         {
             var inner = new DataModelSerializerFactoryTestCase.InnerCycleType();
             var outer = new DataModelSerializerFactoryTestCase.OuterCycleType { Inner = inner };
-            inner.OuterArray = new[] { outer };
+            inner.OuterArray = [outer];
 
             var factory = new DataTypeBinarySerializer();
             using (var stream = new MemoryStream())
@@ -228,7 +228,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         public void DataModelSerializerFactory_AdditiveSchema_Entity()
         {
             var factory = new DataTypeBinarySerializer();
-            var super = new SimpleDataType { Foo = 42, Bar = "baz", Qux = new[] { 1, 2, 3 } };
+            var super = new SimpleDataType { Foo = 42, Bar = "baz", Qux = [1, 2, 3] };
 
 #pragma warning disable IDE0050 // Convert to tuple. (Test for anonymous types.)
 

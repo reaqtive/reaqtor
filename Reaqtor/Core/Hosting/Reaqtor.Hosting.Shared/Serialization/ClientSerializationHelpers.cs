@@ -27,13 +27,8 @@ namespace Reaqtor.Hosting.Shared.Serialization
             return new AnonymizingExpressionSerializer(this);
         }
 
-        private sealed class AnonymizingExpressionSerializer : SerializationHelpersExpressionSerializer
+        private sealed class AnonymizingExpressionSerializer(SerializationHelpers parent) : SerializationHelpersExpressionSerializer(parent)
         {
-            public AnonymizingExpressionSerializer(SerializationHelpers parent)
-                : base(parent)
-            {
-            }
-
             public override ExpressionSlim Lift(Expression expression)
             {
                 var slim = base.Lift(expression);

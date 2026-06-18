@@ -12,15 +12,9 @@ using Reaqtor.Reliable.Expressions;
 
 namespace Reaqtor.Reliable.Service
 {
-    public class ReliableQbservable<T> : ReliableQbservableBase<T>
+    public class ReliableQbservable<T>(Expression expression, IReliableQueryProvider provider) : ReliableQbservableBase<T>(provider)
     {
-        public ReliableQbservable(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReliableQubscription SubscribeCore(IReliableQbserver<T> observer, Uri subscriptionUri, object state) => ((ReliableQueryProviderBase)Provider).Subscribe(this, observer, subscriptionUri, state);
     }

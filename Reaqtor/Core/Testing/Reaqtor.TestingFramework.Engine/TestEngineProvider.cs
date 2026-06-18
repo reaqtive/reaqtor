@@ -65,16 +65,10 @@ namespace Reaqtor.TestingFramework
             return new Observer<T>(this, observerUri);
         }
 
-        private sealed class Observer<T> : IReactiveObserver<T>
+        private sealed class Observer<T>(TestEngineProvider parent, Uri observerUri) : IReactiveObserver<T>
         {
-            private readonly TestEngineProvider _parent;
-            private readonly Uri _observerUri;
-
-            public Observer(TestEngineProvider parent, Uri observerUri)
-            {
-                _parent = parent;
-                _observerUri = observerUri;
-            }
+            private readonly TestEngineProvider _parent = parent;
+            private readonly Uri _observerUri = observerUri;
 
             public void OnNext(T value) => _parent.OnNext<T>(_observerUri, value);
 
@@ -199,28 +193,17 @@ namespace Reaqtor.TestingFramework
 
         public IQueryProvider Provider => new MetadataQueryProvider(this);
 
-        private sealed class MetadataQueryProvider : IQueryProvider
+        private sealed class MetadataQueryProvider(TestEngineProvider parent) : IQueryProvider
         {
-            private readonly TestEngineProvider _parent;
-
-            public MetadataQueryProvider(TestEngineProvider parent)
-            {
-                _parent = parent;
-            }
+            private readonly TestEngineProvider _parent = parent;
 
             public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
             {
                 return new MetadataQuery<TElement>(this, expression);
             }
 
-            private sealed class MetadataQuery<T> : IQueryable<T>
+            private sealed class MetadataQuery<T>(IQueryProvider provider, Expression expression) : IQueryable<T>
             {
-                public MetadataQuery(IQueryProvider provider, Expression expression)
-                {
-                    Provider = provider;
-                    Expression = expression;
-                }
-
                 public IEnumerator<T> GetEnumerator()
                 {
                     return Provider.Execute<IEnumerable<T>>(Expression).GetEnumerator();
@@ -233,9 +216,9 @@ namespace Reaqtor.TestingFramework
 
                 public Type ElementType => typeof(T);
 
-                public Expression Expression { get; }
+                public Expression Expression { get; } = expression;
 
-                public IQueryProvider Provider { get; }
+                public IQueryProvider Provider { get; } = provider;
             }
 
             public IQueryable CreateQuery(Expression expression)

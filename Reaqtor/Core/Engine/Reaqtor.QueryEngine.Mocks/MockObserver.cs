@@ -15,7 +15,7 @@ namespace Reaqtor.QueryEngine.Mocks
     /// </summary>
     public static class MockObserver
     {
-        private static readonly Dictionary<string, object> _observers = new();
+        private static readonly Dictionary<string, object> _observers = [];
 
         /// <summary>
         /// Gets or creates an observer with the specified identifier.
@@ -71,7 +71,7 @@ namespace Reaqtor.QueryEngine.Mocks
 
     public sealed class MockObserver<T> : Observer<T>
     {
-        private readonly List<T> _values = new();
+        private readonly List<T> _values = [];
         private long _currentCount;
 
         private readonly object _lock = new();

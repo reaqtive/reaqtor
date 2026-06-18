@@ -14,25 +14,19 @@ namespace Reaqtor.IoT
     // Similar to EgressObserver<T> but receives events from the outside world.
     //
 
-    public sealed class IngressObservable<T> : ISubscribable<T>
+    public sealed class IngressObservable<T>(string name) : ISubscribable<T>
     {
-        private readonly string _name;
-
-        public IngressObservable(string name) => _name = name;
+        private readonly string _name = name;
 
         public ISubscription Subscribe(IObserver<T> observer) => new Subscription(this, observer);
 
         IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => throw new NotSupportedException();
 
-        private sealed class Subscription : ContextSwitchOperator<IngressObservable<T>, T>, IReliableObserver<T>, IUnloadableOperator
+        private sealed class Subscription(IngressObservable<T> parent, IObserver<T> observer) : ContextSwitchOperator<IngressObservable<T>, T>(parent, observer), IReliableObserver<T>, IUnloadableOperator
         {
             private IReliableSubscription _subscription;
             private long _sequenceId;
             private long _watermark;
-
-            public Subscription(IngressObservable<T> parent, IObserver<T> observer) : base(parent, observer)
-            {
-            }
 
             public override string Name => "iot:Ingress";
 

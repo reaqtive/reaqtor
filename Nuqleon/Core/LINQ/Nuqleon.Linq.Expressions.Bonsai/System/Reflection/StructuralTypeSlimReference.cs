@@ -99,13 +99,8 @@ namespace System.Reflection
 
         #region Types
 
-        private sealed class MutableReadOnlyCollection<T> : ReadOnlyCollection<T>
+        private sealed class MutableReadOnlyCollection<T>(int capacity) : ReadOnlyCollection<T>(new List<T>(capacity))
         {
-            public MutableReadOnlyCollection(int capacity)
-                : base(new List<T>(capacity))
-            {
-            }
-
             public new IList<T> Items => base.Items;
 
             public bool IsFrozen { get; private set; }
@@ -116,13 +111,8 @@ namespace System.Reflection
             }
         }
 
-        private abstract class AnonymousStructuralTypeSlimReference : StructuralTypeSlimReference
+        private abstract class AnonymousStructuralTypeSlimReference(int capacity) : StructuralTypeSlimReference(capacity)
         {
-            public AnonymousStructuralTypeSlimReference(int capacity)
-                : base(capacity)
-            {
-            }
-
             public override StructuralTypeSlimKind StructuralKind => StructuralTypeSlimKind.Anonymous;
 
             public static AnonymousStructuralTypeSlimReference Create(bool hasValueEqualitySemantics, int capacity)
@@ -137,34 +127,19 @@ namespace System.Reflection
                 }
             }
 
-            private sealed class DefaultAnonymousStructuralTypeSlimReference : AnonymousStructuralTypeSlimReference
+            private sealed class DefaultAnonymousStructuralTypeSlimReference(int capacity) : AnonymousStructuralTypeSlimReference(capacity)
             {
-                public DefaultAnonymousStructuralTypeSlimReference(int capacity)
-                    : base(capacity)
-                {
-                }
-
                 public override bool HasValueEqualitySemantics => true;
             }
 
-            private sealed class NoEqualityAnonymousStructuralTypeSlimReference : AnonymousStructuralTypeSlimReference
+            private sealed class NoEqualityAnonymousStructuralTypeSlimReference(int capacity) : AnonymousStructuralTypeSlimReference(capacity)
             {
-                public NoEqualityAnonymousStructuralTypeSlimReference(int capacity)
-                    : base(capacity)
-                {
-                }
-
                 public override bool HasValueEqualitySemantics => false;
             }
         }
 
-        private abstract class RecordStructuralTypeSlimReference : StructuralTypeSlimReference
+        private abstract class RecordStructuralTypeSlimReference(int capacity) : StructuralTypeSlimReference(capacity)
         {
-            public RecordStructuralTypeSlimReference(int capacity)
-                : base(capacity)
-            {
-            }
-
             public override StructuralTypeSlimKind StructuralKind => StructuralTypeSlimKind.Record;
 
             public static RecordStructuralTypeSlimReference Create(bool hasValueEqualitySemantics, int capacity)
@@ -179,23 +154,13 @@ namespace System.Reflection
                 }
             }
 
-            private sealed class DefaultRecordStructuralTypeSlimReference : RecordStructuralTypeSlimReference
+            private sealed class DefaultRecordStructuralTypeSlimReference(int capacity) : RecordStructuralTypeSlimReference(capacity)
             {
-                public DefaultRecordStructuralTypeSlimReference(int capacity)
-                    : base(capacity)
-                {
-                }
-
                 public override bool HasValueEqualitySemantics => false;
             }
 
-            private sealed class EqualityRecordStructuralTypeSlimReference : RecordStructuralTypeSlimReference
+            private sealed class EqualityRecordStructuralTypeSlimReference(int capacity) : RecordStructuralTypeSlimReference(capacity)
             {
-                public EqualityRecordStructuralTypeSlimReference(int capacity)
-                    : base(capacity)
-                {
-                }
-
                 public override bool HasValueEqualitySemantics => true;
             }
         }

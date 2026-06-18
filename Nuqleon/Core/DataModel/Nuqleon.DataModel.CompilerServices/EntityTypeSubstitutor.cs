@@ -28,23 +28,15 @@ namespace Nuqleon.DataModel.CompilerServices
     /// <summary>
     /// Replaces entity types with anonymous or record types.
     /// </summary>
-    public abstract class EntityTypeSubstitutor : TypeSubstitutionExpressionVisitor
+    /// <remarks>
+    /// Create an entity type substitutor.
+    /// </remarks>
+    /// <param name="typeMap">A map to use to replace types.</param>
+    public abstract class EntityTypeSubstitutor(IDictionary<Type, Type> typeMap) : TypeSubstitutionExpressionVisitor(typeMap)
     {
         #region Fields & constructors
 
-        private readonly EnumAwareTypeSubstitutor _subst;
-
-        /// <summary>
-        /// Create an entity type substitutor.
-        /// </summary>
-        /// <param name="typeMap">A map to use to replace types.</param>
-        protected EntityTypeSubstitutor(IDictionary<Type, Type> typeMap)
-            : base(typeMap)
-        {
-            TypeMap = typeMap ?? throw new ArgumentNullException(nameof(typeMap));
-            ConstantsMap = new Dictionary<object, object>();
-            _subst = new EnumAwareTypeSubstitutor(typeMap);
-        }
+        private readonly EnumAwareTypeSubstitutor _subst = new EnumAwareTypeSubstitutor(typeMap);
 
         #endregion
 
@@ -53,7 +45,7 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <summary>
         /// Gets a reference to the type map so that mappings can be added.
         /// </summary>
-        public IDictionary<Type, Type> TypeMap { get; }
+        public IDictionary<Type, Type> TypeMap { get; } = typeMap ?? throw new ArgumentNullException(nameof(typeMap));
 
         /// <summary>
         /// The parent of this type substitution visitor, which has an `Apply` method
@@ -65,7 +57,7 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <summary>
         /// Gets a reference to the constants map of converted constant values.
         /// </summary>
-        public IDictionary<object, object> ConstantsMap { get; }
+        public IDictionary<object, object> ConstantsMap { get; } = new Dictionary<object, object>();
 
         #endregion
 
@@ -875,7 +867,7 @@ namespace Nuqleon.DataModel.CompilerServices
 
         private sealed class TypeMismatchSearcher : TypeEqualityComparer
         {
-            public readonly Dictionary<Type, Type> _results = new();
+            public readonly Dictionary<Type, Type> _results = [];
 
             public override bool Equals(Type x, Type y)
             {
@@ -892,16 +884,12 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <summary>
         /// Sentinel expression type which can be used to indicate absence of assignment of a member in a structural type.
         /// </summary>
-        protected class UnassignedExpression : Expression
+        /// <remarks>
+        /// Creates a new sentinel expression with the specified underlying type.
+        /// </remarks>
+        /// <param name="type">Underlying type of the expression.</param>
+        protected class UnassignedExpression(Type type) : Expression
         {
-            /// <summary>
-            /// Creates a new sentinel expression with the specified underlying type.
-            /// </summary>
-            /// <param name="type">Underlying type of the expression.</param>
-            public UnassignedExpression(Type type)
-            {
-                Type = type;
-            }
 
             /// <summary>
             /// Returns Extension.
@@ -911,7 +899,7 @@ namespace Nuqleon.DataModel.CompilerServices
             /// <summary>
             /// Gets the underlying type.
             /// </summary>
-            public override Type Type { get; }
+            public override Type Type { get; } = type;
 
             /// <summary>
             /// Always returns true.

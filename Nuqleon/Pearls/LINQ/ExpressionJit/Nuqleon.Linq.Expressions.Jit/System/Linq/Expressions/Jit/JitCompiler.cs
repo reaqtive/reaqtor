@@ -108,7 +108,7 @@ namespace System.Linq.Expressions.Jit
             /// The indexes correspond to the entries in the method table passed to the top-level
             /// lambda.
             /// </summary>
-            private readonly Dictionary<int, LambdaInfo> _lambdas = new();
+            private readonly Dictionary<int, LambdaInfo> _lambdas = [];
 
             /// <summary>
             /// The current compiler scope to bind variable accesses against.
@@ -152,7 +152,7 @@ namespace System.Linq.Expressions.Jit
                 for (var i = 0; i < count; i++)
                 {
                     var lambda = _lambdas[i];
-                    var thunk = Activator.CreateInstance(lambda.ThunkType, new object[] { lambda.Lambda });
+                    var thunk = Activator.CreateInstance(lambda.ThunkType, [lambda.Lambda]);
                     thunks[i] = thunk;
                 }
 
@@ -378,7 +378,7 @@ namespace System.Linq.Expressions.Jit
                     // on the thunk. The thunk is retrieved from the method table that's passed to
                     // the top-level lambda by indexing into the Thunks array.
                     //
-                    var createDelegate = thunkType.GetMethod(nameof(ActionThunk<object>.CreateDelegate));
+                    var createDelegate = thunkType.GetMethod(nameof(ActionThunk<>.CreateDelegate));
                     var methodTable = currentScope.Bind(_methodTable);
 
                     var createDelegateCall =
@@ -549,36 +549,30 @@ namespace System.Linq.Expressions.Jit
             /// <summary>
             /// Struct containing information about an inner lambda expression.
             /// </summary>
-            private readonly struct LambdaInfo
+            /// <remarks>
+            /// Creates a new value containing information about an inner lambda expression.
+            /// </remarks>
+            /// <param name="lambda">
+            /// The rewritten inner lambda expression which can be passed to the constructor of
+            /// the <paramref name="thunkType"/>.
+            /// </param>
+            /// <param name="thunkType">
+            /// The thunk type compatible with the <paramref name="lambda"/> in order to
+            /// perform JIT compilation.
+            /// </param>
+            private readonly struct LambdaInfo(LambdaExpression lambda, Type thunkType)
             {
                 /// <summary>
                 /// The rewritten inner lambda expression which can be passed to the constructor
                 /// of the <see cref="ThunkType"/>.
                 /// </summary>
-                public readonly LambdaExpression Lambda;
+                public readonly LambdaExpression Lambda = lambda;
 
                 /// <summary>
                 /// The thunk type compatible with the <see cref="Lambda"/> in order to perform JIT
                 /// compilation.
                 /// </summary>
-                public readonly Type ThunkType;
-
-                /// <summary>
-                /// Creates a new value containing information about an inner lambda expression.
-                /// </summary>
-                /// <param name="lambda">
-                /// The rewritten inner lambda expression which can be passed to the constructor of
-                /// the <paramref name="thunkType"/>.
-                /// </param>
-                /// <param name="thunkType">
-                /// The thunk type compatible with the <paramref name="lambda"/> in order to
-                /// perform JIT compilation.
-                /// </param>
-                public LambdaInfo(LambdaExpression lambda, Type thunkType)
-                {
-                    Lambda = lambda;
-                    ThunkType = thunkType;
-                }
+                public readonly Type ThunkType = thunkType;
             }
 
             /// <summary>
@@ -610,7 +604,7 @@ namespace System.Linq.Expressions.Jit
                     _scope = null;
                     Closure = methodTable;
                     _hoistedLocals = new HoistedLocals(methodTable);
-                    Locals = new List<ParameterExpression>();
+                    Locals = [];
                 }
 
                 /// <summary>

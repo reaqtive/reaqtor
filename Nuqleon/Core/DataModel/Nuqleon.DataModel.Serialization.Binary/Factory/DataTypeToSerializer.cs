@@ -68,7 +68,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         public DataTypeToSerializer()
         {
-            _visited = new HashSet<Type>();
+            _visited = [];
         }
 
         protected override LambdaExpression MakeArray(ArrayDataType type, LambdaExpression elementType)
@@ -84,7 +84,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
             var accessExpression = type.UnderlyingType.IsArray
                 ? (Expression)Expression.ArrayIndex(valueParameter, loopParameter)
-                : Expression.Call(valueParameter, type.UnderlyingType.GetMethod("get_Item", new[] { typeof(int) }), loopParameter);
+                : Expression.Call(valueParameter, type.UnderlyingType.GetMethod("get_Item", [typeof(int)]), loopParameter);
 
             var serializerParameter = default(ParameterExpression);
             var innerInvoke = MakeInnerSerialize(elementType, streamParameter, accessExpression, ref serializerParameter);

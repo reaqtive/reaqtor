@@ -43,7 +43,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            var m = typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) });
+            var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
             pt.Add(m.GetParameters()[0]);
 
@@ -58,7 +58,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             pt.Add<int, string>(x => "".Substring(x, 0));
 
-            var m = typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) });
+            var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
             Assert.IsTrue(pt.Contains(m.GetParameters()[0]));
         }
@@ -70,7 +70,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             pt.Add<int, string>(x => new string('*', x));
 
-            var c = typeof(string).GetConstructor(new[] { typeof(char), typeof(int) });
+            var c = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
             Assert.IsTrue(pt.Contains(c.GetParameters()[1]));
         }
@@ -139,7 +139,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var pt = new ParameterTable();
             var rpt = pt.ToReadOnly();
 
-            var m = typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) });
+            var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
             Assert.ThrowsException<InvalidOperationException>(() => rpt.Add(m.GetParameters()[0]));
         }

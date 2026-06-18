@@ -9,14 +9,9 @@ namespace Reaqtor.TestingFramework
 {
     public partial class TestExecutionEnvironment
     {
-        private sealed class BridgeFactory<I, O, A> : IReactiveQubjectFactory<I, O, A>
+        private sealed class BridgeFactory<I, O, A>(TestExecutionEnvironment parent) : IReactiveQubjectFactory<I, O, A>
         {
-            private readonly TestExecutionEnvironment _parent;
-
-            public BridgeFactory(TestExecutionEnvironment parent)
-            {
-                _parent = parent;
-            }
+            private readonly TestExecutionEnvironment _parent = parent;
 
             public IReactiveQubject<I, O> Create(Uri streamUri, A argument, object state)
             {

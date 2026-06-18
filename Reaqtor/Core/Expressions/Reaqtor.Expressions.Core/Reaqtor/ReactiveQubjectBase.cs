@@ -21,13 +21,12 @@ namespace Reaqtor
     /// </summary>
     /// <typeparam name="TInput">Type of the data received by the subject.</typeparam>
     /// <typeparam name="TOutput">Type of the data produced by the subject.</typeparam>
-    public abstract class ReactiveQubjectBase<TInput, TOutput> : ReactiveSubjectBase<TInput, TOutput>, IReactiveQubject<TInput, TOutput>
+    /// <remarks>
+    /// Creates a new subject represented by an expression tree, using the specified associated query provider.
+    /// </remarks>
+    /// <param name="provider">Query provider associated with the subject.</param>
+    public abstract class ReactiveQubjectBase<TInput, TOutput>(IReactiveQueryProvider provider) : ReactiveSubjectBase<TInput, TOutput>, IReactiveQubject<TInput, TOutput>
     {
-        /// <summary>
-        /// Creates a new subject represented by an expression tree, using the specified associated query provider.
-        /// </summary>
-        /// <param name="provider">Query provider associated with the subject.</param>
-        protected ReactiveQubjectBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the type of the data received by the subject.
@@ -52,7 +51,7 @@ namespace Reaqtor
         /// <summary>
         /// Gets the query provider that is associated with the subject.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; }
+        public IReactiveQueryProvider Provider { get; } = provider;
 
         /// <summary>
         /// Gets the expression tree representing the subject.

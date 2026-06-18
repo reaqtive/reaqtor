@@ -16,34 +16,27 @@ namespace Nuqleon.DataModel.Serialization.Binary
     /// Represents a pool of reusable arrays.
     /// </summary>
     /// <typeparam name="T">Element type of the arrays.</typeparam>
-    internal sealed class ArrayPool<T>
+    /// <remarks>
+    /// Creates a new array pool for arrays of the specified size and with the specified maximum pool capacity.
+    /// </remarks>
+    /// <param name="size">Size of the arrays in the pool.</param>
+    /// <param name="max">Maximum pool capacity.</param>
+    internal sealed class ArrayPool<T>(int size, int max = 16)
     {
         /// <summary>
         /// Number of elements in each pooled array.
         /// </summary>
-        private readonly int _size;
+        private readonly int _size = size;
 
         /// <summary>
         /// Number of elements in the pool.
         /// </summary>
-        private readonly int _max;
+        private readonly int _max = max;
 
         /// <summary>
         /// Array of holders containing arrays that are available from the pool.
         /// </summary>
-        private readonly Holder[] _pool;
-
-        /// <summary>
-        /// Creates a new array pool for arrays of the specified size and with the specified maximum pool capacity.
-        /// </summary>
-        /// <param name="size">Size of the arrays in the pool.</param>
-        /// <param name="max">Maximum pool capacity.</param>
-        public ArrayPool(int size, int max = 16)
-        {
-            _size = size;
-            _max = max;
-            _pool = new Holder[max];
-        }
+        private readonly Holder[] _pool = new Holder[max];
 
         /// <summary>
         /// Gets an array from the pool. After use, the array has to be returned to the pool using the <see cref="Release"/> method.

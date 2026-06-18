@@ -13,13 +13,8 @@ namespace Reaqtor.QueryEngine
     /// Represents a defninition (cold) entity in a QueryEngineRegistry.
     /// The definition entities are stream factories, observables and observers.
     /// </summary>
-    internal abstract class DefinitionEntity : ReactiveEntity, IReactiveDefinedResource
+    internal abstract class DefinitionEntity(Uri uri, Expression expression, object state) : ReactiveEntity(uri, expression, state), IReactiveDefinedResource
     {
-        protected DefinitionEntity(Uri uri, Expression expression, object state)
-            : base(uri, expression, state)
-        {
-        }
-
         public bool IsParameterized => throw new NotImplementedException();
 
         public DateTimeOffset DefinitionTime => throw new NotImplementedException();

@@ -206,12 +206,12 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
             foreach (var expected in input)
             {
                 _stream.SetLength(0);
-                var serialization = _genericSerialize.MakeGenericMethod(new[] { expected.GetType() });
-                serialization.Invoke(_jsonSerializer, new[] { expected, _stream });
+                var serialization = _genericSerialize.MakeGenericMethod([expected.GetType()]);
+                serialization.Invoke(_jsonSerializer, [expected, _stream]);
 
                 _stream.Position = 0;
-                var deserialization = _genericDeserialize.MakeGenericMethod(new[] { expected.GetType() });
-                var actual = deserialization.Invoke(_jsonSerializer, new object[] { _stream });
+                var deserialization = _genericDeserialize.MakeGenericMethod([expected.GetType()]);
+                var actual = deserialization.Invoke(_jsonSerializer, [_stream]);
 
                 Assert.AreEqual(expected, actual);
             }
@@ -915,7 +915,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
             var reader = new StreamReader(memoryStream);
             memoryStream.Position = 0;
             var json = reader.ReadToEnd();
-            Assert.IsTrue(json.Split(new[] { "\"Context\"" }, 10, StringSplitOptions.None).Length == 2);
+            Assert.IsTrue(json.Split(["\"Context\""], 10, StringSplitOptions.None).Length == 2);
 
             memoryStream.Position = 0;
 
@@ -1219,7 +1219,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
                 var elem = obs.GetGenericArguments()[0];
 
                 var type = typeof(Qum<>).MakeGenericType(elem);
-                return Activator.CreateInstance(type, new object[] { expr });
+                return Activator.CreateInstance(type, [expr]);
             }
         }
 
@@ -1228,11 +1228,9 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
             T Eval();
         }
 
-        private class Num<T> : INum<T>
+        private class Num<T>(T value) : INum<T>
         {
-            private readonly T _value;
-
-            public Num(T value) => _value = value;
+            private readonly T _value = value;
 
             public T Eval() => _value;
         }
@@ -1247,13 +1245,11 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         {
         }
 
-        private class Qum<T> : IQum<T>
+        private class Qum<T>(Expression expression) : IQum<T>
         {
-            public Qum(Expression expression) => Expression = expression;
-
             public T Eval() => Expression.Evaluate<T>();
 
-            public Expression Expression { get; }
+            public Expression Expression { get; } = expression;
         }
 
         private class BarConv : DataConverter
@@ -1381,8 +1377,8 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
                 using var stream = new MemoryStream();
                 using var reader = new StreamReader(stream);
 
-                var serialize = genericSerialize.MakeGenericMethod(new[] { type });
-                serialize.Invoke(DataSerializer, new[] { obj, stream });
+                var serialize = genericSerialize.MakeGenericMethod([type]);
+                serialize.Invoke(DataSerializer, [obj, stream]);
 
                 stream.Position = 0;
 
@@ -1399,7 +1395,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
                 using var stream = new MemoryStream();
                 using var writer = new StreamWriter(stream);
 
-                var deserialize = genericDeserialize.MakeGenericMethod(new[] { type });
+                var deserialize = genericDeserialize.MakeGenericMethod([type]);
 
                 writer.Write(obj.ToString());
                 writer.Flush();
@@ -1422,13 +1418,8 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
                 }
             }
 
-            private class DataModelBonsaiExpressionSerializer : BonsaiExpressionSerializer
+            private class DataModelBonsaiExpressionSerializer(Func<Type, Func<object, JsonExpression>> liftFactory, Func<Type, Func<JsonExpression, object>> reduceFactory) : BonsaiExpressionSerializer(liftFactory, reduceFactory)
             {
-                public DataModelBonsaiExpressionSerializer(Func<Type, Func<object, JsonExpression>> liftFactory, Func<Type, Func<JsonExpression, object>> reduceFactory)
-                    : base(liftFactory, reduceFactory)
-                {
-                }
-
                 public override Expression Reduce(ExpressionSlim expression)
                 {
                     return new ExpressionSlimToExpressionConverter(new DataModelInvertedTypeSpace()).Visit(expression);

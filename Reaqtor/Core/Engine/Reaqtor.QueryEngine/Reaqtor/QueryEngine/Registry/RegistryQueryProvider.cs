@@ -21,10 +21,7 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Query provider for the reactive entity collections in the registry.
     /// </summary>
-    internal class RegistryQueryProvider : RegistryQueryProviderBase
-    {
-        public RegistryQueryProvider(ILoggedQueryEngineRegistry registry)
-            : base(new Dictionary<string, ITypeErasedDictionary<Uri, object>>
+    internal class RegistryQueryProvider(ILoggedQueryEngineRegistry registry) : RegistryQueryProviderBase(new Dictionary<string, ITypeErasedDictionary<Uri, object>>
             {
                 // Keep in sync with ReactiveMetadataBase. Loose coupling of names; engine should not know about service APIs.
                 { "rx://metadata/streamFactories",       TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<StreamFactoryDefinitionEntity, IReactiveStreamFactoryDefinition>(registry.SubjectFactories, x => x)) },
@@ -34,17 +31,13 @@ namespace Reaqtor.QueryEngine
                 { "rx://metadata/streams",               TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<SubjectEntity, IReactiveStreamProcess>(registry.Subjects, x => x)) },
                 { "rx://metadata/subscriptions",         TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<SubscriptionEntity, IReactiveSubscriptionProcess>(registry.Subscriptions, x => x)) },
             })
-        {
-        }
+    {
     }
 
     /// <summary>
     /// Query provider for the reactive entity collections in the registry, handing out read-only entities.
     /// </summary>
-    internal class OperatorContextRegistryQueryProvider : RegistryQueryProviderBase
-    {
-        public OperatorContextRegistryQueryProvider(ILoggedQueryEngineRegistry registry)
-            : base(new Dictionary<string, ITypeErasedDictionary<Uri, object>>
+    internal class OperatorContextRegistryQueryProvider(ILoggedQueryEngineRegistry registry) : RegistryQueryProviderBase(new Dictionary<string, ITypeErasedDictionary<Uri, object>>
             {
                 // Keep in sync with ReactiveMetadataBase. Loose coupling of names; engine should not know about service APIs.
                 { "rx://metadata/streamFactories",       TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<StreamFactoryDefinitionEntity, IReactiveStreamFactoryDefinition>(registry.SubjectFactories, x => new ReadonlyReactiveStreamFactoryDefinition(x), new RegistryOptions { ShowUninitialized = true })) },
@@ -54,17 +47,10 @@ namespace Reaqtor.QueryEngine
                 { "rx://metadata/streams",               TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<SubjectEntity, IReactiveStreamProcess>(registry.Subjects, x => new ReadonlyReactiveStreamProcess(x), new RegistryOptions { ShowUninitialized = true })) },
                 { "rx://metadata/subscriptions",         TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<SubscriptionEntity, IReactiveSubscriptionProcess>(registry.Subscriptions, x => new ReadonlyReactiveSubscriptionProcess(x), new RegistryOptions { ShowUninitialized = true })) },
             })
-        {
-        }
-
-        private abstract class ReadonlyReactiveResource<TWrapped> : IReactiveResource
+    {
+        private abstract class ReadonlyReactiveResource<TWrapped>(TWrapped entity) : IReactiveResource
             where TWrapped : ReactiveEntity
         {
-            protected ReadonlyReactiveResource(TWrapped entity)
-            {
-                Entity = entity;
-            }
-
             public abstract ReactiveEntityKind Kind { get; }
 
             public Uri Uri => Entity.Uri;
@@ -73,7 +59,7 @@ namespace Reaqtor.QueryEngine
 
             public object State => Entity.State;
 
-            protected TWrapped Entity { get; }
+            protected TWrapped Entity { get; } = entity;
 
             protected void CheckInitialized()
             {
@@ -82,28 +68,18 @@ namespace Reaqtor.QueryEngine
             }
         }
 
-        private abstract class ReadonlyReactiveDefinedResource<TWrapped> : ReadonlyReactiveResource<TWrapped>, IReactiveDefinedResource
+        private abstract class ReadonlyReactiveDefinedResource<TWrapped>(TWrapped entity) : ReadonlyReactiveResource<TWrapped>(entity), IReactiveDefinedResource
             where TWrapped : DefinitionEntity
         {
-            protected ReadonlyReactiveDefinedResource(TWrapped entity)
-                : base(entity)
-            {
-            }
-
             public bool IsParameterized => Entity.IsParameterized;
 
             public DateTimeOffset DefinitionTime => Entity.DefinitionTime;
         }
 
-        private abstract class ReadonlyReactiveProcessResource<TWrapped, TDisposable> : ReadonlyReactiveResource<TWrapped>, IReactiveProcessResource
+        private abstract class ReadonlyReactiveProcessResource<TWrapped, TDisposable>(TWrapped entity) : ReadonlyReactiveResource<TWrapped>(entity), IReactiveProcessResource
             where TWrapped : RuntimeEntity<TDisposable>
             where TDisposable : IDisposable
         {
-            protected ReadonlyReactiveProcessResource(TWrapped entity)
-                : base(entity)
-            {
-            }
-
             public DateTimeOffset CreationTime => Entity.CreationTime;
 
             public void Dispose()
@@ -114,13 +90,8 @@ namespace Reaqtor.QueryEngine
             }
         }
 
-        private sealed class ReadonlyReactiveSubscriptionProcess : ReadonlyReactiveProcessResource<SubscriptionEntity, ISubscription>, IReactiveSubscriptionProcess
+        private sealed class ReadonlyReactiveSubscriptionProcess(SubscriptionEntity entity) : ReadonlyReactiveProcessResource<SubscriptionEntity, ISubscription>(entity), IReactiveSubscriptionProcess
         {
-            public ReadonlyReactiveSubscriptionProcess(SubscriptionEntity entity)
-                : base(entity)
-            {
-            }
-
             public IReactiveQubscription ToSubscription()
             {
                 CheckInitialized();
@@ -131,13 +102,8 @@ namespace Reaqtor.QueryEngine
             public override ReactiveEntityKind Kind => ReactiveEntityKind.Subscription;
         }
 
-        private sealed class ReadonlyReactiveStreamProcess : ReadonlyReactiveProcessResource<SubjectEntity, IDisposable>, IReactiveStreamProcess
+        private sealed class ReadonlyReactiveStreamProcess(SubjectEntity entity) : ReadonlyReactiveProcessResource<SubjectEntity, IDisposable>(entity), IReactiveStreamProcess
         {
-            public ReadonlyReactiveStreamProcess(SubjectEntity entity)
-                : base(entity)
-            {
-            }
-
             public IReactiveQubject<TInput, TOutput> ToStream<TInput, TOutput>()
             {
                 CheckInitialized();
@@ -148,13 +114,8 @@ namespace Reaqtor.QueryEngine
             public override ReactiveEntityKind Kind => ReactiveEntityKind.Stream;
         }
 
-        private sealed class ReadonlyReactiveObserverDefinition : ReadonlyReactiveDefinedResource<ObserverDefinitionEntity>, IReactiveObserverDefinition
+        private sealed class ReadonlyReactiveObserverDefinition(ObserverDefinitionEntity entity) : ReadonlyReactiveDefinedResource<ObserverDefinitionEntity>(entity), IReactiveObserverDefinition
         {
-            public ReadonlyReactiveObserverDefinition(ObserverDefinitionEntity entity)
-                : base(entity)
-            {
-            }
-
             public IReactiveQbserver<T> ToObserver<T>()
             {
                 CheckInitialized();
@@ -172,13 +133,8 @@ namespace Reaqtor.QueryEngine
             public override ReactiveEntityKind Kind => ReactiveEntityKind.Observer;
         }
 
-        private sealed class ReadonlyReactiveObservableDefinition : ReadonlyReactiveDefinedResource<ObservableDefinitionEntity>, IReactiveObservableDefinition
+        private sealed class ReadonlyReactiveObservableDefinition(ObservableDefinitionEntity entity) : ReadonlyReactiveDefinedResource<ObservableDefinitionEntity>(entity), IReactiveObservableDefinition
         {
-            public ReadonlyReactiveObservableDefinition(ObservableDefinitionEntity entity)
-                : base(entity)
-            {
-            }
-
             public IReactiveQbservable<T> ToObservable<T>()
             {
                 CheckInitialized();
@@ -196,13 +152,8 @@ namespace Reaqtor.QueryEngine
             public override ReactiveEntityKind Kind => ReactiveEntityKind.Observable;
         }
 
-        private sealed class ReadonlyReactiveStreamFactoryDefinition : ReadonlyReactiveDefinedResource<StreamFactoryDefinitionEntity>, IReactiveStreamFactoryDefinition
+        private sealed class ReadonlyReactiveStreamFactoryDefinition(StreamFactoryDefinitionEntity entity) : ReadonlyReactiveDefinedResource<StreamFactoryDefinitionEntity>(entity), IReactiveStreamFactoryDefinition
         {
-            public ReadonlyReactiveStreamFactoryDefinition(StreamFactoryDefinitionEntity entity)
-                : base(entity)
-            {
-            }
-
             public IReactiveQubjectFactory<TInput, TOutput> ToStreamFactory<TInput, TOutput>()
             {
                 CheckInitialized();
@@ -220,13 +171,8 @@ namespace Reaqtor.QueryEngine
             public override ReactiveEntityKind Kind => ReactiveEntityKind.StreamFactory;
         }
 
-        private sealed class ReadonlyReactiveSubscriptionFactoryDefinition : ReadonlyReactiveDefinedResource<SubscriptionFactoryDefinitionEntity>, IReactiveSubscriptionFactoryDefinition
+        private sealed class ReadonlyReactiveSubscriptionFactoryDefinition(SubscriptionFactoryDefinitionEntity entity) : ReadonlyReactiveDefinedResource<SubscriptionFactoryDefinitionEntity>(entity), IReactiveSubscriptionFactoryDefinition
         {
-            public ReadonlyReactiveSubscriptionFactoryDefinition(SubscriptionFactoryDefinitionEntity entity)
-                : base(entity)
-            {
-            }
-
             public IReactiveQubscriptionFactory ToSubscriptionFactory()
             {
                 CheckInitialized();
@@ -245,10 +191,7 @@ namespace Reaqtor.QueryEngine
         }
     }
 
-    internal class AsyncQueryProvider : RegistryQueryProviderBase
-    {
-        public AsyncQueryProvider(ILoggedQueryEngineRegistry registry)
-            : base(new Dictionary<string, ITypeErasedDictionary<Uri, object>>
+    internal class AsyncQueryProvider(ILoggedQueryEngineRegistry registry) : RegistryQueryProviderBase(new Dictionary<string, ITypeErasedDictionary<Uri, object>>
             {
                 { "rx://metadata/streamFactories",       TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<StreamFactoryDefinitionEntity, IAsyncReactiveStreamFactoryDefinition>(registry.SubjectFactories, x => new AsyncReactiveStreamFactoryDefinition(x.Uri, x.Expression, x.State))) },
                 { "rx://metadata/subscriptionFactories", TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<SubscriptionFactoryDefinitionEntity, IAsyncReactiveSubscriptionFactoryDefinition>(registry.SubscriptionFactories, x => new AsyncReactiveSubscriptionFactoryDefinition(x.Uri, x.Expression, x.State))) },
@@ -257,46 +200,27 @@ namespace Reaqtor.QueryEngine
                 { "rx://metadata/streams",               TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<SubjectEntity, IAsyncReactiveStreamProcess>(registry.Subjects, x => new AsyncReactiveStreamProcess(x.Uri, x.Expression, x.State))) },
                 { "rx://metadata/subscriptions",         TypeErasedDictionary.ToReadOnly(new WrappedEntityCollection<SubscriptionEntity, IAsyncReactiveSubscriptionProcess>(registry.Subscriptions, x => new AsyncReactiveSubscriptionProcess(x.Uri, x.Expression, x.State))) },
             })
+    {
+        private abstract class AsyncReactiveResource(Uri uri, Expression expression, object state) : IAsyncReactiveResource
         {
-        }
-
-        private abstract class AsyncReactiveResource : IAsyncReactiveResource
-        {
-            protected AsyncReactiveResource(Uri uri, Expression expression, object state)
-            {
-                Uri = uri ?? throw new ArgumentNullException(nameof(uri));
-                State = state;
-                Expression = expression;
-            }
-
             public abstract ReactiveEntityKind Kind { get; }
 
-            public Uri Uri { get; }
+            public Uri Uri { get; } = uri ?? throw new ArgumentNullException(nameof(uri));
 
-            public Expression Expression { get; }
+            public Expression Expression { get; } = expression;
 
-            public object State { get; }
+            public object State { get; } = state;
         }
 
-        private abstract class AsyncReactiveDefinedResource : AsyncReactiveResource, IAsyncReactiveDefinedResource
+        private abstract class AsyncReactiveDefinedResource(Uri uri, Expression expression, object state) : AsyncReactiveResource(uri, expression, state), IAsyncReactiveDefinedResource
         {
-            protected AsyncReactiveDefinedResource(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public bool IsParameterized => throw new NotImplementedException();
 
             public DateTimeOffset DefinitionTime => throw new NotImplementedException();
         }
 
-        private abstract class AsyncReactiveProcessResource : AsyncReactiveResource, IAsyncReactiveProcessResource
+        private abstract class AsyncReactiveProcessResource(Uri uri, Expression expression, object state) : AsyncReactiveResource(uri, expression, state), IAsyncReactiveProcessResource
         {
-            protected AsyncReactiveProcessResource(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public DateTimeOffset CreationTime => throw new NotImplementedException();
 
 #if NET6_0_OR_GREATER || NETSTANDARD2_1
@@ -306,37 +230,22 @@ namespace Reaqtor.QueryEngine
 #endif
         }
 
-        private sealed class AsyncReactiveSubscriptionProcess : AsyncReactiveProcessResource, IAsyncReactiveSubscriptionProcess
+        private sealed class AsyncReactiveSubscriptionProcess(Uri uri, Expression expression, object state) : AsyncReactiveProcessResource(uri, expression, state), IAsyncReactiveSubscriptionProcess
         {
-            public AsyncReactiveSubscriptionProcess(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQubscription ToSubscription() => throw new NotImplementedException();
 
             public override ReactiveEntityKind Kind => ReactiveEntityKind.Subscription;
         }
 
-        private sealed class AsyncReactiveStreamProcess : AsyncReactiveProcessResource, IAsyncReactiveStreamProcess
+        private sealed class AsyncReactiveStreamProcess(Uri uri, Expression expression, object state) : AsyncReactiveProcessResource(uri, expression, state), IAsyncReactiveStreamProcess
         {
-            public AsyncReactiveStreamProcess(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQubject<TInput, TOutput> ToStream<TInput, TOutput>() => throw new NotImplementedException();
 
             public override ReactiveEntityKind Kind => ReactiveEntityKind.Stream;
         }
 
-        private sealed class AsyncReactiveObserverDefinition : AsyncReactiveDefinedResource, IAsyncReactiveObserverDefinition
+        private sealed class AsyncReactiveObserverDefinition(Uri uri, Expression expression, object state) : AsyncReactiveDefinedResource(uri, expression, state), IAsyncReactiveObserverDefinition
         {
-            public AsyncReactiveObserverDefinition(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQbserver<T> ToObserver<T>() => throw new NotImplementedException();
 
             public Func<TArgs, IAsyncReactiveQbserver<TResult>> ToObserver<TArgs, TResult>() => throw new NotImplementedException();
@@ -344,13 +253,8 @@ namespace Reaqtor.QueryEngine
             public override ReactiveEntityKind Kind => ReactiveEntityKind.Observer;
         }
 
-        private sealed class AsyncReactiveObservableDefinition : AsyncReactiveDefinedResource, IAsyncReactiveObservableDefinition
+        private sealed class AsyncReactiveObservableDefinition(Uri uri, Expression expression, object state) : AsyncReactiveDefinedResource(uri, expression, state), IAsyncReactiveObservableDefinition
         {
-            public AsyncReactiveObservableDefinition(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQbservable<T> ToObservable<T>() => throw new NotImplementedException();
 
             public Func<TArgs, IAsyncReactiveQbservable<TResult>> ToObservable<TArgs, TResult>() => throw new NotImplementedException();
@@ -358,13 +262,8 @@ namespace Reaqtor.QueryEngine
             public override ReactiveEntityKind Kind => ReactiveEntityKind.Observable;
         }
 
-        private sealed class AsyncReactiveStreamFactoryDefinition : AsyncReactiveDefinedResource, IAsyncReactiveStreamFactoryDefinition
+        private sealed class AsyncReactiveStreamFactoryDefinition(Uri uri, Expression expression, object state) : AsyncReactiveDefinedResource(uri, expression, state), IAsyncReactiveStreamFactoryDefinition
         {
-            public AsyncReactiveStreamFactoryDefinition(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQubjectFactory<TInput, TOutput> ToStreamFactory<TInput, TOutput>() => throw new NotImplementedException();
 
             public IAsyncReactiveQubjectFactory<TInput, TOutput, TArgs> ToStreamFactory<TArgs, TInput, TOutput>() => throw new NotImplementedException();
@@ -372,13 +271,8 @@ namespace Reaqtor.QueryEngine
             public override ReactiveEntityKind Kind => ReactiveEntityKind.StreamFactory;
         }
 
-        private sealed class AsyncReactiveSubscriptionFactoryDefinition : AsyncReactiveDefinedResource, IAsyncReactiveSubscriptionFactoryDefinition
+        private sealed class AsyncReactiveSubscriptionFactoryDefinition(Uri uri, Expression expression, object state) : AsyncReactiveDefinedResource(uri, expression, state), IAsyncReactiveSubscriptionFactoryDefinition
         {
-            public AsyncReactiveSubscriptionFactoryDefinition(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQubscriptionFactory ToSubscriptionFactory() => throw new NotImplementedException();
 
             public IAsyncReactiveQubscriptionFactory<TArgs> ToSubscriptionFactory<TArgs>() => throw new NotImplementedException();
@@ -596,23 +490,16 @@ namespace Reaqtor.QueryEngine
         /// </summary>
         /// <typeparam name="T">The concrete type in the entity collection.</typeparam>
         /// <typeparam name="R">The type exposed by the reactive service.</typeparam>
-        protected class WrappedEntityCollection<T, R> : IReactiveEntityCollection<Uri, R>
+        protected class WrappedEntityCollection<T, R>(IReactiveEntityCollection<string, T> parent, Func<T, R> conversion, RegistryOptions options) : IReactiveEntityCollection<Uri, R>
             where T : ReactiveEntity
         {
-            private readonly IReactiveEntityCollection<string, T> _parent;
-            private readonly Func<T, R> _conversion;
-            private readonly RegistryOptions _options;
+            private readonly IReactiveEntityCollection<string, T> _parent = parent;
+            private readonly Func<T, R> _conversion = conversion;
+            private readonly RegistryOptions _options = options;
 
             public WrappedEntityCollection(IReactiveEntityCollection<string, T> parent, Func<T, R> conversion)
                 : this(parent, conversion, new RegistryOptions())
             {
-            }
-
-            public WrappedEntityCollection(IReactiveEntityCollection<string, T> parent, Func<T, R> conversion, RegistryOptions options)
-            {
-                _parent = parent;
-                _conversion = conversion;
-                _options = options;
             }
 
             public bool ContainsKey(Uri key) => TryGetValue(key, out _);
@@ -662,11 +549,9 @@ namespace Reaqtor.QueryEngine
                 return new Impl<TKey, TValue>(collection);
             }
 
-            private sealed class Impl<TKey, TValue> : ITypeErasedDictionary<TKey, TValue>
+            private sealed class Impl<TKey, TValue>(IReactiveEntityCollection<TKey, TValue> collection) : ITypeErasedDictionary<TKey, TValue>
             {
-                private readonly IReactiveEntityCollection<TKey, TValue> _collection;
-
-                public Impl(IReactiveEntityCollection<TKey, TValue> collection) => _collection = collection;
+                private readonly IReactiveEntityCollection<TKey, TValue> _collection = collection;
 
                 public IOption<object> TryLookup(TKey key)
                 {
@@ -682,22 +567,18 @@ namespace Reaqtor.QueryEngine
 
                 public object Values => _collection.Select(kvp => kvp.Value);
 
-                private sealed class None<T> : IOption<T>
+                private sealed class None<T>(T value) : IOption<T>
                 {
-                    public None(T value) => Value = value;
-
                     public bool HasValue => false;
 
-                    public T Value { get; }
+                    public T Value { get; } = value;
                 }
 
-                private sealed class Some<T> : IOption<T>
+                private sealed class Some<T>(T value) : IOption<T>
                 {
-                    public Some(T value) => Value = value;
-
                     public bool HasValue => true;
 
-                    public T Value { get; }
+                    public T Value { get; } = value;
                 }
             }
         }

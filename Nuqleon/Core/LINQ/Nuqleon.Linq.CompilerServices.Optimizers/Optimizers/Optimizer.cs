@@ -86,32 +86,19 @@ namespace System.Linq.CompilerServices.Optimizers
             return new FixedPointOptimizer(optimizer, int.MaxValue, throwOnCycle: true);
         }
 
-        private sealed class ThenOptimizer : IOptimizer
+        private sealed class ThenOptimizer(IOptimizer first, IOptimizer second) : IOptimizer
         {
-            private readonly IOptimizer _first;
-            private readonly IOptimizer _second;
-
-            public ThenOptimizer(IOptimizer first, IOptimizer second)
-            {
-                _first = first;
-                _second = second;
-            }
+            private readonly IOptimizer _first = first;
+            private readonly IOptimizer _second = second;
 
             public QueryTree Optimize(QueryTree queryTree) => _second.Optimize(_first.Optimize(queryTree));
         }
 
-        private sealed class FixedPointOptimizer : IOptimizer
+        private sealed class FixedPointOptimizer(IOptimizer optimizer, int maxIterations, bool throwOnCycle) : IOptimizer
         {
-            private readonly IOptimizer _optimizer;
-            private readonly int _maxIterations;
-            private readonly bool _throwOnCycle;
-
-            public FixedPointOptimizer(IOptimizer optimizer, int maxIterations, bool throwOnCycle)
-            {
-                _optimizer = optimizer;
-                _maxIterations = maxIterations;
-                _throwOnCycle = throwOnCycle;
-            }
+            private readonly IOptimizer _optimizer = optimizer;
+            private readonly int _maxIterations = maxIterations;
+            private readonly bool _throwOnCycle = throwOnCycle;
 
             public QueryTree Optimize(QueryTree queryTree)
             {

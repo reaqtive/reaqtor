@@ -13,20 +13,12 @@ using System;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class ObserverOnCompleted : ObserverOperation
+    public class ObserverOnCompleted(Uri observerUri) : ObserverOperation(ServiceOperationKind.ObserverOnCompleted, observerUri)
     {
-        public ObserverOnCompleted(Uri observerUri)
-            : base(ServiceOperationKind.ObserverOnCompleted, observerUri)
-        {
-        }
     }
 
     [Serializable]
-    public class ObserverOnCompleted<T> : ObserverOnCompleted
+    public class ObserverOnCompleted<T>(Uri observerUri) : ObserverOnCompleted(observerUri)
     {
-        public ObserverOnCompleted(Uri observerUri)
-            : base(observerUri)
-        {
-        }
     }
 }

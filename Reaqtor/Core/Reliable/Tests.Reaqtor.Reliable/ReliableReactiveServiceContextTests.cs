@@ -307,7 +307,7 @@ namespace Tests.Reaqtor.Reliable
                             Expression.Lambda<Func<long, IReliableQbservable<long>>>(
                                 Expression.Invoke(
                                     Expression.Parameter(typeof(Func<TimeSpan, IReliableQbservable<long>>), Constants.Observable.Timer),
-                                    Expression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), longParam)
+                                    Expression.New(typeof(TimeSpan).GetConstructor([typeof(long)]), longParam)
                                 ),
                                 longParam
                             )

@@ -31,13 +31,8 @@ namespace Tests.Reaqtor.QueryEngine
             return new _(this, observer);
         }
 
-        private sealed class _ : ContextSwitchOperator<SubscribableOnScheduler<TSource>, TSource>
+        private sealed class _(SubscribableOnScheduler<TSource> parent, IObserver<TSource> observer) : ContextSwitchOperator<SubscribableOnScheduler<TSource>, TSource>(parent, observer)
         {
-            public _(SubscribableOnScheduler<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
-
             public override string Name => "rct:SubscribableOnScheduler";
 
             public override Version Version => Versioning.v1;

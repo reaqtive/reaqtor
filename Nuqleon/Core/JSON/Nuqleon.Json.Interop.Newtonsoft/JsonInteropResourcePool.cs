@@ -21,9 +21,13 @@ namespace Nuqleon.Json.Interop.Newtonsoft
     /// <summary>
     /// Provides a pool of resources used by <see cref="JsonExpressionReader"/> and <see cref="JsonExpressionWriter"/>.
     /// </summary>
-    public sealed class JsonInteropResourcePool
+    /// <remarks>
+    /// Creates a new resource pool with the specified capacity.
+    /// </remarks>
+    /// <param name="capacity">The capacity of the resource pool.</param>
+    public sealed class JsonInteropResourcePool(int capacity)
     {
-        internal readonly ObjectPool<TokenStack> Pool;
+        internal readonly ObjectPool<TokenStack> Pool = new ObjectPool<TokenStack>(() => new TokenStack(), capacity);
 
         /// <summary>
         /// Creates a new resource pool with the default capacity.
@@ -32,11 +36,5 @@ namespace Nuqleon.Json.Interop.Newtonsoft
             : this(Environment.ProcessorCount)
         {
         }
-
-        /// <summary>
-        /// Creates a new resource pool with the specified capacity.
-        /// </summary>
-        /// <param name="capacity">The capacity of the resource pool.</param>
-        public JsonInteropResourcePool(int capacity) => Pool = new ObjectPool<TokenStack>(() => new TokenStack(), capacity);
     }
 }

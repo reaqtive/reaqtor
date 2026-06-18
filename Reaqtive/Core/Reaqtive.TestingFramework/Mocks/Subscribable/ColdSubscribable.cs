@@ -9,31 +9,18 @@ using Reaqtive.Testing;
 
 namespace Reaqtive.TestingFramework.Mocks
 {
-    internal class ColdSubscribable<T> : MockSubscribable<T>
+    internal class ColdSubscribable<T>(TestScheduler scheduler, params Recorded<Notification<T>>[] actions) : MockSubscribable<T>(scheduler)
     {
-        public ColdSubscribable(TestScheduler scheduler, params Recorded<Notification<T>>[] actions)
-            : base(scheduler)
-        {
-            ObserverMessages = actions ?? throw new ArgumentNullException(nameof(actions));
-        }
-
-        public override IList<Recorded<Notification<T>>> ObserverMessages { get; }
+        public override IList<Recorded<Notification<T>>> ObserverMessages { get; } = actions ?? throw new ArgumentNullException(nameof(actions));
 
         public override ISubscription Subscribe(IObserver<T> observer) => new _(this, base.Subscribe(observer));
 
-        private sealed class _ : StatefulUnaryOperator<ColdSubscribable<T>, T>
+        private sealed class _(ColdSubscribable<T> parent, ISubscription sub) : StatefulUnaryOperator<ColdSubscribable<T>, T>(parent, parent.TheObserver)
         {
-            private readonly ColdSubscribable<T> _parent;
-            private readonly ISubscription _sub;
-            private int _currentItem;
+            private readonly ColdSubscribable<T> _parent = parent;
+            private readonly ISubscription _sub = sub;
+            private int _currentItem = 0;
             private TestScheduler _scheduler;
-
-            public _(ColdSubscribable<T> parent, ISubscription sub) : base(parent, parent.TheObserver)
-            {
-                _parent = parent;
-                _sub = sub;
-                _currentItem = 0;
-            }
 
             public override string Name => "rct:ColdSubscribable";
 

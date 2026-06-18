@@ -12,14 +12,9 @@ using Reaqtive.Tasks;
 
 namespace Reaqtor
 {
-    public class StatefulTransitionObservable : SubscribableBase<int>
+    public class StatefulTransitionObservable(int count) : SubscribableBase<int>
     {
-        private readonly int _count;
-
-        public StatefulTransitionObservable(int count)
-        {
-            _count = count;
-        }
+        private readonly int _count = count;
 
         public static bool IsStateful
         {
@@ -39,24 +34,14 @@ namespace Reaqtor
             }
         }
 
-        private sealed class _ : Operator<StatefulTransitionObservable, int>
+        private sealed class _(StatefulTransitionObservable parent, IObserver<int> observer) : Operator<StatefulTransitionObservable, int>(parent, observer)
         {
-            public _(StatefulTransitionObservable parent, IObserver<int> observer)
-                : base(parent, observer)
-            {
-            }
         }
 
-        private sealed class s : StatefulUnaryOperator<StatefulTransitionObservable, int>, ITransitioningOperator
+        private sealed class s(StatefulTransitionObservable parent, IObserver<int> observer) : StatefulUnaryOperator<StatefulTransitionObservable, int>(parent, observer), ITransitioningOperator
         {
-            private readonly List<int> _values;
+            private readonly List<int> _values = [];
             private IScheduler _scheduler;
-
-            public s(StatefulTransitionObservable parent, IObserver<int> observer)
-                : base(parent, observer)
-            {
-                _values = new List<int>();
-            }
 
             public override string Name => "rc:MyStatefulOperator";
 
@@ -104,16 +89,10 @@ namespace Reaqtor
         }
     }
 
-    public class StatefulTransitionOperator : SubscribableBase<int>
+    public class StatefulTransitionOperator(ISubscribable<int> source, int count) : SubscribableBase<int>
     {
-        private readonly ISubscribable<int> _source;
-        private readonly int _count;
-
-        public StatefulTransitionOperator(ISubscribable<int> source, int count)
-        {
-            _source = source;
-            _count = count;
-        }
+        private readonly ISubscribable<int> _source = source;
+        private readonly int _count = count;
 
         public static bool IsStateful
         {
@@ -133,29 +112,18 @@ namespace Reaqtor
             }
         }
 
-        private sealed class _ : Operator<StatefulTransitionOperator, int>
+        private sealed class _(StatefulTransitionOperator parent, IObserver<int> observer) : Operator<StatefulTransitionOperator, int>(parent, observer)
         {
-            public _(StatefulTransitionOperator parent, IObserver<int> observer)
-                : base(parent, observer)
-            {
-            }
-
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
                 return new[] { Params._source.Subscribe(Output) };
             }
         }
 
-        private sealed class s : StatefulUnaryOperator<StatefulTransitionOperator, int>, ITransitioningOperator
+        private sealed class s(StatefulTransitionOperator parent, IObserver<int> observer) : StatefulUnaryOperator<StatefulTransitionOperator, int>(parent, observer), ITransitioningOperator
         {
-            private readonly List<int> _values;
+            private readonly List<int> _values = [];
             private IScheduler _scheduler;
-
-            public s(StatefulTransitionOperator parent, IObserver<int> observer)
-                : base(parent, observer)
-            {
-                _values = new List<int>();
-            }
 
             public override string Name => "rc:MyStatefulOperator";
 
@@ -228,14 +196,9 @@ namespace Reaqtor
             }
         }
 
-        private sealed class _ : Observer<int>
+        private sealed class _(IObserver<int> inner) : Observer<int>
         {
-            private readonly IObserver<int> _inner;
-
-            public _(IObserver<int> inner)
-            {
-                _inner = inner;
-            }
+            private readonly IObserver<int> _inner = inner;
 
             protected override void OnCompletedCore()
             {
@@ -253,14 +216,9 @@ namespace Reaqtor
             }
         }
 
-        private sealed class s : StatefulObserver<int>, ITransitioningOperator
+        private sealed class s(IObserver<int> inner) : StatefulObserver<int>, ITransitioningOperator
         {
-            private readonly IObserver<int> _inner;
-
-            public s(IObserver<int> inner)
-            {
-                _inner = inner;
-            }
+            private readonly IObserver<int> _inner = inner;
 
             public override string Name => "rc:StatefulTransitionObserver";
 
@@ -299,13 +257,8 @@ namespace Reaqtor
 
         public class TestException : InvalidOperationException { }
 
-        private sealed class _ : StatefulUnaryOperator<SaveFailureOperator, int>
+        private sealed class _(SaveFailureOperator parent, IObserver<int> observer) : StatefulUnaryOperator<SaveFailureOperator, int>(parent, observer)
         {
-            public _(SaveFailureOperator parent, IObserver<int> observer)
-                : base(parent, observer)
-            {
-            }
-
             public override string Name => "rc:SaveFailureOperator";
 
             public override Version Version => Versioning.v1;

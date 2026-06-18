@@ -16,19 +16,12 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Base class for entities in QueryEngineRegistry.
     /// </summary>
-    internal abstract class ReactiveEntity : IReactiveResource
+    internal abstract class ReactiveEntity(Uri uri, Expression expression, object state) : IReactiveResource
     {
-        private volatile object _expression;
+        private volatile object _expression = expression;
         private volatile bool _isPersisted;
 
         private int _transactionLogState;
-
-        protected ReactiveEntity(Uri uri, Expression expression, object state)
-        {
-            Uri = uri ?? throw new ArgumentNullException(nameof(uri));
-            State = state;
-            _expression = expression;
-        }
 
         /// <summary>
         /// Gets the entity kind.
@@ -38,7 +31,7 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// The URI of the entity.
         /// </summary>
-        public Uri Uri { get; }
+        public Uri Uri { get; } = uri ?? throw new ArgumentNullException(nameof(uri));
 
         /// <summary>
         /// The expression representation of the entity.
@@ -49,7 +42,7 @@ namespace Reaqtor.QueryEngine
         /// Additional state associated with the entity. Must be an object
         /// conforming to the data model (JSON serializable).
         /// </summary>
-        public object State { get; }
+        public object State { get; } = state;
 
         /// <summary>
         /// Gets a value indicating whether the entity has been initialized already.

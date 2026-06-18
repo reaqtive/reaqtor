@@ -465,17 +465,13 @@ namespace Reaqtor.QueryEngine
             /// <summary>
             /// Differential checkpoint.
             /// </summary>
-            private sealed class DifferentialStateSaver : StateSaver
+            /// <remarks>
+            /// Initializes a new instance of the <see cref="DifferentialStateSaver"/> class.
+            /// </remarks>
+            /// <param name="writer">The writer.</param>
+            /// <param name="engine">The engine.</param>
+            private sealed class DifferentialStateSaver(IStateWriter writer, CheckpointingQueryEngine.CoreReactiveEngine engine) : StateSaver(writer, engine)
             {
-                /// <summary>
-                /// Initializes a new instance of the <see cref="DifferentialStateSaver"/> class.
-                /// </summary>
-                /// <param name="writer">The writer.</param>
-                /// <param name="engine">The engine.</param>
-                public DifferentialStateSaver(IStateWriter writer, CoreReactiveEngine engine)
-                    : base(writer, engine)
-                {
-                }
 
                 /// <summary>
                 /// Predicate defining whether the definition should be included in the checkpoint.
@@ -531,17 +527,13 @@ namespace Reaqtor.QueryEngine
             /// <summary>
             /// Full checkpoint.
             /// </summary>
-            private sealed class FullStateSaver : StateSaver
+            /// <remarks>
+            /// Initializes a new instance of the <see cref="FullStateSaver"/> class.
+            /// </remarks>
+            /// <param name="writer">The writer.</param>
+            /// <param name="engine">The engine.</param>
+            private sealed class FullStateSaver(IStateWriter writer, CheckpointingQueryEngine.CoreReactiveEngine engine) : StateSaver(writer, engine)
             {
-                /// <summary>
-                /// Initializes a new instance of the <see cref="FullStateSaver"/> class.
-                /// </summary>
-                /// <param name="writer">The writer.</param>
-                /// <param name="engine">The engine.</param>
-                public FullStateSaver(IStateWriter writer, CoreReactiveEngine engine)
-                    : base(writer, engine)
-                {
-                }
 
                 /// <summary>
                 /// Predicate defining whether the definition should be included in the checkpoint.

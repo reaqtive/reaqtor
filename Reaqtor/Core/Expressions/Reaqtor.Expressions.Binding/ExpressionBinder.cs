@@ -23,8 +23,8 @@ namespace Reaqtor.Expressions.Binding
         /// <summary>
         /// All empty generic types for Func.
         /// </summary>
-        protected static readonly HashSet<Type> FuncTypes = new()
-        {
+        protected static readonly HashSet<Type> FuncTypes =
+        [
             typeof(Func<>),
             typeof(Func<,>),
             typeof(Func<,,>),
@@ -41,7 +41,7 @@ namespace Reaqtor.Expressions.Binding
             typeof(Func<,,,,,,,,,,,,,>),
             typeof(Func<,,,,,,,,,,,,,,>),
             typeof(Func<,,,,,,,,,,,,,,,>),
-        };
+        ];
 
         /// <summary>
         /// Create an instance of ExpressionBinder type.
@@ -99,11 +99,9 @@ namespace Reaqtor.Expressions.Binding
         /// <returns>Expression with the bindings applied to perform inlining.</returns>
         protected virtual Expression Inline(Expression expression, IDictionary<ParameterExpression, Expression> bindings) => new Inliner(bindings).Visit(expression);
 
-        private sealed class Inliner : ScopedExpressionVisitor<Expression>
+        private sealed class Inliner(IDictionary<ParameterExpression, Expression> map) : ScopedExpressionVisitor<Expression>
         {
-            private readonly IDictionary<ParameterExpression, Expression> _map;
-
-            public Inliner(IDictionary<ParameterExpression, Expression> map) => _map = map;
+            private readonly IDictionary<ParameterExpression, Expression> _map = map;
 
             protected override Expression GetState(ParameterExpression parameter) => parameter;
 

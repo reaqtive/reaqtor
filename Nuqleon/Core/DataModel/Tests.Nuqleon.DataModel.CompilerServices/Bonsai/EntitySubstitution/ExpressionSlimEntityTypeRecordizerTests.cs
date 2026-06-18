@@ -144,7 +144,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void ExpressionSlimEntityTypeRecordizer_Constants_ManOrBoy1()
         {
-            var c = Expression.Constant(new A { B = new B { Cs = new C[] { new C { D = 42, Es = new List<E> { new E { F = 42 } } } } } });
+            var c = Expression.Constant(new A { B = new B { Cs = [new C { D = 42, Es = [new E { F = 42 }] }] } });
 
             var res = Roundtrip(c);
 
@@ -171,9 +171,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             var g = f.Compile();
 
             var res = g(new[] {
-                new A { B = new B { Cs = new C[] { new C { D = 23 } } } },
-                new A { B = new B { Cs = new C[] { new C { D = -1 } } } },
-                new A { B = new B { Cs = new C[] { new C { D = 87 } } } },
+                new A { B = new B { Cs = [new C { D = 23 }] } },
+                new A { B = new B { Cs = [new C { D = -1 }] } },
+                new A { B = new B { Cs = [new C { D = 87 }] } },
             });
 
             var eta = new ExpressionSlimEntityTypeRecordizer();
@@ -225,7 +225,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             var p = CompilerGeneratedNameEliminator.Prettify(h).ToCSharpString(allowCompilerGeneratedNames: true).Replace("<>a__RecordType", "rec").Replace("<>h__TransparentIdentifier", "__t");
             Assert.IsTrue(true, p);
 
-            var output = (IEnumerable<int>)h.Compile().DynamicInvoke(new object[] { inp });
+            var output = (IEnumerable<int>)h.Compile().DynamicInvoke([inp]);
 
             Assert.IsTrue(res.SequenceEqual(output));
         }
@@ -254,7 +254,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public C()
             {
-                Es = new List<E>();
+                Es = [];
             }
 
             [Mapping("d")]
@@ -345,26 +345,16 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             public string Foo { get; set; }
         }
 
-        private class MissingMapping
+        private class MissingMapping(int x)
         {
-            public MissingMapping(int x)
-            {
-                X = x;
-            }
-
             [Mapping("foo")]
-            public int X { get; set; }
+            public int X { get; set; } = x;
         }
 
-        private class NonMatchingMapping
+        private class NonMatchingMapping([Mapping("bar")] int x)
         {
-            public NonMatchingMapping([Mapping("bar")] int x)
-            {
-                X = x;
-            }
-
             [Mapping("foo")]
-            public int X { get; set; }
+            public int X { get; set; } = x;
         }
 
         private class DuplicateMapping

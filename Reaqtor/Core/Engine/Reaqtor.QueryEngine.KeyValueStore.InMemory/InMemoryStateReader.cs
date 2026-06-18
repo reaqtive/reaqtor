@@ -12,20 +12,15 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// <summary>
     /// Thread-safe state reader reading item from an in-memory state store.
     /// </summary>
-    public sealed class InMemoryStateReader : IStateReader
+    /// <remarks>
+    /// Create a new instance of <see cref="InMemoryStateReader"/>.
+    /// </remarks>
+    /// <param name="store">The store containing the state.</param>
+    public sealed class InMemoryStateReader(InMemoryStateStore store) : IStateReader
     {
-        private readonly InMemoryStateStore _store;
+        private readonly InMemoryStateStore _store = store ?? throw new ArgumentNullException(nameof(store));
 
         private volatile bool _disposed;
-
-        /// <summary>
-        /// Create a new instance of <see cref="InMemoryStateReader"/>.
-        /// </summary>
-        /// <param name="store">The store containing the state.</param>
-        public InMemoryStateReader(InMemoryStateStore store)
-        {
-            _store = store ?? throw new ArgumentNullException(nameof(store));
-        }
 
         /// <summary>
         /// Get all categories present in the store.

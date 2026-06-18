@@ -175,7 +175,7 @@ namespace Test.Reaqtive.Operators
                 Hide(xs).ToSubscribable());
 
             results.Messages.AssertEqual(
-                batch.ToArray()
+                [.. batch]
             );
 
             xs.Subscriptions.AssertEqual(

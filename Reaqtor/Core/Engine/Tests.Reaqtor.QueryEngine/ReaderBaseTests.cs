@@ -46,16 +46,16 @@ namespace Tests.Reaqtor.QueryEngine
             var bytes = stream.ToArray();
 
             // B
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes.Take(1).ToArray()), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(1)]), SerializationPolicy.Default).ReadHeader());
 
             // BD 1.0
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes.Take(10).ToArray()), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(10)]), SerializationPolicy.Default).ReadHeader());
 
             // BD 1.0.0.0
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes.Take(18).ToArray()), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(18)]), SerializationPolicy.Default).ReadHeader());
 
             // BD 1.0.0.0 0 1.0
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes.Take(30).ToArray()), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(30)]), SerializationPolicy.Default).ReadHeader());
         }
 
         [TestMethod]

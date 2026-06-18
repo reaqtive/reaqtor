@@ -6,11 +6,9 @@ using System;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
-    public class AddOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
+    public class AddOperationResult<TKey, TValue>(bool keyAlreadyExists) : OperationResult<TKey, TValue>
     {
-        private readonly bool _keyAlreadyExists;
-
-        public AddOperationResult(bool keyAlreadyExists) => _keyAlreadyExists = keyAlreadyExists;
+        private readonly bool _keyAlreadyExists = keyAlreadyExists;
 
         public override Exception Exception => _keyAlreadyExists ? new ArgumentException("An item with the same key has already been added.") : null;
 

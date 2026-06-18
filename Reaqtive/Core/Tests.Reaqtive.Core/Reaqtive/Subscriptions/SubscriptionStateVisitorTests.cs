@@ -90,16 +90,10 @@ namespace Test.Reaqtive
 
         // NB: The code below is a copy of Take<T> from Reaqtive.Linq, but is kept here for test layering purposes.
 
-        private sealed class Take<TResult> : SubscribableBase<TResult>
+        private sealed class Take<TResult>(ISubscribable<TResult> source, int count) : SubscribableBase<TResult>
         {
-            private readonly ISubscribable<TResult> _source;
-            private readonly int _count;
-
-            public Take(ISubscribable<TResult> source, int count)
-            {
-                _source = source;
-                _count = count;
-            }
+            private readonly ISubscribable<TResult> _source = source;
+            private readonly int _count = count;
 
             protected override ISubscription SubscribeCore(IObserver<TResult> observer)
             {

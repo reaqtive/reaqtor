@@ -40,7 +40,7 @@ namespace Reaqtor
         {
             ReactiveClientInterfaceType = reactiveClientInterfaceType;
 
-            _registeredObjects = new ConditionalWeakTable<object, Expression>();
+            _registeredObjects = [];
             _closureEliminator = new ClosureEliminator();
             _knownResourceRewriter = new KnownResourceRewriter(this);
             _clientInterfaceCallToUriRewriter = new ClientInterfaceCallToUriRewriter(this);
@@ -213,7 +213,7 @@ namespace Reaqtor
             {
                 _parent = parent;
                 _impl = new Impl(this);
-                _expressions = new HashSet<Expression>();
+                _expressions = [];
             }
 
             public Expression Inline(Expression expression)
@@ -238,11 +238,9 @@ namespace Reaqtor
 
             public bool TryGetObject(object value, out Expression expression) => _parent.TryGetObject(value, out expression);
 
-            private sealed class Impl : CooperativeExpressionVisitor
+            private sealed class Impl(ReactiveExpressionServices.ExpressionInliner parent) : CooperativeExpressionVisitor
             {
-                private readonly ExpressionInliner _parent;
-
-                public Impl(ExpressionInliner parent) => _parent = parent;
+                private readonly ExpressionInliner _parent = parent;
 
                 protected override Expression VisitConstant(ConstantExpression node)
                 {
@@ -348,8 +346,8 @@ namespace Reaqtor
                     return Expression.New(ctor, args, props);
                 }
 
-                private static readonly HashSet<Type> s_tuples = new()
-                {
+                private static readonly HashSet<Type> s_tuples =
+                [
                     typeof(Tuple<>),
                     typeof(Tuple<,>),
                     typeof(Tuple<,,>),
@@ -358,23 +356,19 @@ namespace Reaqtor
                     typeof(Tuple<,,,,,>),
                     typeof(Tuple<,,,,,,>),
                     typeof(Tuple<,,,,,,,>),
-                };
+                ];
             }
         }
 
-        private sealed class KnownResourceRewriter
+        private sealed class KnownResourceRewriter(ReactiveExpressionServices parent)
         {
-            private readonly Impl _impl;
-
-            public KnownResourceRewriter(ReactiveExpressionServices parent) => _impl = new Impl(parent);
+            private readonly Impl _impl = new Impl(parent);
 
             public Expression Rewrite(Expression expression) => _impl.Visit(expression);
 
-            private sealed class Impl : ExpressionVisitor
+            private sealed class Impl(ReactiveExpressionServices parent) : ExpressionVisitor
             {
-                private readonly ReactiveExpressionServices _parent;
-
-                public Impl(ReactiveExpressionServices parent) => _parent = parent;
+                private readonly ReactiveExpressionServices _parent = parent;
 
                 protected override Expression VisitMethodCall(MethodCallExpression node)
                 {
@@ -418,7 +412,7 @@ namespace Reaqtor
                     {
                         var obj = Visit(node.Expression);
 
-                        return _parent.GetKnownResourceInvocation(uri, node.Member, obj, Enumerable.Empty<Expression>(), node.Type);
+                        return _parent.GetKnownResourceInvocation(uri, node.Member, obj, [], node.Type);
                     }
 
                     return base.VisitMember(node);
@@ -469,7 +463,7 @@ namespace Reaqtor
 
             argTypes = argTypes.Concat(new[] { returnType });
 
-            var functionType = Expression.GetDelegateType(argTypes.ToArray());
+            var functionType = Expression.GetDelegateType([.. argTypes]);
 
             var function = GetNamedExpression(functionType, knownResourceUri);
 
@@ -480,14 +474,9 @@ namespace Reaqtor
         /// Common base class for exprssion tree rewriters containing helper methods that are needed
         /// for most client-aware rewrites.
         /// </summary>
-        private abstract class ScopedExpressionRewriterBase : ScopedExpressionVisitor<ParameterExpression>
+        private abstract class ScopedExpressionRewriterBase(ReactiveExpressionServices parent) : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly ReactiveExpressionServices _parent;
-
-            protected ScopedExpressionRewriterBase(ReactiveExpressionServices parent)
-            {
-                _parent = parent;
-            }
+            private readonly ReactiveExpressionServices _parent = parent;
 
             /// <summary>
             /// Checks if the passed expression is the reactive client. The criteria are:
@@ -533,21 +522,14 @@ namespace Reaqtor
         /// <remarks>
         /// Input expressions come in this way typically when code uses the context interface directly.
         /// </remarks>
-        private sealed class ClientInterfaceCallToUriRewriter
+        private sealed class ClientInterfaceCallToUriRewriter(ReactiveExpressionServices parent)
         {
-            private readonly ReactiveExpressionServices _parent;
-
-            public ClientInterfaceCallToUriRewriter(ReactiveExpressionServices parent) => _parent = parent;
+            private readonly ReactiveExpressionServices _parent = parent;
 
             public Expression Rewrite(Expression expression) => new Impl(_parent).Visit(expression);
 
-            private sealed class Impl : ScopedExpressionRewriterBase
+            private sealed class Impl(ReactiveExpressionServices parent) : ScopedExpressionRewriterBase(parent)
             {
-                public Impl(ReactiveExpressionServices parent)
-                    : base(parent)
-                {
-                }
-
                 protected override Expression VisitMethodCall(MethodCallExpression node)
                 {
                     var rewritten = base.VisitMethodCall(node);
@@ -689,21 +671,14 @@ namespace Reaqtor
         ///    var res = aQbservable.SelectMany(x => ctx.Ys(x))
         /// </code>
         /// </remarks>
-        private sealed class KnownResourceInvocationRewriter
+        private sealed class KnownResourceInvocationRewriter(ReactiveExpressionServices parent)
         {
-            private readonly ReactiveExpressionServices _parent;
-
-            public KnownResourceInvocationRewriter(ReactiveExpressionServices parent) => _parent = parent;
+            private readonly ReactiveExpressionServices _parent = parent;
 
             public Expression Rewrite(Expression expression) => new Impl(_parent).Visit(expression);
 
-            private sealed class Impl : ScopedExpressionRewriterBase
+            private sealed class Impl(ReactiveExpressionServices parent) : ScopedExpressionRewriterBase(parent)
             {
-                public Impl(ReactiveExpressionServices parent)
-                    : base(parent)
-                {
-                }
-
                 protected override Expression VisitInvocation(InvocationExpression node)
                 {
                     var rewritten = base.VisitInvocation(node);
@@ -772,7 +747,7 @@ namespace Reaqtor
                     {
                         var method = type.GetMethod("Invoke");
 
-                        parameterTypes = method.GetParameters().Select(p => p.ParameterType).ToArray();
+                        parameterTypes = [.. method.GetParameters().Select(p => p.ParameterType)];
                         returnType = method.ReturnType;
                         return true;
                     }
@@ -794,7 +769,7 @@ namespace Reaqtor
                     // build new type (Func<reduced_argument_types, returntype> or custom delegate type if count of
                     // type arguments is too high)
                     var argTypes = args.Select(arg => arg.Type);
-                    var functionType = Expression.GetDelegateType(argTypes.Concat(new[] { invocation.Type }).ToArray());
+                    var functionType = Expression.GetDelegateType([.. argTypes, .. new[] { invocation.Type }]);
                     var function = Expression.Parameter(functionType, resourceName);
 
                     return Expression.Invoke(function, args);

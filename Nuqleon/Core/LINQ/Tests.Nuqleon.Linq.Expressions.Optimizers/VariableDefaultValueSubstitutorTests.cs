@@ -57,7 +57,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                     )
                 );
 
-            var subst = new VariableDefaultValueSubstitutor(new HashSet<ParameterExpression> { x, ex });
+            var subst = new VariableDefaultValueSubstitutor([x, ex]);
 
             var res = subst.Visit(e);
 

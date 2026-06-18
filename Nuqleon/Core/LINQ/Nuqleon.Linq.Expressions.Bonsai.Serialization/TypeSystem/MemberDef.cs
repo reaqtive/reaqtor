@@ -24,7 +24,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         #region Fields
 
         private const int GenericParameterNameCount = 8;
-        private static readonly string[] s_genericParameterNames = new string[] { "T0", "T1", "T2", "T3", "T4", "T5", "T6", "T7" };
+        private static readonly string[] s_genericParameterNames = ["T0", "T1", "T2", "T3", "T4", "T5", "T6", "T7"];
         protected static readonly ReadOnlyCollection<TypeSlim> s_emptyTypeList = Array.Empty<TypeSlim>().ToReadOnly();
 
         #endregion

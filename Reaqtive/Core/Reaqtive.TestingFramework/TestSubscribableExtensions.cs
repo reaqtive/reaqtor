@@ -79,7 +79,7 @@ namespace Reaqtive.TestingFramework
 
         public static ISubscribable<T> Apply<T>(this ISubscribable<T> source, TestScheduler scheduler, Recorded<SubscriptionAction> action)
         {
-            return Apply(source, scheduler, new[] { action });
+            return Apply(source, scheduler, [action]);
         }
     }
 }

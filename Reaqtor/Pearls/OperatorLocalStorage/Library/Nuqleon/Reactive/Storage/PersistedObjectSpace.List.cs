@@ -86,7 +86,11 @@ namespace Reaqtive.Storage
         ///   <item><c>list.RemoveAt(i)</c> results in <c>Edit("metadata/length", length - 1); for (j in [i..length-1)) { Edit($"items/{j}", items[j + 1]) }; Delete($"items/{length}")</c></item>
         /// </list>
         /// </remarks>
-        private sealed class List : PersistableBase
+        /// <remarks>
+        /// Creates a new entity representing a list.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private sealed class List(PersistedObjectSpace parent) : PersistableBase(parent)
         {
             /// <summary>
             /// The category to store the metadata (i.e. the list length, using the <see cref="LengthKey"/> key) in.
@@ -122,15 +126,6 @@ namespace Reaqtive.Storage
             /// The pending edits obtained from <see cref="_dirty"/> on the last call to <see cref="SaveCore(IStateWriter)"/>, for use by <see cref="OnSavedCore"/> to edit <see cref="_length"/> upon a successful save operation.
             /// </summary>
             private DirtyState[] _dirtyHistory;
-
-            /// <summary>
-            /// Creates a new entity representing a list.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            public List(PersistedObjectSpace parent)
-                : base(parent)
-            {
-            }
 
             /// <summary>
             /// Gets the kind of the entity. Always returns <see cref="PersistableKind.List"/>.
@@ -502,7 +497,7 @@ namespace Reaqtive.Storage
                 }
                 else
                 {
-                    return new List<T>();
+                    return [];
                 }
             }
 
@@ -524,30 +519,23 @@ namespace Reaqtive.Storage
             /// Statically typed wrapper for a persisted list with element type <typeparamref name="T"/>.
             /// </summary>
             /// <typeparam name="T">The type of the elements stored in the list.</typeparam>
-            private sealed class Wrapper<T> : PersistedBase, IPersistedList<T>, IListPersistence
+            /// <remarks>
+            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+            /// </remarks>
+            /// <param name="id">The identifier of the list.</param>
+            /// <param name="storage">The storage entity representing the list.</param>
+            /// <param name="list">The initial list. This could either be the result of deserializing persisted state, or an empty list for a new entity.</param>
+            private sealed class Wrapper<T>(string id, PersistedObjectSpace.List storage, List<T> list) : PersistedBase(id), IPersistedList<T>, IListPersistence
             {
                 /// <summary>
                 /// The storage entity being wrapped.
                 /// </summary>
-                private readonly List _storage;
+                private readonly List _storage = storage;
 
                 /// <summary>
                 /// The stored list, always reflecting the latest in-memory state.
                 /// </summary>
-                private readonly List<T> _list;
-
-                /// <summary>
-                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-                /// </summary>
-                /// <param name="id">The identifier of the list.</param>
-                /// <param name="storage">The storage entity representing the list.</param>
-                /// <param name="list">The initial list. This could either be the result of deserializing persisted state, or an empty list for a new entity.</param>
-                public Wrapper(string id, List storage, List<T> list)
-                    : base(id)
-                {
-                    _storage = storage;
-                    _list = list;
-                }
+                private readonly List<T> _list = list;
 
                 /// <summary>
                 /// Gets or sets the element at the specified index.
@@ -758,7 +746,7 @@ namespace Reaqtive.Storage
                 /// <summary>
                 /// Set containing the indexes of the elements in the list that have been edited.
                 /// </summary>
-                public readonly HashSet<int> Edits = new();
+                public readonly HashSet<int> Edits = [];
 
                 /// <summary>
                 /// The element count of the list. This value is <c>null</c> when the element count hasn't changed (due to calls to Add or Remove).

@@ -56,20 +56,14 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
     #endregion
 
-    internal abstract class ExpressionSlimToBonsaiConverter : Visitor
+    internal abstract class ExpressionSlimToBonsaiConverter(SerializationState state) : Visitor
     {
         #region Fields
 
-        private readonly SerializationState _state;
+        private readonly SerializationState _state = state;
 
         #endregion
-
         #region Constructors
-
-        protected ExpressionSlimToBonsaiConverter(SerializationState state)
-        {
-            _state = state;
-        }
 
         #endregion
 

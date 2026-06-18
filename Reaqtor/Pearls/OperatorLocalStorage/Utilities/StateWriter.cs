@@ -21,20 +21,14 @@ namespace Utilities
     /// <summary>
     /// Implementation of <see cref="IStateWriter"/> for the in-memory key/value store implementation in <see cref="Store"/>.
     /// </summary>
-    public sealed class StateWriter : IStateWriter
+    public sealed class StateWriter(Store store, CheckpointKind checkpointKind) : IStateWriter
     {
-        private readonly Store _store;
-        private readonly List<StateWriterOperation> _log = new();
+        private readonly Store _store = store;
+        private readonly List<StateWriterOperation> _log = [];
 
-        public StateWriter(Store store, CheckpointKind checkpointKind)
-        {
-            _store = store;
-            CheckpointKind = checkpointKind;
-        }
+        public CheckpointKind CheckpointKind { get; private set; } = checkpointKind;
 
-        public CheckpointKind CheckpointKind { get; private set; }
-
-        public StateWriterOperation[] GetLog() => _log.ToArray();
+        public StateWriterOperation[] GetLog() => [.. _log];
 
         public Task CommitAsync(CancellationToken token, IProgress<int> progress)
         {
@@ -42,7 +36,7 @@ namespace Utilities
 
             lock (_log)
             {
-                log = _log.ToArray();
+                log = [.. _log];
             }
 
             foreach (var item in log)

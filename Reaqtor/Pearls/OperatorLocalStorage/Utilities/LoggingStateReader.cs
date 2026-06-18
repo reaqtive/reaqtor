@@ -19,17 +19,12 @@ namespace Utilities
     /// <summary>
     /// Implementation of <see cref="IStateReader"/> with logging of operations through a <see cref="TextWriter"/>.
     /// </summary>
-    public sealed class LoggingStateReader : LoggingStateReaderWriterBase, IStateReader
+    public sealed class LoggingStateReader(IStateReader reader, TextWriter log, bool keepOpen = true) : LoggingStateReaderWriterBase(log, keepOpen), IStateReader
     {
 #pragma warning disable CA2213 // "Change the Dispose method to call Close or Dispose on this field." We don't own the underlying stream, so this is an inappropriate suggestion.
-        private readonly IStateReader _reader;
-#pragma warning restore CA2213
+        private readonly IStateReader _reader = reader;
 
-        public LoggingStateReader(IStateReader reader, TextWriter log, bool keepOpen = true)
-            : base(log, keepOpen)
-        {
-            _reader = reader;
-        }
+#pragma warning restore CA2213
 
         protected override void DisposeCore() => _reader.Dispose();
 

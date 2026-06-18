@@ -10,11 +10,9 @@
 
 namespace System.Collections.Specialized
 {
-    internal readonly struct DecoratedBitArray : IBitArray
+    internal readonly struct DecoratedBitArray(int size) : IBitArray
     {
-        private readonly BitArray _bitArray;
-
-        public DecoratedBitArray(int size) => _bitArray = new BitArray(size);
+        private readonly BitArray _bitArray = new BitArray(size);
 
         public int Count => _bitArray.Length;
 

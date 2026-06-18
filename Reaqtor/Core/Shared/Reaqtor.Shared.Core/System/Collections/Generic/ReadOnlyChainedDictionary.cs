@@ -13,16 +13,10 @@ using System.Linq;
 
 namespace System.Collections.Generic
 {
-    internal class ReadOnlyChainedDictionary<TKey, TValue> : IDictionary<TKey, TValue>
+    internal class ReadOnlyChainedDictionary<TKey, TValue>(IDictionary<TKey, TValue> first, IDictionary<TKey, TValue> second) : IDictionary<TKey, TValue>
     {
-        private readonly IDictionary<TKey, TValue> _first;
-        private readonly IDictionary<TKey, TValue> _second;
-
-        public ReadOnlyChainedDictionary(IDictionary<TKey, TValue> first, IDictionary<TKey, TValue> second)
-        {
-            _first = first;
-            _second = second;
-        }
+        private readonly IDictionary<TKey, TValue> _first = first;
+        private readonly IDictionary<TKey, TValue> _second = second;
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {

@@ -59,25 +59,16 @@ namespace System.Linq.Expressions
         /// <remarks>
         /// Modulo the optimization flags, instances of this type are stateless and may be reused.
         /// </remarks>
-        private sealed class Impl : BetterExpressionVisitor
+        /// <remarks>
+        /// Creates a new optimizer instance with the given optimizations flags set.
+        /// </remarks>
+        /// <param name="optimizations">The optimizations to apply.</param>
+        private sealed class Impl(Optimizations optimizations) : BetterExpressionVisitor
         {
             /// <summary>
             /// Flags indicating which optimizations are applied.
             /// </summary>
-            private readonly Optimizations _optimizations;
-
-            //
-            // WARNING: If per-instance state is added here, undo instance sharing optimizations.
-            //
-
-            /// <summary>
-            /// Creates a new optimizer instance with the given optimizations flags set.
-            /// </summary>
-            /// <param name="optimizations">The optimizations to apply.</param>
-            public Impl(Optimizations optimizations)
-            {
-                _optimizations = optimizations;
-            }
+            private readonly Optimizations _optimizations = optimizations;
 
             /// <summary>
             /// Visits block expressions in order to apply the block flattening optimization, if enabled.

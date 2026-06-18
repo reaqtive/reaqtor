@@ -15,21 +15,14 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal sealed class PropertyDef : DeclaredMemberDef
+    internal sealed class PropertyDef(TypeRef declaringType, PropertyInfoSlim property) : DeclaredMemberDef(declaringType)
     {
         #region Fields
 
-        private readonly PropertyInfoSlim _property;
+        private readonly PropertyInfoSlim _property = property;
 
         #endregion
-
         #region Constructors
-
-        public PropertyDef(TypeRef declaringType, PropertyInfoSlim property)
-            : base(declaringType)
-        {
-            _property = property;
-        }
 
         #endregion
 

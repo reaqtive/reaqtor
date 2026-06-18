@@ -33,37 +33,37 @@ namespace Tests.Reaqtor.Remoting.Tools
         {
             AssertFound(
                 Expression.Invoke(Expression.Parameter(typeof(Func<int, IAsyncReactiveQbservable<int>>), "foo"), Expression.Constant(4)),
-                new Result(ReactiveEntityType.Observable, "foo", new HashSet<IEnumerable<Expression>> { new[] { Expression.Constant(4) } })
+                new Result(ReactiveEntityType.Observable, "foo", [new[] { Expression.Constant(4) }])
             );
 
             AssertFound(
                 Expression.Invoke(Expression.Parameter(typeof(Func<int, IAsyncReactiveQbserver<int>>), "foo"), Expression.Constant(4)),
-                new Result(ReactiveEntityType.Observer, "foo", new HashSet<IEnumerable<Expression>> { new[] { Expression.Constant(4) } })
+                new Result(ReactiveEntityType.Observer, "foo", [new[] { Expression.Constant(4) }])
             );
 
             AssertFound(
                 Expression.Parameter(typeof(IAsyncReactiveQubject<int>), "foo"),
-                new Result(ReactiveEntityType.Stream, "foo", new HashSet<IEnumerable<Expression>> { Array.Empty<Expression>() })
+                new Result(ReactiveEntityType.Stream, "foo", [Array.Empty<Expression>()])
             );
 
             AssertFound(
                 Expression.Parameter(typeof(IAsyncReactiveQubject<int, int>), "foo"),
-                new Result(ReactiveEntityType.Stream, "foo", new HashSet<IEnumerable<Expression>> { Array.Empty<Expression>() })
+                new Result(ReactiveEntityType.Stream, "foo", [Array.Empty<Expression>()])
             );
 
             AssertFound(
                 Expression.Parameter(typeof(IAsyncReactiveQubjectFactory<int, int>), "foo"),
-                new Result(ReactiveEntityType.StreamFactory, "foo", new HashSet<IEnumerable<Expression>> { Array.Empty<Expression>() })
+                new Result(ReactiveEntityType.StreamFactory, "foo", [Array.Empty<Expression>()])
             );
 
             AssertFound(
                 Expression.Parameter(typeof(IAsyncReactiveQubscriptionFactory), "foo"),
-                new Result(ReactiveEntityType.SubscriptionFactory, "foo", new HashSet<IEnumerable<Expression>> { Array.Empty<Expression>() })
+                new Result(ReactiveEntityType.SubscriptionFactory, "foo", [Array.Empty<Expression>()])
             );
 
             AssertFound(
                 Expression.Parameter(typeof(IAsyncReactiveQubscriptionFactory<int>), "foo"),
-                new Result(ReactiveEntityType.SubscriptionFactory, "foo", new HashSet<IEnumerable<Expression>> { Array.Empty<Expression>() })
+                new Result(ReactiveEntityType.SubscriptionFactory, "foo", [Array.Empty<Expression>()])
             );
 
             AssertFound(
@@ -75,8 +75,8 @@ namespace Tests.Reaqtor.Remoting.Tools
                         Expression.Parameter(typeof(IAsyncReactiveQbserver<int>), "Observer")
                     )
                 ),
-                new Result(ReactiveEntityType.Observable, "Observable", new HashSet<IEnumerable<Expression>> { Array.Empty<Expression>() }),
-                new Result(ReactiveEntityType.Observer, "Observer", new HashSet<IEnumerable<Expression>> { Array.Empty<Expression>() })
+                new Result(ReactiveEntityType.Observable, "Observable", [Array.Empty<Expression>()]),
+                new Result(ReactiveEntityType.Observer, "Observer", [Array.Empty<Expression>()])
             );
 
             AssertFound(
@@ -88,8 +88,8 @@ namespace Tests.Reaqtor.Remoting.Tools
                         Expression.Invoke(Expression.Parameter(typeof(Func<int, IAsyncReactiveQbserver<int>>), "Observer"), Expression.Constant(42))
                     )
                 ),
-                new Result(ReactiveEntityType.Observable, "Observable", new HashSet<IEnumerable<Expression>> { new[] { Expression.Constant(42) } }),
-                new Result(ReactiveEntityType.Observer, "Observer", new HashSet<IEnumerable<Expression>> { new[] { Expression.Constant(42) } })
+                new Result(ReactiveEntityType.Observable, "Observable", [new[] { Expression.Constant(42) }]),
+                new Result(ReactiveEntityType.Observer, "Observer", [new[] { Expression.Constant(42) }])
             );
 
             AssertFound(Expression.Parameter(typeof(Func<int, IAsyncReactiveQubject<int>>), "foo"));

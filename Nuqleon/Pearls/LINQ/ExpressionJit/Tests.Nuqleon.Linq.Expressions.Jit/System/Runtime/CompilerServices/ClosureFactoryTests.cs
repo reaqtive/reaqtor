@@ -19,7 +19,7 @@ namespace Tests
         {
             for (var i = 0; i < Data.Types.Length; i++)
             {
-                AssertClosureType(Data.Types.Take(i).ToArray(), Data.Values);
+                AssertClosureType([.. Data.Types.Take(i)], Data.Values);
             }
         }
 

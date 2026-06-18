@@ -7,13 +7,8 @@ using System;
 namespace DelegatingBinder
 {
     [AttributeUsage(AttributeTargets.Method)]
-    internal sealed class ResourceAttribute : Attribute
+    internal sealed class ResourceAttribute(string id) : Attribute
     {
-        public ResourceAttribute(string id)
-        {
-            Id = id;
-        }
-
-        public string Id { get; }
+        public string Id { get; } = id;
     }
 }

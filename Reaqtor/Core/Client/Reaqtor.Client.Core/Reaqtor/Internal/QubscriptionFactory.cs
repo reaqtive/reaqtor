@@ -15,15 +15,9 @@ using System.Threading.Tasks;
 
 namespace Reaqtor
 {
-    internal class QubscriptionFactory : AsyncReactiveQubscriptionFactoryBase
+    internal class QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, object state, CancellationToken token)
         {
@@ -31,15 +25,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArgs> : AsyncReactiveQubscriptionFactoryBase<TArgs>
+    internal class QubscriptionFactory<TArgs>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionFactoryBase<TArgs>(provider)
     {
-        public QubscriptionFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> CreateAsyncCore(Uri subscriptionUri, TArgs argument, object state, CancellationToken token)
         {

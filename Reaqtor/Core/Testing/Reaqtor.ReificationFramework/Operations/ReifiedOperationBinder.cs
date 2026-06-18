@@ -15,18 +15,13 @@ using Reaqtor.TestingFramework;
 
 namespace Reaqtor.ReificationFramework
 {
-    internal class ReifiedOperationBinder<TEnvironment> : ReifiedOperationVisitor<Expression<Action<TEnvironment>>>
+    internal class ReifiedOperationBinder<TEnvironment>(IReificationBinder<TEnvironment> platform) : ReifiedOperationVisitor<Expression<Action<TEnvironment>>>
     {
         private static readonly Expression<Func<IWildcardGenerator, Uri>> s_generateExpr = wcg => wcg.Generate();
         private static readonly MethodInfo s_taskRunMethod = (MethodInfo)ReflectionHelpers.InfoOf(() => Task.Run(default(Action), CancellationToken.None));
         private static readonly PropertyInfo s_IsCancellationRequestedProperty = (PropertyInfo)ReflectionHelpers.InfoOf((CancellationToken token) => token.IsCancellationRequested);
 
-        private readonly IReificationBinder<TEnvironment> _platform;
-
-        public ReifiedOperationBinder(IReificationBinder<TEnvironment> platform)
-        {
-            _platform = platform;
-        }
+        private readonly IReificationBinder<TEnvironment> _platform = platform;
 
         protected override Expression<Action<TEnvironment>> MakeAsync(Expression<Action<TEnvironment>> operation, Action<Task> onStart, CancellationToken token)
         {

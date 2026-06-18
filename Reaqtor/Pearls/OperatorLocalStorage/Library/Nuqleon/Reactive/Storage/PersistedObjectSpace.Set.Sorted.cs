@@ -62,16 +62,12 @@ namespace Reaqtive.Storage
         /// <summary>
         /// Storage entity representing a sorted set.
         /// </summary>
-        private sealed class SortedSet : Set
+        /// <remarks>
+        /// Creates a new entity representing a sorted set.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private sealed class SortedSet(PersistedObjectSpace parent) : Set(parent)
         {
-            /// <summary>
-            /// Creates a new entity representing a sorted set.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            public SortedSet(PersistedObjectSpace parent)
-                : base(parent)
-            {
-            }
 
             /// <summary>
             /// Gets the kind of the entity. Always returns <see cref="PersistableKind.SortedSet"/>.
@@ -170,19 +166,15 @@ namespace Reaqtive.Storage
             /// Statically typed wrapper for a persisted set with element type <typeparamref name="T"/>.
             /// </summary>
             /// <typeparam name="T">The type of the elements stored in the set.</typeparam>
-            private class Wrapper<T> : WrapperBase<T, SortedSet<T>>, IPersistedSortedSet<T>
+            /// <remarks>
+            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+            /// </remarks>
+            /// <param name="id">The identifier of the set.</param>
+            /// <param name="storage">The storage entity representing the set.</param>
+            /// <param name="set">The initial set. This could either be the result of deserializing persisted state, or an empty set for a new entity.</param>
+            /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="set"/>.</param>
+            private class Wrapper<T>(string id, PersistedObjectSpace.Set storage, SortedSet<T> set, Map<T, long> storageKeys) : WrapperBase<T, SortedSet<T>>(id, storage, set, storageKeys), IPersistedSortedSet<T>
             {
-                /// <summary>
-                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-                /// </summary>
-                /// <param name="id">The identifier of the set.</param>
-                /// <param name="storage">The storage entity representing the set.</param>
-                /// <param name="set">The initial set. This could either be the result of deserializing persisted state, or an empty set for a new entity.</param>
-                /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="set"/>.</param>
-                public Wrapper(string id, Set storage, SortedSet<T> set, Map<T, long> storageKeys)
-                    : base(id, storage, set, storageKeys)
-                {
-                }
 
                 /// <summary>
                 /// Gets the maximum value in the set.
@@ -459,19 +451,15 @@ namespace Reaqtive.Storage
                 /// <summary>
                 /// Subset implementation for use by <see cref="GetViewBetween(T, T)"/>.
                 /// </summary>
-                private sealed class Subset : Wrapper<T>
+                /// <remarks>
+                /// Creates a new subset of a persisted set using the specified <paramref name="parent"/> to gain access to the underlying subset and the storage keys.
+                /// The subset in the underlying in-memory collection is obtained by using <paramref name="lowerValue"/> and <paramref name="upperValue"/> in a call to <see cref="SortedSet{T}.GetViewBetween(T, T)"/>.
+                /// </remarks>
+                /// <param name="parent">The parent persisted set.</param>
+                /// <param name="lowerValue">The lowest desired value in the view.</param>
+                /// <param name="upperValue">The highest desired value in the view.</param>
+                private sealed class Subset(SortedSet.Wrapper<T> parent, T lowerValue, T upperValue) : Wrapper<T>(parent.Id, parent._storage, parent._set.GetViewBetween(lowerValue, upperValue), parent._storageKeys /* NB: See remarks below. */)
                 {
-                    /// <summary>
-                    /// Creates a new subset of a persisted set using the specified <paramref name="parent"/> to gain access to the underlying subset and the storage keys.
-                    /// The subset in the underlying in-memory collection is obtained by using <paramref name="lowerValue"/> and <paramref name="upperValue"/> in a call to <see cref="SortedSet{T}.GetViewBetween(T, T)"/>.
-                    /// </summary>
-                    /// <param name="parent">The parent persisted set.</param>
-                    /// <param name="lowerValue">The lowest desired value in the view.</param>
-                    /// <param name="upperValue">The highest desired value in the view.</param>
-                    public Subset(Wrapper<T> parent, T lowerValue, T upperValue)
-                        : base(parent.Id, parent._storage, parent._set.GetViewBetween(lowerValue, upperValue), parent._storageKeys /* NB: See remarks below. */)
-                    {
-                    }
 
                     //
                     // NB: This class has a tight coupling with the behavior of its base class. The following methods cause mutation of the underlying subset.

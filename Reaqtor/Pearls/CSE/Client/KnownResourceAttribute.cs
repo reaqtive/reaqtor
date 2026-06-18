@@ -17,21 +17,17 @@ namespace Pearls.Reaqtor.CSE
     /// <summary>
     /// Attribute to annotate known resources.
     /// </summary>
+    /// <remarks>
+    /// Creates a new known resource attribute using the specified resource identifier.
+    /// </remarks>
+    /// <param name="id">Identifier of the known resource.</param>
     [AttributeUsage(AttributeTargets.Method)]
-    internal sealed class KnownResourceAttribute : Attribute
+    internal sealed class KnownResourceAttribute(string id) : Attribute
     {
-        /// <summary>
-        /// Creates a new known resource attribute using the specified resource identifier.
-        /// </summary>
-        /// <param name="id">Identifier of the known resource.</param>
-        public KnownResourceAttribute(string id)
-        {
-            Id = id;
-        }
 
         /// <summary>
         /// Gets the identifier of the known resource.
         /// </summary>
-        public string Id { get; }
+        public string Id { get; } = id;
     }
 }

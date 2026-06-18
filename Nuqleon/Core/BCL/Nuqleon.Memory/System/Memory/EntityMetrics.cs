@@ -15,7 +15,7 @@ namespace System.Memory
 {
     internal static class EntryMetricsExtensions
     {
-        private static readonly ConditionalWeakTable<object, EntityMetrics> s_metrics = new();
+        private static readonly ConditionalWeakTable<object, EntityMetrics> s_metrics = [];
 
         public static IWritableMemoizationCacheEntryMetrics GetMetrics(this object entry) => s_metrics.GetOrCreateValue(entry);
 

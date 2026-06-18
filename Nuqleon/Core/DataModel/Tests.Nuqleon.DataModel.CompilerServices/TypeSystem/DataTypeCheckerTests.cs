@@ -424,32 +424,20 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
 #pragma warning restore CA1822
 
 #pragma warning disable IDE0060 // Remove unused parameter (accessed through reflection)
-        private class CtorMissingMapping
+        private class CtorMissingMapping(int x)
         {
-            public CtorMissingMapping(int x)
-            {
-            }
-
             [Mapping("x")]
             public int X { get; set; }
         }
 
-        private class CtorInvalidMapping
+        private class CtorInvalidMapping([Mapping("x")] int x)
         {
-            public CtorInvalidMapping([Mapping("x")] int x)
-            {
-            }
-
             [Mapping("y")]
             public int X { get; set; }
         }
 
-        private class CtorMismatchedTypeMapping
+        private class CtorMismatchedTypeMapping([Mapping("x")] int x)
         {
-            public CtorMismatchedTypeMapping([Mapping("x")] int x)
-            {
-            }
-
             [Mapping("x")]
             public string X { get; set; }
         }

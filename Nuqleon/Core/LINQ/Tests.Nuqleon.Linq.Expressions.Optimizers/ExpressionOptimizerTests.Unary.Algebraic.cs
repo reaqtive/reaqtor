@@ -955,14 +955,14 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 var o = original[i];
                 var a = alternative[i];
 
-                AssertAlgebraicLaw<sbyte, bool>(o, a, new sbyte[] { sbyte.MinValue, -1, 0, 1, sbyte.MaxValue });
-                AssertAlgebraicLaw<byte, bool>(o, a, new byte[] { 0, 1, byte.MaxValue });
-                AssertAlgebraicLaw<short, bool>(o, a, new short[] { short.MinValue, -1, 0, 1, short.MaxValue });
-                AssertAlgebraicLaw<ushort, bool>(o, a, new ushort[] { 0, 1, ushort.MaxValue });
-                AssertAlgebraicLaw<int, bool>(o, a, new int[] { int.MinValue, -1, 0, 1, int.MaxValue });
-                AssertAlgebraicLaw<uint, bool>(o, a, new uint[] { 0, 1, uint.MaxValue });
-                AssertAlgebraicLaw<long, bool>(o, a, new long[] { long.MinValue, -1, 0, 1, long.MaxValue });
-                AssertAlgebraicLaw<ulong, bool>(o, a, new ulong[] { 0, 1, ulong.MaxValue });
+                AssertAlgebraicLaw<sbyte, bool>(o, a, [sbyte.MinValue, -1, 0, 1, sbyte.MaxValue]);
+                AssertAlgebraicLaw<byte, bool>(o, a, [0, 1, byte.MaxValue]);
+                AssertAlgebraicLaw<short, bool>(o, a, [short.MinValue, -1, 0, 1, short.MaxValue]);
+                AssertAlgebraicLaw<ushort, bool>(o, a, [0, 1, ushort.MaxValue]);
+                AssertAlgebraicLaw<int, bool>(o, a, [int.MinValue, -1, 0, 1, int.MaxValue]);
+                AssertAlgebraicLaw<uint, bool>(o, a, [0, 1, uint.MaxValue]);
+                AssertAlgebraicLaw<long, bool>(o, a, [long.MinValue, -1, 0, 1, long.MaxValue]);
+                AssertAlgebraicLaw<ulong, bool>(o, a, [0, 1, ulong.MaxValue]);
 
                 /*
                  * NB: These are not valid for e.g. !(0 < NaN) --> (0 >= NaN)
@@ -999,14 +999,14 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
                 // WARNING: The sample values *exclude* null! The algebraic law doesn't hold with null operands.
 
-                AssertAlgebraicLaw<sbyte?, bool>(o, a, new sbyte?[] { sbyte.MinValue, -1, 0, 1, sbyte.MaxValue });
-                AssertAlgebraicLaw<byte?, bool>(o, a, new byte?[] { 0, 1, byte.MaxValue });
-                AssertAlgebraicLaw<short?, bool>(o, a, new short?[] { short.MinValue, -1, 0, 1, short.MaxValue });
-                AssertAlgebraicLaw<ushort?, bool>(o, a, new ushort?[] { 0, 1, ushort.MaxValue });
-                AssertAlgebraicLaw<int?, bool>(o, a, new int?[] { int.MinValue, -1, 0, 1, int.MaxValue });
-                AssertAlgebraicLaw<uint?, bool>(o, a, new uint?[] { 0, 1, uint.MaxValue });
-                AssertAlgebraicLaw<long?, bool>(o, a, new long?[] { long.MinValue, -1, 0, 1, long.MaxValue });
-                AssertAlgebraicLaw<ulong?, bool>(o, a, new ulong?[] { 0, 1, ulong.MaxValue });
+                AssertAlgebraicLaw<sbyte?, bool>(o, a, [sbyte.MinValue, -1, 0, 1, sbyte.MaxValue]);
+                AssertAlgebraicLaw<byte?, bool>(o, a, [0, 1, byte.MaxValue]);
+                AssertAlgebraicLaw<short?, bool>(o, a, [short.MinValue, -1, 0, 1, short.MaxValue]);
+                AssertAlgebraicLaw<ushort?, bool>(o, a, [0, 1, ushort.MaxValue]);
+                AssertAlgebraicLaw<int?, bool>(o, a, [int.MinValue, -1, 0, 1, int.MaxValue]);
+                AssertAlgebraicLaw<uint?, bool>(o, a, [0, 1, uint.MaxValue]);
+                AssertAlgebraicLaw<long?, bool>(o, a, [long.MinValue, -1, 0, 1, long.MaxValue]);
+                AssertAlgebraicLaw<ulong?, bool>(o, a, [0, 1, ulong.MaxValue]);
 
                 /*
                  * NB: These are not valid for e.g. !(0 < NaN) --> (0 >= NaN)
@@ -1041,14 +1041,14 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 var o = original[i];
                 var a = alternative[i];
 
-                AssertAlgebraicLaw<sbyte?, bool?>(o, a, new sbyte?[] { null, sbyte.MinValue, -1, 0, 1, sbyte.MaxValue });
-                AssertAlgebraicLaw<byte?, bool?>(o, a, new byte?[] { null, 0, 1, byte.MaxValue });
-                AssertAlgebraicLaw<short?, bool?>(o, a, new short?[] { null, short.MinValue, -1, 0, 1, short.MaxValue });
-                AssertAlgebraicLaw<ushort?, bool?>(o, a, new ushort?[] { null, 0, 1, ushort.MaxValue });
-                AssertAlgebraicLaw<int?, bool?>(o, a, new int?[] { null, int.MinValue, -1, 0, 1, int.MaxValue });
-                AssertAlgebraicLaw<uint?, bool?>(o, a, new uint?[] { null, 0, 1, uint.MaxValue });
-                AssertAlgebraicLaw<long?, bool?>(o, a, new long?[] { null, long.MinValue, -1, 0, 1, long.MaxValue });
-                AssertAlgebraicLaw<ulong?, bool?>(o, a, new ulong?[] { null, 0, 1, ulong.MaxValue });
+                AssertAlgebraicLaw<sbyte?, bool?>(o, a, [null, sbyte.MinValue, -1, 0, 1, sbyte.MaxValue]);
+                AssertAlgebraicLaw<byte?, bool?>(o, a, [null, 0, 1, byte.MaxValue]);
+                AssertAlgebraicLaw<short?, bool?>(o, a, [null, short.MinValue, -1, 0, 1, short.MaxValue]);
+                AssertAlgebraicLaw<ushort?, bool?>(o, a, [null, 0, 1, ushort.MaxValue]);
+                AssertAlgebraicLaw<int?, bool?>(o, a, [null, int.MinValue, -1, 0, 1, int.MaxValue]);
+                AssertAlgebraicLaw<uint?, bool?>(o, a, [null, 0, 1, uint.MaxValue]);
+                AssertAlgebraicLaw<long?, bool?>(o, a, [null, long.MinValue, -1, 0, 1, long.MaxValue]);
+                AssertAlgebraicLaw<ulong?, bool?>(o, a, [null, 0, 1, ulong.MaxValue]);
 
                 /*
                  * NB: These are not valid for e.g. !(0 < NaN) --> (0 >= NaN)
@@ -1079,16 +1079,16 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 var o = original[i];
                 var a = alternative[i];
 
-                AssertAlgebraicLaw<sbyte, bool>(o, a, new sbyte[] { sbyte.MinValue, -1, 0, 1, sbyte.MaxValue });
-                AssertAlgebraicLaw<byte, bool>(o, a, new byte[] { 0, 1, byte.MaxValue });
-                AssertAlgebraicLaw<short, bool>(o, a, new short[] { short.MinValue, -1, 0, 1, short.MaxValue });
-                AssertAlgebraicLaw<ushort, bool>(o, a, new ushort[] { 0, 1, ushort.MaxValue });
-                AssertAlgebraicLaw<int, bool>(o, a, new int[] { int.MinValue, -1, 0, 1, int.MaxValue });
-                AssertAlgebraicLaw<uint, bool>(o, a, new uint[] { 0, 1, uint.MaxValue });
-                AssertAlgebraicLaw<long, bool>(o, a, new long[] { long.MinValue, -1, 0, 1, long.MaxValue });
-                AssertAlgebraicLaw<ulong, bool>(o, a, new ulong[] { 0, 1, ulong.MaxValue });
-                AssertAlgebraicLaw<float, bool>(o, a, new float[] { 0.0f, 0.1f, 0.3f, 1.0f, float.MinValue, float.MaxValue, float.NaN, float.NegativeInfinity, float.PositiveInfinity });
-                AssertAlgebraicLaw<double, bool>(o, a, new double[] { 0.0d, 0.1d, 0.3d, 1.0d, double.MinValue, double.MaxValue, double.NaN, double.NegativeInfinity, double.PositiveInfinity });
+                AssertAlgebraicLaw<sbyte, bool>(o, a, [sbyte.MinValue, -1, 0, 1, sbyte.MaxValue]);
+                AssertAlgebraicLaw<byte, bool>(o, a, [0, 1, byte.MaxValue]);
+                AssertAlgebraicLaw<short, bool>(o, a, [short.MinValue, -1, 0, 1, short.MaxValue]);
+                AssertAlgebraicLaw<ushort, bool>(o, a, [0, 1, ushort.MaxValue]);
+                AssertAlgebraicLaw<int, bool>(o, a, [int.MinValue, -1, 0, 1, int.MaxValue]);
+                AssertAlgebraicLaw<uint, bool>(o, a, [0, 1, uint.MaxValue]);
+                AssertAlgebraicLaw<long, bool>(o, a, [long.MinValue, -1, 0, 1, long.MaxValue]);
+                AssertAlgebraicLaw<ulong, bool>(o, a, [0, 1, ulong.MaxValue]);
+                AssertAlgebraicLaw<float, bool>(o, a, [0.0f, 0.1f, 0.3f, 1.0f, float.MinValue, float.MaxValue, float.NaN, float.NegativeInfinity, float.PositiveInfinity]);
+                AssertAlgebraicLaw<double, bool>(o, a, [0.0d, 0.1d, 0.3d, 1.0d, double.MinValue, double.MaxValue, double.NaN, double.NegativeInfinity, double.PositiveInfinity]);
             }
         }
 
@@ -1112,16 +1112,16 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 var o = original[i];
                 var a = alternative[i];
 
-                AssertAlgebraicLaw<sbyte?, bool>(o, a, new sbyte?[] { null, sbyte.MinValue, -1, 0, 1, sbyte.MaxValue });
-                AssertAlgebraicLaw<byte?, bool>(o, a, new byte?[] { null, 0, 1, byte.MaxValue });
-                AssertAlgebraicLaw<short?, bool>(o, a, new short?[] { null, short.MinValue, -1, 0, 1, short.MaxValue });
-                AssertAlgebraicLaw<ushort?, bool>(o, a, new ushort?[] { null, 0, 1, ushort.MaxValue });
-                AssertAlgebraicLaw<int?, bool>(o, a, new int?[] { null, int.MinValue, -1, 0, 1, int.MaxValue });
-                AssertAlgebraicLaw<uint?, bool>(o, a, new uint?[] { null, 0, 1, uint.MaxValue });
-                AssertAlgebraicLaw<long?, bool>(o, a, new long?[] { null, long.MinValue, -1, 0, 1, long.MaxValue });
-                AssertAlgebraicLaw<ulong?, bool>(o, a, new ulong?[] { null, 0, 1, ulong.MaxValue });
-                AssertAlgebraicLaw<float?, bool>(o, a, new float?[] { null, 0.0f, 0.1f, 0.3f, 1.0f, float.MinValue, float.MaxValue, float.NaN, float.NegativeInfinity, float.PositiveInfinity });
-                AssertAlgebraicLaw<double?, bool>(o, a, new double?[] { null, 0.0d, 0.1d, 0.3d, 1.0d, double.MinValue, double.MaxValue, double.NaN, double.NegativeInfinity, double.PositiveInfinity });
+                AssertAlgebraicLaw<sbyte?, bool>(o, a, [null, sbyte.MinValue, -1, 0, 1, sbyte.MaxValue]);
+                AssertAlgebraicLaw<byte?, bool>(o, a, [null, 0, 1, byte.MaxValue]);
+                AssertAlgebraicLaw<short?, bool>(o, a, [null, short.MinValue, -1, 0, 1, short.MaxValue]);
+                AssertAlgebraicLaw<ushort?, bool>(o, a, [null, 0, 1, ushort.MaxValue]);
+                AssertAlgebraicLaw<int?, bool>(o, a, [null, int.MinValue, -1, 0, 1, int.MaxValue]);
+                AssertAlgebraicLaw<uint?, bool>(o, a, [null, 0, 1, uint.MaxValue]);
+                AssertAlgebraicLaw<long?, bool>(o, a, [null, long.MinValue, -1, 0, 1, long.MaxValue]);
+                AssertAlgebraicLaw<ulong?, bool>(o, a, [null, 0, 1, ulong.MaxValue]);
+                AssertAlgebraicLaw<float?, bool>(o, a, [null, 0.0f, 0.1f, 0.3f, 1.0f, float.MinValue, float.MaxValue, float.NaN, float.NegativeInfinity, float.PositiveInfinity]);
+                AssertAlgebraicLaw<double?, bool>(o, a, [null, 0.0d, 0.1d, 0.3d, 1.0d, double.MinValue, double.MaxValue, double.NaN, double.NegativeInfinity, double.PositiveInfinity]);
             }
         }
 
@@ -1145,16 +1145,16 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 var o = original[i];
                 var a = alternative[i];
 
-                AssertAlgebraicLaw<sbyte?, bool?>(o, a, new sbyte?[] { null, sbyte.MinValue, -1, 0, 1, sbyte.MaxValue });
-                AssertAlgebraicLaw<byte?, bool?>(o, a, new byte?[] { null, 0, 1, byte.MaxValue });
-                AssertAlgebraicLaw<short?, bool?>(o, a, new short?[] { null, short.MinValue, -1, 0, 1, short.MaxValue });
-                AssertAlgebraicLaw<ushort?, bool?>(o, a, new ushort?[] { null, 0, 1, ushort.MaxValue });
-                AssertAlgebraicLaw<int?, bool?>(o, a, new int?[] { null, int.MinValue, -1, 0, 1, int.MaxValue });
-                AssertAlgebraicLaw<uint?, bool?>(o, a, new uint?[] { null, 0, 1, uint.MaxValue });
-                AssertAlgebraicLaw<long?, bool?>(o, a, new long?[] { null, long.MinValue, -1, 0, 1, long.MaxValue });
-                AssertAlgebraicLaw<ulong?, bool?>(o, a, new ulong?[] { null, 0, 1, ulong.MaxValue });
-                AssertAlgebraicLaw<float?, bool?>(o, a, new float?[] { null, 0.0f, 0.1f, 0.3f, 1.0f, float.MinValue, float.MaxValue, float.NaN, float.NegativeInfinity, float.PositiveInfinity });
-                AssertAlgebraicLaw<double?, bool?>(o, a, new double?[] { null, 0.0d, 0.1d, 0.3d, 1.0d, double.MinValue, double.MaxValue, double.NaN, double.NegativeInfinity, double.PositiveInfinity });
+                AssertAlgebraicLaw<sbyte?, bool?>(o, a, [null, sbyte.MinValue, -1, 0, 1, sbyte.MaxValue]);
+                AssertAlgebraicLaw<byte?, bool?>(o, a, [null, 0, 1, byte.MaxValue]);
+                AssertAlgebraicLaw<short?, bool?>(o, a, [null, short.MinValue, -1, 0, 1, short.MaxValue]);
+                AssertAlgebraicLaw<ushort?, bool?>(o, a, [null, 0, 1, ushort.MaxValue]);
+                AssertAlgebraicLaw<int?, bool?>(o, a, [null, int.MinValue, -1, 0, 1, int.MaxValue]);
+                AssertAlgebraicLaw<uint?, bool?>(o, a, [null, 0, 1, uint.MaxValue]);
+                AssertAlgebraicLaw<long?, bool?>(o, a, [null, long.MinValue, -1, 0, 1, long.MaxValue]);
+                AssertAlgebraicLaw<ulong?, bool?>(o, a, [null, 0, 1, ulong.MaxValue]);
+                AssertAlgebraicLaw<float?, bool?>(o, a, [null, 0.0f, 0.1f, 0.3f, 1.0f, float.MinValue, float.MaxValue, float.NaN, float.NegativeInfinity, float.PositiveInfinity]);
+                AssertAlgebraicLaw<double?, bool?>(o, a, [null, 0.0d, 0.1d, 0.3d, 1.0d, double.MinValue, double.MaxValue, double.NaN, double.NegativeInfinity, double.PositiveInfinity]);
             }
         }
 
@@ -1371,8 +1371,8 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             foreach (var t in new[] { typeof(sbyte), typeof(byte), typeof(short), typeof(ushort), typeof(int), typeof(uint), typeof(long), typeof(ulong) })
             {
-                var x = Expression.New(typeof(Nullable<>).MakeGenericType(t).GetConstructor(new[] { t }), Expression.Parameter(t));
-                var y = Expression.New(typeof(Nullable<>).MakeGenericType(t).GetConstructor(new[] { t }), Expression.Parameter(t));
+                var x = Expression.New(typeof(Nullable<>).MakeGenericType(t).GetConstructor([t]), Expression.Parameter(t));
+                var y = Expression.New(typeof(Nullable<>).MakeGenericType(t).GetConstructor([t]), Expression.Parameter(t));
 
                 foreach (var o in opt)
                 {

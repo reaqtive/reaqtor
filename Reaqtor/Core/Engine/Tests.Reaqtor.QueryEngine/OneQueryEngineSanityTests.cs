@@ -954,13 +954,13 @@ namespace Tests.Reaqtor.QueryEngine
                 Assert.IsTrue(keys.Contains(subUri) && keys.Contains(sub2Uri));
 
                 var vals = qe.ReactiveService.Subscriptions.Values.ToList();
-                vals = vals.Where(val => !val.Uri.ToCanonicalString().StartsWith("mgmt://")).ToList();
+                vals = [.. vals.Where(val => !val.Uri.ToCanonicalString().StartsWith("mgmt://"))];
 
                 Assert.AreEqual(state, vals.Single(v => v.Uri == subUri).State);
                 Assert.AreEqual(state2, vals.Single(v => v.Uri == sub2Uri).State);
 
                 var subs = qe.ReactiveService.Subscriptions.ToList();
-                subs = subs.Where(kv => !kv.Key.ToCanonicalString().StartsWith("mgmt://")).ToList();
+                subs = [.. subs.Where(kv => !kv.Key.ToCanonicalString().StartsWith("mgmt://"))];
 
                 Assert.AreEqual(state, subs.Single(s => s.Value.Uri == subUri).Value.State);
                 Assert.AreEqual(state2, subs.Single(s => s.Value.Uri == sub2Uri).Value.State);
@@ -1494,7 +1494,7 @@ namespace Tests.Reaqtor.QueryEngine
                 using (var qe4 = CreateQueryEngine(kvs2))
                 {
                     var handled = false;
-                    qe4.EntityReplayFailed += (object sender, ReactiveEntityReplayFailedEventArgs e) =>
+                    qe4.EntityReplayFailed += (sender, e) =>
                     {
                         if (e.Uri == testId)
                         {
@@ -1567,7 +1567,7 @@ namespace Tests.Reaqtor.QueryEngine
                 using (var qe4 = CreateQueryEngine(kvs))
                 {
                     var handled = false;
-                    qe4.EntityReplayFailed += (object sender, ReactiveEntityReplayFailedEventArgs e) =>
+                    qe4.EntityReplayFailed += (sender, e) =>
                     {
                         if (e.Uri == testId)
                         {
@@ -1693,11 +1693,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 o1.Take(2).Subscribe(v1, new Uri("s:/s1"), null);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1705,12 +1705,12 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
                     ReliableEvent.AcknowledgeRange(-1),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1724,11 +1724,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe2, chkpt1);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
-                });
+                ]);
 
                 var obs2 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe2.Scheduler);
                 obs2.OnNext(42, 17);
@@ -1739,12 +1739,12 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
                     ReliableEvent.AcknowledgeRange(17),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1758,21 +1758,21 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe3, chkpt2);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
-                });
+                ]);
 
                 var obs3 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe3.Scheduler);
                 obs3.OnNext(43, 25);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
                     ReliableEvent.Stop(),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1780,14 +1780,14 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
                     ReliableEvent.Stop(),
                     ReliableEvent.AcknowledgeRange(25),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1801,11 +1801,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe4, chkpt3);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1813,11 +1813,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1831,11 +1831,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe5, chkpt4);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
             }
         }
 
@@ -1867,11 +1867,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 o1.AwaitDispose(l1).Take(2).Subscribe(v1, new Uri("s:/s1"), null);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1879,12 +1879,12 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
                     ReliableEvent.AcknowledgeRange(-1),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1898,11 +1898,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe2, chkpt1);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
-                });
+                ]);
 
                 var obs2 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe2.Scheduler);
                 obs2.OnNext(42, 17);
@@ -1913,12 +1913,12 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(0),
                     ReliableEvent.AcknowledgeRange(17),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1932,22 +1932,22 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe3, chkpt2);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
-                });
+                ]);
 
                 var obs3 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe3.Scheduler);
                 obs3.OnNext(43, 25);
                 LockManager.Wait(l1);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
                     ReliableEvent.Stop(),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1955,14 +1955,14 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Start(18),
                     ReliableEvent.Stop(),
                     ReliableEvent.AcknowledgeRange(25),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -1976,11 +1976,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe4, chkpt3);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -1988,11 +1988,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear state ------------------------------------------------------------
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
 
                 ReliableObservableManager.Clear(relId);
                 Crash();
@@ -2006,11 +2006,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe5, chkpt4);
 
-                AssertActions(new[]
-                {
+                AssertActions(
+                [
                     ReliableEvent.Subscribe(),
                     ReliableEvent.Dispose(),
-                });
+                ]);
             }
         }
 
@@ -2535,14 +2535,14 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 state = Checkpoint(qe);
 
-                artifacts = new List<Uri>[]
-                {
-                    qe.ReactiveService.StreamFactories.Select(artifact => artifact.Key).ToList(),
-                    qe.ReactiveService.Observables.Select(artifact => artifact.Key).ToList(),
-                    qe.ReactiveService.Observers.Select(artifact => artifact.Key).ToList(),
-                    qe.ReactiveService.Streams.Select(artifact => artifact.Key).ToList(),
-                    qe.ReactiveService.Subscriptions.Select(artifact => artifact.Key).ToList(),
-                };
+                artifacts =
+                [
+                    [.. qe.ReactiveService.StreamFactories.Select(artifact => artifact.Key)],
+                    [.. qe.ReactiveService.Observables.Select(artifact => artifact.Key)],
+                    [.. qe.ReactiveService.Observers.Select(artifact => artifact.Key)],
+                    [.. qe.ReactiveService.Streams.Select(artifact => artifact.Key)],
+                    [.. qe.ReactiveService.Subscriptions.Select(artifact => artifact.Key)],
+                ];
 
                 Crash();
             }
@@ -2553,11 +2553,11 @@ namespace Tests.Reaqtor.QueryEngine
 
             var recoveredArtifacts = new List<Uri>[]
             {
-                newQe.ReactiveService.StreamFactories.Select(artifact => artifact.Key).ToList(),
-                newQe.ReactiveService.Observables.Select(artifact => artifact.Key).ToList(),
-                newQe.ReactiveService.Observers.Select(artifact => artifact.Key).ToList(),
-                newQe.ReactiveService.Streams.Select(artifact => artifact.Key).ToList(),
-                newQe.ReactiveService.Subscriptions.Select(artifact => artifact.Key).ToList(),
+                [.. newQe.ReactiveService.StreamFactories.Select(artifact => artifact.Key)],
+                [.. newQe.ReactiveService.Observables.Select(artifact => artifact.Key)],
+                [.. newQe.ReactiveService.Observers.Select(artifact => artifact.Key)],
+                [.. newQe.ReactiveService.Streams.Select(artifact => artifact.Key)],
+                [.. newQe.ReactiveService.Subscriptions.Select(artifact => artifact.Key)],
             };
 
             for (var i = 0; i < artifacts.Length; i++)
@@ -2628,7 +2628,7 @@ namespace Tests.Reaqtor.QueryEngine
 
         private class SimpleSubject : IMultiSubject
         {
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
 
             private object _singleton;
 
@@ -2689,8 +2689,8 @@ namespace Tests.Reaqtor.QueryEngine
 
         private static class ReliableObservableManager
         {
-            public static readonly Dictionary<string, List<ReliableEvent>> Actions = new();
-            public static readonly Dictionary<string, object> Observers = new();
+            public static readonly Dictionary<string, List<ReliableEvent>> Actions = [];
+            public static readonly Dictionary<string, object> Observers = [];
 
             public static IReliableObserver<T> GetObserver<T>(string s)
             {
@@ -2787,7 +2787,7 @@ namespace Tests.Reaqtor.QueryEngine
             public MyReliableObservable(string s)
             {
                 _s = s;
-                _actions = new List<ReliableEvent>();
+                _actions = [];
 
                 ReliableObservableManager.Actions.Add(s, _actions);
             }
@@ -2800,14 +2800,9 @@ namespace Tests.Reaqtor.QueryEngine
                 return new Sub(this);
             }
 
-            private sealed class Sub : ReliableSubscriptionBase
+            private sealed class Sub(OneQueryEngineSanityTests.MyReliableObservable<T> parent) : ReliableSubscriptionBase
             {
-                private readonly MyReliableObservable<T> _parent;
-
-                public Sub(MyReliableObservable<T> parent)
-                {
-                    _parent = parent;
-                }
+                private readonly MyReliableObservable<T> _parent = parent;
 
                 public override Uri ResubscribeUri => throw new NotImplementedException();
 

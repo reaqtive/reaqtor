@@ -8,25 +8,18 @@ using System.Globalization;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class SequenceEqual<TSource> : SubscribableBase<bool>
+    internal sealed class SequenceEqual<TSource>(ISubscribable<TSource> left, ISubscribable<TSource> right, IEqualityComparer<TSource> comparer) : SubscribableBase<bool>
     {
-        private readonly ISubscribable<TSource> _left;
-        private readonly ISubscribable<TSource> _right;
-        private readonly IEqualityComparer<TSource> _comparer;
-
-        public SequenceEqual(ISubscribable<TSource> left, ISubscribable<TSource> right, IEqualityComparer<TSource> comparer)
-        {
-            _left = left;
-            _right = right;
-            _comparer = comparer;
-        }
+        private readonly ISubscribable<TSource> _left = left;
+        private readonly ISubscribable<TSource> _right = right;
+        private readonly IEqualityComparer<TSource> _comparer = comparer;
 
         protected override ISubscription SubscribeCore(IObserver<bool> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulOperator<SequenceEqual<TSource>, bool>
+        private sealed class _(SequenceEqual<TSource> parent, IObserver<bool> observer) : StatefulOperator<SequenceEqual<TSource>, bool>(parent, observer)
         {
             private const string MAXQUEUESIZESETTING = "rx://operators/sequenceEqual/settings/maxQueueSize";
             private int _maxQueueSize;
@@ -34,11 +27,6 @@ namespace Reaqtive.Operators
             private readonly object _gate = new();
             private O _l;
             private O _r;
-
-            public _(SequenceEqual<TSource> parent, IObserver<bool> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:SequenceEqual";
 
@@ -90,17 +78,12 @@ namespace Reaqtive.Operators
                 _r.SaveState(writer);
             }
 
-            private abstract class O : IObserver<TSource>
+            private abstract class O(SequenceEqual<TSource>._ parent) : IObserver<TSource>
             {
-                protected readonly _ _parent;
+                protected readonly _ _parent = parent;
 
                 private Queue<TSource> _queue;
                 private bool _done;
-
-                public O(_ parent)
-                {
-                    _parent = parent;
-                }
 
                 public ISubscription Subscription { get; set; }
                 public O Other { get; set; }
@@ -232,13 +215,8 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private class L : O
+            private class L(SequenceEqual<TSource>._ parent) : O(parent)
             {
-                public L(_ parent)
-                    : base(parent)
-                {
-                }
-
                 protected override bool Equal(TSource value, TSource other)
                 {
                     // Compat with Rx behavior: order is always left, right
@@ -246,13 +224,8 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private class R : O
+            private class R(SequenceEqual<TSource>._ parent) : O(parent)
             {
-                public R(_ parent)
-                    : base(parent)
-                {
-                }
-
                 protected override bool Equal(TSource value, TSource other)
                 {
                     // Compat with Rx behavior: order is always left, right

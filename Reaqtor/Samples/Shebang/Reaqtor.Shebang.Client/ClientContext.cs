@@ -34,11 +34,8 @@ namespace Reaqtor.Shebang.Client
     // The most commonly mapped artifact types are likely observables and observers.
     //
 
-    public partial class ClientContext : ReactiveClientContext
+    public partial class ClientContext(IReactiveServiceProvider provider) : ReactiveClientContext(new ExpressionServices(), provider)
     {
-        public ClientContext(IReactiveServiceProvider provider) : base(new ExpressionServices(), provider)
-        {
-        }
 
         // NB: SimpleTimer shows how to build a custom "source" observable. It's named SimpleTimer to avoid conflict with the built-in Timer.
 

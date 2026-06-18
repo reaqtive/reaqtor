@@ -9,18 +9,16 @@ using Reaqtive;
 
 namespace Reaqtor.Reactive
 {
-    internal sealed class MultiSubjectObserverProxy<T> : Observer<T>
+    internal sealed class MultiSubjectObserverProxy<T>(Uri uri) : Observer<T>
     {
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
-        private readonly StableCompositeSubscription _inputs = new();
+        private readonly StableCompositeSubscription _inputs = [];
 #pragma warning restore CA2213
-        private readonly Uri _uri;
+        private readonly Uri _uri = uri;
 
         private IObserver<T> _observer;
         private ISubscription _observerAsSubscription;
         private IOperator _observerAsOperator;
-
-        public MultiSubjectObserverProxy(Uri uri) => _uri = uri;
 
         #region IOperator
 

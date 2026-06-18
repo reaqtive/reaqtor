@@ -31,31 +31,20 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
     #endregion
 
-    internal class SerializationState
+    internal class SerializationState(Version version)
     {
         #region Fields
 
-        private readonly SerializationDomain _domain;
-        private readonly Stack<Dictionary<ParameterExpression, int>> _params;
-        private readonly Dictionary<ParameterExpression, int> _globals;
-        private readonly List<ParameterExpression> _globalsDef;
-        private readonly Dictionary<LabelTarget, int> _labelTargets;
-        private readonly List<LabelTarget> _labelTargetsDef;
+        private readonly SerializationDomain _domain = new SerializationDomain(version);
+        private readonly Stack<Dictionary<ParameterExpression, int>> _params = new Stack<Dictionary<ParameterExpression, int>>();
+        private readonly Dictionary<ParameterExpression, int> _globals = [];
+        private readonly List<ParameterExpression> _globalsDef = [];
+        private readonly Dictionary<LabelTarget, int> _labelTargets = [];
+        private readonly List<LabelTarget> _labelTargetsDef = [];
         private static readonly Json.Expression s_parameterDiscriminator = Json.Expression.String("$");
 
         #endregion
-
         #region Constructors
-
-        public SerializationState(Version version)
-        {
-            _domain = new SerializationDomain(version);
-            _params = new Stack<Dictionary<ParameterExpression, int>>();
-            _globals = new Dictionary<ParameterExpression, int>();
-            _globalsDef = new List<ParameterExpression>();
-            _labelTargets = new Dictionary<LabelTarget, int>();
-            _labelTargetsDef = new List<LabelTarget>();
-        }
 
         #endregion
 

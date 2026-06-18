@@ -9,13 +9,12 @@ using Reaqtor.Reliable.Client;
 
 namespace Reaqtor.Reliable.Expressions
 {
-    public abstract class ReliableQbserverBase<T> : ReliableReactiveObserverBase<T>, IReliableQbserver<T>
+    /// <summary>
+    /// Creates a new observer represented by an expression tree, using the specified associated query provider.
+    /// </summary>
+    /// <param name="provider">Query provider associated with the observer.</param>
+    public abstract class ReliableQbserverBase<T>(IReliableQueryProvider provider) : ReliableReactiveObserverBase<T>, IReliableQbserver<T>
     {
-        /// <summary>
-        /// Creates a new observer represented by an expression tree, using the specified associated query provider.
-        /// </summary>
-        /// <param name="provider">Query provider associated with the observer.</param>
-        protected ReliableQbserverBase(IReliableQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the type of the data received by the observer.
@@ -25,7 +24,7 @@ namespace Reaqtor.Reliable.Expressions
         /// <summary>
         /// Gets the query provider that is associated with the observer.
         /// </summary>
-        public IReliableQueryProvider Provider { get; }
+        public IReliableQueryProvider Provider { get; } = provider;
 
         /// <summary>
         /// Gets the expression tree representing the observer.

@@ -29,13 +29,8 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<Contains<TSource>, bool>, IObserver<TSource>
+        private sealed class _(Contains<TSource> parent, IObserver<bool> observer) : StatefulUnaryOperator<Contains<TSource>, bool>(parent, observer), IObserver<TSource>
         {
-            public _(Contains<TSource> parent, IObserver<bool> observer)
-                : base(parent, observer)
-            {
-            }
-
             public override string Name => "rc:Contains";
 
             public override Version Version => Versioning.v1;

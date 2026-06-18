@@ -12,13 +12,8 @@ using Reaqtor.Expressions;
 
 namespace Reaqtor.QueryEngine
 {
-    internal sealed class EntityWriter : WriterBase
+    internal sealed class EntityWriter(Stream stream, ISerializationPolicy policy) : WriterBase(stream, policy)
     {
-        public EntityWriter(Stream stream, ISerializationPolicy policy)
-            : base(stream, policy)
-        {
-        }
-
         public void Save(ReactiveEntity entity)
         {
             SerializeExpression(entity.Expression);

@@ -10,13 +10,8 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Represents an arbitrary definition in a QueryEngineRegistry.
     /// </summary>
-    internal class OtherDefinitionEntity : DefinitionEntity
+    internal class OtherDefinitionEntity(Uri uri, Expression expression, object state) : DefinitionEntity(uri, expression, state)
     {
-        public OtherDefinitionEntity(Uri uri, Expression expression, object state)
-            : base(uri, expression, state)
-        {
-        }
-
         public override ReactiveEntityKind Kind => ReactiveEntityKind.Other;
 
         public static OtherDefinitionEntity CreateInvalidInstance(Uri uri) => new InvalidEntity(uri);

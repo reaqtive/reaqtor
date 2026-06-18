@@ -25,12 +25,12 @@ namespace Reaqtor.Hosting.Shared.Tools
         /// </summary>
         public ReactiveEntities()
         {
-            Add(ReactiveEntityType.Observable, new ReactiveEntitySet());
-            Add(ReactiveEntityType.Observer, new ReactiveEntitySet());
-            Add(ReactiveEntityType.Stream, new ReactiveEntitySet());
-            Add(ReactiveEntityType.StreamFactory, new ReactiveEntitySet());
-            Add(ReactiveEntityType.Subscription, new ReactiveEntitySet());
-            Add(ReactiveEntityType.SubscriptionFactory, new ReactiveEntitySet());
+            Add(ReactiveEntityType.Observable, []);
+            Add(ReactiveEntityType.Observer, []);
+            Add(ReactiveEntityType.Stream, []);
+            Add(ReactiveEntityType.StreamFactory, []);
+            Add(ReactiveEntityType.Subscription, []);
+            Add(ReactiveEntityType.SubscriptionFactory, []);
         }
 
         /// <summary>

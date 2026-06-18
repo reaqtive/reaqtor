@@ -74,14 +74,9 @@ namespace Reaqtor.QueryEngine
             /// <summary>
             /// Mitigation that removes an entity that failed to load.
             /// </summary>
-            private class RemoveMitigator : ReactiveEntityRecoveryFailureMitigator
+            private class RemoveMitigator(CheckpointingQueryEngine.CoreReactiveEngine parent) : ReactiveEntityRecoveryFailureMitigator
             {
-                private readonly CoreReactiveEngine _parent;
-
-                public RemoveMitigator(CoreReactiveEngine parent)
-                {
-                    _parent = parent;
-                }
+                private readonly CoreReactiveEngine _parent = parent;
 
                 protected override bool OnRemove(ReactiveEntity entity)
                 {
@@ -101,15 +96,9 @@ namespace Reaqtor.QueryEngine
             /// <summary>
             /// Mitigation that supports to regenerate an entity that failed to load, e.g. if its state is corrupt.
             /// </summary>
-            private sealed class FullMitigator : RemoveMitigator
+            private sealed class FullMitigator(Action<ReactiveEntity> onRegenerate, CheckpointingQueryEngine.CoreReactiveEngine engine) : RemoveMitigator(engine)
             {
-                private readonly Action<ReactiveEntity> _onRegenerate;
-
-                public FullMitigator(Action<ReactiveEntity> onRegenerate, CoreReactiveEngine engine)
-                    : base(engine)
-                {
-                    _onRegenerate = onRegenerate;
-                }
+                private readonly Action<ReactiveEntity> _onRegenerate = onRegenerate;
 
                 protected override bool OnRegenerate(ReactiveEntity entity)
                 {
@@ -124,15 +113,9 @@ namespace Reaqtor.QueryEngine
             /// is volatile (not persisted upon checkpointing) making this mitigation useful for (manual) fixing of failed
             /// entities in the underlying store.
             /// </summary>
-            private sealed class PlaceholderMitigator : RemoveMitigator
+            private sealed class PlaceholderMitigator(CheckpointingQueryEngine.CoreReactiveEngine parent) : RemoveMitigator(parent)
             {
-                private readonly CoreReactiveEngine _parent;
-
-                public PlaceholderMitigator(CoreReactiveEngine parent)
-                    : base(parent)
-                {
-                    _parent = parent;
-                }
+                private readonly CoreReactiveEngine _parent = parent;
 
                 protected override void OnAll(ReactiveEntity entity)
                 {

@@ -14,15 +14,9 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal class QubscriptionFactory<TArg1, TArg2> : ReactiveQubscriptionFactoryBase<TArg1, TArg2>
+    internal class QubscriptionFactory<TArg1, TArg2>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state)
         {
@@ -30,15 +24,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, object state)
         {
@@ -46,15 +34,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, object state)
         {
@@ -62,15 +44,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, object state)
         {
@@ -78,15 +54,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, object state)
         {
@@ -94,15 +64,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, object state)
         {
@@ -110,15 +74,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, object state)
         {
@@ -126,15 +84,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, object state)
         {
@@ -142,15 +94,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, object state)
         {
@@ -158,15 +104,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, object state)
         {
@@ -174,15 +114,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, object state)
         {
@@ -190,15 +124,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, object state)
         {
@@ -206,15 +134,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, object state)
         {
@@ -222,15 +144,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>
+    internal class QubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, TArg15 arg15, object state)
         {

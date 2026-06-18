@@ -13,15 +13,9 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.QueryEngine
 {
-    internal sealed class EntityReader : ReaderBase
+    internal sealed class EntityReader(Stream stream, IQueryEngineRegistry registry, ISerializationPolicy policy) : ReaderBase(stream, policy)
     {
-        private readonly IQueryEngineRegistry _registry;
-
-        public EntityReader(Stream stream, IQueryEngineRegistry registry, ISerializationPolicy policy)
-            : base(stream, policy)
-        {
-            _registry = registry;
-        }
+        private readonly IQueryEngineRegistry _registry = registry;
 
         public ReactiveEntity Load(ReactiveEntityKind kind)
         {
@@ -128,8 +122,8 @@ namespace Reaqtor.QueryEngine
 
         private sealed class TupleTypeEnumerator
         {
-            private static readonly Type[] _tupleTypes = new[]
-            {
+            private static readonly Type[] _tupleTypes =
+            [
                 typeof(Tuple<>),
                 typeof(Tuple<,>),
                 typeof(Tuple<,,>),
@@ -138,7 +132,7 @@ namespace Reaqtor.QueryEngine
                 typeof(Tuple<,,,,,>),
                 typeof(Tuple<,,,,,,>),
                 typeof(Tuple<,,,,,,,>),
-            };
+            ];
 
             public static bool TryEnumerate(Type type, out Type[] innerTypes)
             {

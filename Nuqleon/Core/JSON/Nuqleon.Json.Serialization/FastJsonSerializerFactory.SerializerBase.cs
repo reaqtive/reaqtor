@@ -19,22 +19,16 @@ namespace Nuqleon.Json.Serialization
         /// Base class for JSON serializers for objects of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of the objects to serialize.</typeparam>
-        private abstract class SerializerBase<T> : IFastJsonSerializer<T>
+        /// <remarks>
+        /// Creates a new serializer given the specified emitter implementations.
+        /// </remarks>
+        /// <param name="emitterString">The emitter to use to serialize objects to string outputs.</param>
+        /// <param name="emitterWriter">The emitter to use to serialize objects to text writers.</param>
+        private abstract class SerializerBase<T>(EmitStringAction<T> emitterString, EmitWriterAction<T> emitterWriter) : IFastJsonSerializer<T>
         {
 #if !NO_IO
-            protected readonly EmitStringAction<T> _emitterString;
-            protected readonly EmitWriterAction<T> _emitterWriter;
-
-            /// <summary>
-            /// Creates a new serializer given the specified emitter implementations.
-            /// </summary>
-            /// <param name="emitterString">The emitter to use to serialize objects to string outputs.</param>
-            /// <param name="emitterWriter">The emitter to use to serialize objects to text writers.</param>
-            public SerializerBase(EmitStringAction<T> emitterString, EmitWriterAction<T> emitterWriter)
-            {
-                _emitterString = emitterString;
-                _emitterWriter = emitterWriter;
-            }
+            protected readonly EmitStringAction<T> _emitterString = emitterString;
+            protected readonly EmitWriterAction<T> _emitterWriter = emitterWriter;
 #else
             protected readonly EmitStringAction<T> _emitterString;
 

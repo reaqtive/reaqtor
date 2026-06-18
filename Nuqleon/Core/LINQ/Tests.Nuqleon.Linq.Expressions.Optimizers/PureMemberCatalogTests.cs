@@ -200,7 +200,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
                 foreach (var values in valuess)
                 {
-                    var expected = Eval(method, values[0], values.Skip(1).ToArray());
+                    var expected = Eval(method, values[0], [.. values.Skip(1)]);
 
                     var instExpr = Expression.Constant(values[0], instanceType);
                     var argExprs = parameters.Zip(values.Skip(1), (p, v) => Expression.Constant(v, p.ParameterType)).ToArray();
@@ -247,7 +247,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             if (getMethod.IsStatic)
             {
-                var expected = Eval(property, instance: null, Array.Empty<object>());
+                var expected = Eval(property, instance: null, []);
 
                 var propertyExpr = Expression.Property(expression: null, property);
 
@@ -266,7 +266,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
                     foreach (var instance in GetValues(instanceType))
                     {
-                        var expected = Eval(property, instance, Array.Empty<object>());
+                        var expected = Eval(property, instance, []);
 
                         var instanceExpr = Expression.Constant(instance, instanceType);
                         var propertyExpr = Expression.Property(instanceExpr, property);
@@ -288,7 +288,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             foreach (var values in valuess)
             {
-                var expected = Eval(property, values[0], values.Skip(1).ToArray());
+                var expected = Eval(property, values[0], [.. values.Skip(1)]);
 
                 var instExpr = Expression.Constant(values[0], instanceType);
                 var argExprs = parameters.Zip(values.Skip(1), (p, v) => Expression.Constant(v, p.ParameterType)).ToArray();
@@ -414,7 +414,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
         private static IEnumerable<object[]> GetValues(params Type[] types)
         {
-            var res = (IEnumerable<IEnumerable<object>>)new[] { Array.Empty<object>() };
+            var res = (IEnumerable<IEnumerable<object>>)[Array.Empty<object>()];
 
             foreach (var type in types)
             {
@@ -451,7 +451,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
         private static readonly MethodInfo s_castArray = ((MethodInfo)ReflectionHelpers.InfoOf(() => CastArray<object>(null))).GetGenericMethodDefinition();
 
-        private static T[] CastArray<T>(object[] array) => array.Cast<T>().ToArray();
+        private static T[] CastArray<T>(object[] array) => [.. array.Cast<T>()];
 
         private static IEnumerable<T> Sample<T>(IEnumerable<T> values)
         {

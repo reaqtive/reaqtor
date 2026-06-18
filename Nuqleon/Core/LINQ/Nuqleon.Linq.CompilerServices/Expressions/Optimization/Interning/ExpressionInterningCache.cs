@@ -20,11 +20,16 @@ namespace System.Linq.Expressions
     /// <summary>
     /// A concurrent cache for LINQ expression trees.
     /// </summary>
-    public class ExpressionInterningCache : IExpressionInterningCache, IClearable
+    /// <remarks>
+    /// Instantiates a concurrent cache for LINQ expression trees using the
+    /// given expression equality comparison strategy.
+    /// </remarks>
+    /// <param name="comparatorFactory">A factory to generate expression equality comparers.</param>
+    public class ExpressionInterningCache(Func<ExpressionEqualityComparator> comparatorFactory) : IExpressionInterningCache, IClearable
     {
         private readonly ConcurrentDictionary<HashedNode, ITree<HashedNode>> _nodes = new();
-        private readonly ExpressionToHashedExpressionTreeConverter _converter;
-        private readonly Func<ExpressionEqualityComparator> _comparatorFactory;
+        private readonly ExpressionToHashedExpressionTreeConverter _converter = new ExpressionToHashedExpressionTreeConverter(comparatorFactory);
+        private readonly Func<ExpressionEqualityComparator> _comparatorFactory = comparatorFactory;
 
         /// <summary>
         /// Instantiates a concurrent cache for LINQ expression trees using the
@@ -33,17 +38,6 @@ namespace System.Linq.Expressions
         public ExpressionInterningCache()
             : this(() => new ExpressionEqualityComparator())
         {
-        }
-
-        /// <summary>
-        /// Instantiates a concurrent cache for LINQ expression trees using the
-        /// given expression equality comparison strategy.
-        /// </summary>
-        /// <param name="comparatorFactory">A factory to generate expression equality comparers.</param>
-        public ExpressionInterningCache(Func<ExpressionEqualityComparator> comparatorFactory)
-        {
-            _converter = new ExpressionToHashedExpressionTreeConverter(comparatorFactory);
-            _comparatorFactory = comparatorFactory;
         }
 
         /// <summary>
@@ -173,11 +167,9 @@ namespace System.Linq.Expressions
 
         private static object Update(object oldExpr, object[] newChildren) => new Subst(newChildren).VisitObject(oldExpr);
 
-        private sealed class Subst : DynamicExpressionVisitor
+        private sealed class Subst(object[] newChildren) : DynamicExpressionVisitor
         {
-            private readonly object[] _newChildren;
-
-            public Subst(object[] newChildren) => _newChildren = newChildren;
+            private readonly object[] _newChildren = newChildren;
 
             public object VisitObject(object o)
             {

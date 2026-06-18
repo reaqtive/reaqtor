@@ -245,7 +245,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var j = i;
 
-                res[j] = new List<int>();
+                res[j] = [];
                 done[j] = false;
 
                 var iv = Observer.Create<int>(
@@ -584,23 +584,17 @@ namespace Tests.Reaqtor.QueryEngine
 
         private class MiniService : IReactive
         {
-            public readonly HashSet<Uri> DeletedStreams = new();
+            public readonly HashSet<Uri> DeletedStreams = [];
 
             public IReactiveQubject<TInput, TOutput> GetStream<TInput, TOutput>(Uri uri)
             {
                 return new Qubject<TInput, TOutput>(this, uri);
             }
 
-            private sealed class Qubject<TInput, TOutput> : IReactiveQubject<TInput, TOutput>
+            private sealed class Qubject<TInput, TOutput>(InnerSubjectTests.MiniService parent, Uri uri) : IReactiveQubject<TInput, TOutput>
             {
-                private readonly MiniService _parent;
-                private readonly Uri _uri;
-
-                public Qubject(MiniService parent, Uri uri)
-                {
-                    _parent = parent;
-                    _uri = uri;
-                }
+                private readonly MiniService _parent = parent;
+                private readonly Uri _uri = uri;
 
                 public void Dispose()
                 {

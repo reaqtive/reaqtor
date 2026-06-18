@@ -49,7 +49,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void InfoOf_MethodCall_MethodInfo2()
         {
-            Assert.AreSame(typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), ReflectionHelpers.InfoOf((string s) => Console.WriteLine(s)));
+            Assert.AreSame(typeof(Console).GetMethod("WriteLine", [typeof(string)]), ReflectionHelpers.InfoOf((string s) => Console.WriteLine(s)));
         }
 
         [TestMethod]
@@ -82,7 +82,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void InfoOf_New_ConstructorInfo()
         {
-            Assert.AreSame(typeof(Exception).GetConstructor(new[] { typeof(string) }), ReflectionHelpers.InfoOf((string s) => new Exception(s)));
+            Assert.AreSame(typeof(Exception).GetConstructor([typeof(string)]), ReflectionHelpers.InfoOf((string s) => new Exception(s)));
         }
     }
 }

@@ -14,7 +14,7 @@ namespace Reaqtive.TestingFramework
 
         public LoggingPhysicalTestScheduler()
         {
-            _scheduledTimes = new List<long>();
+            _scheduledTimes = [];
         }
 
         public IEnumerable<long> ScheduledTimes => _scheduledTimes;

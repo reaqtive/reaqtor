@@ -46,7 +46,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         public DataTypeToDeserializer()
         {
-            _visited = new HashSet<Type>();
+            _visited = [];
         }
 
         protected override LambdaExpression MakeArray(ArrayDataType type, LambdaExpression elementType)
@@ -118,7 +118,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var tcParameter = Expression.Parameter(typeof(byte), "tc");
 
             var listCtor = type.UnderlyingType.GetConstructor(ReflectionConstants.ListCtorArgs);
-            var listAdd = type.UnderlyingType.GetMethod("Add", new[] { type.ElementType.UnderlyingType } /* pool? */);
+            var listAdd = type.UnderlyingType.GetMethod("Add", [type.ElementType.UnderlyingType] /* pool? */);
 
             var serializerParameter = default(ParameterExpression);
             var innerInvoke = MakeInnerDeserialize(elementType, streamParameter, ref serializerParameter);

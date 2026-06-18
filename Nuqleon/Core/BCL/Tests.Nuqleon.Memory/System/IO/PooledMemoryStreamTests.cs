@@ -22,7 +22,7 @@ namespace Tests
 #if !NET472_OR_GREATER
 #pragma warning disable IDE0230 // Use UTF-8 string literal. Not actually a UTF-8 string.
 #endif
-        private static readonly byte[] bytes = new byte[] { 0x42, 0xDE, 0xAD, 0x43 };
+        private static readonly byte[] bytes = [0x42, 0xDE, 0xAD, 0x43];
 #if !NET472_OR_GREATER
 #pragma warning restore IDE0230
 #endif

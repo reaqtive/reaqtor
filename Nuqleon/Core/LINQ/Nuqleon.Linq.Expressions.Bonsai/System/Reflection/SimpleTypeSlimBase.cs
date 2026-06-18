@@ -14,28 +14,23 @@ namespace System.Reflection
     /// <summary>
     /// Lightweight representation of a simple type.
     /// </summary>
-    public abstract class SimpleTypeSlimBase : TypeSlim
+    /// <remarks>
+    /// Creates a new generic type definition representation object.
+    /// </remarks>
+    /// <param name="assembly">Assembly defining the type.</param>
+    /// <param name="name">Name of the type.</param>
+    public abstract class SimpleTypeSlimBase(AssemblySlim assembly, string name) : TypeSlim
     {
-        /// <summary>
-        /// Creates a new generic type definition representation object.
-        /// </summary>
-        /// <param name="assembly">Assembly defining the type.</param>
-        /// <param name="name">Name of the type.</param>
-        protected SimpleTypeSlimBase(AssemblySlim assembly, string name)
-        {
-            Assembly = assembly;
-            Name = name;
-        }
 
         /// <summary>
         /// Gets the assembly defining the type.
         /// </summary>
-        public AssemblySlim Assembly { get; }
+        public AssemblySlim Assembly { get; } = assembly;
 
         /// <summary>
         /// Gets the name of the type.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; } = name;
 
         /// <summary>
         /// The equals method for comparing against other class instances.

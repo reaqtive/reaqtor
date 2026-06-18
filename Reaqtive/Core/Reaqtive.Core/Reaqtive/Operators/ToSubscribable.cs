@@ -36,16 +36,12 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _ : ContextSwitchOperator<ToSubscribable<TSource>, TSource>
+        private sealed class _(ToSubscribable<TSource> parent, IObserver<TSource> observer) : ContextSwitchOperator<ToSubscribable<TSource>, TSource>(parent, observer)
         {
 #pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private SingleAssignmentSubscription subscription;
-#pragma warning restore CA2213
 
-            public _(ToSubscribable<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
+#pragma warning restore CA2213
 
             public override string Name => "rc:ToSubscribable";
 

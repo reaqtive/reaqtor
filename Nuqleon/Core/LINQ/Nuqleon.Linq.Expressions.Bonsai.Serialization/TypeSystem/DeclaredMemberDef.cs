@@ -11,20 +11,16 @@
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal abstract class DeclaredMemberDef : MemberDef
+    internal abstract class DeclaredMemberDef(TypeRef declaringType) : MemberDef
     {
-        #region Constructors
 
-        public DeclaredMemberDef(TypeRef declaringType)
-        {
-            DeclaringType = declaringType;
-        }
+        #region Constructors
 
         #endregion
 
         #region Properties
 
-        public TypeRef DeclaringType { get; }
+        public TypeRef DeclaringType { get; } = declaringType;
 
         #endregion
     }

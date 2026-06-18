@@ -31,7 +31,7 @@ namespace Tests
             var pbr = new FastJsonSerializerFactory.EmitterWriterBuilder(DefaultNameProvider.Instance);
             var bdr = typeof(FastJsonSerializerFactory.EmitterWriterBuilder).GetMethod("Build", BindingFlags.Public | BindingFlags.Instance);
 #endif
-            var create = typeof(FastJsonSerializerFactory).GetMethod("CreateSerializer", new[] { typeof(INameProvider), typeof(FastJsonConcurrencyMode) });
+            var create = typeof(FastJsonSerializerFactory).GetMethod("CreateSerializer", [typeof(INameProvider), typeof(FastJsonConcurrencyMode)]);
 
             foreach (var type in new[] { typeof(E), typeof(E?), typeof(C), typeof(int[,]), typeof(D), typeof(I), typeof(G<int>), typeof(IDictionary<int, int>) })
             {
@@ -613,14 +613,9 @@ namespace Tests
         }
 
         [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-        private sealed class IdentifierAttribute : Attribute
+        private sealed class IdentifierAttribute(string id) : Attribute
         {
-            public IdentifierAttribute(string id)
-            {
-                Id = id;
-            }
-
-            public string Id;
+            public string Id = id;
         }
 
         private sealed class NullableDictionary<K, V> : Dictionary<K, V>, IEnumerable<KeyValuePair<K, V>>

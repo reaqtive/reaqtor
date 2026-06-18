@@ -37,54 +37,42 @@ namespace Reaqtive.Storage
         ///   <item><c>set.Remove(v)</c> results in <c>Delete($"items/{getKeyOf(v)}")</c></item>
         /// </list>
         /// </remarks>
-        private abstract partial class Set : Heap
+        /// <remarks>
+        /// Creates a new entity representing a set.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private abstract partial class Set(PersistedObjectSpace parent) : Heap(parent)
         {
-            /// <summary>
-            /// Creates a new entity representing a set.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            public Set(PersistedObjectSpace parent)
-                : base(parent)
-            {
-            }
 
             /// <summary>
             /// Base class for statically typed wrappers for persisted sets with element type <typeparamref name="T"/>.
             /// </summary>
             /// <typeparam name="T">The type of the elements stored in the set.</typeparam>
             /// <typeparam name="TSet">The type of the in-memory set, inheriting from <see cref="ISet{T}"/>.</typeparam>
-            protected abstract class WrapperBase<T, TSet> : PersistedBase, IHeapPersistence, ISet<T>
+            /// <remarks>
+            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+            /// </remarks>
+            /// <param name="id">The identifier of the set.</param>
+            /// <param name="storage">The storage entity representing the set.</param>
+            /// <param name="set">The initial set. This could either be the result of deserializing persisted state, or an empty set for a new entity.</param>
+            /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="set"/>.</param>
+            protected abstract class WrapperBase<T, TSet>(string id, PersistedObjectSpace.Set storage, TSet set, Map<T, long> storageKeys) : PersistedBase(id), IHeapPersistence, ISet<T>
                 where TSet : ISet<T>
             {
                 /// <summary>
                 /// The storage entity being wrapped.
                 /// </summary>
-                protected readonly Set _storage;
+                protected readonly Set _storage = storage;
 
                 /// <summary>
                 /// The stored set, always reflecting the latest in-memory state.
                 /// </summary>
-                protected readonly TSet _set;
+                protected readonly TSet _set = set;
 
                 /// <summary>
                 /// The bi-directional map used to associate the storage key used for each element in <see cref="_set"/>.
                 /// </summary>
-                protected readonly Map<T, long> _storageKeys;
-
-                /// <summary>
-                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-                /// </summary>
-                /// <param name="id">The identifier of the set.</param>
-                /// <param name="storage">The storage entity representing the set.</param>
-                /// <param name="set">The initial set. This could either be the result of deserializing persisted state, or an empty set for a new entity.</param>
-                /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="set"/>.</param>
-                public WrapperBase(string id, Set storage, TSet set, Map<T, long> storageKeys)
-                    : base(id)
-                {
-                    _storage = storage;
-                    _set = set;
-                    _storageKeys = storageKeys;
-                }
+                protected readonly Map<T, long> _storageKeys = storageKeys;
 
                 /// <summary>
                 /// Gets the number of elements in the set.

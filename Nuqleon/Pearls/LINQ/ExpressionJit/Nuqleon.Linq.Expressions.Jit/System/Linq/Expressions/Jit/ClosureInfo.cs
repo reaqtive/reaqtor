@@ -16,28 +16,22 @@ namespace System.Linq.Expressions.Jit
     /// <summary>
     /// A closure information object providing facilities to emit variable storage operations for hoisted locals.
     /// </summary>
-    internal sealed class ClosureInfo
+    /// <remarks>
+    /// Creates a new closure information object.
+    /// </remarks>
+    /// <param name="closureType">The closure type providing hoisted variable storage.</param>
+    /// <param name="fieldMap">The closure type providing hoisted variable storage.</param>
+    internal sealed class ClosureInfo(Type closureType, Dictionary<ParameterExpression, ClosureFieldInfo> fieldMap)
     {
         /// <summary>
         /// The closure type providing hoisted variable storage.
         /// </summary>
-        public readonly Type ClosureType;
+        public readonly Type ClosureType = closureType;
 
         /// <summary>
         /// The closure type providing hoisted variable storage.
         /// </summary>
-        public readonly Dictionary<ParameterExpression, ClosureFieldInfo> FieldMap;
-
-        /// <summary>
-        /// Creates a new closure information object.
-        /// </summary>
-        /// <param name="closureType">The closure type providing hoisted variable storage.</param>
-        /// <param name="fieldMap">The closure type providing hoisted variable storage.</param>
-        public ClosureInfo(Type closureType, Dictionary<ParameterExpression, ClosureFieldInfo> fieldMap)
-        {
-            ClosureType = closureType;
-            FieldMap = fieldMap;
-        }
+        public readonly Dictionary<ParameterExpression, ClosureFieldInfo> FieldMap = fieldMap;
 
         /// <summary>
         /// Gets an expression tree to access the specified hoisted variable from the specified closure.
@@ -103,7 +97,7 @@ namespace System.Linq.Expressions.Jit
             //
             if ((field.Kind & StorageKind.Boxed) != 0)
             {
-                rhs = Expression.New(typeof(StrongBox<>).MakeGenericType(variable.Type).GetConstructor(new[] { variable.Type }), value);
+                rhs = Expression.New(typeof(StrongBox<>).MakeGenericType(variable.Type).GetConstructor([variable.Type]), value);
             }
 
             //

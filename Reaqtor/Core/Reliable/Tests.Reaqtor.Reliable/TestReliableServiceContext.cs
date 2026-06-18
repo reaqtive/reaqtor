@@ -17,13 +17,8 @@ using Reaqtor.Reliable.Service;
 
 namespace Tests.Reaqtor.Reliable
 {
-    internal class TestReliableServiceContext : ReliableReactiveServiceContext
+    internal class TestReliableServiceContext(IReliableReactiveEngineProvider serviceProvider) : ReliableReactiveServiceContext(new TestExpressionServices(), serviceProvider)
     {
-        public TestReliableServiceContext(IReliableReactiveEngineProvider serviceProvider)
-            : base(new TestExpressionServices(), serviceProvider)
-        {
-        }
-
         private sealed class TestExpressionServices : ReactiveExpressionServices
         {
             public TestExpressionServices()

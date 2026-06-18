@@ -26,15 +26,13 @@ namespace System.Memory
         /// <summary>
         /// Implementation of a factory for weak memoization caches with an LRU cache eviction strategy.
         /// </summary>
-        private sealed class LruImpl : IWeakMemoizationCacheFactory
+        /// <remarks>
+        /// Creates a new LRU cache with the specified maximum capacity.
+        /// </remarks>
+        /// <param name="maxCapacity">The maximum capacity of the cache.</param>
+        private sealed class LruImpl(int maxCapacity) : IWeakMemoizationCacheFactory
         {
-            private readonly int _maxCapacity;
-
-            /// <summary>
-            /// Creates a new LRU cache with the specified maximum capacity.
-            /// </summary>
-            /// <param name="maxCapacity">The maximum capacity of the cache.</param>
-            public LruImpl(int maxCapacity) => _maxCapacity = maxCapacity;
+            private readonly int _maxCapacity = maxCapacity;
 
             /// <summary>
             /// Creates a memoization cache for the specified <paramref name="function"/> that doesn't keep cache entry keys alive.

@@ -16,29 +16,22 @@ namespace Reaqtive.TestingFramework
     /// </summary>
     /// <typeparam name="TAbsolute">Absolute time representation type.</typeparam>
     /// <typeparam name="TRelative">Relative time representation type.</typeparam>
-    public abstract class VirtualTimePhysicalScheduler<TAbsolute, TRelative> : VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative>
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="VirtualTimePhysicalScheduler{TAbsolute, TRelative}"/> class.
+    /// </remarks>
+    /// <param name="comparer">The comparer used to sort work items.</param>
+    /// <param name="initialClock">The initial clock value.</param>
+    public abstract class VirtualTimePhysicalScheduler<TAbsolute, TRelative>(IComparer<TAbsolute> comparer, TAbsolute initialClock) : VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative>(comparer, initialClock)
         where TAbsolute : IComparable<TAbsolute>
     {
-        private readonly HeapBasedPriorityQueue<IWorkItem<TAbsolute>> _ready;
-        private readonly List<IWorkItem<TAbsolute>> _notReady;
+        private readonly HeapBasedPriorityQueue<IWorkItem<TAbsolute>> _ready = new HeapBasedPriorityQueue<IWorkItem<TAbsolute>>(Comparer<IWorkItem<TAbsolute>>.Create(Compare));
+        private readonly List<IWorkItem<TAbsolute>> _notReady = [];
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtualTimePhysicalScheduler{TAbsolute, TRelative}"/> class.
         /// </summary>
         protected VirtualTimePhysicalScheduler() : this(Comparer<TAbsolute>.Default, default)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="VirtualTimePhysicalScheduler{TAbsolute, TRelative}"/> class.
-        /// </summary>
-        /// <param name="comparer">The comparer used to sort work items.</param>
-        /// <param name="initialClock">The initial clock value.</param>
-        protected VirtualTimePhysicalScheduler(IComparer<TAbsolute> comparer, TAbsolute initialClock)
-            : base(comparer, initialClock)
-        {
-            _ready = new HeapBasedPriorityQueue<IWorkItem<TAbsolute>>(Comparer<IWorkItem<TAbsolute>>.Create(Compare));
-            _notReady = new List<IWorkItem<TAbsolute>>();
         }
 
         /// <summary>

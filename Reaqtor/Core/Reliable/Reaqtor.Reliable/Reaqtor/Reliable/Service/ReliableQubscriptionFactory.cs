@@ -12,28 +12,16 @@ using Reaqtor.Reliable.Expressions;
 
 namespace Reaqtor.Reliable.Service
 {
-    public class ReliableQubscriptionFactory : ReliableQubscriptionFactoryBase
+    public class ReliableQubscriptionFactory(Expression expression, IReliableQueryProvider provider) : ReliableQubscriptionFactoryBase(provider)
     {
-        public ReliableQubscriptionFactory(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReliableQubscription CreateCore(Uri subscriptionUri, object state) => ((ReliableQueryProviderBase)Provider).CreateSubscription(this, subscriptionUri, state);
     }
 
-    public class ReliableQubscriptionFactory<TArg> : ReliableQubscriptionFactoryBase<TArg>
+    public class ReliableQubscriptionFactory<TArg>(Expression expression, IReliableQueryProvider provider) : ReliableQubscriptionFactoryBase<TArg>(provider)
     {
-        public ReliableQubscriptionFactory(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReliableQubscription CreateCore(Uri subscriptionUri, TArg argument, object state) => ((ReliableQueryProviderBase)Provider).CreateSubscription(this, argument, subscriptionUri, state);
     }

@@ -29,10 +29,10 @@ namespace Tests.System.Linq.CompilerServices
                 )
             );
 
-            var ltre = new LabeledTree<int>(new Label<int>(tree, new List<Match> { new Match(1) }), new LabeledTree<int>[] {
-                new LabeledTree<int>(new Label<int>(tree.Children[0], new List<Match> { new Match(2) }), Array.Empty<LabeledTree<int>>()),
-                new LabeledTree<int>(new Label<int>(tree.Children[1], new List<Match> { new Match(3) }), new LabeledTree<int>[] {
-                    new LabeledTree<int>(new Label<int>(tree.Children[1].Children[0], new List<Match> { new Match(4) }), Array.Empty<LabeledTree<int>>())
+            var ltre = new LabeledTree<int>(new Label<int>(tree, [new Match(1)]), new LabeledTree<int>[] {
+                new LabeledTree<int>(new Label<int>(tree.Children[0], [new Match(2)]), Array.Empty<LabeledTree<int>>()),
+                new LabeledTree<int>(new Label<int>(tree.Children[1], [new Match(3)]), new LabeledTree<int>[] {
+                    new LabeledTree<int>(new Label<int>(tree.Children[1].Children[0], [new Match(4)]), Array.Empty<LabeledTree<int>>())
                 }),
             });
 

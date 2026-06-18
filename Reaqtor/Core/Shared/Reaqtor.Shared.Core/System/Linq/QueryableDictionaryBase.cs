@@ -136,7 +136,7 @@ namespace System.Linq
             var p = Expression.Parameter(typeof(KeyValuePair<TKey, TValue>), "item");
 
             var e = Expression.Equal(
-                Expression.Property(p, p.Type.GetProperty(nameof(KeyValuePair<TKey, TValue>.Key))),
+                Expression.Property(p, p.Type.GetProperty(nameof(KeyValuePair<,>.Key))),
                 Expression.Constant(key)
             );
 

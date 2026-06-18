@@ -24,7 +24,7 @@ namespace Tests
                 Item1 = 42
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, Array.Empty<long>());
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, []);
             Assert.AreEqual(0, r.Count);
 
             foreach (var index in new[] { -1, 0, 1 })
@@ -42,7 +42,7 @@ namespace Tests
                 Item1 = 42
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 0L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [0L]);
             Assert.AreEqual(1, r.Count);
             Assert.AreEqual(c.Item1, r[0]);
             r[0] = 43;
@@ -69,7 +69,7 @@ namespace Tests
                 Item2 = 42
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 1L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [1L]);
             Assert.AreEqual(1, r.Count);
             Assert.AreEqual(c.Item2, r[0]);
             r[0] = 43;
@@ -98,7 +98,7 @@ namespace Tests
                 Item3 = "bar"
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 1L, 0L, 2L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [1L, 0L, 2L]);
             Assert.AreEqual(3, r.Count);
             Assert.AreEqual(c.Item2, r[0]);
             Assert.AreEqual(c.Item1, r[1]);
@@ -146,7 +146,7 @@ namespace Tests
                 }
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 1L << 32 | 1L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [1L << 32 | 1L]);
             Assert.AreEqual(1, r.Count);
             Assert.AreEqual(c.Item1.Item2, r[0]);
             r[0] = 43;
@@ -179,7 +179,7 @@ namespace Tests
                 }
             };
 
-            var r = RuntimeOpsEx.CreateRuntimeVariables(c, new[] { 2L << 32 | 1L });
+            var r = RuntimeOpsEx.CreateRuntimeVariables(c, [2L << 32 | 1L]);
             Assert.AreEqual(1, r.Count);
             Assert.AreEqual(c.Item1.Item1.Item2, r[0]);
             r[0] = 43;
@@ -290,7 +290,7 @@ namespace Tests
                 { x, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
             };
             var p = new HoistedLocals(parent: null, variables, definitions);
-            var h = new HoistedLocals(p, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), new Dictionary<ParameterExpression, StorageKind>());
+            var h = new HoistedLocals(p, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), []);
 
             var e = Expression.Lambda<Func<int>>(x);
 
@@ -395,6 +395,6 @@ namespace Tests
         }
 #endif
 
-        private static HoistedLocals GetEmptyHoistedLocals() => new(parent: null, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), new Dictionary<ParameterExpression, StorageKind>());
+        private static HoistedLocals GetEmptyHoistedLocals() => new(parent: null, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), []);
     }
 }

@@ -140,7 +140,7 @@ namespace Reaqtor.QueryEngine
         {
         }
 
-        public IEnumerable<ISubscription> Inputs => Enumerable.Empty<ISubscription>();
+        public IEnumerable<ISubscription> Inputs => [];
 
         public void Subscribe() { }
 

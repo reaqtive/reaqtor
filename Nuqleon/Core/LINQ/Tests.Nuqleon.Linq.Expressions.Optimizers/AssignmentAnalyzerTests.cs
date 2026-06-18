@@ -45,7 +45,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void AssignmentAnalyzer_ByRef()
         {
-            var read = typeof(Volatile).GetMethod(nameof(Volatile.Read), new[] { typeof(int).MakeByRefType() });
+            var read = typeof(Volatile).GetMethod(nameof(Volatile.Read), [typeof(int).MakeByRefType()]);
 
             var x = Expression.Parameter(typeof(int));
 

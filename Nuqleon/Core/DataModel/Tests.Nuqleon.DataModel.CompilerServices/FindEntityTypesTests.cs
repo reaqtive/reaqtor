@@ -28,11 +28,11 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         {
             var e = (Expression<Func<Bar>>)(() => new Bar());
 
-            FindEntitiesAndAssert(e, new[] {
+            FindEntitiesAndAssert(e, [
                 typeof(Bar),
                 typeof(Foo), // transitive
                 typeof(Qux), // closure
-            });
+            ]);
         }
 
         [TestMethod]
@@ -40,9 +40,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         {
             var e = (Expression<Func<Baz, Baz>>)(b => b);
 
-            FindEntitiesAndAssert(e, new[] {
+            FindEntitiesAndAssert(e, [
                 typeof(Baz),
-            });
+            ]);
         }
 
         [TestMethod]
@@ -50,11 +50,11 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         {
             var e = (Expression<Func<object, bool>>)(o => o is Bar);
 
-            FindEntitiesAndAssert(e, new[] {
+            FindEntitiesAndAssert(e, [
                 typeof(Bar),
                 typeof(Foo), // transitive
                 typeof(Qux), // closure
-            });
+            ]);
         }
 
         [TestMethod]
@@ -62,11 +62,11 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         {
             var e = (Expression<Action>)(() => FooIt<Bar>());
 
-            FindEntitiesAndAssert(e, new[] {
+            FindEntitiesAndAssert(e, [
                 typeof(Bar),
                 typeof(Foo), // transitive
                 typeof(Qux), // closure
-            });
+            ]);
         }
 
         private static void FooIt<T>()
@@ -89,11 +89,11 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
 
 #pragma warning restore IDE0050 // Convert to tuple
 
-            FindEntitiesAndAssert(e, new[] {
+            FindEntitiesAndAssert(e, [
                 typeof(Bar),
                 typeof(Foo),
                 typeof(Qux),
-            });
+            ]);
         }
 
         [TestMethod]
@@ -110,9 +110,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             var e = (from x in Enumerable.Empty<BarWithEnum>().AsQueryable()
                      select x).Expression;
 
-            FindEnumsAndAssert(e, new[] {
+            FindEnumsAndAssert(e, [
                 typeof(BarEnum),
-            });
+            ]);
         }
 
         [TestMethod]
@@ -122,9 +122,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
                      where x.Bar == BarEnum.Foo
                      select x).Expression;
 
-            FindEnumsAndAssert(e, new[] {
+            FindEnumsAndAssert(e, [
                 typeof(BarEnum),
-            });
+            ]);
         }
 
         [TestMethod]
@@ -134,9 +134,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
                      where new List<BarEnum>().Contains(BarEnum.Foo)
                      select x).Expression;
 
-            FindEnumsAndAssert(e, new[] {
+            FindEnumsAndAssert(e, [
                 typeof(BarEnum),
-            });
+            ]);
         }
 
         [TestMethod]
@@ -145,9 +145,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             var e = (from x in Enumerable.Empty<FooWithEnum>().AsQueryable()
                      select x).Expression;
 
-            FindEnumsAndAssert(e, new[] {
+            FindEnumsAndAssert(e, [
                 typeof(BarEnum),
-            });
+            ]);
         }
 
         [TestMethod]
@@ -157,9 +157,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
                      where x.Bar == BarEnum.Foo
                      select x).Expression;
 
-            FindEnumsAndAssert(e, new[] {
+            FindEnumsAndAssert(e, [
                 typeof(BarEnum),
-            });
+            ]);
         }
 
         private static void FindEntitiesAndAssert(Expression expression, params Type[] types)

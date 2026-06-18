@@ -6,18 +6,11 @@ using System;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Aggregate<TSource, TAccumulate> : SubscribableBase<TAccumulate>
+    internal sealed class Aggregate<TSource, TAccumulate>(ISubscribable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> accumulate) : SubscribableBase<TAccumulate>
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly TAccumulate _seed;
-        private readonly Func<TAccumulate, TSource, TAccumulate> _accumulate;
-
-        public Aggregate(ISubscribable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> accumulate)
-        {
-            _source = source;
-            _seed = seed;
-            _accumulate = accumulate;
-        }
+        private readonly ISubscribable<TSource> _source = source;
+        private readonly TAccumulate _seed = seed;
+        private readonly Func<TAccumulate, TSource, TAccumulate> _accumulate = accumulate;
 
         protected override ISubscription SubscribeCore(IObserver<TAccumulate> observer)
         {
@@ -87,31 +80,20 @@ namespace Reaqtive.Operators
         }
     }
 
-    internal sealed class Aggregate<TSource> : SubscribableBase<TSource>
+    internal sealed class Aggregate<TSource>(ISubscribable<TSource> source, Func<TSource, TSource, TSource> aggregate) : SubscribableBase<TSource>
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, TSource, TSource> _aggregate;
-
-        public Aggregate(ISubscribable<TSource> source, Func<TSource, TSource, TSource> aggregate)
-        {
-            _source = source;
-            _aggregate = aggregate;
-        }
+        private readonly ISubscribable<TSource> _source = source;
+        private readonly Func<TSource, TSource, TSource> _aggregate = aggregate;
 
         protected override ISubscription SubscribeCore(IObserver<TSource> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<Aggregate<TSource>, TSource>, IObserver<TSource>
+        private sealed class _(Aggregate<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<Aggregate<TSource>, TSource>(parent, observer), IObserver<TSource>
         {
             private bool _hasValue;
             private TSource _result;
-
-            public _(Aggregate<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:Aggregate+Simple";
 

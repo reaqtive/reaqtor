@@ -10,6 +10,7 @@
 
 using System.Reflection;
 using System.Reflection.Emit;
+using System.Threading;
 
 namespace System.Runtime.CompilerServices
 {
@@ -21,7 +22,7 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// The lock to protect against double-initialization of the assembly builder.
         /// </summary>
-        private static readonly object s_lock = new();
+        private static readonly Lock s_lock = new();
 
 #if NET6_0_OR_GREATER
         //
@@ -36,7 +37,6 @@ namespace System.Runtime.CompilerServices
         /// <remarks>
         /// The instance of the module builder is lazily created via the <see cref="Module"/> property.
         /// </remarks>
-        private static ModuleBuilder s_mod;
 
         /// <summary>
         /// Gets the module builder used to emit dynamically generated closure types.
@@ -45,19 +45,19 @@ namespace System.Runtime.CompilerServices
         {
             get
             {
-                if (s_mod == null)
+                if (field == null)
                 {
                     lock (s_lock)
                     {
-                        if (s_mod == null)
+                        if (field == null)
                         {
                             var asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("<>__ExpressionJit"), AssemblyBuilderAccess.RunAndCollect);
-                            s_mod = asm.DefineDynamicModule("RuntimeTypes");
+                            field = asm.DefineDynamicModule("RuntimeTypes");
                         }
                     }
                 }
 
-                return s_mod;
+                return field;
             }
         }
 #else

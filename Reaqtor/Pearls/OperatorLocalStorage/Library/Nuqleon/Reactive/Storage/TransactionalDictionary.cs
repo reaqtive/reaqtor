@@ -71,7 +71,7 @@ namespace Reaqtive.Storage
         public TransactionalDictionary()
         {
             _gate = new object();
-            _store = new Dictionary<TKey, TValue>();
+            _store = [];
             _deltas = new StateChangedManager<Dictionary<TKey, Maybe<TValue>>>();
         }
 
@@ -160,7 +160,7 @@ namespace Reaqtive.Storage
 
             lock (_gate)
             {
-                res = GetEnumerableCore().ToList();
+                res = [.. GetEnumerableCore()];
             }
 
             //
@@ -327,7 +327,7 @@ namespace Reaqtive.Storage
                 }
             }
 
-            return new Snapshot(this, edits.ToArray());
+            return new Snapshot(this, [.. edits]);
         }
 
         /// <summary>
@@ -366,7 +366,7 @@ namespace Reaqtive.Storage
                 _ = _deltas.SaveState();
             }
 
-            return new Snapshot(this, edits.ToArray());
+            return new Snapshot(this, [.. edits]);
         }
 
         /// <summary>
@@ -546,30 +546,24 @@ namespace Reaqtive.Storage
         /// <summary>
         /// Representation of a snapshot returned by <see cref="CreateSnapshot(bool)"/>.
         /// </summary>
-        private sealed class Snapshot : ISnapshot<TKey, TValue>
+        /// <remarks>
+        /// Creates a new instance of <see cref="Snapshot"/> containing the specified <paramref name="edits"/> to be applied to the persisted key/value store.
+        /// </remarks>
+        /// <param name="parent">The parent transactional dictionary used to make a call to <see cref="TransactionalDictionary{TKey, TValue}.OnCommitted(TransactionalDictionary{TKey, TValue}.Snapshot)"/> when the snapshot was successfully committed.</param>
+        /// <param name="edits">The edits to be applied to the persisted key/value store via the <see cref="Accept(ISnapshotVisitor{TKey, TValue})"/> method.</param>
+        private sealed class Snapshot(TransactionalDictionary<TKey, TValue> parent, Edit<TKey, TValue>[] edits) : ISnapshot<TKey, TValue>
         {
             // REVIEW: Should we add a version number to the snapshot so we can detect invalid use patterns (i.e. operating on an old snapshot if a newer one exists)?
 
             /// <summary>
             /// The parent transactional dictionary used to make a call to <see cref="TransactionalDictionary{TKey, TValue}.OnCommitted(TransactionalDictionary{TKey, TValue}.Snapshot)"/> when the snapshot was successfully committed.
             /// </summary>
-            private readonly TransactionalDictionary<TKey, TValue> _parent;
+            private readonly TransactionalDictionary<TKey, TValue> _parent = parent;
 
             /// <summary>
             /// The edits to be applied to the persisted key/value store via the <see cref="Accept(ISnapshotVisitor{TKey, TValue})"/> method.
             /// </summary>
-            private readonly Edit<TKey, TValue>[] _edits;
-
-            /// <summary>
-            /// Creates a new instance of <see cref="Snapshot"/> containing the specified <paramref name="edits"/> to be applied to the persisted key/value store.
-            /// </summary>
-            /// <param name="parent">The parent transactional dictionary used to make a call to <see cref="TransactionalDictionary{TKey, TValue}.OnCommitted(TransactionalDictionary{TKey, TValue}.Snapshot)"/> when the snapshot was successfully committed.</param>
-            /// <param name="edits">The edits to be applied to the persisted key/value store via the <see cref="Accept(ISnapshotVisitor{TKey, TValue})"/> method.</param>
-            public Snapshot(TransactionalDictionary<TKey, TValue> parent, Edit<TKey, TValue>[] edits)
-            {
-                _parent = parent;
-                _edits = edits;
-            }
+            private readonly Edit<TKey, TValue>[] _edits = edits;
 
             /// <summary>
             /// Dispatches all the edits in the snapshot to the appropriate <paramref name="visitor"/> methods.

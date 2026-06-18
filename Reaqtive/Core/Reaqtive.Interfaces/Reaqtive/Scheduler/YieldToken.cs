@@ -9,25 +9,23 @@ namespace Reaqtive.Scheduler
     /// <summary>
     /// Token to observe requests to yield execution.
     /// </summary>
-    public readonly struct YieldToken : IEquatable<YieldToken>
+    /// <remarks>
+    /// Creates a new <see cref="YieldToken"/> value using the specified yield token
+    /// <paramref name="source"/> to check for yield requests.
+    /// </remarks>
+    /// <param name="source">The yield token source used to check for yield requests.</param>
+    public readonly struct YieldToken(IYieldTokenSource source) : IEquatable<YieldToken>
     {
         /// <summary>
         /// The yield token source used to check for yield requests. For the default instance
         /// which gets returned by <see cref="None"/>, the field will be set to <c>null</c>.
         /// </summary>
-        private readonly IYieldTokenSource _source;
+        private readonly IYieldTokenSource _source = source;
 
         /// <summary>
         /// Returns an empty <see cref="YieldToken"/> value.
         /// </summary>
         public static YieldToken None => new();
-
-        /// <summary>
-        /// Creates a new <see cref="YieldToken"/> value using the specified yield token
-        /// <paramref name="source"/> to check for yield requests.
-        /// </summary>
-        /// <param name="source">The yield token source used to check for yield requests.</param>
-        public YieldToken(IYieldTokenSource source) => _source = source;
 
         /// <summary>
         /// Gets whether yielding has been requested for this token.

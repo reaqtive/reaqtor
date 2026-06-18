@@ -73,7 +73,7 @@ namespace Reaqtor.ReificationFramework
             if (genericType != null)
             {
                 var method = s_catchGeneric.MakeGenericMethod(genericType.GenericTypeArguments[0]);
-                return (ReifiedOperation)method.Invoke(this, new object[] { operation });
+                return (ReifiedOperation)method.Invoke(this, [operation]);
             }
 
             throw new InvalidOperationException(
@@ -112,7 +112,7 @@ namespace Reaqtor.ReificationFramework
                 var result = Visit(op);
                 if (result != op && rest == null)
                 {
-                    rest = new List<ReifiedOperation>(operation.Rest.Take(count));
+                    rest = [.. operation.Rest.Take(count)];
                 }
 
                 rest?.Add(op);

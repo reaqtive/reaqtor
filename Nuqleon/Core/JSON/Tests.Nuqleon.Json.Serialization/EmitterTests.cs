@@ -29,7 +29,7 @@ namespace Tests
 #if !NO_IO
             var sw = new System.IO.StringWriter();
 
-            var emitWriterMtd = action.Method.DeclaringType.GetMethod(action.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, new[] { typeof(System.IO.TextWriter), typeof(T), typeof(EmitterContext) }, modifiers: null);
+            var emitWriterMtd = action.Method.DeclaringType.GetMethod(action.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, [typeof(System.IO.TextWriter), typeof(T), typeof(EmitterContext)], modifiers: null);
             var emitWriterFnc = (EmitWriterAction<T>)Delegate.CreateDelegate(typeof(EmitWriterAction<T>), emitWriterMtd);
             emitWriterFnc(sw, value, GetEmitterContext());
 

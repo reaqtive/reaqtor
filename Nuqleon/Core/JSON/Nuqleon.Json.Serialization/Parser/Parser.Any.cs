@@ -377,7 +377,7 @@ namespace Nuqleon.Json.Serialization
             {
                 i++;
                 SkipWhiteSpace(str, len, ref i); // NB: We *have* to skip trailing whitespace after the ] token.
-                return ArrayBuilder<object>.Empty;
+                return [];
             }
 
             var builder = ArrayBuilder.Create<object>();
@@ -448,7 +448,7 @@ namespace Nuqleon.Json.Serialization
             {
                 reader.Read();
                 SkipWhiteSpace(reader); // NB: We *have* to skip trailing whitespace after the ] token.
-                return ArrayBuilder<object>.Empty;
+                return [];
             }
 
             var builder = ArrayBuilder.Create<object>();

@@ -19,12 +19,16 @@ namespace Reaqtive.Storage
         /// <summary>
         /// Base class for storage entities that support persistence to a key/value store.
         /// </summary>
-        private abstract class PersistableBase : IPersistable
+        /// <remarks>
+        /// Creates a new storage entity.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private abstract class PersistableBase(PersistedObjectSpace parent) : IPersistable
         {
             /// <summary>
             /// The parent object space, used to access serialization facilities.
             /// </summary>
-            private readonly PersistedObjectSpace _parent;
+            private readonly PersistedObjectSpace _parent = parent;
 
             /// <summary>
             /// The strongly typed wrapper, managed by derived types.
@@ -35,15 +39,6 @@ namespace Reaqtive.Storage
             /// The state change manager used to track the dirty state of the entity (see <see cref="Load"/>, <see cref="Save"/>, and <see cref="OnSaved"/>).
             /// </summary>
             private StateChangedManager _changed;
-
-            /// <summary>
-            /// Creates a new storage entity.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            protected PersistableBase(PersistedObjectSpace parent)
-            {
-                _parent = parent;
-            }
 
             /// <summary>
             /// Gets or sets a value indicating whether the storage entity has dirty state that needs to be persisted in future checkpoints.

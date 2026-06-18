@@ -26,7 +26,7 @@ namespace System.Reflection
         public TypeSlimPrettyPrinter()
         {
             _revisited = 0;
-            _visited = new Dictionary<StructuralTypeSlim, string>();
+            _visited = [];
         }
 
         public override string Visit(TypeSlim typeSlim)

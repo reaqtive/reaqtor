@@ -14,7 +14,11 @@ namespace System.Runtime.CompilerServices
     /// The method table which is used as the first parameter to a compiled
     /// expression with JIT compilation support.
     /// </summary>
-    public sealed class MethodTable
+    /// <remarks>
+    /// Creates a new method table with the specified <paramref name="thunks"/>.
+    /// </remarks>
+    /// <param name="thunks">Array containing the thunks for all the inner lambda expressions that can be JIT compiled.</param>
+    public sealed class MethodTable(object[] thunks)
     {
 #pragma warning disable CA1051 // Do not declare visible instance field. (Usage of field is by design.)
 
@@ -22,17 +26,8 @@ namespace System.Runtime.CompilerServices
         /// Array containing the thunks for all the inner lambda expressions
         /// that can be JIT compiled.
         /// </summary>
-        public readonly object[] Thunks;
+        public readonly object[] Thunks = thunks;
 
 #pragma warning restore CA1051
-
-        /// <summary>
-        /// Creates a new method table with the specified <paramref name="thunks"/>.
-        /// </summary>
-        /// <param name="thunks">Array containing the thunks for all the inner lambda expressions that can be JIT compiled.</param>
-        public MethodTable(object[] thunks)
-        {
-            Thunks = thunks;
-        }
     }
 }

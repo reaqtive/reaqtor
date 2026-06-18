@@ -24,29 +24,21 @@ namespace System.Linq.Expressions
         CallSite,
     }
 
-    internal abstract class HashedNode
+    internal abstract class HashedNode(int hash)
     {
-        protected HashedNode(int hash) => Hash = hash;
-
         public abstract HashedNodeType NodeType { get; }
 
-        public int Hash { get; }
+        public int Hash { get; } = hash;
 
         public abstract object Value { get; }
 
         public sealed override string ToString() => Value.ToString();
     }
 
-    internal abstract class HashedNode<T> : HashedNode, IEquatable<T>
+    internal abstract class HashedNode<T>(int hash, Func<ExpressionEqualityComparator> comparatorFactory) : HashedNode(hash), IEquatable<T>
         where T : HashedNode<T>
     {
-        private readonly Func<ExpressionEqualityComparator> _comparatorFactory;
-
-        public HashedNode(int hash, Func<ExpressionEqualityComparator> comparatorFactory)
-            : base(hash)
-        {
-            _comparatorFactory = comparatorFactory;
-        }
+        private readonly Func<ExpressionEqualityComparator> _comparatorFactory = comparatorFactory;
 
         public sealed override bool Equals(object obj) => Equals(obj as T);
 
@@ -110,104 +102,68 @@ namespace System.Linq.Expressions
         protected abstract bool Equals(ExpressionEqualityComparator comparator, T other);
     }
 
-    internal sealed class ExpressionHashedNode : HashedNode<ExpressionHashedNode>
+    internal sealed class ExpressionHashedNode(Expression node, int hash, Func<ExpressionEqualityComparator> comparatorFactory) : HashedNode<ExpressionHashedNode>(hash, comparatorFactory)
     {
-        public ExpressionHashedNode(Expression node, int hash, Func<ExpressionEqualityComparator> comparatorFactory)
-            : base(hash, comparatorFactory)
-        {
-            Expression = node;
-        }
-
         public override HashedNodeType NodeType => HashedNodeType.Expression;
 
         public override object Value => Expression;
 
-        public Expression Expression { get; }
+        public Expression Expression { get; } = node;
 
         protected override bool Equals(ExpressionEqualityComparator comparator, ExpressionHashedNode other) => comparator.Equals(Expression, other.Expression);
     }
 
-    internal sealed class MemberBindingHashedNode : HashedNode<MemberBindingHashedNode>
+    internal sealed class MemberBindingHashedNode(MemberBinding binding, int hash, Func<ExpressionEqualityComparator> comparatorFactory) : HashedNode<MemberBindingHashedNode>(hash, comparatorFactory)
     {
-        public MemberBindingHashedNode(MemberBinding binding, int hash, Func<ExpressionEqualityComparator> comparatorFactory)
-            : base(hash, comparatorFactory)
-        {
-            Binding = binding;
-        }
-
         public override HashedNodeType NodeType => HashedNodeType.MemberBinding;
 
         public override object Value => Binding;
 
-        public MemberBinding Binding { get; }
+        public MemberBinding Binding { get; } = binding;
 
         protected override bool Equals(ExpressionEqualityComparator comparator, MemberBindingHashedNode other) => comparator.Equals(Binding, other.Binding);
     }
 
-    internal sealed class ElementInitHashedNode : HashedNode<ElementInitHashedNode>
+    internal sealed class ElementInitHashedNode(ElementInit initializer, int hash, Func<ExpressionEqualityComparator> comparatorFactory) : HashedNode<ElementInitHashedNode>(hash, comparatorFactory)
     {
-        public ElementInitHashedNode(ElementInit initializer, int hash, Func<ExpressionEqualityComparator> comparatorFactory)
-            : base(hash, comparatorFactory)
-        {
-            Initializer = initializer;
-        }
-
         public override HashedNodeType NodeType => HashedNodeType.ElementInit;
 
         public override object Value => Initializer;
 
-        public ElementInit Initializer { get; }
+        public ElementInit Initializer { get; } = initializer;
 
         protected override bool Equals(ExpressionEqualityComparator comparator, ElementInitHashedNode other) => comparator.Equals(Initializer, other.Initializer);
     }
 
-    internal sealed class SwitchCaseHashedNode : HashedNode<SwitchCaseHashedNode>
+    internal sealed class SwitchCaseHashedNode(SwitchCase switchCase, int hash, Func<ExpressionEqualityComparator> comparatorFactory) : HashedNode<SwitchCaseHashedNode>(hash, comparatorFactory)
     {
-        public SwitchCaseHashedNode(SwitchCase switchCase, int hash, Func<ExpressionEqualityComparator> comparatorFactory)
-            : base(hash, comparatorFactory)
-        {
-            SwitchCase = switchCase;
-        }
-
         public override HashedNodeType NodeType => HashedNodeType.SwitchCase;
 
         public override object Value => SwitchCase;
 
-        public SwitchCase SwitchCase { get; }
+        public SwitchCase SwitchCase { get; } = switchCase;
 
         protected override bool Equals(ExpressionEqualityComparator comparator, SwitchCaseHashedNode other) => comparator.Equals(SwitchCase, other.SwitchCase);
     }
 
-    internal sealed class CatchBlockHashedNode : HashedNode<CatchBlockHashedNode>
+    internal sealed class CatchBlockHashedNode(CatchBlock catchBlock, int hash, Func<ExpressionEqualityComparator> comparatorFactory) : HashedNode<CatchBlockHashedNode>(hash, comparatorFactory)
     {
-        public CatchBlockHashedNode(CatchBlock catchBlock, int hash, Func<ExpressionEqualityComparator> comparatorFactory)
-            : base(hash, comparatorFactory)
-        {
-            CatchBlock = catchBlock;
-        }
-
         public override HashedNodeType NodeType => HashedNodeType.CatchBlock;
 
         public override object Value => CatchBlock;
 
-        public CatchBlock CatchBlock { get; }
+        public CatchBlock CatchBlock { get; } = catchBlock;
 
         protected override bool Equals(ExpressionEqualityComparator comparator, CatchBlockHashedNode other) => comparator.Equals(CatchBlock, other.CatchBlock);
     }
 
-    internal sealed class LabelTargetHashedNode : HashedNode<LabelTargetHashedNode>
+    internal sealed class LabelTargetHashedNode(LabelTarget labelTarget, int hash, Func<ExpressionEqualityComparator> comparatorFactory) : HashedNode<LabelTargetHashedNode>(hash, comparatorFactory)
     {
-        public LabelTargetHashedNode(LabelTarget labelTarget, int hash, Func<ExpressionEqualityComparator> comparatorFactory)
-            : base(hash, comparatorFactory)
-        {
-            LabelTarget = labelTarget;
-        }
-
         public override HashedNodeType NodeType => HashedNodeType.LabelTarget;
 
         public override object Value => LabelTarget;
 
-        public LabelTarget LabelTarget { get; }
+        public LabelTarget LabelTarget { get; } = labelTarget;
 
         // NB: By design; only the ExpressionEqualityComparator can decide on equality given a parent expression where the branch structure can
         //     be analyzed to match labels.
@@ -215,19 +171,13 @@ namespace System.Linq.Expressions
         protected override bool Equals(ExpressionEqualityComparator comparator, LabelTargetHashedNode other) => false;
     }
 
-    internal sealed class CallSiteHashedNode : HashedNode<CallSiteHashedNode>
+    internal sealed class CallSiteHashedNode(CallSiteBinder binder, int hash, Func<ExpressionEqualityComparator> comparatorFactory) : HashedNode<CallSiteHashedNode>(hash, comparatorFactory)
     {
-        public CallSiteHashedNode(CallSiteBinder binder, int hash, Func<ExpressionEqualityComparator> comparatorFactory)
-            : base(hash, comparatorFactory)
-        {
-            Binder = binder;
-        }
-
         public override HashedNodeType NodeType => HashedNodeType.CallSite;
 
         public override object Value => Binder;
 
-        public CallSiteBinder Binder { get; }
+        public CallSiteBinder Binder { get; } = binder;
 
         protected override bool Equals(ExpressionEqualityComparator comparator, CallSiteHashedNode other) => comparator.Equals(Binder, other.Binder);
     }

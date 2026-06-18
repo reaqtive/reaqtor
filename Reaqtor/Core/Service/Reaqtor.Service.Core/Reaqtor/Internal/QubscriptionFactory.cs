@@ -13,15 +13,9 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal class QubscriptionFactory : ReactiveQubscriptionFactoryBase
+    internal class QubscriptionFactory(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, object state)
         {
@@ -29,15 +23,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubscriptionFactory<TArg> : ReactiveQubscriptionFactoryBase<TArg>
+    internal class QubscriptionFactory<TArg>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionFactoryBase<TArg>(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg argument, object state)
         {

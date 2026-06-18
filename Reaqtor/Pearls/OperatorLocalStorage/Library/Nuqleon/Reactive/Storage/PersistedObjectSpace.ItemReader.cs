@@ -21,12 +21,17 @@ namespace Reaqtive.Storage
         /// <summary>
         /// Implementation of <see cref="IStateReader"/> to support reading a persisted entity's state from its own state partition under the <see cref="OperatorStateItemCategoryPrefix"/> category.
         /// </summary>
-        private sealed class ItemReader : IStateReader
+        /// <remarks>
+        /// Creates a new item reader to load the persisted entity with the specified <paramref name="key"/> identifier.
+        /// </remarks>
+        /// <param name="reader">The state reader obtained from the entity's persisted object space. State for the persisted entity will be read from a partition under the <see cref="OperatorStateItemCategoryPrefix"/>.</param>
+        /// <param name="key">The identifier of the persisted entity to read.</param>
+        private sealed class ItemReader(IStateReader reader, string key) : IStateReader
         {
             /// <summary>
             /// The state reader obtained from the entity's persisted object space. State for the persisted entity will be read from a partition under the <see cref="OperatorStateItemCategoryPrefix"/>.
             /// </summary>
-            private readonly IStateReader _reader;
+            private readonly IStateReader _reader = reader;
 
             /// <summary>
             /// The category prefix used to read state for the entity (see the <c>key</c> parameter in the constructor) from the underlying <see cref="_reader"/>.
@@ -34,22 +39,7 @@ namespace Reaqtive.Storage
             /// <example>
             /// The state for a persisted entity with identifier <c>foo</c> will be read from category <c>state/item/foo</c>.
             /// </example>
-            private readonly string _prefix;
-
-            /// <summary>
-            /// Creates a new item reader to load the persisted entity with the specified <paramref name="key"/> identifier.
-            /// </summary>
-            /// <param name="reader">The state reader obtained from the entity's persisted object space. State for the persisted entity will be read from a partition under the <see cref="OperatorStateItemCategoryPrefix"/>.</param>
-            /// <param name="key">The identifier of the persisted entity to read.</param>
-            public ItemReader(IStateReader reader, string key)
-            {
-                //
-                // REVIEW: We don't impose any limits on key (length, characters, etc.). Can we assume the IStateWriter has to deal with this, or should we have our own mapping somewhere (hashing, use of a dictionary, etc.)?
-                //
-
-                _reader = reader;
-                _prefix = OperatorStateItemCategoryPrefix + key + "/";
-            }
+            private readonly string _prefix = OperatorStateItemCategoryPrefix + key + "/";
 
             /// <summary>
             /// Disposes the item reader.

@@ -10,18 +10,12 @@
 
 namespace Utilities
 {
-    public abstract class StateWriterOperation
+    public abstract class StateWriterOperation(string category, string key)
     {
-        protected StateWriterOperation(string category, string key)
-        {
-            Category = category;
-            Key = key;
-        }
-
         public abstract StateWriterOperationKind Kind { get; }
 
-        public string Category { get; }
-        public string Key { get; }
+        public string Category { get; } = category;
+        public string Key { get; } = key;
 
         public abstract void Apply(Store store);
     }

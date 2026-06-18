@@ -144,9 +144,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 Expression.NewArrayBounds(typeof(int), Expression.Constant(1)),
                 Expression.NewArrayInit(typeof(int), Expression.Constant(1)),
 
-                Expression.New(typeof(string).GetConstructor(new[] { typeof(char), typeof(int) }), Expression.Constant('*'), Expression.Constant(1)),
-                Expression.ListInit(Expression.New(typeof(List<int>).GetConstructor(Type.EmptyTypes)), Expression.ElementInit(typeof(List<int>).GetMethod(nameof(List<int>.Add), new[] { typeof(int) }), Expression.Constant(1))),
-                Expression.MemberInit(Expression.New(typeof(StrongBox<int>).GetConstructor(Type.EmptyTypes)), Expression.Bind(typeof(StrongBox<int>).GetField(nameof(StrongBox<int>.Value)), Expression.Constant(1))),
+                Expression.New(typeof(string).GetConstructor([typeof(char), typeof(int)]), Expression.Constant('*'), Expression.Constant(1)),
+                Expression.ListInit(Expression.New(typeof(List<int>).GetConstructor(Type.EmptyTypes)), Expression.ElementInit(typeof(List<int>).GetMethod(nameof(List<>.Add), [typeof(int)]), Expression.Constant(1))),
+                Expression.MemberInit(Expression.New(typeof(StrongBox<int>).GetConstructor(Type.EmptyTypes)), Expression.Bind(typeof(StrongBox<int>).GetField(nameof(StrongBox<>.Value)), Expression.Constant(1))),
 
                 Expression.IsFalse(Expression.Constant(true)),
                 Expression.IsTrue(Expression.Constant(true)),

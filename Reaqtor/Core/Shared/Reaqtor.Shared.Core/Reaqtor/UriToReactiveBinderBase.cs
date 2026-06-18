@@ -118,20 +118,14 @@ namespace Reaqtor
         /// <summary>
         /// Visitor to bind unbound parameters.
         /// </summary>
-        protected class BindingVisitor : ScopedExpressionVisitor<ParameterExpression>
+        /// <remarks>
+        /// Creates a new binding visitor.
+        /// </remarks>
+        /// <param name="parent">Parent binder.</param>
+        protected class BindingVisitor(UriToReactiveBinderBase parent) : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly UriToReactiveBinderBase _parent;
-            private readonly IDictionary<ParameterExpression, Expression> _bindings;
-
-            /// <summary>
-            /// Creates a new binding visitor.
-            /// </summary>
-            /// <param name="parent">Parent binder.</param>
-            public BindingVisitor(UriToReactiveBinderBase parent)
-            {
-                _parent = parent;
-                _bindings = new Dictionary<ParameterExpression, Expression>();
-            }
+            private readonly UriToReactiveBinderBase _parent = parent;
+            private readonly IDictionary<ParameterExpression, Expression> _bindings = new Dictionary<ParameterExpression, Expression>();
 
             /// <summary>
             /// Gets the parameters to be bound.

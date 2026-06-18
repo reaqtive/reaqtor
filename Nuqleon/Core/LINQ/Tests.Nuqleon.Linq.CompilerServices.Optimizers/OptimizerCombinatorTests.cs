@@ -219,18 +219,16 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             }
         }
 
-        private sealed class MockOptimizer : IOptimizer
+        private sealed class MockOptimizer(Func<QueryTree, QueryTree> optimize) : IOptimizer
         {
-            private readonly Func<QueryTree, QueryTree> _optimize;
-
-            public MockOptimizer(Func<QueryTree, QueryTree> optimize) => _optimize = optimize;
+            private readonly Func<QueryTree, QueryTree> _optimize = optimize;
 
             public QueryTree Optimize(QueryTree queryTree) => _optimize(queryTree);
         }
 
         private static Action<ArgumentException> AssertParameterName(string paramName)
         {
-            return (ArgumentException ex) => { Assert.AreEqual(paramName, ex.ParamName); };
+            return ex => { Assert.AreEqual(paramName, ex.ParamName); };
         }
     }
 }

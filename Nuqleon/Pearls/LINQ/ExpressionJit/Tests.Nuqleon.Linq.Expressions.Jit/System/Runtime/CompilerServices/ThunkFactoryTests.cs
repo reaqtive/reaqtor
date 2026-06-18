@@ -238,7 +238,7 @@ namespace Tests
             // Invoke CreateDelegate with an "assertive closure" instance.
             //
             var closure = new AssertiveClosure();
-            var del = (Delegate)createDelegate.Invoke(o, new object[] { closure });
+            var del = (Delegate)createDelegate.Invoke(o, [closure]);
 
             //
             // Prior to invoking the delegate, check we haven't triggered JIT compilation yet.
@@ -324,7 +324,7 @@ namespace Tests
 
     internal sealed class AssertiveClosure
     {
-        private readonly List<object> _args = new();
+        private readonly List<object> _args = [];
         private bool _flag;
 
         public void Add(object arg)

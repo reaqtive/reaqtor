@@ -18,28 +18,23 @@ namespace System.Linq.CompilerServices
     /// The interpretation of the index is contextual and extrinsic to the object.
     /// </summary>
     /// <typeparam name="T">Type of the object to associate with an index.</typeparam>
-    public readonly struct Indexed<T> : IEquatable<Indexed<T>>
+    /// <remarks>
+    /// Creates a new indexed object association.
+    /// </remarks>
+    /// <param name="value">Object to associate with the index.</param>
+    /// <param name="index">Index to associate the object with.</param>
+    public readonly struct Indexed<T>(T value, int index) : IEquatable<Indexed<T>>
     {
-        /// <summary>
-        /// Creates a new indexed object association.
-        /// </summary>
-        /// <param name="value">Object to associate with the index.</param>
-        /// <param name="index">Index to associate the object with.</param>
-        public Indexed(T value, int index)
-        {
-            Value = value;
-            Index = index;
-        }
 
         /// <summary>
         /// Gets the object associated with the index.
         /// </summary>
-        public T Value { get; }
+        public T Value { get; } = value;
 
         /// <summary>
         /// Gets the index the object is associated with.
         /// </summary>
-        public int Index { get; }
+        public int Index { get; } = index;
 
         /// <summary>
         /// Determines whether this value is equal to the specified object.

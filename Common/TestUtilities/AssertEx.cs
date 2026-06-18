@@ -83,11 +83,9 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]
-    public sealed class FlakyTestMethodAttribute : TestMethodAttribute
+    public sealed class FlakyTestMethodAttribute(int repeatCount) : TestMethodAttribute
     {
-        private readonly int _repeatCount;
-
-        public FlakyTestMethodAttribute(int repeatCount) => _repeatCount = repeatCount;
+        private readonly int _repeatCount = repeatCount;
 
         public override TestResult[] Execute(ITestMethod testMethod)
         {
@@ -102,16 +100,14 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
                 }
             }
 
-            return res.ToArray();
+            return [.. res];
         }
     }
 
     [AttributeUsage(AttributeTargets.Class, AllowMultiple = false)]
-    public sealed class FlakyTestClassAttribute : TestClassAttribute
+    public sealed class FlakyTestClassAttribute(int repeatCount) : TestClassAttribute
     {
-        private readonly int _repeatCount;
-
-        public FlakyTestClassAttribute(int repeatCount) => _repeatCount = repeatCount;
+        private readonly int _repeatCount = repeatCount;
 
         public override TestMethodAttribute GetTestMethodAttribute(TestMethodAttribute testMethodAttribute)
         {

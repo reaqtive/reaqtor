@@ -19,18 +19,22 @@ namespace System.Reflection
     /// <summary>
     /// A container for mappings from slim types to types and slim members to members.
     /// </summary>
-    public class InvertedTypeSpace
+    /// <remarks>
+    /// Creates the type space.
+    /// </remarks>
+    /// <param name="provider">The reflection provider to use.</param>
+    public class InvertedTypeSpace(IReflectionProvider provider)
     {
         #region Fields
 
-        private readonly Dictionary<PropertyInfoSlim, PropertyInfo> _properties;
-        private readonly Dictionary<FieldInfoSlim, FieldInfo> _fields;
-        private readonly Dictionary<MethodInfoSlim, MethodInfo> _methods;
-        private readonly Dictionary<ConstructorInfoSlim, ConstructorInfo> _constructors;
-        private readonly TypeSlimToTypeConverter _typeConverter;
-        private readonly IReflectionProvider _provider;
+        private readonly Dictionary<PropertyInfoSlim, PropertyInfo> _properties = [];
+        private readonly Dictionary<FieldInfoSlim, FieldInfo> _fields = [];
+        private readonly Dictionary<MethodInfoSlim, MethodInfo> _methods = [];
+        private readonly Dictionary<ConstructorInfoSlim, ConstructorInfo> _constructors = [];
+        private readonly TypeSlimToTypeConverter _typeConverter = new TypeSlimToTypeConverter(provider);
+        private readonly IReflectionProvider _provider = provider;
 
-        private static readonly Type[] s_emptyTypes = Array.Empty<Type>();
+        private static readonly Type[] s_emptyTypes = [];
 
         #endregion Fields
 
@@ -42,20 +46,6 @@ namespace System.Reflection
         public InvertedTypeSpace()
             : this(DefaultReflectionProvider.Instance)
         {
-        }
-
-        /// <summary>
-        /// Creates the type space.
-        /// </summary>
-        /// <param name="provider">The reflection provider to use.</param>
-        public InvertedTypeSpace(IReflectionProvider provider)
-        {
-            _properties = new Dictionary<PropertyInfoSlim, PropertyInfo>();
-            _fields = new Dictionary<FieldInfoSlim, FieldInfo>();
-            _methods = new Dictionary<MethodInfoSlim, MethodInfo>();
-            _constructors = new Dictionary<ConstructorInfoSlim, ConstructorInfo>();
-            _typeConverter = new TypeSlimToTypeConverter(provider);
-            _provider = provider;
         }
 
         #endregion

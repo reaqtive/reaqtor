@@ -86,7 +86,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
                 Expression.Constant(value: null, typeof(Qux)),
 
-                Expression.Constant(new A { B = new B { Cs = new C[] { new C { D = 42, Es = new List<E> { new E { F = 42 } } } } } }),
+                Expression.Constant(new A { B = new B { Cs = [new C { D = 42, Es = [new E { F = 42 }] }] } }),
 
                 (Expression<Func<IEnumerable<A>, IEnumerable<int>>>)(xs => from x in xs
                                                                          let b = x.B

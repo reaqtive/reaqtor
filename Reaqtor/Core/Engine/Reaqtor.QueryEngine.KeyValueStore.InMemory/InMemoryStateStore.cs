@@ -16,22 +16,15 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// Thread-safe in memory state store which holds key-value pair item sorted by categories
     /// and track items removal.
     /// </summary>
+    /// <remarks>
+    /// Create a new <see cref="InMemoryStateStore"/> instance.
+    /// </remarks>
+    /// <param name="id">Store identifier.</param>
     [Serializable]
-    public sealed class InMemoryStateStore
+    public sealed class InMemoryStateStore(string id)
     {
-        private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>> _internalStore;
-        private readonly ConcurrentDictionary<string, ConcurrentBag<string>> _removedItems;
-
-        /// <summary>
-        /// Create a new <see cref="InMemoryStateStore"/> instance.
-        /// </summary>
-        /// <param name="id">Store identifier.</param>
-        public InMemoryStateStore(string id)
-        {
-            Id = id;
-            _internalStore = new ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>>();
-            _removedItems = new ConcurrentDictionary<string, ConcurrentBag<string>>();
-        }
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>> _internalStore = new ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>>();
+        private readonly ConcurrentDictionary<string, ConcurrentBag<string>> _removedItems = new ConcurrentDictionary<string, ConcurrentBag<string>>();
 
         /// <summary>
         /// Loads the state store from the given stream.
@@ -133,13 +126,13 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
                     entries.Add(entry);
                 }
 
-                var category = new XElement("Category", new object[] { catNameAttr }.Concat(entries).ToArray());
+                var category = new XElement("Category", [catNameAttr, .. entries]);
                 categories.Add(category);
             }
 
             var doc = new XDocument(
                 new XElement("Store",
-                    new object[] { idAttr }.Concat(categories).ToArray()
+                    [idAttr, .. categories]
                 )
             );
             return doc;
@@ -148,7 +141,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <summary>
         /// Store id.
         /// </summary>
-        public string Id { get; private set; }
+        public string Id { get; private set; } = id;
 
         /// <summary>
         /// Get the categories present in the store.
@@ -175,7 +168,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             }
             else
             {
-                return Enumerable.Empty<string>();
+                return [];
             }
         }
 
@@ -234,7 +227,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             {
                 removed = values.TryRemove(key, out _);
             }
-            var removedKeys = _removedItems.GetOrAdd(category, c => new ConcurrentBag<string>());
+            var removedKeys = _removedItems.GetOrAdd(category, c => []);
             removedKeys.Add(key);
             return removed;
         }
@@ -303,7 +296,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         public void Clear()
         {
             // we do it in 2 passes to clear the content of each categories.
-            string[] categories = _internalStore.Keys.ToArray();
+            string[] categories = [.. _internalStore.Keys];
             foreach (var category in categories)
             {
                 if (_internalStore.TryGetValue(category, out var items))
@@ -313,12 +306,13 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             }
             _internalStore.Clear();
 
-            categories = _removedItems.Keys.ToArray();
+            categories = [.. _removedItems.Keys];
             foreach (var category in categories)
             {
                 if (_removedItems.TryGetValue(category, out var items))
                 {
-                    while (items.TryTake(out _)) { };
+                    while (items.TryTake(out _)) { }
+                    ;
                 }
             }
             _removedItems.Clear();

@@ -13,14 +13,9 @@ using System.IO;
 
 namespace Utilities
 {
-    public sealed class AddOrUpdateStateWriterOperation : StateWriterOperation
+    public sealed class AddOrUpdateStateWriterOperation(string category, string key, MemoryStream data) : StateWriterOperation(category, key)
     {
-        private readonly MemoryStream _data;
-
-        public AddOrUpdateStateWriterOperation(string category, string key, MemoryStream data) : base(category, key)
-        {
-            _data = data;
-        }
+        private readonly MemoryStream _data = data;
 
         public override StateWriterOperationKind Kind => StateWriterOperationKind.AddOrUpdate;
 
@@ -30,7 +25,7 @@ namespace Utilities
 
             if (!store.Data.TryGetValue(Category, out var table))
             {
-                table = new Dictionary<string, byte[]>();
+                table = [];
                 store.Data.Add(Category, table);
             }
 

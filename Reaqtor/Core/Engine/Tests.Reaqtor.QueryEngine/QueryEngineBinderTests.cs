@@ -24,12 +24,12 @@ namespace Tests.Reaqtor.QueryEngine
     [TestClass]
     public class QueryEngineBinderTests
     {
-        private static readonly string[] Keys = new[]
-        {
+        private static readonly string[] Keys =
+        [
             new Uri("test://key0/").ToCanonicalString(),
             new Uri("test://key1/").ToCanonicalString(),
             new Uri("test://key2/").ToCanonicalString(),
-        };
+        ];
 
         private static readonly Expression ReliableStream = Expression.New(typeof(DummyReliableSubject));
         private static readonly Expression UntypedStream = Expression.New(typeof(DummyUntypedSubject));
@@ -1413,14 +1413,9 @@ namespace Tests.Reaqtor.QueryEngine
             }
         }
 
-        private class SimpleDelegationTarget<T, R> : IMultiSubject<T, R>, IDelegationTarget, IExpressible
+        private class SimpleDelegationTarget<T, R>(Func<ParameterExpression, Expression, Expression> delegationFunc) : IMultiSubject<T, R>, IDelegationTarget, IExpressible
         {
-            private readonly Func<ParameterExpression, Expression, Expression> _delegationFunc;
-
-            public SimpleDelegationTarget(Func<ParameterExpression, Expression, Expression> delegationFunc)
-            {
-                _delegationFunc = delegationFunc;
-            }
+            private readonly Func<ParameterExpression, Expression, Expression> _delegationFunc = delegationFunc;
 
             public bool CanDelegate(ParameterExpression node, Expression expression)
             {

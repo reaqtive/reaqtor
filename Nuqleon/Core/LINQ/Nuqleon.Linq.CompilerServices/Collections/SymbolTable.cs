@@ -45,7 +45,7 @@ namespace System.Linq.CompilerServices
 
             Parent = parent;
             _table = new Dictionary<TSymbol, Indexed<TValue>>(symbolComparer);
-            _ordered = new List<KeyValuePair<TSymbol, TValue>>();
+            _ordered = [];
         }
 
         /// <summary>

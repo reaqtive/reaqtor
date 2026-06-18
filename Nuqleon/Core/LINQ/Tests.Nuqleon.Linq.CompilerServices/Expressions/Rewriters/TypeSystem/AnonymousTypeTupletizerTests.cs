@@ -394,13 +394,13 @@ namespace Tests.System.Linq.CompilerServices
             {
                 new KeyValuePair<string, Type>("Qux", typeof(int)),
                 new KeyValuePair<string, Type>("Bar", atb2),
-            }, Array.Empty<string>());
+            }, []);
 
             rtc.DefineAnonymousType(atb2, new[]
             {
                 new KeyValuePair<string, Type>("Baz", typeof(int)),
                 new KeyValuePair<string, Type>("Foo", atb1),
-            }, Array.Empty<string>());
+            }, []);
 
             var foo = atb1.CreateType();
             var bar = atb2.CreateType();

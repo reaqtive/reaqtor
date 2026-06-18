@@ -143,19 +143,13 @@ namespace Tests.System.Linq.Expressions.Optimizers
             }
         }
 
-        private sealed class PureMembers
+        private sealed class PureMembers(int value)
         {
-            public PureMembers(int value)
-            {
-                InstanceField = value;
-                InstanceFieldNotPure = value;
-            }
-
             public static int StaticField = 42;
             public static int StaticFieldNotPure = -1;
 
-            public int InstanceField;
-            public int InstanceFieldNotPure;
+            public int InstanceField = value;
+            public int InstanceFieldNotPure = value;
         }
     }
 }

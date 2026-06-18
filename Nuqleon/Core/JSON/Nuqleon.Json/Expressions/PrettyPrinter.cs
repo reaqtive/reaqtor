@@ -18,11 +18,16 @@ namespace Nuqleon.Json.Expressions
     /// Pretty printer for JSON expression trees.
     /// </summary>
     /// <remarks>Recommended for debugging purposes.</remarks>
-    public sealed class PrettyPrinter : ExpressionVisitor<string>
+    /// <remarks>
+    /// Creates a new pretty printer with the specified indentation width and character.
+    /// </remarks>
+    /// <param name="indentationWidth">Indentation width.</param>
+    /// <param name="indentationCharacter">Indentation character.</param>
+    public sealed class PrettyPrinter(int indentationWidth, char indentationCharacter) : ExpressionVisitor<string>
     {
-        private static readonly char[] s_CrLf = new[] { '\r', '\n' };
+        private static readonly char[] s_CrLf = ['\r', '\n'];
 
-        private readonly string _indent;
+        private readonly string _indent = new string(indentationCharacter, indentationWidth);
 
         /// <summary>
         /// Creates a new pretty printer with indentation of two spaces.
@@ -30,16 +35,6 @@ namespace Nuqleon.Json.Expressions
         public PrettyPrinter()
             : this(2, ' ')
         {
-        }
-
-        /// <summary>
-        /// Creates a new pretty printer with the specified indentation width and character.
-        /// </summary>
-        /// <param name="indentationWidth">Indentation width.</param>
-        /// <param name="indentationCharacter">Indentation character.</param>
-        public PrettyPrinter(int indentationWidth, char indentationCharacter)
-        {
-            _indent = new string(indentationCharacter, indentationWidth);
         }
 
         /// <summary>

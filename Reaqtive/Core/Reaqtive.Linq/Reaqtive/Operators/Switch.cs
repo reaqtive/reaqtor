@@ -4,26 +4,22 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Switch<TSource> : SubscribableBase<TSource>
+    internal sealed class Switch<TSource>(ISubscribable<ISubscribable<TSource>> sources) : SubscribableBase<TSource>
     {
-        private readonly ISubscribable<ISubscribable<TSource>> _sources;
-
-        public Switch(ISubscribable<ISubscribable<TSource>> sources)
-        {
-            _sources = sources;
-        }
+        private readonly ISubscribable<ISubscribable<TSource>> _sources = sources;
 
         protected override ISubscription SubscribeCore(IObserver<TSource> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : HigherOrderInputStatefulOperator<Switch<TSource>, TSource>, IObserver<ISubscribable<TSource>>
+        private sealed class _(Switch<TSource> parent, IObserver<TSource> observer) : HigherOrderInputStatefulOperator<Switch<TSource>, TSource>(parent, observer), IObserver<ISubscribable<TSource>>
         {
-            private object _lock;
+            private Lock _lock;
 #pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private ISubscription _subscription;
             private SerialSubscription _innerSubscription;
@@ -33,18 +29,13 @@ namespace Reaqtive.Operators
             private bool _hasLatest;
             private IOperatorContext _context;
 
-            public _(Switch<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
-
             public override string Name => "rc:Switch";
 
             public override Version Version => Versioning.v1;
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                _lock = new object();
+                _lock = new Lock();
                 _innerSubscription = new SerialSubscription();
                 _isStopped = false;
                 _latest = 0UL;
@@ -160,17 +151,11 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private sealed class i : IObserver<TSource>
+            private sealed class i(Switch<TSource>._ parent, ulong id) : IObserver<TSource>
             {
-                private readonly _ _parent;
-                private readonly ulong _id;
+                private readonly _ _parent = parent;
+                private readonly ulong _id = id;
                 private ISubscription _self;
-
-                public i(_ parent, ulong id)
-                {
-                    _parent = parent;
-                    _id = id;
-                }
 
                 public ISubscription Subscription
                 {

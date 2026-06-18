@@ -23,14 +23,9 @@ namespace Reaqtor.QueryEngine
         ///
         /// See <see cref="AsyncReactiveEngineProvider"/> for the async variant, with transaction log applied.
         /// </remarks>
-        private sealed class ReactiveEngine : IReactiveEngineProvider
+        private sealed class ReactiveEngine(CheckpointingQueryEngine.CoreReactiveEngine engine) : IReactiveEngineProvider
         {
-            private readonly CoreReactiveEngine _engine;
-
-            public ReactiveEngine(CoreReactiveEngine engine)
-            {
-                _engine = engine;
-            }
+            private readonly CoreReactiveEngine _engine = engine;
 
             public void CreateSubscription(Uri subscriptionUri, Expression subscription, object state)
             {
@@ -105,14 +100,9 @@ namespace Reaqtor.QueryEngine
 
             public IQueryProvider Provider => _engine.MetadataQueryProvider;
 
-            private sealed class ReactiveObserverToReliableObserver<T> : IReactiveObserver<T>
+            private sealed class ReactiveObserverToReliableObserver<T>(IReliableObserver<T> reliableObserver) : IReactiveObserver<T>
             {
-                private readonly IReliableObserver<T> _reliableObserver;
-
-                public ReactiveObserverToReliableObserver(IReliableObserver<T> reliableObserver)
-                {
-                    _reliableObserver = reliableObserver;
-                }
+                private readonly IReliableObserver<T> _reliableObserver = reliableObserver;
 
                 public void OnCompleted() => _reliableObserver.OnCompleted();
 

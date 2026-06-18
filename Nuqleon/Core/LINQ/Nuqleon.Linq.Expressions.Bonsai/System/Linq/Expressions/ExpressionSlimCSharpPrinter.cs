@@ -29,19 +29,17 @@ namespace System.Linq.Expressions.Bonsai
         private readonly Dictionary<ParameterExpressionSlim, string> _globalAliases;
         private int _globalAliasesMax = 0;
 
-        private readonly Dictionary<MemberInfoSlim, string> _memberAliases = new();
-
-        private static IDictionary<Type, Func<object, string>> s_numericConstantToString;
+        private readonly Dictionary<MemberInfoSlim, string> _memberAliases = [];
 
         public ExpressionSlimCSharpPrinter()
         {
             _environment = new Stack<IEnumerable<ParameterExpressionSlim>>();
-            _globals = new List<ParameterExpressionSlim>();
+            _globals = [];
 
             _aliases = new Stack<Dictionary<ParameterExpressionSlim, string>>();
             _aliasesMax = new Stack<int>();
 
-            _globalAliases = new Dictionary<ParameterExpressionSlim, string>();
+            _globalAliases = [];
             _aliases.Push(_globalAliases);
             _aliasesMax.Push(-1);
         }
@@ -240,7 +238,7 @@ namespace System.Linq.Expressions.Bonsai
         {
             get
             {
-                s_numericConstantToString ??= new Dictionary<Type, Func<object, string>>
+                field ??= new Dictionary<Type, Func<object, string>>
                     {
                         {
                             typeof(char), value =>
@@ -350,7 +348,7 @@ namespace System.Linq.Expressions.Bonsai
                         },
                     };
 
-                return s_numericConstantToString;
+                return field;
             }
         }
 

@@ -7,16 +7,10 @@ using System.Collections.Generic;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
-    public class GetOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
+    public class GetOperationResult<TKey, TValue>(Sequenced<TValue> result, bool keyNotFound) : OperationResult<TKey, TValue>
     {
-        private readonly Sequenced<TValue> _result;
-        private readonly bool _keyNotFound;
-
-        public GetOperationResult(Sequenced<TValue> result, bool keyNotFound)
-        {
-            _result = result;
-            _keyNotFound = keyNotFound;
-        }
+        private readonly Sequenced<TValue> _result = result;
+        private readonly bool _keyNotFound = keyNotFound;
 
         public override Exception Exception => _keyNotFound ? new KeyNotFoundException() : null;
 

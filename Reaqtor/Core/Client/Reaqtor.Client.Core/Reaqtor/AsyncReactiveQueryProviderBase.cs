@@ -18,18 +18,14 @@ namespace Reaqtor
     /// <summary>
     /// Base class for reactive processing query providers, used to build observables, observers, and subjects represented by expression trees.
     /// </summary>
-    public abstract partial class AsyncReactiveQueryProviderBase : IAsyncReactiveQueryProvider
+    /// <remarks>
+    /// Creates a new reactive processing query provider with default factory method implementations.
+    /// </remarks>
+    /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
+    public abstract partial class AsyncReactiveQueryProviderBase(IReactiveExpressionServices expressionServices) : IAsyncReactiveQueryProvider
     {
-        #region Constructor & fields
 
-        /// <summary>
-        /// Creates a new reactive processing query provider with default factory method implementations.
-        /// </summary>
-        /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
-        protected AsyncReactiveQueryProviderBase(IReactiveExpressionServices expressionServices)
-        {
-            ExpressionServices = expressionServices ?? throw new ArgumentNullException(nameof(expressionServices));
-        }
+        #region Constructor & fields
 
         #endregion
 
@@ -38,7 +34,7 @@ namespace Reaqtor
         /// <summary>
         /// Gets the expression services object, used to perform expression tree manipulations.
         /// </summary>
-        public IReactiveExpressionServices ExpressionServices { get; }
+        public IReactiveExpressionServices ExpressionServices { get; } = expressionServices ?? throw new ArgumentNullException(nameof(expressionServices));
 
         #endregion
 
@@ -94,12 +90,12 @@ namespace Reaqtor
 
         internal Task<IAsyncReactiveQubscription> CreateSubscriptionAsync(IAsyncReactiveQubscriptionFactory factory, Uri subscriptionUri, object state, CancellationToken token)
         {
-            return CreateSubscriptionAsync(factory, Array.Empty<Expression>(), subscriptionUri, state, token);
+            return CreateSubscriptionAsync(factory, [], subscriptionUri, state, token);
         }
 
         internal Task<IAsyncReactiveQubscription> CreateSubscriptionAsync<TArgs>(IAsyncReactiveQubscriptionFactory<TArgs> factory, TArgs argument, Uri subscriptionUri, object state, CancellationToken token)
         {
-            return CreateSubscriptionAsync(factory, new Expression[] { Expression.Constant(argument, typeof(TArgs)) }, subscriptionUri, state, token);
+            return CreateSubscriptionAsync(factory, [Expression.Constant(argument, typeof(TArgs))], subscriptionUri, state, token);
         }
 
         internal async Task<IAsyncReactiveQubscription> CreateSubscriptionAsync(IAsyncReactiveExpressible factory, Expression[] arguments, Uri subscriptionUri, object state, CancellationToken token)
@@ -149,12 +145,12 @@ namespace Reaqtor
 
         internal Task<IAsyncReactiveQubject<TInput, TOutput>> CreateStreamAsync<TInput, TOutput>(IAsyncReactiveQubjectFactory<TInput, TOutput> factory, Uri streamUri, object state, CancellationToken token)
         {
-            return CreateStreamAsync<TInput, TOutput>(factory, Array.Empty<Expression>(), streamUri, state, token);
+            return CreateStreamAsync<TInput, TOutput>(factory, [], streamUri, state, token);
         }
 
         internal Task<IAsyncReactiveQubject<TInput, TOutput>> CreateStreamAsync<TArgs, TInput, TOutput>(IAsyncReactiveQubjectFactory<TInput, TOutput, TArgs> factory, TArgs argument, Uri streamUri, object state, CancellationToken token)
         {
-            return CreateStreamAsync<TInput, TOutput>(factory, new Expression[] { Expression.Constant(argument, typeof(TArgs)) }, streamUri, state, token);
+            return CreateStreamAsync<TInput, TOutput>(factory, [Expression.Constant(argument, typeof(TArgs))], streamUri, state, token);
         }
 
         internal async Task<IAsyncReactiveQubject<TInput, TOutput>> CreateStreamAsync<TInput, TOutput>(IAsyncReactiveExpressible factory, Expression[] arguments, Uri streamUri, object state, CancellationToken token)

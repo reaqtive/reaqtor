@@ -262,14 +262,14 @@ namespace System.Linq.CompilerServices
                         var call = default(Expression);
                         if (mce.Object != null)
                         {
-                            args = new[] { mce.Object }.Concat(mce.Arguments).ToArray();
-                            ps = args.Select((e, i) => Expression.Parameter(e.Type, CpsConstants.PREFIX + i)).ToArray();
+                            args = [mce.Object, .. mce.Arguments];
+                            ps = [.. args.Select((e, i) => Expression.Parameter(e.Type, CpsConstants.PREFIX + i))];
                             call = _parent.MakeAsyncMethodCall(ps[0], tgt, ps.Skip(1).Cast<Expression>(), cont);
                         }
                         else
                         {
-                            args = mce.Arguments.ToArray();
-                            ps = args.Select((e, i) => Expression.Parameter(e.Type, CpsConstants.PREFIX + i)).ToArray();
+                            args = [.. mce.Arguments];
+                            ps = [.. args.Select((e, i) => Expression.Parameter(e.Type, CpsConstants.PREFIX + i))];
                             call = _parent.MakeAsyncMethodCall(instance: null, tgt, ps.Cast<Expression>(), cont);
                         }
 

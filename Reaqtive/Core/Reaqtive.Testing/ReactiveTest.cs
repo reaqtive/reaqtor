@@ -178,14 +178,9 @@ namespace Reaqtive.Testing
 
         #region Predicate-based notification assert helper classes
 
-        private sealed class OnNextPredicate<T> : PredicateNotification<T>
+        private sealed class OnNextPredicate<T>(Func<T, bool> predicate) : PredicateNotification<T>
         {
-            private readonly Func<T, bool> _predicate;
-
-            public OnNextPredicate(Func<T, bool> predicate)
-            {
-                _predicate = predicate;
-            }
+            private readonly Func<T, bool> _predicate = predicate;
 
             public override bool Equals(Notification<T> other)
             {
@@ -200,14 +195,9 @@ namespace Reaqtive.Testing
             }
         }
 
-        private sealed class OnErrorPredicate<T> : PredicateNotification<T>
+        private sealed class OnErrorPredicate<T>(Func<Exception, bool> predicate) : PredicateNotification<T>
         {
-            private readonly Func<Exception, bool> _predicate;
-
-            public OnErrorPredicate(Func<Exception, bool> predicate)
-            {
-                _predicate = predicate;
-            }
+            private readonly Func<Exception, bool> _predicate = predicate;
 
             public override bool Equals(Notification<T> other)
             {

@@ -723,7 +723,7 @@ namespace Nuqleon.Json.Serialization
             //         remainder =          t": 42
             //
 
-            return value.IndexOfAny(new char[] { '\\', '"' }) < 0;
+            return value.IndexOfAny(['\\', '"']) < 0;
         }
 
         /// <summary>

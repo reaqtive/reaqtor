@@ -15,7 +15,7 @@ namespace Reaqtor.ReificationFramework
     /// </summary>
     public class ReifiedOperation
     {
-        private static readonly ConditionalWeakTable<object, ReifiedOperation> s_upcasts = new();
+        private static readonly ConditionalWeakTable<object, ReifiedOperation> s_upcasts = [];
 
         private readonly QueryEngineOperation _qeOp;
         private readonly ServiceOperation _svcOp;

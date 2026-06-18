@@ -4,7 +4,7 @@
 
 namespace Reaqtor.QueryEngine
 {
-    internal class MockReactiveServiceContext : ReactiveServiceContext
+    internal class MockReactiveServiceContext(IReactiveEngineProvider provider) : ReactiveServiceContext(new ExpressionServices(), provider)
     {
         public const string SubscribeUri = Constants.SubscribeUri;
         public const string ReliableSubscribeUri = "rx://reliableobservable/subscribe";
@@ -18,11 +18,6 @@ namespace Reaqtor.QueryEngine
         public const string SubscribableId = "rx:/subscribable/id";
 
         private readonly ReactiveMetadataBase _metadata;
-
-        public MockReactiveServiceContext(IReactiveEngineProvider provider)
-            : base(new ExpressionServices(), provider)
-        {
-        }
 
         public MockReactiveServiceContext(IReactiveEngineProvider provider, ReactiveMetadataBase metadata)
             : this(provider)

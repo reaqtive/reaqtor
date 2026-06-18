@@ -493,7 +493,7 @@ namespace Tests.System.Linq.CompilerServices
             var p = Expression.Parameter(typeof(string));
             var c = Expression.Coalesce(p, Expression.Constant(0), f);
 
-            var e = (Expression<Func<string, int>>)Expression.Lambda(c, new[] { p });
+            var e = (Expression<Func<string, int>>)Expression.Lambda(c, [p]);
             CloneAndAssert(e);
         }
 
@@ -884,9 +884,9 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_Call_Static2()
         {
-            var e1 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", new[] { typeof(bool) }), Expression.Constant(true));
-            var e2 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", new[] { typeof(bool) }), Expression.Constant(false));
-            var e3 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", new[] { typeof(bool) }), Expression.Constant(true));
+            var e1 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", [typeof(bool)]), Expression.Constant(true));
+            var e2 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", [typeof(bool)]), Expression.Constant(false));
+            var e3 = Expression.Call(instance: null, typeof(Console).GetMethod("ReadKey", [typeof(bool)]), Expression.Constant(true));
 
             var i1 = Intern(e1);
             var i2 = Intern(e2);
@@ -922,9 +922,9 @@ namespace Tests.System.Linq.CompilerServices
         {
             var c = Expression.Constant("bar");
 
-            var e1 = Expression.Call(c, typeof(string).GetMethod("Substring", new[] { typeof(int) }), Expression.Constant(1));
-            var e2 = Expression.Call(c, typeof(string).GetMethod("Substring", new[] { typeof(int) }), Expression.Constant(2));
-            var e3 = Expression.Call(c, typeof(string).GetMethod("Substring", new[] { typeof(int) }), Expression.Constant(1));
+            var e1 = Expression.Call(c, typeof(string).GetMethod("Substring", [typeof(int)]), Expression.Constant(1));
+            var e2 = Expression.Call(c, typeof(string).GetMethod("Substring", [typeof(int)]), Expression.Constant(2));
+            var e3 = Expression.Call(c, typeof(string).GetMethod("Substring", [typeof(int)]), Expression.Constant(1));
 
             var i1 = Intern(e1);
             var i2 = Intern(e2);
@@ -1019,12 +1019,12 @@ namespace Tests.System.Linq.CompilerServices
         public void Intern_Members_Indexed_Property()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(int) }), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), new[] { Expression.Constant(0) });
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
             CloneAndAssert(f1);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(string), typeof(int) }), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), new[] { Expression.Constant("foo"), Expression.Constant(0) });
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             CloneAndAssert(f2);
@@ -1160,7 +1160,7 @@ namespace Tests.System.Linq.CompilerServices
             {
                 new KeyValuePair<string, Type>("foo", typeof(int)),
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, new string[] { "bar" });
+            }, ["bar"]);
 
             Assert.IsNotNull(anon.GetProperty("bar"));
             Assert.IsNotNull(anon.GetProperty("foo"));
@@ -1309,20 +1309,13 @@ namespace Tests.System.Linq.CompilerServices
             CloneAndAssert(e);
         }
 
-        private sealed class Qux
+        private sealed class Qux(int x)
         {
-            public Qux(int x)
-            {
-                X = x;
-                Foos = new List<int>();
-                Bar = new Bar2();
-            }
-
             public int X
             {
                 get;
                 private set;
-            }
+            } = x;
 
             public string Baz
             {
@@ -1334,13 +1327,13 @@ namespace Tests.System.Linq.CompilerServices
             {
                 get;
                 private set;
-            }
+            } = new Bar2();
 
             public List<int> Foos
             {
                 get;
                 private set;
-            }
+            } = [];
         }
 
         private sealed class Bar2
@@ -1867,12 +1860,12 @@ namespace Tests.System.Linq.CompilerServices
         {
             public static List<T> Concat<T>(List<T> x, List<T> y, int take)
             {
-                return x.Concat(y.Take(take)).ToList();
+                return [.. x, .. y.Take(take)];
             }
 
             public static List<T> Concat<T>(List<T> x, List<T> y, List<T> z)
             {
-                return x.Concat(y).Concat(z).ToList();
+                return [.. x, .. y, .. z];
             }
         }
 
@@ -2062,7 +2055,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             public WithMemberList()
             {
-                Inner = new List<int>();
+                Inner = [];
             }
 
             public List<int> Inner

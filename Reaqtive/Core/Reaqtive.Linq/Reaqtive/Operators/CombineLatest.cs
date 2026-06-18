@@ -233,44 +233,32 @@ namespace Reaqtive.Operators
     /// Represents an observer for a source used by an n-ary `CombineLatest` operator.
     /// </summary>
     /// <typeparam name="TInput">The type of the events processed by the nth observer.</typeparam>
-    internal sealed class CombineLatestObserver<TInput> : IObserver<TInput>
+    internal sealed class CombineLatestObserver<TInput>(ICombineLatest parent, int index) : IObserver<TInput>
     {
         /// <summary>
         /// The parent sink to report observer events to.
         /// </summary>
-        private readonly ICombineLatest _parent;
+        private readonly ICombineLatest _parent = parent;
 
         /// <summary>
         /// The index of the observer, i.e. which of the sources it's subscribed to. This value
         /// is used to report values and completion messages to the parent, in order for it to
         /// update the corresponding value and completion tracking state.
         /// </summary>
-        private readonly int _index;
-
-        /// <summary>
-        /// The subscription of the source sequence with this observer. This field is set after
-        /// constructing the instance, using the <see cref="Subscription"/> property.
-        /// </summary>
-        private ISubscription _subscription;
-
-        public CombineLatestObserver(ICombineLatest parent, int index)
-        {
-            _parent = parent;
-            _index = index;
-        }
+        private readonly int _index = index;
 
         /// <summary>
         /// Sets the subscription of the source sequence with this observer.
         /// </summary>
         public ISubscription Subscription
         {
-            get => _subscription;
+            get;
 
             set
             {
-                Debug.Assert(_subscription == null, "Expecting that the subscription will only be set once.");
+                Debug.Assert(field == null, "Expecting that the subscription will only be set once.");
 
-                _subscription = value;
+                field = value;
             }
         }
 
@@ -303,7 +291,7 @@ namespace Reaqtive.Operators
         /// </summary>
         public void OnCompleted()
         {
-            _subscription.Dispose();
+            Subscription.Dispose();
             _parent.Done(_index);
         }
 

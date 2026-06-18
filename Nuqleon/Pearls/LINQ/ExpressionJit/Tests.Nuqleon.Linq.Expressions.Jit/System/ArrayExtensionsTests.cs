@@ -18,7 +18,7 @@ namespace Tests
             var xs = new[] { 42 };
             var res = xs.RemoveFirst();
             Assert.AreEqual(0, res.Length);
-            Assert.AreSame(Array.Empty<int>(), res);
+            Assert.AreSame([], res);
         }
 
         [TestMethod]
@@ -45,7 +45,7 @@ namespace Tests
             var xs = Array.Empty<int>();
             var res = xs.Map(x => x * 2);
             Assert.AreEqual(0, xs.Length);
-            Assert.AreSame(Array.Empty<int>(), res);
+            Assert.AreSame([], res);
         }
 
         [TestMethod]

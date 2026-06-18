@@ -12,21 +12,15 @@ namespace Reaqtor.TestingFramework
 {
     public partial class TestExecutionEnvironment
     {
-        private class NotSoSimpleUntypedSubject<T> : MultiSubjectBase, IReactiveQubject<T>, ISealable, IDisposable
+        private class NotSoSimpleUntypedSubject<T>(TestExecutionEnvironment parent, Uri streamUri) : MultiSubjectBase, IReactiveQubject<T>, ISealable, IDisposable
         {
 #pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood OnDispose
             private readonly SimpleSubject<T> _subject = new();
 #pragma warning restore CA2213
 
-            private readonly TestExecutionEnvironment _parent;
-            private readonly Uri _streamUri;
+            private readonly TestExecutionEnvironment _parent = parent;
+            private readonly Uri _streamUri = streamUri;
             private int _count;
-
-            public NotSoSimpleUntypedSubject(TestExecutionEnvironment parent, Uri streamUri)
-            {
-                _parent = parent;
-                _streamUri = streamUri;
-            }
 
             public int RefCount => _count;
 
@@ -56,14 +50,9 @@ namespace Reaqtor.TestingFramework
                 _subject.Dispose();
             }
 
-            private sealed class Impl<TOutput> : SubscribableBase<TOutput>
+            private sealed class Impl<TOutput>(TestExecutionEnvironment.NotSoSimpleUntypedSubject<TOutput> parent) : SubscribableBase<TOutput>
             {
-                private readonly NotSoSimpleUntypedSubject<TOutput> _parent;
-
-                public Impl(NotSoSimpleUntypedSubject<TOutput> parent)
-                {
-                    _parent = parent;
-                }
+                private readonly NotSoSimpleUntypedSubject<TOutput> _parent = parent;
 
                 protected override ISubscription SubscribeCore(IObserver<TOutput> observer)
                 {
@@ -77,16 +66,10 @@ namespace Reaqtor.TestingFramework
                 }
             }
 
-            private sealed class Subscription<TOutput> : ISubscription
+            private sealed class Subscription<TOutput>(TestExecutionEnvironment.NotSoSimpleUntypedSubject<TOutput> parent) : ISubscription
             {
-                private readonly NotSoSimpleUntypedSubject<TOutput> _parent;
+                private readonly NotSoSimpleUntypedSubject<TOutput> _parent = parent;
                 private int _disposed;
-
-                public Subscription(NotSoSimpleUntypedSubject<TOutput> parent)
-                {
-                    _parent = parent;
-                }
-
                 public ISubscription Inner;
 
                 public void Accept(ISubscriptionVisitor visitor)

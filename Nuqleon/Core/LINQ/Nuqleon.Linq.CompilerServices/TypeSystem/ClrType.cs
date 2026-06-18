@@ -12,13 +12,11 @@
 
 namespace System.Linq.CompilerServices
 {
-    internal class ClrType : IType
+    internal class ClrType(Type type) : IType
     {
         public static readonly IType Void = new ClrType(typeof(void));
 
-        private readonly Type _type;
-
-        public ClrType(Type type) => _type = type;
+        private readonly Type _type = type;
 
         public bool IsAssignableTo(IType type)
         {

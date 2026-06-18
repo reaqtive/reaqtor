@@ -16,16 +16,10 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Reaqtor.TestingFramework
 {
-    public sealed class SequentialAssertionTestEngineProvider : AssertionTestEngineProvider, IDisposable
+    public sealed class SequentialAssertionTestEngineProvider(IEqualityComparer<ServiceOperation> comparer, params ServiceOperation[] operations) : AssertionTestEngineProvider, IDisposable
     {
-        private readonly IEnumerator<ServiceOperation> _operations;
-        private readonly IEqualityComparer<ServiceOperation> _comparer;
-
-        public SequentialAssertionTestEngineProvider(IEqualityComparer<ServiceOperation> comparer, params ServiceOperation[] operations)
-        {
-            _comparer = comparer;
-            _operations = ((IEnumerable<ServiceOperation>)operations ?? throw new ArgumentNullException(nameof(operations))).GetEnumerator();
-        }
+        private readonly IEnumerator<ServiceOperation> _operations = ((IEnumerable<ServiceOperation>)operations ?? throw new ArgumentNullException(nameof(operations))).GetEnumerator();
+        private readonly IEqualityComparer<ServiceOperation> _comparer = comparer;
 
         protected override void AssertCore(ServiceOperation operation)
         {

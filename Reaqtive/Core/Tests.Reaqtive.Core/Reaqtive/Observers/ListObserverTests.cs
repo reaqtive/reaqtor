@@ -145,7 +145,7 @@ namespace Test.Reaqtive
             {
                 Do(() =>
                 {
-                    _instance = Activator.CreateInstance(s_listObserver.Value, new object[] { observers });
+                    _instance = Activator.CreateInstance(s_listObserver.Value, [observers]);
                 });
             }
 
@@ -163,7 +163,7 @@ namespace Test.Reaqtive
             {
                 return Do(() =>
                 {
-                    return (IObserver<T>)s_add.Value.Invoke(_instance, new object[] { observer });
+                    return (IObserver<T>)s_add.Value.Invoke(_instance, [observer]);
                 });
             }
 
@@ -171,7 +171,7 @@ namespace Test.Reaqtive
             {
                 return Do(() =>
                 {
-                    return (IObserver<T>)s_remove.Value.Invoke(_instance, new object[] { observer });
+                    return (IObserver<T>)s_remove.Value.Invoke(_instance, [observer]);
                 });
             }
 

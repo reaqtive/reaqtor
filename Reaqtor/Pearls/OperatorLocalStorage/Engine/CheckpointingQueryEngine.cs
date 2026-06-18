@@ -40,15 +40,9 @@ namespace Engine
     /// <summary>
     /// Extension of <see cref="Reaqtor.QueryEngine.CheckpointingQueryEngine"/> to support a persisted object space that can be used by reactive artifacts.
     /// </summary>
-    public class CheckpointingQueryEngine : Reaqtor.QueryEngine.CheckpointingQueryEngine
+    public class CheckpointingQueryEngine(Uri uri, IReactiveServiceResolver serviceResolver, IScheduler scheduler, IReactiveMetadata metadataRegistry, IKeyValueStore keyValueStore, IQuotedTypeConversionTargets quotedTypeConversionTargets, TraceSource traceSource, ICompiledDelegateCache delegateCache) : Reaqtor.QueryEngine.CheckpointingQueryEngine(uri, serviceResolver, scheduler, metadataRegistry, keyValueStore, SerializationPolicy.Default, quotedTypeConversionTargets, traceSource, delegateCache)
     {
-        private readonly PersistedObjectSpace _objectSpace;
-
-        public CheckpointingQueryEngine(Uri uri, IReactiveServiceResolver serviceResolver, IScheduler scheduler, IReactiveMetadata metadataRegistry, IKeyValueStore keyValueStore, IQuotedTypeConversionTargets quotedTypeConversionTargets, TraceSource traceSource, ICompiledDelegateCache delegateCache)
-            : base(uri, serviceResolver, scheduler, metadataRegistry, keyValueStore, SerializationPolicy.Default, quotedTypeConversionTargets, traceSource, delegateCache)
-        {
-            _objectSpace = new PersistedObjectSpace(new SerializationFactory());
-        }
+        private readonly PersistedObjectSpace _objectSpace = new PersistedObjectSpace(new SerializationFactory());
 
         public IDictionary<string, object> OperatorContextElements { get; } = new ConcurrentDictionary<string, object>();
 
@@ -105,16 +99,10 @@ namespace Engine
             return new OperatorContext(res, this);
         }
 
-        private sealed class OperatorContext : IHostedOperatorContext
+        private sealed class OperatorContext(IHostedOperatorContext context, CheckpointingQueryEngine parent) : IHostedOperatorContext
         {
-            private readonly IHostedOperatorContext _context;
-            private readonly CheckpointingQueryEngine _parent;
-
-            public OperatorContext(IHostedOperatorContext context, CheckpointingQueryEngine parent)
-            {
-                _context = context;
-                _parent = parent;
-            }
+            private readonly IHostedOperatorContext _context = context;
+            private readonly CheckpointingQueryEngine _parent = parent;
 
             public Uri InstanceId => _context.InstanceId;
 
@@ -148,18 +136,11 @@ namespace Engine
             }
         }
 
-        private sealed class PartitionedStateWriter : IStateWriter
+        private sealed class PartitionedStateWriter(IStateWriter writer, string prefix, bool isOwner) : IStateWriter
         {
-            private readonly IStateWriter _writer;
-            private readonly string _prefix;
-            private readonly bool _isOwner;
-
-            public PartitionedStateWriter(IStateWriter writer, string prefix, bool isOwner)
-            {
-                _writer = writer;
-                _prefix = prefix + "/";
-                _isOwner = isOwner;
-            }
+            private readonly IStateWriter _writer = writer;
+            private readonly string _prefix = prefix + "/";
+            private readonly bool _isOwner = isOwner;
 
             public CheckpointKind CheckpointKind => _writer.CheckpointKind;
 
@@ -186,18 +167,11 @@ namespace Engine
             }
         }
 
-        private sealed class PartitionedStateReader : IStateReader
+        private sealed class PartitionedStateReader(IStateReader reader, string prefix, bool isOwner) : IStateReader
         {
-            private readonly IStateReader _reader;
-            private readonly string _prefix;
-            private readonly bool _isOwner;
-
-            public PartitionedStateReader(IStateReader reader, string prefix, bool isOwner)
-            {
-                _reader = reader;
-                _prefix = prefix + "/";
-                _isOwner = isOwner;
-            }
+            private readonly IStateReader _reader = reader;
+            private readonly string _prefix = prefix + "/";
+            private readonly bool _isOwner = isOwner;
 
             public void Dispose()
             {

@@ -6,29 +6,18 @@ using System;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Count<TSource> : SubscribableBase<int>
+    internal sealed class Count<TSource>(ISubscribable<TSource> source) : SubscribableBase<int>
     {
-        private readonly ISubscribable<TSource> _source;
-
-        public Count(ISubscribable<TSource> source)
-        {
-            _source = source;
-        }
+        private readonly ISubscribable<TSource> _source = source;
 
         protected override ISubscription SubscribeCore(IObserver<int> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<Count<TSource>, int>, IObserver<TSource>
+        private sealed class _(Count<TSource> parent, IObserver<int> observer) : StatefulUnaryOperator<Count<TSource>, int>(parent, observer), IObserver<TSource>
         {
-            private int _count;
-
-            public _(Count<TSource> parent, IObserver<int> observer)
-                : base(parent, observer)
-            {
-                _count = 0;
-            }
+            private int _count = 0;
 
             public override string Name => "rc:Count";
 

@@ -39,7 +39,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             var cycleDetector = new DataTypeToCycleDetector();
             var expression = (Expression<Action<object, HashSet<object>>>)cycleDetector.Visit(DataType.FromType(typeof(MyCyclicType), allowCycles: true));
             var compiled = expression.Compile();
-            compiled(instance, new HashSet<object>());
+            compiled(instance, []);
         }
 
         [TestMethod]

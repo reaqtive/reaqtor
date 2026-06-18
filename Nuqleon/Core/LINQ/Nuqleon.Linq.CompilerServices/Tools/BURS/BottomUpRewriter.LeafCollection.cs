@@ -23,7 +23,7 @@ namespace System.Linq.CompilerServices
     {
         private readonly List<Leaf<TSource, TTarget>> _leaves;
 
-        internal LeafCollection() => _leaves = new List<Leaf<TSource, TTarget>>();
+        internal LeafCollection() => _leaves = [];
 
         /// <summary>
         /// Adds a new leaf rule.

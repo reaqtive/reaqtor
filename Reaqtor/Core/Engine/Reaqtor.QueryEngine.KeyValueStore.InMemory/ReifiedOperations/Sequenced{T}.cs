@@ -8,7 +8,12 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// Represents a value with an associated sequence number.
     /// </summary>
     /// <typeparam name="T">The type of the object.</typeparam>
-    public class Sequenced<T>
+    /// <remarks>
+    /// Creates a new sequenced object, using the specified sequence number.
+    /// </remarks>
+    /// <param name="obj">The underlying object.</param>
+    /// <param name="sequenceId">The sequence id to use.</param>
+    public class Sequenced<T>(T obj, long sequenceId)
     {
         /// <summary>
         /// Creates a new sequenced object, using a unique sequence number obtained from a global counter.
@@ -19,29 +24,18 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         {
         }
 
-        /// <summary>
-        /// Creates a new sequenced object, using the specified sequence number.
-        /// </summary>
-        /// <param name="obj">The underlying object.</param>
-        /// <param name="sequenceId">The sequence id to use.</param>
-        public Sequenced(T obj, long sequenceId)
-        {
-            Object = obj;
-            SequenceId = sequenceId;
-        }
-
 #pragma warning disable CA1720 // Identifier 'Object' contains type name.
 
         /// <summary>
         /// Gets the object.
         /// </summary>
-        public T Object { get; }
+        public T Object { get; } = obj;
 
 #pragma warning restore CA1720
 
         /// <summary>
         /// Gets the sequence number.
         /// </summary>
-        public long SequenceId { get; }
+        public long SequenceId { get; } = sequenceId;
     }
 }

@@ -25,7 +25,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_Observable_Roundtrip()
         {
             var observable = new Observable(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
@@ -41,7 +41,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_Observer_Roundtrip()
         {
             var observer = new Observer(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(observer);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObserverDefinition>(serialized);
 
@@ -57,7 +57,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_StreamFactory_Roundtrip()
         {
             var streamFactory = new StreamFactory(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(streamFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveStreamFactoryDefinition>(serialized);
 
@@ -74,7 +74,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_SubscriptionFactory_Roundtrip()
         {
             var subscriptionFactory = new SubscriptionFactory(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(subscriptionFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionFactoryDefinition>(serialized);
 
@@ -91,7 +91,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_Stream_Roundtrip()
         {
             var stream = new Stream(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(stream);
             var roundtripped = serializer.Deserialize<IAsyncReactiveStreamProcess>(serialized);
 
@@ -106,7 +106,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_Subscription_Roundtrip()
         {
             var subscription = new Subscription(new Uri("test://uri"), Expression.Default(typeof(object)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(subscription);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionProcess>(serialized);
 
@@ -120,7 +120,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         [TestMethod]
         public void ReactiveResourceConverter_Null_Roundtrip()
         {
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize<IAsyncReactiveSubscriptionProcess>(null);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionProcess>(serialized);
 
@@ -132,7 +132,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         {
             var observable = new Observable(new Uri("test://uri"), Expression.Default(typeof(object)), null);
             var expressionServices = new ExpressionServices();
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter(expressionServices) });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter(expressionServices)]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
@@ -146,7 +146,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_DefinedResource_Roundtrip_Parameterized()
         {
             var observable = new Observable(new Uri("test://uri"), Expression.Lambda<Func<int, IAsyncReactiveQbservable<int>>>(Expression.Default(typeof(IAsyncReactiveQbservable<int>)), Expression.Parameter(typeof(int))), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
@@ -160,7 +160,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_StreamFactory_Roundtrip_Parameterized_Func()
         {
             var streamFactory = new StreamFactory(new Uri("test://uri"), Expression.Lambda<Func<int, IAsyncReactiveQubject<int, int>>>(Expression.Default(typeof(IAsyncReactiveQubject<int, int>)), Expression.Parameter(typeof(int))), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(streamFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveStreamFactoryDefinition>(serialized);
 
@@ -172,7 +172,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_StreamFactory_Roundtrip_Parameterized_StreamFactory()
         {
             var streamFactory = new StreamFactory(new Uri("test://uri"), Expression.Default(typeof(IAsyncReactiveQubjectFactory<int, int, int>)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(streamFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveStreamFactoryDefinition>(serialized);
 
@@ -184,7 +184,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_SubscriptionFactory_Roundtrip_Parameterized_Func()
         {
             var subscriptionFactory = new SubscriptionFactory(new Uri("test://uri"), Expression.Lambda<Func<int, IAsyncReactiveQubscription>>(Expression.Default(typeof(IAsyncReactiveQubscription)), Expression.Parameter(typeof(int))), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(subscriptionFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionFactoryDefinition>(serialized);
 
@@ -196,7 +196,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_SubscriptionFactory_Roundtrip_Parameterized_SubscriptionFactory()
         {
             var subscriptionFactory = new SubscriptionFactory(new Uri("test://uri"), Expression.Default(typeof(IAsyncReactiveQubscriptionFactory<int>)), null);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter()]);
             var serialized = serializer.Serialize(subscriptionFactory);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionFactoryDefinition>(serialized);
 
@@ -208,7 +208,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_DefinedResource_Roundtrip_State()
         {
             var observable = new Observable(new Uri("test://uri"), Expression.Default(typeof(object)), 42);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter<int>() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter<int>()]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
@@ -219,7 +219,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void ReactiveResourceConverter_ProcessResource_Roundtrip_State()
         {
             var subscription = new Subscription(new Uri("test://uri"), Expression.Default(typeof(object)), 42);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter<int>() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter<int>()]);
             var serialized = serializer.Serialize(subscription);
             var roundtripped = serializer.Deserialize<IAsyncReactiveSubscriptionProcess>(serialized);
 
@@ -231,7 +231,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         {
             var state = new State { Foo = "foo", Bar = 42 };
             var observable = new Observable(new Uri("test://uri"), Expression.Default(typeof(object)), state);
-            var serializer = new SerializationHelpers(new DataConverter[] { new ReactiveResourceConverter<State>() });
+            var serializer = new SerializationHelpers([new ReactiveResourceConverter<State>()]);
             var serialized = serializer.Serialize(observable);
             var roundtripped = serializer.Deserialize<IAsyncReactiveObservableDefinition>(serialized);
 
@@ -273,28 +273,16 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             Assert.IsTrue(new ExpressionEqualityComparer().Equals(x.Expression, y.Expression));
         }
 
-        private class Resource : IAsyncReactiveResource
+        private class Resource(Uri uri, Expression expression) : IAsyncReactiveResource
         {
-            public Resource(Uri uri, Expression expression)
-            {
-                Uri = uri;
-                Expression = expression;
-            }
+            public Uri Uri { get; } = uri;
 
-            public Uri Uri { get; }
-
-            public Expression Expression { get; }
+            public Expression Expression { get; } = expression;
         }
 
-        private class ProcessResource : Resource, IAsyncReactiveProcessResource
+        private class ProcessResource(Uri uri, Expression expression, object state) : Resource(uri, expression), IAsyncReactiveProcessResource
         {
-            public ProcessResource(Uri uri, Expression expression, object state)
-                : base(uri, expression)
-            {
-                State = state;
-            }
-
-            public object State { get; }
+            public object State { get; } = state;
 
             public DateTimeOffset CreationTime => DateTimeOffset.Now;
 
@@ -305,28 +293,17 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
 #endif
         }
 
-        private class DefinedResource : Resource, IAsyncReactiveDefinedResource
+        private class DefinedResource(Uri uri, Expression expression, object state) : Resource(uri, expression), IAsyncReactiveDefinedResource
         {
-            public DefinedResource(Uri uri, Expression expression, object state)
-                : base(uri, expression)
-            {
-                State = state;
-            }
-
             public bool IsParameterized => Expression is LambdaExpression;
 
-            public object State { get; }
+            public object State { get; } = state;
 
             public DateTimeOffset DefinitionTime => DateTimeOffset.Now;
         }
 
-        private sealed class Observable : DefinedResource, IAsyncReactiveObservableDefinition
+        private sealed class Observable(Uri uri, Expression expression, object state) : DefinedResource(uri, expression, state), IAsyncReactiveObservableDefinition
         {
-            public Observable(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQbservable<T> ToObservable<T>()
             {
                 throw new NotImplementedException();
@@ -338,13 +315,8 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class Observer : DefinedResource, IAsyncReactiveObserverDefinition
+        private sealed class Observer(Uri uri, Expression expression, object state) : DefinedResource(uri, expression, state), IAsyncReactiveObserverDefinition
         {
-            public Observer(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQbserver<T> ToObserver<T>()
             {
                 throw new NotImplementedException();
@@ -356,13 +328,8 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class StreamFactory : DefinedResource, IAsyncReactiveStreamFactoryDefinition
+        private sealed class StreamFactory(Uri uri, Expression expression, object state) : DefinedResource(uri, expression, state), IAsyncReactiveStreamFactoryDefinition
         {
-            public StreamFactory(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQubjectFactory<TInput, TOutput> ToStreamFactory<TInput, TOutput>()
             {
                 throw new NotImplementedException();
@@ -374,13 +341,8 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class SubscriptionFactory : DefinedResource, IAsyncReactiveSubscriptionFactoryDefinition
+        private sealed class SubscriptionFactory(Uri uri, Expression expression, object state) : DefinedResource(uri, expression, state), IAsyncReactiveSubscriptionFactoryDefinition
         {
-            public SubscriptionFactory(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQubscriptionFactory ToSubscriptionFactory()
             {
                 throw new NotImplementedException();
@@ -392,26 +354,16 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class Stream : ProcessResource, IAsyncReactiveStreamProcess
+        private sealed class Stream(Uri uri, Expression expression, object state) : ProcessResource(uri, expression, state), IAsyncReactiveStreamProcess
         {
-            public Stream(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQubject<TInput, TOutput> ToStream<TInput, TOutput>()
             {
                 throw new NotImplementedException();
             }
         }
 
-        private sealed class Subscription : ProcessResource, IAsyncReactiveSubscriptionProcess
+        private sealed class Subscription(Uri uri, Expression expression, object state) : ProcessResource(uri, expression, state), IAsyncReactiveSubscriptionProcess
         {
-            public Subscription(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IAsyncReactiveQubscription ToSubscription()
             {
                 throw new NotImplementedException();

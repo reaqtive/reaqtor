@@ -12,7 +12,11 @@ namespace Reaqtive.Tasks
     /// <summary>
     /// Simple action task.
     /// </summary>
-    public sealed class ActionTask : ISchedulerTask
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="ActionTask"/> class.
+    /// </remarks>
+    /// <param name="action">The action.</param>
+    public sealed class ActionTask(Action action) : ISchedulerTask
     {
         /// <summary>
         /// The action tasks have highest priority.
@@ -22,16 +26,7 @@ namespace Reaqtive.Tasks
         /// <summary>
         /// The action.
         /// </summary>
-        private readonly Action _action;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActionTask"/> class.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        public ActionTask(Action action)
-        {
-            _action = action ?? throw new ArgumentNullException(nameof(action));
-        }
+        private readonly Action _action = action ?? throw new ArgumentNullException(nameof(action));
 
         /// <summary>
         /// Gets task priority.

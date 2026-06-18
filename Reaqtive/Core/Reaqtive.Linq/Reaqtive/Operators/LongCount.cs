@@ -6,29 +6,18 @@ using System;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class LongCount<TSource> : SubscribableBase<long>
+    internal sealed class LongCount<TSource>(ISubscribable<TSource> source) : SubscribableBase<long>
     {
-        private readonly ISubscribable<TSource> _source;
-
-        public LongCount(ISubscribable<TSource> source)
-        {
-            _source = source;
-        }
+        private readonly ISubscribable<TSource> _source = source;
 
         protected override ISubscription SubscribeCore(IObserver<long> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<LongCount<TSource>, long>, IObserver<TSource>
+        private sealed class _(LongCount<TSource> parent, IObserver<long> observer) : StatefulUnaryOperator<LongCount<TSource>, long>(parent, observer), IObserver<TSource>
         {
-            private long _count;
-
-            public _(LongCount<TSource> parent, IObserver<long> observer)
-                : base(parent, observer)
-            {
-                _count = 0;
-            }
+            private long _count = 0;
 
             public override string Name => "rc:LongCount";
 

@@ -14,21 +14,17 @@ namespace System.Linq.CompilerServices
     /// Attribute to annotate constructors, methods, properties, and fields with a visitor type that will be used to process
     /// expression trees referring to those reflection members.
     /// </summary>
+    /// <remarks>
+    /// Creates a new visitor attribute referring to the specified visitor type.
+    /// </remarks>
+    /// <param name="visitorType">Type of the visitor that will process expression nodes that use the reflection member the attribute is applied to.</param>
     [AttributeUsage(AttributeTargets.Constructor | AttributeTargets.Method | AttributeTargets.Property | AttributeTargets.Field, Inherited = false, AllowMultiple = false)]
-    public sealed class VisitorAttribute : Attribute
+    public sealed class VisitorAttribute(Type visitorType) : Attribute
     {
-        /// <summary>
-        /// Creates a new visitor attribute referring to the specified visitor type.
-        /// </summary>
-        /// <param name="visitorType">Type of the visitor that will process expression nodes that use the reflection member the attribute is applied to.</param>
-        public VisitorAttribute(Type visitorType)
-        {
-            VisitorType = visitorType;
-        }
 
         /// <summary>
         /// Gets the type of the visitor that will process expression nodes that use the reflection member the attribute is applied to.
         /// </summary>
-        public Type VisitorType { get; }
+        public Type VisitorType { get; } = visitorType;
     }
 }

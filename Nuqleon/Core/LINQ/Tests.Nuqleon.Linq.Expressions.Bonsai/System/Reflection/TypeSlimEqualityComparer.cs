@@ -279,10 +279,10 @@ namespace Tests.System.Reflection
 
             int[] GetVersions(TypeSlimEqualityComparator eq)
             {
-                return (from f in fields
+                return [.. (from f in fields
                         let collection = f.Collection.GetValue(eq)
                         let version = (int)f.Version.GetValue(collection)
-                        select version).ToArray();
+                        select version)];
             }
 
             static void AssertVersionsChanged(int[] versions1, int[] versions2)

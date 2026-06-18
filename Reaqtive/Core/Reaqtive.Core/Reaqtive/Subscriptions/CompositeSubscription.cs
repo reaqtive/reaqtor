@@ -42,7 +42,7 @@ namespace Reaqtive
                 throw new ArgumentNullException(nameof(subscriptions));
             }
 
-            _subscriptions = new List<ISubscription>(subscriptions);
+            _subscriptions = [.. subscriptions];
             _activeSubscriptionsCount = _subscriptions.Count;
         }
 
@@ -204,7 +204,7 @@ namespace Reaqtive
             {
                 if (_activeSubscriptionsCount == 0)
                 {
-                    return Array.Empty<ISubscription>();
+                    return [];
                 }
 
                 var snapshot = new ISubscription[_activeSubscriptionsCount];

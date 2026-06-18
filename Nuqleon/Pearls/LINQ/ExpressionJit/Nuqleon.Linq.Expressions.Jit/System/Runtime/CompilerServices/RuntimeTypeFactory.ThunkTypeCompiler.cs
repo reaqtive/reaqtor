@@ -69,7 +69,7 @@ namespace System.Runtime.CompilerServices
             /// <summary>
             /// The types of the parameters of a delegate type's instance constructor.
             /// </summary>
-            private static readonly Type[] s_delegateCtorParameterTypes = new[] { typeof(object), typeof(IntPtr) };
+            private static readonly Type[] s_delegateCtorParameterTypes = [typeof(object), typeof(IntPtr)];
 
             /// <summary>
             /// The constructor of the open generic Thunk base class, taking in the Expression{TInner}.
@@ -84,12 +84,12 @@ namespace System.Runtime.CompilerServices
             /// <summary>
             /// The reflection object representing Monitor.Enter(object, out bool) used to acquire a lock.
             /// </summary>
-            private static readonly MethodInfo s_monitorEnter = typeof(Monitor).GetMethod(nameof(Monitor.Enter), new[] { typeof(object), typeof(bool).MakeByRefType() });
+            private static readonly MethodInfo s_monitorEnter = typeof(Monitor).GetMethod(nameof(Monitor.Enter), [typeof(object), typeof(bool).MakeByRefType()]);
 
             /// <summary>
             /// The reflection object representing Monitor.Exit(object) used to release a lock.
             /// </summary>
-            private static readonly MethodInfo s_monitorExit = typeof(Monitor).GetMethod(nameof(Monitor.Exit), new[] { typeof(object) });
+            private static readonly MethodInfo s_monitorExit = typeof(Monitor).GetMethod(nameof(Monitor.Exit), [typeof(object)]);
 
             /// <summary>
             /// The Expression field on the Thunk base class, of type Expression{TInner}.
@@ -104,7 +104,7 @@ namespace System.Runtime.CompilerServices
             /// <summary>
             /// The Compile(bool) method on the Expression{TDelegate} class.
             /// </summary>
-            private static readonly MethodInfo s_expressionCompileBool = typeof(Expression<>).GetMethod("Compile", new[] { typeof(bool) });
+            private static readonly MethodInfo s_expressionCompileBool = typeof(Expression<>).GetMethod("Compile", [typeof(bool)]);
 
             /// <summary>
             /// The constructor of the open generic Dispatcher base class, taking no parameters.
@@ -124,7 +124,7 @@ namespace System.Runtime.CompilerServices
             /// <summary>
             /// The Increment(ref int) method on the Interlocked class.
             /// </summary>
-            private static readonly MethodInfo s_interlockedIncrement = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), new[] { typeof(int).MakeByRefType() });
+            private static readonly MethodInfo s_interlockedIncrement = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), [typeof(int).MakeByRefType()]);
 
 #if !NET6_0_OR_GREATER
             /// <summary>
@@ -565,7 +565,7 @@ namespace System.Runtime.CompilerServices
                         //
                         if (interfaceConstraints != null)
                         {
-                            genericParameter.SetInterfaceConstraints(interfaceConstraints.ToArray());
+                            genericParameter.SetInterfaceConstraints([.. interfaceConstraints]);
                         }
                     }
                 }
@@ -650,7 +650,7 @@ namespace System.Runtime.CompilerServices
                 //
                 // 6. The CreateDelegate method `TDelegate CreateDelegate(TClosure)`
                 //
-                var mtdCreateDelegate = builder.DefineMethod("CreateDelegate", MethodAttributes.Public | MethodAttributes.HideBySig, closedDelegateType, new[] { closureType });
+                var mtdCreateDelegate = builder.DefineMethod("CreateDelegate", MethodAttributes.Public | MethodAttributes.HideBySig, closedDelegateType, [closureType]);
 
                 //
                 // Return all the info.

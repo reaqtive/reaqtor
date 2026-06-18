@@ -24,11 +24,9 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
 #pragma warning disable IDE0060 // Remove unused parameter
 #pragma warning disable CA1822 // Mark static
-        protected class Foo
+        protected class Foo(int i, int j)
         {
-            public int baz;
-
-            public Foo(int i, int j) { baz = 0; }
+            public int baz = 0;
 
             public int this[int i, int j] => i * j;
 
@@ -41,11 +39,9 @@ namespace Tests.System.Linq.Expressions.Bonsai
             public Bar Element { get; set; }
         }
 
-        protected class Qux
+        protected class Qux(int i, int j)
         {
-            public int baz;
-
-            public Qux(int i, int j) { baz = 0; }
+            public int baz = 0;
 
             public int this[int i, int j] => i * j;
 

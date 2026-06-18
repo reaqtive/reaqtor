@@ -30,15 +30,10 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<DistinctUntilChanged<TResult, TKey>, TResult>, IObserver<TResult>
+        private sealed class _(DistinctUntilChanged<TResult, TKey> parent, IObserver<TResult> observer) : StatefulUnaryOperator<DistinctUntilChanged<TResult, TKey>, TResult>(parent, observer), IObserver<TResult>
         {
             private bool _hasCurrentKey;
             private TKey _currentKey;
-
-            public _(DistinctUntilChanged<TResult, TKey> parent, IObserver<TResult> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:DistinctUntilChanged";
 

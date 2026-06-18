@@ -15,15 +15,9 @@ using System.Threading.Tasks;
 
 namespace Reaqtor
 {
-    internal class Qbservable<T> : AsyncReactiveQbservableBase<T>
+    internal class Qbservable<T>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQbservableBase<T>(provider)
     {
-        public Qbservable(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubscription> SubscribeAsyncCore(IAsyncReactiveQbserver<T> observer, Uri subscriptionUri, object state, CancellationToken token)
         {

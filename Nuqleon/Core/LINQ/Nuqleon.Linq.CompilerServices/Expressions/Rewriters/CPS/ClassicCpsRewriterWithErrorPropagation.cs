@@ -264,17 +264,17 @@ namespace System.Linq.CompilerServices
             {
                 var s = Expression.Parameter(typeof(Action), "success");
                 var e = Expression.Parameter(typeof(Action<Exception>), "failure");
-                var f = Expression.GetActionType(expression.Parameters.Select(x => x.Type).Concat(new[] { s.Type, e.Type }).ToArray());
+                var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), .. new[] { s.Type, e.Type }]);
                 var b = base.RewriteCore(expression.Body, new SuccessErrorContinuationPair { SuccessContinuation = s, ErrorContinuation = e });
-                return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { s, e }).ToArray());
+                return Expression.Lambda(f, b, [.. expression.Parameters, .. new[] { s, e }]);
             }
             else
             {
                 var s = Expression.Parameter(typeof(Action<>).MakeGenericType(expression.Body.Type), "success");
                 var e = Expression.Parameter(typeof(Action<Exception>), "failure");
-                var f = Expression.GetActionType(expression.Parameters.Select(x => x.Type).Concat(new[] { s.Type, e.Type }).ToArray());
+                var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), .. new[] { s.Type, e.Type }]);
                 var b = base.RewriteCore(expression.Body, new SuccessErrorContinuationPair { SuccessContinuation = s, ErrorContinuation = e });
-                return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { s, e }).ToArray());
+                return Expression.Lambda(f, b, [.. expression.Parameters, .. new[] { s, e }]);
             }
         }
 
@@ -589,7 +589,7 @@ namespace System.Linq.CompilerServices
 
             return method.ReturnType == typeof(void)
                 ? new[] { typeof(Action), typeof(Action<Exception>) }
-                : new[] { typeof(Action<>).MakeGenericType(method.ReturnType), typeof(Action<Exception>) };
+                : [typeof(Action<>).MakeGenericType(method.ReturnType), typeof(Action<Exception>)];
         }
 
         /// <summary>

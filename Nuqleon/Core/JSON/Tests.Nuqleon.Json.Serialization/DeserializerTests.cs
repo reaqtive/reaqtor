@@ -32,7 +32,7 @@ namespace Tests
             var pbr = new FastJsonSerializerFactory.ParserReaderBuilder(DefaultNameResolver.Instance);
             var bdr = typeof(FastJsonSerializerFactory.ParserReaderBuilder).GetMethod("Build", BindingFlags.Public | BindingFlags.Instance);
 #endif
-            var create = typeof(FastJsonSerializerFactory).GetMethod("CreateDeserializer", new[] { typeof(INameResolver), typeof(FastJsonConcurrencyMode) });
+            var create = typeof(FastJsonSerializerFactory).GetMethod("CreateDeserializer", [typeof(INameResolver), typeof(FastJsonConcurrencyMode)]);
 
             foreach (var type in new[] { typeof(E), typeof(E?), typeof(C), typeof(int[,]), typeof(D), typeof(I), typeof(G<int>), typeof(IDictionary<int, int>) })
             {
@@ -307,8 +307,8 @@ namespace Tests
             {
                 { "null", null },
                 { "[null]", new int[][] { null } },
-                { "[[42]]", new int[][] { new int[] { 42 } } },
-                { "[  [ 42 ] \t , null\r\n, [ 43, 44 ]\r\n]", new int[][] { new int[] { 42 }, null, new int[] { 43, 44 } } },
+                { "[[42]]", new int[][] { [42] } },
+                { "[  [ 42 ] \t , null\r\n, [ 43, 44 ]\r\n]", new int[][] { [42], null, [43, 44] } },
             },
             (expected, actual) =>
             {
@@ -1049,14 +1049,9 @@ namespace Tests
         }
 
         [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-        private sealed class IdentifierAttribute : Attribute
+        private sealed class IdentifierAttribute(string id) : Attribute
         {
-            public IdentifierAttribute(string id)
-            {
-                Id = id;
-            }
-
-            public string Id;
+            public string Id = id;
         }
     }
 }

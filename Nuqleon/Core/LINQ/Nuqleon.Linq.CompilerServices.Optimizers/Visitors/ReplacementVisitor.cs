@@ -15,23 +15,17 @@ namespace System.Linq.CompilerServices.Optimizers
     /// <summary>
     /// Visitor to replace a parameter in an expression.
     /// </summary>
-    internal class ReplacementVisitor : ExpressionVisitor
+    /// <remarks>
+    /// Creates a visitor to repace a parameter in an expression.
+    /// </remarks>
+    /// <param name="variableToReplace">The variable to replace.</param>
+    /// <param name="replacement">The expression to replace the variable with.</param>
+    internal class ReplacementVisitor(ParameterExpression variableToReplace, Expression replacement) : ExpressionVisitor
     {
-        private readonly Expression _replacement;
-        private readonly ParameterExpression _variableToReplace;
+        private readonly Expression _replacement = replacement;
+        private readonly ParameterExpression _variableToReplace = variableToReplace;
 
         private int scopes;
-
-        /// <summary>
-        /// Creates a visitor to repace a parameter in an expression.
-        /// </summary>
-        /// <param name="variableToReplace">The variable to replace.</param>
-        /// <param name="replacement">The expression to replace the variable with.</param>
-        public ReplacementVisitor(ParameterExpression variableToReplace, Expression replacement)
-        {
-            _variableToReplace = variableToReplace;
-            _replacement = replacement;
-        }
 
         /// <summary>
         /// Visits the lambda to perform scope tracking.

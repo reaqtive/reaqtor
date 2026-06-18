@@ -15,18 +15,17 @@ namespace Reaqtor
     /// <summary>
     /// Attribute to denote known resources, which can be represented using a URI.
     /// </summary>
+    /// <remarks>
+    /// Creates a new attribute with the specified URI identifying the resource the attribute is applied to.
+    /// </remarks>
+    /// <param name="uri">URI that identifies the resource.</param>
     [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
-    public sealed class KnownResourceAttribute : Attribute
+    public sealed class KnownResourceAttribute(string uri) : Attribute
     {
-        /// <summary>
-        /// Creates a new attribute with the specified URI identifying the resource the attribute is applied to.
-        /// </summary>
-        /// <param name="uri">URI that identifies the resource.</param>
-        public KnownResourceAttribute(string uri) => Uri = uri;
 
         /// <summary>
         /// Gets the URI that identifies the resource.
         /// </summary>
-        public string Uri { get; }
+        public string Uri { get; } = uri;
     }
 }

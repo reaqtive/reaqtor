@@ -40,7 +40,7 @@ namespace System.Memory.Diagnostics
         /// A <see cref="ConditionalWeakTable{TKey, TValue}"/> is used to ensure we don't keep collectible
         /// types alive when an editor for such a type exists.
         /// </remarks>
-        private static readonly ConditionalWeakTable<Type, EditorInfo> s_editors = new();
+        private static readonly ConditionalWeakTable<Type, EditorInfo> s_editors = [];
 
         /// <summary>
         /// A pool for <see cref="Queue{T}"/> instances that can be used to maintain the work list for
@@ -56,7 +56,7 @@ namespace System.Memory.Diagnostics
         /// A pool for <see cref="ObjectSet"/> instances that can be used to perform cycle detection during
         /// heap walking in<see cref="Walk"/>.
         /// </summary>
-        private static readonly ObjectPool<ObjectSet> s_setPool = new(() => new ObjectSet(), size: Environment.ProcessorCount);
+        private static readonly ObjectPool<ObjectSet> s_setPool = new(() => [], size: Environment.ProcessorCount);
 
         /// <summary>
         /// A pool for <see cref="Dictionary{Type, Editor}"/> instances that can be used to maintain a local
@@ -1231,7 +1231,7 @@ namespace System.Memory.Diagnostics
             /// <returns>A setter delegate for the specified field.</returns>
             public static ByRefFieldSetter GetFieldSetterByRef(FieldInfo field)
             {
-                return (ref object obj, object value) => field.SetValue(obj, value);
+                return (ref obj, value) => field.SetValue(obj, value);
             }
         }
 

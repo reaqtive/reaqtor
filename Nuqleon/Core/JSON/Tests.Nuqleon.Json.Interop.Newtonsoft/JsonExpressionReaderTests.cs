@@ -80,9 +80,9 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         [TestMethod]
         public void JsonExpressionReader_Primitives_Null()
         {
-            Roundtrip(new object[] {
+            Roundtrip([
                 null
-            });
+            ]);
         }
 
         [TestMethod]

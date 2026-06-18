@@ -35,7 +35,7 @@ namespace Rxcel
 
         private sealed class Impl : ExcelExpressionVisitor<Expression>
         {
-            public Dictionary<string, ParameterExpression> _cellReferences = new();
+            public Dictionary<string, ParameterExpression> _cellReferences = [];
 
             protected internal override Expression VisitBinary(BinaryExcelExpression node)
             {
@@ -75,7 +75,7 @@ namespace Rxcel
 
             protected internal override Expression VisitFormula(FormulaExcelExpression node)
             {
-                var args = Expression.NewArrayInit(typeof(double?), node.Arguments.Select(Visit).SelectMany(Flatten).ToArray());
+                var args = Expression.NewArrayInit(typeof(double?), [.. node.Arguments.Select(Visit).SelectMany(Flatten)]);
 
                 var mtd = node.Name.ToUpper(CultureInfo.InvariantCulture) switch
                 {

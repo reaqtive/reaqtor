@@ -43,11 +43,9 @@ namespace System.Memory
             return new WeakImpl(factory);
         }
 
-        private sealed class Impl : IMemoizer
+        private sealed class Impl(IMemoizationCacheFactory factory) : IMemoizer
         {
-            private readonly IMemoizationCacheFactory _factory;
-
-            public Impl(IMemoizationCacheFactory factory) => _factory = factory;
+            private readonly IMemoizationCacheFactory _factory = factory;
 
             /// <summary>
             /// Memoizes the specified <paramref name="function"/>.
@@ -68,11 +66,9 @@ namespace System.Memory
             }
         }
 
-        private sealed class WeakImpl : IWeakMemoizer
+        private sealed class WeakImpl(IWeakMemoizationCacheFactory factory) : IWeakMemoizer
         {
-            private readonly IWeakMemoizationCacheFactory _factory;
-
-            public WeakImpl(IWeakMemoizationCacheFactory factory) => _factory = factory;
+            private readonly IWeakMemoizationCacheFactory _factory = factory;
 
             /// <summary>
             /// Memoizes the specified <paramref name="function"/> without keeping the function argument alive by the memoization cache.

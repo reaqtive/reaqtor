@@ -72,7 +72,7 @@ namespace Tests.System.Reflection
             Assert.IsTrue(genericDef.IsGenericMethodDefinition);
             Assert.AreEqual(genericDef, genericDefRt);
 
-            var generic = genericDef.MakeGenericMethod(new[] { typeof(int) });
+            var generic = genericDef.MakeGenericMethod([typeof(int)]);
             var genericRt = MemberInfoRoundtrip(generic);
             Assert.AreEqual(generic, genericRt);
         }

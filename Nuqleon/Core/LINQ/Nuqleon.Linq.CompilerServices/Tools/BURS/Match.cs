@@ -12,33 +12,20 @@ using System.Globalization;
 
 namespace System.Linq.CompilerServices
 {
-    internal class Match
+    internal class Match(int state)
     {
-        public Match(int state) => State = state;
-
-        public int State { get; }
+        public int State { get; } = state;
 
         public override string ToString() => State.ToString(CultureInfo.InvariantCulture) + " (0$)";
 
-        public sealed class Wildcard : Match
+        public sealed class Wildcard(int state) : Match(state)
         {
-            public Wildcard(int state)
-                : base(state)
-            {
-            }
-
             public override string ToString() => State.ToString(CultureInfo.InvariantCulture) + "*";
         }
 
-        public sealed class Final : Match
+        public sealed class Final(int state, int cost) : Match(state)
         {
-            public Final(int state, int cost)
-                : base(state)
-            {
-                Cost = cost;
-            }
-
-            public int Cost { get; }
+            public int Cost { get; } = cost;
 
             public override string ToString() => State.ToString(CultureInfo.InvariantCulture) + "! (" + Cost.ToString(CultureInfo.InvariantCulture) + "$)";
         }

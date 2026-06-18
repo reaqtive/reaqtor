@@ -45,27 +45,21 @@ namespace System.Reflection
     /// <summary>
     /// Lightweight representation of a structural type.
     /// </summary>
-    internal sealed class ReadOnlyStructuralTypeSlim : StructuralTypeSlim
+    /// <remarks>
+    /// Creates a new structural type representation object.
+    /// </remarks>
+    /// <param name="properties">The set of properties for the structural type.</param>
+    /// <param name="hasValueEqualitySemantics">true if type uses value equality semantics, false otherwise.</param>
+    /// <param name="kind">The kind of structural type to create/serialize.</param>
+    internal sealed class ReadOnlyStructuralTypeSlim(ReadOnlyCollection<PropertyInfoSlim> properties, bool hasValueEqualitySemantics, StructuralTypeSlimKind kind) : StructuralTypeSlim
     {
         // PERF: Consider creating specialized layouts for this type. Note this is not too pressing
         //       because the Structural factory method is rarely used. Instead, these types are often
         //       built using the StructuralTypeSlimReference.Create factory methods using a builder
         //       pattern.
 
-        #region Constructors
 
-        /// <summary>
-        /// Creates a new structural type representation object.
-        /// </summary>
-        /// <param name="properties">The set of properties for the structural type.</param>
-        /// <param name="hasValueEqualitySemantics">true if type uses value equality semantics, false otherwise.</param>
-        /// <param name="kind">The kind of structural type to create/serialize.</param>
-        public ReadOnlyStructuralTypeSlim(ReadOnlyCollection<PropertyInfoSlim> properties, bool hasValueEqualitySemantics, StructuralTypeSlimKind kind)
-        {
-            Properties = properties;
-            StructuralKind = kind;
-            HasValueEqualitySemantics = hasValueEqualitySemantics;
-        }
+        #region Constructors
 
         #endregion
 
@@ -74,17 +68,17 @@ namespace System.Reflection
         /// <summary>
         /// true if type uses value equality semantics, false otherwise.
         /// </summary>
-        public override bool HasValueEqualitySemantics { get; }
+        public override bool HasValueEqualitySemantics { get; } = hasValueEqualitySemantics;
 
         /// <summary>
         /// Gets the members of the structural type.
         /// </summary>
-        public override ReadOnlyCollection<PropertyInfoSlim> Properties { get; }
+        public override ReadOnlyCollection<PropertyInfoSlim> Properties { get; } = properties;
 
         /// <summary>
         /// Gets the kind of structural type.
         /// </summary>
-        public override StructuralTypeSlimKind StructuralKind { get; }
+        public override StructuralTypeSlimKind StructuralKind { get; } = kind;
 
         #endregion
     }

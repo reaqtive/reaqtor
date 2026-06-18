@@ -31,7 +31,7 @@ namespace System.Memory
         private bool _hasNullValue;
         private T _nullValue;
 
-        public WeakCacheDictionary() => _dictionary = new ConditionalWeakTable<K, T>();
+        public WeakCacheDictionary() => _dictionary = [];
 
 #if DEBUG
         public ICollection<K> Keys
@@ -42,7 +42,7 @@ namespace System.Memory
 
                 if (_dictionary is IEnumerable<KeyValuePair<K, T>> enumerable)
                 {
-                    keys = enumerable.Select(kv => kv.Key).ToList();
+                    keys = [.. enumerable.Select(kv => kv.Key)];
                 }
                 else
                 {

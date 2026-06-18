@@ -28,7 +28,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Gets the unbound variables found in the expression tree.
         /// </summary>
-        public readonly HashSet<ParameterExpression> UnboundVariables = new();
+        public readonly HashSet<ParameterExpression> UnboundVariables = [];
 
         /// <summary>
         /// Visits block expressions in order to push a scope of declared variables.
@@ -41,7 +41,7 @@ namespace System.Linq.Expressions
 
             if (variables.Count > 0)
             {
-                _environment.Push(new HashSet<ParameterExpression>(variables));
+                _environment.Push([.. variables]);
             }
 
             Visit(node.Expressions);
@@ -65,7 +65,7 @@ namespace System.Linq.Expressions
 
             if (variable != null)
             {
-                _environment.Push(new HashSet<ParameterExpression>(new[] { variable }));
+                _environment.Push([variable]);
             }
 
             Visit(node.Filter);
@@ -91,7 +91,7 @@ namespace System.Linq.Expressions
 
             if (parameters.Count > 0)
             {
-                _environment.Push(new HashSet<ParameterExpression>(parameters));
+                _environment.Push([.. parameters]);
             }
 
             Visit(node.Body);

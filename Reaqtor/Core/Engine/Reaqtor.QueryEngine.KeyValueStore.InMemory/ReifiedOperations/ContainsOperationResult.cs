@@ -6,11 +6,9 @@ using System;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
-    public class ContainsOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
+    public class ContainsOperationResult<TKey, TValue>(bool result) : OperationResult<TKey, TValue>
     {
-        private readonly bool _result;
-
-        public ContainsOperationResult(bool result) => _result = result;
+        private readonly bool _result = result;
 
         public override Exception Exception => null;
 

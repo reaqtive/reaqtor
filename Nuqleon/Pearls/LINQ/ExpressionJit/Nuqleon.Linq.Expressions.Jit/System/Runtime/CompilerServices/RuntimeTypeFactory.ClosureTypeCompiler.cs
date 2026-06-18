@@ -70,17 +70,17 @@ namespace System.Runtime.CompilerServices
             /// <summary>
             /// The reflection object representing the constructor of ArgumentOutOfRangeException which takes a string parameter.
             /// </summary>
-            private static readonly ConstructorInfo s_argumentOutOfRangeCtor = typeof(ArgumentOutOfRangeException).GetConstructor(new[] { typeof(string) });
+            private static readonly ConstructorInfo s_argumentOutOfRangeCtor = typeof(ArgumentOutOfRangeException).GetConstructor([typeof(string)]);
 
             /// <summary>
             /// An array with a single element set to typeof(int), used for the Item indexer.
             /// </summary>
-            private static readonly Type[] s_TypeArray_Int32 = new[] { typeof(int) };
+            private static readonly Type[] s_TypeArray_Int32 = [typeof(int)];
 
             /// <summary>
             /// An array with two elements set to typeof(int) and typeof(object), used for the Item indexer.
             /// </summary>
-            private static readonly Type[] s_TypeArray_Int32Object = new[] { typeof(int), typeof(object) };
+            private static readonly Type[] s_TypeArray_Int32Object = [typeof(int), typeof(object)];
 
             /// <summary>
             /// Creates a new generic closure type with the specified arity.

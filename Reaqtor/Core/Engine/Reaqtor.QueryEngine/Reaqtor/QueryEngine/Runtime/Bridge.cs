@@ -79,10 +79,10 @@ namespace Reaqtor.QueryEngine
     /// IDs), e.g. when inner subscriptions cross engine boundaries. To support this, a low watermark is persisted, such that replay can be
     /// requested.
     /// </remarks>
-    internal sealed class Bridge<T> : IReliableMultiSubject<T>, IMultiSubject<T>, IStatefulOperator, IDependencyOperator
+    internal sealed class Bridge<T>(IDiscardable<Expression> source) : IReliableMultiSubject<T>, IMultiSubject<T>, IStatefulOperator, IDependencyOperator
     {
         // Only needed for upstream subscription lifetime management
-        private readonly IDiscardable<Expression> _source;
+        private readonly IDiscardable<Expression> _source = source;
         private Uri _upstreamObservableUri;
         private Uri _upstreamSubscriptionUri;
 
@@ -90,21 +90,16 @@ namespace Reaqtor.QueryEngine
 
         private Subscription _subscription;
 
-        private List<T> _queue = new();
+        private List<T> _queue = [];
         private Exception _error;
         private bool _done;
 
         private bool _completeNotified;
         private long _lowWatermark = 0;
 
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
         private int _disposed = 0;
         private StateChangedManager _stateful;
-
-        public Bridge(IDiscardable<Expression> source)
-        {
-            _source = source;
-        }
 
         public Uri Id => _context.InstanceId;
 
@@ -208,15 +203,10 @@ namespace Reaqtor.QueryEngine
             }
         }
 
-        private sealed class Observer : IReliableObserver<T>, IObserver<T>
+        private sealed class Observer(Bridge<T> parent) : IReliableObserver<T>, IObserver<T>
         {
-            private readonly Bridge<T> _parent;
+            private readonly Bridge<T> _parent = parent;
             private long _lastSequenceId = -1;
-
-            public Observer(Bridge<T> parent)
-            {
-                _parent = parent;
-            }
 
             public Uri ResubscribeUri => _parent.Id;
 
@@ -393,11 +383,11 @@ namespace Reaqtor.QueryEngine
             qbservableSource.Subscribe(_context.ReactiveService.GetObserver<T>(Id), _upstreamSubscriptionUri, state);
         }
 
-        private sealed class Subscription : IReliableSubscription, ISubscription, IOperator, IDependencyOperator
+        private sealed class Subscription(Bridge<T> parent, IReliableObserver<T> observer, long lastAck) : IReliableSubscription, ISubscription, IOperator, IDependencyOperator
         {
-            private readonly Bridge<T> _parent;
-            private readonly IReliableObserver<T> _observer;
-            private long _lastAck;
+            private readonly Bridge<T> _parent = parent;
+            private readonly IReliableObserver<T> _observer = observer;
+            private long _lastAck = lastAck;
 
             //
             // NB: We harden the code against invalid state transitions which can happen in concurrent scenarios. For example,
@@ -439,13 +429,6 @@ namespace Reaqtor.QueryEngine
             private const int Disposed = 5;
 
             private int _state = Created;
-
-            public Subscription(Bridge<T> parent, IReliableObserver<T> observer, long lastAck)
-            {
-                _parent = parent;
-                _observer = observer;
-                _lastAck = lastAck;
-            }
 
             private bool IsStarted => Volatile.Read(ref _state) is Starting or Started;
 
@@ -621,7 +604,7 @@ namespace Reaqtor.QueryEngine
 
             public void Accept(ISubscriptionVisitor visitor) => visitor.Visit(this);
 
-            public IEnumerable<ISubscription> Inputs => Enumerable.Empty<ISubscription>();
+            public IEnumerable<ISubscription> Inputs => [];
 
             public void SetContext(IOperatorContext context) => Context = (IHostedOperatorContext)context;
         }
@@ -722,7 +705,7 @@ namespace Reaqtor.QueryEngine
 
         #region State
 
-        public IEnumerable<ISubscription> Inputs => Enumerable.Empty<ISubscription>();
+        public IEnumerable<ISubscription> Inputs => [];
 
         public string Name => "rce:Bridge";
 

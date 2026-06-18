@@ -9,17 +9,15 @@ using Reaqtor.Reliable.Client;
 
 namespace Reaqtor.Reliable.Expressions
 {
-    public abstract class ReliableQubjectBase<TInput, TOutput> : ReliableReactiveMultiSubjectBase<TInput, TOutput>, IReliableMultiQubject<TInput, TOutput>
+    public abstract class ReliableQubjectBase<TInput, TOutput>(IReliableQueryProvider provider) : ReliableReactiveMultiSubjectBase<TInput, TOutput>, IReliableMultiQubject<TInput, TOutput>
     {
-        protected ReliableQubjectBase(IReliableQueryProvider provider) => Provider = provider;
-
         protected Type InputType => typeof(TInput);
 
         protected Type OutputType => typeof(TOutput);
 
         public Type ElementType => OutputType;
 
-        public IReliableQueryProvider Provider { get; }
+        public IReliableQueryProvider Provider { get; } = provider;
 
         public abstract Expression Expression { get; }
 

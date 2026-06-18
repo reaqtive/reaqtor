@@ -94,14 +94,9 @@ namespace Test.Reaqtive.Operators
             });
         }
 
-        private sealed class ThrowComparer<T> : IEqualityComparer<T>
+        private sealed class ThrowComparer<T>(Exception ex) : IEqualityComparer<T>
         {
-            private readonly Exception _ex;
-
-            public ThrowComparer(Exception ex)
-            {
-                _ex = ex;
-            }
+            private readonly Exception _ex = ex;
 
             public bool Equals(T x, T y)
             {

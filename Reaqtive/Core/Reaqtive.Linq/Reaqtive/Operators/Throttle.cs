@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
@@ -15,23 +16,17 @@ namespace Reaqtive.Operators
     /// </summary>
     /// <typeparam name="TSource">Type being observed from subscription.</typeparam>
     /// <typeparam name="TThrottle">Type of result output by throttle.</typeparam>
-    internal sealed class Throttle<TSource, TThrottle> : SubscribableBase<TSource>
+    internal sealed class Throttle<TSource, TThrottle>(ISubscribable<TSource> source, Func<TSource, ISubscribable<TThrottle>> throttleSelector) : SubscribableBase<TSource>
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, ISubscribable<TThrottle>> _throttleSelector;
-
-        public Throttle(ISubscribable<TSource> source, Func<TSource, ISubscribable<TThrottle>> throttleSelector)
-        {
-            _source = source;
-            _throttleSelector = throttleSelector;
-        }
+        private readonly ISubscribable<TSource> _source = source;
+        private readonly Func<TSource, ISubscribable<TThrottle>> _throttleSelector = throttleSelector;
 
         protected override ISubscription SubscribeCore(IObserver<TSource> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : HigherOrderInputStatefulOperator<Throttle<TSource, TThrottle>, TSource>, IObserver<TSource>
+        private sealed class _(Throttle<TSource, TThrottle> parent, IObserver<TSource> observer) : HigherOrderInputStatefulOperator<Throttle<TSource, TThrottle>, TSource>(parent, observer), IObserver<TSource>
         {
 #pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private SerialSubscription _cancelable;
@@ -39,15 +34,9 @@ namespace Reaqtive.Operators
 
             private TSource _value;
             private bool _hasValue;
-            private readonly object _gate;
+            private readonly Lock _gate = new Lock();
             private ulong _id;
             private IOperatorContext _context;
-
-            public _(Throttle<TSource, TThrottle> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-                _gate = new object();
-            }
 
             public override string Name => "rc:Throttle";
 
@@ -201,17 +190,12 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private sealed class ThrottleObserver : StatefulObserver<TThrottle>
+            private sealed class ThrottleObserver(Throttle<TSource, TThrottle>._ parent) : StatefulObserver<TThrottle>
             {
-                private readonly _ _parent;
+                private readonly _ _parent = parent;
                 private ISubscription _self;
                 private TSource _value;
                 private ulong _currentId;
-
-                public ThrottleObserver(_ parent)
-                {
-                    _parent = parent;
-                }
 
                 public ThrottleObserver(_ parent, TSource value, ulong currentid)
                     : this(parent)

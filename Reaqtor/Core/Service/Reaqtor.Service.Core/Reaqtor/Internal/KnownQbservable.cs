@@ -13,14 +13,8 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal sealed class KnownQbservable<T> : Qbservable<T>, IKnownResource
+    internal sealed class KnownQbservable<T>(Expression expression, Uri observableUri, IReactiveQueryProvider provider) : Qbservable<T>(expression, provider), IKnownResource
     {
-        public KnownQbservable(Expression expression, Uri observableUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = observableUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = observableUri;
     }
 }

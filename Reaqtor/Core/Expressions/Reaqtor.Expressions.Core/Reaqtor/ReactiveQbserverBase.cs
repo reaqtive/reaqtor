@@ -17,13 +17,12 @@ namespace Reaqtor
     /// Base class for the implementation of observers represented by an expression tree.
     /// </summary>
     /// <typeparam name="T">Type of the data received by the observer.</typeparam>
-    public abstract class ReactiveQbserverBase<T> : ReactiveObserverBase<T>, IReactiveQbserver<T>
+    /// <remarks>
+    /// Creates a new observer represented by an expression tree, using the specified associated query provider.
+    /// </remarks>
+    /// <param name="provider">Query provider associated with the observer.</param>
+    public abstract class ReactiveQbserverBase<T>(IReactiveQueryProvider provider) : ReactiveObserverBase<T>, IReactiveQbserver<T>
     {
-        /// <summary>
-        /// Creates a new observer represented by an expression tree, using the specified associated query provider.
-        /// </summary>
-        /// <param name="provider">Query provider associated with the observer.</param>
-        protected ReactiveQbserverBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the type of the data received by the observer.
@@ -33,7 +32,7 @@ namespace Reaqtor
         /// <summary>
         /// Gets the query provider that is associated with the observer.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; }
+        public IReactiveQueryProvider Provider { get; } = provider;
 
         /// <summary>
         /// Gets the expression tree representing the observer.

@@ -6,6 +6,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 
 namespace Reaqtive
 {
@@ -20,7 +21,7 @@ namespace Reaqtive
     /// </remarks>
     public sealed class StableCompositeSubscription : ICompositeSubscription
     {
-        private readonly object _syncLock = new();
+        private readonly Lock _syncLock = new();
         private ISubscription[] _subscriptions;
         private bool _disposed;
 
@@ -44,7 +45,7 @@ namespace Reaqtive
                 throw new ArgumentNullException(nameof(subscriptions));
             }
 
-            _subscriptions = subscriptions.ToArray();
+            _subscriptions = [.. subscriptions];
         }
 
         /// <summary>
@@ -160,7 +161,7 @@ namespace Reaqtive
                     }
                     else
                     {
-                        _subscriptions = Array.Empty<ISubscription>();
+                        _subscriptions = [];
                     }
                 }
             }
@@ -220,7 +221,7 @@ namespace Reaqtive
                     snapshot = _subscriptions;
 
                     // clear the internal list so that we can't alter its references through Remove calls
-                    _subscriptions = Array.Empty<ISubscription>();
+                    _subscriptions = [];
 
                     // mark the instance as disposed right now so that any new Add will dispose the subscription to add
                     _disposed = true;

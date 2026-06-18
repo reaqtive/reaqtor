@@ -98,27 +98,16 @@ namespace System.Reflection
 
         #region Types
 
-        private sealed class VectorArrayTypeSlim : ArrayTypeSlim
+        private sealed class VectorArrayTypeSlim(TypeSlim elementType) : ArrayTypeSlim(elementType)
         {
-            public VectorArrayTypeSlim(TypeSlim elementType)
-                : base(elementType)
-            {
-            }
-
             public override int? Rank => null;
 
             protected override ArrayTypeSlim Rewrite(TypeSlim elementType) => CreateVector(elementType);
         }
 
-        private sealed class MultiDimensionalArrayTypeSlim : ArrayTypeSlim
+        private sealed class MultiDimensionalArrayTypeSlim(TypeSlim elementType, int rank) : ArrayTypeSlim(elementType)
         {
-            public MultiDimensionalArrayTypeSlim(TypeSlim elementType, int rank)
-                : base(elementType)
-            {
-                Rank = rank;
-            }
-
-            public override int? Rank { get; }
+            public override int? Rank { get; } = rank;
 
             protected override ArrayTypeSlim Rewrite(TypeSlim elementType) => CreateMultiDimensional(elementType, Rank.Value);
         }

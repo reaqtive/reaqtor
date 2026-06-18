@@ -66,7 +66,7 @@ namespace Tests.System.Linq.CompilerServices
             var leaf3 = new Tree<int>(44);
             var node1 = new Tree<int>(91, leaf1, leaf2);
             var node2 = new Tree<int>(92, new[] { node1, leaf3 });
-            var node3 = new Tree<int>(93, (IEnumerable<ITree<int>>)new[] { node2 });
+            var node3 = new Tree<int>(93, (IEnumerable<ITree<int>>)[node2]);
 
             Assert.AreEqual(93, node3.Value);
             Assert.AreEqual(92, node2.Value);
@@ -152,7 +152,7 @@ namespace Tests.System.Linq.CompilerServices
             var leaf3 = new Tree<int>(44);
 
             var tree1 = new Tree<int>(1, leaf1, leaf2);
-            var tree2 = tree1.Update((IEnumerable<ITree<int>>)new[] { leaf2, leaf3 });
+            var tree2 = tree1.Update((IEnumerable<ITree<int>>)[leaf2, leaf3]);
 
             Assert.AreEqual(tree1.Value, tree2.Value);
             Assert.IsTrue(new[] { leaf1, leaf2 }.SequenceEqual(tree1.Children));

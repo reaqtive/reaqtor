@@ -40,19 +40,13 @@ namespace Reaqtive.Operators
             }
         }
 
-        private sealed class _ : StatefulUnaryOperator<Retry<TResult>, TResult>, IObserver<TResult>
+        private sealed class _(Retry<TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<Retry<TResult>, TResult>(parent, observer), IObserver<TResult>
         {
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private readonly SerialSubscription _subscription = new();
 #pragma warning restore CA2213
-            private int _retryCount;
+            private int _retryCount = parent._count.Value;
             private IOperatorContext _context;
-
-            public _(Retry<TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
-            {
-                _retryCount = parent._count.Value;
-            }
 
             public override string Name => "rc:Retry+Count";
 
@@ -136,17 +130,12 @@ namespace Reaqtive.Operators
             }
         }
 
-        private sealed class i : StatefulUnaryOperator<Retry<TResult>, TResult>, IObserver<TResult>
+        private sealed class i(Retry<TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<Retry<TResult>, TResult>(parent, observer), IObserver<TResult>
         {
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private readonly SerialSubscription _subscription = new();
 #pragma warning restore CA2213
             private IOperatorContext _context;
-
-            public i(Retry<TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:Retry";
 

@@ -15,13 +15,8 @@ using Reaqtor.Service.Core;
 
 namespace Tests.Reaqtor.QueryEngine
 {
-    internal class TupletizingClientContext : ReactiveClientContext
+    internal class TupletizingClientContext(IReactiveServiceProvider provider) : ReactiveClientContext(new ExpressionService(), provider)
     {
-        public TupletizingClientContext(IReactiveServiceProvider provider)
-            : base(new ExpressionService(), provider)
-        {
-        }
-
         private class ExpressionService : ReactiveExpressionServices
         {
             public ExpressionService()
@@ -101,23 +96,13 @@ namespace Tests.Reaqtor.QueryEngine
         }
     }
 
-    public class TupletizingContext : ReactiveServiceContext
+    public class TupletizingContext(IReactive innerService) : ReactiveServiceContext(new ExpressionService(), new Engine(innerService))
     {
-        public TupletizingContext(IReactive innerService)
-            : base(new ExpressionService(), new Engine(innerService))
-        {
-        }
-
-        private class Engine : IReactiveEngineProvider
+        private class Engine(IReactive innerService) : IReactiveEngineProvider
         {
             private static readonly MethodInfo _invokeTypedExpressionHelper1 = ((MethodInfo)ReflectionHelpers.InfoOf(() => InvokeTypedExpressionHelper<object, object>(null, null))).GetGenericMethodDefinition();
 
-            private readonly IReactive _innerService;
-
-            public Engine(IReactive innerService)
-            {
-                _innerService = innerService;
-            }
+            private readonly IReactive _innerService = innerService;
 
             public void CreateSubscription(Uri subscriptionUri, Expression subscription, object state)
             {
@@ -144,7 +129,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Type[] args = exprType.GetGenericArguments();
 
-                _invokeTypedExpressionHelper1.MakeGenericMethod(args[0], args[1]).Invoke(null, new object[] { bindingExpr, _innerService });
+                _invokeTypedExpressionHelper1.MakeGenericMethod(args[0], args[1]).Invoke(null, [bindingExpr, _innerService]);
             }
 
             public void DeleteStream(Uri streamUri)

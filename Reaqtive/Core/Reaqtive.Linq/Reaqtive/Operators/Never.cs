@@ -13,13 +13,8 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<Never<TResult>, TResult>
+        private sealed class _(Never<TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<Never<TResult>, TResult>(parent, observer)
         {
-            public _(Never<TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
-            {
-            }
-
             public override string Name => "rc:Never";
 
             public override Version Version => Versioning.v1;

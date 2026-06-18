@@ -85,8 +85,8 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             yield return Expression.IfThen(Expression.Constant(true), Expression.Constant(1));
 
             // Call
-            yield return Expression.Call(typeof(Math).GetMethod(nameof(Math.Abs), new[] { typeof(int) }), Expression.Constant(1));
-            yield return Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) }), Expression.Constant(1), Expression.Constant(2));
+            yield return Expression.Call(typeof(Math).GetMethod(nameof(Math.Abs), [typeof(int)]), Expression.Constant(1));
+            yield return Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]), Expression.Constant(1), Expression.Constant(2));
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
             yield return ((Expression<Func<Bar>>)(() => Activator.CreateInstance<Bar>()));
 #pragma warning restore IDE0004
@@ -95,7 +95,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
 
             // New
             yield return Expression.New(typeof(TimeSpan));
-            yield return Expression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), Expression.Constant(42L));
+            yield return Expression.New(typeof(TimeSpan).GetConstructor([typeof(long)]), Expression.Constant(42L));
             yield return ((Expression<Func<object>>)(() => new { a = 1 })).Body;
             yield return ((Expression<Func<object>>)(() => new { a = 1L })).Body;
             yield return ((Expression<Func<object>>)(() => new { b = 1 })).Body;
@@ -296,7 +296,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             public int Qux { get; set; }
 
             public Baz Baz { get; } = new Baz();
-            public List<int> Xs { get; } = new List<int>();
+            public List<int> Xs { get; } = [];
 
             public static bool EqualsInt32(int x, int y) => false;
         }

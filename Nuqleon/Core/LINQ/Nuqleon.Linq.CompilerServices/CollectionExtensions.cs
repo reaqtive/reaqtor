@@ -30,9 +30,9 @@ namespace System.Linq.CompilerServices
         {
             return enumerable switch
             {
-                null => Array.Empty<T>(),
+                null => [],
                 T[] array => array,
-                _ => enumerable.ToArray(),
+                _ => [.. enumerable],
             };
         }
 
@@ -50,7 +50,7 @@ namespace System.Linq.CompilerServices
             {
                 null => Array.Empty<T>(),
                 ICollection<T> collection => collection,
-                _ => enumerable.ToList(),
+                _ => [.. enumerable],
             };
         }
 
@@ -95,7 +95,7 @@ namespace System.Linq.CompilerServices
         /// <param name="source">Sequence to convert to a list.</param>
         /// <returns>The source sequence object if it implements IList&lt;T&gt;, otherwise a copy of the source sequence into a list.</returns>
         /// <remarks>Notice this method does not guarantee that a copy of the source sequence will be made; therefore, aliasing can occur and the ownership of the source sequence needs to be approved for transfer.</remarks>
-        internal static IList<T> ToIListUnsafe<T>(this IEnumerable<T> source) => source is IList<T> list ? list : new List<T>(source);
+        internal static IList<T> ToIListUnsafe<T>(this IEnumerable<T> source) => source is IList<T> list ? list : [.. source];
 
         /// <summary>
         /// Converts the specified sequence to an IReadOnlyList&lt;T&gt;.
@@ -122,7 +122,7 @@ namespace System.Linq.CompilerServices
 
             if (source is not IList<T> list)
             {
-                list = new List<T>(source);
+                list = [.. source];
             }
 
             return list.Count == 0 ? EmptyReadOnlyCollection<T>.Instance : new ReadOnlyCollection<T>(list);
@@ -142,16 +142,12 @@ namespace System.Linq.CompilerServices
     /// Upon creating an instance of this type, the ownership of the specified collection is transferred.
     /// </summary>
     /// <typeparam name="T">Type of the elements in the collection.</typeparam>
-    internal class TrueReadOnlyCollection<T> : ReadOnlyCollection<T>
+    /// <remarks>
+    /// Creates a new read-only wrapper around the specified inner collection.
+    /// </remarks>
+    /// <param name="list">Inner collection to wrap in a read-only container. Ownership of this collection should be transferred upon calling this constructor.</param>
+    internal class TrueReadOnlyCollection<T>(IList<T> list) : ReadOnlyCollection<T>(list)
     {
-        /// <summary>
-        /// Creates a new read-only wrapper around the specified inner collection.
-        /// </summary>
-        /// <param name="list">Inner collection to wrap in a read-only container. Ownership of this collection should be transferred upon calling this constructor.</param>
-        public TrueReadOnlyCollection(IList<T> list)
-            : base(list)
-        {
-        }
 
         /// <summary>
         /// Gets the underlying list.

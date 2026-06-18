@@ -55,7 +55,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public ListPropertyTest()
             {
-                List = new List<int>();
+                List = [];
             }
 
             [Mapping("contoso://list")]
@@ -72,7 +72,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public RecordListPropertyTest()
             {
-                List = new List<SimplePropertyTest>();
+                List = [];
             }
 
             [Mapping("contoso://list")]
@@ -158,14 +158,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public Star()
             {
-                List = new List<int>();
-                Planets = new List<Planet>();
+                List = [];
+                Planets = [];
             }
 
             public Star([Mapping("contoso://list")] List<int> list)
             {
                 List = list;
-                Planets = new List<Planet>();
+                Planets = [];
             }
 
             [Mapping("contoso://list")]
@@ -417,15 +417,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             AssertRecordizationException<InvalidOperationException>(exp);
         }
 
-        private class Foo3
+        private class Foo3([Mapping("bar")] string bar)
         {
-            public Foo3([Mapping("bar")] string bar)
-            {
-                Bar = bar;
-            }
-
             [Mapping("bar")]
-            public string Bar { get; set; }
+            public string Bar { get; set; } = bar;
 
             public int Baz { get; set; }
         }

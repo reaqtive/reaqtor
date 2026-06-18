@@ -679,18 +679,12 @@ namespace System.Reflection
             _typeFindMembers?.Cache.Clear();
         }
 
-        private readonly struct MakeGenericTypeParams : IEquatable<MakeGenericTypeParams>
+        private readonly struct MakeGenericTypeParams(Type definition, Type[] arguments) : IEquatable<MakeGenericTypeParams>
         {
-            public MakeGenericTypeParams(Type definition, Type[] arguments)
-            {
-                Definition = definition;
-                Arguments = arguments;
-            }
-
             public static Type Invoke(MakeGenericTypeParams p) => p.Definition.MakeGenericType(p.Arguments);
 
-            public Type Definition { get; }
-            public Type[] Arguments { get; }
+            public Type Definition { get; } = definition;
+            public Type[] Arguments { get; } = arguments;
 
             public bool Equals(MakeGenericTypeParams other) => Definition == other.Definition && Utils.SequenceEqual(Arguments, other.Arguments);
 
@@ -699,18 +693,12 @@ namespace System.Reflection
             public override int GetHashCode() => Utils.GetHashCode(Definition, Arguments);
         }
 
-        private readonly struct MakeGenericMethodParams : IEquatable<MakeGenericMethodParams>
+        private readonly struct MakeGenericMethodParams(MethodInfo definition, Type[] arguments) : IEquatable<MakeGenericMethodParams>
         {
-            public MakeGenericMethodParams(MethodInfo definition, Type[] arguments)
-            {
-                Definition = definition;
-                Arguments = arguments;
-            }
-
             public static MethodInfo Invoke(MakeGenericMethodParams p) => p.Definition.MakeGenericMethod(p.Arguments);
 
-            public MethodInfo Definition { get; }
-            public Type[] Arguments { get; }
+            public MethodInfo Definition { get; } = definition;
+            public Type[] Arguments { get; } = arguments;
 
             public bool Equals(MakeGenericMethodParams other) => Definition == other.Definition && Utils.SequenceEqual(Arguments, other.Arguments);
 
@@ -719,20 +707,12 @@ namespace System.Reflection
             public override int GetHashCode() => Utils.GetHashCode(Definition, Arguments);
         }
 
-        private sealed class CachingCustomAttributeProvider : ICustomAttributeProvider, IClearable
+        private sealed class CachingCustomAttributeProvider(IMemoizer memoizer, ICustomAttributeProvider provider) : ICustomAttributeProvider, IClearable
         {
-            private readonly ICustomAttributeProvider _provider;
-            private readonly IMemoizedDelegate<Func<ICustomAttributeProvider, bool, object[]>> _getCustomAttributes;
-            private readonly IMemoizedDelegate<Func<ICustomAttributeProvider, Type, bool, object[]>> _getCustomAttributesByType;
-            private readonly IMemoizedDelegate<Func<ICustomAttributeProvider, Type, bool, bool>> _isDefined;
-
-            public CachingCustomAttributeProvider(IMemoizer memoizer, ICustomAttributeProvider provider)
-            {
-                _provider = provider;
-                _getCustomAttributes = memoizer.Memoize<ICustomAttributeProvider, bool, object[]>((c, i) => c.GetCustomAttributes(i));
-                _getCustomAttributesByType = memoizer.Memoize<ICustomAttributeProvider, Type, bool, object[]>((c, t, i) => c.GetCustomAttributes(t, i));
-                _isDefined = memoizer.Memoize<ICustomAttributeProvider, Type, bool, bool>((c, t, i) => c.IsDefined(t, i));
-            }
+            private readonly ICustomAttributeProvider _provider = provider;
+            private readonly IMemoizedDelegate<Func<ICustomAttributeProvider, bool, object[]>> _getCustomAttributes = memoizer.Memoize<ICustomAttributeProvider, bool, object[]>((c, i) => c.GetCustomAttributes(i));
+            private readonly IMemoizedDelegate<Func<ICustomAttributeProvider, Type, bool, object[]>> _getCustomAttributesByType = memoizer.Memoize<ICustomAttributeProvider, Type, bool, object[]>((c, t, i) => c.GetCustomAttributes(t, i));
+            private readonly IMemoizedDelegate<Func<ICustomAttributeProvider, Type, bool, bool>> _isDefined = memoizer.Memoize<ICustomAttributeProvider, Type, bool, bool>((c, t, i) => c.IsDefined(t, i));
 
             public void Clear()
             {

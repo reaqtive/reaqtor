@@ -13,27 +13,16 @@ using System;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class ObserverOnNext : ObserverOperation
+    public class ObserverOnNext(Uri observerUri, object value) : ObserverOperation(ServiceOperationKind.ObserverOnNext, observerUri)
     {
-        public ObserverOnNext(Uri observerUri, object value)
-            : base(ServiceOperationKind.ObserverOnNext, observerUri)
-        {
-            Value = value;
-        }
-
-        public object Value { get; }
+        public object Value { get; } = value;
 
         public override string ToString() => base.ToString() + " - " + Value;
     }
 
     [Serializable]
-    public class ObserverOnNext<T> : ObserverOnNext
+    public class ObserverOnNext<T>(Uri observerUri, T value) : ObserverOnNext(observerUri, value)
     {
-        public ObserverOnNext(Uri observerUri, T value)
-            : base(observerUri, value)
-        {
-        }
-
         public new T Value => (T)base.Value;
     }
 }

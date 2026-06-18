@@ -698,12 +698,8 @@ namespace Tests.System.Linq.CompilerServices
         {
         }
 
-        private sealed class Bar2
+        private sealed class Bar2(int x)
         {
-            public Bar2(int x)
-            {
-            }
-
             public Foo2 Foo1;
             public Foo2 Foo2 { get; set; }
         }

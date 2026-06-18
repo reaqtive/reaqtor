@@ -17,21 +17,16 @@ namespace Reaqtive.Storage
     /// </summary>
     /// <typeparam name="TKey">The type of the keys stored in the dictionary.</typeparam>
     /// <typeparam name="TValue">The type of the values stored in the dictionary.</typeparam>
-    internal sealed class DictionarySnapshotVisitor<TKey, TValue> : ISnapshotVisitor<TKey, TValue>
+    /// <remarks>
+    /// Creates a new instance of <see cref="DictionarySnapshotVisitor{TKey, TValue}"/> which will apply edits to the specified <paramref name="dictionary"/>.
+    /// </remarks>
+    /// <param name="dictionary">The dictionary to apply the edits to.</param>
+    internal sealed class DictionarySnapshotVisitor<TKey, TValue>(Dictionary<TKey, TValue> dictionary) : ISnapshotVisitor<TKey, TValue>
     {
         /// <summary>
         /// The dictionary to apply the edits to.
         /// </summary>
-        private readonly Dictionary<TKey, TValue> _dictionary;
-
-        /// <summary>
-        /// Creates a new instance of <see cref="DictionarySnapshotVisitor{TKey, TValue}"/> which will apply edits to the specified <paramref name="dictionary"/>.
-        /// </summary>
-        /// <param name="dictionary">The dictionary to apply the edits to.</param>
-        public DictionarySnapshotVisitor(Dictionary<TKey, TValue> dictionary)
-        {
-            _dictionary = dictionary;
-        }
+        private readonly Dictionary<TKey, TValue> _dictionary = dictionary;
 
         /// <summary>
         /// Adds or updates the dictionary entry with the specified <paramref name="key"/> and <paramref name="value"/>.

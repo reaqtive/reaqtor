@@ -18,15 +18,11 @@ namespace System.Linq.CompilerServices.Optimizers
     /// Upon creating an instance of this type, the ownership of the specified collection is transferred.
     /// </summary>
     /// <typeparam name="T">Type of the elements in the collection.</typeparam>
-    internal sealed class TrueReadOnlyCollection<T> : ReadOnlyCollection<T>
+    /// <remarks>
+    /// Creates a new read-only wrapper around the specified inner collection.
+    /// </remarks>
+    /// <param name="list">Inner collection to wrap in a read-only container. Ownership of this collection should be transferred upon calling this constructor.</param>
+    internal sealed class TrueReadOnlyCollection<T>(IList<T> list) : ReadOnlyCollection<T>(list)
     {
-        /// <summary>
-        /// Creates a new read-only wrapper around the specified inner collection.
-        /// </summary>
-        /// <param name="list">Inner collection to wrap in a read-only container. Ownership of this collection should be transferred upon calling this constructor.</param>
-        public TrueReadOnlyCollection(IList<T> list)
-            : base(list)
-        {
-        }
     }
 }

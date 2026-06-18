@@ -37,20 +37,16 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         #endregion
     }
 
-    internal sealed class SimpleTypeRef : TypeRef
+    internal sealed class SimpleTypeRef(int index) : TypeRef
     {
-        #region Constructors
 
-        public SimpleTypeRef(int index)
-        {
-            Index = index;
-        }
+        #region Constructors
 
         #endregion
 
         #region Properties
 
-        public sealed override int Index { get; }
+        public sealed override int Index { get; } = index;
 
         #endregion
     }

@@ -64,25 +64,15 @@ namespace Test.Reaqtive
             string Name { get; }
         }
 
-        private sealed class MySpecialOperator : MyOperator, IMySpecialOperator
+        private sealed class MySpecialOperator(string name, params ISubscription[] inputs) : MyOperator(name, inputs), IMySpecialOperator
         {
-            public MySpecialOperator(string name, params ISubscription[] inputs)
-                : base(name, inputs)
-            {
-            }
         }
 
-        private class MyOperator : IMyOperator, ISubscription
+        private class MyOperator(string name, params ISubscription[] inputs) : IMyOperator, ISubscription
         {
-            private readonly ISubscription[] _inputs;
+            private readonly ISubscription[] _inputs = inputs;
 
-            public MyOperator(string name, params ISubscription[] inputs)
-            {
-                Name = name;
-                _inputs = inputs;
-            }
-
-            public string Name { get; private set; }
+            public string Name { get; private set; } = name;
 
             public IEnumerable<ISubscription> Inputs => _inputs;
 

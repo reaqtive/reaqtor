@@ -28,7 +28,7 @@ namespace System.Documentation
         /// Notice the use of a CWT to ensure that the use of collectible assemblies with this
         /// class's functionality doesn't cause them to become non-collectible.
         /// </summary>
-        private static readonly ConditionalWeakTable<Assembly, XDocument> s_assemblies = new();
+        private static readonly ConditionalWeakTable<Assembly, XDocument> s_assemblies = [];
 
         /// <summary>
         /// Gets the XML documentation for the specified parameter.
@@ -280,10 +280,10 @@ namespace System.Documentation
                 var fileName = Path.GetFileNameWithoutExtension(location);
                 var xmlDocFileName = fileName + ".xml";
 
-                var candidateDirectories = (IEnumerable<string>)new[]
-                {
+                var candidateDirectories = (IEnumerable<string>)
+                [
                     Path.GetDirectoryName(location),
-                };
+                ];
 
                 var programFiles = Environment.GetFolderPath(Environment.Is64BitOperatingSystem ? Environment.SpecialFolder.ProgramFilesX86 : Environment.SpecialFolder.ProgramFiles);
                 var referenceAssemblies = Path.Combine(programFiles, @"Reference Assemblies\Microsoft\Framework\.NETFramework");

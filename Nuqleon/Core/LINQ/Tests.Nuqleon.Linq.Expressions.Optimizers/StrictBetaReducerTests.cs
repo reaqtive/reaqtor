@@ -390,7 +390,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                         Expression.Assign(
                             Expression.Field(
                                 x,
-                                nameof(StrongBox<int>.Value)
+                                nameof(StrongBox<>.Value)
                             ),
                             Expression.Constant(1)
                         ),
@@ -1517,7 +1517,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                                 typeof(List<int>).GetConstructor(Type.EmptyTypes)
                             ),
                             Expression.ElementInit(
-                                typeof(List<int>).GetMethod(nameof(List<int>.Add)),
+                                typeof(List<int>).GetMethod(nameof(List<>.Add)),
                                 x
                             )
                         ),
@@ -1532,7 +1532,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                         typeof(List<int>).GetConstructor(Type.EmptyTypes)
                     ),
                     Expression.ElementInit(
-                        typeof(List<int>).GetMethod(nameof(List<int>.Add)),
+                        typeof(List<int>).GetMethod(nameof(List<>.Add)),
                         PureNoThrowNoNull(typeof(int))
                     )
                 );
@@ -1553,7 +1553,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                                 typeof(List<int>).GetConstructor(Type.EmptyTypes)
                             ),
                             Expression.ElementInit(
-                                typeof(List<int>).GetMethod(nameof(List<int>.Add)),
+                                typeof(List<int>).GetMethod(nameof(List<>.Add)),
                                 x
                             )
                         ),
@@ -1581,7 +1581,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                                 typeof(StrongBox<int>).GetConstructor(Type.EmptyTypes)
                             ),
                             Expression.Bind(
-                                typeof(StrongBox<int>).GetField(nameof(StrongBox<int>.Value)),
+                                typeof(StrongBox<int>).GetField(nameof(StrongBox<>.Value)),
                                 x
                             )
                         ),
@@ -1596,7 +1596,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                         typeof(StrongBox<int>).GetConstructor(Type.EmptyTypes)
                     ),
                     Expression.Bind(
-                        typeof(StrongBox<int>).GetField(nameof(StrongBox<int>.Value)),
+                        typeof(StrongBox<int>).GetField(nameof(StrongBox<>.Value)),
                         PureNoThrowNoNull(typeof(int))
                     )
                 );
@@ -1661,7 +1661,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                             Expression.ListBind(
                                 typeof(Bar).GetProperty(nameof(Bar.Xs)),
                                 Expression.ElementInit(
-                                    typeof(List<int>).GetMethod(nameof(List<int>.Add)),
+                                    typeof(List<int>).GetMethod(nameof(List<>.Add)),
                                     x
                                 )
                             )
@@ -1679,7 +1679,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                     Expression.ListBind(
                         typeof(Bar).GetProperty(nameof(Bar.Xs)),
                         Expression.ElementInit(
-                            typeof(List<int>).GetMethod(nameof(List<int>.Add)),
+                            typeof(List<int>).GetMethod(nameof(List<>.Add)),
                             PureNoThrowNoNull(typeof(int))
                         )
                     )
@@ -1701,7 +1701,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                                 typeof(StrongBox<int>).GetConstructor(Type.EmptyTypes)
                             ),
                             Expression.Bind(
-                                typeof(StrongBox<int>).GetField(nameof(StrongBox<int>.Value)),
+                                typeof(StrongBox<int>).GetField(nameof(StrongBox<>.Value)),
                                 x
                             )
                         ),
@@ -1725,7 +1725,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 Expression.Invoke(
                     Expression.Lambda(
                         Expression.New(
-                            typeof(TimeSpan).GetConstructor(new[] { typeof(int), typeof(int), typeof(int) }),
+                            typeof(TimeSpan).GetConstructor([typeof(int), typeof(int), typeof(int)]),
                             x,
                             Expression.Constant(2),
                             Expression.Constant(3)
@@ -1737,7 +1737,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var r =
                 Expression.New(
-                    typeof(TimeSpan).GetConstructor(new[] { typeof(int), typeof(int), typeof(int) }),
+                    typeof(TimeSpan).GetConstructor([typeof(int), typeof(int), typeof(int)]),
                     F,
                     Expression.Constant(2),
                     Expression.Constant(3)
@@ -1752,7 +1752,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             StrictBetaReducer_OneParam_CantReduce_MayThrow(
                 typeof(int),
                 Expression.New(
-                    typeof(TimeSpan).GetConstructor(new[] { typeof(long) }),
+                    typeof(TimeSpan).GetConstructor([typeof(long)]),
                     Expression.Constant(42L)
                 ),
                 F
@@ -1768,7 +1768,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 Expression.Invoke(
                     Expression.Lambda(
                         Expression.New(
-                            typeof(TimeSpan).GetConstructor(new[] { typeof(int), typeof(int), typeof(int) }),
+                            typeof(TimeSpan).GetConstructor([typeof(int), typeof(int), typeof(int)]),
                             Expression.Constant(1),
                             x,
                             Expression.Constant(3)
@@ -1780,7 +1780,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var r =
                 Expression.New(
-                    typeof(TimeSpan).GetConstructor(new[] { typeof(int), typeof(int), typeof(int) }),
+                    typeof(TimeSpan).GetConstructor([typeof(int), typeof(int), typeof(int)]),
                     Expression.Constant(1),
                     F,
                     Expression.Constant(3)
@@ -2006,7 +2006,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         private sealed class Bar
         {
             public Foo Foo { get; } = new Foo();
-            public List<int> Xs { get; } = new List<int>();
+            public List<int> Xs { get; } = [];
         }
 
         private sealed class Foo

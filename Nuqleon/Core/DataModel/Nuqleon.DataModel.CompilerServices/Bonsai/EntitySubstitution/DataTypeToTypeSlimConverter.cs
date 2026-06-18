@@ -29,7 +29,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
         /// <summary>
         /// Initializes the visitor.
         /// </summary>
-        protected DataTypeToTypeSlimConverter() => _structuralTypes = new Dictionary<StructuralDataType, StructuralTypeSlimReference>();
+        protected DataTypeToTypeSlimConverter() => _structuralTypes = [];
 
         /// <summary>
         /// Makes an array type representation.

@@ -11,7 +11,11 @@ namespace Nuqleon.DataModel.Serialization.Json
     /// <summary>
     /// Implementation of <see cref="IArrayPool{T}"/> using <see cref="ArrayPool{T}"/>.
     /// </summary>
-    internal sealed class CharArrayPool : IArrayPool<char>
+    /// <remarks>
+    /// Creates a new instance of <see cref="CharArrayPool"/> using the specified underlying <paramref name="pool"/>.
+    /// </remarks>
+    /// <param name="pool">The underlying array pool to use.</param>
+    internal sealed class CharArrayPool(ArrayPool<char> pool) : IArrayPool<char>
     {
         /// <summary>
         /// The shared singleton instance of the array pool, using defaults of <c>System.Buffers</c>.
@@ -21,13 +25,7 @@ namespace Nuqleon.DataModel.Serialization.Json
         /// <summary>
         /// The underlying array pool to use.
         /// </summary>
-        private readonly ArrayPool<char> _pool;
-
-        /// <summary>
-        /// Creates a new instance of <see cref="CharArrayPool"/> using the specified underlying <paramref name="pool"/>.
-        /// </summary>
-        /// <param name="pool">The underlying array pool to use.</param>
-        public CharArrayPool(ArrayPool<char> pool) => _pool = pool;
+        private readonly ArrayPool<char> _pool = pool;
 
         /// <summary>
         /// Rents an array from the pool. This array must be returned when it is no longer needed.

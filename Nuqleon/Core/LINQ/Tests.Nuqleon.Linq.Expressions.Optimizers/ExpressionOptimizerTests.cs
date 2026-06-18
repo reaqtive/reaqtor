@@ -44,7 +44,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         private static readonly Expression V3 = Expression.Call(typeof(ExpressionOptimizerTests).GetMethod(nameof(MV3)));
 
         private static Expression WriteLine(Expression e) => WriteLine(e, e.Type);
-        private static Expression WriteLine(Expression e, Type type) => Expression.Call(typeof(Console).GetMethod(nameof(WriteLine), new[] { type }), e);
+        private static Expression WriteLine(Expression e, Type type) => Expression.Call(typeof(Console).GetMethod(nameof(WriteLine), [type]), e);
 
         internal static void AssertOptimized(Expression original, Expression expected)
         {

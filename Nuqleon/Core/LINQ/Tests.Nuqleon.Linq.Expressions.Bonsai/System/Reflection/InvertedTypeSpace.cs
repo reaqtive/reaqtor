@@ -65,8 +65,8 @@ namespace Tests.System.Linq.Expressions.Bonsai
             var quxGenericDef = typeof(Qux).GetMethod("Qux2");
             Assert.AreEqual(quxGenericDef, MemberInfoRoundtrip(fooGenericDef, ts, its));
 
-            var fooGeneric = fooGenericDef.MakeGenericMethod(new[] { typeof(int) });
-            var quxGeneric = quxGenericDef.MakeGenericMethod(new[] { typeof(int) });
+            var fooGeneric = fooGenericDef.MakeGenericMethod([typeof(int)]);
+            var quxGeneric = quxGenericDef.MakeGenericMethod([typeof(int)]);
             Assert.AreEqual(quxGeneric, MemberInfoRoundtrip(fooGeneric, ts, its));
         }
 
@@ -96,7 +96,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
             var genericDef = typeof(Foo).GetMethod("Qux2");
             Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(genericDef, ts, its));
 
-            var generic = genericDef.MakeGenericMethod(new[] { typeof(int) });
+            var generic = genericDef.MakeGenericMethod([typeof(int)]);
             Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(generic, ts, its));
         }
     }

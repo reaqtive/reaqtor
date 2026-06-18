@@ -26,14 +26,14 @@ namespace Tests.System.Linq.CompilerServices
         public void MemberInfoComparer_Equals_Nulls()
         {
             AssertEqual(null, null);
-            AssertNotEqual(null, typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) }));
-            AssertNotEqual(typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) }), null);
+            AssertNotEqual(null, typeof(Foo).GetConstructor([typeof(int), typeof(int)]));
+            AssertNotEqual(typeof(Foo).GetConstructor([typeof(int), typeof(int)]), null);
         }
 
         [TestMethod]
         public void MemberInfoComparer_Equals_DifferentMemberTypes()
         {
-            AssertNotEqual(typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) }), typeof(Foo).GetField("Field1"));
+            AssertNotEqual(typeof(Foo).GetConstructor([typeof(int), typeof(int)]), typeof(Foo).GetField("Field1"));
         }
 
         #endregion
@@ -43,9 +43,9 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void MemberInfoComparer_EqualsConstructor_Simple()
         {
-            var ctor1 = typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) });
-            var ctor1copy = typeof(Foo).GetConstructor(new Type[] { typeof(int), typeof(int) });
-            var ctor2 = typeof(Foo).GetConstructor(new Type[] { typeof(int) });
+            var ctor1 = typeof(Foo).GetConstructor([typeof(int), typeof(int)]);
+            var ctor1copy = typeof(Foo).GetConstructor([typeof(int), typeof(int)]);
+            var ctor2 = typeof(Foo).GetConstructor([typeof(int)]);
 
             AssertEqual(ctor1, ctor1copy);
             AssertNotEqual(ctor1, ctor2);
@@ -146,7 +146,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var members = new[]
             {
-                typeof(Foo).GetConstructor(new[] { typeof(int) }),
+                typeof(Foo).GetConstructor([typeof(int)]),
                 typeof(Foo).GetEvent("Changed"),
                 ReflectionHelpers.InfoOf((Foo foo) => foo.Field1),
                 ReflectionHelpers.InfoOf((Foo foo) => foo.Property1),

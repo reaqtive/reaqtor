@@ -208,14 +208,9 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// Cleanup object returned from <see cref="SnapshotAsync"/>, used to trigger truncation after successful checkpoints.
         /// </summary>
-        public sealed class SnapshotCleanup
+        public sealed class SnapshotCleanup(TransactionLogManager parent)
         {
-            private readonly TransactionLogManager _parent;
-
-            public SnapshotCleanup(TransactionLogManager parent)
-            {
-                _parent = parent;
-            }
+            private readonly TransactionLogManager _parent = parent;
 
             /// <summary>
             /// Triggers truncation of the transaction log (everything up to and including the current snapshot that has been
@@ -292,14 +287,9 @@ namespace Reaqtor.QueryEngine
         /// Object returned from <see cref="SnapshotCleanup.LoseReferenceAsync(IKeyValueStoreTransaction)"/>, used to trigger a "garbage collection"
         /// that removes transaction log entries that are no longer reachable.
         /// </summary>
-        public sealed class ReclaimResource
+        public sealed class ReclaimResource(TransactionLogManager parent)
         {
-            private readonly TransactionLogManager _parent;
-
-            public ReclaimResource(TransactionLogManager parent)
-            {
-                _parent = parent;
-            }
+            private readonly TransactionLogManager _parent = parent;
 
             /// <summary>
             /// Starts reclaiming transaction log entries that are no longer reachable. Typically called in a fire-and-forget fashion.
@@ -435,7 +425,7 @@ namespace Reaqtor.QueryEngine
             public ReplayTransactionLog(IList<ITransactionLog> logs, TransactionLogManager parent)
             {
                 _parent = parent;
-                _invalidReplaySequence = new Dictionary<string, List<ArtifactOperation>>();
+                _invalidReplaySequence = [];
 
                 _subjectFactories = Coalesce(parent._keyValueStore, logs, l => l.SubjectFactories);
                 _subscriptionFactories = Coalesce(parent._keyValueStore, logs, l => l.SubscriptionFactories);
@@ -540,7 +530,7 @@ namespace Reaqtor.QueryEngine
                 {
                     var prev = replayList[id];
                     replayList.Remove(id);
-                    failedReplays[id] = lst = new List<ArtifactOperation> { prev };
+                    failedReplays[id] = lst = [prev];
                 }
 
                 lst.Add(failingOperation);

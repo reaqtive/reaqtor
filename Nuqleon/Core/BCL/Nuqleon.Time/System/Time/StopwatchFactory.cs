@@ -65,19 +65,15 @@ namespace System.Time
             }
         }
 
-        private sealed class ClockStopwatchFactory : IStopwatchFactory
+        private sealed class ClockStopwatchFactory(IClock clock) : IStopwatchFactory
         {
-            private readonly IClock _clock;
-
-            public ClockStopwatchFactory(IClock clock) => _clock = clock;
+            private readonly IClock _clock = clock;
 
             public IStopwatch Create() => new Impl(_clock);
 
-            private sealed class Impl : StopwatchBase
+            private sealed class Impl(IClock clock) : StopwatchBase
             {
-                private readonly IClock _clock;
-
-                public Impl(IClock clock) => _clock = clock;
+                private readonly IClock _clock = clock;
 
                 protected override bool IsHighResolution => false;
 

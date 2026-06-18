@@ -57,7 +57,7 @@ namespace Tests.System.Reflection
         public void TypeSlimToTypeConverter_VisitGenericParameter_ThrowsInvalidOperation()
         {
             var visitor = new TypeSlimToTypeConverter(DefaultReflectionProvider.Instance);
-            visitor.Push(new Dictionary<TypeSlim, Type>());
+            visitor.Push([]);
             var param = TypeSlim.GenericParameter("T");
             Assert.ThrowsException<InvalidOperationException>(() => visitor.Visit(param));
         }

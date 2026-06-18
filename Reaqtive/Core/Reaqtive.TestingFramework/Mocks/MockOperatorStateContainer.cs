@@ -19,7 +19,7 @@ namespace Reaqtive.TestingFramework.Mocks
         /// </summary>
         public MockOperatorStateContainer()
         {
-            _values = new List<object>();
+            _values = [];
         }
 
         /// <summary>

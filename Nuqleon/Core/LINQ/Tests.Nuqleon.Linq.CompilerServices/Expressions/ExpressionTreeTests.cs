@@ -360,7 +360,7 @@ namespace Tests.System.Linq.CompilerServices
             var a2 = et.Children[1];
 
             var bu = et.Update(a1, a2);
-            var bv = et.Update((IEnumerable<ExpressionTree>)new[] { a1, (ExpressionTree)a2 });
+            var bv = et.Update((IEnumerable<ExpressionTree>)[a1, (ExpressionTree)a2]);
 
             Assert.AreSame(a1, bu.Children[0]);
             Assert.AreSame(a2, bu.Children[1]);
@@ -1123,7 +1123,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ce.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1187,7 +1187,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ce.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1213,7 +1213,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ce.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1279,7 +1279,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = bar.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<MemberBindingExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<MemberBindingExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1307,7 +1307,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = bar.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<MemberBindingExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<MemberBindingExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1373,7 +1373,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ei2.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ElementInitExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ElementInitExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);
@@ -1401,7 +1401,7 @@ namespace Tests.System.Linq.CompilerServices
             var a1 = ei2.ToExpressionTree();
 
             var eu = et.Update(a1);
-            var ev = et.Update((IEnumerable<ElementInitExpressionTree>)new[] { a1 });
+            var ev = et.Update((IEnumerable<ElementInitExpressionTree>)[a1]);
 
             Assert.AreSame(a1, eu.Children[0]);
             Assert.AreSame(a1, ev.Children[0]);

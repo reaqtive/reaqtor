@@ -60,10 +60,10 @@ namespace System.Linq.CompilerServices
         /// <param name="exclusions">Exclusion list for constant sites that should be excluded from hoisting.</param>
         public ConstantHoister(bool useDefaultForNull, params LambdaExpression[] exclusions)
         {
-            exclusions ??= Array.Empty<LambdaExpression>();
+            exclusions ??= [];
 
             _useDefaultForNull = useDefaultForNull;
-            _holes = new Dictionary<MemberInfo, List<int>>();
+            _holes = [];
 
             foreach (var exclusion in exclusions)
             {
@@ -116,7 +116,7 @@ namespace System.Linq.CompilerServices
                 {
                     if (_holes.TryGetValue(member, out List<int> existing))
                     {
-                        holes = existing.Union(holes).ToList();
+                        holes = [.. existing.Union(holes)];
                     }
 
                     _holes[member] = holes;
@@ -288,11 +288,11 @@ namespace System.Linq.CompilerServices
             {
                 _parent = parent;
                 _constants = new Dictionary<object, ParameterExpression>(TypeAwareComparer.Instance);
-                Environment = new List<Binding>();
+                Environment = [];
 
                 if (!_parent._useDefaultForNull)
                 {
-                    _nulls = new Dictionary<Type, ParameterExpression>();
+                    _nulls = [];
                 }
             }
 

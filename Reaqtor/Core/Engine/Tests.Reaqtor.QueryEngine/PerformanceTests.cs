@@ -81,7 +81,7 @@ namespace Tests.Reaqtor.QueryEngine
                 engines.Add(engine);
                 tasks.Add(new TaskFactory().StartNew(() => AddSubscriptions(engine, sources, NumberOfSubscriptions)));
             }
-            Task.WaitAll(tasks.ToArray());
+            Task.WaitAll([.. tasks]);
             stopwatch.Stop();
 
             Trace.WriteLine(

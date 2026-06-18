@@ -29,7 +29,7 @@ namespace Reaqtor.Shebang.App
 
     public sealed class IngressEgressManager : IIngressEgressManager
     {
-        private readonly Dictionary<string, object> _subjects = new();
+        private readonly Dictionary<string, object> _subjects = [];
 
         public IReliableSubject<T> CreateSubject<T>(string name)
         {
@@ -79,11 +79,9 @@ namespace Reaqtor.Shebang.App
             }
         }
 
-        private sealed class ReliableObserver<T> : IReliableObserver<T>
+        private sealed class ReliableObserver<T>(ReliableSubject<T> subject) : IReliableObserver<T>
         {
-            private readonly ReliableSubject<T> _subject;
-
-            public ReliableObserver(ReliableSubject<T> subject) => _subject = subject;
+            private readonly ReliableSubject<T> _subject = subject;
 
             public Uri ResubscribeUri => throw new NotImplementedException();
 
@@ -96,25 +94,17 @@ namespace Reaqtor.Shebang.App
             public void OnStarted() { }
         }
 
-        private sealed class ReliableObservable<T> : IReliableObservable<T>
+        private sealed class ReliableObservable<T>(ReliableSubject<T> subject) : IReliableObservable<T>
         {
-            private readonly ReliableSubject<T> _subject;
-
-            public ReliableObservable(ReliableSubject<T> subject) => _subject = subject;
+            private readonly ReliableSubject<T> _subject = subject;
 
             public IReliableSubscription Subscribe(IReliableObserver<T> observer) => new Subscription(_subject, observer);
 
-            private sealed class Subscription : IReliableSubscription
+            private sealed class Subscription(ReliableSubject<T> subject, IReliableObserver<T> observer) : IReliableSubscription
             {
-                private readonly ReliableSubject<T> _subject;
-                private readonly IReliableObserver<T> _observer;
+                private readonly ReliableSubject<T> _subject = subject;
+                private readonly IReliableObserver<T> _observer = observer;
                 private IDisposable _subscription;
-
-                public Subscription(ReliableSubject<T> subject, IReliableObserver<T> observer)
-                {
-                    _subject = subject;
-                    _observer = observer;
-                }
 
                 public Uri ResubscribeUri => throw new NotImplementedException("Used for engine-to-engine communication; N/A here.");
 

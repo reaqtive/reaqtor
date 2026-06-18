@@ -19,14 +19,21 @@ namespace System.Linq.Expressions.Bonsai.Serialization
     /// <summary>
     /// Bonsai serializer for expressions.
     /// </summary>
-    public class ExpressionSlimBonsaiSerializer
+    /// <remarks>
+    /// Instantiates the expression Bonsai serializer.
+    /// </remarks>
+    /// <param name="liftFactory">Factory to produce object serializer.</param>
+    /// <param name="reduceFactory">Factory to produce object deserializer.</param>
+    /// <param name="version">Version of Bonsai to use.</param>
+    /// <param name="mergeContext">true if recursive calls to serialize should use a root-level context, false otherwise.</param>
+    public class ExpressionSlimBonsaiSerializer(Func<Type, Func<object, object>> liftFactory, Func<Type, Func<object, object>> reduceFactory, Version version, bool mergeContext)
     {
-        private readonly Func<Type, Func<object, object>> _liftFactory;
-        private readonly Func<Type, Func<object, object>> _reduceFactory;
+        private readonly Func<Type, Func<object, object>> _liftFactory = liftFactory;
+        private readonly Func<Type, Func<object, object>> _reduceFactory = reduceFactory;
 
-        private readonly Version _version;
+        private readonly Version _version = version;
 
-        private readonly bool _mergeContext;
+        private readonly bool _mergeContext = mergeContext;
         private SerializationState _serializationState;
         private DeserializationState _deserializationState;
 
@@ -39,21 +46,6 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         public ExpressionSlimBonsaiSerializer(Func<Type, Func<object, object>> liftFactory, Func<Type, Func<object, object>> reduceFactory, Version version)
             : this(liftFactory, reduceFactory, version, mergeContext: true)
         {
-        }
-
-        /// <summary>
-        /// Instantiates the expression Bonsai serializer.
-        /// </summary>
-        /// <param name="liftFactory">Factory to produce object serializer.</param>
-        /// <param name="reduceFactory">Factory to produce object deserializer.</param>
-        /// <param name="version">Version of Bonsai to use.</param>
-        /// <param name="mergeContext">true if recursive calls to serialize should use a root-level context, false otherwise.</param>
-        public ExpressionSlimBonsaiSerializer(Func<Type, Func<object, object>> liftFactory, Func<Type, Func<object, object>> reduceFactory, Version version, bool mergeContext)
-        {
-            _liftFactory = liftFactory;
-            _reduceFactory = reduceFactory;
-            _version = version;
-            _mergeContext = mergeContext;
         }
 
         /// <summary>
@@ -134,15 +126,9 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             return visitor.Visit(expr);
         }
 
-        private sealed class SerializerImpl : ExpressionSlimToBonsaiConverter
+        private sealed class SerializerImpl(SerializationState state, Func<Type, Func<object, object>> liftFactory) : ExpressionSlimToBonsaiConverter(state)
         {
-            private readonly Func<Type, Func<object, object>> _liftFactory;
-
-            public SerializerImpl(SerializationState state, Func<Type, Func<object, object>> liftFactory)
-                : base(state)
-            {
-                _liftFactory = liftFactory;
-            }
+            private readonly Func<Type, Func<object, object>> _liftFactory = liftFactory;
 
             protected override Json.Expression VisitConstantValue(ObjectSlim value)
             {
@@ -157,15 +143,9 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             }
         }
 
-        private sealed class DeserializerImpl : BonsaiToExpressionSlimConverter
+        private sealed class DeserializerImpl(DeserializationState state, Func<Type, Func<object, object>> reduceFactory) : BonsaiToExpressionSlimConverter(state)
         {
-            private readonly Func<Type, Func<object, object>> _reduceFactory;
-
-            public DeserializerImpl(DeserializationState state, Func<Type, Func<object, object>> reduceFactory)
-                : base(state)
-            {
-                _reduceFactory = reduceFactory;
-            }
+            private readonly Func<Type, Func<object, object>> _reduceFactory = reduceFactory;
 
             protected override ObjectSlim VisitConstantValue(Json.Expression value, TypeSlim type)
             {

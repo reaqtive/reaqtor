@@ -19,7 +19,7 @@ namespace Tests
     [TestClass]
     public class PooledStackTests : TestBase
     {
-        private static readonly string[] exp = new[] { "qux", "foo", "bar", "baz" }.Reverse().ToArray();
+        private static readonly string[] exp = [.. new[] { "qux", "foo", "bar", "baz" }.Reverse()];
 
         [TestMethod]
         public void PooledStack_ArgumentChecking()

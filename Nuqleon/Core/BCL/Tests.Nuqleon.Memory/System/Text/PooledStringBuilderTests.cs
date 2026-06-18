@@ -19,7 +19,7 @@ namespace Tests
     [TestClass]
     public class PooledStringBuilderTests : TestBase
     {
-        private static readonly string[] words = new string[] { "bar", "foo", "qux", "baz" };
+        private static readonly string[] words = ["bar", "foo", "qux", "baz"];
 
         [TestMethod]
         public void PooledStringBuilder_ArgumentChecking()

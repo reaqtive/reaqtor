@@ -51,10 +51,10 @@ namespace Tests.System.Linq.CompilerServices
 
             Assert.IsFalse(st.TryGetValue("foo", out Indexed<string> unk));
 
-            Assert.IsTrue(st.ToArray().SequenceEqual(new[] {
+            Assert.IsTrue(st.ToArray().SequenceEqual([
                 new Indexed<KeyValuePair<string, string>>(new KeyValuePair<string, string>("bar", "foo"), 0),
                 new Indexed<KeyValuePair<string, string>>(new KeyValuePair<string, string>("baz", "qux"), 1)
-            }));
+            ]));
 
             Assert.IsNotNull(((IEnumerable)st).GetEnumerator());
 

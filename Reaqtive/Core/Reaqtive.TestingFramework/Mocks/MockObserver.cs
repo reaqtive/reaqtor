@@ -9,14 +9,9 @@ using Reaqtive.Testing;
 
 namespace Reaqtive.TestingFramework.Mocks
 {
-    public class MockObserver<T> : ITestableObserver<T>
+    public class MockObserver<T>(TestScheduler scheduler) : ITestableObserver<T>
     {
-        private readonly TestScheduler _scheduler;
-
-        public MockObserver(TestScheduler scheduler)
-        {
-            _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
-        }
+        private readonly TestScheduler _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
 
         public void OnNext(T value)
         {
@@ -33,6 +28,6 @@ namespace Reaqtive.TestingFramework.Mocks
             Messages.Add(new Recorded<Notification<T>>(_scheduler.Clock, Notification.CreateOnCompleted<T>()));
         }
 
-        public IList<Recorded<Notification<T>>> Messages { get; } = new List<Recorded<Notification<T>>>();
+        public IList<Recorded<Notification<T>>> Messages { get; } = [];
     }
 }

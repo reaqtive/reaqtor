@@ -17,7 +17,7 @@ using System.Linq.Expressions;
 
 namespace SampleTrees.Logic
 {
-    public class LogicNodeType : IEqualityComparer<LogicNodeType>
+    public class LogicNodeType(string name) : IEqualityComparer<LogicNodeType>
     {
         public static readonly LogicNodeType Const = new("Const");
         public static readonly LogicNodeType Symbol = new("Symbol");
@@ -26,9 +26,7 @@ namespace SampleTrees.Logic
         public static readonly LogicNodeType Or = new("Or");
         public static readonly LogicNodeType Wildcard = new("Wildcard");
 
-        public LogicNodeType(string name) => Name = name;
-
-        public string Name { get; }
+        public string Name { get; } = name;
 
         public bool Equals(LogicNodeType x, LogicNodeType y) => ReferenceEquals(x, y);
 
@@ -60,16 +58,11 @@ namespace SampleTrees.Logic
         public override string ToString() => "|B";
     }
 
-    public abstract class LogicExpr : Tree<LogicNodeType>, ITyped
+    public abstract class LogicExpr(LogicNodeType type, params LogicExpr[] children) : Tree<LogicNodeType>(type, children), ITyped
     {
-        public LogicExpr(LogicNodeType type, params LogicExpr[] children)
-            : base(type, children)
-        {
-        }
-
         public abstract bool Eval(Dictionary<BoolSymbol, BoolConst> bindings);
 
-        public bool Eval() => Eval(new Dictionary<BoolSymbol, BoolConst>());
+        public bool Eval() => Eval([]);
 
         public static Not operator !(LogicExpr expr) => new(expr);
 
@@ -91,15 +84,9 @@ namespace SampleTrees.Logic
         public LogicExpr CreateWildcard(ParameterExpression hole) => new LogicWildcard(hole.Name);
     }
 
-    public class LogicWildcard : LogicExpr
+    public class LogicWildcard(string name) : LogicExpr(LogicNodeType.Wildcard)
     {
-        public LogicWildcard(string name)
-            : base(LogicNodeType.Wildcard)
-        {
-            Name = name;
-        }
-
-        public string Name { get; }
+        public string Name { get; } = name;
 
         public override string ToStringFormat() => Name;
 
@@ -167,13 +154,8 @@ namespace SampleTrees.Logic
         }
     }
 
-    public class Not : LogicExpr
+    public class Not(LogicExpr operand) : LogicExpr(LogicNodeType.Not, operand)
     {
-        public Not(LogicExpr operand)
-            : base(LogicNodeType.Not, operand)
-        {
-        }
-
         public LogicExpr Operand => (LogicExpr)Children[0];
 
         public override int GetHashCode() => base.GetHashCode() ^ Operand.GetHashCode();
@@ -189,13 +171,8 @@ namespace SampleTrees.Logic
         }
     }
 
-    public abstract class BinaryLogicExpr : LogicExpr
+    public abstract class BinaryLogicExpr(LogicExpr left, LogicExpr right, LogicNodeType type) : LogicExpr(type, left, right)
     {
-        public BinaryLogicExpr(LogicExpr left, LogicExpr right, LogicNodeType type)
-            : base(type, left, right)
-        {
-        }
-
         public LogicExpr Left => (LogicExpr)Children[0];
 
         public LogicExpr Right => (LogicExpr)Children[1];
@@ -205,13 +182,8 @@ namespace SampleTrees.Logic
         public override bool Equals(object obj) => obj is BinaryLogicExpr other && other.Value.Equals(Value) && other.Left.Equals(Left) && other.Right.Equals(Right);
     }
 
-    public class And : BinaryLogicExpr
+    public class And(LogicExpr left, LogicExpr right) : BinaryLogicExpr(left, right, LogicNodeType.And)
     {
-        public And(LogicExpr left, LogicExpr right)
-            : base(left, right, LogicNodeType.And)
-        {
-        }
-
         public override bool Eval(Dictionary<BoolSymbol, BoolConst> bindings) => Left.Eval(bindings) && Right.Eval(bindings);
 
         protected override LogicExpr Update(IEnumerable<LogicExpr> children)
@@ -221,13 +193,8 @@ namespace SampleTrees.Logic
         }
     }
 
-    public class Or : BinaryLogicExpr
+    public class Or(LogicExpr left, LogicExpr right) : BinaryLogicExpr(left, right, LogicNodeType.Or)
     {
-        public Or(LogicExpr left, LogicExpr right)
-            : base(left, right, LogicNodeType.Or)
-        {
-        }
-
         public override bool Eval(Dictionary<BoolSymbol, BoolConst> bindings) => Left.Eval(bindings) || Right.Eval(bindings);
 
         protected override LogicExpr Update(IEnumerable<LogicExpr> children)

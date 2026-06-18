@@ -121,13 +121,8 @@ namespace System.Linq.Expressions
 #pragma warning restore IDE0079
     }
 
-    internal sealed class InvocationExpressionSlim0 : InvocationExpressionSlim
+    internal sealed class InvocationExpressionSlim0(ExpressionSlim expression) : InvocationExpressionSlim(expression)
     {
-        public InvocationExpressionSlim0(ExpressionSlim expression)
-            : base(expression)
-        {
-        }
-
         public override int ArgumentCount => 0;
 
         public override ExpressionSlim GetArgument(int index)
@@ -146,15 +141,9 @@ namespace System.Linq.Expressions
         }
     }
 
-    internal sealed class InvocationExpressionSlimN : InvocationExpressionSlim
+    internal sealed class InvocationExpressionSlimN(ExpressionSlim expression, ReadOnlyCollection<ExpressionSlim> arguments) : InvocationExpressionSlim(expression)
     {
-        private readonly ReadOnlyCollection<ExpressionSlim> _arguments;
-
-        public InvocationExpressionSlimN(ExpressionSlim expression, ReadOnlyCollection<ExpressionSlim> arguments)
-            : base(expression)
-        {
-            _arguments = arguments;
-        }
+        private readonly ReadOnlyCollection<ExpressionSlim> _arguments = arguments;
 
         public override int ArgumentCount => _arguments.Count;
 

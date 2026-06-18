@@ -136,14 +136,8 @@ namespace System.Linq.CompilerServices.Optimizers
             }
         }
 
-        private sealed class EnumerableSelectOperator : SelectOperator
+        private sealed class EnumerableSelectOperator(Type elementType, Type inputElementType, MonadMember source, QueryTree selector) : SelectOperator(elementType, inputElementType, source, selector)
         {
-            // TODO make this take a MethodInfo instead?
-            public EnumerableSelectOperator(Type elementType, Type inputElementType, MonadMember source, QueryTree selector)
-                : base(elementType, inputElementType, source, selector)
-            {
-            }
-
             public override IQueryExpressionFactory QueryExpressionFactory => EnumerableQueryExpressionFactory.Instance;
 
             public override Expression Reduce()

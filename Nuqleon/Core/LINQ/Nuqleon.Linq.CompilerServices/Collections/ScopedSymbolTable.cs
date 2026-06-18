@@ -18,9 +18,13 @@ namespace System.Linq.CompilerServices
     /// </summary>
     /// <typeparam name="TSymbol">Type of the symbols stored in the table.</typeparam>
     /// <typeparam name="TValue">Type of the values associated with the symbols stored in the table.</typeparam>
-    public class ScopedSymbolTable<TSymbol, TValue> : IEnumerable<Indexed<SymbolTable<TSymbol, TValue>>>
+    /// <remarks>
+    /// Creates a new empty scoped symbol table with an empty initial global scope, using the specified equality comparer for symbols.
+    /// </remarks>
+    /// <param name="symbolComparer">Equality comparer to compare symbols. A scoped symbol table can only contain distinct symbols within each level. Symbols can shadow declarations in the enclosing scope.</param>
+    public class ScopedSymbolTable<TSymbol, TValue>(IEqualityComparer<TSymbol> symbolComparer) : IEnumerable<Indexed<SymbolTable<TSymbol, TValue>>>
     {
-        private readonly Stack<SymbolTable<TSymbol, TValue>> _environment;
+        private readonly Stack<SymbolTable<TSymbol, TValue>> _environment = new Stack<SymbolTable<TSymbol, TValue>>();
 
         /// <summary>
         /// Creates a new empty scoped symbol table with an empty initial global scope.
@@ -31,19 +35,9 @@ namespace System.Linq.CompilerServices
         }
 
         /// <summary>
-        /// Creates a new empty scoped symbol table with an empty initial global scope, using the specified equality comparer for symbols.
-        /// </summary>
-        /// <param name="symbolComparer">Equality comparer to compare symbols. A scoped symbol table can only contain distinct symbols within each level. Symbols can shadow declarations in the enclosing scope.</param>
-        public ScopedSymbolTable(IEqualityComparer<TSymbol> symbolComparer)
-        {
-            GlobalScope = new SymbolTable<TSymbol, TValue>(parent: null, symbolComparer ?? throw new ArgumentNullException(nameof(symbolComparer)));
-            _environment = new Stack<SymbolTable<TSymbol, TValue>>();
-        }
-
-        /// <summary>
         /// Gets the global scope associated with the scoped symbol table.
         /// </summary>
-        public SymbolTable<TSymbol, TValue> GlobalScope { get; }
+        public SymbolTable<TSymbol, TValue> GlobalScope { get; } = new SymbolTable<TSymbol, TValue>(parent: null, symbolComparer ?? throw new ArgumentNullException(nameof(symbolComparer)));
 
         /// <summary>
         /// Gets the current scope in the scoped symbol table.

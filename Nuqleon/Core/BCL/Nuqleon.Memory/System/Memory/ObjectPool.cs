@@ -38,13 +38,20 @@ namespace System.Memory
     /// Rationale:
     ///    If there is no intent for reusing the object, do not use pool - just use "new".
     /// </remarks>
-    public class ObjectPool<T> : ObjectPoolBase<T>
+    /// <remarks>
+    /// Creates a new object pool using the specified factory to create new object instances
+    /// and using the specified pool size.
+    /// </remarks>
+    /// <param name="factory">Factory delegate used to create new object instances.</param>
+    /// <param name="size">Number of object instances to keep in the pool.</param>
+    /// <exception cref="ArgumentNullException">Thrown if <paramref name="factory"/> is null.</exception>
+    public class ObjectPool<T>(Func<T> factory, int size) : ObjectPoolBase<T>(size)
         where T : class
     {
         /// <summary>
         /// Factory delegate used to create new object instances.
         /// </summary>
-        private readonly Func<T> _factory;
+        private readonly Func<T> _factory = factory ?? throw new ArgumentNullException(nameof(factory));
 
         /// <summary>
         /// Creates a new object pool using the specified factory to create new object instances.
@@ -54,19 +61,6 @@ namespace System.Memory
         public ObjectPool(Func<T> factory)
             : this(factory, Environment.ProcessorCount * 2)
         {
-        }
-
-        /// <summary>
-        /// Creates a new object pool using the specified factory to create new object instances
-        /// and using the specified pool size.
-        /// </summary>
-        /// <param name="factory">Factory delegate used to create new object instances.</param>
-        /// <param name="size">Number of object instances to keep in the pool.</param>
-        /// <exception cref="ArgumentNullException">Thrown if <paramref name="factory"/> is null.</exception>
-        public ObjectPool(Func<T> factory, int size)
-            : base(size)
-        {
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
         }
 
         /// <summary>

@@ -93,7 +93,11 @@ namespace Reaqtive.Storage
         ///   <item><c>list.AddAfter(o, v)</c> results in <c>let newKey = getUnusedKey() in Edit("items/{getKeyOf(o)}/metadata", $"prev = {getKeyOf(o.Previous)}, next = {newKey}"); Edit("items/{getKeyOf(o.Next)}/metadata", $"prev = {newKey}, next = {getKeyOf(o.Next.Next)}"); Add($"items/{newKey}/data", v); Add($"items/{newKey}/metadata", $"prev = {getKeyOf(o)}, next = {getKeyOf(o.Next)}")</c></item>
         /// </list>
         /// </remarks>
-        private sealed class LinkedList : HeapBase
+        /// <remarks>
+        /// Creates a new entity representing a linked list.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private sealed class LinkedList(PersistedObjectSpace parent) : HeapBase(parent)
         {
             /// <summary>
             /// The category to store the metadata (i.e. the references to the previous and next node for each linked list node) in.
@@ -122,15 +126,6 @@ namespace Reaqtive.Storage
             /// The pending edits obtained from <see cref="_dirty"/> on the last call to <see cref="SaveCore(IStateWriter)"/>, for use by <see cref="SaveItemCore(IStateWriter, string, long)"/> to look up up the edits associated with a storage key.
             /// </summary>
             private DirtyState[] _dirtyHistory;
-
-            /// <summary>
-            /// Creates a new entity representing a linked list.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            public LinkedList(PersistedObjectSpace parent)
-                : base(parent)
-            {
-            }
 
             /// <summary>
             /// Gets the kind of the entity. Always returns <see cref="PersistableKind.LinkedList"/>.
@@ -190,7 +185,7 @@ namespace Reaqtive.Storage
                 // Prepare the storage for eventual objects.
                 //
 
-                _data = new List<(long key, EventualObject data, EventualObject metadata)>();
+                _data = [];
 
                 //
                 // Perform the core load operations, which will result in calls to TryGetItemKeysCore and LoadItemCore.
@@ -584,7 +579,7 @@ namespace Reaqtive.Storage
             /// Called when the linked list is cleared.
             /// </summary>
             /// <param name="keys">The list of storage keys associated with the elements that were removed.</param>
-            private void ClearKeys(IEnumerable<long> keys) => base.Clear(new SortedSet<long>(keys));
+            private void ClearKeys(IEnumerable<long> keys) => base.Clear([.. keys]);
 
             /// <summary>
             /// Called when an element in the linked list associated with the specified <paramref name="key"/> is edited.
@@ -631,42 +626,34 @@ namespace Reaqtive.Storage
             /// Statically typed wrapper for a persisted linked list with element type <typeparamref name="T"/>.
             /// </summary>
             /// <typeparam name="T">The type of the elements stored in the linked list.</typeparam>
-            private sealed class Wrapper<T> : PersistedBase, IPersistedLinkedList<T>, ILinkedListPersistence
+            /// <remarks>
+            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+            /// </remarks>
+            /// <param name="id">The identifier of the linked list.</param>
+            /// <param name="storage">The storage entity representing the linked list.</param>
+            /// <param name="list">The initial linked list. This could either be the result of deserializing persisted state, or an empty linked list for a new entity.</param>
+            /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each linked list node in <paramref name="list"/>.</param>
+            private sealed class Wrapper<T>(string id, PersistedObjectSpace.LinkedList storage, LinkedList<T> list, Map<LinkedListNode<T>, long> storageKeys) : PersistedBase(id), IPersistedLinkedList<T>, ILinkedListPersistence
             {
                 /// <summary>
                 /// The storage entity being wrapped.
                 /// </summary>
-                private readonly LinkedList _storage;
+                private readonly LinkedList _storage = storage;
 
                 /// <summary>
                 /// The stored linked list, always reflecting the latest in-memory state.
                 /// </summary>
-                private readonly LinkedList<T> _list;
+                private readonly LinkedList<T> _list = list;
 
                 /// <summary>
                 /// The bi-directional map used to associate the storage key used for each linked list node in <see cref="_list"/>.
                 /// </summary>
-                private readonly Map<LinkedListNode<T>, long> _storageKeys;
+                private readonly Map<LinkedListNode<T>, long> _storageKeys = storageKeys;
 
                 /// <summary>
                 /// Weakly rooted association of nodes in the underlying linked list (see <see cref="_list"/>) and our wrappers, used to reduce allocation overhead and to ensure reference equality for the same wrapped node.
                 /// </summary>
-                private readonly ConditionalWeakTable<LinkedListNode<T>, NodeWrapper> _nodeCache = new();
-
-                /// <summary>
-                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-                /// </summary>
-                /// <param name="id">The identifier of the linked list.</param>
-                /// <param name="storage">The storage entity representing the linked list.</param>
-                /// <param name="list">The initial linked list. This could either be the result of deserializing persisted state, or an empty linked list for a new entity.</param>
-                /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each linked list node in <paramref name="list"/>.</param>
-                public Wrapper(string id, LinkedList storage, LinkedList<T> list, Map<LinkedListNode<T>, long> storageKeys)
-                    : base(id)
-                {
-                    _storage = storage;
-                    _list = list;
-                    _storageKeys = storageKeys;
-                }
+                private readonly ConditionalWeakTable<LinkedListNode<T>, NodeWrapper> _nodeCache = [];
 
                 /// <summary>
                 /// Gets the number of elements in the linked list.
@@ -1363,28 +1350,22 @@ namespace Reaqtive.Storage
                 /// <summary>
                 /// Wrapper around an in-memory linked list node, used to keep track of the associated storage key.
                 /// </summary>
-                private sealed class NodeWrapper : ILinkedListNode<T>
+                /// <remarks>
+                /// Creates a new persisted linked list node wrapper around the specified in-memory linked list <paramref name="node"/>.
+                /// </remarks>
+                /// <param name="list">The list the node belongs (initially) to.</param>
+                /// <param name="node"> The corresponding in-memory linked list node.</param>
+                private sealed class NodeWrapper(LinkedList.Wrapper<T> list, LinkedListNode<T> node) : ILinkedListNode<T>
                 {
                     /// <summary>
                     /// The list the node belongs to, used to perform storage updates upon editing the value through <see cref="Value"/>. This reference can be <c>null</c> for a removed list node.
                     /// </summary>
-                    public Wrapper<T> List;
+                    public Wrapper<T> List = list;
 
                     /// <summary>
                     /// The corresponding in-memory linked list node.
                     /// </summary>
-                    public readonly LinkedListNode<T> Node;
-
-                    /// <summary>
-                    /// Creates a new persisted linked list node wrapper around the specified in-memory linked list <paramref name="node"/>.
-                    /// </summary>
-                    /// <param name="list">The list the node belongs (initially) to.</param>
-                    /// <param name="node"> The corresponding in-memory linked list node.</param>
-                    public NodeWrapper(Wrapper<T> list, LinkedListNode<T> node)
-                    {
-                        List = list;
-                        Node = node;
-                    }
+                    public readonly LinkedListNode<T> Node = node;
 
                     /// <summary>
                     /// Gets the storage key used to persist the linked list element.
@@ -1512,7 +1493,7 @@ namespace Reaqtive.Storage
                 /// <summary>
                 /// The dictionary mapping each edited storage key to the latest edit operation applied to the key.
                 /// </summary>
-                public readonly Dictionary<long, NodeEditKind> Edits = new();
+                public readonly Dictionary<long, NodeEditKind> Edits = [];
 
                 /// <summary>
                 /// Starts tracking an edit of a heap element associated with the specified <paramref name="key"/>.

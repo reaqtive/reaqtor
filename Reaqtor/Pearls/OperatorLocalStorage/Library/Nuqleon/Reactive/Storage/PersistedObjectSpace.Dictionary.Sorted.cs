@@ -65,16 +65,12 @@ namespace Reaqtive.Storage
         /// <summary>
         /// Storage entity representing a sorted dictionary.
         /// </summary>
-        private sealed partial class SortedDictionary : Dictionary
+        /// <remarks>
+        /// Creates a new entity representing a set.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private sealed partial class SortedDictionary(PersistedObjectSpace parent) : Dictionary(parent)
         {
-            /// <summary>
-            /// Creates a new entity representing a set.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            public SortedDictionary(PersistedObjectSpace parent)
-                : base(parent)
-            {
-            }
 
             /// <summary>
             /// Gets the kind of the entity. Always returns <see cref="PersistableKind.SortedDictionary"/>.
@@ -176,19 +172,15 @@ namespace Reaqtive.Storage
             /// </summary>
             /// <typeparam name="TKey">The type of keys stored in the dictionary.</typeparam>
             /// <typeparam name="TValue">The type of values stored in the dictionary.</typeparam>
-            private sealed class Wrapper<TKey, TValue> : WrapperBase<TKey, TValue, SortedDictionary<TKey, TValue>>, IPersistedSortedDictionary<TKey, TValue>
+            /// <remarks>
+            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+            /// </remarks>
+            /// <param name="id">The identifier of the dictionary.</param>
+            /// <param name="storage">The storage entity representing the dictionary.</param>
+            /// <param name="dictionary">The initial dictionary. This could either be the result of deserializing persisted state, or an empty dictionary for a new entity.</param>
+            /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="dictionary"/>.</param>
+            private sealed class Wrapper<TKey, TValue>(string id, PersistedObjectSpace.Dictionary storage, SortedDictionary<TKey, TValue> dictionary, Map<TKey, long> storageKeys) : WrapperBase<TKey, TValue, SortedDictionary<TKey, TValue>>(id, storage, dictionary, storageKeys), IPersistedSortedDictionary<TKey, TValue>
             {
-                /// <summary>
-                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-                /// </summary>
-                /// <param name="id">The identifier of the dictionary.</param>
-                /// <param name="storage">The storage entity representing the dictionary.</param>
-                /// <param name="dictionary">The initial dictionary. This could either be the result of deserializing persisted state, or an empty dictionary for a new entity.</param>
-                /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="dictionary"/>.</param>
-                public Wrapper(string id, Dictionary storage, SortedDictionary<TKey, TValue> dictionary, Map<TKey, long> storageKeys)
-                    : base(id, storage, dictionary, storageKeys)
-                {
-                }
 
                 /// <summary>
                 /// Gets a collection containing the keys in the dictionary.

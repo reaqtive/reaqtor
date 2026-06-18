@@ -44,7 +44,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
 
             AssertEx.ThrowsException<ArgumentNullException>(() => new DataTypeException(default(DataTypeError)), ex => Assert.AreEqual("error", ex.ParamName));
 
-            var err = new DataTypeError(typeof(int), "bar", new[] { typeof(List<int>) });
+            var err = new DataTypeError(typeof(int), "bar", [typeof(List<int>)]);
             var ex4 = new DataTypeException(err);
             Assert.AreSame(err, ex4.Error);
             Assert.IsTrue(ex4.ToString().Contains("bar"));

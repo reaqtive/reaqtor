@@ -33,9 +33,9 @@ namespace Tests.System.Linq.CompilerServices
             AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), 1), ex => Assert.AreEqual("convert", ex.ParamName));
             AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ITree<Bar> b) => null, -1), ex => Assert.AreEqual("cost", ex.ParamName));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), (ITree<Bar> b) => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add((ITree<Bar> b) => null, default(Expression<Func<ITree<Bar>, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ITree<Bar> b) => null, (ITree<Bar> b) => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), b => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(b => null, default(Expression<Func<ITree<Bar>, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Leaves.Add(b => null, (ITree<Bar> b) => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(pattern: null, () => null, 1), ex => Assert.AreEqual("pattern", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(() => null, goal: null, 1), ex => Assert.AreEqual("goal", ex.ParamName));
@@ -54,11 +54,11 @@ namespace Tests.System.Linq.CompilerServices
             AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add((b1, b2, b3) => b1, (f1, f2, f3) => f1, -1), ex => Assert.AreEqual("cost", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add((ITree<Bar> b) => null, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(b => null, -1), ex => Assert.AreEqual("cost", ex.ParamName));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), (ITree<Bar> b) => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add((ITree<Bar> b) => null, default(Expression<Func<ITree<Bar>, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add((ITree<Bar> b) => null, (ITree<Bar> b) => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<ITree<Bar>, ITree<Foo>>>), b => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(b => null, default(Expression<Func<ITree<Bar>, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(b => null, b => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var mb = new MyBurs();

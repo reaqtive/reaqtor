@@ -16,18 +16,14 @@ namespace Reaqtor
     /// <summary>
     /// Base class for reactive processing query providers, used to build observables, observers, and subjects represented by expression trees.
     /// </summary>
-    public abstract partial class ReactiveQueryProviderBase : IReactiveQueryProvider
+    /// <remarks>
+    /// Creates a new reactive processing query provider with default factory method implementations.
+    /// </remarks>
+    /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
+    public abstract partial class ReactiveQueryProviderBase(IReactiveExpressionServices expressionServices) : IReactiveQueryProvider
     {
-        #region Constructor & fields
 
-        /// <summary>
-        /// Creates a new reactive processing query provider with default factory method implementations.
-        /// </summary>
-        /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
-        protected ReactiveQueryProviderBase(IReactiveExpressionServices expressionServices)
-        {
-            ExpressionServices = expressionServices ?? throw new ArgumentNullException(nameof(expressionServices));
-        }
+        #region Constructor & fields
 
         #endregion
 
@@ -36,7 +32,7 @@ namespace Reaqtor
         /// <summary>
         /// Gets the expression services object, used to perform expression tree manipulations.
         /// </summary>
-        public IReactiveExpressionServices ExpressionServices { get; }
+        public IReactiveExpressionServices ExpressionServices { get; } = expressionServices ?? throw new ArgumentNullException(nameof(expressionServices));
 
         #endregion
 
@@ -91,12 +87,12 @@ namespace Reaqtor
 
         internal IReactiveQubscription CreateSubscription(IReactiveQubscriptionFactory factory, Uri subscriptionUri, object state)
         {
-            return CreateSubscription(factory, Array.Empty<Expression>(), subscriptionUri, state);
+            return CreateSubscription(factory, [], subscriptionUri, state);
         }
 
         internal IReactiveQubscription CreateSubscription<TArgs>(IReactiveQubscriptionFactory<TArgs> factory, TArgs argument, Uri subscriptionUri, object state)
         {
-            return CreateSubscription(factory, new Expression[] { Expression.Constant(argument, typeof(TArgs)) }, subscriptionUri, state);
+            return CreateSubscription(factory, [Expression.Constant(argument, typeof(TArgs))], subscriptionUri, state);
         }
 
         internal IReactiveQubscription CreateSubscription(IReactiveExpressible factory, Expression[] arguments, Uri subscriptionUri, object state)
@@ -145,12 +141,12 @@ namespace Reaqtor
 
         internal IReactiveQubject<TInput, TOutput> CreateStream<TInput, TOutput>(IReactiveQubjectFactory<TInput, TOutput> factory, Uri streamUri, object state)
         {
-            return CreateStream<TInput, TOutput>(factory, Array.Empty<Expression>(), streamUri, state);
+            return CreateStream<TInput, TOutput>(factory, [], streamUri, state);
         }
 
         internal IReactiveQubject<TInput, TOutput> CreateStream<TArgs, TInput, TOutput>(IReactiveQubjectFactory<TInput, TOutput, TArgs> factory, TArgs argument, Uri streamUri, object state)
         {
-            return CreateStream<TInput, TOutput>(factory, new Expression[] { Expression.Constant(argument, typeof(TArgs)) }, streamUri, state);
+            return CreateStream<TInput, TOutput>(factory, [Expression.Constant(argument, typeof(TArgs))], streamUri, state);
         }
 
         internal IReactiveQubject<TInput, TOutput> CreateStream<TInput, TOutput>(IReactiveExpressible factory, Expression[] arguments, Uri streamUri, object state)

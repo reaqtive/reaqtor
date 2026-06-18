@@ -329,23 +329,14 @@ namespace Test.Reaqtor
                 return new _(this, observer);
             }
 
-            private sealed class _ : UnaryOperator<Never<T>, T>
+            private sealed class _(MultiSubjectProxyTests.Never<T> parent, IObserver<T> observer) : UnaryOperator<Never<T>, T>(parent, observer)
             {
-                public _(Never<T> parent, IObserver<T> observer)
-                    : base(parent, observer)
-                {
-                }
             }
         }
 
-        private sealed class TestSubject : IMultiSubject
+        private sealed class TestSubject(object instance) : IMultiSubject
         {
-            private readonly object _instance;
-
-            public TestSubject(object instance)
-            {
-                _instance = instance;
-            }
+            private readonly object _instance = instance;
 
             public IObserver<T> GetObserver<T>()
             {

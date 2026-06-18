@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Threading;
 
 namespace Reaqtive
 {
@@ -13,7 +14,7 @@ namespace Reaqtive
     {
         private readonly _ Disposed;
         private volatile ISubscription _current;
-        private readonly object _lock;
+        private readonly Lock _lock;
 
         /// <summary>
         /// Creates a new single assignment subscription with no initial inner subscription assigned.
@@ -21,7 +22,7 @@ namespace Reaqtive
         public SingleAssignmentSubscription()
         {
             Disposed = new _();
-            _lock = new object();
+            _lock = new Lock();
         }
 
         /// <summary>

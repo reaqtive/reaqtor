@@ -15,7 +15,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 {
     internal sealed class DataTypeToCycleDetector : DataTypeVisitor<Expression, Tuple<DataProperty, Expression>>
     {
-        private readonly Dictionary<Type, CycleHelper> _visited = new();
+        private readonly Dictionary<Type, CycleHelper> _visited = [];
 
         protected override Expression VisitStructural(StructuralDataType type)
         {
@@ -56,7 +56,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
                 var accessExpression = type.UnderlyingType.IsArray
                     ? (Expression)Expression.ArrayIndex(convertedParameter, loopParameter)
-                    : Expression.Call(convertedParameter, type.UnderlyingType.GetMethod("get_Item", new[] { typeof(int) }), loopParameter);
+                    : Expression.Call(convertedParameter, type.UnderlyingType.GetMethod("get_Item", [typeof(int)]), loopParameter);
 
                 Debug.Assert(elementType.Type == typeof(CycleDetector));
 

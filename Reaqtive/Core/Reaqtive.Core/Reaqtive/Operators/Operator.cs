@@ -17,22 +17,16 @@ namespace Reaqtive
     /// </summary>
     /// <typeparam name="TParam">Type of the parameters passed to the observer.</typeparam>
     /// <typeparam name="TResult">Element type of the result sequence produced by the operator.</typeparam>
-    public abstract class Operator<TParam, TResult> : IOperator, ISubscription
+    /// <remarks>
+    /// Creates a new operator instance using the given parameters and the
+    /// observer to report downstream notifications to.
+    /// </remarks>
+    /// <param name="parent">Parameters used by the operator.</param>
+    /// <param name="observer">Observer receiving the operator's output.</param>
+    public abstract class Operator<TParam, TResult>(TParam parent, IObserver<TResult> observer) : IOperator, ISubscription
     {
-        private IObserver<TResult> _observer;
+        private IObserver<TResult> _observer = observer;
         private int _started;
-
-        /// <summary>
-        /// Creates a new operator instance using the given parameters and the
-        /// observer to report downstream notifications to.
-        /// </summary>
-        /// <param name="parent">Parameters used by the operator.</param>
-        /// <param name="observer">Observer receiving the operator's output.</param>
-        protected Operator(TParam parent, IObserver<TResult> observer)
-        {
-            Params = parent;
-            _observer = observer;
-        }
 
         //
         // NB: Array.Empty<T>().GetEnumerator() allocates new SZArrayEnumerator instances each time.
@@ -42,13 +36,13 @@ namespace Reaqtive
         /// <summary>
         /// Gets a list of upstream subscriptions established by the operator.
         /// </summary>
-        public IEnumerable<ISubscription> Inputs { get; private set; } = Enumerable.Empty<ISubscription>();
+        public IEnumerable<ISubscription> Inputs { get; private set; } = [];
 
         /// <summary>
         /// Gets the parameters used by the operator. These parameters may include
         /// subscribable objects representing input sequences for the operator.
         /// </summary>
-        protected TParam Params { get; }
+        protected TParam Params { get; } = parent;
 
         /// <summary>
         /// The observer that is subscribed to the operator. Is set when the object
@@ -173,7 +167,7 @@ namespace Reaqtive
             // NB: See remarks on Inputs property about use of Enumerable.Empty<T>() versus Array.Empty<T>().
             //
 
-            return Enumerable.Empty<ISubscription>();
+            return [];
         }
 
         /// <summary>

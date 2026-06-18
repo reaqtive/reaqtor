@@ -7,16 +7,10 @@ using System.Collections.Generic;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Max<TSource> : SubscribableBase<TSource>
+    internal sealed class Max<TSource>(ISubscribable<TSource> source, IComparer<TSource> comparer) : SubscribableBase<TSource>
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly IComparer<TSource> _comparer;
-
-        public Max(ISubscribable<TSource> source, IComparer<TSource> comparer)
-        {
-            _source = source;
-            _comparer = comparer;
-        }
+        private readonly ISubscribable<TSource> _source = source;
+        private readonly IComparer<TSource> _comparer = comparer;
 
         protected override ISubscription SubscribeCore(IObserver<TSource> observer)
         {
@@ -30,15 +24,10 @@ namespace Reaqtive.Operators
             }
         }
 
-        private sealed class _ : StatefulUnaryOperator<Max<TSource>, TSource>, IObserver<TSource>
+        private sealed class _(Max<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<Max<TSource>, TSource>(parent, observer), IObserver<TSource>
         {
             private bool _hasValue;
             private TSource _res;
-
-            public _(Max<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:Max";
 
@@ -117,14 +106,9 @@ namespace Reaqtive.Operators
             }
         }
 
-        private sealed class N : StatefulUnaryOperator<Max<TSource>, TSource>, IObserver<TSource>
+        private sealed class N(Max<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<Max<TSource>, TSource>(parent, observer), IObserver<TSource>
         {
             private TSource _res;
-
-            public N(Max<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:MaxNullable";
 

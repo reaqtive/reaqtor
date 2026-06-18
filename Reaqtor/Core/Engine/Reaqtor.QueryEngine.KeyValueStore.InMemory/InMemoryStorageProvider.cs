@@ -4,6 +4,7 @@
 
 using System;
 using System.Diagnostics;
+using System.Threading;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
@@ -15,7 +16,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     {
         private volatile CheckpointInfo _latestFullCheckpoint;
         private volatile CheckpointInfo _currentCheckpoint;
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
 
         /// <summary>
         /// Start a new (full) checkpoint with the provided identifier.
@@ -137,23 +138,17 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             }
         }
 
-        private sealed class CheckpointInfo
+        private sealed class CheckpointInfo(InMemoryStateStore store, CheckpointKind kind)
         {
-            public CheckpointInfo(InMemoryStateStore store, CheckpointKind kind)
-            {
-                Store = store;
-                Kind = kind;
-            }
-
             public DateTime Creation { get; set; }
 
             public DateTime LatestUpdate { get; set; }
 
-            public InMemoryStateStore Store { get; }
+            public InMemoryStateStore Store { get; } = store;
 
             public string Id => Store.Id;
 
-            public CheckpointKind Kind { get; }
+            public CheckpointKind Kind { get; } = kind;
         }
     }
 }

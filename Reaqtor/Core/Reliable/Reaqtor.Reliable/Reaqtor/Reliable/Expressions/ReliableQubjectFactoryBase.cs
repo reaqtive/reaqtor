@@ -9,10 +9,8 @@ using Reaqtor.Reliable.Client;
 
 namespace Reaqtor.Reliable.Expressions
 {
-    public abstract class ReliableQubjectFactoryBase<TInput, TOutput> : IReliableQubjectFactory<TInput, TOutput>
+    public abstract class ReliableQubjectFactoryBase<TInput, TOutput>(IReliableQueryProvider provider) : IReliableQubjectFactory<TInput, TOutput>
     {
-        protected ReliableQubjectFactoryBase(IReliableQueryProvider provider) => Provider = provider;
-
         public IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, object state = null)
         {
             if (streamUri == null)
@@ -31,15 +29,13 @@ namespace Reaqtor.Reliable.Expressions
 
         protected abstract IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, object state);
 
-        public IReliableQueryProvider Provider { get; }
+        public IReliableQueryProvider Provider { get; } = provider;
 
         public abstract Expression Expression { get; }
     }
 
-    public abstract class ReliableQubjectFactoryBase<TInput, TOutput, TArg> : IReliableQubjectFactory<TInput, TOutput, TArg>
+    public abstract class ReliableQubjectFactoryBase<TInput, TOutput, TArg>(IReliableQueryProvider provider) : IReliableQubjectFactory<TInput, TOutput, TArg>
     {
-        protected ReliableQubjectFactoryBase(IReliableQueryProvider provider) => Provider = provider;
-
         public IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, TArg argument, object state = null)
         {
             if (streamUri == null)
@@ -58,7 +54,7 @@ namespace Reaqtor.Reliable.Expressions
 
         protected abstract IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg argument, object state);
 
-        public IReliableQueryProvider Provider { get; }
+        public IReliableQueryProvider Provider { get; } = provider;
 
         public abstract Expression Expression { get; }
     }

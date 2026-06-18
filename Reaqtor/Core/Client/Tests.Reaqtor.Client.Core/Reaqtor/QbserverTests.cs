@@ -136,7 +136,7 @@ namespace Tests.Reaqtor
 
         private sealed class MyObserver<T> : IAsyncReactiveObserver<T>
         {
-            public List<T> OnNextLog = new();
+            public List<T> OnNextLog = [];
             public Exception OnErrorLog;
             public bool OnCompletedLog;
 

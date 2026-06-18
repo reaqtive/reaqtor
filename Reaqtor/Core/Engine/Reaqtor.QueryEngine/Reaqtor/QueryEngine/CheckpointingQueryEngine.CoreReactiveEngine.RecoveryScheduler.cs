@@ -37,7 +37,7 @@ namespace Reaqtor.QueryEngine
                 {
                     var threadCount = Math.Max(1, (int)(Environment.ProcessorCount * MaxRecoveryUtilizationFactor));
 
-                    _tasks = new BlockingCollection<Task>();
+                    _tasks = [];
                     _threads = new Thread[threadCount];
 
                     for (var i = 0; i < threadCount; ++i)

@@ -536,7 +536,7 @@ namespace System.Memory
         private int _createInstanceCount;
         private int _dropCount;
 
-        private readonly ConditionalWeakTable<T, History> _objectLogs = new();
+        private readonly ConditionalWeakTable<T, History> _objectLogs = [];
         private readonly ConcurrentDictionary<History, bool> _trackedObjs = new();
 
         partial void OnCreate() => _createData = TraceLog.Create(Operation.CreatePool);
@@ -826,25 +826,16 @@ namespace System.Memory
             }
         }
 
-        private sealed class History
+        private sealed class History(T obj, Action<ObjectPoolBase<T>.History> remove)
         {
             private const int MAX = 8;
 
             private static int s_counter;
 
-            private readonly Action<History> _remove;
-            private readonly ConcurrentQueue<TraceLog> _traces;
-
-            public History(T obj, Action<History> remove)
-            {
-                Id = Interlocked.Increment(ref s_counter);
-                Ref = new WeakReference<T>(obj);
-                _remove = remove;
-                _traces = new ConcurrentQueue<TraceLog>();
-            }
-
-            public int Id;
-            public WeakReference<T> Ref;
+            private readonly Action<History> _remove = remove;
+            private readonly ConcurrentQueue<TraceLog> _traces = new ConcurrentQueue<TraceLog>();
+            public int Id = Interlocked.Increment(ref s_counter);
+            public WeakReference<T> Ref = new WeakReference<T>(obj);
 
             public void Add(TraceLog log)
             {

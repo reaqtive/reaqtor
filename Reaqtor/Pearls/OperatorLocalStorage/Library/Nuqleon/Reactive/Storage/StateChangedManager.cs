@@ -24,11 +24,6 @@ namespace Reaqtive.Storage
         private bool _lastCheckpointNoSuccess;
 
         /// <summary>
-        /// A value indicating whether a state change has been reported via a call to the <see cref="StateChanged"/> setter.
-        /// </summary>
-        private bool _stateChanged;
-
-        /// <summary>
         /// A value indicating whether the entity has been saved at least once, e.g. due to a call to <see cref="LoadState"/> or <see cref="SaveState"/>.
         /// </summary>
         private bool _savedOnce;
@@ -38,8 +33,8 @@ namespace Reaqtive.Storage
         /// </summary>
         public bool StateChanged
         {
-            readonly get => !_savedOnce || _stateChanged || _lastCheckpointNoSuccess;
-            set => _stateChanged = value;
+            readonly get => !_savedOnce || field || _lastCheckpointNoSuccess;
+            set;
         }
 
         /// <summary>
@@ -63,7 +58,7 @@ namespace Reaqtive.Storage
 
             _savedOnce = true;
             _lastCheckpointNoSuccess = true;
-            _stateChanged = false;
+            StateChanged = false;
         }
 
         /// <summary>
@@ -89,7 +84,7 @@ namespace Reaqtive.Storage
         /// <summary>
         /// The list of edit pages in chronological order. This list gets appended with an empty edit page in <see cref="SaveState"/> and pruned in <see cref="OnStateSaved"/>.
         /// </summary>
-        private readonly List<T> _edits = new();
+        private readonly List<T> _edits = [];
 
         /// <summary>
         /// Creates a new state changed manager with a single empty edit page.

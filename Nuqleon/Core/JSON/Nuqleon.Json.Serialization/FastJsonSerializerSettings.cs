@@ -13,17 +13,16 @@ namespace Nuqleon.Json.Serialization
     /// <summary>
     /// Provides settings for the creation of fast JSON serializers or deserializers.
     /// </summary>
-    public class FastJsonSerializerSettings
+    /// <remarks>
+    /// Creates a new instance of fast JSON serializer settings given the specified concurrency mode.
+    /// </remarks>
+    /// <param name="concurrencyMode">Intended concurrency usage pattern for a fast JSON serializer or deserializer.</param>
+    public class FastJsonSerializerSettings(FastJsonConcurrencyMode concurrencyMode)
     {
-        /// <summary>
-        /// Creates a new instance of fast JSON serializer settings given the specified concurrency mode.
-        /// </summary>
-        /// <param name="concurrencyMode">Intended concurrency usage pattern for a fast JSON serializer or deserializer.</param>
-        public FastJsonSerializerSettings(FastJsonConcurrencyMode concurrencyMode) => ConcurrencyMode = concurrencyMode;
 
         /// <summary>
         /// Gets the intended concurrency usage pattern for a fast JSON serializer or deserializer.
         /// </summary>
-        public FastJsonConcurrencyMode ConcurrencyMode { get; }
+        public FastJsonConcurrencyMode ConcurrencyMode { get; } = concurrencyMode;
     }
 }

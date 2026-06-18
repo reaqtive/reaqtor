@@ -29,7 +29,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
         public static readonly PropertyInfo ExpressionSerializer = (PropertyInfo)ReflectionHelpers.InfoOf((DataTypeBinarySerializer f) => f.ExpressionSerializer);
         public static readonly PropertyInfo ListCount = (PropertyInfo)ReflectionHelpers.InfoOf((IList l) => l.Count);
 
-        public static readonly Type[] ListCtorArgs = new[] { typeof(int) };
+        public static readonly Type[] ListCtorArgs = [typeof(int)];
 
         public static readonly Expression NullObject = Expression.Constant(value: null, typeof(object));
         public static readonly Expression ZeroInt32 = Expression.Constant(value: 0, typeof(int));

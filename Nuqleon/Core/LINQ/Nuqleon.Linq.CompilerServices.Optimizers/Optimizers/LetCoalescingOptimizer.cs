@@ -189,7 +189,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
             private abstract class MemberChainVisitor : ExpressionVisitor
             {
-                private readonly List<MemberExpression> _memberChain = new();
+                private readonly List<MemberExpression> _memberChain = [];
 
                 protected sealed override Expression VisitMember(MemberExpression node)
                 {
@@ -294,20 +294,13 @@ namespace System.Linq.CompilerServices.Optimizers
                 protected abstract bool TryVisitLeaf(IList<MemberExpression> memberChain, Expression leaf, out Expression result);
             }
 
-            private sealed class ValidateMemberAccessesAndInlineVisitor : MemberChainAndNewExpressionLeafVisitor
+            private sealed class ValidateMemberAccessesAndInlineVisitor(NewExpression anonymousConstructor, ParameterExpression converted, ParameterExpression initial) : MemberChainAndNewExpressionLeafVisitor(anonymousConstructor)
             {
-                private readonly ParameterExpression _initial;
-                private readonly ParameterExpression _converted;
+                private readonly ParameterExpression _initial = initial;
+                private readonly ParameterExpression _converted = converted;
 
                 private int _unboundInitialParameters;
                 private int _convertedScopes;
-
-                public ValidateMemberAccessesAndInlineVisitor(NewExpression anonymousConstructor, ParameterExpression converted, ParameterExpression initial)
-                    : base(anonymousConstructor)
-                {
-                    _initial = initial;
-                    _converted = converted;
-                }
 
                 public bool Valid => _unboundInitialParameters == 0;
 
@@ -376,17 +369,11 @@ namespace System.Linq.CompilerServices.Optimizers
                 }
             }
 
-            private sealed class ValidateMemberAccessVisitor : MemberChainAndNewExpressionLeafVisitor
+            private sealed class ValidateMemberAccessVisitor(NewExpression anonymousConstructor, ParameterExpression initial) : MemberChainAndNewExpressionLeafVisitor(anonymousConstructor)
             {
-                private readonly ParameterExpression _initial;
+                private readonly ParameterExpression _initial = initial;
 
                 private int _unboundInitialParameters;
-
-                public ValidateMemberAccessVisitor(NewExpression anonymousConstructor, ParameterExpression initial)
-                    : base(anonymousConstructor)
-                {
-                    _initial = initial;
-                }
 
                 public bool Valid => _unboundInitialParameters == 0;
 
@@ -417,19 +404,11 @@ namespace System.Linq.CompilerServices.Optimizers
                 }
             }
 
-            private sealed class InlineFlattenedTypeVisitor : MemberChainAndNewExpressionLeafVisitor
+            private sealed class InlineFlattenedTypeVisitor(NewExpression anonymousConstructor, ParameterExpression converted, ParameterExpression initial, Impl.AnonymousTypeFlattener flattener) : MemberChainAndNewExpressionLeafVisitor(anonymousConstructor)
             {
-                private readonly ParameterExpression _initial;
-                private readonly ParameterExpression _converted;
-                private readonly AnonymousTypeFlattener _flattener;
-
-                public InlineFlattenedTypeVisitor(NewExpression anonymousConstructor, ParameterExpression converted, ParameterExpression initial, AnonymousTypeFlattener flattener)
-                    : base(anonymousConstructor)
-                {
-                    _initial = initial;
-                    _converted = converted;
-                    _flattener = flattener;
-                }
+                private readonly ParameterExpression _initial = initial;
+                private readonly ParameterExpression _converted = converted;
+                private readonly AnonymousTypeFlattener _flattener = flattener;
 
                 protected override Expression VisitLambda<T>(Expression<T> node)
                 {
@@ -466,8 +445,8 @@ namespace System.Linq.CompilerServices.Optimizers
                     _mapper = new Dictionary<IEnumerable<MemberInfo>, MemberInfo[]>(ExpressionChainComparer.Instance);
                 }
 
-                private static readonly string[] s_tupleItems = new string[]
-                {
+                private static readonly string[] s_tupleItems =
+                [
                     "Item1",
                     "Item2",
                     "Item3",
@@ -476,12 +455,12 @@ namespace System.Linq.CompilerServices.Optimizers
                     "Item6",
                     "Item7",
                     "Rest",
-                };
+                ];
 
                 public bool TryConstruct(out NewExpression rewritten)
                 {
                     var results = new List<MapEntry>();
-                    if (TryConstruct(_expression, new List<MemberInfo>(), results))
+                    if (TryConstruct(_expression, [], results))
                     {
                         rewritten = (NewExpression)ExpressionTupletizer.Pack(results.Select(x => x.ConstructorArgument));
 
@@ -544,7 +523,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
                             results.Add(new MapEntry
                             {
-                                MemberChain = prefix.ToArray(),
+                                MemberChain = [.. prefix],
                                 Type = parameters[i].ParameterType,
                                 Name = builder.ToString(),
                                 ConstructorArgument = arg,

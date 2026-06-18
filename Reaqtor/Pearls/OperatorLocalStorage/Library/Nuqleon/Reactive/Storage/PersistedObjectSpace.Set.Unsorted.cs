@@ -62,16 +62,12 @@ namespace Reaqtive.Storage
         /// <summary>
         /// Storage entity representing an unsorted set.
         /// </summary>
-        private sealed class UnsortedSet : Set
+        /// <remarks>
+        /// Creates a new entity representing a set.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private sealed class UnsortedSet(PersistedObjectSpace parent) : Set(parent)
         {
-            /// <summary>
-            /// Creates a new entity representing a set.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            public UnsortedSet(PersistedObjectSpace parent)
-                : base(parent)
-            {
-            }
 
             /// <summary>
             /// Gets the kind of the entity. Always returns <see cref="PersistableKind.Set"/>.
@@ -167,19 +163,15 @@ namespace Reaqtive.Storage
             /// Statically typed wrapper for a persisted set with element type <typeparamref name="T"/>.
             /// </summary>
             /// <typeparam name="T">The type of the elements stored in the set.</typeparam>
-            private sealed class Wrapper<T> : WrapperBase<T, HashSet<T>>, IPersistedSet<T>
+            /// <remarks>
+            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+            /// </remarks>
+            /// <param name="id">The identifier of the set.</param>
+            /// <param name="storage">The storage entity representing the set.</param>
+            /// <param name="set">The initial set. This could either be the result of deserializing persisted state, or an empty set for a new entity.</param>
+            /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="set"/>.</param>
+            private sealed class Wrapper<T>(string id, PersistedObjectSpace.Set storage, HashSet<T> set, Map<T, long> storageKeys) : WrapperBase<T, HashSet<T>>(id, storage, set, storageKeys), IPersistedSet<T>
             {
-                /// <summary>
-                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-                /// </summary>
-                /// <param name="id">The identifier of the set.</param>
-                /// <param name="storage">The storage entity representing the set.</param>
-                /// <param name="set">The initial set. This could either be the result of deserializing persisted state, or an empty set for a new entity.</param>
-                /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="set"/>.</param>
-                public Wrapper(string id, Set storage, HashSet<T> set, Map<T, long> storageKeys)
-                    : base(id, storage, set, storageKeys)
-                {
-                }
 
                 /// <summary>
                 /// Modifies the set to contain only elements that are present in the set and in the specified <paramref name="other"/> collection.

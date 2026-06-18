@@ -250,14 +250,14 @@ namespace System.Linq.CompilerServices
             {
                 var p = Expression.Parameter(typeof(Action), "callback");
                 var b = base.RewriteCore(expression.Body, p);
-                var f = Expression.GetActionType(expression.Parameters.Select(x => x.Type).Concat(new[] { typeof(Action) }).ToArray());
+                var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), .. new[] { typeof(Action) }]);
                 return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { p }));
             }
             else
             {
                 var p = Expression.Parameter(typeof(Action<>).MakeGenericType(expression.Body.Type), "callback");
                 var b = base.RewriteCore(expression.Body, p);
-                var f = Expression.GetActionType(expression.Parameters.Select(x => x.Type).Concat(new[] { p.Type }).ToArray());
+                var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), .. new[] { p.Type }]);
                 return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { p }));
             }
         }

@@ -13,27 +13,20 @@ using System.Reflection;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal abstract class MethodDef : DeclaredMemberDef
+    internal abstract class MethodDef(TypeRef declaringType, MethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters) : DeclaredMemberDef(declaringType)
     {
-        #region Constructors
 
-        protected MethodDef(TypeRef declaringType, MethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters)
-            : base(declaringType)
-        {
-            Method = method;
-            ReturnType = returnType;
-            Parameters = parameters;
-        }
+        #region Constructors
 
         #endregion
 
         #region Properties
 
-        protected MethodInfoSlim Method { get; }
+        protected MethodInfoSlim Method { get; } = method;
 
-        public TypeRef ReturnType { get; }
+        public TypeRef ReturnType { get; } = returnType;
 
-        public TypeRef[] Parameters { get; }
+        public TypeRef[] Parameters { get; } = parameters;
 
         #endregion
 

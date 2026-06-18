@@ -25,7 +25,7 @@ namespace Tests
             var t = TimeSpan.FromDays(365);
             var e = TimeSpan.FromDays(1);
 
-            var o = typeof(DateTimeOffset).GetMethod("op_Addition", new[] { typeof(DateTimeOffset), typeof(TimeSpan) });
+            var o = typeof(DateTimeOffset).GetMethod("op_Addition", [typeof(DateTimeOffset), typeof(TimeSpan)]);
 
             var f =
                 Lambda<Func<DateTimeOffset>>(

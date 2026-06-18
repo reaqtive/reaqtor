@@ -25,15 +25,9 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<Skip<TSource>, TSource>, IObserver<TSource>
+        private sealed class _(Skip<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<Skip<TSource>, TSource>(parent, observer), IObserver<TSource>
         {
-            private int _valuesToSkip;
-
-            public _(Skip<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-                _valuesToSkip = parent._skipCount;
-            }
+            private int _valuesToSkip = parent._skipCount;
 
             public override string Name => "rc:Skip";
 

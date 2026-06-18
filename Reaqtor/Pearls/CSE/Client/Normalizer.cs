@@ -31,7 +31,7 @@ namespace Pearls.Reaqtor.CSE
             var known = node.Method.GetCustomAttribute<KnownResourceAttribute>();
             if (known != null)
             {
-                var type = Expression.GetFuncType(node.Arguments.Select(a => a.Type).Concat(new[] { node.Type }).ToArray());
+                var type = Expression.GetFuncType([.. node.Arguments.Select(a => a.Type), .. new[] { node.Type }]);
                 return Expression.Invoke(Expression.Parameter(type, known.Id), Visit(node.Arguments));
             }
 

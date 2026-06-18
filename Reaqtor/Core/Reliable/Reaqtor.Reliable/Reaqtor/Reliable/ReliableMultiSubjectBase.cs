@@ -17,10 +17,10 @@ namespace Reaqtor.Reliable
 {
     public abstract class ReliableMultiSubjectBase<T> : IReliableMultiSubject<T>
     {
-        private Subscription[] _subscriptions = Array.Empty<Subscription>();
-        private readonly object _subscriptionsLock = new();
+        private Subscription[] _subscriptions = [];
+        private readonly Lock _subscriptionsLock = new();
 
-        private List<T> _queue = new();
+        private List<T> _queue = [];
 
         private Exception _error;
         private bool _done;
@@ -241,7 +241,7 @@ namespace Reaqtor.Reliable
         {
             lock (_subscriptionsLock)
             {
-                _subscriptions = Array.Empty<Subscription>();
+                _subscriptions = [];
 
                 // TODO: Old subscriptions must be deleted from the QE *after* they are dropped from the EdgeOutput.
             }
@@ -352,15 +352,10 @@ namespace Reaqtor.Reliable
             }
         }
 
-        private class Observer : IReliableObserver<T>
+        private class Observer(ReliableMultiSubjectBase<T> parent) : IReliableObserver<T>
         {
-            private readonly ReliableMultiSubjectBase<T> _parent;
+            private readonly ReliableMultiSubjectBase<T> _parent = parent;
             private long _lastSequenceId = -1;
-
-            public Observer(ReliableMultiSubjectBase<T> parent)
-            {
-                _parent = parent;
-            }
 
             public Uri ResubscribeUri => _parent.Id;
 
@@ -380,19 +375,12 @@ namespace Reaqtor.Reliable
             public void OnCompleted() => _parent.OnCompleted();
         }
 
-        protected sealed class Subscription : IReliableSubscription
+        protected sealed class Subscription(ReliableMultiSubjectBase<T> parent, IReliableObserver<T> observer, long lastAck) : IReliableSubscription
         {
-            private readonly ReliableMultiSubjectBase<T> _parent;
-            private readonly IReliableObserver<T> _observer;
-            private long _lastAck;
+            private readonly ReliableMultiSubjectBase<T> _parent = parent;
+            private readonly IReliableObserver<T> _observer = observer;
+            private long _lastAck = lastAck;
             private long _disposed = 1;
-
-            public Subscription(ReliableMultiSubjectBase<T> parent, IReliableObserver<T> observer, long lastAck)
-            {
-                _parent = parent;
-                _observer = observer;
-                _lastAck = lastAck;
-            }
 
             public long LastAck => Interlocked.Read(ref _lastAck);
 

@@ -13,17 +13,13 @@ namespace System.Reflection
     /// <summary>
     /// Lightweight representation of a simple type, i.e. not constructed from other types.
     /// </summary>
-    public sealed class SimpleTypeSlim : SimpleTypeSlimBase
+    /// <remarks>
+    /// Creates a new generic type definition representation object.
+    /// </remarks>
+    /// <param name="assembly">Assembly defining the type.</param>
+    /// <param name="name">Name of the type.</param>
+    public sealed class SimpleTypeSlim(AssemblySlim assembly, string name) : SimpleTypeSlimBase(assembly, name)
     {
-        /// <summary>
-        /// Creates a new generic type definition representation object.
-        /// </summary>
-        /// <param name="assembly">Assembly defining the type.</param>
-        /// <param name="name">Name of the type.</param>
-        public SimpleTypeSlim(AssemblySlim assembly, string name)
-            : base(assembly, name)
-        {
-        }
 
         /// <summary>
         /// Gets the kind of the type.

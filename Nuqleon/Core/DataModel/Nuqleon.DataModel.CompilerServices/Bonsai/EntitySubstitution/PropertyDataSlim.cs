@@ -10,28 +10,23 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
     /// <summary>
     /// Container for structural type property data.
     /// </summary>
-    public readonly struct PropertyDataSlim : IEquatable<PropertyDataSlim>
+    /// <remarks>
+    /// Instantiates a property data container for structural types.
+    /// </remarks>
+    /// <param name="name">The name of the property.</param>
+    /// <param name="type">The type of the property.</param>
+    public readonly struct PropertyDataSlim(string name, TypeSlim type) : IEquatable<PropertyDataSlim>
     {
-        /// <summary>
-        /// Instantiates a property data container for structural types.
-        /// </summary>
-        /// <param name="name">The name of the property.</param>
-        /// <param name="type">The type of the property.</param>
-        public PropertyDataSlim(string name, TypeSlim type)
-        {
-            Name = name;
-            Type = type;
-        }
 
         /// <summary>
         /// The name of the property.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; } = name;
 
         /// <summary>
         /// The type of the property.
         /// </summary>
-        public TypeSlim Type { get; }
+        public TypeSlim Type { get; } = type;
 
         /// <summary>
         /// Checks if the current object is equal to the specified object.

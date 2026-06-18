@@ -27,13 +27,13 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
 
                 var one = table["A"];
 
                 CollectionAssert.AreEqual(new byte[] { 1 }, one);
 
-                table.Update("A", new byte[] { 2 });
+                table.Update("A", [2]);
 
                 Assert.IsTrue(table.Contains("A"));
 
@@ -79,7 +79,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Clear
 
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
 
                 table.Clear();
 
@@ -89,7 +89,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Assert.IsFalse(table.TryRemove("A"));
 
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
 
                 Assert.IsTrue(table.TryRemove("A"));
                 Assert.IsFalse(table.Contains("A"));
@@ -97,7 +97,7 @@ namespace Tests.Reaqtor.QueryEngine
                 // TryGet
 
                 Assert.IsFalse(table.TryGet("A", out var value));
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
                 Assert.IsTrue(table.TryGet("A", out value));
                 CollectionAssert.AreEquivalent(value, new byte[] { 1 });
             }
@@ -137,7 +137,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                table.Add("A", new byte[] { 1 });
+                table.Add("A", [1]);
 
                 tx.CommitAsync().Wait();
             }
@@ -161,7 +161,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                table.Update("A", new byte[] { 2 });
+                table.Update("A", [2]);
 
                 tx.CommitAsync().Wait();
             }
@@ -252,8 +252,8 @@ namespace Tests.Reaqtor.QueryEngine
                 var writer1 = subtable1.Enter(tx1);
                 var writer2 = subtable1.Enter(tx2);
 
-                writer1.Add("A", new byte[] { 1 });
-                writer2.Add("B", new byte[] { 1 });
+                writer1.Add("A", [1]);
+                writer2.Add("B", [1]);
 
                 tx1.CommitAsync().Wait();
                 tx2.CommitAsync().Wait();
@@ -274,8 +274,8 @@ namespace Tests.Reaqtor.QueryEngine
                 var writer1 = subtable1.Enter(tx1);
                 var writer2 = subtable2.Enter(tx2);
 
-                writer1.Add("C", new byte[] { 1 });
-                writer2.Add("C", new byte[] { 2 });
+                writer1.Add("C", [1]);
+                writer2.Add("C", [2]);
 
                 tx1.CommitAsync().Wait();
                 tx2.CommitAsync().Wait();
@@ -297,8 +297,8 @@ namespace Tests.Reaqtor.QueryEngine
                 var writer1 = subtable1.Enter(tx1);
                 var writer2 = subtable1.Enter(tx2);
 
-                writer1.Add("D", new byte[] { 1 });
-                writer2.Add("D", new byte[] { 2 });
+                writer1.Add("D", [1]);
+                writer2.Add("D", [2]);
 
                 tx1.CommitAsync().Wait();
 
@@ -322,7 +322,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var writer = subtable1.Enter(tx2);
 
                 reader.Contains("A");
-                writer.Add("A", Array.Empty<byte>());
+                writer.Add("A", []);
 
                 tx2.CommitAsync().Wait();
 
@@ -363,7 +363,7 @@ namespace Tests.Reaqtor.QueryEngine
                     // We leak the fact that the table doesn't contain "A"
                 }
 
-                writer.Add("A", Array.Empty<byte>());
+                writer.Add("A", []);
 
                 tx2.CommitAsync().Wait();
 
@@ -411,7 +411,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 try
                 {
-                    writer1.Update("A", Array.Empty<byte>());
+                    writer1.Update("A", []);
                     Assert.Fail();
                 }
                 catch
@@ -419,7 +419,7 @@ namespace Tests.Reaqtor.QueryEngine
                     // We leaked that "A" is not in the kvs
                 }
 
-                writer2.Add("A", Array.Empty<byte>());
+                writer2.Add("A", []);
 
                 tx2.CommitAsync().Wait();
 
@@ -437,7 +437,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 try
                 {
-                    writer1.Add("A", Array.Empty<byte>());
+                    writer1.Add("A", []);
                     Assert.Fail();
                 }
                 catch
@@ -471,7 +471,7 @@ namespace Tests.Reaqtor.QueryEngine
                     // We leaked that "A" is already in the kvs
                 }
 
-                writer2.Add("A", Array.Empty<byte>());
+                writer2.Add("A", []);
 
                 tx2.CommitAsync().Wait();
 

@@ -154,7 +154,7 @@ namespace Test.Reaqtive
 
             var rand = new Random(1983);
 
-            ds1 = ds1.OrderBy(_ => rand.Next()).ToList();
+            ds1 = [.. ds1.OrderBy(_ => rand.Next())];
 
             var R = 2 * N / 3;
 

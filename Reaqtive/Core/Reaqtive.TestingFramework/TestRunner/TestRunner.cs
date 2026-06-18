@@ -10,20 +10,13 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Reaqtive.TestingFramework.TestRunner
 {
-    internal class TestRunner
+    internal class TestRunner(object instance, MethodInfo method)
     {
-        private readonly object _instance;
-        private readonly Lazy<ExpectedExceptionAttribute> _expectedException;
-
-        public TestRunner(object instance, MethodInfo method)
-        {
-            _instance = instance;
-            TestMethod = method;
-            _expectedException = new Lazy<ExpectedExceptionAttribute>(
+        private readonly object _instance = instance;
+        private readonly Lazy<ExpectedExceptionAttribute> _expectedException = new Lazy<ExpectedExceptionAttribute>(
                 () => method.GetCustomAttribute<ExpectedExceptionAttribute>());
-        }
 
-        public MethodInfo TestMethod { get; private set; }
+        public MethodInfo TestMethod { get; private set; } = method;
 
         public void Run()
         {
@@ -33,7 +26,7 @@ namespace Reaqtive.TestingFramework.TestRunner
                 {
                     try
                     {
-                        ((Task)TestMethod.Invoke(_instance, Array.Empty<object>())).Wait();
+                        ((Task)TestMethod.Invoke(_instance, [])).Wait();
                     }
                     catch (AggregateException ex)
                     {
@@ -42,7 +35,7 @@ namespace Reaqtive.TestingFramework.TestRunner
                 }
                 else
                 {
-                    TestMethod.Invoke(_instance, Array.Empty<object>());
+                    TestMethod.Invoke(_instance, []);
                 }
             }
             catch (TargetInvocationException ex)

@@ -16,7 +16,7 @@ namespace Nuqleon.DataModel.TypeSystem
     internal sealed class StructuralDataTypeReference : StructuralDataType
     {
         public StructuralDataTypeReference(Type type, StructuralDataTypeKinds kind)
-            : this(type, new List<DataProperty>(), kind)
+            : this(type, [], kind)
         {
         }
 

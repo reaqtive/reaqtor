@@ -13,18 +13,11 @@ namespace Reaqtor.TestingFramework
 {
     public partial class TestExecutionEnvironment
     {
-        private class SimpleBridge<T> : SimpleSubject<T>, IReactiveQubject<T>, ISubscribable<T>, IDisposable
+        private class SimpleBridge<T>(TestExecutionEnvironment parent, Uri streamUri, Expression source) : SimpleSubject<T>, IReactiveQubject<T>, ISubscribable<T>, IDisposable
         {
-            private readonly TestExecutionEnvironment _parent;
-            private readonly Uri _streamUri;
-            private readonly Expression _source;
-
-            public SimpleBridge(TestExecutionEnvironment parent, Uri streamUri, Expression source)
-            {
-                _parent = parent;
-                _streamUri = streamUri;
-                _source = source;
-            }
+            private readonly TestExecutionEnvironment _parent = parent;
+            private readonly Uri _streamUri = streamUri;
+            private readonly Expression _source = source;
 
             ISubscription ISubscribable<T>.Subscribe(IObserver<T> observer)
             {

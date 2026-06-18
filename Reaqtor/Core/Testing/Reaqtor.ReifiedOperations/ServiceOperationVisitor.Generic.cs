@@ -196,7 +196,7 @@ namespace Reaqtor.TestingFramework
             if (genericType != null)
             {
                 var method = s_onNextGeneric.MakeGenericMethod(genericType.GenericTypeArguments[0]);
-                return (TResult)method.Invoke(this, new object[] { operation });
+                return (TResult)method.Invoke(this, [operation]);
             }
 
             return VisitObserverOnNextCore(operation);
@@ -212,7 +212,7 @@ namespace Reaqtor.TestingFramework
             if (genericType != null)
             {
                 var method = s_onErrorGeneric.MakeGenericMethod(genericType.GenericTypeArguments[0]);
-                return (TResult)method.Invoke(this, new object[] { operation });
+                return (TResult)method.Invoke(this, [operation]);
             }
 
             return VisitObserverOnErrorCore(operation);
@@ -228,7 +228,7 @@ namespace Reaqtor.TestingFramework
             if (genericType != null)
             {
                 var method = s_onCompletedGeneric.MakeGenericMethod(genericType.GenericTypeArguments[0]);
-                return (TResult)method.Invoke(this, new object[] { operation });
+                return (TResult)method.Invoke(this, [operation]);
             }
 
             return VisitObserverOnCompletedCore(operation);

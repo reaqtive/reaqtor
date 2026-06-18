@@ -54,7 +54,7 @@ namespace Reaqtive.TestingFramework.TestRunner
                 var assemblyInitialize = _type.GetMethods()
                     .SingleOrDefault(m => m.IsDefined(typeof(AssemblyInitializeAttribute)));
                 // TODO: revisit a mocked TestContext
-                assemblyInitialize?.Invoke(null, new object[] { null });
+                assemblyInitialize?.Invoke(null, [null]);
             }
         }
 
@@ -63,7 +63,7 @@ namespace Reaqtive.TestingFramework.TestRunner
             var assemblyCleanup = _type.GetMethods()
                 .SingleOrDefault(m => m.IsDefined(typeof(AssemblyCleanupAttribute)));
             // TODO: revisit a mocked TestContext
-            assemblyCleanup?.Invoke(null, new object[] { null });
+            assemblyCleanup?.Invoke(null, [null]);
         }
 
         private void InitializeClass()
@@ -71,7 +71,7 @@ namespace Reaqtive.TestingFramework.TestRunner
             var classInitializer = _type.GetMethods()
                 .SingleOrDefault(m => m.IsDefined(typeof(ClassInitializeAttribute)));
             // TODO: revisit a mocked TestContext
-            classInitializer?.Invoke(null, new object[] { null });
+            classInitializer?.Invoke(null, [null]);
         }
 
         private void CleanupClass()
@@ -79,21 +79,21 @@ namespace Reaqtive.TestingFramework.TestRunner
             var classCleanup = _type.GetMethods()
                 .SingleOrDefault(m => m.IsDefined(typeof(ClassCleanupAttribute)));
             // TODO: revisit a mocked TestContext
-            classCleanup?.Invoke(null, Array.Empty<object>());
+            classCleanup?.Invoke(null, []);
         }
 
         private void InitializeTest(object instance)
         {
             var testInitializer = _type.GetMethods()
                 .SingleOrDefault(m => m.IsDefined(typeof(TestInitializeAttribute)));
-            testInitializer?.Invoke(instance, Array.Empty<object>());
+            testInitializer?.Invoke(instance, []);
         }
 
         private void CleanupTest(object instance)
         {
             var testCleanup = _type.GetMethods()
                 .SingleOrDefault(m => m.IsDefined(typeof(TestCleanupAttribute)));
-            testCleanup?.Invoke(instance, Array.Empty<object>());
+            testCleanup?.Invoke(instance, []);
         }
 
         private void RepeatTest(object instance, MethodInfo method, int repeat)

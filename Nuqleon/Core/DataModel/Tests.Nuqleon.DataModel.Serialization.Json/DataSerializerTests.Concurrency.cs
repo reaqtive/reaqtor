@@ -115,12 +115,12 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         {
             var stream = new MemoryStream();
             var type = expected.GetType();
-            var serialization = _genericSerialize.MakeGenericMethod(new[] { type });
-            serialization.Invoke(_jsonSerializer, new[] { expected, stream });
+            var serialization = _genericSerialize.MakeGenericMethod([type]);
+            serialization.Invoke(_jsonSerializer, [expected, stream]);
 
             stream.Position = 0;
-            var deserialization = _genericDeserialize.MakeGenericMethod(new[] { type });
-            var actual = deserialization.Invoke(_jsonSerializer, new object[] { stream });
+            var deserialization = _genericDeserialize.MakeGenericMethod([type]);
+            var actual = deserialization.Invoke(_jsonSerializer, [stream]);
 
             if (!expected.Equals(actual))
             {

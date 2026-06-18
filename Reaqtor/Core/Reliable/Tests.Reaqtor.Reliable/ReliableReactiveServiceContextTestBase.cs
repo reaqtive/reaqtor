@@ -38,13 +38,8 @@ namespace Tests.Reaqtor.Reliable
         }
     }
 
-    internal sealed class MyContext : TestReliableServiceContext
+    internal sealed class MyContext(IReliableReactiveEngineProvider provider) : TestReliableServiceContext(provider)
     {
-        public MyContext(IReliableReactiveEngineProvider provider)
-            : base(provider)
-        {
-        }
-
         [KnownResource(Constants.Observable.XS)]
         public IReliableQbservable<int> Xs => GetObservable<int>(new Uri(Constants.Observable.XS));
     }

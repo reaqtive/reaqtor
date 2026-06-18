@@ -26,24 +26,21 @@ namespace Nuqleon.Json.Serialization
     /// <summary>
     /// JSON serializer and deserializer.
     /// </summary>
-    public sealed class JsonSerializer
+    /// <remarks>
+    /// Creates a new JSON (de)serializer.
+    /// </remarks>
+    /// <param name="type">Type used in deserialization.</param>
+    public sealed class JsonSerializer(Type type)
     {
         #region Private fields
 
         /// <summary>
         /// Type used for deserialization.
         /// </summary>
-        private readonly Type _type;
+        private readonly Type _type = type ?? throw new ArgumentNullException(nameof(type));
 
         #endregion
-
         #region Constructors
-
-        /// <summary>
-        /// Creates a new JSON (de)serializer.
-        /// </summary>
-        /// <param name="type">Type used in deserialization.</param>
-        public JsonSerializer(Type type) => _type = type ?? throw new ArgumentNullException(nameof(type));
 
         #endregion
 
@@ -313,7 +310,7 @@ namespace Nuqleon.Json.Serialization
                 foreach (var member in objectExpression.Members)
                 {
                     var memberName = member.Key;
-                    add.Invoke(res, new object[] { memberName, Deserialize(member.Value, valuesType) });
+                    add.Invoke(res, [memberName, Deserialize(member.Value, valuesType)]);
                 }
             }
             else if (typeof(IDictionary).IsAssignableFrom(type))
@@ -404,7 +401,7 @@ namespace Nuqleon.Json.Serialization
 
                 for (int i = 0, n = arrayExpression.ElementCount; i < n; i++)
                 {
-                    add.Invoke(list, new object[] { Deserialize(arrayExpression.GetElement(i), elementType) });
+                    add.Invoke(list, [Deserialize(arrayExpression.GetElement(i), elementType)]);
                 }
 
                 return list;

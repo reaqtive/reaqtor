@@ -139,24 +139,13 @@ namespace System.Linq.Expressions
 #pragma warning restore IDE0079
     }
 
-    internal abstract class InstanceMethodCallExpressionSlim : MethodCallExpressionSlim
+    internal abstract class InstanceMethodCallExpressionSlim(ExpressionSlim instance, MethodInfoSlim method) : MethodCallExpressionSlim(method)
     {
-        public InstanceMethodCallExpressionSlim(ExpressionSlim instance, MethodInfoSlim method)
-            : base(method)
-        {
-            Object = instance;
-        }
-
-        public override ExpressionSlim Object { get; }
+        public override ExpressionSlim Object { get; } = instance;
     }
 
-    internal sealed class InstanceMethodCallExpressionSlim0 : InstanceMethodCallExpressionSlim
+    internal sealed class InstanceMethodCallExpressionSlim0(ExpressionSlim instance, MethodInfoSlim method) : InstanceMethodCallExpressionSlim(instance, method)
     {
-        public InstanceMethodCallExpressionSlim0(ExpressionSlim instance, MethodInfoSlim method)
-            : base(instance, method)
-        {
-        }
-
         public override int ArgumentCount => 0;
 
         public override ExpressionSlim GetArgument(int index)
@@ -175,15 +164,9 @@ namespace System.Linq.Expressions
         }
     }
 
-    internal sealed class InstanceMethodCallExpressionSlimN : InstanceMethodCallExpressionSlim
+    internal sealed class InstanceMethodCallExpressionSlimN(ExpressionSlim instance, MethodInfoSlim method, ReadOnlyCollection<ExpressionSlim> arguments) : InstanceMethodCallExpressionSlim(instance, method)
     {
-        private readonly ReadOnlyCollection<ExpressionSlim> _arguments;
-
-        public InstanceMethodCallExpressionSlimN(ExpressionSlim instance, MethodInfoSlim method, ReadOnlyCollection<ExpressionSlim> arguments)
-            : base(instance, method)
-        {
-            _arguments = arguments;
-        }
+        private readonly ReadOnlyCollection<ExpressionSlim> _arguments = arguments;
 
         public override int ArgumentCount => _arguments.Count;
 
@@ -200,23 +183,13 @@ namespace System.Linq.Expressions
         }
     }
 
-    internal abstract class StaticMethodCallExpressionSlim : MethodCallExpressionSlim
+    internal abstract class StaticMethodCallExpressionSlim(MethodInfoSlim method) : MethodCallExpressionSlim(method)
     {
-        public StaticMethodCallExpressionSlim(MethodInfoSlim method)
-            : base(method)
-        {
-        }
-
         public override ExpressionSlim Object => null;
     }
 
-    internal sealed class StaticMethodCallExpressionSlim0 : StaticMethodCallExpressionSlim
+    internal sealed class StaticMethodCallExpressionSlim0(MethodInfoSlim method) : StaticMethodCallExpressionSlim(method)
     {
-        public StaticMethodCallExpressionSlim0(MethodInfoSlim method)
-            : base(method)
-        {
-        }
-
         public override int ArgumentCount => 0;
 
         public override ExpressionSlim GetArgument(int index)
@@ -232,15 +205,9 @@ namespace System.Linq.Expressions
         }
     }
 
-    internal sealed class StaticMethodCallExpressionSlimN : StaticMethodCallExpressionSlim
+    internal sealed class StaticMethodCallExpressionSlimN(MethodInfoSlim method, ReadOnlyCollection<ExpressionSlim> arguments) : StaticMethodCallExpressionSlim(method)
     {
-        private readonly ReadOnlyCollection<ExpressionSlim> _arguments;
-
-        public StaticMethodCallExpressionSlimN(MethodInfoSlim method, ReadOnlyCollection<ExpressionSlim> arguments)
-            : base(method)
-        {
-            _arguments = arguments;
-        }
+        private readonly ReadOnlyCollection<ExpressionSlim> _arguments = arguments;
 
         public override int ArgumentCount => _arguments.Count;
 

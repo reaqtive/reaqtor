@@ -105,7 +105,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             Assert.ThrowsException<ArgumentException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1))));
             Assert.IsTrue(comparer.Equals(
                 factory.LambdaAbstraction(Expression.Lambda(Expression.Empty())),
-                unsafeFactory.LambdaAbstraction(Expression.Lambda(Expression.Empty()), Enumerable.Empty<QueryTree>())
+                unsafeFactory.LambdaAbstraction(Expression.Lambda(Expression.Empty()), [])
             ));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => factory.LambdaAbstraction(body: null, parameters: null), AssertParameterName("body"));
@@ -166,7 +166,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
 
         private static Action<ArgumentException> AssertParameterName(string paramName)
         {
-            return (ArgumentException ex) => { Assert.AreEqual(paramName, ex.ParamName); };
+            return ex => { Assert.AreEqual(paramName, ex.ParamName); };
         }
     }
 }

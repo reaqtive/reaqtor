@@ -459,7 +459,7 @@ namespace System.Reflection
                     { "qux", typeof(string) }
                 },
                 true);
-            var list = typeof(List<>).MakeGenericType(new[] { record2 });
+            var list = typeof(List<>).MakeGenericType([record2]);
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var slimList = typeToSlim.Visit(list);

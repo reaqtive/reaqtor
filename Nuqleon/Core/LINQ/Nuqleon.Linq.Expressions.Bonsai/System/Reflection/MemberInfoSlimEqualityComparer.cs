@@ -89,23 +89,18 @@ namespace System.Reflection
     /// <summary>
     /// Equality comparer for slim representations of member reflection objects.
     /// </summary>
-    public class MemberInfoSlimEqualityComparator : IEqualityComparer<MemberInfoSlim>
+    /// <remarks>
+    /// Instantiates the comparer with a type comparer, used to assert equality and get hashcodes
+    /// for slim representations of types.
+    /// </remarks>
+    /// <param name="typeComparer">The slim type equality comparer.</param>
+    public class MemberInfoSlimEqualityComparator(IEqualityComparer<TypeSlim> typeComparer) : IEqualityComparer<MemberInfoSlim>
     {
         #region Constructors & Fields
 
         private const uint Prime = 0xa5555529; // See CompilationPass.cpp in C# compiler codebase.
 
-        private IEqualityComparer<TypeSlim> _typeComparer;
-
-        /// <summary>
-        /// Instantiates the comparer with a type comparer, used to assert equality and get hashcodes
-        /// for slim representations of types.
-        /// </summary>
-        /// <param name="typeComparer">The slim type equality comparer.</param>
-        public MemberInfoSlimEqualityComparator(IEqualityComparer<TypeSlim> typeComparer)
-        {
-            _typeComparer = typeComparer;
-        }
+        private IEqualityComparer<TypeSlim> _typeComparer = typeComparer;
 
         #endregion
 
@@ -691,14 +686,9 @@ namespace System.Reflection
 
         #region Generic equality helpers
 
-        private sealed class GenericMapTypeSlimEqualityComparatorForEquals : TypeSlimEqualityComparator
+        private sealed class GenericMapTypeSlimEqualityComparatorForEquals(Dictionary<GenericParameterTypeSlim, GenericParameterTypeSlim> genericTypeMap) : TypeSlimEqualityComparator
         {
-            private readonly Dictionary<GenericParameterTypeSlim, GenericParameterTypeSlim> _genericTypeMap;
-
-            public GenericMapTypeSlimEqualityComparatorForEquals(Dictionary<GenericParameterTypeSlim, GenericParameterTypeSlim> genericTypeMap)
-            {
-                _genericTypeMap = genericTypeMap;
-            }
+            private readonly Dictionary<GenericParameterTypeSlim, GenericParameterTypeSlim> _genericTypeMap = genericTypeMap;
 
             protected override bool EqualsGenericParameter(GenericParameterTypeSlim x, GenericParameterTypeSlim y)
             {
@@ -710,14 +700,9 @@ namespace System.Reflection
             //
         }
 
-        private sealed class GenericMapTypeSlimEqualityComparatorForGetHashCode : TypeSlimEqualityComparator
+        private sealed class GenericMapTypeSlimEqualityComparatorForGetHashCode(Dictionary<GenericParameterTypeSlim, int> genericTypeHashes) : TypeSlimEqualityComparator
         {
-            private readonly Dictionary<GenericParameterTypeSlim, int> _genericTypeHashes;
-
-            public GenericMapTypeSlimEqualityComparatorForGetHashCode(Dictionary<GenericParameterTypeSlim, int> genericTypeHashes)
-            {
-                _genericTypeHashes = genericTypeHashes;
-            }
+            private readonly Dictionary<GenericParameterTypeSlim, int> _genericTypeHashes = genericTypeHashes;
 
             protected override int GetHashCodeGenericParameter(GenericParameterTypeSlim obj)
             {

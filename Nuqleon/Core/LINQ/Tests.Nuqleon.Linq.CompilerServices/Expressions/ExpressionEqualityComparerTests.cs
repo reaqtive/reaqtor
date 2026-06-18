@@ -50,7 +50,7 @@ namespace Tests.System.Linq.CompilerServices
             {
                 try
                 {
-                    Assert.IsTrue((bool)equals.Invoke(eq, new object[] { null, null }), equals.ToString());
+                    Assert.IsTrue((bool)equals.Invoke(eq, [null, null]), equals.ToString());
                 }
                 catch (TargetInvocationException ex)
                 {
@@ -70,7 +70,7 @@ namespace Tests.System.Linq.CompilerServices
             {
                 try
                 {
-                    var res = (int)getHashCode.Invoke(eq, new object[] { null });
+                    var res = (int)getHashCode.Invoke(eq, [null]);
                     Assert.IsTrue(true);
                 }
                 catch (TargetInvocationException ex)
@@ -1401,7 +1401,7 @@ namespace Tests.System.Linq.CompilerServices
             Assert.AreNotEqual(eq.GetHashCode(e1), eq.GetHashCode(e3));
         }
 
-        private sealed class MyExt
+        private sealed class MyExt(int x)
 #if USE_SLIM
             : ExpressionSlim
 #else
@@ -1413,16 +1413,11 @@ namespace Tests.System.Linq.CompilerServices
             {
             }
 
-            public MyExt(int x)
-            {
-                X = x;
-            }
-
             public int X
             {
                 get;
                 private set;
-            }
+            } = x;
 
             public override ExpressionType NodeType => ExpressionType.Extension;
 
@@ -1614,16 +1609,16 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new[]
             {
                 new[] { p1, p2 },
-                new[] { p2, p1 },
-                new[] { p5, p6 },
-                new[] { p6, p5 },
+                [p2, p1],
+                [p5, p6],
+                [p6, p5],
 
-                new[] { p1, p1 },
-                new[] { p2, p2 },
-                new[] { p3, p3 },
-                new[] { p4, p4 },
-                new[] { p5, p5 },
-                new[] { p6, p6 },
+                [p1, p1],
+                [p2, p2],
+                [p3, p3],
+                [p4, p4],
+                [p5, p5],
+                [p6, p6],
             };
 
             foreach (var e in eq)
@@ -1641,11 +1636,11 @@ namespace Tests.System.Linq.CompilerServices
             var neq = new[]
             {
                 new[] { p1, p3 },
-                new[] { p3, p1 },
-                new[] { p2, p3 },
-                new[] { p3, p2 },
-                new[] { p1, p4 },
-                new[] { p4, p1 },
+                [p3, p1],
+                [p2, p3],
+                [p3, p2],
+                [p1, p4],
+                [p4, p1],
             };
 
             foreach (var e in neq)
@@ -1732,12 +1727,12 @@ namespace Tests.System.Linq.CompilerServices
             var eq = CreateComparator();
 
             var equals = eq.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name.StartsWith("Equals") && m.GetParameters().Length == 2 && m.GetParameters()[0].ParameterType == typeof(T));
-            Assert.IsTrue((bool)equals.Invoke(eq, new object[] { null, null }));
-            Assert.IsFalse((bool)equals.Invoke(eq, new object[] { e, null }));
-            Assert.IsFalse((bool)equals.Invoke(eq, new object[] { null, e }));
+            Assert.IsTrue((bool)equals.Invoke(eq, [null, null]));
+            Assert.IsFalse((bool)equals.Invoke(eq, [e, null]));
+            Assert.IsFalse((bool)equals.Invoke(eq, [null, e]));
 
             var getHashCode = eq.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name.StartsWith("GetHashCode") && m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T));
-            Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, new object[] { null }));
+            Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, [null]));
         }
 
         private static void AssertProtectedNull<T>(T e, string methodDiscriminator)
@@ -1745,12 +1740,12 @@ namespace Tests.System.Linq.CompilerServices
             var eq = CreateComparator();
 
             var equals = eq.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name.StartsWith(string.Format("Equals{0}", methodDiscriminator)) && m.GetParameters().Length == 2 && m.GetParameters()[0].ParameterType == typeof(T));
-            Assert.IsTrue((bool)equals.Invoke(eq, new object[] { null, null }));
-            Assert.IsFalse((bool)equals.Invoke(eq, new object[] { e, null }));
-            Assert.IsFalse((bool)equals.Invoke(eq, new object[] { null, e }));
+            Assert.IsTrue((bool)equals.Invoke(eq, [null, null]));
+            Assert.IsFalse((bool)equals.Invoke(eq, [e, null]));
+            Assert.IsFalse((bool)equals.Invoke(eq, [null, e]));
 
             var getHashCode = eq.GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Public | BindingFlags.Instance).Single(m => m.Name.StartsWith(string.Format("GetHashCode{0}", methodDiscriminator)) && m.GetParameters().Length == 1 && m.GetParameters()[0].ParameterType == typeof(T));
-            Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, new object[] { null }));
+            Assert.AreNotEqual(0, (int)getHashCode.Invoke(eq, [null]));
         }
 
 #if USE_SLIM

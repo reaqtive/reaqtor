@@ -7,17 +7,12 @@ namespace Reaqtor.ReificationFramework
     /// <summary>
     /// Client context for reifications.
     /// </summary>
-    public class ReificationClientContext : ReactiveClientContext
+    /// <remarks>
+    /// Instantiates the client context.
+    /// </remarks>
+    /// <param name="expressionServices">The expression rewrite services.</param>
+    /// <param name="serviceProvider">The service provider.</param>
+    public class ReificationClientContext(IReactiveExpressionServices expressionServices, IReactiveServiceProvider serviceProvider) : ReactiveClientContext(expressionServices, serviceProvider)
     {
-        /// <summary>
-        /// Instantiates the client context.
-        /// </summary>
-        /// <param name="expressionServices">The expression rewrite services.</param>
-        /// <param name="serviceProvider">The service provider.</param>
-        public ReificationClientContext(IReactiveExpressionServices expressionServices, IReactiveServiceProvider serviceProvider)
-            : base(expressionServices, serviceProvider)
-        {
-            // NB: base used to accept new TupletizingExpressionServices(typeof(IReactiveClientProxy)), which has dependencies on DataModel etc.
-        }
     }
 }

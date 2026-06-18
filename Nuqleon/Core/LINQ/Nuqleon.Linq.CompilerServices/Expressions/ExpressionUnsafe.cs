@@ -66,12 +66,12 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor arguments for <see cref="Expression{TDelegate}"/>.
         /// </summary>
-        private static readonly Type[] s_expressionCtorArgs = new[] { typeof(Expression), typeof(string), typeof(bool), typeof(ReadOnlyCollection<ParameterExpression>) };
+        private static readonly Type[] s_expressionCtorArgs = [typeof(Expression), typeof(string), typeof(bool), typeof(ReadOnlyCollection<ParameterExpression>)];
 
         /// <summary>
         /// Cache of compiled delegates for <see cref="Expression{TDelegate}"/> constructors.
         /// </summary>
-        private static readonly ConditionalWeakTable<Type, Func<Expression, string, bool, ReadOnlyCollection<ParameterExpression>, LambdaExpression>> s_lambdaCtors = new();
+        private static readonly ConditionalWeakTable<Type, Func<Expression, string, bool, ReadOnlyCollection<ParameterExpression>, LambdaExpression>> s_lambdaCtors = [];
 
         #region Delegates
 
@@ -80,7 +80,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for SimpleBinaryExpression.
         /// </summary>
-        private static readonly Lazy<Func<ExpressionType, Expression, Expression, Type, BinaryExpression>> s_SimpleBinaryExpressionCtor = new(() => CreateCtorDelegate<Func<ExpressionType, Expression, Expression, Type, BinaryExpression>>("System.Linq.Expressions.SimpleBinaryExpression", new Type[] { typeof(ExpressionType), typeof(Expression), typeof(Expression), typeof(Type) }, null));
+        private static readonly Lazy<Func<ExpressionType, Expression, Expression, Type, BinaryExpression>> s_SimpleBinaryExpressionCtor = new(() => CreateCtorDelegate<Func<ExpressionType, Expression, Expression, Type, BinaryExpression>>("System.Linq.Expressions.SimpleBinaryExpression", [typeof(ExpressionType), typeof(Expression), typeof(Expression), typeof(Type)], null));
 
         #endregion
 
@@ -89,57 +89,57 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for MethodCallExpression targeting a static method with 1 argument.
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, Expression, MethodCallExpression>> s_MethodCallExpression1Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression1", new Type[] { typeof(MethodInfo), typeof(Expression) }, Expression.Call));
+        private static readonly Lazy<Func<MethodInfo, Expression, MethodCallExpression>> s_MethodCallExpression1Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression1", [typeof(MethodInfo), typeof(Expression)], Expression.Call));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting a static method with 2 arguments.
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, Expression, Expression, MethodCallExpression>> s_MethodCallExpression2Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression2", new Type[] { typeof(MethodInfo), typeof(Expression), typeof(Expression) }, Expression.Call));
+        private static readonly Lazy<Func<MethodInfo, Expression, Expression, MethodCallExpression>> s_MethodCallExpression2Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression2", [typeof(MethodInfo), typeof(Expression), typeof(Expression)], Expression.Call));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting a static method with 3 arguments.
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, MethodCallExpression>> s_MethodCallExpression3Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression3", new Type[] { typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression) }, Expression.Call));
+        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, MethodCallExpression>> s_MethodCallExpression3Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression3", [typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression)], Expression.Call));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting a static method with 4 arguments.
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, Expression, MethodCallExpression>> s_MethodCallExpression4Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression4", new Type[] { typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression), typeof(Expression) }, Expression.Call));
+        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, Expression, MethodCallExpression>> s_MethodCallExpression4Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression4", [typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression), typeof(Expression)], Expression.Call));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting a static method with 5 arguments.
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, Expression, Expression, MethodCallExpression>> s_MethodCallExpression5Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression5", new Type[] { typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression), typeof(Expression), typeof(Expression) }, Expression.Call));
+        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, Expression, Expression, MethodCallExpression>> s_MethodCallExpression5Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpression5", [typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression), typeof(Expression), typeof(Expression)], Expression.Call));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting a static method with N arguments (option 1, with fallback to <c>null</c>).
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, IList<Expression>, MethodCallExpression>> s_MethodCallExpressionNCtor1 = new(() => CreateCtorDelegate<Func<MethodInfo, IList<Expression>, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpressionN", new Type[] { typeof(MethodInfo), typeof(IList<Expression>) }, null));
+        private static readonly Lazy<Func<MethodInfo, IList<Expression>, MethodCallExpression>> s_MethodCallExpressionNCtor1 = new(() => CreateCtorDelegate<Func<MethodInfo, IList<Expression>, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpressionN", [typeof(MethodInfo), typeof(IList<Expression>)], null));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting a static method with N arguments (option 2, with fallback to safe factory).
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, IReadOnlyList<Expression>, MethodCallExpression>> s_MethodCallExpressionNCtor2 = new(() => CreateCtorDelegate<Func<MethodInfo, IReadOnlyList<Expression>, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpressionN", new Type[] { typeof(MethodInfo), typeof(IReadOnlyList<Expression>) }, Expression.Call));
+        private static readonly Lazy<Func<MethodInfo, IReadOnlyList<Expression>, MethodCallExpression>> s_MethodCallExpressionNCtor2 = new(() => CreateCtorDelegate<Func<MethodInfo, IReadOnlyList<Expression>, MethodCallExpression>>("System.Linq.Expressions.MethodCallExpressionN", [typeof(MethodInfo), typeof(IReadOnlyList<Expression>)], Expression.Call));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting an instance method with 2 arguments.
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, MethodCallExpression>> s_InstanceMethodCallExpression2Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.InstanceMethodCallExpression2", new Type[] { typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression) }, Expression.Call));
+        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, MethodCallExpression>> s_InstanceMethodCallExpression2Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.InstanceMethodCallExpression2", [typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression)], Expression.Call));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting an instance method with 3 arguments.
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, Expression, MethodCallExpression>> s_InstanceMethodCallExpression3Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.InstanceMethodCallExpression3", new Type[] { typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression), typeof(Expression) }, Expression.Call));
+        private static readonly Lazy<Func<MethodInfo, Expression, Expression, Expression, Expression, MethodCallExpression>> s_InstanceMethodCallExpression3Ctor = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, Expression, Expression, Expression, MethodCallExpression>>("System.Linq.Expressions.InstanceMethodCallExpression3", [typeof(MethodInfo), typeof(Expression), typeof(Expression), typeof(Expression), typeof(Expression)], Expression.Call));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting an instance method with N arguments (option 1, with fallback to <c>null</c>).
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, Expression, IList<Expression>, MethodCallExpression>> s_InstanceMethodCallExpressionNCtor1 = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, IList<Expression>, MethodCallExpression>>("System.Linq.Expressions.InstanceMethodCallExpressionN", new Type[] { typeof(MethodInfo), typeof(Expression), typeof(IList<Expression>) }, null));
+        private static readonly Lazy<Func<MethodInfo, Expression, IList<Expression>, MethodCallExpression>> s_InstanceMethodCallExpressionNCtor1 = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, IList<Expression>, MethodCallExpression>>("System.Linq.Expressions.InstanceMethodCallExpressionN", [typeof(MethodInfo), typeof(Expression), typeof(IList<Expression>)], null));
 
         /// <summary>
         /// Constructor for MethodCallExpression targeting an instance method with N argument (option 2, with fallback to <c>null</c>).
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, Expression, IReadOnlyList<Expression>, MethodCallExpression>> s_InstanceMethodCallExpressionNCtor2 = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, IReadOnlyList<Expression>, MethodCallExpression>>("System.Linq.Expressions.InstanceMethodCallExpressionN", new Type[] { typeof(MethodInfo), typeof(Expression), typeof(IReadOnlyList<Expression>) }, null));
+        private static readonly Lazy<Func<MethodInfo, Expression, IReadOnlyList<Expression>, MethodCallExpression>> s_InstanceMethodCallExpressionNCtor2 = new(() => CreateCtorDelegate<Func<MethodInfo, Expression, IReadOnlyList<Expression>, MethodCallExpression>>("System.Linq.Expressions.InstanceMethodCallExpressionN", [typeof(MethodInfo), typeof(Expression), typeof(IReadOnlyList<Expression>)], null));
 
         #endregion
 
@@ -148,7 +148,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Make factory for ConditionalExpression.
         /// </summary>
-        private static readonly Lazy<Func<Expression, Expression, Expression, Type, ConditionalExpression>> s_ConditionalExpressionMake = new(() => CreateMakeDelegate<Func<Expression, Expression, Expression, Type, ConditionalExpression>>(typeof(ConditionalExpression), new Type[] { typeof(Expression), typeof(Expression), typeof(Expression), typeof(Type) }, Expression.Condition));
+        private static readonly Lazy<Func<Expression, Expression, Expression, Type, ConditionalExpression>> s_ConditionalExpressionMake = new(() => CreateMakeDelegate<Func<Expression, Expression, Expression, Type, ConditionalExpression>>(typeof(ConditionalExpression), [typeof(Expression), typeof(Expression), typeof(Expression), typeof(Type)], Expression.Condition));
 
         #endregion
 
@@ -157,7 +157,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for ElementInit.
         /// </summary>
-        private static readonly Lazy<Func<MethodInfo, ReadOnlyCollection<Expression>, ElementInit>> s_ElementInitCtor = new(() => CreateCtorDelegate<Func<MethodInfo, ReadOnlyCollection<Expression>, ElementInit>>(typeof(ElementInit), new Type[] { typeof(MethodInfo), typeof(ReadOnlyCollection<Expression>) }, Expression.ElementInit));
+        private static readonly Lazy<Func<MethodInfo, ReadOnlyCollection<Expression>, ElementInit>> s_ElementInitCtor = new(() => CreateCtorDelegate<Func<MethodInfo, ReadOnlyCollection<Expression>, ElementInit>>(typeof(ElementInit), [typeof(MethodInfo), typeof(ReadOnlyCollection<Expression>)], Expression.ElementInit));
 
         #endregion
 
@@ -166,12 +166,12 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for IndexExpression (option 1, with fallback to <c>null</c>).
         /// </summary>
-        private static readonly Lazy<Func<Expression, PropertyInfo, IList<Expression>, IndexExpression>> s_IndexExpressionCtor1 = new(() => CreateCtorDelegate<Func<Expression, PropertyInfo, IList<Expression>, IndexExpression>>(typeof(IndexExpression), new Type[] { typeof(Expression), typeof(PropertyInfo), typeof(IList<Expression>) }, null));
+        private static readonly Lazy<Func<Expression, PropertyInfo, IList<Expression>, IndexExpression>> s_IndexExpressionCtor1 = new(() => CreateCtorDelegate<Func<Expression, PropertyInfo, IList<Expression>, IndexExpression>>(typeof(IndexExpression), [typeof(Expression), typeof(PropertyInfo), typeof(IList<Expression>)], null));
 
         /// <summary>
         /// Constructor for IndexExpression (option 2, with fallback to <c>Expression.MakeIndex</c>).
         /// </summary>
-        private static readonly Lazy<Func<Expression, PropertyInfo, IReadOnlyList<Expression>, IndexExpression>> s_IndexExpressionCtor2 = new(() => CreateCtorDelegate<Func<Expression, PropertyInfo, IReadOnlyList<Expression>, IndexExpression>>(typeof(IndexExpression), new Type[] { typeof(Expression), typeof(PropertyInfo), typeof(IReadOnlyList<Expression>) }, Expression.MakeIndex));
+        private static readonly Lazy<Func<Expression, PropertyInfo, IReadOnlyList<Expression>, IndexExpression>> s_IndexExpressionCtor2 = new(() => CreateCtorDelegate<Func<Expression, PropertyInfo, IReadOnlyList<Expression>, IndexExpression>>(typeof(IndexExpression), [typeof(Expression), typeof(PropertyInfo), typeof(IReadOnlyList<Expression>)], Expression.MakeIndex));
 
         #endregion
 
@@ -180,12 +180,12 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for InvokeExpression (option 1, with fallback to <c>null</c>).
         /// </summary>
-        private static readonly Lazy<Func<Expression, IList<Expression>, Type, InvocationExpression>> s_InvocationExpressionCtor1 = new(() => CreateCtorDelegate<Func<Expression, IList<Expression>, Type, InvocationExpression>>(typeof(InvocationExpression), new Type[] { typeof(Expression), typeof(IList<Expression>), typeof(Type) }, null));
+        private static readonly Lazy<Func<Expression, IList<Expression>, Type, InvocationExpression>> s_InvocationExpressionCtor1 = new(() => CreateCtorDelegate<Func<Expression, IList<Expression>, Type, InvocationExpression>>(typeof(InvocationExpression), [typeof(Expression), typeof(IList<Expression>), typeof(Type)], null));
 
         /// <summary>
         /// Constructor for InvokeExpression (option 2, with fallback to <c>null</c>).
         /// </summary>
-        private static readonly Lazy<Func<Expression, IReadOnlyList<Expression>, Type, InvocationExpression>> s_InvocationExpressionCtor2 = new(() => CreateCtorDelegate<Func<Expression, IReadOnlyList<Expression>, Type, InvocationExpression>>("System.Linq.Expressions.InvocationExpressionN", new Type[] { typeof(Expression), typeof(IReadOnlyList<Expression>), typeof(Type) }, null));
+        private static readonly Lazy<Func<Expression, IReadOnlyList<Expression>, Type, InvocationExpression>> s_InvocationExpressionCtor2 = new(() => CreateCtorDelegate<Func<Expression, IReadOnlyList<Expression>, Type, InvocationExpression>>("System.Linq.Expressions.InvocationExpressionN", [typeof(Expression), typeof(IReadOnlyList<Expression>), typeof(Type)], null));
 
         #endregion
 
@@ -194,7 +194,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// CreateLambda method to create non-generic lambda expression nodes.
         /// </summary>
-        private static readonly Lazy<Func<Type, Expression, string, bool, ReadOnlyCollection<ParameterExpression>, LambdaExpression>> s_CreateLambda = new(() => CreateDelegate<Func<Type, Expression, string, bool, ReadOnlyCollection<ParameterExpression>, LambdaExpression>>(typeof(Expression), "CreateLambda", new[] { typeof(Type), typeof(Expression), typeof(string), typeof(bool), typeof(ReadOnlyCollection<ParameterExpression>) }, Expression.Lambda));
+        private static readonly Lazy<Func<Type, Expression, string, bool, ReadOnlyCollection<ParameterExpression>, LambdaExpression>> s_CreateLambda = new(() => CreateDelegate<Func<Type, Expression, string, bool, ReadOnlyCollection<ParameterExpression>, LambdaExpression>>(typeof(Expression), "CreateLambda", [typeof(Type), typeof(Expression), typeof(string), typeof(bool), typeof(ReadOnlyCollection<ParameterExpression>)], Expression.Lambda));
 
         #endregion
 
@@ -203,7 +203,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for ListInitExpression.
         /// </summary>
-        private static readonly Lazy<Func<NewExpression, ReadOnlyCollection<ElementInit>, ListInitExpression>> s_ListInitExpressionCtor = new(() => CreateCtorDelegate<Func<NewExpression, ReadOnlyCollection<ElementInit>, ListInitExpression>>(typeof(ListInitExpression), new Type[] { typeof(NewExpression), typeof(ReadOnlyCollection<ElementInit>) }, Expression.ListInit));
+        private static readonly Lazy<Func<NewExpression, ReadOnlyCollection<ElementInit>, ListInitExpression>> s_ListInitExpressionCtor = new(() => CreateCtorDelegate<Func<NewExpression, ReadOnlyCollection<ElementInit>, ListInitExpression>>(typeof(ListInitExpression), [typeof(NewExpression), typeof(ReadOnlyCollection<ElementInit>)], Expression.ListInit));
 
         #endregion
 
@@ -212,7 +212,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for MemberAssignment.
         /// </summary>
-        private static readonly Lazy<Func<MemberInfo, Expression, MemberAssignment>> s_MemberAssignmentCtor = new(() => CreateCtorDelegate<Func<MemberInfo, Expression, MemberAssignment>>(typeof(MemberAssignment), new Type[] { typeof(MemberInfo), typeof(Expression) }, Expression.Bind));
+        private static readonly Lazy<Func<MemberInfo, Expression, MemberAssignment>> s_MemberAssignmentCtor = new(() => CreateCtorDelegate<Func<MemberInfo, Expression, MemberAssignment>>(typeof(MemberAssignment), [typeof(MemberInfo), typeof(Expression)], Expression.Bind));
 
         #endregion
 
@@ -221,7 +221,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for MemberListBinding.
         /// </summary>
-        private static readonly Lazy<Func<MemberInfo, ReadOnlyCollection<ElementInit>, MemberListBinding>> s_MemberListBindingCtor = new(() => CreateCtorDelegate<Func<MemberInfo, ReadOnlyCollection<ElementInit>, MemberListBinding>>(typeof(MemberListBinding), new Type[] { typeof(MemberInfo), typeof(ReadOnlyCollection<ElementInit>) }, Expression.ListBind));
+        private static readonly Lazy<Func<MemberInfo, ReadOnlyCollection<ElementInit>, MemberListBinding>> s_MemberListBindingCtor = new(() => CreateCtorDelegate<Func<MemberInfo, ReadOnlyCollection<ElementInit>, MemberListBinding>>(typeof(MemberListBinding), [typeof(MemberInfo), typeof(ReadOnlyCollection<ElementInit>)], Expression.ListBind));
 
         #endregion
 
@@ -230,7 +230,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for MemberMemberBinding.
         /// </summary>
-        private static readonly Lazy<Func<MemberInfo, ReadOnlyCollection<MemberBinding>, MemberMemberBinding>> s_MemberMemberBindingCtor = new(() => CreateCtorDelegate<Func<MemberInfo, ReadOnlyCollection<MemberBinding>, MemberMemberBinding>>(typeof(MemberMemberBinding), new Type[] { typeof(MemberInfo), typeof(ReadOnlyCollection<MemberBinding>) }, Expression.MemberBind));
+        private static readonly Lazy<Func<MemberInfo, ReadOnlyCollection<MemberBinding>, MemberMemberBinding>> s_MemberMemberBindingCtor = new(() => CreateCtorDelegate<Func<MemberInfo, ReadOnlyCollection<MemberBinding>, MemberMemberBinding>>(typeof(MemberMemberBinding), [typeof(MemberInfo), typeof(ReadOnlyCollection<MemberBinding>)], Expression.MemberBind));
 
         #endregion
 
@@ -239,7 +239,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for MemberInitExpression.
         /// </summary>
-        private static readonly Lazy<Func<NewExpression, ReadOnlyCollection<MemberBinding>, MemberInitExpression>> s_MemberInitExpressionCtor = new(() => CreateCtorDelegate<Func<NewExpression, ReadOnlyCollection<MemberBinding>, MemberInitExpression>>(typeof(MemberInitExpression), new Type[] { typeof(NewExpression), typeof(ReadOnlyCollection<MemberBinding>) }, Expression.MemberInit));
+        private static readonly Lazy<Func<NewExpression, ReadOnlyCollection<MemberBinding>, MemberInitExpression>> s_MemberInitExpressionCtor = new(() => CreateCtorDelegate<Func<NewExpression, ReadOnlyCollection<MemberBinding>, MemberInitExpression>>(typeof(MemberInitExpression), [typeof(NewExpression), typeof(ReadOnlyCollection<MemberBinding>)], Expression.MemberInit));
 
         #endregion
 
@@ -248,12 +248,12 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for NewExpression (option 1, with fallback to <c>null</c>).
         /// </summary>
-        private static readonly Lazy<Func<ConstructorInfo, IList<Expression>, ReadOnlyCollection<MemberInfo>, NewExpression>> s_NewExpressionCtor1 = new(() => CreateCtorDelegate<Func<ConstructorInfo, IList<Expression>, ReadOnlyCollection<MemberInfo>, NewExpression>>(typeof(NewExpression), new Type[] { typeof(ConstructorInfo), typeof(IList<Expression>), typeof(ReadOnlyCollection<MemberInfo>) }, null));
+        private static readonly Lazy<Func<ConstructorInfo, IList<Expression>, ReadOnlyCollection<MemberInfo>, NewExpression>> s_NewExpressionCtor1 = new(() => CreateCtorDelegate<Func<ConstructorInfo, IList<Expression>, ReadOnlyCollection<MemberInfo>, NewExpression>>(typeof(NewExpression), [typeof(ConstructorInfo), typeof(IList<Expression>), typeof(ReadOnlyCollection<MemberInfo>)], null));
 
         /// <summary>
         /// Constructor for NewExpression (option 1, with fallback to <c>Expression.New</c>).
         /// </summary>
-        private static readonly Lazy<Func<ConstructorInfo, IReadOnlyList<Expression>, ReadOnlyCollection<MemberInfo>, NewExpression>> s_NewExpressionCtor2 = new(() => CreateCtorDelegate<Func<ConstructorInfo, IReadOnlyList<Expression>, ReadOnlyCollection<MemberInfo>, NewExpression>>(typeof(NewExpression), new Type[] { typeof(ConstructorInfo), typeof(IReadOnlyList<Expression>), typeof(ReadOnlyCollection<MemberInfo>) }, Expression.New));
+        private static readonly Lazy<Func<ConstructorInfo, IReadOnlyList<Expression>, ReadOnlyCollection<MemberInfo>, NewExpression>> s_NewExpressionCtor2 = new(() => CreateCtorDelegate<Func<ConstructorInfo, IReadOnlyList<Expression>, ReadOnlyCollection<MemberInfo>, NewExpression>>(typeof(NewExpression), [typeof(ConstructorInfo), typeof(IReadOnlyList<Expression>), typeof(ReadOnlyCollection<MemberInfo>)], Expression.New));
 
         #endregion
 
@@ -262,7 +262,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Make factory for NewArrayExpression.
         /// </summary>
-        private static readonly Lazy<Func<ExpressionType, Type, ReadOnlyCollection<Expression>, NewArrayExpression>> s_NewArrayExpressionMake = new(() => CreateMakeDelegate<Func<ExpressionType, Type, ReadOnlyCollection<Expression>, NewArrayExpression>>(typeof(NewArrayExpression), new Type[] { typeof(ExpressionType), typeof(Type), typeof(ReadOnlyCollection<Expression>) }, MakeNewArrayExpression));
+        private static readonly Lazy<Func<ExpressionType, Type, ReadOnlyCollection<Expression>, NewArrayExpression>> s_NewArrayExpressionMake = new(() => CreateMakeDelegate<Func<ExpressionType, Type, ReadOnlyCollection<Expression>, NewArrayExpression>>(typeof(NewArrayExpression), [typeof(ExpressionType), typeof(Type), typeof(ReadOnlyCollection<Expression>)], MakeNewArrayExpression));
 
         private static NewArrayExpression MakeNewArrayExpression(ExpressionType kind, Type type, ReadOnlyCollection<Expression> expressions)
         {
@@ -283,7 +283,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Constructor for UnaryExpression.
         /// </summary>
-        private static readonly Lazy<Func<ExpressionType, Expression, Type, MethodInfo, UnaryExpression>> s_UnaryExpressionCtor = new(() => CreateCtorDelegate<Func<ExpressionType, Expression, Type, MethodInfo, UnaryExpression>>(typeof(UnaryExpression), new Type[] { typeof(ExpressionType), typeof(Expression), typeof(Type), typeof(MethodInfo) }, Expression.MakeUnary));
+        private static readonly Lazy<Func<ExpressionType, Expression, Type, MethodInfo, UnaryExpression>> s_UnaryExpressionCtor = new(() => CreateCtorDelegate<Func<ExpressionType, Expression, Type, MethodInfo, UnaryExpression>>(typeof(UnaryExpression), [typeof(ExpressionType), typeof(Expression), typeof(Type), typeof(MethodInfo)], Expression.MakeUnary));
 
         #endregion
 
@@ -719,7 +719,7 @@ namespace System.Linq.Expressions
         /// <param name="method">A <see cref="MethodInfo" /> to set the <see cref="MethodCallExpression.Method" /> property equal to.</param>
         public static new MethodCallExpression Call(Expression instance, MethodInfo method)
         {
-            return Call(instance, method, Array.Empty<Expression>());
+            return Call(instance, method, []);
         }
 
         /// <summary>Creates a <see cref="MethodCallExpression" /> that represents a call to a static method that takes two arguments.</summary>

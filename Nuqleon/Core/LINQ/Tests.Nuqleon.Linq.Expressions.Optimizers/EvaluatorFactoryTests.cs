@@ -23,7 +23,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var field = typeof(Bar).GetField(nameof(Bar.StaticField));
             var d = GetEvaluatorFactory().GetEvaluator(field);
-            Assert.AreEqual(42, d.DynamicInvoke(Array.Empty<object>()));
+            Assert.AreEqual(42, d.DynamicInvoke([]));
         }
 
         [TestMethod]
@@ -31,7 +31,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var field = typeof(Bar).GetField(nameof(Bar.InstanceField));
             var d = GetEvaluatorFactory().GetEvaluator(field);
-            Assert.AreEqual(42, d.DynamicInvoke(new object[] { new Bar() }));
+            Assert.AreEqual(42, d.DynamicInvoke([new Bar()]));
         }
 
         [TestMethod]
@@ -39,7 +39,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var property = typeof(Bar).GetProperty(nameof(Bar.StaticProperty));
             var d = GetEvaluatorFactory().GetEvaluator(property);
-            Assert.AreEqual(42, d.DynamicInvoke(Array.Empty<object>()));
+            Assert.AreEqual(42, d.DynamicInvoke([]));
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var property = typeof(Bar).GetProperty(nameof(Bar.InstanceProperty));
             var d = GetEvaluatorFactory().GetEvaluator(property);
-            Assert.AreEqual(42, d.DynamicInvoke(new object[] { new Bar() }));
+            Assert.AreEqual(42, d.DynamicInvoke([new Bar()]));
         }
 
         [TestMethod]
@@ -55,15 +55,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var property = typeof(Bar).GetProperty("Item");
             var d = GetEvaluatorFactory().GetEvaluator(property);
-            Assert.AreEqual(42, d.DynamicInvoke(new object[] { new Bar(), 39, 3 }));
+            Assert.AreEqual(42, d.DynamicInvoke([new Bar(), 39, 3]));
         }
 
         [TestMethod]
         public void EvaluatorFactory_Constructor()
         {
-            var ctor = typeof(Bar).GetConstructor(new[] { typeof(int), typeof(int) });
+            var ctor = typeof(Bar).GetConstructor([typeof(int), typeof(int)]);
             var d = GetEvaluatorFactory().GetEvaluator(ctor);
-            Assert.AreEqual(42, ((Bar)d.DynamicInvoke(new object[] { 39, 3 })).InstanceField);
+            Assert.AreEqual(42, ((Bar)d.DynamicInvoke([39, 3])).InstanceField);
         }
 
         [TestMethod]
@@ -71,7 +71,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var method = typeof(Bar).GetMethod(nameof(Bar.StaticMethod));
             var d = GetEvaluatorFactory().GetEvaluator(method);
-            Assert.AreEqual(42, d.DynamicInvoke(new object[] { 39, 3 }));
+            Assert.AreEqual(42, d.DynamicInvoke([39, 3]));
         }
 
         [TestMethod]
@@ -79,14 +79,14 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var method = typeof(Bar).GetMethod(nameof(Bar.InstanceMethod));
             var d = GetEvaluatorFactory().GetEvaluator(method);
-            Assert.AreEqual(42, d.DynamicInvoke(new object[] { new Bar(), 39, 3 }));
+            Assert.AreEqual(42, d.DynamicInvoke([new Bar(), 39, 3]));
         }
 
         [TestMethod]
         public void EvaluatorFactory_Type()
         {
             var d = GetEvaluatorFactory().GetEvaluator(typeof(Foo));
-            Assert.IsTrue(d.DynamicInvoke(Array.Empty<object>()) is Foo);
+            Assert.IsTrue(d.DynamicInvoke([]) is Foo);
         }
 
         [TestMethod]

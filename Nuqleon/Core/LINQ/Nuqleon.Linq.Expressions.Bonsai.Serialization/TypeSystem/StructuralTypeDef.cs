@@ -15,26 +15,16 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal abstract class StructuralTypeDef : TypeDef
+    internal abstract class StructuralTypeDef(params StructuralTypeMember[] members) : TypeDef
     {
-        protected readonly StructuralTypeMember[] _members;
+        protected readonly StructuralTypeMember[] _members = members;
         protected StructuralTypeSlim _type;
-
-        public StructuralTypeDef(params StructuralTypeMember[] members)
-        {
-            _members = members;
-        }
 
         public abstract StructuralTypeSlimKind Kind { get; }
     }
 
-    internal sealed class AnonymousStructuralTypeDef : StructuralTypeDef
+    internal sealed class AnonymousStructuralTypeDef(params AnonymousStructuralTypeMember[] members) : StructuralTypeDef(members)
     {
-        public AnonymousStructuralTypeDef(params AnonymousStructuralTypeMember[] members)
-            : base(members)
-        {
-        }
-
         public override StructuralTypeSlimKind Kind => StructuralTypeSlimKind.Anonymous;
 
         public override TypeSlim ToType(DeserializationDomain domain, params TypeSlim[] genericArguments)
@@ -90,15 +80,9 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         }
     }
 
-    internal sealed class RecordStructuralTypeDef : StructuralTypeDef
+    internal sealed class RecordStructuralTypeDef(bool hasValueEqualitySemantics, params RecordStructuralTypeMember[] members) : StructuralTypeDef(members)
     {
-        private readonly bool _hasValueEqualitySemantics;
-
-        public RecordStructuralTypeDef(bool hasValueEqualitySemantics, params RecordStructuralTypeMember[] members)
-            : base(members)
-        {
-            _hasValueEqualitySemantics = hasValueEqualitySemantics;
-        }
+        private readonly bool _hasValueEqualitySemantics = hasValueEqualitySemantics;
 
         public override StructuralTypeSlimKind Kind => StructuralTypeSlimKind.Record;
 

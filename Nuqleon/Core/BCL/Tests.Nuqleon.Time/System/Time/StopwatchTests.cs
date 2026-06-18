@@ -149,11 +149,9 @@ namespace Tests
             Assert.AreEqual(2000, sw.Elapsed.Ticks);
         }
 
-        private sealed class MyStopwatch : StopwatchBase
+        private sealed class MyStopwatch(IClock clock) : StopwatchBase
         {
-            private readonly IClock _clock;
-
-            public MyStopwatch(IClock clock) => _clock = clock;
+            private readonly IClock _clock = clock;
 
             public override long GetTimestamp() => _clock.Now;
 

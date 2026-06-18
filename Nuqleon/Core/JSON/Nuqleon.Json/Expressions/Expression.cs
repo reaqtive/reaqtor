@@ -127,7 +127,7 @@ namespace Nuqleon.Json.Expressions
             if (values == null)
                 throw new ArgumentNullException(nameof(values));
 
-            return MakeArrayCore(values.ToArray());
+            return MakeArrayCore([.. values]);
         }
 
         /// <summary>

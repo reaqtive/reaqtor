@@ -121,27 +121,17 @@ namespace Test.Reaqtor.Expressions
             Assert.IsTrue(new[] { 42 }.SequenceEqual(values));
         }
 
-        private sealed class Return<T> : SubscribableBase<T>
+        private sealed class Return<T>(T value) : SubscribableBase<T>
         {
-            private readonly T _value;
-
-            public Return(T value)
-            {
-                _value = value;
-            }
+            private readonly T _value = value;
 
             protected override ISubscription SubscribeCore(IObserver<T> observer)
             {
                 return new _(this, observer);
             }
 
-            private sealed class _ : Operator<Return<T>, T>
+            private sealed class _(QuotationTests.Return<T> ret, IObserver<T> obs) : Operator<Return<T>, T>(ret, obs)
             {
-                public _(Return<T> ret, IObserver<T> obs)
-                    : base(ret, obs)
-                {
-                }
-
                 protected override void OnStart()
                 {
                     base.OnStart();
@@ -152,26 +142,18 @@ namespace Test.Reaqtor.Expressions
             }
         }
 
-        private sealed class ValueCell
+        private sealed class ValueCell(int value)
         {
-            private readonly int _value;
-
-            public ValueCell(int value)
-            {
-                _value = value;
-                HasAccessed = false;
-            }
-
             public int Value
             {
                 get
                 {
                     HasAccessed = true;
-                    return _value;
+                    return field;
                 }
-            }
+            } = value;
 
-            public bool HasAccessed { get; private set; }
+            public bool HasAccessed { get; private set; } = false;
         }
 
         private sealed class TestPolicy : IExpressionPolicy

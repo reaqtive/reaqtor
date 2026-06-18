@@ -13,11 +13,7 @@ using System;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class UndefineObservable : UndefineServiceOperation
+    public class UndefineObservable(Uri observableUri) : UndefineServiceOperation(ServiceOperationKind.UndefineObservable, observableUri)
     {
-        public UndefineObservable(Uri observableUri)
-            : base(ServiceOperationKind.UndefineObservable, observableUri)
-        {
-        }
     }
 }

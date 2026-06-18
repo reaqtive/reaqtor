@@ -56,7 +56,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
         {
             using var stream = new MemoryStream();
 
-            var bigString = new string(Enumerable.Repeat('a', StreamHelpers.MAX_POOLED_STRING_BYTES * 2).ToArray());
+            var bigString = new string([.. Enumerable.Repeat('a', StreamHelpers.MAX_POOLED_STRING_BYTES * 2)]);
 
             stream.WriteString(bigString);
             stream.Position = 0;

@@ -322,14 +322,9 @@ namespace ExpressionDebugger
                 }
             }
 
-            private sealed class LambdaDispatch : ExpressionVisitor
+            private sealed class LambdaDispatch(Func<Expression, Expression> visit) : ExpressionVisitor
             {
-                private readonly Func<Expression, Expression> _visit;
-
-                public LambdaDispatch(Func<Expression, Expression> visit)
-                {
-                    _visit = visit;
-                }
+                private readonly Func<Expression, Expression> _visit = visit;
 
                 protected override Expression VisitLambda<T>(Expression<T> node)
                 {

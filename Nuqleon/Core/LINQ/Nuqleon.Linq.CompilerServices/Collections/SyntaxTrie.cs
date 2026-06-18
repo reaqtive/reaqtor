@@ -31,7 +31,7 @@ namespace System.Linq.CompilerServices
 
         private SyntaxTrie(SyntaxTrie parent, bool isTerminal)
         {
-            _trie = new Dictionary<char, SyntaxTrie>();
+            _trie = [];
             _parent = parent;
             _isTerminal = isTerminal;
         }

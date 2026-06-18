@@ -15,20 +15,14 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal sealed class GenericParameterTypeDef : TypeDef
+    internal sealed class GenericParameterTypeDef(int index) : TypeDef
     {
         #region Fields
 
-        private readonly int _index;
+        private readonly int _index = index;
 
         #endregion
-
         #region Constructors
-
-        public GenericParameterTypeDef(int index)
-        {
-            _index = index;
-        }
 
         #endregion
 

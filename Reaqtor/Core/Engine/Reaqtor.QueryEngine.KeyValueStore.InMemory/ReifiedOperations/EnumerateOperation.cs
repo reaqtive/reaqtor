@@ -8,11 +8,9 @@ using System.Linq;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
-    public class EnumerateOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
+    public class EnumerateOperation<TKey, TValue>(Func<TKey, bool> filter) : ReifiedOperation<TKey, TValue>
     {
-        private readonly Func<TKey, bool> _filter;
-
-        public EnumerateOperation(Func<TKey, bool> filter) => _filter = filter;
+        private readonly Func<TKey, bool> _filter = filter;
 
         public override OperationType OperationType => OperationType.Enumerate;
 

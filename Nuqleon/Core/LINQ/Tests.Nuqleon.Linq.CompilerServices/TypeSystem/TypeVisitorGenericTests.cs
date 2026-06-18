@@ -91,11 +91,9 @@ namespace Tests.System.Linq.CompilerServices
             }
         }
 
-        private class FindUsageTypeVisitor : TypeVisitor<bool>
+        private class FindUsageTypeVisitor(Type type) : TypeVisitor<bool>
         {
-            private readonly Type _type;
-
-            public FindUsageTypeVisitor(Type type) => _type = type;
+            private readonly Type _type = type;
 
             protected override bool MakeArrayType(Type type, bool elementType) => elementType;
 
@@ -125,7 +123,7 @@ namespace Tests.System.Linq.CompilerServices
             public void Test()
             {
                 {
-                    var res = Visit(new[] { typeof(int), typeof(int[]) });
+                    var res = Visit([typeof(int), typeof(int[])]);
                     Assert.IsTrue(new[] { "Int32", "Int32[]" }.SequenceEqual(res));
                 }
 

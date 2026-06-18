@@ -64,7 +64,7 @@ namespace Nuqleon.DataModel.CompilerServices
             {
                 var constructor = type.GetConstructor(Type.EmptyTypes);
 
-                var newExpression = Expression.New(constructor, Array.Empty<Expression>(), Array.Empty<MemberInfo>());
+                var newExpression = Expression.New(constructor, Array.Empty<Expression>(), []);
 
                 var bindings = new MemberAssignment[memberAssignments.Count];
 

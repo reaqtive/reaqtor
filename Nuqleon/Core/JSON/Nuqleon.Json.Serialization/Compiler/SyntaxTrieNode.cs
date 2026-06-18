@@ -19,23 +19,18 @@ namespace Nuqleon.Json.Serialization
     /// Represents a node in a syntax trie.
     /// </summary>
     /// <typeparam name="T">Type of the objects associated with terminal productions.</typeparam>
-    internal sealed class SyntaxTrieNode<T>
+    /// <remarks>
+    /// Creates a new syntax trie node with the specified character.
+    /// </remarks>
+    /// <param name="value">The character represented by this node.</param>
+    internal sealed class SyntaxTrieNode<T>(char value)
         where T : class
     {
-        /// <summary>
-        /// Creates a new syntax trie node with the specified character.
-        /// </summary>
-        /// <param name="value">The character represented by this node.</param>
-        public SyntaxTrieNode(char value)
-        {
-            Value = value;
-            Children = new Dictionary<char, SyntaxTrieNode<T>>();
-        }
 
         /// <summary>
         /// Gets the character represented by this node.
         /// </summary>
-        public char Value { get; }
+        public char Value { get; } = value;
 
         /// <summary>
         /// Gets the terminal production associated with this node, or null if the node is not a terminal.
@@ -45,7 +40,7 @@ namespace Nuqleon.Json.Serialization
         /// <summary>
         /// Gets the children of the current node.
         /// </summary>
-        public IDictionary<char, SyntaxTrieNode<T>> Children { get; }
+        public IDictionary<char, SyntaxTrieNode<T>> Children { get; } = new Dictionary<char, SyntaxTrieNode<T>>();
 
         /// <summary>
         /// Compiles the syntax trie node into an expression fragment for efficient lexing and parsing of JSON. This function is recursive and builds up the lexer for an entire syntax trie.
@@ -170,7 +165,7 @@ namespace Nuqleon.Json.Serialization
                             Expression.Call(ReflectionCache.TryGetNextCharString, str, len, i, c),
                             Expression.Switch(
                                 c,
-                                Children.Select(kv => Expression.SwitchCase(kv.Value.CompileString(str, len, b, i, res, e, c, terminals), Expression.Constant(kv.Key))).ToArray()
+                                [.. Children.Select(kv => Expression.SwitchCase(kv.Value.CompileString(str, len, b, i, res, e, c, terminals), Expression.Constant(kv.Key)))]
                             )
                         );
                 }
@@ -312,7 +307,7 @@ namespace Nuqleon.Json.Serialization
                             Expression.Call(ReflectionCache.TryGetNextCharReader, reader, c),
                             Expression.Switch(
                                 c,
-                                Children.Select(kv => Expression.SwitchCase(kv.Value.CompileReader(reader, res, e, c, terminals), Expression.Constant((int)kv.Key))).ToArray()
+                                [.. Children.Select(kv => Expression.SwitchCase(kv.Value.CompileReader(reader, res, e, c, terminals), Expression.Constant((int)kv.Key)))]
                             )
                         );
                 }

@@ -43,27 +43,17 @@ namespace System.Runtime.CompilerServices
     /// <typeparam name="TDelegate">The type of the delegate exposed by the thunk.</typeparam>
     /// <typeparam name="TClosure">The type of the closure parameter.</typeparam>
     /// <typeparam name="TInner">The type of the internal delegate used by the thunk. This delegate differs from <typeparamref name="TDelegate"/> by having an additional first parameter of type <typeparamref name="TClosure"/>.</typeparam>
-    public abstract class Thunk<TDelegate, TClosure, TInner> : Thunk
+    /// <remarks>
+    /// Creates a new instance of the thunk using the specified expression to implement the delegate.
+    /// </remarks>
+    /// <param name="expression">Expression representing the implementation of the delegate.</param>
+    public abstract class Thunk<TDelegate, TClosure, TInner>(Expression<TInner> expression) : Thunk
     {
         //
         // NB: We adding constructors, don't forget to update the GetConstructors() logic in the runtime
         //     thunk type compiler to ensure it picks the right one when emitting IL code.
         //
 
-        /// <summary>
-        /// Creates a new instance of the thunk using the specified expression to implement the delegate.
-        /// </summary>
-        /// <param name="expression">Expression representing the implementation of the delegate.</param>
-        protected Thunk(Expression<TInner> expression)
-        {
-            Expression = expression;
-
-            //
-            // NB: The constructor of derived types is responsible to set the Target field, either
-            //     by immediate compilation of the given expression or by installing a JIT function
-            //     whih also gets returned from the Compiler property.
-            //
-        }
 
         //
         // CONSIDER: Should we introduce another level in the class hierarchy to allow for thunks
@@ -77,7 +67,7 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// Gets the expression implementing the thunk's internal delegate, i.e. the delegate that's parameterized on <typeparamref name="TClosure"/>.
         /// </summary>
-        public Expression<TInner> Expression;
+        public Expression<TInner> Expression = expression;
 
         /// <summary>
         /// Gets the target delegate invoked by dispatchers that supply the <typeparamref name="TClosure"/> object.

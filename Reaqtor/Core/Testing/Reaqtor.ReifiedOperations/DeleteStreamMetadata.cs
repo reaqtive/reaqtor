@@ -13,11 +13,7 @@ using System;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class DeleteStreamMetadata : DeleteMetadataOperation
+    public class DeleteStreamMetadata(Uri targetObjectUri) : DeleteMetadataOperation(ServiceOperationKind.DeleteStreamMetadata, targetObjectUri)
     {
-        public DeleteStreamMetadata(Uri targetObjectUri)
-            : base(ServiceOperationKind.DeleteStreamMetadata, targetObjectUri)
-        {
-        }
     }
 }

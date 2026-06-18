@@ -19,7 +19,7 @@ namespace Tests
     [TestClass]
     public class PooledListTests : TestBase
     {
-        private static readonly string[] exp = new[] { "qux", "foo", "bar", "baz" };
+        private static readonly string[] exp = ["qux", "foo", "bar", "baz"];
 
         [TestMethod]
         public void PooledList_ArgumentChecking()

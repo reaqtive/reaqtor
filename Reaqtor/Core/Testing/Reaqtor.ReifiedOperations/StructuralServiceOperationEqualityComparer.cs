@@ -34,13 +34,8 @@ namespace Reaqtor.TestingFramework
             return res;
         }
 
-        private sealed class Comparator : ExpressionEqualityComparator
+        private sealed class Comparator(StructuralTypeEqualityComparator typeComparer) : ExpressionEqualityComparator(typeComparer, typeComparer.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
         {
-            public Comparator(StructuralTypeEqualityComparator typeComparer)
-                : base(typeComparer, typeComparer.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
-            {
-            }
-
             protected override bool EqualsGlobalParameter(ParameterExpression x, ParameterExpression y)
             {
                 return x.Name == y.Name && Equals(x.Type, y.Type);

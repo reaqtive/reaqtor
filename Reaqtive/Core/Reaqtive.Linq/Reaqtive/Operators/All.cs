@@ -6,29 +6,18 @@ using System;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class All<TSource> : SubscribableBase<bool>
+    internal sealed class All<TSource>(ISubscribable<TSource> source, Func<TSource, bool> predicate) : SubscribableBase<bool>
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, bool> _predicate;
-
-        public All(ISubscribable<TSource> source, Func<TSource, bool> predicate)
-        {
-            _source = source;
-            _predicate = predicate;
-        }
+        private readonly ISubscribable<TSource> _source = source;
+        private readonly Func<TSource, bool> _predicate = predicate;
 
         protected override ISubscription SubscribeCore(IObserver<bool> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<All<TSource>, bool>, IObserver<TSource>
+        private sealed class _(All<TSource> parent, IObserver<bool> observer) : StatefulUnaryOperator<All<TSource>, bool>(parent, observer), IObserver<TSource>
         {
-            public _(All<TSource> parent, IObserver<bool> observer)
-                : base(parent, observer)
-            {
-            }
-
             public override string Name => "rc:All";
 
             public override Version Version => Versioning.v1;

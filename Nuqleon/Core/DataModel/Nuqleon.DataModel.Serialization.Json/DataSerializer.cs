@@ -20,7 +20,7 @@ namespace Nuqleon.DataModel.Serialization.Json
         /// Creates a new serializer instance.
         /// </summary>
         protected DataSerializer()
-            : this(Array.Empty<DataConverter>())
+            : this([])
         {
         }
 

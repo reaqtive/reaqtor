@@ -15,33 +15,25 @@ namespace Reaqtor.QueryEngine
     /// </summary>
     /// <typeparam name="TKey">The type of the keys.</typeparam>
     /// <typeparam name="TValue">The type of the values.</typeparam>
-    internal sealed class ReactiveEntityCollection<TKey, TValue> : IReactiveEntityCollection<TKey, TValue>
+    /// <remarks>
+    /// Creates a new reactive entity collection using the specified <paramref name="comparer"/> for keys.
+    /// </remarks>
+    /// <param name="comparer">The comparer to use to check for equality between keys.</param>
+    internal sealed class ReactiveEntityCollection<TKey, TValue>(IEqualityComparer<TKey> comparer) : IReactiveEntityCollection<TKey, TValue>
     {
-        private readonly IEqualityComparer<TKey> _comparer;
-        private readonly ConcurrentDictionary<TKey, TValue> _collection;
+        private readonly IEqualityComparer<TKey> _comparer = comparer;
+        private readonly ConcurrentDictionary<TKey, TValue> _collection = new ConcurrentDictionary<TKey, TValue>(comparer);
 
         // No concurrent hash set, representing with a dictionary of key->().
         // Keep an eye on https://github.com/dotnet/runtime/issues/39919.
-        private readonly ConcurrentDictionary<TKey, Empty> _removedKeys;
+        private readonly ConcurrentDictionary<TKey, Empty> _removedKeys = new ConcurrentDictionary<TKey, Empty>(comparer);
 
         /// <summary>
         /// A reader-writer lock to be held during clone operations.
         /// </summary>
-        private readonly ReaderWriterLockSlim _lock;
+        private readonly ReaderWriterLockSlim _lock = new ReaderWriterLockSlim();
 
         private bool _disposed;
-
-        /// <summary>
-        /// Creates a new reactive entity collection using the specified <paramref name="comparer"/> for keys.
-        /// </summary>
-        /// <param name="comparer">The comparer to use to check for equality between keys.</param>
-        public ReactiveEntityCollection(IEqualityComparer<TKey> comparer)
-        {
-            _collection = new ConcurrentDictionary<TKey, TValue>(comparer);
-            _removedKeys = new ConcurrentDictionary<TKey, Empty>(comparer);
-            _comparer = comparer;
-            _lock = new ReaderWriterLockSlim();
-        }
 
         public bool ContainsKey(TKey key) => _collection.ContainsKey(key); // No lock required, read-only
 

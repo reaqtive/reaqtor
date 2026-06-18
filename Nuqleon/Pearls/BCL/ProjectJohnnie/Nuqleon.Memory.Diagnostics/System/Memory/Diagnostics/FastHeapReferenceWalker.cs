@@ -50,7 +50,7 @@ namespace System.Memory.Diagnostics
         /// A <see cref="ConditionalWeakTable{TKey, TValue}"/> is used to ensure we don't keep collectible
         /// types alive when a walker for such a type exists.
         /// </remarks>
-        private static readonly ConditionalWeakTable<Type, WalkerInfo> s_walkers = new();
+        private static readonly ConditionalWeakTable<Type, WalkerInfo> s_walkers = [];
 
         /// <summary>
         /// A pool for <see cref="Queue{T}"/> instances that can be used to maintain the work list for

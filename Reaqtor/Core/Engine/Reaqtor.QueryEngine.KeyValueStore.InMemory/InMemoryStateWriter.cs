@@ -19,11 +19,22 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// as AddOrUpdate() or Delete(). It is therefore the responsability of the user to ensure that
     /// all operations are done (including disposing streams) before calling Commit() or Rollback().
     /// </remarks>
-    public class InMemoryStateWriter : IStateWriter
+    /// <remarks>
+    /// Create a new instance of <see cref="InMemoryStateWriter"/>.
+    /// </remarks>
+    /// <param name="stateStore">The store where the state is persisted.</param>
+    /// <param name="checkpointKind">The checkpoint kind.</param>
+    /// <param name="onCommit">The action to be called when committing.</param>
+    /// <param name="onRollback">The action to be called when rolling back.</param>
+    public class InMemoryStateWriter(
+        InMemoryStateStore stateStore,
+        CheckpointKind checkpointKind,
+        Action onCommit = null,
+        Action onRollback = null) : IStateWriter
     {
-        private readonly Action _onCommit;
-        private readonly Action _onRollback;
-        private readonly InMemoryStateStore _stateStore;
+        private readonly Action _onCommit = onCommit;
+        private readonly Action _onRollback = onRollback;
+        private readonly InMemoryStateStore _stateStore = stateStore ?? throw new ArgumentNullException(nameof(stateStore));
 
         private long _openedStreamCount;
         private volatile bool _disposed;
@@ -32,25 +43,6 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// Set to 1 once Commit or Rollback has been called.
         /// </summary>
         private int _sealed;
-
-        /// <summary>
-        /// Create a new instance of <see cref="InMemoryStateWriter"/>.
-        /// </summary>
-        /// <param name="stateStore">The store where the state is persisted.</param>
-        /// <param name="checkpointKind">The checkpoint kind.</param>
-        /// <param name="onCommit">The action to be called when committing.</param>
-        /// <param name="onRollback">The action to be called when rolling back.</param>
-        public InMemoryStateWriter(
-            InMemoryStateStore stateStore,
-            CheckpointKind checkpointKind,
-            Action onCommit = null,
-            Action onRollback = null)
-        {
-            _onRollback = onRollback;
-            _onCommit = onCommit;
-            _stateStore = stateStore ?? throw new ArgumentNullException(nameof(stateStore));
-            CheckpointKind = checkpointKind;
-        }
 
         /// <summary>
         /// The checkpoint kind.
@@ -62,7 +54,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         {
             get;
             private set;
-        }
+        } = checkpointKind;
 
         /// <summary>
         /// Commit the changes.
@@ -229,18 +221,11 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// Lightweight wrapper for stream adding abilities to specify action to take
         /// when disposing as well as the option to leave the stream open when disposing.
         /// </summary>
-        private sealed class StreamWrapper : Stream
+        private sealed class StreamWrapper(Stream stream, Action onDispose, bool leaveStreamOpen = false) : Stream
         {
-            private readonly Stream _stream;
-            private readonly Action _onDispose;
-            private readonly bool _leaveStreamOpen;
-
-            public StreamWrapper(Stream stream, Action onDispose, bool leaveStreamOpen = false)
-            {
-                _stream = stream ?? throw new ArgumentNullException(nameof(stream));
-                _onDispose = onDispose;
-                _leaveStreamOpen = leaveStreamOpen;
-            }
+            private readonly Stream _stream = stream ?? throw new ArgumentNullException(nameof(stream));
+            private readonly Action _onDispose = onDispose;
+            private readonly bool _leaveStreamOpen = leaveStreamOpen;
 
             protected override void Dispose(bool disposing)
             {

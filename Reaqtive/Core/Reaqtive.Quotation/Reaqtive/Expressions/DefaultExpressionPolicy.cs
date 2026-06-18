@@ -100,14 +100,9 @@ namespace Reaqtive.Expressions
 
             public IDiscardable<Expression> Create(Expression value) => new CacheReference(value);
 
-            private sealed class CacheReference : IDiscardable<Expression>
+            private sealed class CacheReference(Expression expression) : IDiscardable<Expression>
             {
-                public CacheReference(Expression expression)
-                {
-                    Value = expression;
-                }
-
-                public Expression Value { get; }
+                public Expression Value { get; } = expression;
 
                 public void Dispose()
                 {

@@ -15,15 +15,13 @@ namespace System.Linq.Expressions
     /// <summary>
     /// Utility to create stable hash codes for expression trees.
     /// </summary>
-    public class StableExpressionSlimHasher : ExpressionSlimHasher
+    /// <remarks>
+    /// Creates a new stable expression hasher with the specified <paramref name="options"/>.
+    /// </remarks>
+    /// <param name="options">Options to influence the behavior of stable hashing of expression trees.</param>
+    public class StableExpressionSlimHasher(StableExpressionSlimHashingOptions options) : ExpressionSlimHasher
     {
-        private readonly StableExpressionSlimHashingOptions _options;
-
-        /// <summary>
-        /// Creates a new stable expression hasher with the specified <paramref name="options"/>.
-        /// </summary>
-        /// <param name="options">Options to influence the behavior of stable hashing of expression trees.</param>
-        public StableExpressionSlimHasher(StableExpressionSlimHashingOptions options) => _options = options;
+        private readonly StableExpressionSlimHashingOptions _options = options;
 
         /// <summary>
         /// Gets the hash code for the specified object <paramref name="value"/>.

@@ -13,16 +13,12 @@ namespace System.Linq.CompilerServices
     /// <summary>
     /// Visitor to rewrite the expression nodes whose type is a structural type.
     /// </summary>
-    public class StructuralTypeSubstitutionExpressionVisitor : TypeSubstitutionExpressionVisitor
+    /// <remarks>
+    /// Creates a new structural type substitution visitor using the specified type map.
+    /// </remarks>
+    /// <param name="typeMap">Dictionary mapping original types to their rewrite targets.</param>
+    public class StructuralTypeSubstitutionExpressionVisitor(IDictionary<Type, Type> typeMap) : TypeSubstitutionExpressionVisitor(typeMap)
     {
-        /// <summary>
-        /// Creates a new structural type substitution visitor using the specified type map.
-        /// </summary>
-        /// <param name="typeMap">Dictionary mapping original types to their rewrite targets.</param>
-        public StructuralTypeSubstitutionExpressionVisitor(IDictionary<Type, Type> typeMap)
-            : base(typeMap)
-        {
-        }
 
         // TODO: There is a known limitation that this visitor does not support conversion of
         //       all constants that are data model compliant. E.g. list, array, and tuple constants

@@ -559,7 +559,7 @@ namespace Tests.System.Linq.CompilerServices
             {
                 if (node.AddMethod.DeclaringType == typeof(List<int>))
                 {
-                    return Expression.ElementInit(typeof(HashSet<int>).GetMethod("Add", new[] { typeof(int) }), arguments);
+                    return Expression.ElementInit(typeof(HashSet<int>).GetMethod("Add", [typeof(int)]), arguments);
                 }
 
                 throw new NotImplementedException();
@@ -656,7 +656,7 @@ namespace Tests.System.Linq.CompilerServices
             {
                 if (node.Method.DeclaringType == typeof(Math) && node.Method.Name == "Sin")
                 {
-                    return Expression.Call(typeof(Math).GetMethod("Cos", new[] { typeof(double) }), arguments);
+                    return Expression.Call(typeof(Math).GetMethod("Cos", [typeof(double)]), arguments);
                 }
 
                 if (@object != null && typeof(Array).IsAssignableFrom(@object.Type) && node.Method.Name == "Get")
@@ -681,7 +681,7 @@ namespace Tests.System.Linq.CompilerServices
 
                 if (node.Type == typeof(Bar))
                 {
-                    return Expression.New(typeof(Foo).GetConstructor(new[] { typeof(string), typeof(int) }), arguments.Reverse());
+                    return Expression.New(typeof(Foo).GetConstructor([typeof(string), typeof(int)]), arguments.Reverse());
                 }
 
                 if (node.Type == typeof(Qux))
@@ -711,7 +711,7 @@ namespace Tests.System.Linq.CompilerServices
 
             protected override Expression MakeSwitch(SwitchExpression node, Expression switchValue, Expression defaultBody, ReadOnlyCollection<SwitchCase> cases)
             {
-                return Expression.Switch(switchValue, defaultBody, cases.Reverse().ToArray());
+                return Expression.Switch(switchValue, defaultBody, [.. cases.Reverse()]);
             }
 
             protected override SwitchCase MakeSwitchCase(SwitchCase node, Expression body, ReadOnlyCollection<Expression> testValues)
@@ -746,12 +746,8 @@ namespace Tests.System.Linq.CompilerServices
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
-        private sealed class Bar
+        private sealed class Bar(int x, string y)
         {
-            public Bar(int x, string y)
-            {
-            }
-
             public int Foo { get; set; }
             public Qux Qux { get; set; }
             public List<int> Xs { get; set; }
@@ -759,12 +755,8 @@ namespace Tests.System.Linq.CompilerServices
             public int ooF { get; set; }
         }
 
-        private sealed class Foo
+        private sealed class Foo(string y, int x)
         {
-            public Foo(string y, int x)
-            {
-            }
-
             public int Bar { get; set; }
             public Baz Baz { get; set; }
             public HashSet<int> Ys { get; set; }

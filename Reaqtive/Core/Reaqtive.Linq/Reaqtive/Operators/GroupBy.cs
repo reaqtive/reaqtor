@@ -6,32 +6,23 @@ using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading;
 
 namespace Reaqtive
 {
-    internal abstract class GroupByBase<TSource, TKey, TElement> : SubscribableBase<IGroupedSubscribable<TKey, TElement>>
+    internal abstract class GroupByBase<TSource, TKey, TElement>(ISubscribable<TSource> source, Func<TSource, TKey> keySelector) : SubscribableBase<IGroupedSubscribable<TKey, TElement>>
     {
-        private readonly ISubscribable<TSource> _source;
-        protected readonly Func<TSource, TKey> _keySelector;
+        private readonly ISubscribable<TSource> _source = source;
+        protected readonly Func<TSource, TKey> _keySelector = keySelector;
 
-        public GroupByBase(ISubscribable<TSource> source, Func<TSource, TKey> keySelector)
-        {
-            _source = source;
-            _keySelector = keySelector;
-        }
-
-        protected abstract class SinkBase<TParam> : HigherOrderOutputStatefulOperator<TParam, TSource, TElement, IGroupedSubscribable<TKey, TElement>, TKey>
+        protected abstract class SinkBase<TParam>(TParam parent, IObserver<IGroupedSubscribable<TKey, TElement>> observer) : HigherOrderOutputStatefulOperator<TParam, TSource, TElement, IGroupedSubscribable<TKey, TElement>, TKey>(parent, observer)
             where TParam : GroupByBase<TSource, TKey, TElement>
         {
             private bool _recovered;
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private RefCountSubscription _subscription;
-#pragma warning restore CA2213
 
-            public SinkBase(TParam parent, IObserver<IGroupedSubscribable<TKey, TElement>> observer)
-                : base(parent, observer)
-            {
-            }
+#pragma warning restore CA2213
 
             protected override string InnerStreamPrefix => "rx://tunnel/group/";
 
@@ -82,24 +73,16 @@ namespace Reaqtive
             }
         }
 
-        protected abstract class Sink<TParam> : SinkBase<TParam>
+        protected abstract class Sink<TParam>(TParam parent, IObserver<IGroupedSubscribable<TKey, TElement>> observer, IEqualityComparer<TKey> comparer) : SinkBase<TParam>(parent, observer)
             where TParam : GroupByBase<TSource, TKey, TElement>
         {
             private const string MAXGROUPCOUNTSETTING = "rx://operators/groupBy/settings/maxGroupCount";
             private int _maxGroupCount;
 
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private Entry _nullGroup;
-            private readonly IDictionary<TKey, Entry> _groups;
-            private readonly IDictionary<Uri, TKey> _tunnels;
-
-            public Sink(TParam parent, IObserver<IGroupedSubscribable<TKey, TElement>> observer, IEqualityComparer<TKey> comparer)
-                : base(parent, observer)
-            {
-                // TODO: allocate upon start or recovery and use known capacity (if any) - also do this in Window
-                _groups = new Dictionary<TKey, Entry>(comparer);
-                _tunnels = new Dictionary<Uri, TKey>();
-            }
+            private readonly IDictionary<TKey, Entry> _groups = new Dictionary<TKey, Entry>(comparer);
+            private readonly IDictionary<Uri, TKey> _tunnels = new Dictionary<Uri, TKey>();
 
             public override void SetContext(IOperatorContext context)
             {
@@ -351,30 +334,18 @@ namespace Reaqtive
         }
     }
 
-    internal sealed class GroupBy<TSource, TKey, TElement> : GroupByBase<TSource, TKey, TElement>
+    internal sealed class GroupBy<TSource, TKey, TElement>(ISubscribable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer) : GroupByBase<TSource, TKey, TElement>(source, keySelector)
     {
-        private readonly IEqualityComparer<TKey> _comparer;
-        private readonly Func<TSource, TElement> _elementSelector;
-
-        public GroupBy(ISubscribable<TSource> source, Func<TSource, TKey> keySelector, Func<TSource, TElement> elementSelector, IEqualityComparer<TKey> comparer)
-            : base(source, keySelector)
-        {
-            _comparer = comparer;
-            _elementSelector = elementSelector;
-        }
+        private readonly IEqualityComparer<TKey> _comparer = comparer;
+        private readonly Func<TSource, TElement> _elementSelector = elementSelector;
 
         protected override ISubscription SubscribeCore(IObserver<IGroupedSubscribable<TKey, TElement>> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : Sink<GroupBy<TSource, TKey, TElement>>
+        private sealed class _(GroupBy<TSource, TKey, TElement> parent, IObserver<IGroupedSubscribable<TKey, TElement>> observer) : Sink<GroupBy<TSource, TKey, TElement>>(parent, observer, parent._comparer)
         {
-            public _(GroupBy<TSource, TKey, TElement> parent, IObserver<IGroupedSubscribable<TKey, TElement>> observer)
-                : base(parent, observer, parent._comparer)
-            {
-            }
-
             public override string Name => "rc:GroupBy";
 
             public override Version Version => Versioning.v1;
@@ -391,28 +362,17 @@ namespace Reaqtive
         }
     }
 
-    internal sealed class GroupBy<TSource, TKey> : GroupByBase<TSource, TKey, TSource>
+    internal sealed class GroupBy<TSource, TKey>(ISubscribable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer) : GroupByBase<TSource, TKey, TSource>(source, keySelector)
     {
-        private readonly IEqualityComparer<TKey> _comparer;
-
-        public GroupBy(ISubscribable<TSource> source, Func<TSource, TKey> keySelector, IEqualityComparer<TKey> comparer)
-            : base(source, keySelector)
-        {
-            _comparer = comparer;
-        }
+        private readonly IEqualityComparer<TKey> _comparer = comparer;
 
         protected override ISubscription SubscribeCore(IObserver<IGroupedSubscribable<TKey, TSource>> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : Sink<GroupBy<TSource, TKey>>
+        private sealed class _(GroupBy<TSource, TKey> parent, IObserver<IGroupedSubscribable<TKey, TSource>> observer) : Sink<GroupBy<TSource, TKey>>(parent, observer, parent._comparer)
         {
-            public _(GroupBy<TSource, TKey> parent, IObserver<IGroupedSubscribable<TKey, TSource>> observer)
-                : base(parent, observer, parent._comparer)
-            {
-            }
-
             public override string Name => "rc:GroupBy/Element";
 
             public override Version Version => Versioning.v1;

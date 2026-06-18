@@ -87,28 +87,18 @@ namespace DelegatingBinder
             bound.Evaluate();
         }
 
-        private class Binder
+        private class Binder(IDictionary<ParameterExpression, Expression> bindings)
         {
-            private readonly IDictionary<ParameterExpression, Expression> _bindings;
-
-            public Binder(IDictionary<ParameterExpression, Expression> bindings)
-            {
-                _bindings = bindings;
-            }
+            private readonly IDictionary<ParameterExpression, Expression> _bindings = bindings;
 
             public Expression Bind(Expression expression)
             {
                 return new Impl(this).Visit(expression);
             }
 
-            private class Impl : ScopedExpressionVisitor<ParameterExpression>
+            private class Impl(Service.Binder parent) : ScopedExpressionVisitor<ParameterExpression>
             {
-                private readonly Binder _parent;
-
-                public Impl(Binder parent)
-                {
-                    _parent = parent;
-                }
+                private readonly Binder _parent = parent;
 
                 protected override ParameterExpression GetState(ParameterExpression parameter)
                 {

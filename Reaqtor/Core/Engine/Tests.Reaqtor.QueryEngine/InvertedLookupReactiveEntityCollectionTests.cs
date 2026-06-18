@@ -84,11 +84,11 @@ namespace Tests.Reaqtor.QueryEngine
             for (var i = 0; i < 1000; ++i)
             {
                 collection.AddLock.Set();
-                Task.WaitAll(new[]
-                {
+                Task.WaitAll(
+                [
                     Task.Run(() => Assert.IsFalse(collection.TryAdd("foo", 2))),
                     Task.Run(() => Assert.IsFalse(collection.TryGetKey(2, out key))),
-                });
+                ]);
             }
         }
 
@@ -107,12 +107,12 @@ namespace Tests.Reaqtor.QueryEngine
             for (var i = 0; i < 1000; ++i)
             {
                 collection.AddLock.Set();
-                Task.WaitAll(new[]
-                {
+                Task.WaitAll(
+                [
                     Task.Run(() => Assert.IsFalse(collection.TryAdd("bar", 42))),
                     Task.Run(() => Assert.IsTrue(collection.TryGetKey(42, out key))),
                     Task.Run(() => Assert.IsFalse(collection.TryGetValue("bar", out value))),
-                });
+                ]);
                 Assert.AreEqual(key, "foo");
             }
         }
@@ -179,18 +179,11 @@ namespace Tests.Reaqtor.QueryEngine
             public EventWaitHandle RemoveLock { get; private set; }
         }
 
-        private sealed class BlockingCollection<TKey, TValue> : IReactiveEntityCollection<TKey, TValue>
+        private sealed class BlockingCollection<TKey, TValue>(IEqualityComparer<TKey> comparer, EventWaitHandle blockAdd, EventWaitHandle blockRemove) : IReactiveEntityCollection<TKey, TValue>
         {
-            private readonly IReactiveEntityCollection<TKey, TValue> _inner;
-            private readonly EventWaitHandle _blockAdd;
-            private readonly EventWaitHandle _blockRemove;
-
-            public BlockingCollection(IEqualityComparer<TKey> comparer, EventWaitHandle blockAdd, EventWaitHandle blockRemove)
-            {
-                _inner = new ReactiveEntityCollection<TKey, TValue>(comparer);
-                _blockAdd = blockAdd;
-                _blockRemove = blockRemove;
-            }
+            private readonly IReactiveEntityCollection<TKey, TValue> _inner = new ReactiveEntityCollection<TKey, TValue>(comparer);
+            private readonly EventWaitHandle _blockAdd = blockAdd;
+            private readonly EventWaitHandle _blockRemove = blockRemove;
 
             public bool ContainsKey(TKey key)
             {

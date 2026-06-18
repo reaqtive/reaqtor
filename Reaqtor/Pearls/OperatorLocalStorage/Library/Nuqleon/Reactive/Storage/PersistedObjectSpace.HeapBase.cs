@@ -37,7 +37,11 @@ namespace Reaqtive.Storage
         /// </list>
         /// This enables derived types to decide on the storage details of heap items.
         /// </remarks>
-        private abstract partial class HeapBase : PersistableBase
+        /// <remarks>
+        /// Creates a new entity representing a heap.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private abstract partial class HeapBase(PersistedObjectSpace parent) : PersistableBase(parent)
         {
             //
             // NB: We use numeric key representations for all data structures below and on edit pages. This prevents having to keep strings alive when save and load operations happen infrequently.
@@ -67,7 +71,7 @@ namespace Reaqtive.Storage
             /// This collection is an unordered set. We only sort the entries in the set when required to get a deterministic order, e.g. in <see cref="DeleteCore(IStateWriter)"/>.
             /// Writes to this collection should only happen due to state persistence operations including <see cref="LoadCore(IStateReader)"/> and <see cref="OnSavedCore"/>. In particular, set operations should not mutate this collection.
             /// </remarks>
-            private HashSet<long> _keys = new();
+            private HashSet<long> _keys = [];
 
             /// <summary>
             /// The numeric representation of the next available store key, for use by <see cref="Add"/>. This value will be 0 for a new heap that has not yet been persisted, and will be derived from state in <see cref="LoadCore(IStateReader)"/>.
@@ -82,7 +86,7 @@ namespace Reaqtive.Storage
             /// The maximum number of entries on the free list is governed by the <see cref="MaxFreeListSize"/> setting. For more information, see remarks on this constant's declaration.
             /// Writes to this collection should only happen due to heap operations, except for <see cref="LoadCore(IStateReader)"/>. In particular, <see cref="OnSavedCore"/> shall not mutate this collection, because it runs concurrently with heap operations.
             /// </remarks>
-            private readonly SortedSet<long> _freeList = new();
+            private readonly SortedSet<long> _freeList = [];
 
             /// <summary>
             /// The state change manager used to keep track of changes to the key set used to store elements in the heap since the last successful <see cref="SaveCore(IStateWriter)"/> operation (as indicated by a call to <see cref="OnSavedCore"/>).
@@ -93,15 +97,6 @@ namespace Reaqtive.Storage
             /// The pending edits obtained from <see cref="_dirty"/> on the last call to <see cref="SaveCore(IStateWriter)"/>, for use by <see cref="OnSavedCore"/> to edit <see cref="_keys"/> upon a successful save operation.
             /// </summary>
             private DirtyState[] _dirtyHistory;
-
-            /// <summary>
-            /// Creates a new entity representing a heap.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            public HeapBase(PersistedObjectSpace parent)
-                : base(parent)
-            {
-            }
 
             /// <summary>
             /// Deletes the heap from storage.
@@ -605,12 +600,12 @@ namespace Reaqtive.Storage
                 /// <summary>
                 /// The dictionary mapping each edited storage key to the latest edit operation applied to the key (<c>true</c> for add or edit, <c>false</c> for remove).
                 /// </summary>
-                private readonly Dictionary<long, bool> _edits = new();
+                private readonly Dictionary<long, bool> _edits = [];
 
                 /// <summary>
                 /// The sorted set of removed key values. We keep this set sorted to aid in ordered reused of slots, see <see cref="TryGetRemovedKeyAndSwapToEdited(out long)"/>.
                 /// </summary>
-                private readonly SortedSet<long> _removed = new();
+                private readonly SortedSet<long> _removed = [];
 
                 /// <summary>
                 /// Start tracking the addition of a heap element associated with the specified <paramref name="key"/>.

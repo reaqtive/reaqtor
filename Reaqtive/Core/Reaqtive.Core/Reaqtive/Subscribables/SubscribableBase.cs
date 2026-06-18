@@ -64,17 +64,12 @@ namespace Reaqtive
         }
 
 #if DEBUG
-        private sealed class AssertObserver : IObserver<TResult>, ISubscription, IOperator
+        private sealed class AssertObserver(IObserver<TResult> observer) : IObserver<TResult>, ISubscription, IOperator
         {
-            private readonly IObserver<TResult> _observer;
+            private readonly IObserver<TResult> _observer = observer;
             private int _stopped = 0;
             private int _busy = 0;
             private IScheduler _scheduler;
-
-            public AssertObserver(IObserver<TResult> observer)
-            {
-                _observer = observer;
-            }
 
             public ISubscription Subscription
             {

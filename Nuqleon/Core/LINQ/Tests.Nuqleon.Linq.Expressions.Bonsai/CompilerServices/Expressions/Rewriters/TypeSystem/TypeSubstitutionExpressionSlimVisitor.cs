@@ -497,9 +497,9 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp1 = (Expression<Func<TestBaz, int>>)((TestBaz b) => b.x);
-            var exp2 = (Expression<Func<TestBar, int>>)((TestBar b) => b.Wrong2);
-            var exp3 = (Expression<Func<TestBar, int>>)((TestBar b) => b.Wrong3);
+            var exp1 = (Expression<Func<TestBaz, int>>)(b => b.x);
+            var exp2 = (Expression<Func<TestBar, int>>)(b => b.Wrong2);
+            var exp3 = (Expression<Func<TestBar, int>>)(b => b.Wrong3);
 
             Assert.ThrowsException<ArgumentException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
             Assert.ThrowsException<ArgumentException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
@@ -511,7 +511,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp = (Expression<Func<TestBaz, int>>)((TestBaz b) => b.Y);
+            var exp = (Expression<Func<TestBaz, int>>)(b => b.Y);
 
             Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
@@ -607,8 +607,8 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp1 = (Expression<Func<TestBaz, int>>)((TestBaz b) => b.Z(5));
-            var exp2 = (Expression<Func<TestBaz, int>>)((TestBaz b) => b.A<bool>(5));
+            var exp1 = (Expression<Func<TestBaz, int>>)(b => b.Z(5));
+            var exp2 = (Expression<Func<TestBaz, int>>)(b => b.A<bool>(5));
 
             Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
             Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
@@ -957,7 +957,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             var pers = typeof(Person);
             var query = (Expression<Func<IEnumerable<Person>, IEnumerable<string>>>)(xs => from x in xs where x.Age > 10 let name = x.Name where name.StartsWith("B") select name.ToUpper() + " is " + x.Age);
 
-            var check1 = new TypeErasureChecker(new[] { typeof(Person) });
+            var check1 = new TypeErasureChecker([typeof(Person)]);
             Assert.ThrowsException<InvalidOperationException>(() => check1.Visit(query));
 
 
@@ -976,15 +976,15 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             check1.Visit(res1);
 
-            var check2 = new TypeErasureChecker(new[] { anon });
+            var check2 = new TypeErasureChecker([anon]);
             Assert.ThrowsException<InvalidOperationException>(() => check2.Visit(res1));
 
 
             var f = ((LambdaExpression)res1).Compile();
 
             var cast = ((MethodInfo)ReflectionHelpers.InfoOf(() => Enumerable.Cast<int>(null))).GetGenericMethodDefinition().MakeGenericMethod(anon);
-            var peopleObj = new[] { Activator.CreateInstance(anon, new object[] { "Bart", 10 }), Activator.CreateInstance(anon, new object[] { "Lisa", 8 }), Activator.CreateInstance(anon, new object[] { "Bart", 21 }) };
-            var peopleAnon = cast.Invoke(obj: null, new object[] { peopleObj });
+            var peopleObj = new[] { Activator.CreateInstance(anon, ["Bart", 10]), Activator.CreateInstance(anon, ["Lisa", 8]), Activator.CreateInstance(anon, ["Bart", 21]) };
+            var peopleAnon = cast.Invoke(obj: null, [peopleObj]);
             var qres = (IEnumerable<string>)f.DynamicInvoke(peopleAnon);
             Assert.IsTrue(new[] { "BART is 21" }.SequenceEqual(qres));
 
@@ -1016,14 +1016,9 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
         }
 
-        private sealed class TypeErasureChecker : ExpressionVisitor
+        private sealed class TypeErasureChecker(Type[] disallow) : ExpressionVisitor
         {
-            private readonly Checker _checker;
-
-            public TypeErasureChecker(Type[] disallow)
-            {
-                _checker = new Checker(disallow);
-            }
+            private readonly Checker _checker = new Checker(disallow);
 
             public override Expression Visit(Expression node)
             {
@@ -1035,14 +1030,9 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
                 return base.Visit(node);
             }
 
-            private sealed class Checker : TypeVisitor
+            private sealed class Checker(Type[] disallow) : TypeVisitor
             {
-                private readonly Type[] _disallow;
-
-                public Checker(Type[] disallow)
-                {
-                    _disallow = disallow;
-                }
+                private readonly Type[] _disallow = disallow;
 
                 public override Type Visit(Type type)
                 {
@@ -1197,13 +1187,8 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             Assert.IsTrue(new ExpressionEqualityComparer(() => new Comparator(new StructuralTypeEqualityComparator())).Equals(la, lb));
         }
 
-        private sealed class Comparator : ExpressionEqualityComparator
+        private sealed class Comparator(StructuralTypeEqualityComparator typeComparer) : ExpressionEqualityComparator(typeComparer, typeComparer.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
         {
-            public Comparator(StructuralTypeEqualityComparator typeComparer)
-                : base(typeComparer, typeComparer.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
-            {
-            }
-
             public override bool Equals(Expression x, Expression y)
             {
                 return base.Equals(x, y);
@@ -1240,12 +1225,8 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
 #pragma warning disable 0649
 #pragma warning disable IDE0060 // Remove unused parameter
-        private sealed class TestBar
+        private sealed class TestBar(int x)
         {
-            public TestBar(int x)
-            {
-            }
-
             public int this[int x] => throw new NotImplementedException();
 
             public static string Baz;
@@ -1266,12 +1247,8 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             public static TestBar operator -(TestBar b) => throw new NotImplementedException();
         }
 
-        private sealed class TestFoo
+        private sealed class TestFoo(long x)
         {
-            public TestFoo(long x)
-            {
-            }
-
             public static string Baz;
             public long Qux { get; set; }
             public TestFoo Joey { get; private set; }
@@ -1291,12 +1268,8 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         }
 
 #pragma warning disable CA1822 // Mark static
-        private sealed class TestBaz
+        private sealed class TestBaz(int x)
         {
-            public TestBaz(int x)
-            {
-            }
-
             public int x;
             public int Y { get; private set; }
             public int Z(int x) { return 42; }

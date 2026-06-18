@@ -80,13 +80,8 @@ namespace System.Linq.Expressions
 #pragma warning restore IDE0079
     }
 
-    internal sealed class NewArrayBoundsExpressionSlim : NewArrayExpressionSlim
+    internal sealed class NewArrayBoundsExpressionSlim(TypeSlim elementType, ReadOnlyCollection<ExpressionSlim> expressions) : NewArrayExpressionSlim(elementType, expressions)
     {
-        public NewArrayBoundsExpressionSlim(TypeSlim elementType, ReadOnlyCollection<ExpressionSlim> expressions)
-            : base(elementType, expressions)
-        {
-        }
-
         public override ExpressionType NodeType => ExpressionType.NewArrayBounds;
 
         public override NewArrayExpressionSlim Update(ReadOnlyCollection<ExpressionSlim> expressions)
@@ -100,13 +95,8 @@ namespace System.Linq.Expressions
         }
     }
 
-    internal sealed class NewArrayInitExpressionSlim : NewArrayExpressionSlim
+    internal sealed class NewArrayInitExpressionSlim(TypeSlim elementType, ReadOnlyCollection<ExpressionSlim> expressions) : NewArrayExpressionSlim(elementType, expressions)
     {
-        public NewArrayInitExpressionSlim(TypeSlim elementType, ReadOnlyCollection<ExpressionSlim> expressions)
-            : base(elementType, expressions)
-        {
-        }
-
         public override ExpressionType NodeType => ExpressionType.NewArrayInit;
 
         public override NewArrayExpressionSlim Update(ReadOnlyCollection<ExpressionSlim> expressions)

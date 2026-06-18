@@ -19,9 +19,14 @@ namespace Reaqtor.Hosting.Shared.Serialization
     /// A data converter for entities implementing <see cref="IAsyncReactiveResource"/>.
     /// </summary>
     /// <typeparam name="TState">The type of state parameter.</typeparam>
-    public class ReactiveResourceConverter<TState> : DataConverter
+    /// <remarks>
+    /// Instantiates the data converter with an expression services implementation
+    /// to apply when serializing or deserializing expressions.
+    /// </remarks>
+    /// <param name="expressionServices">The expression services.</param>
+    public class ReactiveResourceConverter<TState>(IReactiveExpressionServices expressionServices) : DataConverter
     {
-        private readonly IReactiveExpressionServices _expressionServices;
+        private readonly IReactiveExpressionServices _expressionServices = expressionServices;
 
         /// <summary>
         /// Instantiates the data converter.
@@ -29,16 +34,6 @@ namespace Reaqtor.Hosting.Shared.Serialization
         public ReactiveResourceConverter()
             : this(expressionServices: null)
         {
-        }
-
-        /// <summary>
-        /// Instantiates the data converter with an expression services implementation
-        /// to apply when serializing or deserializing expressions.
-        /// </summary>
-        /// <param name="expressionServices">The expression services.</param>
-        public ReactiveResourceConverter(IReactiveExpressionServices expressionServices)
-        {
-            _expressionServices = expressionServices;
         }
 
         /// <summary>
@@ -178,10 +173,10 @@ namespace Reaqtor.Hosting.Shared.Serialization
             public Expression Expression => _expression.Value;
         }
 
-        private abstract class DefinedResource : Resource, IAsyncReactiveDefinedResource
+        private abstract class DefinedResource(ReactiveResourceConverter<TState>.ReactiveResourceContainer container, IReactiveExpressionServices expressionServices) : Resource(container, expressionServices), IAsyncReactiveDefinedResource
         {
-            private static readonly HashSet<Type> s_funcTypes = new()
-            {
+            private static readonly HashSet<Type> s_funcTypes =
+            [
                 typeof(Func<,>),
                 typeof(Func<,,>),
                 typeof(Func<,,,>),
@@ -198,15 +193,9 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 typeof(Func<,,,,,,,,,,,,,,>),
                 typeof(Func<,,,,,,,,,,,,,,,>),
                 typeof(Func<,,,,,,,,,,,,,,,,>),
-            };
+            ];
 
             private bool? _isParameterized;
-
-            public DefinedResource(ReactiveResourceContainer container, IReactiveExpressionServices expressionServices)
-                : base(container, expressionServices)
-            {
-                State = container.State;
-            }
 
             public virtual bool IsParameterized
             {
@@ -221,20 +210,14 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 }
             }
 
-            public object State { get; }
+            public object State { get; } = container.State;
 
             public DateTimeOffset DefinitionTime => throw new NotImplementedException();
         }
 
-        private abstract class ProcessResource : Resource, IAsyncReactiveProcessResource
+        private abstract class ProcessResource(ReactiveResourceConverter<TState>.ReactiveResourceContainer container, IReactiveExpressionServices expressionServices) : Resource(container, expressionServices), IAsyncReactiveProcessResource
         {
-            public ProcessResource(ReactiveResourceContainer container, IReactiveExpressionServices expressionServices)
-                : base(container, expressionServices)
-            {
-                State = container.State;
-            }
-
-            public object State { get; }
+            public object State { get; } = container.State;
 
             public DateTimeOffset CreationTime => throw new NotImplementedException();
 
@@ -245,13 +228,8 @@ namespace Reaqtor.Hosting.Shared.Serialization
 #endif
         }
 
-        private sealed class Observable : DefinedResource, IAsyncReactiveObservableDefinition
+        private sealed class Observable(ReactiveResourceConverter<TState>.ReactiveResourceContainer container, IReactiveExpressionServices expressionServices) : DefinedResource(container, expressionServices), IAsyncReactiveObservableDefinition
         {
-            public Observable(ReactiveResourceContainer container, IReactiveExpressionServices expressionServices)
-                : base(container, expressionServices)
-            {
-            }
-
             public IAsyncReactiveQbservable<T> ToObservable<T>()
             {
                 throw new NotImplementedException();
@@ -263,13 +241,8 @@ namespace Reaqtor.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class Observer : DefinedResource, IAsyncReactiveObserverDefinition
+        private sealed class Observer(ReactiveResourceConverter<TState>.ReactiveResourceContainer container, IReactiveExpressionServices expressionServices) : DefinedResource(container, expressionServices), IAsyncReactiveObserverDefinition
         {
-            public Observer(ReactiveResourceContainer container, IReactiveExpressionServices expressionServices)
-                : base(container, expressionServices)
-            {
-            }
-
             public IAsyncReactiveQbserver<T> ToObserver<T>()
             {
                 throw new NotImplementedException();
@@ -281,10 +254,10 @@ namespace Reaqtor.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class StreamFactory : DefinedResource, IAsyncReactiveStreamFactoryDefinition
+        private sealed class StreamFactory(ReactiveResourceConverter<TState>.ReactiveResourceContainer container, IReactiveExpressionServices expressionServices) : DefinedResource(container, expressionServices), IAsyncReactiveStreamFactoryDefinition
         {
-            private static readonly HashSet<Type> s_factoryTypes = new()
-            {
+            private static readonly HashSet<Type> s_factoryTypes =
+            [
                 typeof(IAsyncReactiveQubjectFactory<,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,,>),
@@ -300,14 +273,9 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 typeof(IAsyncReactiveQubjectFactory<,,,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,,,,,,,,,,,,,,>),
-            };
+            ];
 
             private bool? _isParameterized;
-
-            public StreamFactory(ReactiveResourceContainer container, IReactiveExpressionServices expressionServices)
-                : base(container, expressionServices)
-            {
-            }
 
             public override bool IsParameterized
             {
@@ -338,23 +306,18 @@ namespace Reaqtor.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class Stream : ProcessResource, IAsyncReactiveStreamProcess
+        private sealed class Stream(ReactiveResourceConverter<TState>.ReactiveResourceContainer container, IReactiveExpressionServices expressionServices) : ProcessResource(container, expressionServices), IAsyncReactiveStreamProcess
         {
-            public Stream(ReactiveResourceContainer container, IReactiveExpressionServices expressionServices)
-                : base(container, expressionServices)
-            {
-            }
-
             public IAsyncReactiveQubject<TInput, TOutput> ToStream<TInput, TOutput>()
             {
                 throw new NotImplementedException();
             }
         }
 
-        private sealed class SubscriptionFactory : DefinedResource, IAsyncReactiveSubscriptionFactoryDefinition
+        private sealed class SubscriptionFactory(ReactiveResourceConverter<TState>.ReactiveResourceContainer container, IReactiveExpressionServices expressionServices) : DefinedResource(container, expressionServices), IAsyncReactiveSubscriptionFactoryDefinition
         {
-            private static readonly HashSet<Type> s_factoryTypes = new()
-            {
+            private static readonly HashSet<Type> s_factoryTypes =
+            [
                 typeof(IAsyncReactiveQubscriptionFactory<>),
                 typeof(IAsyncReactiveQubscriptionFactory<,>),
                 typeof(IAsyncReactiveQubscriptionFactory<,,>),
@@ -370,14 +333,9 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 typeof(IAsyncReactiveQubscriptionFactory<,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubscriptionFactory<,,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubscriptionFactory<,,,,,,,,,,,,,,>),
-            };
+            ];
 
             private bool? _isParameterized;
-
-            public SubscriptionFactory(ReactiveResourceContainer container, IReactiveExpressionServices expressionServices)
-                : base(container, expressionServices)
-            {
-            }
 
             public override bool IsParameterized
             {
@@ -408,13 +366,8 @@ namespace Reaqtor.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class Subscription : ProcessResource, IAsyncReactiveSubscriptionProcess
+        private sealed class Subscription(ReactiveResourceConverter<TState>.ReactiveResourceContainer container, IReactiveExpressionServices expressionServices) : ProcessResource(container, expressionServices), IAsyncReactiveSubscriptionProcess
         {
-            public Subscription(ReactiveResourceContainer container, IReactiveExpressionServices expressionServices)
-                : base(container, expressionServices)
-            {
-            }
-
             public IAsyncReactiveQubscription ToSubscription()
             {
                 throw new NotImplementedException();

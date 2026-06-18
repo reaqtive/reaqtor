@@ -11,6 +11,7 @@
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Threading;
 
 namespace System.Memory
 {
@@ -130,7 +131,7 @@ namespace System.Memory
 
         private sealed class Entry : IReference<T>
         {
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private int _count;
 
 #if DEBUG

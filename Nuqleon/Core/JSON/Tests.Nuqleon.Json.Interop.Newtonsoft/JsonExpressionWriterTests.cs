@@ -77,9 +77,9 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         [TestMethod]
         public void JsonExpressionWriter_Primitives_Null()
         {
-            Roundtrip(new object[] {
+            Roundtrip([
                 null
-            });
+            ]);
         }
 
         [TestMethod]
@@ -408,14 +408,14 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         [TestMethod]
         public void JsonExpressionWriter_String()
         {
-            Roundtrip(new object[] {
+            Roundtrip([
                 null,
                 " ",
                 "bar",
                 "I am Bart",
                 "Hello \"Bart\"!",
                 "Some\tweird\r\ncharacters..."
-            });
+            ]);
 
             var w = new JsonExpressionWriter();
             w.WriteValue((string)null);
@@ -605,7 +605,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         [TestMethod]
         public void JsonExpressionWriter_NotSupported()
         {
-            AssertNotSupported(w => w.WriteValue(Array.Empty<byte>()));
+            AssertNotSupported(w => w.WriteValue([]));
             AssertNotSupported(w => w.WriteComment("bar"));
             AssertNotSupported(w => w.WriteStartConstructor("bar"));
             AssertNotSupported(w => w.WriteEndConstructor());

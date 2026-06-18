@@ -25,22 +25,15 @@ namespace Reaqtor.QueryEngine
             /// a good basis to start from. The central idea is reachability analysis using <see cref="IDependencyOperator"/> with a
             /// mark and sweep approach.
             /// </remarks>
-            private sealed class GarbageCollector
+            private sealed class GarbageCollector(CheckpointingQueryEngine queryEngine, Action<ReactiveEntity> remove)
             {
-                private readonly CheckpointingQueryEngine _queryEngine;
-                private readonly Action<ReactiveEntity> _remove;
-                private readonly ConcurrentQueue<ReactiveEntity> _collectibleEntities;
+                private readonly CheckpointingQueryEngine _queryEngine = queryEngine;
+                private readonly Action<ReactiveEntity> _remove = remove;
+                private readonly ConcurrentQueue<ReactiveEntity> _collectibleEntities = new ConcurrentQueue<ReactiveEntity>();
 
                 private int _iterations;
                 private int _totalSweeps;
                 private TimeSpan _totalSweepTime;
-
-                public GarbageCollector(CheckpointingQueryEngine queryEngine, Action<ReactiveEntity> remove)
-                {
-                    _queryEngine = queryEngine;
-                    _remove = remove;
-                    _collectibleEntities = new ConcurrentQueue<ReactiveEntity>();
-                }
 
                 public void Enqueue(ReactiveEntity entity)
                 {

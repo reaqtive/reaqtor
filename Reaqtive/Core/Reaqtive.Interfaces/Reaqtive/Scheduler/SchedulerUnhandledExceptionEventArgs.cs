@@ -9,28 +9,23 @@ namespace Reaqtive.Scheduler
     /// <summary>
     /// Provides data for the UnhandledException event on IScheduler.
     /// </summary>
-    public sealed class SchedulerUnhandledExceptionEventArgs : EventArgs
+    /// <remarks>
+    /// Creates a new scheduler unhandled exception event argument object using the specified scheduler and exception.
+    /// </remarks>
+    /// <param name="scheduler">Scheduler associated with this event.</param>
+    /// <param name="exception">Exception that was raised when executing code on the scheduler.</param>
+    public sealed class SchedulerUnhandledExceptionEventArgs(IScheduler scheduler, Exception exception) : EventArgs
     {
-        /// <summary>
-        /// Creates a new scheduler unhandled exception event argument object using the specified scheduler and exception.
-        /// </summary>
-        /// <param name="scheduler">Scheduler associated with this event.</param>
-        /// <param name="exception">Exception that was raised when executing code on the scheduler.</param>
-        public SchedulerUnhandledExceptionEventArgs(IScheduler scheduler, Exception exception)
-        {
-            Scheduler = scheduler;
-            Exception = exception;
-        }
 
         /// <summary>
         /// Gets the scheduler associated with this event.
         /// </summary>
-        public IScheduler Scheduler { get; }
+        public IScheduler Scheduler { get; } = scheduler;
 
         /// <summary>
         /// Gets the exception that was raised when executing code on the scheduler.
         /// </summary>
-        public Exception Exception { get; }
+        public Exception Exception { get; } = exception;
 
         /// <summary>
         /// Gets or sets whether the exception event has been handled.

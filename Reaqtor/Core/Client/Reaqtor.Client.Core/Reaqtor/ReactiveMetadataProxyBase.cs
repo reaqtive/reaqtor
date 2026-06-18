@@ -87,45 +87,31 @@ namespace Reaqtor
 
         #region Private implementation
 
-        private sealed class QueryableDictionary<T> : QueryableDictionaryBase<Uri, T>
+        private sealed class QueryableDictionary<T>(IQueryProvider provider, Expression expression) : QueryableDictionaryBase<Uri, T>
         {
-            public QueryableDictionary(IQueryProvider provider, Expression expression)
-            {
-                Provider = provider;
-                Expression = expression;
-            }
-
             public override IEnumerator<KeyValuePair<Uri, T>> GetEnumerator() => Provider.Execute<IEnumerable<KeyValuePair<Uri, T>>>(Expression).GetEnumerator();
 
-            public override Expression Expression { get; }
+            public override Expression Expression { get; } = expression;
 
-            public override IQueryProvider Provider { get; }
+            public override IQueryProvider Provider { get; } = provider;
         }
 
-        private sealed class Queryable<T> : IQueryable<T>
+        private sealed class Queryable<T>(IQueryProvider provider, Expression expression) : IQueryable<T>
         {
-            public Queryable(IQueryProvider provider, Expression expression)
-            {
-                Provider = provider;
-                Expression = expression;
-            }
-
             public IEnumerator<T> GetEnumerator() => Provider.Execute<IEnumerable<T>>(Expression).GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             public Type ElementType => typeof(T);
 
-            public Expression Expression { get; }
+            public Expression Expression { get; } = expression;
 
-            public IQueryProvider Provider { get; }
+            public IQueryProvider Provider { get; } = provider;
         }
 
-        private sealed class QueryProvider : IQueryProvider
+        private sealed class QueryProvider(ReactiveMetadataProxyBase parent) : IQueryProvider
         {
-            private readonly ReactiveMetadataProxyBase _parent;
-
-            public QueryProvider(ReactiveMetadataProxyBase parent) => _parent = parent;
+            private readonly ReactiveMetadataProxyBase _parent = parent;
 
             public IQueryableDictionary<Uri, T> CreateSource<T>(string name)
             {
@@ -154,7 +140,7 @@ namespace Reaqtor
 
                 var queryableType = typeof(Queryable<>).MakeGenericType(elementTypeArgs);
 
-                return (IQueryable)Activator.CreateInstance(queryableType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, binder: null, new object[] { this, expression }, culture: null);
+                return (IQueryable)Activator.CreateInstance(queryableType, BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic, binder: null, [this, expression], culture: null);
             }
 
             public TResult Execute<TResult>(Expression expression)
@@ -176,7 +162,7 @@ namespace Reaqtor
 
                 var genericExecuteMethod = ((MethodInfo)ReflectionHelpers.InfoOf((ReactiveMetadataProxyBase rmpb) => rmpb.Execute<object>(null))).GetGenericMethodDefinition();
                 var executeMethod = genericExecuteMethod.MakeGenericMethod(expression.Type);
-                return executeMethod.Invoke(_parent, new object[] { expression });
+                return executeMethod.Invoke(_parent, [expression]);
             }
 
             private sealed class CollectionInliner : ExpressionVisitor

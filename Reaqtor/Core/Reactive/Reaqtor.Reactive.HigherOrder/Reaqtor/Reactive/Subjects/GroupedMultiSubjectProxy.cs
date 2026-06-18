@@ -13,22 +13,17 @@ namespace Reaqtor.Reactive
     /// </summary>
     /// <typeparam name="TKey">Type of the key associated with the subject.</typeparam>
     /// <typeparam name="TSource">Type of the elements processed by the subject.</typeparam>
-    public sealed class GroupedMultiSubjectProxy<TKey, TSource> : MultiSubjectProxy<TSource, TSource>, IGroupedMultiSubject<TKey, TSource>
+    /// <remarks>
+    /// Create the subject proxy.
+    /// </remarks>
+    /// <param name="uri">The subject URI.</param>
+    /// <param name="key">The grouping key.</param>
+    public sealed class GroupedMultiSubjectProxy<TKey, TSource>(Uri uri, TKey key) : MultiSubjectProxy<TSource, TSource>(uri), IGroupedMultiSubject<TKey, TSource>
     {
-        /// <summary>
-        /// Create the subject proxy.
-        /// </summary>
-        /// <param name="uri">The subject URI.</param>
-        /// <param name="key">The grouping key.</param>
-        public GroupedMultiSubjectProxy(Uri uri, TKey key)
-            : base(uri)
-        {
-            Key = key;
-        }
 
         /// <summary>
         /// Gets the grouping key.
         /// </summary>
-        public TKey Key { get; }
+        public TKey Key { get; } = key;
     }
 }

@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 using Reaqtor.Reliable.Expressions;
 
@@ -11,8 +12,8 @@ namespace Reaqtor.QueryEngine.Mocks
 {
     internal class MockReactiveServiceResolver : IReactiveServiceResolver, IDisposable
     {
-        private readonly object _lock = new();
-        private readonly List<ICheckpointingQueryEngine> _queryEngines = new();
+        private readonly Lock _lock = new();
+        private readonly List<ICheckpointingQueryEngine> _queryEngines = [];
 
         public List<ICheckpointingQueryEngine> QueryEngines
         {
@@ -20,7 +21,7 @@ namespace Reaqtor.QueryEngine.Mocks
             {
                 lock (_lock)
                 {
-                    return new List<ICheckpointingQueryEngine>(_queryEngines);
+                    return [.. _queryEngines];
                 }
             }
         }

@@ -20,7 +20,7 @@ namespace System.Memory
     /// </summary>
     public static partial class Bundle
     {
-        private static readonly MethodInfo[] s_createMethods = typeof(Bundle).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.IsGenericMethod && m.Name == nameof(Create)).OrderBy(m => m.GetGenericArguments().Length).ToArray();
+        private static readonly MethodInfo[] s_createMethods = [.. typeof(Bundle).GetMethods(BindingFlags.Public | BindingFlags.Static).Where(m => m.IsGenericMethod && m.Name == nameof(Create)).OrderBy(m => m.GetGenericArguments().Length)];
 
         private const int MAX = 16;
         private const int LEN = MAX - 1;

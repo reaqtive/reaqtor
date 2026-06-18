@@ -26,8 +26,8 @@ namespace Nuqleon.DataModel.TypeSystem
         private static readonly ObjectPool<Impl> s_poolNoCycles = new(() => new Impl(allowCycles: false));
         private static readonly ObjectPool<Impl> s_poolAllowCycles = new(() => new Impl(allowCycles: true));
 
-        private static readonly ConditionalWeakTable<Type, ReadOnlyCollection<DataTypeError>> s_cacheNoCycles = new();
-        private static readonly ConditionalWeakTable<Type, ReadOnlyCollection<DataTypeError>> s_cacheAllowCycles = new();
+        private static readonly ConditionalWeakTable<Type, ReadOnlyCollection<DataTypeError>> s_cacheNoCycles = [];
+        private static readonly ConditionalWeakTable<Type, ReadOnlyCollection<DataTypeError>> s_cacheAllowCycles = [];
 
         public static bool TryCheck(Type type, bool allowCycles, out ReadOnlyCollection<DataTypeError> errors)
         {
@@ -52,35 +52,23 @@ namespace Nuqleon.DataModel.TypeSystem
             return res ? null : errors;
         }
 
-        private sealed class Impl : DataModelTypeVisitorBase<bool>, IClearable
+        private sealed class Impl(bool allowCycles) : DataModelTypeVisitorBase<bool>, IClearable
         {
-            private readonly bool _allowCycles;
-            private readonly Stack<Record> _stack;
-            private readonly List<DataTypeError> _errors;
+            private readonly bool _allowCycles = allowCycles;
+            private readonly Stack<Record> _stack = new Stack<Record>();
+            private readonly List<DataTypeError> _errors = [];
 
-            public Impl(bool allowCycles)
-            {
-                _allowCycles = allowCycles;
-                _stack = new Stack<Record>();
-                _errors = new List<DataTypeError>();
-            }
-
-            private sealed class Record
+            private sealed class Record(Type type)
             {
                 private List<string> _errors;
 
-                public Record(Type type)
-                {
-                    Type = type;
-                }
-
-                public Type Type { get; }
+                public Type Type { get; } = type;
 
                 public List<string> Errors
                 {
                     get
                     {
-                        _errors ??= new List<string>();
+                        _errors ??= [];
 
                         return _errors;
                     }
@@ -113,7 +101,7 @@ namespace Nuqleon.DataModel.TypeSystem
 
                             var cycle = string.Format(CultureInfo.InvariantCulture, "Cycle detected due to recursive type definition: {0}", string.Join(" -> ", path));
 
-                            _errors.Add(new DataTypeError(type, cycle, _stack.Select(t => t.Type).ToArray()));
+                            _errors.Add(new DataTypeError(type, cycle, [.. _stack.Select(t => t.Type)]));
 
                             return false;
                         }
@@ -143,7 +131,7 @@ namespace Nuqleon.DataModel.TypeSystem
                             sb.AppendLine(error);
                         }
 
-                        _errors.Add(new DataTypeError(type, sb.ToString(), _stack.Select(t => t.Type).ToArray()));
+                        _errors.Add(new DataTypeError(type, sb.ToString(), [.. _stack.Select(t => t.Type)]));
                     }
                 }
 

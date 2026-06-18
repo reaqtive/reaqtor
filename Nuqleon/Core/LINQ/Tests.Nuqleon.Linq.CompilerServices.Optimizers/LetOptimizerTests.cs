@@ -180,9 +180,9 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 var y = Expression.Parameter(t);
                 var e =
                     Expression.Call(
-                        select.MakeGenericMethod(new[] { t, u }),
+                        select.MakeGenericMethod([t, u]),
                         Expression.Call(
-                            select.MakeGenericMethod(new[] { typeof(int), t }),
+                            select.MakeGenericMethod([typeof(int), t]),
                             s,
                             Expression.Lambda(
                                 Expression.New(
@@ -249,9 +249,9 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 var z = Expression.Parameter(t);
                 var e =
                     Expression.Call(
-                        select.MakeGenericMethod(new[] { t, u }),
+                        select.MakeGenericMethod([t, u]),
                         Expression.Call(
-                            select.MakeGenericMethod(new[] { typeof(int), t }),
+                            select.MakeGenericMethod([typeof(int), t]),
                             s,
                             Expression.Lambda(
                                 Expression.New(
@@ -310,9 +310,9 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 var y = Expression.Parameter(t);
                 var e =
                     Expression.Call(
-                        select.MakeGenericMethod(new[] { t, typeof(int) }),
+                        select.MakeGenericMethod([t, typeof(int)]),
                         Expression.Call(
-                            select.MakeGenericMethod(new[] { typeof(int), t }),
+                            select.MakeGenericMethod([typeof(int), t]),
                             s,
                             Expression.Lambda(
                                 Expression.New(

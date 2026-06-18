@@ -51,7 +51,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         [TestMethod]
         public void SlimInfoOf_MethodCall_MethodInfo2()
         {
-            AssertAreSame(typeof(Console).GetMethod("WriteLine", new[] { typeof(string) }), SlimReflectionHelpers.InfoOf((string s) => Console.WriteLine(s)));
+            AssertAreSame(typeof(Console).GetMethod("WriteLine", [typeof(string)]), SlimReflectionHelpers.InfoOf((string s) => Console.WriteLine(s)));
         }
 
         [TestMethod]
@@ -84,7 +84,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         [TestMethod]
         public void SlimInfoOf_New_ConstructorInfo()
         {
-            AssertAreSame(typeof(Exception).GetConstructor(new[] { typeof(string) }), SlimReflectionHelpers.InfoOf((string s) => new Exception(s)));
+            AssertAreSame(typeof(Exception).GetConstructor([typeof(string)]), SlimReflectionHelpers.InfoOf((string s) => new Exception(s)));
         }
 
         private static void AssertAreSame(MemberInfo member, MemberInfoSlim slimMember)

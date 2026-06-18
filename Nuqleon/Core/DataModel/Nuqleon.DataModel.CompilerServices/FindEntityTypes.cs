@@ -118,8 +118,8 @@ namespace Nuqleon.DataModel.CompilerServices
 
             public Impl()
             {
-                Entities = new Dictionary<Type, StructuralDataType>();
-                Enumerations = new Dictionary<Type, PrimitiveDataType>();
+                Entities = [];
+                Enumerations = [];
                 _findEntityDataTypes = new FindEntityDataTypes(this);
             }
 
@@ -164,11 +164,9 @@ namespace Nuqleon.DataModel.CompilerServices
                 return base.VisitMethod(method);
             }
 
-            private sealed class FindEntityDataTypes : TypeVisitor
+            private sealed class FindEntityDataTypes(FindEntityTypes.Impl parent) : TypeVisitor
             {
-                private readonly Impl _parent;
-
-                public FindEntityDataTypes(Impl parent) => _parent = parent;
+                private readonly Impl _parent = parent;
 
                 public override Type Visit(Type type)
                 {
@@ -215,18 +213,11 @@ namespace Nuqleon.DataModel.CompilerServices
             }
         }
 
-        private sealed class TransitiveClosureVisitor : DataTypeVisitor
+        private sealed class TransitiveClosureVisitor(Action<KeyValuePair<Type, StructuralDataType>> enqueue, Action<KeyValuePair<Type, PrimitiveDataType>> addEnumeration) : DataTypeVisitor
         {
-            private readonly Action<KeyValuePair<Type, StructuralDataType>> _enqueue;
-            private readonly Action<KeyValuePair<Type, PrimitiveDataType>> _addEnumeration;
-            private readonly HashSet<Type> _processed;
-
-            public TransitiveClosureVisitor(Action<KeyValuePair<Type, StructuralDataType>> enqueue, Action<KeyValuePair<Type, PrimitiveDataType>> addEnumeration)
-            {
-                _enqueue = enqueue;
-                _addEnumeration = addEnumeration;
-                _processed = new HashSet<Type>();
-            }
+            private readonly Action<KeyValuePair<Type, StructuralDataType>> _enqueue = enqueue;
+            private readonly Action<KeyValuePair<Type, PrimitiveDataType>> _addEnumeration = addEnumeration;
+            private readonly HashSet<Type> _processed = [];
 
             protected override DataType VisitStructural(StructuralDataType type)
             {

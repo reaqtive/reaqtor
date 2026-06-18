@@ -26,7 +26,7 @@ namespace Tests.System.Linq.CompilerServices
 
         private sealed class ExpressionCloner : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly Dictionary<LabelTarget, LabelTarget> _labelMap = new();
+            private readonly Dictionary<LabelTarget, LabelTarget> _labelMap = [];
 
             protected override Expression VisitBinary(BinaryExpression node)
             {

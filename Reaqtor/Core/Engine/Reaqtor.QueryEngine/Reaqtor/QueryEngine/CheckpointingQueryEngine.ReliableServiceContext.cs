@@ -21,14 +21,9 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// Implementation of <see cref="IReliableReactive"/> exposed on the engine, to access IReliable* artifacts.
         /// </summary>
-        private sealed class ReliableServiceContext : ReliableReactiveServiceContext
+        private sealed class ReliableServiceContext(CheckpointingQueryEngine.CoreReactiveEngine engine) : ReliableReactiveServiceContext(engine.ExpressionService, new ReactiveEngine(engine))
         {
-            public ReliableServiceContext(CoreReactiveEngine engine)
-                : base(engine.ExpressionService, new ReactiveEngine(engine))
-            {
-            }
-
-            private sealed class ReactiveEngine : IReliableReactiveEngineProvider
+            private sealed class ReactiveEngine(CheckpointingQueryEngine.CoreReactiveEngine engine) : IReliableReactiveEngineProvider
             {
 #pragma warning disable format // Formatted as tables.
 
@@ -42,12 +37,7 @@ namespace Reaqtor.QueryEngine
 
 #pragma warning restore format
 
-                private readonly CoreReactiveEngine _engine;
-
-                public ReactiveEngine(CoreReactiveEngine engine)
-                {
-                    _engine = engine;
-                }
+                private readonly CoreReactiveEngine _engine = engine;
 
                 public IReliableReactiveObserver<T> GetObserver<T>(Uri observerUri)
                 {
@@ -105,14 +95,9 @@ namespace Reaqtor.QueryEngine
                     return detupletized;
                 }
 
-                private sealed class ReliableReactiveObserverToReliableObserver<T> : IReliableReactiveObserver<T>
+                private sealed class ReliableReactiveObserverToReliableObserver<T>(IReliableObserver<T> reliableObserver) : IReliableReactiveObserver<T>
                 {
-                    private readonly IReliableObserver<T> _reliableObserver;
-
-                    public ReliableReactiveObserverToReliableObserver(IReliableObserver<T> reliableObserver)
-                    {
-                        _reliableObserver = reliableObserver;
-                    }
+                    private readonly IReliableObserver<T> _reliableObserver = reliableObserver;
 
                     public Uri ResubscribeUri => _reliableObserver.ResubscribeUri;
 

@@ -25,16 +25,10 @@ namespace Reaqtive
     // NB: This class is not exposed publicly because it has the sealing construct enabled.
     //     Alternatively, we could rely on a special subject in the reactive environment and move this to the engine.
 
-    internal class GroupedMultiSubject<TKey, TSource> : GroupedMultiSubjectBase<TKey, TSource>, ISealable
+    internal class GroupedMultiSubject<TKey, TSource>(IMultiSubject<TSource, TSource> subject, TKey key) : GroupedMultiSubjectBase<TKey, TSource>, ISealable
     {
-        private readonly IMultiSubject<TSource, TSource> _subject;
-        private readonly TKey _key;
-
-        public GroupedMultiSubject(IMultiSubject<TSource, TSource> subject, TKey key)
-        {
-            _subject = subject;
-            _key = key;
-        }
+        private readonly IMultiSubject<TSource, TSource> _subject = subject;
+        private readonly TKey _key = key;
 
         public override TKey Key => _key;
 

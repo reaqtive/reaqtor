@@ -109,8 +109,8 @@ namespace System.Reflection
         /// </summary>
         public TypeToTypeSlimConverter()
         {
-            _typeCache = new Dictionary<Type, TypeSlim>();
-            _assemblies = new Dictionary<Assembly, AssemblySlim>();
+            _typeCache = [];
+            _assemblies = [];
             _genericParameterContext = new Stack<IDictionary<Type, TypeSlim>>();
         }
 

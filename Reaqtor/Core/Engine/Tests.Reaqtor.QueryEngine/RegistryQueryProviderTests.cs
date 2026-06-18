@@ -23,25 +23,25 @@ namespace Tests.Reaqtor.QueryEngine
     [TestClass]
     public class RegistryQueryProviderTests
     {
-        private static readonly string[] Keys = new[]
-        {
+        private static readonly string[] Keys =
+        [
             "test://key1",
             "test://key2",
             "test://key3",
             "test://key4",
             "test://key5",
             "test://key6",
-        };
+        ];
 
-        private static readonly Expression[] Expressions = new Expression[]
-        {
+        private static readonly Expression[] Expressions =
+        [
             Expression.New(typeof(DummySubject)),
             Expression.Default(typeof(ISubscribable<int>)),
             Expression.Default(typeof(IObserver<int>)),
             Expression.Default(typeof(Func<IReliableMultiSubject<int>>)),
             Expression.New(typeof(DummySubscription)),
             Expression.Default(typeof(Func<ISubscription>)),
-        };
+        ];
 
         [TestMethod]
         public void RegistryQueryProvider_NotImplemented()

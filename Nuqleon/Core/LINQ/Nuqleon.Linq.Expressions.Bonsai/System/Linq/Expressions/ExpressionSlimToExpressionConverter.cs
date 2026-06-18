@@ -23,17 +23,19 @@ namespace System.Linq.Expressions
     /// <summary>
     /// An expression slim visitor to produce an expression from an expression slim.
     /// </summary>
-    public class ExpressionSlimToExpressionConverter : ExpressionSlimVisitor<Expression, LambdaExpression, ParameterExpression, NewExpression, ElementInit, MemberBinding, MemberAssignment, MemberListBinding, MemberMemberBinding, CatchBlock, SwitchCase, LabelTarget>
+    /// <remarks>
+    /// Creates an expression slim to expression converter using the provided type space.
+    /// </remarks>
+    /// <param name="typeSpace">A type space, potentially containing pre-mapped types.</param>
+    /// <param name="factory">The expression factory to use for expression creation.</param>
+    public class ExpressionSlimToExpressionConverter(InvertedTypeSpace typeSpace, IExpressionFactory factory) : ExpressionSlimVisitor<Expression, LambdaExpression, ParameterExpression, NewExpression, ElementInit, MemberBinding, MemberAssignment, MemberListBinding, MemberMemberBinding, CatchBlock, SwitchCase, LabelTarget>
     {
         #region Fields
 
         // TODO Use memory pool for these dictionaries
-        private readonly Dictionary<ParameterExpressionSlim, ParameterExpression> _variables;
-        private readonly Dictionary<LabelTargetSlim, LabelTarget> _labels;
-        private readonly IExpressionFactory _factory;
-
-        private Func<MethodInfoSlim, MethodInfo> _makeMethod;
-        private Func<TypeSlim, Type> _makeType;
+        private readonly Dictionary<ParameterExpressionSlim, ParameterExpression> _variables = [];
+        private readonly Dictionary<LabelTargetSlim, LabelTarget> _labels = [];
+        private readonly IExpressionFactory _factory = factory ?? throw new ArgumentNullException(nameof(factory));
 
         #endregion
 
@@ -56,19 +58,6 @@ namespace System.Linq.Expressions
         {
         }
 
-        /// <summary>
-        /// Creates an expression slim to expression converter using the provided type space.
-        /// </summary>
-        /// <param name="typeSpace">A type space, potentially containing pre-mapped types.</param>
-        /// <param name="factory">The expression factory to use for expression creation.</param>
-        public ExpressionSlimToExpressionConverter(InvertedTypeSpace typeSpace, IExpressionFactory factory)
-        {
-            TypeSpace = typeSpace ?? throw new ArgumentNullException(nameof(typeSpace));
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
-            _variables = new Dictionary<ParameterExpressionSlim, ParameterExpression>();
-            _labels = new Dictionary<LabelTargetSlim, LabelTarget>();
-        }
-
         #endregion
 
         #region Properties
@@ -76,11 +65,11 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Gets the type space containing mapped types.
         /// </summary>
-        protected InvertedTypeSpace TypeSpace { get; }
+        protected InvertedTypeSpace TypeSpace { get; } = typeSpace ?? throw new ArgumentNullException(nameof(typeSpace));
 
-        private Func<MethodInfoSlim, MethodInfo> MakeMethodCachedDelegate => _makeMethod ??= MakeMethod;
+        private Func<MethodInfoSlim, MethodInfo> MakeMethodCachedDelegate => field ??= MakeMethod;
 
-        private Func<TypeSlim, Type> MakeTypeCachedDelegate => _makeType ??= MakeType;
+        private Func<TypeSlim, Type> MakeTypeCachedDelegate => field ??= MakeType;
 
         #endregion
 

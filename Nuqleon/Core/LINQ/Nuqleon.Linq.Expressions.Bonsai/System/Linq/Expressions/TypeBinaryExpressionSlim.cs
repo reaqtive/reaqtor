@@ -101,23 +101,13 @@ namespace System.Linq.Expressions
         }
     }
 
-    internal sealed class TypeEqualExpressionSlim : TypeBinaryExpressionSlim
+    internal sealed class TypeEqualExpressionSlim(ExpressionSlim expression, TypeSlim typeOperand) : TypeBinaryExpressionSlim(expression, typeOperand)
     {
-        public TypeEqualExpressionSlim(ExpressionSlim expression, TypeSlim typeOperand)
-            : base(expression, typeOperand)
-        {
-        }
-
         public override ExpressionType NodeType => ExpressionType.TypeEqual;
     }
 
-    internal sealed class TypeIsExpressionSlim : TypeBinaryExpressionSlim
+    internal sealed class TypeIsExpressionSlim(ExpressionSlim expression, TypeSlim typeOperand) : TypeBinaryExpressionSlim(expression, typeOperand)
     {
-        public TypeIsExpressionSlim(ExpressionSlim expression, TypeSlim typeOperand)
-            : base(expression, typeOperand)
-        {
-        }
-
         public override ExpressionType NodeType => ExpressionType.TypeIs;
     }
 }

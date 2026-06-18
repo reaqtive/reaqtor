@@ -22,7 +22,12 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// Quotes expressions at runtime by performing binding steps on unbound variables.
         /// </summary>
-        private sealed class ExpressionQuoter : BetterExpressionVisitor
+        /// <remarks>
+        /// Creates a new expression quoter.
+        /// </remarks>
+        /// <param name="locals">The hoisted locals information gathered by the compiler at compile time.</param>
+        /// <param name="closure">The closure to access for the binding of hoisted variables.</param>
+        private sealed class ExpressionQuoter(HoistedLocals locals, IRuntimeVariables closure) : BetterExpressionVisitor
         {
             /// <summary>
             /// Stack of nested declaration scopes.
@@ -33,23 +38,12 @@ namespace System.Runtime.CompilerServices
             /// The hoisted locals information gathered by the compiler at compile time.
             /// Used to traverse the parent chain and to resolve indices of variable slots.
             /// </summary>
-            private readonly HoistedLocals _locals;
+            private readonly HoistedLocals _locals = locals;
 
             /// <summary>
             /// The closure to access for the binding of hoisted variables.
             /// </summary>
-            private readonly IRuntimeVariables _closure;
-
-            /// <summary>
-            /// Creates a new expression quoter.
-            /// </summary>
-            /// <param name="locals">The hoisted locals information gathered by the compiler at compile time.</param>
-            /// <param name="closure">The closure to access for the binding of hoisted variables.</param>
-            public ExpressionQuoter(HoistedLocals locals, IRuntimeVariables closure)
-            {
-                _locals = locals;
-                _closure = closure;
-            }
+            private readonly IRuntimeVariables _closure = closure;
 
             /// <summary>
             /// Visit lambda expressions to perform scope tracking.
@@ -61,7 +55,7 @@ namespace System.Runtime.CompilerServices
             {
                 if (node.Parameters.Count > 0)
                 {
-                    _environment.Push(new HashSet<ParameterExpression>(node.Parameters));
+                    _environment.Push([.. node.Parameters]);
                 }
 
                 var body = Visit(node.Body);
@@ -90,7 +84,7 @@ namespace System.Runtime.CompilerServices
             {
                 if (node.Variables.Count > 0)
                 {
-                    _environment.Push(new HashSet<ParameterExpression>(node.Variables));
+                    _environment.Push([.. node.Variables]);
                 }
 
                 var expressions = Visit(node.Expressions);
@@ -119,7 +113,7 @@ namespace System.Runtime.CompilerServices
             {
                 if (node.Variable != null)
                 {
-                    _environment.Push(new HashSet<ParameterExpression>(new[] { node.Variable }));
+                    _environment.Push([node.Variable]);
                 }
 
                 var filter = Visit(node.Filter);
@@ -224,7 +218,7 @@ namespace System.Runtime.CompilerServices
                 // Convert the list of hoisted variables to an array (to prune excess storage slots) and
                 // store the result in a constant expression of type IRuntimeVariables.
                 //
-                var hoistedRuntimeVariables = Expression.Constant(new RuntimeVariables(hoistedVariables.ToArray()), typeof(IRuntimeVariables));
+                var hoistedRuntimeVariables = Expression.Constant(new RuntimeVariables([.. hoistedVariables]), typeof(IRuntimeVariables));
 
                 //
                 // No local variables found; we can simply return the hoisted variables. We won't use the
@@ -240,7 +234,7 @@ namespace System.Runtime.CompilerServices
                 // at runtime. Emit a MergeRuntimeVariables call using our positive and negative indices to
                 // indicate which IRuntimeVariables object to index into.
                 //
-                return Expression.Call(typeof(RuntimeOps).GetMethod(nameof(RuntimeOps.MergeRuntimeVariables)), Expression.RuntimeVariables(localVariables.ToArray()), hoistedRuntimeVariables, Expression.Constant(indexes));
+                return Expression.Call(typeof(RuntimeOps).GetMethod(nameof(RuntimeOps.MergeRuntimeVariables)), Expression.RuntimeVariables([.. localVariables]), hoistedRuntimeVariables, Expression.Constant(indexes));
             }
 
             /// <summary>

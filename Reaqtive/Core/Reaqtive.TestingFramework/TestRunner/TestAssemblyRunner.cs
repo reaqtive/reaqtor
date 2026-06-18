@@ -60,7 +60,7 @@ namespace Reaqtive.TestingFramework.TestRunner
 
         private static List<TestClassRunner> CreateTestClassRunners(Assembly assembly)
         {
-            return assembly.GetTypes().Where(t => t.IsDefined(typeof(TestClassAttribute))).Select(t => new TestClassRunner(t)).ToList();
+            return [.. assembly.GetTypes().Where(t => t.IsDefined(typeof(TestClassAttribute))).Select(t => new TestClassRunner(t))];
         }
     }
 }

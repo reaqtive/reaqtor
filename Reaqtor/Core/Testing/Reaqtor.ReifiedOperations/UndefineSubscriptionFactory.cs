@@ -13,11 +13,7 @@ using System;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class UndefineSubscriptionFactory : UndefineServiceOperation
+    public class UndefineSubscriptionFactory(Uri subscriptionFactoryUri) : UndefineServiceOperation(ServiceOperationKind.UndefineSubscriptionFactory, subscriptionFactoryUri)
     {
-        public UndefineSubscriptionFactory(Uri subscriptionFactoryUri)
-            : base(ServiceOperationKind.UndefineSubscriptionFactory, subscriptionFactoryUri)
-        {
-        }
     }
 }

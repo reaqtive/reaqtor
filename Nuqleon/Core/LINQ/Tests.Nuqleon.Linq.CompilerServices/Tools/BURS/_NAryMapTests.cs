@@ -32,10 +32,10 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(map.TryGetValue(new[] { 42 }, out string answer));
             Assert.AreEqual("Answer", answer);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[Array.Empty<int>()] = "foo");
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[[]] = "foo");
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[42, 43] = "foo");
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[Array.Empty<int>()]);
+            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[[]]);
             Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[42, 43]);
 
             Assert.IsFalse(map.TryGetValue(new[] { 43 }, out _));

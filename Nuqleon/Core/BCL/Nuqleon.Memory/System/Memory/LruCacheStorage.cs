@@ -194,7 +194,7 @@ namespace System.Memory
         {
             private static readonly Stopwatch s_stopwatch = Stopwatch.StartNew();
 
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private int _count;
 
 #if DEBUG

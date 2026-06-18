@@ -12,12 +12,10 @@ namespace System.Memory
 {
     public static partial class InternCache
     {
-        private sealed class Strong<T> : IInternCache<T>, IServiceProvider
+        private sealed class Strong<T>(IMemoizedDelegate<Func<T, T>> @delegate) : IInternCache<T>, IServiceProvider
             where T : class
         {
-            private readonly IMemoizedDelegate<Func<T, T>> _delegate;
-
-            public Strong(IMemoizedDelegate<Func<T, T>> @delegate) => _delegate = @delegate;
+            private readonly IMemoizedDelegate<Func<T, T>> _delegate = @delegate;
 
             public string DebugView => _delegate.Cache.DebugView;
 

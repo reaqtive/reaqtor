@@ -23,7 +23,7 @@ namespace System.Linq.CompilerServices
     {
         private readonly List<Fallback<TSource, TTarget>> _fallbacks;
 
-        internal FallbackCollection() => _fallbacks = new List<Fallback<TSource, TTarget>>();
+        internal FallbackCollection() => _fallbacks = [];
 
         /// <summary>
         /// Adds a new fallback rule.

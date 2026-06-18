@@ -113,10 +113,10 @@ namespace Tests.System.Linq.Expressions
         public void ExpressionSlim_ToString_Call()
         {
             AssertToString(Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod("ToUpper", Type.EmptyTypes)).ToExpressionSlim(), "Call(System.String System.String.ToUpper(), Constant(bar, System.String))");
-            AssertToString(Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod("Substring", new[] { typeof(int) }), Expression.Constant(1)).ToExpressionSlim(), "Call(System.String System.String.Substring(System.Int32), Constant(bar, System.String), Constant(1, System.Int32))");
+            AssertToString(Expression.Call(Expression.Constant("bar"), typeof(string).GetMethod("Substring", [typeof(int)]), Expression.Constant(1)).ToExpressionSlim(), "Call(System.String System.String.Substring(System.Int32), Constant(bar, System.String), Constant(1, System.Int32))");
 
             AssertToString(Expression.Call(instance: null, typeof(Console).GetMethod("WriteLine", Type.EmptyTypes)).ToExpressionSlim(), "Call(System.Void System.Console.WriteLine())");
-            AssertToString(Expression.Call(instance: null, typeof(Console).GetMethod("WriteLine", new[] { typeof(int) }), Expression.Constant(1)).ToExpressionSlim(), "Call(System.Void System.Console.WriteLine(System.Int32), Constant(1, System.Int32))");
+            AssertToString(Expression.Call(instance: null, typeof(Console).GetMethod("WriteLine", [typeof(int)]), Expression.Constant(1)).ToExpressionSlim(), "Call(System.Void System.Console.WriteLine(System.Int32), Constant(1, System.Int32))");
         }
 
         [TestMethod]
@@ -309,7 +309,7 @@ namespace Tests.System.Linq.Expressions
         public void ExpressionSlim_ToString_New()
         {
             AssertToString(Expression.New(typeof(TimeSpan)).ToExpressionSlim(), "New(System.TimeSpan)");
-            AssertToString(Expression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), Expression.Constant(42L)).ToExpressionSlim(), "New(System.TimeSpan..ctor(System.Int64), Constant(42, System.Int64))");
+            AssertToString(Expression.New(typeof(TimeSpan).GetConstructor([typeof(long)]), Expression.Constant(42L)).ToExpressionSlim(), "New(System.TimeSpan..ctor(System.Int64), Constant(42, System.Int64))");
             AssertToString(Expression.New(typeof(ArrayList).GetConstructor(Type.EmptyTypes)).ToExpressionSlim(), "New(System.Collections.ArrayList..ctor())");
         }
 

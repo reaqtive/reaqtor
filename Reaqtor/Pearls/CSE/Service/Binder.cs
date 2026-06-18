@@ -16,21 +16,16 @@ namespace Pearls.Reaqtor.CSE
     /// <summary>
     /// Binder for known resources that occur as unbound parameter expressions in an expression.
     /// </summary>
-    internal class Binder : ExpressionVisitor
+    /// <remarks>
+    /// Creates a new binder that uses the specified registry to look up known resources.
+    /// </remarks>
+    /// <param name="registry">Registry used to look up known resources.</param>
+    internal class Binder(Registry registry) : ExpressionVisitor
     {
         /// <summary>
         /// Registry used to look up known resources.
         /// </summary>
-        private readonly Registry _registry;
-
-        /// <summary>
-        /// Creates a new binder that uses the specified registry to look up known resources.
-        /// </summary>
-        /// <param name="registry">Registry used to look up known resources.</param>
-        public Binder(Registry registry)
-        {
-            _registry = registry;
-        }
+        private readonly Registry _registry = registry;
 
         /// <summary>
         /// Analyzes invocation expressions for the typical pattern of invoking a known resource. If a known resource is found, it gets bound using the definition in the registry.

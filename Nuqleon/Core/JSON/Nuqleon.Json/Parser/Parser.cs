@@ -22,7 +22,7 @@ namespace Nuqleon.Json.Parser
     /// </summary>
     public static class JsonParser
     {
-        private static readonly Expression[] s_empty = Array.Empty<Expression>();
+        private static readonly Expression[] s_empty = [];
 
         #region Public methods
 

@@ -21,7 +21,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 {
     internal abstract class Domain
     {
-        protected static readonly TypeSlim[] s_noTypesArray = Array.Empty<TypeSlim>();
+        protected static readonly TypeSlim[] s_noTypesArray = [];
         protected static readonly ReadOnlyCollection<TypeSlim> s_noTypesCollection = EmptyReadOnlyCollection<TypeSlim>.Instance;
 
         protected abstract Version Version { get; }
@@ -52,29 +52,16 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         private static int Normalize(int i) => i == -1 ? 0 : i;
     }
 
-    internal sealed class SerializationDomain : Domain
+    internal sealed class SerializationDomain(Version version) : Domain
     {
-        private readonly Dictionary<TypeSlim, TypeRef> _types;
-        private readonly Dictionary<AssemblySlim, int> _assemblies;
-        private readonly Dictionary<MemberInfoSlim, int> _members;
-        private readonly List<TypeDef> _typeDefs;
-        private readonly List<MemberDef> _memberDefs;
-        private readonly List<AssemblySlim> _assemblyDefs;
+        private readonly Dictionary<TypeSlim, TypeRef> _types = [];
+        private readonly Dictionary<AssemblySlim, int> _assemblies = [];
+        private readonly Dictionary<MemberInfoSlim, int> _members = [];
+        private readonly List<TypeDef> _typeDefs = [];
+        private readonly List<MemberDef> _memberDefs = [];
+        private readonly List<AssemblySlim> _assemblyDefs = [];
 
-        public SerializationDomain(Version version)
-        {
-            _types = new Dictionary<TypeSlim, TypeRef>();
-            _assemblies = new Dictionary<AssemblySlim, int>();
-            _members = new Dictionary<MemberInfoSlim, int>();
-
-            _typeDefs = new List<TypeDef>();
-            _assemblyDefs = new List<AssemblySlim>();
-            _memberDefs = new List<MemberDef>();
-
-            Version = version;
-        }
-
-        protected override Version Version { get; }
+        protected override Version Version { get; } = version;
 
         public TypeRef AddType(TypeSlim type) => AddType(type, s_noTypesCollection);
 
@@ -390,7 +377,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             }
             else
             {
-                _memberDefs = Array.Empty<MemberDef>();
+                _memberDefs = [];
             }
         }
 

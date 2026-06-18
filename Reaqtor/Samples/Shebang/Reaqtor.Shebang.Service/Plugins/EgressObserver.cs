@@ -32,13 +32,11 @@ namespace Reaqtor.Shebang.Extensions
     // 7. When the artifact is disposed, Dispose is called.
     //
 
-    internal sealed class EgressObserver<T> : StatefulObserver<T>
+    internal sealed class EgressObserver<T>(string name) : StatefulObserver<T>
     {
-        private readonly string _name;
+        private readonly string _name = name;
         private IReliableObserver<T> _observer;
         private long _sequenceId;
-
-        public EgressObserver(string name) => _name = name;
 
         public override void SetContext(IOperatorContext context)
         {

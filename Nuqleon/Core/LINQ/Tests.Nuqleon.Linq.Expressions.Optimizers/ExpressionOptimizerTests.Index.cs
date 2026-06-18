@@ -22,7 +22,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void Index_Instance_Throw1()
         {
-            var i = typeof(PureIndexers).GetProperty("Item", new[] { typeof(int), typeof(int), typeof(int) });
+            var i = typeof(PureIndexers).GetProperty("Item", [typeof(int), typeof(int), typeof(int)]);
 
             var x = Expression.Parameter(typeof(int));
             var ex = Expression.Parameter(typeof(Exception));
@@ -42,7 +42,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void Index_Instance_Throw2()
         {
-            var i = typeof(PureIndexers).GetProperty("Item", new[] { typeof(int), typeof(int), typeof(int) });
+            var i = typeof(PureIndexers).GetProperty("Item", [typeof(int), typeof(int), typeof(int)]);
 
             var o = Expression.Constant(new PureIndexers(1L));
             var x = Expression.Parameter(typeof(int));
@@ -63,7 +63,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void Index_Instance_Eval()
         {
-            var i = typeof(PureIndexers).GetProperty("Item", new[] { typeof(int), typeof(int), typeof(int) });
+            var i = typeof(PureIndexers).GetProperty("Item", [typeof(int), typeof(int), typeof(int)]);
 
             var o = Expression.Constant(new PureIndexers(1L));
             var e = Expression.MakeIndex(o, i, new Expression[] { Expression.Constant(7), Expression.Constant(8), Expression.Constant(15) });
@@ -80,7 +80,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void Index_Instance_NoEval()
         {
-            var i = typeof(PureIndexers).GetProperty("Item", new[] { typeof(int) });
+            var i = typeof(PureIndexers).GetProperty("Item", [typeof(int)]);
 
             var o = Expression.Constant(new PureIndexers(1L));
             var e = Expression.MakeIndex(o, i, new Expression[] { Expression.Constant(7) });
@@ -100,7 +100,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.MakeIndex(
                     Expression.Constant(value: null, typeof(List<int>)),
-                    typeof(List<int>).GetProperty("Item", new[] { typeof(int) }),
+                    typeof(List<int>).GetProperty("Item", [typeof(int)]),
                     new Expression[]
                     {
                         Expression.Constant(1)
@@ -116,7 +116,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.MakeIndex(
                     Expression.Constant(value: null, typeof(List<int>)),
-                    typeof(List<int>).GetProperty("Item", new[] { typeof(int) }),
+                    typeof(List<int>).GetProperty("Item", [typeof(int)]),
                     new Expression[]
                     {
                         Expression.Parameter(typeof(int))
@@ -132,7 +132,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.MakeIndex(
                     Expression.Constant(value: null, typeof(List<int>)),
-                    typeof(List<int>).GetProperty("Item", new[] { typeof(int) }),
+                    typeof(List<int>).GetProperty("Item", [typeof(int)]),
                     new Expression[]
                     {
                         F
@@ -204,15 +204,13 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             public override bool IsPure(MemberInfo member)
             {
-                return member == typeof(PureIndexers).GetProperty("Item", new[] { typeof(int), typeof(int), typeof(int) });
+                return member == typeof(PureIndexers).GetProperty("Item", [typeof(int), typeof(int), typeof(int)]);
             }
         }
 
-        private sealed class PureIndexers
+        private sealed class PureIndexers(long seed)
         {
-            private readonly long _seed;
-
-            public PureIndexers(long seed) => _seed = seed;
+            private readonly long _seed = seed;
 
             public long this[int a] => _seed + a;
             public long this[int a, int b, int c] => _seed + a * b - c;

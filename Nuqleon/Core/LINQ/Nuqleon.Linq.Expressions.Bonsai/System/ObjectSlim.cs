@@ -15,20 +15,15 @@ namespace System
     /// <summary>
     /// A slim representation of a constant value.
     /// </summary>
-    public abstract class ObjectSlim
+    /// <remarks>
+    /// Creates a new slim representation of a constant value with the given slim type.
+    /// </remarks>
+    /// <param name="value">The underlying value, which can be either a liftable CLR object or a reducible Bonsai value.</param>
+    /// <param name="typeSlim">The slim type representation of the object.</param>
+    public abstract class ObjectSlim(object value, TypeSlim typeSlim)
     {
-        #region Constructors
 
-        /// <summary>
-        /// Creates a new slim representation of a constant value with the given slim type.
-        /// </summary>
-        /// <param name="value">The underlying value, which can be either a liftable CLR object or a reducible Bonsai value.</param>
-        /// <param name="typeSlim">The slim type representation of the object.</param>
-        protected ObjectSlim(object value, TypeSlim typeSlim)
-        {
-            Value = value;
-            TypeSlim = typeSlim;
-        }
+        #region Constructors
 
         #endregion
 
@@ -47,12 +42,12 @@ namespace System
         /// <summary>
         /// The value held by the object.
         /// </summary>
-        public object Value { get; }
+        public object Value { get; } = value;
 
         /// <summary>
         /// Gets the slim type representation of the object.
         /// </summary>
-        public TypeSlim TypeSlim { get; }
+        public TypeSlim TypeSlim { get; } = typeSlim;
 
         /// <summary>
         /// Gets the original type of the liftable object representation.
@@ -137,18 +132,12 @@ namespace System
 
         #region Types
 
-        private sealed class LiftableObjectSlim : ObjectSlim
+        private sealed class LiftableObjectSlim(object value, TypeSlim typeSlim, Type type) : ObjectSlim(value, typeSlim)
         {
-            public LiftableObjectSlim(object value, TypeSlim typeSlim, Type type)
-                : base(value, typeSlim)
-            {
-                OriginalType = type;
-            }
-
             public override bool CanLift => true;
             public override bool CanReduce => false;
 
-            public override Type OriginalType { get; }
+            public override Type OriginalType { get; } = type;
 
             public override TLifted Lift<TLifted>(Func<Type, Func<object, TLifted>> liftFactory)
             {
@@ -178,18 +167,12 @@ namespace System
             }
         }
 
-        private sealed class ReducibleObjectSlim<TLifted> : ObjectSlim
+        private sealed class ReducibleObjectSlim<TLifted>(TLifted liftedValue, TypeSlim typeSlim, Func<Type, Func<TLifted, object>> reduceFactory) : ObjectSlim(liftedValue, typeSlim)
         {
-            public ReducibleObjectSlim(TLifted liftedValue, TypeSlim typeSlim, Func<Type, Func<TLifted, object>> reduceFactory)
-                : base(liftedValue, typeSlim)
-            {
-                ReduceFactory = reduceFactory;
-            }
-
             public override bool CanLift => false;
             public override bool CanReduce => true;
 
-            public Func<Type, Func<TLifted, object>> ReduceFactory { get; }
+            public Func<Type, Func<TLifted, object>> ReduceFactory { get; } = reduceFactory;
 
             public override Type OriginalType => throw new InvalidOperationException("The lifted object representation has no type information.");
 

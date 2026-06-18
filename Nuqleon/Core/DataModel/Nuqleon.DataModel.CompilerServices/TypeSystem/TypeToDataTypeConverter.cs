@@ -38,9 +38,9 @@ namespace Nuqleon.DataModel.TypeSystem
         //     Note that the cache has an upper bound that is proportional in the number of Type instances in the AppDomain. We could reduce this using
         //     some LRU strategy (cf. memoization caches) but consider that this is the same upper bound as reflection.
 
-        private readonly ConditionalWeakTable<Type, DataType> _convertCache = new();
-        private readonly ConditionalWeakTable<Type, DataType> _tryConvertCache = new();
-        private readonly ConditionalWeakTable<Type, DataType> _convertKnownTypeCache = new();
+        private readonly ConditionalWeakTable<Type, DataType> _convertCache = [];
+        private readonly ConditionalWeakTable<Type, DataType> _tryConvertCache = [];
+        private readonly ConditionalWeakTable<Type, DataType> _convertKnownTypeCache = [];
 
         private TypeToDataTypeConverter(bool allowCycles)
         {
@@ -91,17 +91,17 @@ namespace Nuqleon.DataModel.TypeSystem
             return res;
         }
 
-        private class Impl : DataModelTypeVisitorBase<DataType>, IClearable
+        private class Impl(bool allowCycles) : DataModelTypeVisitorBase<DataType>, IClearable
         {
             // WARNING: This type implements IClearable. If state is added here, make sure to reset it in the Clear method.
 
-            private readonly bool _allowCycles;
-            private readonly IDictionary<Type, DataType> _convertedTypes;
+            private readonly bool _allowCycles = allowCycles;
+            private readonly IDictionary<Type, DataType> _convertedTypes = new Dictionary<Type, DataType>();
 
             private const int TupleItemNamesCount = 7;
 
-            private static readonly string[] s_tupleItemNames = new string[]
-            {
+            private static readonly string[] s_tupleItemNames =
+            [
                 "Item1",
                 "Item2",
                 "Item3",
@@ -109,13 +109,7 @@ namespace Nuqleon.DataModel.TypeSystem
                 "Item5",
                 "Item6",
                 "Item7",
-            };
-
-            public Impl(bool allowCycles)
-            {
-                _convertedTypes = new Dictionary<Type, DataType>();
-                _allowCycles = allowCycles;
-            }
+            ];
 
             public override DataType Visit(Type type)
             {
@@ -263,20 +257,12 @@ namespace Nuqleon.DataModel.TypeSystem
             public virtual void Clear() => _convertedTypes.Clear();
         }
 
-        private sealed class SafeImpl : Impl
+        private sealed class SafeImpl(bool allowCycles) : Impl(allowCycles)
         {
-            private readonly IDictionary<Type, List<string>> _entityFailures;
-            private readonly IDictionary<Type, List<string>> _entityEnumFailures;
+            private readonly IDictionary<Type, List<string>> _entityFailures = new Dictionary<Type, List<string>>();
+            private readonly IDictionary<Type, List<string>> _entityEnumFailures = new Dictionary<Type, List<string>>();
 
-            public SafeImpl(bool allowCycles)
-                : base(allowCycles)
-            {
-                HasFailed = false;
-                _entityFailures = new Dictionary<Type, List<string>>();
-                _entityEnumFailures = new Dictionary<Type, List<string>>();
-            }
-
-            public bool HasFailed { get; private set; }
+            public bool HasFailed { get; private set; } = false;
 
             protected override DataType FailCycle(Type type) => Fail(type, GetFailCycleError);
 
@@ -327,7 +313,7 @@ namespace Nuqleon.DataModel.TypeSystem
             {
                 if (!_entityFailures.TryGetValue(type, out var entityErrors))
                 {
-                    entityErrors = new List<string>();
+                    entityErrors = [];
                     _entityFailures[type] = entityErrors;
                 }
 
@@ -367,7 +353,7 @@ namespace Nuqleon.DataModel.TypeSystem
             {
                 if (!_entityEnumFailures.TryGetValue(type, out var entityErrors))
                 {
-                    entityErrors = new List<string>();
+                    entityErrors = [];
                     _entityEnumFailures[type] = entityErrors;
                 }
 
@@ -402,15 +388,9 @@ namespace Nuqleon.DataModel.TypeSystem
                 _entityEnumFailures.Clear();
             }
 
-            private sealed class InvalidDataType : DataType
+            private sealed class InvalidDataType(Type type, string error) : DataType(type)
             {
-                private readonly string _error;
-
-                public InvalidDataType(Type type, string error)
-                    : base(type)
-                {
-                    _error = error;
-                }
+                private readonly string _error = error;
 
                 public override DataTypeKinds Kind => DataTypeKinds.Custom;
 
@@ -422,14 +402,10 @@ namespace Nuqleon.DataModel.TypeSystem
             }
         }
 
-        private sealed class KnownTypeImpl : Impl
+        private sealed class KnownTypeImpl(bool allowCycles) : Impl(allowCycles)
         {
             // WARNING: Objects of this type are pooled; if state is added here, don't forget to override the Clear method!
 
-            public KnownTypeImpl(bool allowCycles)
-                : base(allowCycles)
-            {
-            }
 
             internal override bool CheckEntityTypePropertiesAndFields(Type type, out IList<KeyValuePair<string, MemberInfo>> mappedMembers)
             {

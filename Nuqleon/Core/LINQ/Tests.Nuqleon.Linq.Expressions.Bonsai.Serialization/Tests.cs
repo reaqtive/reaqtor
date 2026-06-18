@@ -21,6 +21,7 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -637,7 +638,7 @@ namespace Tests
             var p = Expression.Parameter(typeof(string));
             var c = Expression.Coalesce(p, Expression.Constant(0), f);
 
-            var e = (Expression<Func<string, int>>)Expression.Lambda(c, new[] { p });
+            var e = (Expression<Func<string, int>>)Expression.Lambda(c, [p]);
             var r = (Expression<Func<string, int>>)Roundtrip(e);
 
             var ef = e.Compile();
@@ -1124,7 +1125,7 @@ namespace Tests
             Assert.IsNotNull(r);
 
             var f = r.Compile();
-            Assert.AreEqual(20 * 21 / 2, f.DynamicInvoke(Enumerable.Range(1, 20).Cast<object>().ToArray()));
+            Assert.AreEqual(20 * 21 / 2, f.DynamicInvoke([.. Enumerable.Range(1, 20).Cast<object>()]));
         }
 
         #endregion
@@ -1684,10 +1685,10 @@ namespace Tests
         public void Bonsai_Members_Indexed_Property()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(int) }), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), new[] { Expression.Constant(0) });
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(string), typeof(int) }), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), new[] { Expression.Constant("foo"), Expression.Constant(0) });
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             var e1 = ((Expression<Func<Instancy, int>>)Roundtrip(f1)).Compile();
@@ -1704,10 +1705,10 @@ namespace Tests
         public void Bonsai_V08_IndexedProperty_ThrowsNotSupported()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(int) }), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), new[] { Expression.Constant(0) });
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(string), typeof(int) }), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), new[] { Expression.Constant("foo"), Expression.Constant(0) });
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             Assert.ThrowsException<NotSupportedException>(() => Roundtrip(f1, V08));
@@ -1813,7 +1814,7 @@ namespace Tests
             {
                 new KeyValuePair<string, Type>("foo", typeof(int)),
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, new string[] { "bar" });
+            }, ["bar"]);
 
             Assert.IsNotNull(anon.GetProperty("bar"));
             Assert.IsNotNull(anon.GetProperty("foo"));
@@ -2757,20 +2758,13 @@ namespace Tests
             Assert.AreEqual(d08.ToCSharpString(), e.ToCSharpString());
         }
 
-        private sealed class Qux
+        private sealed class Qux(int x)
         {
-            public Qux(int x)
-            {
-                X = x;
-                Foos = new List<int>();
-                Bar = new Bar();
-            }
-
             public int X
             {
                 get;
                 private set;
-            }
+            } = x;
 
             public string Baz
             {
@@ -2782,13 +2776,13 @@ namespace Tests
             {
                 get;
                 private set;
-            }
+            } = new Bar();
 
             public List<int> Foos
             {
                 get;
                 private set;
-            }
+            } = [];
         }
 
         private sealed class Bar
@@ -2843,24 +2837,14 @@ namespace Tests
             Assert.AreEqual(42, r08.Compile()(new Fooy(42)));
         }
 
-        private sealed class Bary
+        private sealed class Bary(int qux)
         {
-            public Bary(int qux)
-            {
-                Qux = qux;
-            }
-
-            public int Qux { get; set; }
+            public int Qux { get; set; } = qux;
         }
 
-        private sealed class Fooy
+        private sealed class Fooy(int qux)
         {
-            public Fooy(int qux)
-            {
-                Qux = qux;
-            }
-
-            public int Qux { get; set; }
+            public int Qux { get; set; } = qux;
         }
 
         private sealed class MyTypeResolver : ITypeResolutionService
@@ -3058,12 +3042,12 @@ namespace Tests
         {
             public static List<T> Concat<T>(List<T> x, List<T> y, int take)
             {
-                return x.Concat(y.Take(take)).ToList();
+                return [.. x, .. y.Take(take)];
             }
 
             public static List<T> Concat<T>(List<T> x, List<T> y, List<T> z)
             {
-                return x.Concat(y).Concat(z).ToList();
+                return [.. x, .. y, .. z];
             }
         }
 
@@ -3115,15 +3099,14 @@ namespace Tests
 
             var loop = Expression.Loop(
                 Expression.Block(
-                    new Expression[]
-                    {
+                    [
                         loopCondition,
                         loopInc,
                         loopFibAssign,
                         loopPrev2Assign,
                         loopPrev1Assign,
                         loopPrint
-                    }),
+                    ]),
                 loopBreakTarget);
 
             var returnFib = Expression.Return(endTarget, fib, typeof(long));
@@ -3139,8 +3122,7 @@ namespace Tests
                     prev2
 
                 },
-                new Expression[]
-                {
+                [
                     baseCase,
                     assign,
                     assignFib,
@@ -3150,9 +3132,9 @@ namespace Tests
                     loop,
                     returnFib,
                     end
-                });
+                ]);
 
-            var f = (Expression<Func<int, long>>)Expression.Lambda(block, new[] { n });
+            var f = (Expression<Func<int, long>>)Expression.Lambda(block, [n]);
             var e = (Expression<Func<int, long>>)Roundtrip(f);
 
             var fc = f.Compile();
@@ -3697,7 +3679,7 @@ namespace Tests
         private sealed class SimpleExpressionSerializer : BonsaiExpressionSerializer
         {
             private static readonly ObjectSerializer s_objectSerializer = new();
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
 
             public SimpleExpressionSerializer() { }
 
@@ -3705,8 +3687,8 @@ namespace Tests
 
             public SimpleExpressionSerializer(Version version, IMemoizer memoizer) : base(version, memoizer, memoizer) { }
 
-            public Dictionary<Type, int> GetConstantSerializerHitCount { get; } = new Dictionary<Type, int>();
-            public Dictionary<Type, int> GetConstantDeserializerHitCount { get; } = new Dictionary<Type, int>();
+            public Dictionary<Type, int> GetConstantSerializerHitCount { get; } = [];
+            public Dictionary<Type, int> GetConstantDeserializerHitCount { get; } = [];
 
             protected override Func<object, Json.Expression> GetConstantSerializer(Type type)
             {
@@ -3729,12 +3711,12 @@ namespace Tests
             }
         }
 
-        private sealed class CustomBonsaiExpressionSerializer : BonsaiExpressionSerializer
+        private sealed class CustomBonsaiExpressionSerializer(TypeSpace typeSpace, InvertedTypeSpace invertedTypeSpace, Func<Type, Func<object, Json.Expression>> liftFactory, Func<Type, Func<Json.Expression, object>> reduceFactory, Version version) : BonsaiExpressionSerializer(version)
         {
-            private readonly ExpressionToExpressionSlimConverter _lifter;
-            private readonly ExpressionSlimToExpressionConverter _reducer;
-            private readonly Func<Type, Func<object, Json.Expression>> _liftFactory;
-            private readonly Func<Type, Func<Json.Expression, object>> _reduceFactory;
+            private readonly ExpressionToExpressionSlimConverter _lifter = new ExpressionToExpressionSlimConverter(typeSpace);
+            private readonly ExpressionSlimToExpressionConverter _reducer = new ExpressionSlimToExpressionConverter(invertedTypeSpace);
+            private readonly Func<Type, Func<object, Json.Expression>> _liftFactory = liftFactory;
+            private readonly Func<Type, Func<Json.Expression, object>> _reduceFactory = reduceFactory;
 
             public CustomBonsaiExpressionSerializer(Func<Type, Func<object, Json.Expression>> liftFactory, Func<Type, Func<Json.Expression, object>> reduceFactory)
                 : this(liftFactory, reduceFactory, BonsaiVersion.Default)
@@ -3746,15 +3728,6 @@ namespace Tests
             {
             }
 
-            public CustomBonsaiExpressionSerializer(TypeSpace typeSpace, InvertedTypeSpace invertedTypeSpace, Func<Type, Func<object, Json.Expression>> liftFactory, Func<Type, Func<Json.Expression, object>> reduceFactory, Version version)
-                : base(version)
-            {
-                _lifter = new ExpressionToExpressionSlimConverter(typeSpace);
-                _reducer = new ExpressionSlimToExpressionConverter(invertedTypeSpace);
-                _liftFactory = liftFactory;
-                _reduceFactory = reduceFactory;
-            }
-
             public override ExpressionSlim Lift(Expression expression) => _lifter.Visit(expression);
 
             public override Expression Reduce(ExpressionSlim expression) => _reducer.Visit(expression);
@@ -3764,12 +3737,8 @@ namespace Tests
             protected override Func<Json.Expression, object> GetConstantDeserializer(Type type) => _reduceFactory(type);
         }
 
-        private sealed class Comparator : ExpressionEqualityComparator
+        private sealed class Comparator(StructuralTypeEqualityComparator typeComparator) : ExpressionEqualityComparator(typeComparator, typeComparator.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
         {
-            public Comparator(StructuralTypeEqualityComparator typeComparator)
-                : base(typeComparator, typeComparator.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
-            {
-            }
         }
 
         #endregion

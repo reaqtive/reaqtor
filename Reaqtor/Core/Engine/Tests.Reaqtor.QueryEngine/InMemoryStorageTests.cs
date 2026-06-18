@@ -23,9 +23,9 @@ namespace Tests.Reaqtor.QueryEngine
             string itemKey = "someItem";
             string id = "someId";
 
-            byte[] buffer1 = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
-            byte[] buffer2 = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0 };
-            byte[][] buffers = new byte[][] { buffer1, buffer2 };
+            byte[] buffer1 = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            byte[] buffer2 = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0];
+            byte[][] buffers = [buffer1, buffer2];
 
             for (int i = 0; i < 2; i++)
             {
@@ -74,7 +74,7 @@ namespace Tests.Reaqtor.QueryEngine
             string category = "someCategory";
             string itemKey = "someItem";
             string id = "someId";
-            byte[] buffer = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            byte[] buffer = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
             using (IStateWriter writer = provider.StartNewCheckpoint(id))
             {
@@ -137,7 +137,7 @@ namespace Tests.Reaqtor.QueryEngine
             string id = "someId";
             string category = "someCategory";
             string itemKey = "someItem";
-            byte[] buffer = new byte[] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10 };
+            byte[] buffer = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
 
             for (int i = 0; i < 10; i++)
             {

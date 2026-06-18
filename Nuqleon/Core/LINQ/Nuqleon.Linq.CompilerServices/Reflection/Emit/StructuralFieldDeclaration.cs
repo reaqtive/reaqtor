@@ -16,7 +16,13 @@ namespace System.Linq.CompilerServices
     /// <summary>
     /// Container for structural type property information.
     /// </summary>
-    public class StructuralFieldDeclaration
+    /// <remarks>
+    /// Instantiates a container for structural type property information.
+    /// </remarks>
+    /// <param name="name">The name of the property.</param>
+    /// <param name="type">The type of the property.</param>
+    /// <param name="customAttributes">The set of custom attributes to declare on the property.</param>
+    public class StructuralFieldDeclaration(string name, Type type, ReadOnlyCollection<CustomAttributeDeclaration> customAttributes)
     {
         #region Constructors
 
@@ -42,19 +48,6 @@ namespace System.Linq.CompilerServices
         {
         }
 
-        /// <summary>
-        /// Instantiates a container for structural type property information.
-        /// </summary>
-        /// <param name="name">The name of the property.</param>
-        /// <param name="type">The type of the property.</param>
-        /// <param name="customAttributes">The set of custom attributes to declare on the property.</param>
-        public StructuralFieldDeclaration(string name, Type type, ReadOnlyCollection<CustomAttributeDeclaration> customAttributes)
-        {
-            Name = name;
-            PropertyType = type;
-            CustomAttributes = customAttributes;
-        }
-
         #endregion
 
         #region Properties
@@ -62,17 +55,17 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// The name of the property.
         /// </summary>
-        public string Name { get; }
+        public string Name { get; } = name;
 
         /// <summary>
         /// The type of the property.
         /// </summary>
-        public Type PropertyType { get; }
+        public Type PropertyType { get; } = type;
 
         /// <summary>
         /// The set of custom attributes to declare on the property.
         /// </summary>
-        public ReadOnlyCollection<CustomAttributeDeclaration> CustomAttributes { get; }
+        public ReadOnlyCollection<CustomAttributeDeclaration> CustomAttributes { get; } = customAttributes;
 
         #endregion
     }

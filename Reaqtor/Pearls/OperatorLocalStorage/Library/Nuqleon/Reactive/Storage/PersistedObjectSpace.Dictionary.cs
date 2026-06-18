@@ -37,16 +37,12 @@ namespace Reaqtive.Storage
         ///   <item><c>dictionary.Remove(k)</c> results in <c>Delete($"items/{getKeyOf(k)}")</c></item>
         /// </list>
         /// </remarks>
-        private abstract partial class Dictionary : Heap
+        /// <remarks>
+        /// Creates a new entity representing a dictionary.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private abstract partial class Dictionary(PersistedObjectSpace parent) : Heap(parent)
         {
-            /// <summary>
-            /// Creates a new entity representing a dictionary.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            public Dictionary(PersistedObjectSpace parent)
-                : base(parent)
-            {
-            }
 
             /// <summary>
             /// Statically typed wrapper for a persisted dictionary with key type <typeparamref name="TKey"/> and value type <typeparamref name="TValue"/>.
@@ -54,38 +50,30 @@ namespace Reaqtive.Storage
             /// <typeparam name="TKey">The type of keys stored in the dictionary.</typeparam>
             /// <typeparam name="TValue">The type of values stored in the dictionary.</typeparam>
             /// <typeparam name="TDictionary">The type of the in-memory dictionary, inheriting from <see cref="IDictionary{TKey, TValue}"/>.</typeparam>
-            protected abstract class WrapperBase<TKey, TValue, TDictionary> : PersistedBase, IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IHeapPersistence
+            /// <remarks>
+            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+            /// </remarks>
+            /// <param name="id">The identifier of the dictionary.</param>
+            /// <param name="storage">The storage entity representing the dictionary.</param>
+            /// <param name="dictionary">The initial dictionary. This could either be the result of deserializing persisted state, or an empty dictionary for a new entity.</param>
+            /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="dictionary"/>.</param>
+            protected abstract class WrapperBase<TKey, TValue, TDictionary>(string id, PersistedObjectSpace.Dictionary storage, TDictionary dictionary, Map<TKey, long> storageKeys) : PersistedBase(id), IDictionary<TKey, TValue>, IReadOnlyDictionary<TKey, TValue>, IHeapPersistence
                 where TDictionary : IDictionary<TKey, TValue>
             {
                 /// <summary>
                 /// The storage entity being wrapped.
                 /// </summary>
-                private readonly Dictionary _storage;
+                private readonly Dictionary _storage = storage;
 
                 /// <summary>
                 /// The stored dictionary, always reflecting the latest in-memory state.
                 /// </summary>
-                protected readonly TDictionary _dictionary;
+                protected readonly TDictionary _dictionary = dictionary;
 
                 /// <summary>
                 /// The bi-directional map used to associate the storage key used for each element in <see cref="_dictionary"/>.
                 /// </summary>
-                private readonly Map<TKey, long> _storageKeys;
-
-                /// <summary>
-                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-                /// </summary>
-                /// <param name="id">The identifier of the dictionary.</param>
-                /// <param name="storage">The storage entity representing the dictionary.</param>
-                /// <param name="dictionary">The initial dictionary. This could either be the result of deserializing persisted state, or an empty dictionary for a new entity.</param>
-                /// <param name="storageKeys">The initial bi-directional map associating the storage key used for each element in <paramref name="dictionary"/>.</param>
-                public WrapperBase(string id, Dictionary storage, TDictionary dictionary, Map<TKey, long> storageKeys)
-                    : base(id)
-                {
-                    _storage = storage;
-                    _dictionary = dictionary;
-                    _storageKeys = storageKeys;
-                }
+                private readonly Map<TKey, long> _storageKeys = storageKeys;
 
                 /// <summary>
                 /// Gets or sets the element with the specified key.

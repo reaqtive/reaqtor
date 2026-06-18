@@ -23,7 +23,7 @@ namespace System.Linq.CompilerServices
     {
         private readonly List<Rule<TSource, TTarget>> _rules;
 
-        internal RuleCollection() => _rules = new List<Rule<TSource, TTarget>>();
+        internal RuleCollection() => _rules = [];
 
         /// <summary>
         /// Adds a new rewrite rule.

@@ -67,7 +67,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
             ConstantsMap = new Dictionary<object, object>();
             _subst = new EnumAwareTypeSlimSubstitutor(typeMap);
 #if DEBUG
-            _checked = new HashSet<object>();
+            _checked = [];
 #endif
         }
 
@@ -1104,7 +1104,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
 
                 if (typeDefinition != null && arguments.All(a => a != null))
                 {
-                    res = typeDefinition.MakeGenericType(arguments.ToArray());
+                    res = typeDefinition.MakeGenericType([.. arguments]);
                 }
 
                 return res;

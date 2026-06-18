@@ -36,24 +36,24 @@ namespace Tests.System.Linq.CompilerServices
             AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>()), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (KeyValuePair<string, Type>[])null), ex => Assert.AreEqual("properties", ex.ParamName));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>(), Array.Empty<string>()), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (KeyValuePair<string, Type>[])null, Array.Empty<string>()), ex => Assert.AreEqual("properties", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>(), []), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (KeyValuePair<string, Type>[])null, []), ex => Assert.AreEqual("properties", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<StructuralFieldDeclaration>()), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (StructuralFieldDeclaration[])null), ex => Assert.AreEqual("properties", ex.ParamName));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<StructuralFieldDeclaration>(), Array.Empty<string>()), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (StructuralFieldDeclaration[])null, Array.Empty<string>()), ex => Assert.AreEqual("properties", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(anonymousTypeBuilder: null, Array.Empty<StructuralFieldDeclaration>(), []), ex => Assert.AreEqual("anonymousTypeBuilder", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineAnonymousType(atb, (StructuralFieldDeclaration[])null, []), ex => Assert.AreEqual("properties", ex.ParamName));
         }
 
         [TestMethod]
         public void CreateAnonymousType_ArgumentChecks()
         {
             AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((KeyValuePair<string, Type>[])null), ex => Assert.AreEqual("properties", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((KeyValuePair<string, Type>[])null, Array.Empty<string>()), ex => Assert.AreEqual("properties", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((KeyValuePair<string, Type>[])null, []), ex => Assert.AreEqual("properties", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((StructuralFieldDeclaration[])null), ex => Assert.AreEqual("properties", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((StructuralFieldDeclaration[])null, Array.Empty<string>()), ex => Assert.AreEqual("properties", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => RuntimeCompiler.CreateAnonymousType((StructuralFieldDeclaration[])null, []), ex => Assert.AreEqual("properties", ex.ParamName));
         }
 
         [TestMethod]
@@ -139,7 +139,7 @@ namespace Tests.System.Linq.CompilerServices
                 {
                     new StructuralFieldDeclaration("Name", typeof(string)),
                     new StructuralFieldDeclaration("Age", typeof(int)),
-                }, new[] { "Name", "Age" });
+                }, ["Name", "Age"]);
             });
         }
 
@@ -180,19 +180,19 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(prop1.CanRead);
             Assert.IsFalse(prop1.CanWrite);
 
-            var bart = Activator.CreateInstance(ant, new object[] { "Bart", 10 });
+            var bart = Activator.CreateInstance(ant, ["Bart", 10]);
 
             Assert.AreEqual("Bart", prop0.GetValue(bart));
             Assert.AreEqual(10, prop1.GetValue(bart));
             Assert.AreEqual("{ Name = Bart, Age = 10 }", bart.ToString());
 
-            var jojo = Activator.CreateInstance(ant, new object[] { "Bart", 10 });
+            var jojo = Activator.CreateInstance(ant, ["Bart", 10]);
 
             Assert.IsTrue(bart.Equals(jojo));
             Assert.IsTrue(jojo.Equals(bart));
             Assert.AreEqual(bart.GetHashCode(), jojo.GetHashCode());
 
-            var lisa = Activator.CreateInstance(ant, new object[] { "Lisa", 8 });
+            var lisa = Activator.CreateInstance(ant, ["Lisa", 8]);
 
             Assert.IsFalse(bart.Equals(lisa));
             Assert.IsFalse(lisa.Equals(bart));
@@ -212,7 +212,7 @@ namespace Tests.System.Linq.CompilerServices
                 {
                     new KeyValuePair<string, Type>("Name", typeof(string)),
                     new KeyValuePair<string, Type>("Age", typeof(int)),
-                }, new[] { "Name" });
+                }, ["Name"]);
 
                 return atb.CreateType();
             });
@@ -227,7 +227,7 @@ namespace Tests.System.Linq.CompilerServices
                 {
                     new KeyValuePair<string, Type>("Name", typeof(string)),
                     new KeyValuePair<string, Type>("Age", typeof(int)),
-                }, new[] { "Name" });
+                }, ["Name"]);
             });
         }
 
@@ -268,13 +268,13 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(prop1.CanRead);
             Assert.IsTrue(prop1.CanWrite);
 
-            var bart = Activator.CreateInstance(ant, new object[] { "Bart", 10 });
+            var bart = Activator.CreateInstance(ant, ["Bart", 10]);
 
             Assert.AreEqual("Bart", prop0.GetValue(bart));
             Assert.AreEqual(10, prop1.GetValue(bart));
             Assert.AreEqual("{ Name = Bart, Age = 10 }", bart.ToString());
 
-            var jojo = Activator.CreateInstance(ant, new object[] { "Bart", 12 });
+            var jojo = Activator.CreateInstance(ant, ["Bart", 12]);
 
             Assert.IsTrue(bart.Equals(jojo));
             Assert.IsTrue(jojo.Equals(bart));
@@ -288,7 +288,7 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(jojo.Equals(bart));
             Assert.AreEqual(bart.GetHashCode(), jojo.GetHashCode());
 
-            var lisa = Activator.CreateInstance(ant, new object[] { "Lisa", 8 });
+            var lisa = Activator.CreateInstance(ant, ["Lisa", 8]);
 
             Assert.IsFalse(bart.Equals(lisa));
             Assert.IsFalse(lisa.Equals(bart));
@@ -347,16 +347,16 @@ namespace Tests.System.Linq.CompilerServices
             {
                 new KeyValuePair<string, Type>("Foo", atb1),
                 new KeyValuePair<string, Type>("Baz", typeof(int)),
-            }, new[] { "Foo" });
+            }, ["Foo"]);
 
             var foo = atb1.CreateType();
             var bar = atb2.CreateType();
 
-            var objFoo1 = Activator.CreateInstance(foo, new object[] { 42 });
-            var objFoo2 = Activator.CreateInstance(foo, new object[] { 42 });
+            var objFoo1 = Activator.CreateInstance(foo, [42]);
+            var objFoo2 = Activator.CreateInstance(foo, [42]);
 
-            var objBar1 = Activator.CreateInstance(bar, new object[] { objFoo1, 43 });
-            var objBar2 = Activator.CreateInstance(bar, new object[] { objFoo2, 44 });
+            var objBar1 = Activator.CreateInstance(bar, [objFoo1, 43]);
+            var objBar2 = Activator.CreateInstance(bar, [objFoo2, 44]);
 
             Assert.AreEqual(objBar1, objBar2);
             Assert.AreEqual("{ Foo = { Qux = 42 }, Baz = 43 }", objBar1.ToString());
@@ -375,19 +375,19 @@ namespace Tests.System.Linq.CompilerServices
             {
                 new KeyValuePair<string, Type>("Qux", typeof(int)),
                 new KeyValuePair<string, Type>("Bar", atb2),
-            }, Array.Empty<string>());
+            }, []);
 
             rtc.DefineAnonymousType(atb2, new[]
             {
                 new KeyValuePair<string, Type>("Baz", typeof(int)),
                 new KeyValuePair<string, Type>("Foo", atb1),
-            }, Array.Empty<string>());
+            }, []);
 
             var foo = atb1.CreateType();
             var bar = atb2.CreateType();
 
-            var objFoo = Activator.CreateInstance(foo, new object[] { 42, null });
-            var objBar = Activator.CreateInstance(bar, new object[] { 43, null });
+            var objFoo = Activator.CreateInstance(foo, [42, null]);
+            var objBar = Activator.CreateInstance(bar, [43, null]);
 
             var fooBar = foo.GetProperty("Bar");
             fooBar.SetValue(objFoo, objBar);
@@ -778,11 +778,9 @@ namespace Tests.System.Linq.CompilerServices
         }
 
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter, AllowMultiple = false)]
-        public sealed class FooAttribute : Attribute
+        public sealed class FooAttribute(string uri) : Attribute
         {
-            public FooAttribute(string uri) => Uri = uri;
-
-            public string Uri { get; }
+            public string Uri { get; } = uri;
         }
 
         #endregion

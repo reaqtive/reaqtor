@@ -29,11 +29,9 @@ namespace System.Memory
             return new Impl<T>(trim);
         }
 
-        private sealed class Impl<T> : ITrimmable<T>
+        private sealed class Impl<T>(Func<Func<T, bool>, int> trim) : ITrimmable<T>
         {
-            private readonly Func<Func<T, bool>, int> _trim;
-
-            public Impl(Func<Func<T, bool>, int> trim) => _trim = trim;
+            private readonly Func<Func<T, bool>, int> _trim = trim;
 
             public int Trim(Func<T, bool> shouldTrim)
             {

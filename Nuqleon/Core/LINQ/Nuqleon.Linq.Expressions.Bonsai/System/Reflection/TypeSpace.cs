@@ -44,10 +44,10 @@ namespace System.Reflection
         public TypeSpace()
         {
             // TODO: equality comparers modulo ReflectedType
-            _properties = new Dictionary<PropertyInfo, PropertyInfoSlim>();
-            _fields = new Dictionary<FieldInfo, FieldInfoSlim>();
-            _methods = new Dictionary<MethodInfo, MethodInfoSlim>();
-            _constructors = new Dictionary<ConstructorInfo, ConstructorInfoSlim>();
+            _properties = [];
+            _fields = [];
+            _methods = [];
+            _constructors = [];
             _typeConverter = new TypeToTypeSlimConverter();
         }
 

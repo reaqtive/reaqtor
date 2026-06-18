@@ -52,7 +52,7 @@ namespace Reaqtor.Expressions
         /// <summary>
         /// Conditional weak table to map types onto settable properties that implement <see cref="IExpressible.Expression"/> (or null if no such property is found).
         /// </summary>
-        private static readonly ConditionalWeakTable<Type, PropertyInfo> s_expressionPropertyMap = new();
+        private static readonly ConditionalWeakTable<Type, PropertyInfo> s_expressionPropertyMap = [];
 
         /// <summary>
         /// The <see cref="MethodInfo"/> object for the get method of the <see cref="IExpressible.Expression"/> property.
@@ -407,17 +407,13 @@ namespace Reaqtor.Expressions
         /// <summary>
         /// Sentinel type used for InfoOf. Never called.
         /// </summary>
-        private sealed class _Q : Quoted<_I>, _I
+        /// <remarks>
+        /// Never called.
+        /// </remarks>
+        /// <param name="value">Ignored.</param>
+        /// <param name="expression">Ignored.</param>
+        private sealed class _Q(Quoter._I value, Expression expression) : Quoted<_I>(value, expression), _I
         {
-            /// <summary>
-            /// Never called.
-            /// </summary>
-            /// <param name="value">Ignored.</param>
-            /// <param name="expression">Ignored.</param>
-            public _Q(_I value, Expression expression)
-                : base(value, expression)
-            {
-            }
         }
     }
 

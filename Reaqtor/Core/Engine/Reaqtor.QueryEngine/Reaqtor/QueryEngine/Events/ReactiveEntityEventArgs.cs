@@ -11,34 +11,28 @@ namespace Reaqtor.QueryEngine.Events
     /// <summary>
     /// Base class for event arguments involving a reactive entity.
     /// </summary>
-    public abstract class ReactiveEntityEventArgs : EventArgs, IKnownResource
+    /// <remarks>
+    /// Creates a new instance of the <see cref="ReactiveEntityEventArgs"/> class for the specified entity.
+    /// </remarks>
+    /// <param name="uri">URI of the reactive entity.</param>
+    /// <param name="entity">Reactive entity.</param>
+    /// <param name="entityType">Kind of the reactive entity.</param>
+    public abstract class ReactiveEntityEventArgs(Uri uri, IReactiveResource entity, ReactiveEntityKind entityType) : EventArgs, IKnownResource
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="ReactiveEntityEventArgs"/> class for the specified entity.
-        /// </summary>
-        /// <param name="uri">URI of the reactive entity.</param>
-        /// <param name="entity">Reactive entity.</param>
-        /// <param name="entityType">Kind of the reactive entity.</param>
-        protected ReactiveEntityEventArgs(Uri uri, IReactiveResource entity, ReactiveEntityKind entityType)
-        {
-            Uri = uri;
-            Entity = entity;
-            EntityType = entityType;
-        }
 
         /// <summary>
         /// Gets the URI of the reactive entity.
         /// </summary>
-        public Uri Uri { get; }
+        public Uri Uri { get; } = uri;
 
         /// <summary>
         /// Gets the kind of the reactive entity.
         /// </summary>
-        public ReactiveEntityKind EntityType { get; }
+        public ReactiveEntityKind EntityType { get; } = entityType;
 
         /// <summary>
         /// Gets the reactive entity.
         /// </summary>
-        public IReactiveResource Entity { get; }
+        public IReactiveResource Entity { get; } = entity;
     }
 }

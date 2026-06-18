@@ -25,9 +25,9 @@ namespace System.Linq.CompilerServices
             Levels = n;
 
             if (n == 1)
-                _leaf = new Dictionary<TKey, TValue>();
+                _leaf = [];
             else
-                _map = new Dictionary<TKey, NAryMap<TKey, TValue>>();
+                _map = [];
         }
 
         public int Levels { get; }

@@ -28,7 +28,7 @@ namespace Rxcel
 
         public ExcelExpression Parse(string expression)
         {
-            _tokens = Lex(expression).ToArray();
+            _tokens = [.. Lex(expression)];
             _i = 0;
 
             return Expr();
@@ -187,7 +187,7 @@ namespace Rxcel
                 }
             }
 
-            return args.ToArray();
+            return [.. args];
         }
 
         private static IEnumerable<Token> Lex(string s)

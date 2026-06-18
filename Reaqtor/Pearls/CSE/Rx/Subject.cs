@@ -22,28 +22,23 @@ namespace Pearls.Reaqtor.CSE
     /// Simple stateless fire-and-forget subject implementation.
     /// </summary>
     /// <typeparam name="T">Type of elements processed by this subject.</typeparam>
-    internal class Subject<T> : IObservable<T>, IObserver<T>
+    /// <remarks>
+    /// Creates a new subject.
+    /// </remarks>
+    /// <param name="id">Optional identifier used for logging.</param>
+    internal class Subject<T>(string id = "") : IObservable<T>, IObserver<T>
     {
         // TODO: omitted locking; should use the well-known immutable list design (or use Rx's subject as-is)
 
         /// <summary>
         /// List of observers subscribed to the subject.
         /// </summary>
-        private readonly List<IObserver<T>> _observers = new();
+        private readonly List<IObserver<T>> _observers = [];
 
         /// <summary>
         /// Identifier of te subject.
         /// </summary>
-        private readonly string _id;
-
-        /// <summary>
-        /// Creates a new subject.
-        /// </summary>
-        /// <param name="id">Optional identifier used for logging.</param>
-        public Subject(string id = "")
-        {
-            _id = id;
-        }
+        private readonly string _id = id;
 
         /// <summary>
         /// Returns a friendly string representation of the subject.
@@ -71,28 +66,22 @@ namespace Pearls.Reaqtor.CSE
         /// <summary>
         /// Disposable resource used to unsubscribe an observer from the parent subject.
         /// </summary>
-        private class Disposable : IDisposable
+        /// <remarks>
+        /// Creates a new disposable resource that can be used to unsubscribe the specified observer from the specified subject.
+        /// </remarks>
+        /// <param name="subject">Subject owning the subscription using the specified observer.</param>
+        /// <param name="observer">Observer subscribed to the subject.</param>
+        private class Disposable(Subject<T> subject, IObserver<T> observer) : IDisposable
         {
             /// <summary>
             /// Subject owning the subscription using the specified observer.
             /// </summary>
-            private Subject<T> _subject;
+            private Subject<T> _subject = subject;
 
             /// <summary>
             /// Observer subscribed to the subject.
             /// </summary>
-            private IObserver<T> _observer;
-
-            /// <summary>
-            /// Creates a new disposable resource that can be used to unsubscribe the specified observer from the specified subject.
-            /// </summary>
-            /// <param name="subject">Subject owning the subscription using the specified observer.</param>
-            /// <param name="observer">Observer subscribed to the subject.</param>
-            public Disposable(Subject<T> subject, IObserver<T> observer)
-            {
-                _subject = subject;
-                _observer = observer;
-            }
+            private IObserver<T> _observer = observer;
 
             /// <summary>
             /// Disposes the subscription of the observer to the subject.

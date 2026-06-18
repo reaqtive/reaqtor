@@ -36,7 +36,7 @@ namespace Tests.System.Linq.CompilerServices
             AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ConstantExpression ce) => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ConstantExpression, ArithExpr>>), _ => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add((ConstantExpression ce) => new Const(1), default(Expression<Func<ConstantExpression, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(ce => new Const(1), default(Expression<Func<ConstantExpression, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
             AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ConstantExpression ce) => new Const(1), _ => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int>>), () => new Const(1), 1), ex => Assert.AreEqual("pattern", ex.ParamName));
@@ -58,11 +58,11 @@ namespace Tests.System.Linq.CompilerServices
             AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add((int x, int y, int z, int a) => x + y + z + a + 1, (x, y, z, a) => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<Expression, ArithExpr>>), 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add((Expression e) => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(e => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<Expression, ArithExpr>>), _ => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add((Expression e) => new Const(1), default(Expression<Func<Expression, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add((Expression e) => new Const(1), _ => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(e => new Const(1), default(Expression<Func<Expression, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(e => new Const(1), _ => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rewrite(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
 #pragma warning restore IDE0034 // Simplify 'default' expression
@@ -269,7 +269,7 @@ namespace Tests.System.Linq.CompilerServices
 
                 Fallbacks =
                 {
-                    { (Expression e) => new Lazy(e.Funcletize<int>()), 9 },
+                    { e => new Lazy(e.Funcletize<int>()), 9 },
                 },
 
                 Log = log
@@ -317,7 +317,7 @@ namespace Tests.System.Linq.CompilerServices
 
                 Fallbacks =
                 {
-                    { (Expression e) => new Lazy(e.Funcletize<int>()), e => e.NodeType != ExpressionType.Modulo, 9 },
+                    { e => new Lazy(e.Funcletize<int>()), e => e.NodeType != ExpressionType.Modulo, 9 },
                 },
 
                 Log = log
@@ -756,10 +756,10 @@ namespace Tests.System.Linq.CompilerServices
         {
             var assert1 = GetAsserter((Bar b) => !b);
 
-            Expression<Func<Bar, Bar>> f1 = (Bar b) => !b;
+            Expression<Func<Bar, Bar>> f1 = b => !b;
             assert1(true)(f1.Body);
 
-            Expression<Func<Bar, Bar>> f2 = (Bar b) => -b;
+            Expression<Func<Bar, Bar>> f2 = b => -b;
             assert1(false)(f2.Body);
         }
 
@@ -777,7 +777,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void BottomUpExpressionRewriter_Unary_Convert_Custom()
         {
-            var assert1 = GetAsserter<DateTime, DateTimeOffset>((DateTime x) => x);
+            var assert1 = GetAsserter<DateTime, DateTimeOffset>(x => x);
 
             Expression<Func<DateTimeOffset>> f1 = () => DateTime.Now;
             assert1(true)(f1.Body);

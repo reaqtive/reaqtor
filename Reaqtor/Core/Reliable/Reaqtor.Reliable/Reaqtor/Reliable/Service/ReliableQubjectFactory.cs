@@ -12,28 +12,16 @@ using Reaqtor.Reliable.Expressions;
 
 namespace Reaqtor.Reliable.Service
 {
-    public class ReliableQubjectFactory<TInput, TOutput> : ReliableQubjectFactoryBase<TInput, TOutput>
+    public class ReliableQubjectFactory<TInput, TOutput>(Expression expression, IReliableQueryProvider provider) : ReliableQubjectFactoryBase<TInput, TOutput>(provider)
     {
-        public ReliableQubjectFactory(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, object state) => ((ReliableQueryProviderBase)Provider).CreateStream(this, streamUri, state);
     }
 
-    public class ReliableQubjectFactory<TInput, TOutput, TArg> : ReliableQubjectFactoryBase<TInput, TOutput, TArg>
+    public class ReliableQubjectFactory<TInput, TOutput, TArg>(Expression expression, IReliableQueryProvider provider) : ReliableQubjectFactoryBase<TInput, TOutput, TArg>(provider)
     {
-        public ReliableQubjectFactory(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg argument, object state) => ((ReliableQueryProviderBase)Provider).CreateStream(this, argument, streamUri, state);
     }

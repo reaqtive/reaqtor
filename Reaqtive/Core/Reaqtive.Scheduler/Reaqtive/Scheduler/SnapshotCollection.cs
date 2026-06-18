@@ -29,7 +29,7 @@ namespace Reaqtive.Scheduler
         /// </summary>
         public SnapshotCollection()
         {
-            _collections = new[] { new TCollection(), new TCollection() };
+            _collections = [new TCollection(), new TCollection()];
             _active = 0;
         }
 

@@ -72,20 +72,13 @@ namespace Reaqtor.QueryEngine
     /// up permeating the query operator space, and thus intersects with scheduling and the ability to pause when creatng a checkpoint.
     /// We can reconsider this work (cf. prototypes that have proven feasibility of this) if/when we decide to support async Rx operators.
     /// </remarks>
-    internal class OutputEdge<T> : ReliableMultiSubjectBase<T>, IStatefulOperator
+    internal class OutputEdge<T>(EdgeDescription edge, IReactiveServiceResolver serviceResolver, IReliableReactive reactiveService) : ReliableMultiSubjectBase<T>, IStatefulOperator
     {
-        private readonly EdgeDescription _edge;
-        private readonly IReactiveServiceResolver _serviceResolver;
-        private readonly IReliableReactive _parentReactiveService;
+        private readonly EdgeDescription _edge = edge;
+        private readonly IReactiveServiceResolver _serviceResolver = serviceResolver;
+        private readonly IReliableReactive _parentReactiveService = reactiveService;
         private IReliableReactive _externalReactiveService;
         private IHostedOperatorContext _context;
-
-        public OutputEdge(EdgeDescription edge, IReactiveServiceResolver serviceResolver, IReliableReactive reactiveService)
-        {
-            _edge = edge;
-            _serviceResolver = serviceResolver;
-            _parentReactiveService = reactiveService;
-        }
 
         public override Uri Id => _edge.InternalUri;
 
@@ -97,7 +90,7 @@ namespace Reaqtor.QueryEngine
         {
         }
 
-        public IEnumerable<ISubscription> Inputs => Enumerable.Empty<ISubscription>();
+        public IEnumerable<ISubscription> Inputs => [];
 
         public void Subscribe() { }
 

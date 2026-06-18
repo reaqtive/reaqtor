@@ -20,23 +20,13 @@ using Reaqtor.Service.Core;
 
 namespace Engine
 {
-    public sealed class QueryEngineContext : ReactiveServiceContext
+    public sealed class QueryEngineContext(IReactive innerService) : ReactiveServiceContext(new ExpressionService(), new Engine(innerService))
     {
-        public QueryEngineContext(IReactive innerService)
-            : base(new ExpressionService(), new Engine(innerService))
-        {
-        }
-
-        private class Engine : IReactiveEngineProvider
+        private class Engine(IReactive innerService) : IReactiveEngineProvider
         {
             private static readonly MethodInfo _invokeTypedExpressionHelper1 = ((MethodInfo)ReflectionHelpers.InfoOf(() => InvokeTypedExpressionHelper<object, object>(null, null))).GetGenericMethodDefinition();
 
-            private readonly IReactive _innerService;
-
-            public Engine(IReactive innerService)
-            {
-                _innerService = innerService;
-            }
+            private readonly IReactive _innerService = innerService;
 
             public void CreateSubscription(Uri subscriptionUri, Expression subscription, object state)
             {
@@ -63,7 +53,7 @@ namespace Engine
 
                 Type[] args = exprType.GetGenericArguments();
 
-                _invokeTypedExpressionHelper1.MakeGenericMethod(args[0], args[1]).Invoke(null, new object[] { bindingExpr, _innerService });
+                _invokeTypedExpressionHelper1.MakeGenericMethod(args[0], args[1]).Invoke(null, [bindingExpr, _innerService]);
             }
 
             public void DeleteStream(Uri streamUri)

@@ -17,7 +17,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
     internal static class Helpers
     {
         private const int N = 64; // NB: The largest Bonsai trees we've seen to this date (December 2016) have 40-50 entries in reflection context tables.
-        private static readonly Json.ConstantExpression[] s_integers = Enumerable.Range(0, N).Select(i => Json.Expression.Number(i.ToStringFast())).ToArray();
+        private static readonly Json.ConstantExpression[] s_integers = [.. Enumerable.Range(0, N).Select(i => Json.Expression.Number(i.ToStringFast()))];
 
         public static string ToStringFast(this int i)
         {

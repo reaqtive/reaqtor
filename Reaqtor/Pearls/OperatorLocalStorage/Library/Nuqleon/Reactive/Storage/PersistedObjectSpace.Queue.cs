@@ -86,7 +86,11 @@ namespace Reaqtive.Storage
         ///   <item><c>queue.Dequeue()</c> results in <c>Edit("metadata/head", head - 1); Delete($"items/{head}")</c></item>
         /// </list>
         /// </remarks>
-        private sealed class Queue : PersistableBase
+        /// <remarks>
+        /// Creates a new entity representing a queue.
+        /// </remarks>
+        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+        private sealed class Queue(PersistedObjectSpace parent) : PersistableBase(parent)
         {
             /// <summary>
             /// The category to store the metadata (i.e. the head, using the <see cref="HeadKey"/> key, and the tail, using the <see cref="TailKey"/>) in.
@@ -146,15 +150,6 @@ namespace Reaqtive.Storage
             /// The pending edits obtained from <see cref="_dirty"/> on the last call to <see cref="SaveCore(IStateWriter)"/>, for use by <see cref="OnSavedCore"/> to edit <see cref="_head"/> and <see cref="_tail"/> upon a successful save operation.
             /// </summary>
             private DirtyState[] _dirtyHistory;
-
-            /// <summary>
-            /// Creates a new entity representing a queue.
-            /// </summary>
-            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-            public Queue(PersistedObjectSpace parent)
-                : base(parent)
-            {
-            }
 
             /// <summary>
             /// Gets the kind of the entity. Always returns <see cref="PersistableKind.Queue"/>.
@@ -552,30 +547,23 @@ namespace Reaqtive.Storage
             /// Statically typed wrapper for a persisted queue with element type <typeparamref name="T"/>.
             /// </summary>
             /// <typeparam name="T">The type of the elements stored in the queue.</typeparam>
-            private sealed class Wrapper<T> : PersistedBase, IPersistedQueue<T>, IQueuePersistence
+            /// <remarks>
+            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+            /// </remarks>
+            /// <param name="id">The identifier of the queue.</param>
+            /// <param name="storage">The storage entity representing the queue.</param>
+            /// <param name="queue">The initial queue. This could either be the result of deserializing persisted state, or an empty queue for a new entity.</param>
+            private sealed class Wrapper<T>(string id, PersistedObjectSpace.Queue storage, Queue<T> queue) : PersistedBase(id), IPersistedQueue<T>, IQueuePersistence
             {
                 /// <summary>
                 /// The storage entity being wrapped.
                 /// </summary>
-                private readonly Queue _storage;
+                private readonly Queue _storage = storage;
 
                 /// <summary>
                 /// The stored queue, always reflecting the latest in-memory state.
                 /// </summary>
-                private readonly Queue<T> _queue;
-
-                /// <summary>
-                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-                /// </summary>
-                /// <param name="id">The identifier of the queue.</param>
-                /// <param name="storage">The storage entity representing the queue.</param>
-                /// <param name="queue">The initial queue. This could either be the result of deserializing persisted state, or an empty queue for a new entity.</param>
-                public Wrapper(string id, Queue storage, Queue<T> queue)
-                    : base(id)
-                {
-                    _storage = storage;
-                    _queue = queue;
-                }
+                private readonly Queue<T> _queue = queue;
 
                 /// <summary>
                 /// Gets the number of elements in the queue.

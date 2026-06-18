@@ -75,22 +75,18 @@ namespace Reaqtive
         /// <summary>
         /// Represents an OnNext notification to an observer.
         /// </summary>
+        /// <remarks>
+        /// Constructs a notification of a new value.
+        /// </remarks>
         [DebuggerDisplay("OnNext({Value})")]
         [Serializable]
-        internal sealed class OnNextNotification : Notification<T>
+        internal sealed class OnNextNotification(T value) : Notification<T>
         {
-            /// <summary>
-            /// Constructs a notification of a new value.
-            /// </summary>
-            public OnNextNotification(T value)
-            {
-                Value = value;
-            }
 
             /// <summary>
             /// Returns the value of an OnNext notification.
             /// </summary>
-            public override T Value { get; }
+            public override T Value { get; } = value;
 
             /// <summary>
             /// Returns <c>null</c>.
@@ -148,17 +144,13 @@ namespace Reaqtive
         /// <summary>
         /// Represents an OnError notification to an observer.
         /// </summary>
+        /// <remarks>
+        /// Constructs a notification of an exception.
+        /// </remarks>
         [DebuggerDisplay("OnError({Exception})")]
         [Serializable]
-        internal sealed class OnErrorNotification : Notification<T>
+        internal sealed class OnErrorNotification(Exception exception) : Notification<T>
         {
-            /// <summary>
-            /// Constructs a notification of an exception.
-            /// </summary>
-            public OnErrorNotification(Exception exception)
-            {
-                Exception = exception;
-            }
 
             /// <summary>
             /// Throws the exception.
@@ -168,7 +160,7 @@ namespace Reaqtive
             /// <summary>
             /// Returns the exception.
             /// </summary>
-            public override Exception Exception { get; }
+            public override Exception Exception { get; } = exception;
 
             /// <summary>
             /// Returns <c>false</c>.

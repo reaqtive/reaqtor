@@ -6118,10 +6118,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x
                                         ),
@@ -6178,10 +6178,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x
                                         ),
@@ -6239,10 +6239,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x
                                         ),
@@ -6301,10 +6301,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x
                                         ),
@@ -6364,10 +6364,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x
                                         ),
@@ -6428,10 +6428,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x, x
                                         ),
@@ -6493,10 +6493,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x, x, x
                                         ),
@@ -6559,10 +6559,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x, x, x, x
                                         ),
@@ -6626,10 +6626,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x, x, x, x, x
                                         ),
@@ -6694,10 +6694,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x, x, x, x, x, x
                                         ),
@@ -6763,10 +6763,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x, x, x, x, x, x, x
                                         ),
@@ -6833,10 +6833,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x, x, x, x, x, x, x, x
                                         ),
@@ -6904,10 +6904,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x, x, x, x, x, x, x, x, x
                                         ),
@@ -6976,10 +6976,10 @@ namespace Tests.Reaqtor.Service
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(int), typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             x, x, x, x, x, x, x, x, x, x, x, x, x, x, x
                                         ),
@@ -11964,13 +11964,8 @@ namespace Tests.Reaqtor.Service
 
         #endregion
 
-        private sealed class MyParameterizedContext : MyContext
+        private sealed class MyParameterizedContext(IReactiveEngineProvider provider) : MyContext(provider)
         {
-            public MyParameterizedContext(IReactiveEngineProvider provider)
-                : base(provider)
-            {
-            }
-
             [KnownResource(Constants.Observable.XS + "2")]
             public IReactiveQbservable<int> Xs2p(string p1, string p2)
             {

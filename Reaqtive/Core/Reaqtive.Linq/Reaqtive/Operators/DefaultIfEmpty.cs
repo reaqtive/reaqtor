@@ -25,14 +25,9 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<DefaultIfEmpty<TSource>, TSource>, IObserver<TSource>
+        private sealed class _(DefaultIfEmpty<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<DefaultIfEmpty<TSource>, TSource>(parent, observer), IObserver<TSource>
         {
             private bool _isNotEmpty;
-
-            public _(DefaultIfEmpty<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:DefaultIfEmpty";
 

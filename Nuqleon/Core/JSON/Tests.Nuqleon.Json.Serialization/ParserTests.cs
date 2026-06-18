@@ -143,7 +143,7 @@ namespace Tests
             AssertParseCore(parser, s, expected);
 
 #if !NO_IO
-            var parseReaderMtd = parser.Method.DeclaringType.GetMethod(parser.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, new[] { typeof(System.IO.TextReader), typeof(ParserContext) }, modifiers: null);
+            var parseReaderMtd = parser.Method.DeclaringType.GetMethod(parser.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, [typeof(System.IO.TextReader), typeof(ParserContext)], modifiers: null);
             var parseReaderFnc = (ParseReader<T>)Delegate.CreateDelegate(typeof(ParseReader<T>), parseReaderMtd);
             var parserWithReader = ParseWithReader(parseReaderFnc);
             AssertParseCore(parserWithReader, s, expected);
@@ -175,7 +175,7 @@ namespace Tests
             AssertParseFailCore(parser, s);
 
 #if !NO_IO
-            var parseReaderMtd = parser.Method.DeclaringType.GetMethod(parser.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, new[] { typeof(System.IO.TextReader), typeof(ParserContext) }, modifiers: null);
+            var parseReaderMtd = parser.Method.DeclaringType.GetMethod(parser.Method.Name, System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Static, binder: null, [typeof(System.IO.TextReader), typeof(ParserContext)], modifiers: null);
             var parseReaderFnc = (ParseReader<T>)Delegate.CreateDelegate(typeof(ParseReader<T>), parseReaderMtd);
             var parserWithReader = ParseWithReader(parseReaderFnc);
             AssertParseFailCore(parserWithReader, s);
@@ -211,7 +211,7 @@ namespace Tests
 
         private static ParseString<T> ParseWithReader<T>(ParseReader<T> parse)
         {
-            return (string str, int len, ref int i, ParserContext ctx) =>
+            return (str, len, ref i, ctx) =>
             {
                 var reader = new Reader(str);
 
@@ -229,13 +229,8 @@ namespace Tests
     }
 
 #if !NO_IO
-    internal sealed class Reader : System.IO.StringReader
+    internal sealed class Reader(string s) : System.IO.StringReader(s)
     {
-        public Reader(string s)
-            : base(s)
-        {
-        }
-
         public int Position { get; private set; }
 
         public override int Read()

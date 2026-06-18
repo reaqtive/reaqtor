@@ -43,7 +43,7 @@ namespace Reaqtor.Expressions
         /// different sequence types used in subscription expressions. Many data structures exist that are linear
         /// in the same way. The only drawback is that this is a global cache.
         /// </remarks>
-        private static readonly ConditionalWeakTable<Type, ConcurrentDictionary<ArgTypes, Creator>> s_creators = new();
+        private static readonly ConditionalWeakTable<Type, ConcurrentDictionary<ArgTypes, Creator>> s_creators = [];
 
         /// <summary>
         /// Creates a new quoted expression representation.
@@ -62,7 +62,7 @@ namespace Reaqtor.Expressions
                 return value;
             }
 
-            return CreateInstance<T, R>(value, expression, args ?? Array.Empty<object>());
+            return CreateInstance<T, R>(value, expression, args ?? []);
         }
 
         /// <summary>
@@ -103,7 +103,7 @@ namespace Reaqtor.Expressions
 
             var expr = Expression.Invoke(Expression.Lambda(expression, parameters), arguments);
 
-            return CreateInstance<T, R>(value, expr, args ?? Array.Empty<object>());
+            return CreateInstance<T, R>(value, expr, args ?? []);
         }
 
         /// <summary>
@@ -173,7 +173,11 @@ namespace Reaqtor.Expressions
         /// passed to a quote instantiation call. Equality semantics are based on pairwise equality of these
         /// argument types.
         /// </summary>
-        private readonly struct ArgTypes : IEquatable<ArgTypes>
+        /// <remarks>
+        /// Creates a new <see cref="ArgTypes"/> instance using the specified argument <paramref name="types"/>.
+        /// </remarks>
+        /// <param name="types">The array of argument types.</param>
+        private readonly struct ArgTypes(Type[] types) : IEquatable<ArgTypes>
         {
             /// <summary>
             /// A shared instance of a <see cref="ParameterExpression"/> of with <see cref="Expression.Type"/>
@@ -196,16 +200,7 @@ namespace Reaqtor.Expressions
             /// <summary>
             /// The array of argument types.
             /// </summary>
-            private readonly Type[] _types;
-
-            /// <summary>
-            /// Creates a new <see cref="ArgTypes"/> instance using the specified argument <paramref name="types"/>.
-            /// </summary>
-            /// <param name="types">The array of argument types.</param>
-            public ArgTypes(Type[] types)
-            {
-                _types = types;
-            }
+            private readonly Type[] _types = types;
 
             /// <summary>
             /// Gets the public instance constructor on the specified <paramref name="type"/> using the parameter
@@ -444,7 +439,12 @@ namespace Reaqtor.Expressions
     /// <summary>
     /// Representing of a binding of a free variable to value.
     /// </summary>
-    internal struct ValueBinding
+    /// <remarks>
+    /// Creates a new <see cref="ValueBinding"/> with the specified arguments.
+    /// </remarks>
+    /// <param name="variable">The free variable that's bound to <paramref name="value"/>.</param>
+    /// <param name="value">The value that's bound to <paramref name="variable"/>.</param>
+    internal struct ValueBinding(ParameterExpression variable, object value)
     {
 #pragma warning disable IDE0034 // Simplify 'default' expression
 
@@ -456,24 +456,13 @@ namespace Reaqtor.Expressions
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
         /// <summary>
-        /// Creates a new <see cref="ValueBinding"/> with the specified arguments.
-        /// </summary>
-        /// <param name="variable">The free variable that's bound to <paramref name="value"/>.</param>
-        /// <param name="value">The value that's bound to <paramref name="variable"/>.</param>
-        public ValueBinding(ParameterExpression variable, object value)
-        {
-            Variable = variable;
-            Value = value;
-        }
-
-        /// <summary>
         /// Gets the free variable that's bound to <see cref="Value"/>.
         /// </summary>
-        public ParameterExpression Variable;
+        public ParameterExpression Variable = variable;
 
         /// <summary>
         /// Gets the value that's bound to <see cref="Variable"/>.
         /// </summary>
-        public object Value;
+        public object Value = value;
     }
 }

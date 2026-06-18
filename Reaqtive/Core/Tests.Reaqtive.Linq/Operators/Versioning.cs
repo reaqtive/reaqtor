@@ -31,7 +31,7 @@ namespace Test.Reaqtive.Operators
                          from i in o.GetNestedTypes(BindingFlags.NonPublic)
                          where typeof(IVersioned).IsAssignableFrom(i)
                          where !i.IsAbstract
-                         let j = i.IsGenericTypeDefinition ? i.MakeGenericType(i.GetGenericArguments().Select(_ => typeof(object)).ToArray()) : i
+                         let j = i.IsGenericTypeDefinition ? i.MakeGenericType([.. i.GetGenericArguments().Select(_ => typeof(object))]) : i
                          let v = (IVersioned)RuntimeHelpers.GetUninitializedObject(j)
                          select (Operator: o, Sink: i, v.Version, v.Name))
                         .ToArray();

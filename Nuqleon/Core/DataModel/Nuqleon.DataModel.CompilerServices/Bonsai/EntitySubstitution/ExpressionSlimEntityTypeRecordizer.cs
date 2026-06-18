@@ -65,7 +65,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
             {
                 var constructor = type.GetConstructor(EmptyReadOnlyCollection<Type>.Instance);
 
-                var newExpression = Expression.New(constructor, Array.Empty<Expression>(), Array.Empty<MemberInfo>());
+                var newExpression = Expression.New(constructor, Array.Empty<Expression>(), []);
 
                 var bindings = new MemberAssignment[memberAssignments.Count];
 

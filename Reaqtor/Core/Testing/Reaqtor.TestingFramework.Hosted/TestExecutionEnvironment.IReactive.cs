@@ -14,11 +14,9 @@ namespace Reaqtor.TestingFramework
     {
         public IReactive Reactive => new ReactiveImpl(this);
 
-        private sealed class ReactiveImpl : IReactive
+        private sealed class ReactiveImpl(TestExecutionEnvironment parent) : IReactive
         {
-            private readonly TestExecutionEnvironment _parent;
-
-            public ReactiveImpl(TestExecutionEnvironment parent) => _parent = parent;
+            private readonly TestExecutionEnvironment _parent = parent;
 
             public IReactiveQubjectFactory<TInput, TOutput, TArgs> GetStreamFactory<TArgs, TInput, TOutput>(Uri uri)
             {

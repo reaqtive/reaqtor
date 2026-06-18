@@ -476,7 +476,7 @@ namespace Tests.System.Linq.CompilerServices
 
                     if (ne.Constructor.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(int), typeof(string) }))
                     {
-                        result = Expression.New(typeof(NewOp).GetConstructor(new[] { typeof(string), typeof(int) }), visit(ne.Arguments[1]), visit(ne.Arguments[0]));
+                        result = Expression.New(typeof(NewOp).GetConstructor([typeof(string), typeof(int)]), visit(ne.Arguments[1]), visit(ne.Arguments[0]));
                     }
                     else
                     {

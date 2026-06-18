@@ -400,7 +400,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
             var p = Expression.Parameter(typeof(string));
             var c = Expression.Coalesce(p, Expression.Constant(0), f);
 
-            var e = (Expression<Func<string, int>>)Expression.Lambda(c, new[] { p });
+            var e = (Expression<Func<string, int>>)Expression.Lambda(c, [p]);
 
             RoundtripAndAssert(e.Body);
         }
@@ -411,7 +411,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
             var p = Expression.Parameter(typeof(int?));
             var c = Expression.Coalesce(p, Expression.Constant(0L));
 
-            var e = Expression.Lambda<Func<int?, long>>(c, new[] { p });
+            var e = Expression.Lambda<Func<int?, long>>(c, [p]);
 
             RoundtripAndAssertNull(e.Body);
         }
@@ -848,10 +848,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
         public void TypeSlimDerivationVisitor_Members_Indexed_Property()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(int) }), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), new[] { Expression.Constant(0) });
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", new[] { typeof(string), typeof(int) }), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), new[] { Expression.Constant("foo"), Expression.Constant(0) });
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             RoundtripAndAssert(f1.Body);
@@ -929,7 +929,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
             {
                 new KeyValuePair<string, Type>("foo", typeof(int)),
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, new string[] { "bar" });
+            }, ["bar"]);
 
             Assert.IsNotNull(anon.GetProperty("bar"));
             Assert.IsNotNull(anon.GetProperty("foo"));
@@ -1061,20 +1061,13 @@ namespace Tests.System.Linq.Expressions.Bonsai
             RoundtripAndAssert(e);
         }
 
-        private sealed class ThisQux
+        private sealed class ThisQux(int x)
         {
-            public ThisQux(int x)
-            {
-                X = x;
-                Foos = new List<int>();
-                Bar = new ThisBar();
-            }
-
             public int X
             {
                 get;
                 private set;
-            }
+            } = x;
 
             public string Baz
             {
@@ -1086,13 +1079,13 @@ namespace Tests.System.Linq.Expressions.Bonsai
             {
                 get;
                 private set;
-            }
+            } = new ThisBar();
 
             public List<int> Foos
             {
                 get;
                 private set;
-            }
+            } = [];
         }
 
         private sealed class ThisBar
@@ -1336,12 +1329,12 @@ namespace Tests.System.Linq.Expressions.Bonsai
         {
             public static List<T> Concat<T>(List<T> x, List<T> y, int take)
             {
-                return x.Concat(y.Take(take)).ToList();
+                return [.. x, .. y.Take(take)];
             }
 
             public static List<T> Concat<T>(List<T> x, List<T> y, List<T> z)
             {
-                return x.Concat(y).Concat(z).ToList();
+                return [.. x, .. y, .. z];
             }
         }
 
@@ -1386,7 +1379,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
         private sealed class ManOrBoyVisitor : ExpressionVisitor
         {
-            public readonly List<KeyValuePair<Expression, TypeSlim>> Entries = new();
+            public readonly List<KeyValuePair<Expression, TypeSlim>> Entries = [];
 
             public override Expression Visit(Expression node)
             {

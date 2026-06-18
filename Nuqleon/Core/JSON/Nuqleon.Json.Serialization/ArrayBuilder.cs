@@ -31,7 +31,7 @@ namespace Nuqleon.Json.Serialization
 
     internal sealed class ArrayBuilder<T>
     {
-        public static readonly T[] Empty = Array.Empty<T>();
+        public static readonly T[] Empty = [];
 
         private const int INITIAL_CAPACITY = 4;
         private const int GROW_FACTOR = 2;

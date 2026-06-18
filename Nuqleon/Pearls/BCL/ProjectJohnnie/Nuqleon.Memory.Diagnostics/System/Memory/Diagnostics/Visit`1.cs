@@ -15,18 +15,13 @@ namespace System.Memory.Diagnostics
     /// </summary>
     /// <typeparam name="TObject">The type of the object being visited.</typeparam>
     /// <typeparam name="TEdge">The type used to represent edges in the object graph.</typeparam>
-    public class Visit<TObject, TEdge> : IVisit<TEdge>
+    /// <remarks>
+    /// Creates a new reified representation of a visit to an object.
+    /// </remarks>
+    /// <param name="obj">The object being visited.</param>
+    /// <param name="edge">The incoming edge that led to the object being visited.</param>
+    public class Visit<TObject, TEdge>(TObject obj, TEdge edge) : IVisit<TEdge>
     {
-        /// <summary>
-        /// Creates a new reified representation of a visit to an object.
-        /// </summary>
-        /// <param name="obj">The object being visited.</param>
-        /// <param name="edge">The incoming edge that led to the object being visited.</param>
-        public Visit(TObject obj, TEdge edge)
-        {
-            Object = obj;
-            Edge = edge;
-        }
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1720 // Identifier 'Object' contains type name.
@@ -34,7 +29,7 @@ namespace System.Memory.Diagnostics
         /// <summary>
         /// Gets the object being visited.
         /// </summary>
-        public TObject Object { get; }
+        public TObject Object { get; } = obj;
 
 #pragma warning restore CA1720
 #pragma warning restore IDE0079
@@ -42,7 +37,7 @@ namespace System.Memory.Diagnostics
         /// <summary>
         /// Gets the incoming edge that led to the object being visited.
         /// </summary>
-        public TEdge Edge { get; }
+        public TEdge Edge { get; } = edge;
 
         /// <summary>
         /// Dispatches the current reified visit operation to the specified object <paramref name="visitor"/>.

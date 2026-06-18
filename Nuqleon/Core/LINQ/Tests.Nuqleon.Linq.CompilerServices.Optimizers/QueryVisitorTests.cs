@@ -264,16 +264,10 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             }
         }
 
-        private class ReferenceEqualSubstitutionVisitor : QueryVisitor
+        private class ReferenceEqualSubstitutionVisitor(QueryTree tree, QueryTree replacement) : QueryVisitor
         {
-            private readonly QueryTree _tree;
-            private readonly QueryTree _replacement;
-
-            public ReferenceEqualSubstitutionVisitor(QueryTree tree, QueryTree replacement)
-            {
-                _tree = tree;
-                _replacement = replacement;
-            }
+            private readonly QueryTree _tree = tree;
+            private readonly QueryTree _replacement = replacement;
 
             public override QueryTree Visit(QueryTree expression)
             {
@@ -284,16 +278,10 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             }
         }
 
-        private class ReferenceEqualSubstitutionVisitorWithReflection : QueryVisitorWithReflection
+        private class ReferenceEqualSubstitutionVisitorWithReflection(QueryTree tree, QueryTree replacement) : QueryVisitorWithReflection
         {
-            private readonly QueryTree _tree;
-            private readonly QueryTree _replacement;
-
-            public ReferenceEqualSubstitutionVisitorWithReflection(QueryTree tree, QueryTree replacement)
-            {
-                _tree = tree;
-                _replacement = replacement;
-            }
+            private readonly QueryTree _tree = tree;
+            private readonly QueryTree _replacement = replacement;
 
             public override QueryTree Visit(QueryTree expression)
             {
@@ -304,16 +292,10 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             }
         }
 
-        private class ReferenceEqualTypeSubstitutionVisitor : QueryVisitorWithReflection
+        private class ReferenceEqualTypeSubstitutionVisitor(Type tree, Type replacement) : QueryVisitorWithReflection
         {
-            private readonly Type _origType;
-            private readonly Type _replacementType;
-
-            public ReferenceEqualTypeSubstitutionVisitor(Type tree, Type replacement)
-            {
-                _origType = tree;
-                _replacementType = replacement;
-            }
+            private readonly Type _origType = tree;
+            private readonly Type _replacementType = replacement;
 
             protected override Type VisitType(Type type)
             {

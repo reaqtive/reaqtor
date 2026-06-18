@@ -184,7 +184,7 @@ namespace Tests.Reaqtor.QueryEngine
 
         private sealed class MyCheckpointable : ICheckpointable
         {
-            public List<Tuple<CheckpointableRequest, object>> Requests = new();
+            public List<Tuple<CheckpointableRequest, object>> Requests = [];
 
             public Task CheckpointAsync(IStateWriter writer, CancellationToken token, IProgress<int> progress)
             {

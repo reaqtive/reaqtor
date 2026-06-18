@@ -14,11 +14,9 @@ using System.Linq.CompilerServices;
 
 namespace Nuqleon.DataModel.CompilerServices
 {
-    internal sealed class EnumAwareTypeSubstitutor : TypeVisitor
+    internal sealed class EnumAwareTypeSubstitutor(IDictionary<Type, Type> typeMap) : TypeVisitor
     {
-        private readonly IDictionary<Type, Type> _typeMap;
-
-        public EnumAwareTypeSubstitutor(IDictionary<Type, Type> typeMap) => _typeMap = typeMap;
+        private readonly IDictionary<Type, Type> _typeMap = typeMap;
 
         public Type Rewrite(Type type) => Visit(type);
 

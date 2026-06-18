@@ -9,12 +9,8 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// Implementation of <see cref="IReactive"/> exposed by the engine.
         /// </summary>
-        private sealed class ServiceContext : ReactiveServiceContext
+        private sealed class ServiceContext(CheckpointingQueryEngine.CoreReactiveEngine engine) : ReactiveServiceContext(engine.ExpressionService, new ReactiveEngine(engine))
         {
-            public ServiceContext(CoreReactiveEngine engine)
-                : base(engine.ExpressionService, new ReactiveEngine(engine))
-            {
-            }
         }
     }
 }

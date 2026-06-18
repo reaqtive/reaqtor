@@ -52,7 +52,7 @@ namespace System.Reflection
         public TypeSlimCSharpPrinter()
         {
             _revisited = 0;
-            _visited = new Dictionary<StructuralTypeSlim, string>();
+            _visited = [];
         }
 
         protected override string VisitSimple(SimpleTypeSlim type)

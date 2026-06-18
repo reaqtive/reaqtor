@@ -5,6 +5,7 @@
 using System;
 using System.IO;
 using System.Linq.Expressions;
+using System.Threading;
 
 using Reaqtor.Metadata;
 using Reaqtor.QueryEngine.Metrics;
@@ -18,19 +19,14 @@ namespace Reaqtor.QueryEngine
     /// Owns the lifetime of the runtime instance once it is set - i.e.
     /// disposing the entity will dispose the runtime instance.
     /// </summary>
-    internal abstract class RuntimeEntity<TEntity> : ReactiveEntity, IDisposable, IReactiveProcessResource
+    internal abstract class RuntimeEntity<TEntity>(Uri uri, Expression expression, object state) : ReactiveEntity(uri, expression, state), IDisposable, IReactiveProcessResource
         where TEntity : IDisposable
     {
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
 
         private bool _started;
         private bool _disposed;
         private TEntity _instance;
-
-        protected RuntimeEntity(Uri uri, Expression expression, object state)
-            : base(uri, expression, state)
-        {
-        }
 
         /// <summary>
         /// The instance of the runtime entity. The instance can be set after

@@ -102,14 +102,9 @@ namespace Test.Reaqtive.Operators
             });
         }
 
-        private sealed class FuncComparer<T> : IEqualityComparer<T>
+        private sealed class FuncComparer<T>(Func<T, T, bool> equals) : IEqualityComparer<T>
         {
-            private readonly Func<T, T, bool> _equals;
-
-            public FuncComparer(Func<T, T, bool> equals)
-            {
-                _equals = equals;
-            }
+            private readonly Func<T, T, bool> _equals = equals;
 
             public bool Equals(T x, T y)
             {
@@ -170,14 +165,9 @@ namespace Test.Reaqtive.Operators
             });
         }
 
-        private sealed class ThrowComparer<T> : IEqualityComparer<T>
+        private sealed class ThrowComparer<T>(Exception ex) : IEqualityComparer<T>
         {
-            private readonly Exception _ex;
-
-            public ThrowComparer(Exception ex)
-            {
-                _ex = ex;
-            }
+            private readonly Exception _ex = ex;
 
             public bool Equals(T x, T y)
             {

@@ -696,7 +696,7 @@ namespace Tests.System.Linq.Expressions
         public void ExpressionSlim_LambdaFactoryTests()
         {
             var body = ExpressionSlim.Parameter(SlimType);
-            var lambda = ExpressionSlim.Lambda(delegateType: null, body, new[] { body });
+            var lambda = ExpressionSlim.Lambda(delegateType: null, body, [body]);
             Assert.AreSame(body, lambda.Body);
             Assert.AreEqual(1, lambda.Parameters.Count);
             Assert.AreSame(body, lambda.Parameters[0]);
@@ -712,7 +712,7 @@ namespace Tests.System.Linq.Expressions
             var add = lie.Initializers[0].AddMethod;
             var x = lie.Initializers[0].Arguments[0];
 
-            var i1 = ExpressionSlim.ElementInit(add, new[] { x });
+            var i1 = ExpressionSlim.ElementInit(add, [x]);
             Assert.AreEqual(1, i1.ArgumentCount);
             Assert.AreSame(x, i1.GetArgument(0));
 
@@ -732,7 +732,7 @@ namespace Tests.System.Linq.Expressions
             var l3 = ExpressionSlim.ListInit(lie.NewExpression, ExpressionSlim.ElementInit(lie.Initializers[0].AddMethod, lie.Initializers[0].Arguments.AsEnumerable()));
             var l4 = ExpressionSlim.ListInit(lie.NewExpression, ExpressionSlim.ElementInit(lie.Initializers[0].AddMethod, lie.Initializers[0].Arguments[0]));
             var l5 = ExpressionSlim.ListInit(lie.NewExpression, lie.Initializers[0].AddMethod, lie.Initializers[0].Arguments.Single());
-            var l6 = ExpressionSlim.ListInit(lie.NewExpression, lie.Initializers[0].AddMethod, (IEnumerable<ExpressionSlim>)new[] { lie.Initializers[0].Arguments.Single() });
+            var l6 = ExpressionSlim.ListInit(lie.NewExpression, lie.Initializers[0].AddMethod, (IEnumerable<ExpressionSlim>)[lie.Initializers[0].Arguments.Single()]);
 
             var e1 = l1.ToExpression();
             var e2 = l2.ToExpression();
@@ -772,7 +772,7 @@ namespace Tests.System.Linq.Expressions
             var ne = (NewExpressionSlim)e.Body.ToExpressionSlim();
 
             var n1 = ExpressionSlim.New(ne.Constructor);
-            var n2 = ExpressionSlim.New(ne.Constructor, Array.Empty<ExpressionSlim>());
+            var n2 = ExpressionSlim.New(ne.Constructor, []);
             var n3 = ExpressionSlim.New(ne.Constructor, EmptyReadOnlyCollection<ExpressionSlim>.Instance);
             var n4 = ExpressionSlim.New(ne.Constructor, EmptyReadOnlyCollection<ExpressionSlim>.Instance, members: null);
 
@@ -1586,7 +1586,7 @@ namespace Tests.System.Linq.Expressions
             var ie = (IndexExpressionSlim)e.ToExpressionSlim();
 
             var i1 = ExpressionSlim.MakeIndex(ie.Object, ie.Indexer, ie.Arguments);
-            var i2 = ExpressionSlim.Property(ie.Object, ie.Indexer, ie.Arguments.ToArray());
+            var i2 = ExpressionSlim.Property(ie.Object, ie.Indexer, [.. ie.Arguments]);
             var i3 = ExpressionSlim.Property(ie.Object, ie.Indexer, ie.Arguments);
 
             var e1 = (IndexExpression)i1.ToExpression();
@@ -3064,14 +3064,9 @@ namespace Tests.System.Linq.Expressions
             }
         }
 
-        private sealed class ArgVisitor : ExpressionSlimVisitor
+        private sealed class ArgVisitor(int index) : ExpressionSlimVisitor
         {
-            private readonly int _index;
-
-            public ArgVisitor(int index)
-            {
-                _index = index;
-            }
+            private readonly int _index = index;
 
             protected internal override ExpressionSlim VisitParameter(ParameterExpressionSlim node)
             {

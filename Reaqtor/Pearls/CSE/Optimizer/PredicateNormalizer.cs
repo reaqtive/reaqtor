@@ -40,21 +40,16 @@ namespace Pearls.Reaqtor.CSE
     /// <summary>
     /// Normalizes predicates such that occurrences of bound parameters appear on the left-hand side of binary operators whenever possible.
     /// </summary>
-    internal class PredicateNormalizer
+    /// <remarks>
+    /// Creates a new predicate normalizer using the specified range variable for predicates.
+    /// </remarks>
+    /// <param name="parameter">Range variable for the predicates that get normalized.</param>
+    internal class PredicateNormalizer(ParameterExpression parameter)
     {
         /// <summary>
         /// Range variable for the predicates that get normalized.
         /// </summary>
-        private readonly ParameterExpression _parameter;
-
-        /// <summary>
-        /// Creates a new predicate normalizer using the specified range variable for predicates.
-        /// </summary>
-        /// <param name="parameter">Range variable for the predicates that get normalized.</param>
-        public PredicateNormalizer(ParameterExpression parameter)
-        {
-            _parameter = parameter;
-        }
+        private readonly ParameterExpression _parameter = parameter;
 
         /// <summary>
         /// Normalizes the given expression by moving occurrences of the range variable to the left-hand side of a binary operator whenever possible.
@@ -111,21 +106,16 @@ namespace Pearls.Reaqtor.CSE
         /// <summary>
         /// Expression visitor to detect whether a given parameter is bound.
         /// </summary>
-        private class BoundParameterScanner : ExpressionVisitor
+        /// <remarks>
+        /// Creates a new bound parameter scanner to check whether the specified parameter is bound.
+        /// </remarks>
+        /// <param name="p">Parameter to check for bound occurrences in visited expressions.</param>
+        private class BoundParameterScanner(ParameterExpression p) : ExpressionVisitor
         {
             /// <summary>
             /// Parameter to check for bound occurrences in visited expressions.
             /// </summary>
-            private readonly ParameterExpression _p;
-
-            /// <summary>
-            /// Creates a new bound parameter scanner to check whether the specified parameter is bound.
-            /// </summary>
-            /// <param name="p">Parameter to check for bound occurrences in visited expressions.</param>
-            public BoundParameterScanner(ParameterExpression p)
-            {
-                _p = p;
-            }
+            private readonly ParameterExpression _p = p;
 
             /// <summary>
             /// Gets a Boolean indicating whether the specified parameter was found to be bound in the visited expression.

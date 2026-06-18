@@ -16,16 +16,10 @@ namespace Utilities
     /// <summary>
     /// Base class for logging state readers and writers.
     /// </summary>
-    public abstract class LoggingStateReaderWriterBase : IDisposable
+    public abstract class LoggingStateReaderWriterBase(TextWriter log, bool keepOpen) : IDisposable
     {
-        private readonly TextWriter _log;
-        private readonly bool _keepOpen;
-
-        protected LoggingStateReaderWriterBase(TextWriter log, bool keepOpen)
-        {
-            _log = log;
-            _keepOpen = keepOpen;
-        }
+        private readonly TextWriter _log = log;
+        private readonly bool _keepOpen = keepOpen;
 
         public void Dispose()
         {

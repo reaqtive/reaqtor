@@ -15,11 +15,13 @@ namespace System.Linq.CompilerServices
     /// <summary>
     /// Equality comparer for structural types.
     /// </summary>
-    public class StructuralTypeEqualityComparer : IEqualityComparer<Type>
+    /// <remarks>
+    /// Instantiates an equality comparer for structural types.
+    /// </remarks>
+    /// <param name="comparatorFactory">A factory to get structural type comparator instances.</param>
+    public class StructuralTypeEqualityComparer(Func<StructuralTypeEqualityComparator> comparatorFactory) : IEqualityComparer<Type>
     {
-        private static StructuralTypeEqualityComparer _instance;
-
-        private readonly Func<StructuralTypeEqualityComparator> _comparatorFactory;
+        private readonly Func<StructuralTypeEqualityComparator> _comparatorFactory = comparatorFactory ?? throw new ArgumentNullException(nameof(comparatorFactory));
 
         /// <summary>
         /// Instantiates an equality comparer for structural types, using the default structural type comparator
@@ -30,15 +32,9 @@ namespace System.Linq.CompilerServices
         }
 
         /// <summary>
-        /// Instantiates an equality comparer for structural types.
-        /// </summary>
-        /// <param name="comparatorFactory">A factory to get structural type comparator instances.</param>
-        public StructuralTypeEqualityComparer(Func<StructuralTypeEqualityComparator> comparatorFactory) => _comparatorFactory = comparatorFactory ?? throw new ArgumentNullException(nameof(comparatorFactory));
-
-        /// <summary>
         /// A default instance of the equality comparer.
         /// </summary>
-        public static StructuralTypeEqualityComparer Default => _instance ??= new StructuralTypeEqualityComparer();
+        public static StructuralTypeEqualityComparer Default => field ??= new StructuralTypeEqualityComparer();
 
         /// <summary>
         /// Checks whether two given types are equal.

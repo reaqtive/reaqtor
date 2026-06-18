@@ -593,16 +593,15 @@ namespace Test.Reaqtive.Operators
             Scheduler.Start();
 
             res1.Messages.AssertEqual(
-                new[]
-                    {
+                [
                         OnNext(100, 0L),
                         OnNext(150, 1L)
-                    });
-            res2.Messages.AssertEqual(new[]
-                    {
+                    ]);
+            res2.Messages.AssertEqual(
+                    [
                         OnNext(200, 2L),
                         OnNext(250, 3L)
-                    });
+                    ]);
         }
 
         [TestMethod]
@@ -623,8 +622,8 @@ namespace Test.Reaqtive.Operators
                 () => Subscribable.Timer(TimeSpan.Zero, TimeSpan.FromTicks(50)).Apply(Scheduler, checkpoints),
                 disposed: 460);
 
-            result.Messages.AssertEqual(new[]
-                {
+            result.Messages.AssertEqual(
+                [
                     OnNext(Subscribed, 0L),
                     OnNext(250, 1L),
                     // Saved old state here
@@ -636,7 +635,7 @@ namespace Test.Reaqtive.Operators
                     OnNext(450, 3L),
                     OnNext(450, 4L),
                     OnNext(450, 5L)
-                });
+                ]);
         }
 
         [TestMethod]
@@ -666,11 +665,10 @@ namespace Test.Reaqtive.Operators
             Scheduler.Start();
 
             res1.Messages.AssertEqual(
-                new[]
-                    {
+                [
                         OnNext(100, 0L)
-                    });
-            res2.Messages.AssertEqual(Array.Empty<Recorded<Notification<long>>>());
+                    ]);
+            res2.Messages.AssertEqual([]);
         }
 
         [TestMethod]
@@ -698,12 +696,11 @@ namespace Test.Reaqtive.Operators
             Scheduler.Start();
 
             res1.Messages.AssertEqual(
-                new[]
-                    {
+                [
                         OnNext(100, 0L),
                         OnCompleted(100, 0L),
-                    });
-            res2.Messages.AssertEqual(Array.Empty<Recorded<Notification<long>>>());
+                    ]);
+            res2.Messages.AssertEqual([]);
         }
 
         #endregion
@@ -807,30 +804,17 @@ namespace Test.Reaqtive.Operators
             return trace;
         }
 
-        private class TestLogger
+        private class TestLogger(List<Recorded<SubscribableTimeTest.LogEntry>> logs, TraceSource trace)
         {
-            public TestLogger(List<Recorded<LogEntry>> logs, TraceSource trace)
-            {
-                Logs = logs;
-                TraceSource = trace;
-            }
-
-            public IEnumerable<Recorded<LogEntry>> Logs { get; }
-            public TraceSource TraceSource { get; }
+            public IEnumerable<Recorded<LogEntry>> Logs { get; } = logs;
+            public TraceSource TraceSource { get; } = trace;
         }
 
-        private class MyListener : TraceListener
+        private class MyListener(IClockable<long> clock, Action<long, string> onMessage) : TraceListener
         {
-            private readonly IClockable<long> _clock;
-            private readonly Action<long, string> _onMessage;
-            private readonly List<string> _buffer;
-
-            public MyListener(IClockable<long> clock, Action<long, string> onMessage)
-            {
-                _clock = clock;
-                _onMessage = onMessage;
-                _buffer = new List<string>();
-            }
+            private readonly IClockable<long> _clock = clock;
+            private readonly Action<long, string> _onMessage = onMessage;
+            private readonly List<string> _buffer = [];
 
             public override void Write(string message)
             {

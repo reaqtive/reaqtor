@@ -34,7 +34,7 @@ namespace Reaqtor.Hosting.Shared.Tools
             /// <summary>
             /// Gets the list of entities found as a result of a call to the visit method.
             /// </summary>
-            public ReactiveEntities Entities { get; } = new ReactiveEntities();
+            public ReactiveEntities Entities { get; } = [];
 
             /// <summary>
             /// Visits an invocation expression and adds an entry to the set of Reactive
@@ -101,7 +101,7 @@ namespace Reaqtor.Hosting.Shared.Tools
                 {
                     if (!reactiveEntitySet.TryGetValue(parameter.Name, out var occurrences))
                     {
-                        occurrences = new HashSet<IEnumerable<ExpressionSlim>>();
+                        occurrences = [];
                         reactiveEntitySet.Add(parameter.Name, occurrences);
                     }
 

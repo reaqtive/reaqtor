@@ -175,7 +175,7 @@ namespace Test.Reaqtive
                 Error = error;
             }
 
-            public List<int> Values = new();
+            public List<int> Values = [];
 
             protected override void OnNextCore(int value)
             {

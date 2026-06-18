@@ -12,17 +12,11 @@ namespace Reaqtor.TestingFramework
 {
     public partial class TestExecutionEnvironment
     {
-        private class NotSoSimpleSubject<T> : SimpleSubject<T>, IReactiveQubject<T>, ISubscribable<T>, ISealable, IDisposable
+        private class NotSoSimpleSubject<T>(TestExecutionEnvironment parent, Uri streamUri) : SimpleSubject<T>, IReactiveQubject<T>, ISubscribable<T>, ISealable, IDisposable
         {
-            private readonly TestExecutionEnvironment _parent;
-            private readonly Uri _streamUri;
+            private readonly TestExecutionEnvironment _parent = parent;
+            private readonly Uri _streamUri = streamUri;
             private int _count;
-
-            public NotSoSimpleSubject(TestExecutionEnvironment parent, Uri streamUri)
-            {
-                _parent = parent;
-                _streamUri = streamUri;
-            }
 
             public int RefCount => _count;
 
@@ -50,16 +44,10 @@ namespace Reaqtor.TestingFramework
                 }
             }
 
-            private sealed class Subscription : ISubscription
+            private sealed class Subscription(TestExecutionEnvironment.NotSoSimpleSubject<T> parent) : ISubscription
             {
-                private readonly NotSoSimpleSubject<T> _parent;
+                private readonly NotSoSimpleSubject<T> _parent = parent;
                 private int _disposed;
-
-                public Subscription(NotSoSimpleSubject<T> parent)
-                {
-                    _parent = parent;
-                }
-
                 public ISubscription Inner;
 
                 public void Accept(ISubscriptionVisitor visitor)

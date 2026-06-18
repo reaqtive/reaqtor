@@ -14,18 +14,14 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Factory for state readers with a specified serialization policy.
     /// </summary>
-    internal sealed class OperatorStateReaderFactory : ReaderBase, IOperatorStateReaderFactory
+    /// <remarks>
+    /// Creates a state reader factory to read from the specified underlying <paramref name="stream"/>, using the
+    /// specified serialization <paramref name="policy"/>.
+    /// </remarks>
+    /// <param name="stream">The stream to read from.</param>
+    /// <param name="policy">The serialization policy used to deserialize values.</param>
+    internal sealed class OperatorStateReaderFactory(Stream stream, ISerializationPolicy policy) : ReaderBase(stream, policy), IOperatorStateReaderFactory
     {
-        /// <summary>
-        /// Creates a state reader factory to read from the specified underlying <paramref name="stream"/>, using the
-        /// specified serialization <paramref name="policy"/>.
-        /// </summary>
-        /// <param name="stream">The stream to read from.</param>
-        /// <param name="policy">The serialization policy used to deserialize values.</param>
-        public OperatorStateReaderFactory(Stream stream, ISerializationPolicy policy)
-            : base(stream, policy)
-        {
-        }
 
         /// <summary>
         /// Creates a new operator state reader for the specified operator.

@@ -248,7 +248,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<string>(250, xs.ObserverMessages.Where(m => m.Value.HasValue).Select(m => m.Value.Value).Min()),
+                    OnNext<string>(250, xs.ObserverMessages.Where(m => m.Value.HasValue).Min(m => m.Value.Value)),
                     OnCompleted<string>(250)
                 );
 
@@ -276,7 +276,7 @@ namespace Test.Reaqtive.Operators
                 );
 
                 res.Messages.AssertEqual(
-                    OnNext<TimeSpan>(250, xs.ObserverMessages.Where(m => m.Value.HasValue).Select(m => m.Value.Value).Min()),
+                    OnNext<TimeSpan>(250, xs.ObserverMessages.Where(m => m.Value.HasValue).Min(m => m.Value.Value)),
                     OnCompleted<TimeSpan>(250)
                 );
 
@@ -344,14 +344,9 @@ namespace Test.Reaqtive.Operators
             });
         }
 
-        private sealed class ThrowingComparer<T> : IComparer<T>
+        private sealed class ThrowingComparer<T>(Exception ex) : IComparer<T>
         {
-            private readonly Exception _ex;
-
-            public ThrowingComparer(Exception ex)
-            {
-                _ex = ex;
-            }
+            private readonly Exception _ex = ex;
 
             public int Compare(T x, T y)
             {

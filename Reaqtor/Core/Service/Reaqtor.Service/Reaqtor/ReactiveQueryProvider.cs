@@ -16,22 +16,16 @@ namespace Reaqtor
     /// <summary>
     /// Reactive processing query provider using a data operations object to perform service-side operations.
     /// </summary>
-    public class ReactiveQueryProvider : ReactiveQueryProviderBase
+    /// <remarks>
+    /// Creates a new reactive processing query provider using the specified data operations object.
+    /// </remarks>
+    /// <param name="provider">Data operations object to delegate operations to.</param>
+    /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
+    public class ReactiveQueryProvider(IReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices) : ReactiveQueryProviderBase(expressionServices)
     {
         #region Constructor & fields
 
-        private readonly IReactiveClientEngineProvider _provider;
-
-        /// <summary>
-        /// Creates a new reactive processing query provider using the specified data operations object.
-        /// </summary>
-        /// <param name="provider">Data operations object to delegate operations to.</param>
-        /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
-        public ReactiveQueryProvider(IReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
-            : base(expressionServices)
-        {
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        }
+        private readonly IReactiveClientEngineProvider _provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
         #endregion
 

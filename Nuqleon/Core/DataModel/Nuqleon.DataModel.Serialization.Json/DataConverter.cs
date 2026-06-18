@@ -51,16 +51,10 @@ namespace Nuqleon.DataModel.Serialization.Json
         /// <returns>Conversion of the given object to the specified target type, used for further deserialization.</returns>
         public abstract object ConvertFrom(object value, Type sourceType, Type targetType);
 
-        private sealed class ConverterImpl : JsonConverter
+        private sealed class ConverterImpl(DataConverter parent) : JsonConverter
         {
-            private readonly DataConverter _parent;
-            private readonly ConcurrentDictionary<Type, Type> _typeMap;
-
-            public ConverterImpl(DataConverter parent)
-            {
-                _parent = parent;
-                _typeMap = new ConcurrentDictionary<Type, Type>();
-            }
+            private readonly DataConverter _parent = parent;
+            private readonly ConcurrentDictionary<Type, Type> _typeMap = new ConcurrentDictionary<Type, Type>();
 
             public override bool CanConvert(Type objectType)
             {

@@ -22,18 +22,13 @@ namespace Nuqleon.DataModel.TypeSystem
     /// <summary>
     /// Abstract base class for data types that conform to the data model.
     /// </summary>
-    public abstract class DataType
+    /// <remarks>
+    /// Creates a new data type of the specified kind.
+    /// </remarks>
+    /// <param name="type">Underlying CLR type.</param>
+    public abstract class DataType(Type type)
     {
         private static readonly ObjectPool<DataTypePrinter> s_printerPool = new(() => new DataTypePrinter());
-
-        /// <summary>
-        /// Creates a new data type of the specified kind.
-        /// </summary>
-        /// <param name="type">Underlying CLR type.</param>
-        protected DataType(Type type)
-        {
-            UnderlyingType = type;
-        }
 
         /// <summary>
         /// Gets the kind of the data type.
@@ -43,7 +38,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <summary>
         /// Gets the underlying CLR type.
         /// </summary>
-        public Type UnderlyingType { get; }
+        public Type UnderlyingType { get; } = type;
 
         /// <summary>
         /// Reduces the data type to a simpler data type representation.
@@ -306,7 +301,7 @@ namespace Nuqleon.DataModel.TypeSystem
 
             public DataTypePrinter()
             {
-                _types = new Dictionary<DataType, string>();
+                _types = [];
                 _hasCycles = false;
             }
 
@@ -329,7 +324,7 @@ namespace Nuqleon.DataModel.TypeSystem
             private string PrintCycleRich(DataType type)
             {
                 _hasCycles = true;
-                _namedTypes = new Dictionary<DataType, NamedType>();
+                _namedTypes = [];
 
                 var res = Visit(type);
 

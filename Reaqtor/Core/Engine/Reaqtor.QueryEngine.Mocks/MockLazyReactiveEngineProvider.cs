@@ -13,19 +13,14 @@ using Reaqtor.Metadata;
 
 namespace Reaqtor.QueryEngine.Mocks
 {
-    public class MockLazyReactiveEngineProvider : IReactiveEngineProvider
+    public class MockLazyReactiveEngineProvider(SubjectManager subjectManager) : IReactiveEngineProvider
     {
         private readonly MetaDataQueryProvider _metadataProvider = new();
-        private readonly SubjectManager _subjectManager;
+        private readonly SubjectManager _subjectManager = subjectManager ?? throw new ArgumentNullException(nameof(subjectManager));
 
         public MockLazyReactiveEngineProvider()
             : this(new SubjectManager())
         {
-        }
-
-        public MockLazyReactiveEngineProvider(SubjectManager subjectManager)
-        {
-            _subjectManager = subjectManager ?? throw new ArgumentNullException(nameof(subjectManager));
         }
 
         public void CreateSubscription(Uri subscriptionUri, Expression subscription, object state)
@@ -316,14 +311,9 @@ namespace Reaqtor.QueryEngine.Mocks
                 throw new NotImplementedException();
             }
 
-            private sealed class Binder : ScopedExpressionVisitor<ParameterExpression>
+            private sealed class Binder(MockLazyReactiveEngineProvider.MetaDataQueryProvider parent) : ScopedExpressionVisitor<ParameterExpression>
             {
-                private readonly MetaDataQueryProvider _parent;
-
-                public Binder(MetaDataQueryProvider parent)
-                {
-                    _parent = parent;
-                }
+                private readonly MetaDataQueryProvider _parent = parent;
 
                 protected override ParameterExpression GetState(ParameterExpression parameter)
                 {
@@ -358,33 +348,20 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private class ResourceMetadata : IReactiveResource
+        private class ResourceMetadata(Uri uri, Expression expression) : IReactiveResource
         {
-            public ResourceMetadata(Uri uri, Expression expression)
-            {
-                Uri = uri;
-                Expression = expression;
-            }
+            public Uri Uri { get; } = uri;
 
-            public Uri Uri { get; }
-
-            public Expression Expression { get; }
+            public Expression Expression { get; } = expression;
         }
 
-        private class DefinedMetadata : ResourceMetadata, IReactiveDefinedResource
+        private class DefinedMetadata(Uri uri, Expression expression, object state) : ResourceMetadata(uri, expression), IReactiveDefinedResource
         {
-            public DefinedMetadata(Uri uri, Expression expression, object state)
-                : base(uri, expression)
-            {
-                State = state;
-                DefinitionTime = DateTimeOffset.UtcNow;
-            }
-
             public bool IsParameterized => Expression.NodeType == ExpressionType.Lambda;
 
-            public object State { get; }
+            public object State { get; } = state;
 
-            public DateTimeOffset DefinitionTime { get; }
+            public DateTimeOffset DefinitionTime { get; } = DateTimeOffset.UtcNow;
 
             public void Undefine()
             {
@@ -397,18 +374,11 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private class ProcessMetadata : ResourceMetadata, IReactiveProcessResource
+        private class ProcessMetadata(Uri uri, Expression expression, object state) : ResourceMetadata(uri, expression), IReactiveProcessResource
         {
-            public ProcessMetadata(Uri uri, Expression expression, object state)
-                : base(uri, expression)
-            {
-                State = state;
-                CreationTime = DateTimeOffset.UtcNow;
-            }
+            public object State { get; } = state;
 
-            public object State { get; }
-
-            public DateTimeOffset CreationTime { get; }
+            public DateTimeOffset CreationTime { get; } = DateTimeOffset.UtcNow;
 
             public void Dispose()
             {
@@ -416,13 +386,8 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private class StreamFactoryMetadata : DefinedMetadata, IReactiveStreamFactoryDefinition
+        private class StreamFactoryMetadata(Uri uri, Expression expression, object state) : DefinedMetadata(uri, expression, state), IReactiveStreamFactoryDefinition
         {
-            public StreamFactoryMetadata(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IReactiveQubjectFactory<TInput, TOutput> ToStreamFactory<TInput, TOutput>()
             {
                 throw new InvalidOperationException();
@@ -434,13 +399,8 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private class SubscriptionFactoryMetadata : DefinedMetadata, IReactiveSubscriptionFactoryDefinition
+        private class SubscriptionFactoryMetadata(Uri uri, Expression expression, object state) : DefinedMetadata(uri, expression, state), IReactiveSubscriptionFactoryDefinition
         {
-            public SubscriptionFactoryMetadata(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IReactiveQubscriptionFactory ToSubscriptionFactory()
             {
                 throw new InvalidOperationException();
@@ -452,26 +412,16 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private sealed class StreamMetadata : ProcessMetadata, IReactiveStreamProcess
+        private sealed class StreamMetadata(Uri uri, Expression expression, object state) : ProcessMetadata(uri, expression, state), IReactiveStreamProcess
         {
-            public StreamMetadata(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IReactiveQubject<TInput, TOutput> ToStream<TInput, TOutput>()
             {
                 throw new NotImplementedException();
             }
         }
 
-        private sealed class ObservableMetadata : DefinedMetadata, IReactiveObservableDefinition
+        private sealed class ObservableMetadata(Uri uri, Expression expression, object state) : DefinedMetadata(uri, expression, state), IReactiveObservableDefinition
         {
-            public ObservableMetadata(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IReactiveQbservable<T> ToObservable<T>()
             {
                 throw new NotImplementedException();
@@ -483,13 +433,8 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private sealed class ObserverMetadata : DefinedMetadata, IReactiveObserverDefinition
+        private sealed class ObserverMetadata(Uri uri, Expression expression, object state) : DefinedMetadata(uri, expression, state), IReactiveObserverDefinition
         {
-            public ObserverMetadata(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IReactiveQbserver<T> ToObserver<T>()
             {
                 throw new NotImplementedException();
@@ -501,24 +446,17 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private sealed class SubscriptionMetadata : ProcessMetadata, IReactiveSubscriptionProcess
+        private sealed class SubscriptionMetadata(Uri uri, Expression expression, object state) : ProcessMetadata(uri, expression, state), IReactiveSubscriptionProcess
         {
-            public SubscriptionMetadata(Uri uri, Expression expression, object state)
-                : base(uri, expression, state)
-            {
-            }
-
             public IReactiveQubscription ToSubscription()
             {
                 throw new NotImplementedException();
             }
         }
 
-        private sealed class Observer<T> : IReactiveObserver<T>
+        private sealed class Observer<T>(IObserver<T> innerObserver) : IReactiveObserver<T>
         {
-            private readonly IObserver<T> _innerObserver;
-
-            public Observer(IObserver<T> innerObserver) => _innerObserver = innerObserver;
+            private readonly IObserver<T> _innerObserver = innerObserver;
 
             public void OnNext(T value) => _innerObserver.OnNext(value);
 

@@ -46,8 +46,8 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// Hash set of other binary serializable types.
         /// </summary>
-        private static readonly HashSet<Type> s_otherBinaryTypes = new()
-        {
+        private static readonly HashSet<Type> s_otherBinaryTypes =
+        [
             typeof(string),
             typeof(decimal),
             typeof(Guid),
@@ -56,7 +56,7 @@ namespace Reaqtor.QueryEngine
             typeof(DateTime),
             typeof(DateTimeOffset),
             typeof(Dictionary<string, object>),
-        };
+        ];
 
         //
         // NB: Note for StyleCop fanatics on the team. DO NOT FORMAT MY TABLES. I don't care for the "right style";
@@ -317,7 +317,7 @@ namespace Reaqtor.QueryEngine
                 var serializeMethod = useCoreMethod
                     ? s_serializeCore.MakeGenericMethod(type)
                     : s_serialize.MakeGenericMethod(type);
-                serializeMethod.Invoke(this, new[] { value, stream });
+                serializeMethod.Invoke(this, [value, stream]);
             }
         }
 
@@ -503,7 +503,7 @@ namespace Reaqtor.QueryEngine
                 var deserializeMethod = useCoreMethod
                     ? s_deserializeCore.MakeGenericMethod(type)
                     : s_deserialize.MakeGenericMethod(type);
-                return deserializeMethod.Invoke(this, new object[] { stream });
+                return deserializeMethod.Invoke(this, [stream]);
             }
         }
 
@@ -646,7 +646,7 @@ namespace Reaqtor.QueryEngine
             }
             else
             {
-                var method = s_jsonSerializeTo.MakeGenericMethod(new[] { type });
+                var method = s_jsonSerializeTo.MakeGenericMethod([type]);
 
                 var objParam = Expression.Parameter(typeof(object));
                 var writerParam = Expression.Parameter(typeof(JsonWriter));
@@ -705,7 +705,7 @@ namespace Reaqtor.QueryEngine
             }
             else
             {
-                var method = s_jsonDeserializeFrom.MakeGenericMethod(new[] { type });
+                var method = s_jsonDeserializeFrom.MakeGenericMethod([type]);
 
                 var readerParam = Expression.Parameter(typeof(JsonReader));
 
@@ -756,14 +756,9 @@ namespace Reaqtor.QueryEngine
             return expression.ToExpression(_expressionPolicy.ExpressionFactory, _expressionPolicy.ReflectionProvider);
         }
 
-        private sealed class QuoteConverter : DataConverter
+        private sealed class QuoteConverter(IExpressionEvaluationPolicy expressionPolicy) : DataConverter
         {
-            private readonly IExpressionEvaluationPolicy _expressionPolicy;
-
-            public QuoteConverter(IExpressionEvaluationPolicy expressionPolicy)
-            {
-                _expressionPolicy = expressionPolicy;
-            }
+            private readonly IExpressionEvaluationPolicy _expressionPolicy = expressionPolicy;
 
             public override object ConvertFrom(object value, Type sourceType, Type targetType)
             {
@@ -801,7 +796,7 @@ namespace Reaqtor.QueryEngine
                     throw new InvalidOperationException("Attempted to restore a checkpoint of a subscribable sequence to an incompatible type.");
                 }
 
-                return Activator.CreateInstance(quoteType, new object[] { expr, _expressionPolicy });
+                return Activator.CreateInstance(quoteType, [expr, _expressionPolicy]);
             }
 
             public override object ConvertTo(object value, Type sourceType, Type targetType)

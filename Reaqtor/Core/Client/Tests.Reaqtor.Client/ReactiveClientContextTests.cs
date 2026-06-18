@@ -492,7 +492,7 @@ namespace Tests.Reaqtor.Client
                             Expression.Lambda<Func<long, IAsyncReactiveQbservable<long>>>(
                                 Expression.Invoke(
                                     Expression.Parameter(typeof(Func<TimeSpan, IAsyncReactiveQbservable<long>>), Constants.Observable.Timer),
-                                    Expression.New(typeof(TimeSpan).GetConstructor(new[] { typeof(long) }), longParam)
+                                    Expression.New(typeof(TimeSpan).GetConstructor([typeof(long)]), longParam)
                                 ),
                                 longParam
                             )
@@ -1359,7 +1359,7 @@ namespace Tests.Reaqtor.Client
                                 Expression.Equal(
                                     Expression.Property(kv, "Key"),
                                     Expression.New(
-                                        typeof(Uri).GetConstructor(new[] { typeof(string) }),
+                                        typeof(Uri).GetConstructor([typeof(string)]),
                                         Expression.Constant("bar://foo")
                                     )
                                 ),
@@ -1391,7 +1391,7 @@ namespace Tests.Reaqtor.Client
                                 Expression.Equal(
                                     Expression.Property(kv, "Key"),
                                     Expression.New(
-                                        typeof(Uri).GetConstructor(new[] { typeof(string) }),
+                                        typeof(Uri).GetConstructor([typeof(string)]),
                                         Expression.Constant("bar://foo")
                                     )
                                 ),

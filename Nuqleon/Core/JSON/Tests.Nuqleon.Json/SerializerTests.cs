@@ -365,7 +365,7 @@ namespace Tests.Nuqleon.Json
             cycle1.Cycle = cycle1;
 
             var cycle2 = new Cyclic();
-            cycle2.Cycles = new[] { cycle2 };
+            cycle2.Cycles = [cycle2];
 
             var cycle3 = new Cyclic[1];
             cycle3[0] = new Cyclic { Cycles = cycle3 };

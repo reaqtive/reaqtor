@@ -98,8 +98,8 @@ namespace Tests.System.Linq.Expressions.Optimizers
             { typeof(ulong), ulong.MaxValue },
         };
 
-        private static readonly Type[] s_integerTypes = new[]
-        {
+        private static readonly Type[] s_integerTypes =
+        [
             typeof(byte),
             typeof(sbyte),
             typeof(short),
@@ -108,10 +108,10 @@ namespace Tests.System.Linq.Expressions.Optimizers
             typeof(uint),
             typeof(long),
             typeof(ulong),
-        };
+        ];
 
-        private static readonly Type[] s_integerAndBoolTypes = new[]
-        {
+        private static readonly Type[] s_integerAndBoolTypes =
+        [
             typeof(byte),
             typeof(sbyte),
             typeof(short),
@@ -121,15 +121,15 @@ namespace Tests.System.Linq.Expressions.Optimizers
             typeof(long),
             typeof(ulong),
             typeof(bool),
-        };
+        ];
 
-        private static readonly Type[] s_arithIntegerTypes = new[]
-        {
+        private static readonly Type[] s_arithIntegerTypes =
+        [
             typeof(int),
             typeof(uint),
             typeof(long),
             typeof(ulong),
-        };
+        ];
 
         [TestMethod]
         public void Binary_Algebraic_Add_Nop()

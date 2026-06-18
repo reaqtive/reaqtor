@@ -40,16 +40,16 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 tester.AreNotAnonymized(() => new KnownTypeType { A = 42 }.A, typeof(KnownTypeType));
 
                 tester.AreStructurallyEqual(() => new StructuralTypeWithKnownType { B = new KnownTypeType() });
-                tester.IsAnonymized(() => new StructuralTypeWithKnownType { B = new KnownTypeType() }, new[] { typeof(KnownTypeType) }, new[] { typeof(StructuralTypeWithKnownType) });
+                tester.IsAnonymized(() => new StructuralTypeWithKnownType { B = new KnownTypeType() }, [typeof(KnownTypeType)], [typeof(StructuralTypeWithKnownType)]);
 
                 tester.AreStructurallyEqual(() => new StructuralTypeWithKnownType { B = new KnownTypeType() }.B);
-                tester.IsAnonymized(() => new StructuralTypeWithKnownType { B = new KnownTypeType() }.B, new[] { typeof(KnownTypeType) }, new[] { typeof(StructuralTypeWithKnownType) });
+                tester.IsAnonymized(() => new StructuralTypeWithKnownType { B = new KnownTypeType() }.B, [typeof(KnownTypeType)], [typeof(StructuralTypeWithKnownType)]);
 
                 tester.AreStructurallyEqual(() => new StructuralTypeWithNonEntityEnum { E = NonEntityEnum.X });
-                tester.IsAnonymized(() => new StructuralTypeWithNonEntityEnum { E = NonEntityEnum.X }, new[] { typeof(NonEntityEnum) }, new[] { typeof(StructuralTypeWithNonEntityEnum) });
+                tester.IsAnonymized(() => new StructuralTypeWithNonEntityEnum { E = NonEntityEnum.X }, [typeof(NonEntityEnum)], [typeof(StructuralTypeWithNonEntityEnum)]);
 
                 tester.AreStructurallyEqual(() => new StructuralTypeWithNonEntityEnum { E = NonEntityEnum.X }.E);
-                tester.IsAnonymized(() => new StructuralTypeWithNonEntityEnum { E = NonEntityEnum.X }.E, new[] { typeof(NonEntityEnum) }, new[] { typeof(StructuralTypeWithNonEntityEnum) });
+                tester.IsAnonymized(() => new StructuralTypeWithNonEntityEnum { E = NonEntityEnum.X }.E, [typeof(NonEntityEnum)], [typeof(StructuralTypeWithNonEntityEnum)]);
 
                 tester.AreStructurallyEqual(() => new StructuralTypeWithEntityEnum { F = EntityEnum.Y });
                 tester.AreAnonymized(() => new StructuralTypeWithEntityEnum { F = EntityEnum.Y }, typeof(StructuralTypeWithEntityEnum), typeof(EntityEnum));
@@ -164,15 +164,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             public int M;
         }
 
-        public class StructuralTypeWithConstructor
+        public class StructuralTypeWithConstructor([Mapping("N")] int n)
         {
-            public StructuralTypeWithConstructor([Mapping("N")] int n)
-            {
-                N = n;
-            }
-
             [Mapping("N")]
-            public int N { get; set; }
+            public int N { get; set; } = n;
         }
 
         #endregion
@@ -521,16 +516,12 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 }
             }
 
-            private class UnassignedExpression : Expression
+            /// <summary>
+            /// Creates a new sentinel expression with the specified underlying type.
+            /// </summary>
+            /// <param name="type">Underlying type of the expression.</param>
+            private class UnassignedExpression(Type type) : Expression
             {
-                /// <summary>
-                /// Creates a new sentinel expression with the specified underlying type.
-                /// </summary>
-                /// <param name="type">Underlying type of the expression.</param>
-                public UnassignedExpression(Type type)
-                {
-                    Type = type;
-                }
 
                 /// <summary>
                 /// Returns Extension.
@@ -540,7 +531,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 /// <summary>
                 /// Gets the underlying type.
                 /// </summary>
-                public override Type Type { get; }
+                public override Type Type { get; } = type;
 
                 /// <summary>
                 /// Always returns true.
@@ -590,14 +581,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
         #region Correctness
 
-        private class ExpressionTypeAsserter : ExpressionVisitorWithReflection
+        private class ExpressionTypeAsserter(Action<Type> assertType) : ExpressionVisitorWithReflection
         {
-            private readonly Action<Type> _assertType;
-
-            public ExpressionTypeAsserter(Action<Type> assertType)
-            {
-                _assertType = assertType;
-            }
+            private readonly Action<Type> _assertType = assertType;
 
             protected override Type VisitType(Type type)
             {
@@ -685,18 +671,11 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             }
         }
 
-        private class AnonymizationChecker : DataTypeVisitor
+        private class AnonymizationChecker(Type[] allow, Type[] disallow, Action<Type> assertStructural) : DataTypeVisitor
         {
-            private readonly Type[] _allow;
-            private readonly Type[] _disallow;
-            private readonly Action<Type> _assertStructural;
-
-            public AnonymizationChecker(Type[] allow, Type[] disallow, Action<Type> assertStructural)
-            {
-                _allow = allow;
-                _disallow = disallow;
-                _assertStructural = assertStructural;
-            }
+            private readonly Type[] _allow = allow;
+            private readonly Type[] _disallow = disallow;
+            private readonly Action<Type> _assertStructural = assertStructural;
 
             public override DataType Visit(DataType type)
             {
@@ -719,15 +698,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             }
         }
 
-        private class CheckFailedException : Exception
+        private class CheckFailedException(string message, Type type) : Exception(message)
         {
-            public CheckFailedException(string message, Type type)
-                : base(message)
-            {
-                Type = type;
-            }
-
-            public Type Type { get; }
+            public Type Type { get; } = type;
         }
 
         #endregion

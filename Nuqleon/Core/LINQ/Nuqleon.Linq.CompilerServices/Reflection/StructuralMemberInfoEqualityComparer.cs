@@ -15,11 +15,13 @@ namespace System.Reflection
     /// <summary>
     /// MemberInfo comparer for structural types.
     /// </summary>
-    public class StructuralMemberInfoEqualityComparer : IEqualityComparer<MemberInfo>
+    /// <remarks>
+    /// Instantiates a MemberInfo comparer for structural type members, using the given comparator factory.
+    /// </remarks>
+    /// <param name="comparatorFactory">Factory to produce comparator instances for performing equals and hash code operations.</param>
+    public class StructuralMemberInfoEqualityComparer(Func<StructuralMemberInfoEqualityComparator> comparatorFactory) : IEqualityComparer<MemberInfo>
     {
-        private static StructuralMemberInfoEqualityComparer _instance;
-
-        private readonly Func<StructuralMemberInfoEqualityComparator> _comparatorFactory;
+        private readonly Func<StructuralMemberInfoEqualityComparator> _comparatorFactory = comparatorFactory;
 
         /// <summary>
         /// Instantiates a MemberInfo comparer for structural type members, using a default comparator factory.
@@ -30,20 +32,14 @@ namespace System.Reflection
         }
 
         /// <summary>
-        /// Instantiates a MemberInfo comparer for structural type members, using the given comparator factory.
-        /// </summary>
-        /// <param name="comparatorFactory">Factory to produce comparator instances for performing equals and hash code operations.</param>
-        public StructuralMemberInfoEqualityComparer(Func<StructuralMemberInfoEqualityComparator> comparatorFactory) => _comparatorFactory = comparatorFactory;
-
-        /// <summary>
         /// A default instance of the equality comparer.
         /// </summary>
         public static StructuralMemberInfoEqualityComparer Default
         {
             get
             {
-                _instance ??= new StructuralMemberInfoEqualityComparer();
-                return _instance;
+                field ??= new StructuralMemberInfoEqualityComparer();
+                return field;
             }
         }
 

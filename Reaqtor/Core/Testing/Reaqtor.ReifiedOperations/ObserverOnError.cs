@@ -13,25 +13,15 @@ using System;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class ObserverOnError : ObserverOperation
+    public class ObserverOnError(Uri observerUri, Exception error) : ObserverOperation(ServiceOperationKind.ObserverOnError, observerUri)
     {
-        public ObserverOnError(Uri observerUri, Exception error)
-            : base(ServiceOperationKind.ObserverOnError, observerUri)
-        {
-            Error = error;
-        }
-
-        public Exception Error { get; }
+        public Exception Error { get; } = error;
 
         public override string ToString() => base.ToString() + " - " + Error;
     }
 
     [Serializable]
-    public class ObserverOnError<T> : ObserverOnError
+    public class ObserverOnError<T>(Uri observerUri, Exception error) : ObserverOnError(observerUri, error)
     {
-        public ObserverOnError(Uri observerUri, Exception error)
-            : base(observerUri, error)
-        {
-        }
     }
 }

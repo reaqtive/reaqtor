@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Threading;
 
 namespace Reaqtive
 {
@@ -11,7 +12,7 @@ namespace Reaqtive
     /// </summary>
     public class SerialSubscription : IFutureSubscription
     {
-        private readonly object _gate = new();
+        private readonly Lock _gate = new();
         private ISubscription _current;
         private bool _disposed;
 

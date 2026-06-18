@@ -89,11 +89,9 @@ namespace Tests
             Assert.ThrowsException<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
         }
 
-        private sealed class MyCache<T, R> : IMemoizationCache<T, R>, IServiceProvider
+        private sealed class MyCache<T, R>(bool hasServices = false) : IMemoizationCache<T, R>, IServiceProvider
         {
-            private readonly bool _hasServices;
-
-            public MyCache(bool hasServices = false) => _hasServices = hasServices;
+            private readonly bool _hasServices = hasServices;
 
             public R GetOrAdd(T argument) => throw new NotImplementedException();
 

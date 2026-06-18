@@ -16,16 +16,12 @@ namespace System.Reflection
     /// <summary>
     /// Lightweight representation of a method.
     /// </summary>
-    public abstract class MethodInfoSlim : MemberInfoSlim
+    /// <remarks>
+    /// Creates a new method representation object.
+    /// </remarks>
+    /// <param name="declaringType">Type declaring the method.</param>
+    public abstract class MethodInfoSlim(TypeSlim declaringType) : MemberInfoSlim(declaringType)
     {
-        /// <summary>
-        /// Creates a new method representation object.
-        /// </summary>
-        /// <param name="declaringType">Type declaring the method.</param>
-        protected MethodInfoSlim(TypeSlim declaringType)
-            : base(declaringType)
-        {
-        }
 
         /// <summary>
         /// Gets the member type of the member.

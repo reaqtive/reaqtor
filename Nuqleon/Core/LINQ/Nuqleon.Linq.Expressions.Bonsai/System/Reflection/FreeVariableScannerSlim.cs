@@ -43,7 +43,7 @@ namespace System.Reflection
 
             public Impl()
             {
-                Globals = new HashSet<ParameterExpressionSlim>();
+                Globals = [];
 
                 _environment = new Stack<HashSet<ParameterExpressionSlim>>();
                 _environment.Push(Globals);
@@ -71,7 +71,7 @@ namespace System.Reflection
             {
                 if (node.Variable != null)
                 {
-                    _environment.Push(new HashSet<ParameterExpressionSlim> { node.Variable });
+                    _environment.Push([node.Variable]);
                 }
 
                 var res = base.VisitCatchBlock(node);

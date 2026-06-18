@@ -13,11 +13,7 @@ using System;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class DeleteServiceOperation : ServiceOperation
+    public class DeleteServiceOperation(ServiceOperationKind kind, Uri targetObjectUri) : ServiceOperation(kind, targetObjectUri, null)
     {
-        public DeleteServiceOperation(ServiceOperationKind kind, Uri targetObjectUri)
-            : base(kind, targetObjectUri, null)
-        {
-        }
     }
 }

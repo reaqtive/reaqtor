@@ -12,20 +12,15 @@ namespace Reaqtive
     /// </summary>
     /// <typeparam name="TParam">Type of the parameters passed to the observer.</typeparam>
     /// <typeparam name="TResult">Element type of the result sequence produced by the operator.</typeparam>
-    public abstract class HigherOrderInputStatefulOperator<TParam, TResult> : StatefulOperator<TParam, TResult>
+    /// <remarks>
+    /// Creates a new higher order operator instance using the given parameters and the
+    /// observer to report downstream notifications to.
+    /// </remarks>
+    /// <param name="parent">Parameters used by the operator.</param>
+    /// <param name="observer">Observer receiving the operator's output.</param>
+    public abstract class HigherOrderInputStatefulOperator<TParam, TResult>(TParam parent, IObserver<TResult> observer) : StatefulOperator<TParam, TResult>(parent, observer)
     {
         private IOperatorContext _context;
-
-        /// <summary>
-        /// Creates a new higher order operator instance using the given parameters and the
-        /// observer to report downstream notifications to.
-        /// </summary>
-        /// <param name="parent">Parameters used by the operator.</param>
-        /// <param name="observer">Observer receiving the operator's output.</param>
-        protected HigherOrderInputStatefulOperator(TParam parent, IObserver<TResult> observer)
-            : base(parent, observer)
-        {
-        }
 
         /// <summary>
         /// Sets the operator's context in which it operates.

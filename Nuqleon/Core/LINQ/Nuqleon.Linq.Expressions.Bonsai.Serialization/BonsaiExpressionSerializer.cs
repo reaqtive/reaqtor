@@ -233,15 +233,9 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             return visitor.Visit(expr);
         }
 
-        private sealed class SerializerImpl : ExpressionSlimToBonsaiConverter
+        private sealed class SerializerImpl(SerializationState state, Func<Type, Func<object, Json.Expression>> liftFactory) : ExpressionSlimToBonsaiConverter(state)
         {
-            private readonly Func<Type, Func<object, Json.Expression>> _liftFactory;
-
-            public SerializerImpl(SerializationState state, Func<Type, Func<object, Json.Expression>> liftFactory)
-                : base(state)
-            {
-                _liftFactory = liftFactory;
-            }
+            private readonly Func<Type, Func<object, Json.Expression>> _liftFactory = liftFactory;
 
             protected override Json.Expression VisitConstantValue(ObjectSlim value)
             {
@@ -254,15 +248,9 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             }
         }
 
-        private sealed class DeserializerImpl : BonsaiToExpressionSlimConverter
+        private sealed class DeserializerImpl(DeserializationState state, Func<Type, Func<Json.Expression, object>> reduceFactory) : BonsaiToExpressionSlimConverter(state)
         {
-            private readonly Func<Type, Func<Json.Expression, object>> _reduceFactory;
-
-            public DeserializerImpl(DeserializationState state, Func<Type, Func<Json.Expression, object>> reduceFactory)
-                : base(state)
-            {
-                _reduceFactory = reduceFactory;
-            }
+            private readonly Func<Type, Func<Json.Expression, object>> _reduceFactory = reduceFactory;
 
             protected override ObjectSlim VisitConstantValue(Json.Expression value, TypeSlim type) => ObjectSlim.Create(value, type, _reduceFactory);
         }

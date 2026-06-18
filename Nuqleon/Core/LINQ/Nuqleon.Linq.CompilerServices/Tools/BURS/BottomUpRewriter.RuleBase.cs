@@ -18,23 +18,18 @@ namespace System.Linq.CompilerServices
     /// </summary>
     /// <typeparam name="TSource">Type of the source tree nodes.</typeparam>
     /// <typeparam name="TTarget">Type of the target tree nodes.</typeparam>
-    public abstract class RuleBase<TSource, TTarget>
+    /// <remarks>
+    /// Creates a new rule with the given cost.
+    /// </remarks>
+    /// <param name="cost">Cost to apply the rule.</param>
+    public abstract class RuleBase<TSource, TTarget>(int cost)
     {
         private List<WildcardTraversal<TSource>> _paths;
 
         /// <summary>
-        /// Creates a new rule with the given cost.
-        /// </summary>
-        /// <param name="cost">Cost to apply the rule.</param>
-        protected RuleBase(int cost)
-        {
-            Cost = cost;
-        }
-
-        /// <summary>
         /// Gets the cost to apply the rule.
         /// </summary>
-        public int Cost { get; }
+        public int Cost { get; } = cost;
 
         internal void SetWildcardTraversalPaths(List<WildcardTraversal<TSource>> paths)
         {
@@ -45,21 +40,15 @@ namespace System.Linq.CompilerServices
         internal IEnumerable<WildcardBinding<T>> RecurseOnWildcards<T>(ITree<T> tree)
         {
             if (_paths == null)
-                return Enumerable.Empty<WildcardBinding<T>>();
+                return [];
 
             return _paths.Select(traversal => new WildcardBinding<T>(traversal.Wildcard, traversal.Get<T>(tree)));
         }
 
-        internal readonly struct WildcardBinding<T>
+        internal readonly struct WildcardBinding<T>(TSource wildcard, ITree<T> tree)
         {
-            public readonly TSource Wildcard;
-            public readonly ITree<T> Tree;
-
-            public WildcardBinding(TSource wildcard, ITree<T> tree)
-            {
-                Wildcard = wildcard;
-                Tree = tree;
-            }
+            public readonly TSource Wildcard = wildcard;
+            public readonly ITree<T> Tree = tree;
         }
     }
 }

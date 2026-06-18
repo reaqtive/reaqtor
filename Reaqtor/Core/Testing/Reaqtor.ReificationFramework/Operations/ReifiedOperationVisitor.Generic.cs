@@ -83,7 +83,7 @@ namespace Reaqtor.ReificationFramework
             if (genericType != null)
             {
                 var method = s_catchGeneric.MakeGenericMethod(genericType.GenericTypeArguments[0]);
-                return (TResult)method.Invoke(this, new object[] { operation });
+                return (TResult)method.Invoke(this, [operation]);
             }
 
             throw new InvalidOperationException(

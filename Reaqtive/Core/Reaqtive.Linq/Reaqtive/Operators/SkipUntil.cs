@@ -29,17 +29,13 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulOperator<SkipUntil<TSource, TOther>, TSource>, IObserver<TSource>
+        private sealed class _(SkipUntil<TSource, TOther> parent, IObserver<TSource> observer) : StatefulOperator<SkipUntil<TSource, TOther>, TSource>(parent, observer), IObserver<TSource>
         {
             private OtherObserver _otherObserver;
 #pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private SingleAssignmentSubscription _firstSubscription;
-#pragma warning restore CA2213
 
-            public _(SkipUntil<TSource, TOther> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
+#pragma warning restore CA2213
 
             public override string Name => "rc:SkipUntil";
 
@@ -106,19 +102,12 @@ namespace Reaqtive.Operators
             /// It uses underneath another instance of <see cref="IObserver{TFirst}"/> to push each of the notifications that it receives.
             /// Initially it will use an observer that will discard all messages until the second observable signals (at which point it will start push notifications to the SkipUntil observer)
             /// </summary>
-            private sealed class FirstObserver : IObserver<TSource>
+            private sealed class FirstObserver(SkipUntil<TSource, TOther>._ parent, ISubscription subscription) : IObserver<TSource>
             {
-                public volatile IObserver<TSource> _observer;
+                public volatile IObserver<TSource> _observer = NopObserver<TSource>.Instance;
 
-                private readonly _ _parent;
-                private readonly ISubscription _subscription;
-
-                public FirstObserver(_ parent, ISubscription subscription)
-                {
-                    _observer = NopObserver<TSource>.Instance;
-                    _parent = parent;
-                    _subscription = subscription;
-                }
+                private readonly _ _parent = parent;
+                private readonly ISubscription _subscription = subscription;
 
                 public IObserver<TSource> Observer
                 {
@@ -151,18 +140,11 @@ namespace Reaqtive.Operators
             /// Observer implementation to be attached to the second observable.
             /// Once the second observable signals (OnNext or OnCompleted) it notifies the First observer to start pushing its notifications to the SkipUntil subscriber
             /// </summary>
-            private sealed class OtherObserver : IObserver<TOther>
+            private sealed class OtherObserver(SkipUntil<TSource, TOther>._ skipUntilOperator, _.FirstObserver firstObserver, ISubscription subscription) : IObserver<TOther>
             {
-                private readonly FirstObserver _firstObserver;
-                private readonly _ _skipUntilObserver;
-                private readonly ISubscription _subscription;
-
-                public OtherObserver(_ skipUntilOperator, FirstObserver firstObserver, ISubscription subscription)
-                {
-                    _skipUntilObserver = skipUntilOperator;
-                    _firstObserver = firstObserver;
-                    _subscription = subscription;
-                }
+                private readonly FirstObserver _firstObserver = firstObserver;
+                private readonly _ _skipUntilObserver = skipUntilOperator;
+                private readonly ISubscription _subscription = subscription;
 
                 public void OnCompleted()
                 {

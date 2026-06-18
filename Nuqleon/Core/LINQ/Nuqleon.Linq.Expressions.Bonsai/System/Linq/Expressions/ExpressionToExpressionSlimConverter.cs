@@ -23,15 +23,20 @@ namespace System.Linq.Expressions
     /// <summary>
     /// Expression visitor that converts expressions to expression slims.
     /// </summary>
-    public class ExpressionToExpressionSlimConverter : ExpressionVisitorNarrow<ExpressionSlim, LambdaExpressionSlim, ParameterExpressionSlim, NewExpressionSlim, ElementInitSlim, MemberBindingSlim, MemberAssignmentSlim, MemberListBindingSlim, MemberMemberBindingSlim, CatchBlockSlim, SwitchCaseSlim, LabelTargetSlim>
+    /// <remarks>
+    /// Instantiates an expression to expression slim converter with a given typespace and slim expression factory.
+    /// </remarks>
+    /// <param name="typeSpace">The type space.</param>
+    /// <param name="factory">The slim expression factory.</param>
+    public class ExpressionToExpressionSlimConverter(TypeSpace typeSpace, IExpressionSlimFactory factory) : ExpressionVisitorNarrow<ExpressionSlim, LambdaExpressionSlim, ParameterExpressionSlim, NewExpressionSlim, ElementInitSlim, MemberBindingSlim, MemberAssignmentSlim, MemberListBindingSlim, MemberMemberBindingSlim, CatchBlockSlim, SwitchCaseSlim, LabelTargetSlim>
     {
         #region Fields
 
-        private readonly IExpressionSlimFactory _factory;
+        private readonly IExpressionSlimFactory _factory = factory ?? throw new ArgumentNullException(nameof(factory));
 
         // TODO Use memory pool for these dictionaries
-        private readonly Dictionary<ParameterExpression, ParameterExpressionSlim> _parameters;
-        private readonly Dictionary<LabelTarget, LabelTargetSlim> _labels;
+        private readonly Dictionary<ParameterExpression, ParameterExpressionSlim> _parameters = [];
+        private readonly Dictionary<LabelTarget, LabelTargetSlim> _labels = [];
 
         #endregion
 
@@ -54,19 +59,6 @@ namespace System.Linq.Expressions
         {
         }
 
-        /// <summary>
-        /// Instantiates an expression to expression slim converter with a given typespace and slim expression factory.
-        /// </summary>
-        /// <param name="typeSpace">The type space.</param>
-        /// <param name="factory">The slim expression factory.</param>
-        public ExpressionToExpressionSlimConverter(TypeSpace typeSpace, IExpressionSlimFactory factory)
-        {
-            TypeSpace = typeSpace ?? throw new ArgumentNullException(nameof(typeSpace));
-            _factory = factory ?? throw new ArgumentNullException(nameof(factory));
-            _parameters = new Dictionary<ParameterExpression, ParameterExpressionSlim>();
-            _labels = new Dictionary<LabelTarget, LabelTargetSlim>();
-        }
-
         #endregion
 
         #region Properties
@@ -74,7 +66,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Gets the type space containing mapped types.
         /// </summary>
-        protected TypeSpace TypeSpace { get; }
+        protected TypeSpace TypeSpace { get; } = typeSpace ?? throw new ArgumentNullException(nameof(typeSpace));
 
         #endregion
 

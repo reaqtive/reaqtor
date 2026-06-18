@@ -22,38 +22,30 @@ using System.Reactive.Subjects;
 
 namespace Rxcel
 {
-    internal sealed class Cell : IDisposable
+    internal sealed class Cell(Sheet sheet) : IDisposable
     {
-        private readonly Sheet _sheet;
-        private readonly BehaviorSubject<double?> _subject;
-        private readonly SerialDisposable _subscription;
-        private string _formula;
+        private readonly Sheet _sheet = sheet;
+        private readonly BehaviorSubject<double?> _subject = new BehaviorSubject<double?>(null);
+        private readonly SerialDisposable _subscription = new SerialDisposable();
         private LambdaExpression _expr;
-
-        public Cell(Sheet sheet)
-        {
-            _sheet = sheet;
-            _subject = new BehaviorSubject<double?>(null);
-            _subscription = new SerialDisposable();
-        }
 
         public string Value
         {
-            get => !string.IsNullOrEmpty(_formula) ? _formula : _subject.Value.ToString();
+            get => !string.IsNullOrEmpty(field) ? field : _subject.Value.ToString();
 
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
                     _expr = null;
-                    _formula = null;
+                    field = null;
                     _subscription.Disposable = Disposable.Empty;
                     _subject.OnNext(null);
                 }
                 else if (double.TryParse(value, out var v))
                 {
                     _expr = null;
-                    _formula = null;
+                    field = null;
                     _subscription.Disposable = Disposable.Empty;
                     _subject.OnNext(v);
                 }
@@ -94,7 +86,7 @@ namespace Rxcel
 
 #pragma warning restore CA1031
 
-                        _formula = value;
+                        field = value;
                     }
                     else
                     {
@@ -180,7 +172,7 @@ namespace Rxcel
                 throw new InvalidOperationException("Cycle detected.");
             }
 
-            var res = Expression.Call(mtd, cells.Select(c => Expression.Constant(c)).Concat(new Expression[] { f }).ToArray());
+            var res = Expression.Call(mtd, [.. cells.Select(c => Expression.Constant(c)), .. new Expression[] { f }]);
 
             var src = Expression.Lambda<Func<IObservable<double?>>>(res).Compile()();
 

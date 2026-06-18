@@ -8,14 +8,14 @@
 //   PS - 10/17/2014 - Wrote these tests.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Linq;
 using System.Linq.Expressions;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #if !NET6_0_OR_GREATER
 using System.IO;

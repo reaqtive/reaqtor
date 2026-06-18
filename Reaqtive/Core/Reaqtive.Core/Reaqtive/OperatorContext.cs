@@ -12,42 +12,35 @@ namespace Reaqtive
     /// <summary>
     /// Operator context.
     /// </summary>
-    public class OperatorContext : IOperatorContext
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="OperatorContext"/> class.
+    /// </remarks>
+    /// <param name="instanceId">The id (URI) of the instance owning the operator.</param>
+    /// <param name="scheduler">The scheduler to perform asynchronous activities on.</param>
+    /// <param name="traceSource">Trace source to log operator diagnostic information to.</param>
+    /// <param name="executionEnvironment">The execution environment where the operator is executing in.</param>
+    public class OperatorContext(Uri instanceId, IScheduler scheduler, TraceSource traceSource = null, IExecutionEnvironment executionEnvironment = null) : IOperatorContext
     {
-        /// <summary>
-        /// Initializes a new instance of the <see cref="OperatorContext"/> class.
-        /// </summary>
-        /// <param name="instanceId">The id (URI) of the instance owning the operator.</param>
-        /// <param name="scheduler">The scheduler to perform asynchronous activities on.</param>
-        /// <param name="traceSource">Trace source to log operator diagnostic information to.</param>
-        /// <param name="executionEnvironment">The execution environment where the operator is executing in.</param>
-        public OperatorContext(Uri instanceId, IScheduler scheduler, TraceSource traceSource = null, IExecutionEnvironment executionEnvironment = null)
-        {
-            InstanceId = instanceId ?? throw new ArgumentNullException(nameof(instanceId));
-            Scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
-            TraceSource = traceSource;
-            ExecutionEnvironment = executionEnvironment;
-        }
 
         /// <summary>
         /// Gets the id (URI) of the instance owning the operator.
         /// </summary>
-        public Uri InstanceId { get; }
+        public Uri InstanceId { get; } = instanceId ?? throw new ArgumentNullException(nameof(instanceId));
 
         /// <summary>
         /// Gets the scheduler to perform asynchronous activities on.
         /// </summary>
-        public IScheduler Scheduler { get; }
+        public IScheduler Scheduler { get; } = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
 
         /// <summary>
         /// Gets the trace source to log operator diagnostic information to.
         /// </summary>
-        public TraceSource TraceSource { get; }
+        public TraceSource TraceSource { get; } = traceSource;
 
         /// <summary>
         /// Gets the execution environment where the operator is executing in.
         /// </summary>
-        public IExecutionEnvironment ExecutionEnvironment { get; }
+        public IExecutionEnvironment ExecutionEnvironment { get; } = executionEnvironment;
 
         /// <summary>
         /// Tries to get an element from the context with the given identifier.

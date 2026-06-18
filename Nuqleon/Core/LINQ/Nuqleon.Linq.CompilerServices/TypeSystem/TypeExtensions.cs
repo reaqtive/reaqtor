@@ -24,14 +24,14 @@ namespace System
     /// </summary>
     public static class TypeExtensions
     {
-        private static readonly HashSet<Type> s_knownWildcards = new()
-        {
+        private static readonly HashSet<Type> s_knownWildcards =
+        [
             typeof(T),
             typeof(T1),
             typeof(T2),
             typeof(T3),
             typeof(R),
-        };
+        ];
 
         #region Anonymous and closure types
 
@@ -665,7 +665,7 @@ namespace System
             return new TypePrinter(useNamespaceQualifiedNames, useCSharpTypeAliases, disallowCompilerGeneratedTypes).Visit(type);
         }
 
-        private sealed class TypePrinter : TypeVisitor<string>
+        private sealed class TypePrinter(bool useNamespaceQualifiedNames, bool useCSharpTypeAliases, bool disallowCompilerGeneratedTypes) : TypeVisitor<string>
         {
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable format // (Formatted as a table.)
@@ -691,16 +691,9 @@ namespace System
 #pragma warning restore format
 #pragma warning restore IDE0079
 
-            private readonly bool _useNamespaceQualifiedNames;
-            private readonly bool _useCSharpTypeAliases;
-            private readonly bool _disallowCompilerGeneratedTypes;
-
-            public TypePrinter(bool useNamespaceQualifiedNames, bool useCSharpTypeAliases, bool disallowCompilerGeneratedTypes)
-            {
-                _useNamespaceQualifiedNames = useNamespaceQualifiedNames;
-                _useCSharpTypeAliases = useCSharpTypeAliases;
-                _disallowCompilerGeneratedTypes = disallowCompilerGeneratedTypes;
-            }
+            private readonly bool _useNamespaceQualifiedNames = useNamespaceQualifiedNames;
+            private readonly bool _useCSharpTypeAliases = useCSharpTypeAliases;
+            private readonly bool _disallowCompilerGeneratedTypes = disallowCompilerGeneratedTypes;
 
             public override string Visit(Type type)
             {
@@ -1009,7 +1002,7 @@ namespace System
                 {
                     if (kv.Value == null)
                     {
-                        unbound ??= new List<string>();
+                        unbound ??= [];
 
                         unbound.Add(kv.Key.Name);
                     }
@@ -1055,16 +1048,10 @@ namespace System
             return error;
         }
 
-        private sealed class TypeUnifier : TypeEqualityComparer
+        private sealed class TypeUnifier(IEqualityComparer<Type> comparer) : TypeEqualityComparer
         {
-            private readonly IEqualityComparer<Type> _comparer;
-            private readonly Dictionary<Type, TypeHolder> _map;
-
-            public TypeUnifier(IEqualityComparer<Type> comparer)
-            {
-                _comparer = comparer;
-                _map = new Dictionary<Type, TypeHolder>();
-            }
+            private readonly IEqualityComparer<Type> _comparer = comparer;
+            private readonly Dictionary<Type, TypeHolder> _map = [];
 
             public Dictionary<Type, Type> Map => _map.ToDictionary(e => e.Key, e => e.Value.Type);
 
@@ -1200,21 +1187,16 @@ namespace System
 
             private sealed class TypeHolder
             {
-                public HashSet<Type> Wildcards { get; } = new HashSet<Type>();
+                public HashSet<Type> Wildcards { get; } = [];
                 public Type Type;
             }
         }
 
-        private sealed class LeftTypeUnifier : TypeEqualityComparer
+        private sealed class LeftTypeUnifier(IEqualityComparer<Type> comparer) : TypeEqualityComparer
         {
-            private readonly IEqualityComparer<Type> _comparer;
+            private readonly IEqualityComparer<Type> _comparer = comparer;
 
-            public LeftTypeUnifier(IEqualityComparer<Type> comparer)
-            {
-                _comparer = comparer;
-            }
-
-            public Dictionary<Type, Type> Map { get; } = new Dictionary<Type, Type>();
+            public Dictionary<Type, Type> Map { get; } = [];
 
             public Exception Error { get; private set; }
 

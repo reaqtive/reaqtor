@@ -14,158 +14,74 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2> : QubjectFactory<TInput, TOutput, TArg1, TArg2>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
-    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>, IKnownResource
+    internal sealed class KnownQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider) : QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(expression, provider), IKnownResource
     {
-        public KnownQubjectFactory(Expression expression, Uri streamFactoryUri, IReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        public Uri Uri { get; } = streamFactoryUri;
     }
 
 }

@@ -65,14 +65,9 @@ namespace System.Reflection
             return string.Format(CultureInfo.InvariantCulture, "{3} {0}.{1}<{4}>({2})", declaringType, method.GenericMethodDefinition.Name, parameterTypes, returnType, genericArgumentTypes);
         }
 
-        private sealed class GenericParameterTypeSubstPrinter : TypeSlimPrettyPrinter
+        private sealed class GenericParameterTypeSubstPrinter(Dictionary<TypeSlim, TypeSlim> map) : TypeSlimPrettyPrinter
         {
-            private readonly Dictionary<TypeSlim, TypeSlim> _map;
-
-            public GenericParameterTypeSubstPrinter(Dictionary<TypeSlim, TypeSlim> map)
-            {
-                _map = map;
-            }
+            private readonly Dictionary<TypeSlim, TypeSlim> _map = map;
 
             protected override string VisitGenericParameter(GenericParameterTypeSlim type)
             {

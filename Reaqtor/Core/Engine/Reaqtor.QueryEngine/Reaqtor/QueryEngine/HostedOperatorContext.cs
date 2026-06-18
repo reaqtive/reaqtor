@@ -12,14 +12,8 @@ using Reaqtor.Reactive;
 
 namespace Reaqtor.QueryEngine
 {
-    internal sealed class HostedOperatorContext : OperatorContext, IHostedOperatorContext
+    internal sealed class HostedOperatorContext(Uri instanceId, IScheduler scheduler, TraceSource traceSource, IExecutionEnvironment executionEnvironment, IReactive service) : OperatorContext(instanceId, scheduler, traceSource, executionEnvironment), IHostedOperatorContext
     {
-        public HostedOperatorContext(Uri instanceId, IScheduler scheduler, TraceSource traceSource, IExecutionEnvironment executionEnvironment, IReactive service)
-            : base(instanceId, scheduler, traceSource, executionEnvironment)
-        {
-            ReactiveService = service ?? throw new ArgumentNullException(nameof(service));
-        }
-
-        public IReactive ReactiveService { get; }
+        public IReactive ReactiveService { get; } = service ?? throw new ArgumentNullException(nameof(service));
     }
 }

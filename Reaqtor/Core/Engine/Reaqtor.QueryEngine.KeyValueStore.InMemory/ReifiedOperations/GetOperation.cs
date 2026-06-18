@@ -7,13 +7,11 @@ using System.Collections.Immutable;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
-    public class GetOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
+    public class GetOperation<TKey, TValue>(TKey key) : ReifiedOperation<TKey, TValue>
     {
-        public GetOperation(TKey key) => Key = key;
-
         public override OperationType OperationType => OperationType.Get;
 
-        public TKey Key { get; }
+        public TKey Key { get; } = key;
 
         public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
         {

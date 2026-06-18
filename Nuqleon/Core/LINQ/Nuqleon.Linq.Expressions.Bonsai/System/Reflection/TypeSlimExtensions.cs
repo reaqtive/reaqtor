@@ -278,7 +278,7 @@ namespace System.Reflection
                 throw new NotImplementedException();
             }
 
-            return Array.Empty<TypeSlim>();
+            return [];
         }
 
         internal static TypeSlim MakeGenericType(this TypeSlim type, ReadOnlyCollection<TypeSlim> args)

@@ -14,19 +14,13 @@ using System.Threading.Tasks;
 
 namespace Reaqtor
 {
-    internal class Qubscription : AsyncReactiveQubscriptionBase
+    internal class Qubscription(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubscriptionBase(provider)
     {
-        public Qubscription(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
         protected override Task DisposeAsyncCore(CancellationToken token)
         {
             return ((AsyncReactiveQueryProviderBase)base.Provider).DeleteSubscriptionAsync(this, token);
         }
 
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
     }
 }

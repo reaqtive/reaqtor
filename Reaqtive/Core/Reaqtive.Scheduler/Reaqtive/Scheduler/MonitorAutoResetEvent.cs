@@ -14,7 +14,11 @@ namespace Reaqtive.Scheduler
     /// of flexibility. For example, operations such as <c>WaitAll</c> and <c>WaitAny</c> are
     /// not supported.
     /// </remarks>
-    internal sealed class MonitorAutoResetEvent
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="MonitorAutoResetEvent" /> class.
+    /// </remarks>
+    /// <param name="isSet">A flag indicating whether the new instance should have the monitor initially set.</param>
+    internal sealed class MonitorAutoResetEvent(bool isSet = false)
     {
         /// <summary>
         /// The thread safety gate.
@@ -24,16 +28,7 @@ namespace Reaqtive.Scheduler
         /// <summary>
         /// Flag indicating whether the monitor is currently set.
         /// </summary>
-        private bool _isSet;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="MonitorAutoResetEvent" /> class.
-        /// </summary>
-        /// <param name="isSet">A flag indicating whether the new instance should have the monitor initially set.</param>
-        public MonitorAutoResetEvent(bool isSet = false)
-        {
-            _isSet = isSet;
-        }
+        private bool _isSet = isSet;
 
         /// <summary>
         /// Sets the event.

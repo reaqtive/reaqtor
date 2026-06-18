@@ -17,21 +17,16 @@ namespace Nuqleon.Json.Serialization
         /// JSON deserializer for objects of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
-        private sealed class Deserializer<T> : DeserializerBase<T>
+        /// <remarks>
+        /// Creates a new deserializer given the specified parser implementation.
+        /// </remarks>
+        /// <param name="parseString">The parser to use to deserialize JSON payloads from string inputs.</param>
+        /// <param name="parseReader">The parser to use to deserialize JSON payloads from text reader inputs.</param>
+        private sealed class Deserializer<T>(ParseStringFunc<T> parseString, ParseReaderFunc<T> parseReader) : DeserializerBase<T>(parseString, parseReader)
         {
-            private readonly ParserContext _context;
+            private readonly ParserContext _context = new ParserContext();
 
 #if !NO_IO
-            /// <summary>
-            /// Creates a new deserializer given the specified parser implementation.
-            /// </summary>
-            /// <param name="parseString">The parser to use to deserialize JSON payloads from string inputs.</param>
-            /// <param name="parseReader">The parser to use to deserialize JSON payloads from text reader inputs.</param>
-            public Deserializer(ParseStringFunc<T> parseString, ParseReaderFunc<T> parseReader)
-                : base(parseString, parseReader)
-            {
-                _context = new ParserContext();
-            }
 #else
             /// <summary>
             /// Creates a new deserializer given the specified parser implementation.

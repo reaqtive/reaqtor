@@ -10,15 +10,9 @@ using Reaqtor.Reliable.Expressions;
 
 namespace Reaqtor.Reliable.Service
 {
-    public class ReliableQueryProvider : ReliableQueryProviderBase
+    public class ReliableQueryProvider(IReliableReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices) : ReliableQueryProviderBase(expressionServices)
     {
-        private readonly IReliableReactiveClientEngineProvider _provider;
-
-        public ReliableQueryProvider(IReliableReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
-            : base(expressionServices)
-        {
-            _provider = provider ?? throw new ArgumentNullException(nameof(provider));
-        }
+        private readonly IReliableReactiveClientEngineProvider _provider = provider ?? throw new ArgumentNullException(nameof(provider));
 
         #region Observer
 

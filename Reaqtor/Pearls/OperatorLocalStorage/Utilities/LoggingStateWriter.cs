@@ -20,17 +20,12 @@ namespace Utilities
     /// <summary>
     /// Implementation of <see cref="IStateWriter"/> with logging of operations through a <see cref="TextWriter"/>.
     /// </summary>
-    public sealed class LoggingStateWriter : LoggingStateReaderWriterBase, IStateWriter
+    public sealed class LoggingStateWriter(IStateWriter writer, TextWriter log, bool keepOpen = true) : LoggingStateReaderWriterBase(log, keepOpen), IStateWriter
     {
 #pragma warning disable CA2213 // "Change the Dispose method to call Close or Dispose on this field." We don't own the underlying stream, so this is an inappropriate suggestion.
-        private readonly IStateWriter _writer;
-#pragma warning restore CA2213
+        private readonly IStateWriter _writer = writer;
 
-        public LoggingStateWriter(IStateWriter writer, TextWriter log, bool keepOpen = true)
-            : base(log, keepOpen)
-        {
-            _writer = writer;
-        }
+#pragma warning restore CA2213
 
         public CheckpointKind CheckpointKind => _writer.CheckpointKind;
 

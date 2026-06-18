@@ -308,7 +308,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 {
                     new KT2 { Nested = { new KTNested { Value = 42 } } },
-                    new ArrayMapped { ArrayNested = new[] { new KTNested { Value = 42 } } }
+                    new ArrayMapped { ArrayNested = [new KTNested { Value = 42 }] }
                 }
             };
 
@@ -327,7 +327,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public KT2()
             {
-                Nested = new List<KTNested>();
+                Nested = [];
             }
 
             [Mapping("nested")]
@@ -350,7 +350,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             public Mapped2()
             {
-                MyNested = new List<MappedNested>();
+                MyNested = [];
             }
 
             [Mapping("nested")]

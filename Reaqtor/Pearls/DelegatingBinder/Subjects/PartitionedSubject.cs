@@ -20,7 +20,7 @@ namespace DelegatingBinder
         public PartitionedSubject()
         {
             _subject = new Subject<T>();
-            _partitions = new Dictionary<MemberInfo, Partition>();
+            _partitions = [];
         }
 
         public void OnCompleted()
@@ -118,7 +118,7 @@ namespace DelegatingBinder
                                 {
                                     if (member.Expression == predicate.Parameters[0])
                                     {
-                                        var newPartition = (Expression<Func<MemberInfo, object, PartitionObservable>>)((MemberInfo key, object value) => new PartitionObservable(this, key, value));
+                                        var newPartition = (Expression<Func<MemberInfo, object, PartitionObservable>>)((key, value) => new PartitionObservable(this, key, value));
                                         var partition = BetaReducer.Reduce(Expression.Invoke(newPartition, Expression.Constant(member.Member), Expression.Constant(constant.Value, typeof(object))));
                                         return partition;
                                     }
@@ -132,18 +132,11 @@ namespace DelegatingBinder
             return expression;
         }
 
-        private sealed class PartitionObservable : IObservable<T>
+        private sealed class PartitionObservable(PartitionedSubject<T> parent, MemberInfo member, object value) : IObservable<T>
         {
-            private readonly PartitionedSubject<T> _parent;
-            private readonly MemberInfo _member;
-            private readonly object _value;
-
-            public PartitionObservable(PartitionedSubject<T> parent, MemberInfo member, object value)
-            {
-                _parent = parent;
-                _member = member;
-                _value = value;
-            }
+            private readonly PartitionedSubject<T> _parent = parent;
+            private readonly MemberInfo _member = member;
+            private readonly object _value = value;
 
             public IDisposable Subscribe(IObserver<T> observer)
             {
@@ -159,20 +152,13 @@ namespace DelegatingBinder
             public abstract IDisposable Subscribe(object value, IObserver<T> observer);
         }
 
-        private class Partition<K> : Partition
+        private class Partition<K>(Func<T, K> keySelector) : Partition
         {
-            private readonly Func<T, K> _keySelector;
+            private readonly Func<T, K> _keySelector = keySelector;
 
             // TODO: concurrency
-            private readonly List<IObserver<T>> _null;
-            private readonly IDictionary<K, List<IObserver<T>>> _keys;
-
-            public Partition(Func<T, K> keySelector)
-            {
-                _keySelector = keySelector;
-                _null = new List<IObserver<T>>();
-                _keys = new Dictionary<K, List<IObserver<T>>>();
-            }
+            private readonly List<IObserver<T>> _null = [];
+            private readonly IDictionary<K, List<IObserver<T>>> _keys = new Dictionary<K, List<IObserver<T>>>();
 
             public override void OnCompleted()
             {
@@ -248,7 +234,7 @@ namespace DelegatingBinder
                 {
                     if (!_keys.TryGetValue(key, out var k))
                     {
-                        k = new List<IObserver<T>>();
+                        k = [];
                         _keys[key] = k;
                     }
 

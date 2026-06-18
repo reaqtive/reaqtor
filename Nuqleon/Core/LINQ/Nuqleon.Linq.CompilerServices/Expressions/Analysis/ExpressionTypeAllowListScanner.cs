@@ -17,7 +17,7 @@ namespace System.Linq.CompilerServices
     /// </summary>
     public class ExpressionTypeAllowListScanner : ExpressionTypeAllowListScannerBase
     {
-        private readonly HashSet<Type> _entries = new();
+        private readonly HashSet<Type> _entries = [];
 
         /// <summary>
         /// Creates a new allow list scanner for types. To complete instantiation, initialize the Types property, e.g. by using collection initializers.

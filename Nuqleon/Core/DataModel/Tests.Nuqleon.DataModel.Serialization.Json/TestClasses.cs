@@ -159,7 +159,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
                 TypeTimeSpan = new TimeSpan(1, 2, 3, 4, 5),
                 TypeGuid = Guid.NewGuid(),
                 TypeIEnumerableBool = new[] { true, false, true },
-                TypeArrayBool = new[] { false, true, false },
+                TypeArrayBool = [false, true, false],
                 TypeEnumInt = EnumInt.EnumValue1,
                 TypeNullableEnumInt = EnumInt.EnumValue2,
             };
@@ -346,9 +346,9 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         {
             return new CollectionsClass
             {
-                TypeHash = new HashSet<string> { "Goodbye", ",", "world!" },
+                TypeHash = ["Goodbye", ",", "world!"],
                 TypeList =
-                               new List<string> { "It", "was", "a", "pleasure", "to", "be", "here." },
+                               ["It", "was", "a", "pleasure", "to", "be", "here."],
                 TypeDictionary =
                                new Dictionary<string, RecursiveClass>
                                    {
@@ -359,12 +359,8 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         }
     }
 
-    public class TupleClass : Tuple<int>
+    public class TupleClass(int item1) : Tuple<int>(item1)
     {
-        public TupleClass(int item1) : base(item1)
-        {
-        }
-
         public int Property { get; set; }
     }
 

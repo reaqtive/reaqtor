@@ -43,11 +43,9 @@ namespace Tests
         }
     }
 
-    internal sealed class ConstantHashEqualityComparer : IEqualityComparer
+    internal sealed class ConstantHashEqualityComparer(int hashCode) : IEqualityComparer
     {
-        private readonly int _hashCode;
-
-        public ConstantHashEqualityComparer(int hashCode) => _hashCode = hashCode;
+        private readonly int _hashCode = hashCode;
 
         bool IEqualityComparer.Equals(object x, object y) => true;
 

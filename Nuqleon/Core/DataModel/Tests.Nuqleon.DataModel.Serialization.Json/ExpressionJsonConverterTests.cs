@@ -131,8 +131,8 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
                 using var stream = new MemoryStream();
                 using var reader = new StreamReader(stream);
 
-                var serialize = _genericSerialize.MakeGenericMethod(new[] { type });
-                serialize.Invoke(DataSerializer, new[] { obj, stream });
+                var serialize = _genericSerialize.MakeGenericMethod([type]);
+                serialize.Invoke(DataSerializer, [obj, stream]);
 
                 stream.Position = 0;
 
@@ -149,7 +149,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
                 using var stream = new MemoryStream();
                 using var writer = new StreamWriter(stream);
 
-                var deserialize = _genericDeserialize.MakeGenericMethod(new[] { type });
+                var deserialize = _genericDeserialize.MakeGenericMethod([type]);
 
                 writer.Write(obj.ToString());
                 writer.Flush();
@@ -172,15 +172,9 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
                 }
             }
 
-            private class DataModelBonsaiExpressionSerializer : BonsaiExpressionSerializer
+            private class DataModelBonsaiExpressionSerializer(InvertedTypeSpace invertedTypeSpace, Func<Type, Func<object, JsonExpression>> liftFactory, Func<Type, Func<JsonExpression, object>> reduceFactory, Version version) : BonsaiExpressionSerializer(liftFactory, reduceFactory, version)
             {
-                private readonly ExpressionSlimToExpressionConverter _reducer;
-
-                public DataModelBonsaiExpressionSerializer(InvertedTypeSpace invertedTypeSpace, Func<Type, Func<object, JsonExpression>> liftFactory, Func<Type, Func<JsonExpression, object>> reduceFactory, Version version)
-                    : base(liftFactory, reduceFactory, version)
-                {
-                    _reducer = new ExpressionSlimToExpressionConverter(invertedTypeSpace);
-                }
+                private readonly ExpressionSlimToExpressionConverter _reducer = new ExpressionSlimToExpressionConverter(invertedTypeSpace);
 
                 public override Expression Reduce(ExpressionSlim expression)
                 {

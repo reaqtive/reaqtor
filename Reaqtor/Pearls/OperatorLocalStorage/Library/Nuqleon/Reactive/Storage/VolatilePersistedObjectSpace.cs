@@ -23,7 +23,7 @@ namespace Reaqtive.Storage
         /// <summary>
         /// The registry holding the entries of the object space.
         /// </summary>
-        private readonly Dictionary<string, IPersisted> _registry = new();
+        private readonly Dictionary<string, IPersisted> _registry = [];
 
         /// <summary>
         /// Creates a persisted array.
@@ -46,7 +46,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted dictionary instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedDictionary<TKey, TValue> CreateDictionary<TKey, TValue>(string id) => Create<IPersistedDictionary<TKey, TValue>>(id, () => new DictionaryWrapper<TKey, TValue>(id, new Dictionary<TKey, TValue>()));
+        public IPersistedDictionary<TKey, TValue> CreateDictionary<TKey, TValue>(string id) => Create<IPersistedDictionary<TKey, TValue>>(id, () => new DictionaryWrapper<TKey, TValue>(id, []));
 
         /// <summary>
         /// Creates a persisted linked list.
@@ -66,7 +66,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted list instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedList<T> CreateList<T>(string id) => Create<IPersistedList<T>>(id, () => new ListWrapper<T>(id, new List<T>()));
+        public IPersistedList<T> CreateList<T>(string id) => Create<IPersistedList<T>>(id, () => new ListWrapper<T>(id, []));
 
         /// <summary>
         /// Creates a persisted queue.
@@ -86,7 +86,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted set instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedSet<T> CreateSet<T>(string id) => Create<IPersistedSet<T>>(id, () => new SetWrapper<T>(id, new HashSet<T>()));
+        public IPersistedSet<T> CreateSet<T>(string id) => Create<IPersistedSet<T>>(id, () => new SetWrapper<T>(id, []));
 
         /// <summary>
         /// Creates a persisted sorted dictionary.
@@ -97,7 +97,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted sorted dictionary instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedSortedDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>(string id) => Create<IPersistedSortedDictionary<TKey, TValue>>(id, () => new SortedDictionaryWrapper<TKey, TValue>(id, new SortedDictionary<TKey, TValue>()));
+        public IPersistedSortedDictionary<TKey, TValue> CreateSortedDictionary<TKey, TValue>(string id) => Create<IPersistedSortedDictionary<TKey, TValue>>(id, () => new SortedDictionaryWrapper<TKey, TValue>(id, []));
 
         /// <summary>
         /// Creates a persisted sorted set.
@@ -107,7 +107,7 @@ namespace Reaqtive.Storage
         /// <returns>A new persisted sorted set instance.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="id"/> is <c>null</c>.</exception>
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
-        public IPersistedSortedSet<T> CreateSortedSet<T>(string id) => Create<IPersistedSortedSet<T>>(id, () => new SortedSetWrapper<T>(id, new SortedSet<T>()));
+        public IPersistedSortedSet<T> CreateSortedSet<T>(string id) => Create<IPersistedSortedSet<T>>(id, () => new SortedSetWrapper<T>(id, []));
 
         /// <summary>
         /// Creates a persisted stack.
@@ -312,15 +312,9 @@ namespace Reaqtive.Storage
             return value;
         }
 
-        private sealed class ArrayWrapper<T> : PersistedBase, IPersistedArray<T>
+        private sealed class ArrayWrapper<T>(string id, T[] array) : PersistedBase(id), IPersistedArray<T>
         {
-            private readonly T[] _array;
-
-            public ArrayWrapper(string id, T[] array)
-                : base(id)
-            {
-                _array = array;
-            }
+            private readonly T[] _array = array;
 
             public T this[int index]
             {
@@ -345,14 +339,9 @@ namespace Reaqtive.Storage
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private sealed class DictionaryWrapper<TKey, TValue> : PersistedBase, IPersistedDictionary<TKey, TValue>
+        private sealed class DictionaryWrapper<TKey, TValue>(string id, Dictionary<TKey, TValue> dictionary) : PersistedBase(id), IPersistedDictionary<TKey, TValue>
         {
-            private readonly Dictionary<TKey, TValue> _dictionary;
-
-            public DictionaryWrapper(string id, Dictionary<TKey, TValue> dictionary) : base(id)
-            {
-                _dictionary = dictionary;
-            }
+            private readonly Dictionary<TKey, TValue> _dictionary = dictionary;
 
             public TValue this[TKey key]
             {
@@ -399,18 +388,12 @@ namespace Reaqtive.Storage
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private sealed class LinkedListWrapper<T> : PersistedBase, IPersistedLinkedList<T>
+        private sealed class LinkedListWrapper<T>(string id, LinkedList<T> list) : PersistedBase(id), IPersistedLinkedList<T>
         {
             // REVIEW: In tests, assert that wrappers for adjacent nodes reflect changes correctly upon applying edits (insert before, insert after, remove).
 
-            private readonly LinkedList<T> _list;
-            private readonly ConditionalWeakTable<LinkedListNode<T>, LinkedListNodeWrapper> _nodeCache = new();
-
-            public LinkedListWrapper(string id, LinkedList<T> list)
-                : base(id)
-            {
-                _list = list;
-            }
+            private readonly LinkedList<T> _list = list;
+            private readonly ConditionalWeakTable<LinkedListNode<T>, LinkedListNodeWrapper> _nodeCache = [];
 
             public ILinkedListNode<T> First => CreateWrapper(_list.First);
 
@@ -536,17 +519,11 @@ namespace Reaqtive.Storage
 
             private static LinkedListNodeWrapper AsWrapper(ILinkedListNode<T> node) => (LinkedListNodeWrapper)node;
 
-            private sealed class LinkedListNodeWrapper : ILinkedListNode<T>
+            private sealed class LinkedListNodeWrapper(VolatilePersistedObjectSpace.LinkedListWrapper<T> parent, LinkedListNode<T> node) : ILinkedListNode<T>
             {
-                private readonly LinkedListWrapper<T> _parent;
+                private readonly LinkedListWrapper<T> _parent = parent;
 
-                public LinkedListNodeWrapper(LinkedListWrapper<T> parent, LinkedListNode<T> node)
-                {
-                    _parent = parent;
-                    Node = node;
-                }
-
-                public LinkedListNode<T> Node { get; }
+                public LinkedListNode<T> Node { get; } = node;
 
                 public T Value
                 {
@@ -570,15 +547,9 @@ namespace Reaqtive.Storage
             }
         }
 
-        private sealed class ListWrapper<T> : PersistedBase, IPersistedList<T>
+        private sealed class ListWrapper<T>(string id, List<T> list) : PersistedBase(id), IPersistedList<T>
         {
-            private readonly List<T> _list;
-
-            public ListWrapper(string id, List<T> list)
-                : base(id)
-            {
-                _list = list;
-            }
+            private readonly List<T> _list = list;
 
             public T this[int index]
             {
@@ -613,15 +584,9 @@ namespace Reaqtive.Storage
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private sealed class QueueWrapper<T> : PersistedBase, IPersistedQueue<T>
+        private sealed class QueueWrapper<T>(string id, Queue<T> queue) : PersistedBase(id), IPersistedQueue<T>
         {
-            private readonly Queue<T> _queue;
-
-            public QueueWrapper(string id, Queue<T> queue)
-                : base(id)
-            {
-                _queue = queue;
-            }
+            private readonly Queue<T> _queue = queue;
 
             public int Count => _queue.Count;
 
@@ -636,15 +601,9 @@ namespace Reaqtive.Storage
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private sealed class StackWrapper<T> : PersistedBase, IPersistedStack<T>
+        private sealed class StackWrapper<T>(string id, Stack<T> stack) : PersistedBase(id), IPersistedStack<T>
         {
-            private readonly Stack<T> _stack;
-
-            public StackWrapper(string id, Stack<T> stack)
-                : base(id)
-            {
-                _stack = stack;
-            }
+            private readonly Stack<T> _stack = stack;
 
             public int Count => _stack.Count;
 
@@ -659,16 +618,10 @@ namespace Reaqtive.Storage
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private abstract class SetWrapperBase<T, TSet> : PersistedBase, ISet<T>
+        private abstract class SetWrapperBase<T, TSet>(string id, TSet set) : PersistedBase(id), ISet<T>
             where TSet : ISet<T>
         {
-            protected readonly TSet _set;
-
-            public SetWrapperBase(string id, TSet set)
-                : base(id)
-            {
-                _set = set;
-            }
+            protected readonly TSet _set = set;
 
             public int Count => _set.Count;
 
@@ -759,22 +712,13 @@ namespace Reaqtive.Storage
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private sealed class SetWrapper<T> : SetWrapperBase<T, HashSet<T>>, IPersistedSet<T>
+        private sealed class SetWrapper<T>(string id, HashSet<T> set) : SetWrapperBase<T, HashSet<T>>(id, set), IPersistedSet<T>
         {
-            public SetWrapper(string id, HashSet<T> set)
-                : base(id, set)
-            {
-            }
         }
 
-        private sealed class SortedDictionaryWrapper<TKey, TValue> : PersistedBase, IPersistedSortedDictionary<TKey, TValue>
+        private sealed class SortedDictionaryWrapper<TKey, TValue>(string id, SortedDictionary<TKey, TValue> dictionary) : PersistedBase(id), IPersistedSortedDictionary<TKey, TValue>
         {
-            private readonly SortedDictionary<TKey, TValue> _dictionary;
-
-            public SortedDictionaryWrapper(string id, SortedDictionary<TKey, TValue> dictionary) : base(id)
-            {
-                _dictionary = dictionary;
-            }
+            private readonly SortedDictionary<TKey, TValue> _dictionary = dictionary;
 
             public TValue this[TKey key]
             {
@@ -821,13 +765,8 @@ namespace Reaqtive.Storage
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
         }
 
-        private sealed class SortedSetWrapper<T> : SetWrapperBase<T, SortedSet<T>>, IPersistedSortedSet<T>
+        private sealed class SortedSetWrapper<T>(string id, SortedSet<T> set) : SetWrapperBase<T, SortedSet<T>>(id, set), IPersistedSortedSet<T>
         {
-            public SortedSetWrapper(string id, SortedSet<T> set)
-                : base(id, set)
-            {
-            }
-
             public T Max => _set.Max;
 
             public T Min => _set.Min;
@@ -837,13 +776,8 @@ namespace Reaqtive.Storage
             public IEnumerable<T> Reverse() => _set.Reverse();
         }
 
-        private sealed class ValueWrapper<T> : PersistedBase, IPersistedValue<T>
+        private sealed class ValueWrapper<T>(string id) : PersistedBase(id), IPersistedValue<T>
         {
-            public ValueWrapper(string id)
-                : base(id)
-            {
-            }
-
             public T Value { get; set; }
 
             T IReadOnlyValue<T>.Value => Value;

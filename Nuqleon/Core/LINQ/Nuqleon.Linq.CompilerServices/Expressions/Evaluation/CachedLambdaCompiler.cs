@@ -186,7 +186,7 @@ namespace System.Linq.Expressions
                 //
                 var tupleArgument = TupleEvaluator.Instance.Visit(argument);
 
-                res = (Delegate)cachedDelegate.DynamicInvoke(new object[] { tupleArgument });
+                res = (Delegate)cachedDelegate.DynamicInvoke([tupleArgument]);
             }
 
             return res;
@@ -347,8 +347,8 @@ namespace System.Linq.Expressions
             {
                 private const string ParameterPrefix = "@p";
                 private const int CachedParameterPrefixCount = 16;
-                private static readonly string[] ParameterPrefixes = new string[CachedParameterPrefixCount]
-                {
+                private static readonly string[] ParameterPrefixes =
+                [
                     "@p0",
                     "@p1",
                     "@p2",
@@ -365,9 +365,9 @@ namespace System.Linq.Expressions
                     "@p13",
                     "@p14",
                     "@p15"
-                };
+                ];
 
-                public readonly List<Binding> bindings = new();
+                public readonly List<Binding> bindings = [];
 
                 protected override Expression VisitConstant(ConstantExpression node) => MakeBinding(node);
 
@@ -449,16 +449,10 @@ namespace System.Linq.Expressions
             /// <returns>Original expression with outlining steps applied.</returns>
             public static Expression Outline(Expression expression, ICompiledDelegateCache cache, IConstantHoister hoister) => new Visitor(cache, hoister).Visit(expression);
 
-            private sealed class Visitor : ExpressionVisitor
+            private sealed class Visitor(ICompiledDelegateCache cache, IConstantHoister hoister) : ExpressionVisitor
             {
-                private readonly ICompiledDelegateCache _cache;
-                private readonly IConstantHoister _hoister;
-
-                public Visitor(ICompiledDelegateCache cache, IConstantHoister hoister)
-                {
-                    _cache = cache;
-                    _hoister = hoister;
-                }
+                private readonly ICompiledDelegateCache _cache = cache;
+                private readonly IConstantHoister _hoister = hoister;
 
                 protected override Expression VisitUnary(UnaryExpression node)
                 {

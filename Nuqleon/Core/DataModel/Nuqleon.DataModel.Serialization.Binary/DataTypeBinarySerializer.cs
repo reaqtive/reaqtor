@@ -24,8 +24,8 @@ namespace Nuqleon.DataModel.Serialization.Binary
         private static readonly Lazy<MethodInfo> s_hashSetPoolGetInstance = new(() => (MethodInfo)ReflectionHelpers.InfoOf(() => PooledHashSet<object>.GetInstance()));
         private static readonly Lazy<MethodInfo> s_pooledHashSetFree = new(() => (MethodInfo)ReflectionHelpers.InfoOf((PooledHashSet<object> p) => p.Free()));
 
-        private readonly ConditionalWeakTable<Type, Delegate> _deserializers = new();
-        private readonly ConditionalWeakTable<Type, Delegate> _serializers = new();
+        private readonly ConditionalWeakTable<Type, Delegate> _deserializers = [];
+        private readonly ConditionalWeakTable<Type, Delegate> _serializers = [];
 
         internal DataTypeBinarySerializer() { }
 
@@ -37,16 +37,13 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         internal IExpressionSerializer ExpressionSerializer { get; }
 
-        private ConditionalWeakTable<Type, Delegate>.CreateValueCallback _getSerializerCore;
-        private ConditionalWeakTable<Type, Delegate>.CreateValueCallback _getDeserializerCore;
-
         private ConditionalWeakTable<Type, Delegate>.CreateValueCallback GetDeserializerCoreMethod
         {
             get
             {
-                _getDeserializerCore ??= GetDeserializerCore;
+                field ??= GetDeserializerCore;
 
-                return _getDeserializerCore;
+                return field;
             }
         }
 
@@ -54,9 +51,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
         {
             get
             {
-                _getSerializerCore ??= GetSerializerCore;
+                field ??= GetSerializerCore;
 
-                return _getSerializerCore;
+                return field;
             }
         }
 

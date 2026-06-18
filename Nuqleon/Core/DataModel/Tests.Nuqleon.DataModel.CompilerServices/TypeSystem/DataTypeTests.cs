@@ -150,7 +150,7 @@ in  t1
             Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance());
             Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(1, 2));
             Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance("bar"));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(new object[1] { null }));
+            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance([null]));
 
             var x = s.CreateInstance(42);
             Assert.AreEqual(42, x);
@@ -174,7 +174,7 @@ in  t1
             var x = s.CreateInstance(42);
             Assert.AreEqual(42, x);
 
-            var y = s.CreateInstance(new object[1] { null });
+            var y = s.CreateInstance([null]);
             Assert.IsNull(y);
 
             var z = s.CreateInstance(42);

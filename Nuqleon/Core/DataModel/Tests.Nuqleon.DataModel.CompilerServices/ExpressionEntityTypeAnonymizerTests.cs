@@ -149,7 +149,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void ExpressionEntityTypeAnonymizer_Constants_ManOrBoy1()
         {
-            var c = Expression.Constant(new A { B = new B { Cs = new C[] { new C { D = 42 } } } });
+            var c = Expression.Constant(new A { B = new B { Cs = [new C { D = 42 }] } });
 
             var eta = new ExpressionEntityTypeAnonymizer();
 
@@ -178,9 +178,9 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             var g = f.Compile();
 
             var res = g(new[] {
-                new A { B = new B { Cs = new C[] { new C { D = 23 } } } },
-                new A { B = new B { Cs = new C[] { new C { D = -1 } } } },
-                new A { B = new B { Cs = new C[] { new C { D = 87 } } } },
+                new A { B = new B { Cs = [new C { D = 23 }] } },
+                new A { B = new B { Cs = [new C { D = -1 }] } },
+                new A { B = new B { Cs = [new C { D = 87 }] } },
             });
 
             var eta = new ExpressionEntityTypeAnonymizer();
@@ -215,7 +215,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             inp[1] = am1;
             inp[2] = a87;
 
-            var output = (IEnumerable<int>)h.Compile().DynamicInvoke(new object[] { inp });
+            var output = (IEnumerable<int>)h.Compile().DynamicInvoke([inp]);
 
             Assert.IsTrue(res.SequenceEqual(output));
         }
@@ -387,32 +387,20 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             public string Foo { get; set; }
         }
 
-        private class MissingMapping
+        private class MissingMapping(int x)
         {
-            public MissingMapping(int x)
-            {
-            }
-
             [Mapping("foo")]
             public int X { get; set; }
         }
 
-        private class NonMatchingMapping
+        private class NonMatchingMapping([Mapping("bar")] int x)
         {
-            public NonMatchingMapping([Mapping("bar")] int x)
-            {
-            }
-
             [Mapping("foo")]
             public int X { get; set; }
         }
 
-        private class DuplicateMapping
+        private class DuplicateMapping([Mapping("foo")] int x, [Mapping("foo")] int y)
         {
-            public DuplicateMapping([Mapping("foo")] int x, [Mapping("foo")] int y)
-            {
-            }
-
             [Mapping("foo")]
             public int X { get; set; }
         }
@@ -428,7 +416,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             public D()
             {
                 E = new E();
-                Ys = new List<int>();
+                Ys = [];
             }
 
             public int X { get; set; }

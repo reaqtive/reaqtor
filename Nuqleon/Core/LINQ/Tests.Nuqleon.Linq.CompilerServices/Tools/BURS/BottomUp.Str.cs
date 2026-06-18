@@ -31,17 +31,11 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         public abstract string Eval();
     }
 
-    internal sealed class ConstStrTree : StrTree
+    internal sealed class ConstStrTree(string value) : StrTree(StrKind.Const)
     {
         public static readonly ConstStrTree Empty = new("");
 
-        public ConstStrTree(string value)
-            : base(StrKind.Const)
-        {
-            Value = value;
-        }
-
-        public new string Value { get; }
+        public new string Value { get; } = value;
 
         public override string Eval() => Value;
 
@@ -50,13 +44,8 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         public override string ToStringFormat() => "Const(" + Value + ")";
     }
 
-    internal sealed class UnaryStrTree : StrTree
+    internal sealed class UnaryStrTree(StrKind kind, StrTree operand) : StrTree(kind, [operand])
     {
-        public UnaryStrTree(StrKind kind, StrTree operand)
-            : base(kind, new[] { operand })
-        {
-        }
-
         public override string Eval()
         {
             return Value switch
@@ -73,13 +62,8 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         }
     }
 
-    internal sealed class ConcatStrTree : StrTree
+    internal sealed class ConcatStrTree(params StrTree[] children) : StrTree(StrKind.Concat, children)
     {
-        public ConcatStrTree(params StrTree[] children)
-            : base(StrKind.Concat, children)
-        {
-        }
-
         public override string Eval()
         {
             return string.Concat(Children.Cast<StrTree>().Select(c => c.Eval()));
@@ -87,19 +71,13 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
 
         protected override ITree<StrKind> UpdateCore(IEnumerable<ITree<StrKind>> children)
         {
-            return new ConcatStrTree(children.Cast<StrTree>().ToArray());
+            return new ConcatStrTree([.. children.Cast<StrTree>()]);
         }
     }
 
-    internal sealed class VariableStrTree : StrTree
+    internal sealed class VariableStrTree(ParameterExpression variable) : StrTree(StrKind.Variable)
     {
-        public VariableStrTree(ParameterExpression variable)
-            : base(StrKind.Variable)
-        {
-            Variable = variable;
-        }
-
-        public ParameterExpression Variable { get; }
+        public ParameterExpression Variable { get; } = variable;
 
         public override string Eval() => throw new NotImplementedException();
 

@@ -17,32 +17,26 @@ namespace Reaqtive.Testing
     /// Record of a value including the virtual time it was produced on.
     /// </summary>
     /// <typeparam name="T">Type of the value.</typeparam>
+    /// <remarks>
+    /// Creates a new object recording the production of the specified value at the given virtual time.
+    /// </remarks>
+    /// <param name="time">Virtual time the value was produced on.</param>
+    /// <param name="value">Value that was produced.</param>
     [DebuggerDisplay("{Value}@{Time}")]
 #if !NO_SERIALIZABLE
     [Serializable]
 #endif
-    public readonly struct Recorded<T> : IEquatable<Recorded<T>>
+    public readonly struct Recorded<T>(long time, T value) : IEquatable<Recorded<T>>
     {
         /// <summary>
         /// Gets the virtual time the value was produced on.
         /// </summary>
-        public long Time { get; }
+        public long Time { get; } = time;
 
         /// <summary>
         /// Gets the recorded value.
         /// </summary>
-        public T Value { get; }
-
-        /// <summary>
-        /// Creates a new object recording the production of the specified value at the given virtual time.
-        /// </summary>
-        /// <param name="time">Virtual time the value was produced on.</param>
-        /// <param name="value">Value that was produced.</param>
-        public Recorded(long time, T value)
-        {
-            Time = time;
-            Value = value;
-        }
+        public T Value { get; } = value;
 
         /// <summary>
         /// Checks whether the given recorded object is equal to the current instance.

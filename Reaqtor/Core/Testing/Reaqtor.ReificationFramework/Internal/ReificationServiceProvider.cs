@@ -15,9 +15,9 @@ namespace Reaqtor.ReificationFramework
 {
     internal class ReificationServiceProvider : IReactiveServiceProvider
     {
-        private readonly List<ServiceOperation> _operations = new();
+        private readonly List<ServiceOperation> _operations = [];
 
-        public ServiceOperation[] Operations => _operations.ToArray();
+        public ServiceOperation[] Operations => [.. _operations];
 
         public async Task CreateSubscriptionAsync(Uri subscriptionUri, Expression subscription, object state, CancellationToken token)
         {
@@ -92,16 +92,10 @@ namespace Reaqtor.ReificationFramework
 
         public IQueryProvider Provider => new QueryProvider(this);
 
-        private sealed class Observer<T> : IAsyncReactiveObserver<T>
+        private sealed class Observer<T>(Uri observerUri, ReificationServiceProvider parent) : IAsyncReactiveObserver<T>
         {
-            private readonly Uri _observerUri;
-            private readonly ReificationServiceProvider _parent;
-
-            public Observer(Uri observerUri, ReificationServiceProvider parent)
-            {
-                _observerUri = observerUri;
-                _parent = parent;
-            }
+            private readonly Uri _observerUri = observerUri;
+            private readonly ReificationServiceProvider _parent = parent;
 
             public async Task OnNextAsync(T value, CancellationToken token)
             {
@@ -119,11 +113,9 @@ namespace Reaqtor.ReificationFramework
             }
         }
 
-        private sealed class QueryProvider : IQueryProvider
+        private sealed class QueryProvider(ReificationServiceProvider parent) : IQueryProvider
         {
-            private readonly ReificationServiceProvider _parent;
-
-            public QueryProvider(ReificationServiceProvider parent) => _parent = parent;
+            private readonly ReificationServiceProvider _parent = parent;
 
             public IQueryable<TElement> CreateQuery<TElement>(Expression expression) => new Queryable<TElement>(this, expression);
 
@@ -145,19 +137,13 @@ namespace Reaqtor.ReificationFramework
 
             public object Execute(Expression expression) => throw new NotImplementedException();
 
-            private sealed class Queryable<T> : IQueryable<T>
+            private sealed class Queryable<T>(IQueryProvider provider, Expression expression) : IQueryable<T>
             {
-                public Queryable(IQueryProvider provider, Expression expression)
-                {
-                    Provider = provider;
-                    Expression = expression;
-                }
-
                 public Type ElementType => typeof(T);
 
-                public Expression Expression { get; }
+                public Expression Expression { get; } = expression;
 
-                public IQueryProvider Provider { get; }
+                public IQueryProvider Provider { get; } = provider;
 
                 public IEnumerator<T> GetEnumerator()
                 {

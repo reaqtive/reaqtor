@@ -21,23 +21,18 @@ namespace Nuqleon.Json.Serialization
         /// </summary>
         /// <typeparam name="T">The type of the objects to serialize.</typeparam>
         /// <remarks>This type is thread-safe.</remarks>
-        private sealed class SafeSerializer<T> : SerializerBase<T>
+        /// <remarks>
+        /// Creates a new serializer given the specified emitter implementation.
+        /// </remarks>
+        /// <param name="emitterString">The emitter to use to serialize objects to string outputs.</param>
+        /// <param name="builderString">The builder to use to create emitters for objects based on their runtime type.</param>
+        /// <param name="emitterWriter">The emitter to use to serialize objects to text writers.</param>
+        /// <param name="builderWriter">The builder to use to create emitters for objects based on their runtime type.</param>
+        private sealed class SafeSerializer<T>(EmitStringAction<T> emitterString, FastJsonSerializerFactory.EmitterStringBuilder builderString, EmitWriterAction<T> emitterWriter, FastJsonSerializerFactory.EmitterWriterBuilder builderWriter) : SerializerBase<T>(emitterString, emitterWriter)
         {
-            private readonly ObjectPool<EmitterContext> _contextPool;
+            private readonly ObjectPool<EmitterContext> _contextPool = new ObjectPool<EmitterContext>(() => new EmitterContext(builderString, builderWriter));
 
 #if !NO_IO
-            /// <summary>
-            /// Creates a new serializer given the specified emitter implementation.
-            /// </summary>
-            /// <param name="emitterString">The emitter to use to serialize objects to string outputs.</param>
-            /// <param name="builderString">The builder to use to create emitters for objects based on their runtime type.</param>
-            /// <param name="emitterWriter">The emitter to use to serialize objects to text writers.</param>
-            /// <param name="builderWriter">The builder to use to create emitters for objects based on their runtime type.</param>
-            public SafeSerializer(EmitStringAction<T> emitterString, EmitterStringBuilder builderString, EmitWriterAction<T> emitterWriter, EmitterWriterBuilder builderWriter)
-                : base(emitterString, emitterWriter)
-            {
-                _contextPool = new ObjectPool<EmitterContext>(() => new EmitterContext(builderString, builderWriter));
-            }
 #else
             /// <summary>
             /// Creates a new serializer given the specified emitter implementation.

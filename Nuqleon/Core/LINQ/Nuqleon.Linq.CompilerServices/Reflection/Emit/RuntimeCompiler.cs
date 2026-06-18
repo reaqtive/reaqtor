@@ -38,7 +38,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Singleton instance of an empty byte array.
         /// </summary>
-        private static readonly byte[] s_emptyBytes = Array.Empty<byte>();
+        private static readonly byte[] s_emptyBytes = [];
 
         /// <summary>
         /// Lazily instantiated module builder.
@@ -504,16 +504,16 @@ namespace System.Linq.CompilerServices
                 if (!keys.All(propertyNames.Contains))
                     throw new ArgumentException("One or more specified keys do not appear in the properties list.", nameof(keys));
 
-                propertyDeclarations = properties.Select(p =>
+                propertyDeclarations = [.. properties.Select(p =>
 #pragma warning restore CA1851 // Possible multiple enumerations of 'IEnumerable' collection
                 {
                     var isKey = keys.Contains(p.Name);
                     return new PropertyDeclaration { Name = p.Name, Type = p.PropertyType, CustomAttributes = p.CustomAttributes, IsKey = isKey, CanRead = true, CanWrite = !isKey };
-                }).ToList();
+                })];
             }
             else
             {
-                propertyDeclarations = properties.Select(p => new PropertyDeclaration { Name = p.Name, Type = p.PropertyType, CustomAttributes = p.CustomAttributes, IsKey = true, CanRead = true, CanWrite = false }).ToList();
+                propertyDeclarations = [.. properties.Select(p => new PropertyDeclaration { Name = p.Name, Type = p.PropertyType, CustomAttributes = p.CustomAttributes, IsKey = true, CanRead = true, CanWrite = false })];
             }
 
             new AnonymousTypeGenerator(anonymousTypeBuilder, propertyDeclarations).Build();
@@ -712,7 +712,12 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Helper type to create structural types.
         /// </summary>
-        private abstract class StructuralTypeGenerator
+        /// <remarks>
+        /// Creates a new structural type generator on the specified builder and with the specified properties.
+        /// </remarks>
+        /// <param name="builder">Build to emit the type definition on.</param>
+        /// <param name="properties">Properties to declare on the type.</param>
+        private abstract class StructuralTypeGenerator(TypeBuilder builder, IEnumerable<RuntimeCompiler.PropertyDeclaration> properties)
         {
             #region Fields
 
@@ -724,12 +729,12 @@ namespace System.Linq.CompilerServices
             /// <summary>
             /// Cached method info for <see cref="StringBuilder.Append(string)"/>.
             /// </summary>
-            private static readonly MethodInfo s_appendString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), new[] { typeof(string) });
+            private static readonly MethodInfo s_appendString = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(string)]);
 
             /// <summary>
             /// Cached method info for <see cref="StringBuilder.Append(object)"/>.
             /// </summary>
-            private static readonly MethodInfo s_appendObject = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), new[] { typeof(object) });
+            private static readonly MethodInfo s_appendObject = typeof(StringBuilder).GetMethod(nameof(StringBuilder.Append), [typeof(object)]);
 
             /// <summary>
             /// Cached method info for <see cref="object.ToString()"/>.
@@ -739,34 +744,21 @@ namespace System.Linq.CompilerServices
             /// <summary>
             /// Type builder to emit members on.
             /// </summary>
-            protected readonly TypeBuilder _builder;
+            protected readonly TypeBuilder _builder = builder;
 
             /// <summary>
             /// Sequence of properties, in the requested order of declaration.
             /// </summary>
-            protected readonly IEnumerable<PropertyDeclaration> _properties;
+            protected readonly IEnumerable<PropertyDeclaration> _properties = properties;
 
             /// <summary>
             /// Mapping of property names to their backing fields.
             /// Contents are initialized by EmitFieldsAndProperties.
             /// </summary>
-            protected readonly Dictionary<string, FieldBuilder> _fields;
+            protected readonly Dictionary<string, FieldBuilder> _fields = [];
 
             #endregion
-
             #region Constructors
-
-            /// <summary>
-            /// Creates a new structural type generator on the specified builder and with the specified properties.
-            /// </summary>
-            /// <param name="builder">Build to emit the type definition on.</param>
-            /// <param name="properties">Properties to declare on the type.</param>
-            public StructuralTypeGenerator(TypeBuilder builder, IEnumerable<PropertyDeclaration> properties)
-            {
-                _builder = builder;
-                _properties = properties;
-                _fields = new Dictionary<string, FieldBuilder>();
-            }
 
             #endregion
 
@@ -821,7 +813,7 @@ namespace System.Linq.CompilerServices
 
                     foreach (var attribute in property.CustomAttributes)
                     {
-                        var customAttributeBuilder = new CustomAttributeBuilder(attribute.Constructor, attribute.Arguments.ToArray());
+                        var customAttributeBuilder = new CustomAttributeBuilder(attribute.Constructor, [.. attribute.Arguments]);
                         prop.SetCustomAttribute(customAttributeBuilder);
                     }
 
@@ -838,7 +830,7 @@ namespace System.Linq.CompilerServices
 
                     if (property.CanWrite)
                     {
-                        var propSet = _builder.DefineMethod("set_" + name, MethodAttributes.Public, typeof(void), new[] { type });
+                        var propSet = _builder.DefineMethod("set_" + name, MethodAttributes.Public, typeof(void), [type]);
 
                         var propSetILGen = propSet.GetILGenerator();  // [S] 0
                         propSetILGen.Emit(OpCodes.Ldarg_0);           // [S] 1
@@ -862,7 +854,7 @@ namespace System.Linq.CompilerServices
             {
                 var keys = _properties.Where(p => p.IsKey).ToList();
 
-                var equals = _builder.DefineMethod(nameof(Equals), MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual, CallingConventions.HasThis, typeof(bool), new[] { typeof(object) });
+                var equals = _builder.DefineMethod(nameof(Equals), MethodAttributes.Public | MethodAttributes.HideBySig | MethodAttributes.Virtual, CallingConventions.HasThis, typeof(bool), [typeof(object)]);
 
                 var equalsILGen = equals.GetILGenerator();                             // [EQ] 0
                 var equalsRightLocal = equalsILGen.DeclareLocal(_builder);
@@ -932,15 +924,15 @@ namespace System.Linq.CompilerServices
                         if (type.GetType().Namespace == "System.Reflection.Emit")
                         {
                             var compParam = compOpen.GetGenericArguments()[0];
-                            comparerGetDefault = TypeBuilder.GetMethod(compClosed, compOpen.GetProperty(nameof(EqualityComparer<object>.Default)).GetGetMethod());
-                            comparerEquals = TypeBuilder.GetMethod(compClosed, compOpen.GetMethod(nameof(Equals), new[] { compParam, compParam }));
-                            comparerGetHashCode = TypeBuilder.GetMethod(compClosed, compOpen.GetMethod(nameof(GetHashCode), new[] { compParam }));
+                            comparerGetDefault = TypeBuilder.GetMethod(compClosed, compOpen.GetProperty(nameof(EqualityComparer<>.Default)).GetGetMethod());
+                            comparerEquals = TypeBuilder.GetMethod(compClosed, compOpen.GetMethod(nameof(Equals), [compParam, compParam]));
+                            comparerGetHashCode = TypeBuilder.GetMethod(compClosed, compOpen.GetMethod(nameof(GetHashCode), [compParam]));
                         }
                         else
                         {
-                            comparerGetDefault = compClosed.GetProperty(nameof(EqualityComparer<object>.Default)).GetGetMethod();
-                            comparerEquals = compClosed.GetMethod(nameof(Equals), new[] { type, type });
-                            comparerGetHashCode = compClosed.GetMethod(nameof(GetHashCode), new[] { type });
+                            comparerGetDefault = compClosed.GetProperty(nameof(EqualityComparer<>.Default)).GetGetMethod();
+                            comparerEquals = compClosed.GetMethod(nameof(Equals), [type, type]);
+                            comparerGetHashCode = compClosed.GetMethod(nameof(GetHashCode), [type]);
                         }
 
                         equalsILGen.Emit(OpCodes.Call, comparerGetDefault);            // [EQ] 1     { comparer }
@@ -1030,17 +1022,13 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Helper type to create anonymous types.
         /// </summary>
-        private sealed class AnonymousTypeGenerator : StructuralTypeGenerator
+        /// <remarks>
+        /// Creates a new anonymous type generator on the specified builder and with the specified properties.
+        /// </remarks>
+        /// <param name="builder">Build to emit the type definition on.</param>
+        /// <param name="properties">Properties to declare on the type.</param>
+        private sealed class AnonymousTypeGenerator(TypeBuilder builder, IEnumerable<RuntimeCompiler.PropertyDeclaration> properties) : StructuralTypeGenerator(builder, properties)
         {
-            /// <summary>
-            /// Creates a new anonymous type generator on the specified builder and with the specified properties.
-            /// </summary>
-            /// <param name="builder">Build to emit the type definition on.</param>
-            /// <param name="properties">Properties to declare on the type.</param>
-            public AnonymousTypeGenerator(TypeBuilder builder, IEnumerable<PropertyDeclaration> properties)
-                : base(builder, properties)
-            {
-            }
 
             #region Methods
 
@@ -1077,7 +1065,13 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Helper type to create record types.
         /// </summary>
-        private sealed class RecordTypeGenerator : StructuralTypeGenerator
+        /// <remarks>
+        /// Creates a new record type generator on the specified builder and with the specified properties.
+        /// </remarks>
+        /// <param name="builder">Build to emit the type definition on.</param>
+        /// <param name="properties">Properties to declare on the type.</param>
+        /// <param name="valueEquality">Indicates whether to emit a record type with value equality semantics.</param>
+        private sealed class RecordTypeGenerator(TypeBuilder builder, IEnumerable<RuntimeCompiler.PropertyDeclaration> properties, bool valueEquality) : StructuralTypeGenerator(builder, properties)
         {
             /// <summary>
             /// Cached default constructor for <see cref="object"/>.
@@ -1087,19 +1081,7 @@ namespace System.Linq.CompilerServices
             /// <summary>
             /// Indicates whether to emit a record type with value equality semantics.
             /// </summary>
-            private readonly bool _valueEquality;
-
-            /// <summary>
-            /// Creates a new record type generator on the specified builder and with the specified properties.
-            /// </summary>
-            /// <param name="builder">Build to emit the type definition on.</param>
-            /// <param name="properties">Properties to declare on the type.</param>
-            /// <param name="valueEquality">Indicates whether to emit a record type with value equality semantics.</param>
-            public RecordTypeGenerator(TypeBuilder builder, IEnumerable<PropertyDeclaration> properties, bool valueEquality)
-                : base(builder, properties)
-            {
-                _valueEquality = valueEquality;
-            }
+            private readonly bool _valueEquality = valueEquality;
 
             /// <summary>
             /// Emits the single constructor on the TypeBuilder.

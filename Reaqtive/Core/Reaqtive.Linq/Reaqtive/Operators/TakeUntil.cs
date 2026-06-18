@@ -27,7 +27,7 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _ : StatefulOperator<TakeUntil<TSource, TOther>, TSource>, IObserver<TSource>
+        private sealed class _(TakeUntil<TSource, TOther> parent, IObserver<TSource> observer) : StatefulOperator<TakeUntil<TSource, TOther>, TSource>(parent, observer), IObserver<TSource>
         {
             /// <summary>
             /// Unlike RX, we are leaking the _ object, so we can't take a lock on that reference.
@@ -38,11 +38,6 @@ namespace Reaqtive.Operators
             private ISubscription _otherSubscription;
 #pragma warning restore CA2213
             private volatile bool _gateOpened;
-
-            public _(TakeUntil<TSource, TOther> parent, IObserver<TSource> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:TakeUntil";
 
@@ -108,14 +103,9 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private class FirstObserver : IObserver<TSource>
+            private class FirstObserver(TakeUntil<TSource, TOther>._ parent) : IObserver<TSource>
             {
-                private readonly _ _parent;
-
-                public FirstObserver(_ parent)
-                {
-                    _parent = parent;
-                }
+                private readonly _ _parent = parent;
 
                 public void OnCompleted()
                 {
@@ -151,15 +141,10 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private sealed class OtherObserver : IObserver<TOther>
+            private sealed class OtherObserver(TakeUntil<TSource, TOther>._ parent) : IObserver<TOther>
             {
-                private readonly _ _parent;
+                private readonly _ _parent = parent;
                 private ISubscription _subscription;
-
-                public OtherObserver(_ parent)
-                {
-                    _parent = parent;
-                }
 
                 public ISubscription Subscription
                 {

@@ -350,7 +350,7 @@ namespace Tests.System.Linq.CompilerServices
 
         private class CustomHoister : ConstantHoister
         {
-            private readonly Dictionary<KeyValuePair<Type, object>, ConstantExpression> _cache = new();
+            private readonly Dictionary<KeyValuePair<Type, object>, ConstantExpression> _cache = [];
 
             protected override Expression Hoist(ConstantExpression expression)
             {

@@ -8,9 +8,9 @@
 // BD - December 2016 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using System.Linq.Expressions.Bonsai.Serialization;
+
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Json = Nuqleon.Json.Expressions;
 

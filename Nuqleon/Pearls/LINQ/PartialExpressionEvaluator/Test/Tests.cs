@@ -285,11 +285,11 @@ namespace Test
                     (Expression<Func<string, int>>)(s => s.Length)
                 },
                 {
-                    E(() => Enumerable.Range(1, 3).Select(x => x).Sum()),
+                    E(() => Enumerable.Range(1, 3).Sum(x => x)),
                     Expression.Constant(6)
                 },
                 {
-                    E(() => Enumerable.Range(1, 3).Select(x => x.ToString()).Select(s => int.Parse(s)).Sum()),
+                    E(() => Enumerable.Range(1, 3).Select(x => x.ToString()).Sum(s => int.Parse(s))),
                     Expression.Constant(6)
                 }
             };
@@ -349,7 +349,7 @@ namespace Test
             public Bar()
             {
                 X = new Foo();
-                Zs = new List<int>();
+                Zs = [];
             }
 
             public Foo X { get; set; }

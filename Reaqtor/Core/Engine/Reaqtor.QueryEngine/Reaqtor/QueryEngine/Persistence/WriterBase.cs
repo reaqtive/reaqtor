@@ -14,22 +14,16 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Base class for state writers.
     /// </summary>
-    internal class WriterBase : IDisposable
+    /// <remarks>
+    /// Creates a writer to the specified underlying <paramref name="stream"/>.
+    /// </remarks>
+    /// <param name="stream">The stream to write to.</param>
+    /// <param name="policy">The serialization policy to use when serializing objects.</param>
+    internal class WriterBase(Stream stream, ISerializationPolicy policy) : IDisposable
     {
-        private readonly ISerializationPolicy _policy;
-        protected readonly Stream _stream;
+        private readonly ISerializationPolicy _policy = policy;
+        protected readonly Stream _stream = stream;
         protected ISerializer _serializer;
-
-        /// <summary>
-        /// Creates a writer to the specified underlying <paramref name="stream"/>.
-        /// </summary>
-        /// <param name="stream">The stream to write to.</param>
-        /// <param name="policy">The serialization policy to use when serializing objects.</param>
-        public WriterBase(Stream stream, ISerializationPolicy policy)
-        {
-            _stream = stream;
-            _policy = policy;
-        }
 
         /// <summary>
         /// Writes a magic header.

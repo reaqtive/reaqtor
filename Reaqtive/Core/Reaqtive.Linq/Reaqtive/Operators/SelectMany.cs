@@ -6,46 +6,35 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class SelectMany<TSource, TCollection, TResult> : SubscribableBase<TResult>
+    internal sealed class SelectMany<TSource, TCollection, TResult>(ISubscribable<TSource> source,
+        Func<TSource, ISubscribable<TCollection>> collectionSelector,
+        Func<TSource, TCollection, TResult> resultSelector) : SubscribableBase<TResult>
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, ISubscribable<TCollection>> _collectionSelector;
-        private readonly Func<TSource, TCollection, TResult> _resultSelector;
-
-        public SelectMany(ISubscribable<TSource> source,
-            Func<TSource, ISubscribable<TCollection>> collectionSelector,
-            Func<TSource, TCollection, TResult> resultSelector)
-        {
-            _source = source;
-            _collectionSelector = collectionSelector;
-            _resultSelector = resultSelector;
-        }
+        private readonly ISubscribable<TSource> _source = source;
+        private readonly Func<TSource, ISubscribable<TCollection>> _collectionSelector = collectionSelector;
+        private readonly Func<TSource, TCollection, TResult> _resultSelector = resultSelector;
 
         protected override ISubscription SubscribeCore(IObserver<TResult> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _ : HigherOrderInputStatefulOperator<SelectMany<TSource, TCollection, TResult>, TResult>, IObserver<TSource>
+        private sealed class _(SelectMany<TSource, TCollection, TResult> parent, IObserver<TResult> observer) : HigherOrderInputStatefulOperator<SelectMany<TSource, TCollection, TResult>, TResult>(parent, observer), IObserver<TSource>
         {
             private const string MAXINNERSUBCOUNTSETTING = "rx://operators/bind/settings/maxConcurrentInnerSubscriptionCount";
             private int _maxInnerCount;
 
-            private readonly object _lock = new();
+            private readonly Lock _lock = new();
             private bool _isStopped;
 #pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private ISubscription _sourceSubscription;
             private CompositeSubscription _innerSubscriptions;
 #pragma warning restore CA2213
             private IOperatorContext _context;
-
-            public _(SelectMany<TSource, TCollection, TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
-            {
-            }
 
             public override string Name => "rc:SelectMany";
 
@@ -55,7 +44,7 @@ namespace Reaqtive.Operators
             {
                 _isStopped = false;
 
-                _innerSubscriptions = new CompositeSubscription();
+                _innerSubscriptions = [];
                 _sourceSubscription = Params._source.Subscribe(this);
 
                 return new ISubscription[] { _sourceSubscription, _innerSubscriptions };
@@ -192,16 +181,11 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private sealed class Observer : StatefulObserver<TCollection>
+            private sealed class Observer(SelectMany<TSource, TCollection, TResult>._ parent) : StatefulObserver<TCollection>
             {
-                private readonly _ _parent;
+                private readonly _ _parent = parent;
                 private ISubscription _subscription;
                 private TSource _value;
-
-                public Observer(_ parent)
-                {
-                    _parent = parent;
-                }
 
                 public Observer(_ parent, TSource value) : this(parent)
                 {

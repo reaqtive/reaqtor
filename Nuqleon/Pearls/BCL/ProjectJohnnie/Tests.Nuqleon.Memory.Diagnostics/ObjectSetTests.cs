@@ -913,7 +913,7 @@ namespace Tests.System.Memory.Diagnostics
             foreach (var other in new IEnumerable<object>[]
             {
                 Array.Empty<object>(),
-                Enumerable.Empty<object>(),
+                [],
                 new[] { o1 },
                 new[] { o1 }.AsEnumerable(),
                 new ObjectSet(new[] { o1 }),
@@ -1011,7 +1011,7 @@ namespace Tests.System.Memory.Diagnostics
             foreach (var other in new IEnumerable<object>[]
             {
                 Array.Empty<object>(),
-                Enumerable.Empty<object>(),
+                [],
                 new[] { o1 },
                 new[] { o1 }.AsEnumerable(),
                 new ObjectSet(new[] { o1 }),

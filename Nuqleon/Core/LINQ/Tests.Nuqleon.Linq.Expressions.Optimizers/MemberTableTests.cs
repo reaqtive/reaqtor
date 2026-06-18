@@ -34,7 +34,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            var method = typeof(decimal).GetMethod("op_UnaryNegation", new[] { typeof(decimal) });
+            var method = typeof(decimal).GetMethod("op_UnaryNegation", [typeof(decimal)]);
 
             mt.Add((decimal a) => -a);
 
@@ -46,7 +46,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            var method = typeof(decimal).GetMethod("op_Addition", new[] { typeof(decimal), typeof(decimal) });
+            var method = typeof(decimal).GetMethod("op_Addition", [typeof(decimal), typeof(decimal)]);
 
             mt.Add((decimal a, decimal b) => a + b);
 
@@ -271,7 +271,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            var method = typeof(int).GetMethod(nameof(int.Parse), new[] { typeof(string) });
+            var method = typeof(int).GetMethod(nameof(int.Parse), [typeof(string)]);
 
             mt.Add(method);
 
@@ -300,7 +300,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var mt = new MemberTable();
 
-            var ctor = typeof(string).GetConstructor(new[] { typeof(char), typeof(int) });
+            var ctor = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
             mt.Add((MemberInfo)ctor);
 
@@ -336,7 +336,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
             var property = typeof(Stuff).GetProperty(nameof(Stuff.InstancePropertySetOnly));
-            var ctor = typeof(string).GetConstructor(new[] { typeof(char), typeof(int) });
+            var ctor = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
             Assert.ThrowsException<InvalidOperationException>(() => rmt.Add((MemberInfo)field));
             Assert.ThrowsException<InvalidOperationException>(() => rmt.Add(field));

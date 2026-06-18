@@ -31,7 +31,7 @@ namespace System.Collections.Generic
             {
                 null => Array.Empty<T>(),
                 ICollection<T> collection => collection,
-                _ => enumerable.ToList(),
+                _ => [.. enumerable],
             };
         }
     }

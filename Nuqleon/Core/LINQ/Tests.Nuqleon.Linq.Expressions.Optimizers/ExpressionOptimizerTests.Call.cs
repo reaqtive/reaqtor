@@ -220,7 +220,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.Call(
                     Expression.Constant(value: null, typeof(string)),
-                    typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) }),
+                    typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]),
                     Expression.Constant(1),
                     Expression.Parameter(typeof(int))
                 );
@@ -234,7 +234,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var e =
                 Expression.Call(
                     Expression.Constant(value: null, typeof(string)),
-                    typeof(string).GetMethod(nameof(string.Substring), new[] { typeof(int), typeof(int) }),
+                    typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]),
                     F,
                     Expression.Constant(1)
                 );
@@ -256,11 +256,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
-        private sealed class PureCalls
+        private sealed class PureCalls(long seed)
         {
-            private readonly long _seed;
-
-            public PureCalls(long seed) => _seed = seed;
+            private readonly long _seed = seed;
 
             public static long StaticMethod(int a, int b, int c) => a * b - c;
             public static void StaticMethodVoid(int a) { }

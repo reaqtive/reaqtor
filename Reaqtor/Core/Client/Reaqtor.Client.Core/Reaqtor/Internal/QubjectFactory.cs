@@ -15,15 +15,9 @@ using System.Threading.Tasks;
 
 namespace Reaqtor
 {
-    internal class QubjectFactory<TInput, TOutput> : AsyncReactiveQubjectFactoryBase<TInput, TOutput>
+    internal class QubjectFactory<TInput, TOutput>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubjectFactoryBase<TInput, TOutput>(provider)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, object state, CancellationToken token)
         {
@@ -31,15 +25,9 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArgs> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArgs>
+    internal class QubjectFactory<TInput, TOutput, TArgs>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArgs>(provider)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
+        public override Expression Expression { get; } = expression;
 
         protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArgs argument, object state, CancellationToken token)
         {

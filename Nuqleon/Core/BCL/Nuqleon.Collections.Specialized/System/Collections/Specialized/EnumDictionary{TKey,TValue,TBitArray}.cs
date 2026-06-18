@@ -104,7 +104,7 @@ namespace System.Collections.Specialized
             return _hasValue[k];
         }
 
-        ICollection<TKey> IDictionary<TKey, TValue>.Keys => this.Select(kvp => kvp.Key).ToList();
+        ICollection<TKey> IDictionary<TKey, TValue>.Keys => [.. this.Select(kvp => kvp.Key)];
 
         public bool Remove(TKey key)
         {
@@ -141,7 +141,7 @@ namespace System.Collections.Specialized
             return temp;
         }
 
-        ICollection<TValue> IDictionary<TKey, TValue>.Values => this.Select(kvp => kvp.Value).ToList();
+        ICollection<TValue> IDictionary<TKey, TValue>.Values => [.. this.Select(kvp => kvp.Value)];
 
         public TValue this[TKey key]
         {

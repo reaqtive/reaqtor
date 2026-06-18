@@ -23,7 +23,7 @@ namespace System.Linq.CompilerServices.Optimizers
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of the method signatures)
 #endif
         private static readonly MethodInfo s_first = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First())).GetGenericMethodDefinition();
-        private static readonly MethodInfo s_firstPredicate = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();
+        private static readonly MethodInfo s_firstPredicate = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First(default))).GetGenericMethodDefinition();
         private static readonly MethodInfo s_select = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Select(default(Expression<Func<int, int>>)))).GetGenericMethodDefinition();
         private static readonly MethodInfo s_take = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Take(default(int)))).GetGenericMethodDefinition();
         private static readonly MethodInfo s_where = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Where(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();
@@ -140,14 +140,8 @@ namespace System.Linq.CompilerServices.Optimizers
             }
         }
 
-        private sealed class QueryableSelectOperator : SelectOperator
+        private sealed class QueryableSelectOperator(Type elementType, Type inputElementType, MonadMember source, QueryTree selector) : SelectOperator(elementType, inputElementType, source, selector)
         {
-            // TODO make this take a MethodInfo instead?
-            public QueryableSelectOperator(Type elementType, Type inputElementType, MonadMember source, QueryTree selector)
-                : base(elementType, inputElementType, source, selector)
-            {
-            }
-
             public override IQueryExpressionFactory QueryExpressionFactory => QueryableQueryExpressionFactory.Instance;
 
             public override Expression Reduce()

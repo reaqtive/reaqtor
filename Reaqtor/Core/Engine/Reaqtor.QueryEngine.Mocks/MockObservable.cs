@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 using Reaqtive;
 
@@ -14,7 +15,7 @@ namespace Reaqtor.QueryEngine.Mocks
     /// </summary>
     public static class MockObservable
     {
-        private static readonly Dictionary<string, object> _observables = new();
+        private static readonly Dictionary<string, object> _observables = [];
 
         /// <summary>
         /// Gets or creates an observable with the specified identifier.
@@ -68,14 +69,12 @@ namespace Reaqtor.QueryEngine.Mocks
         }
     }
 
-    public class MockObservable<T> : IObservable<T>, ISubscribable<T>, IObserver<T>
+    public class MockObservable<T>(string id) : IObservable<T>, ISubscribable<T>, IObserver<T>
     {
-        private readonly List<Subscription> _subscriptions = new();
-        private readonly object _lock = new();
+        private readonly List<Subscription> _subscriptions = [];
+        private readonly Lock _lock = new();
 
-        public MockObservable(string id) => Id = id;
-
-        public string Id { get; }
+        public string Id { get; } = id;
 
         public IEnumerable<IKnownResource> Subscriptions => _subscriptions;
 
@@ -112,7 +111,7 @@ namespace Reaqtor.QueryEngine.Mocks
 
             lock (_lock)
             {
-                subs = new List<Subscription>(_subscriptions);
+                subs = [.. _subscriptions];
             }
 
             subs.ForEach(s => s.OnCompleted());
@@ -124,7 +123,7 @@ namespace Reaqtor.QueryEngine.Mocks
 
             lock (_lock)
             {
-                subs = new List<Subscription>(_subscriptions);
+                subs = [.. _subscriptions];
             }
 
             subs.ForEach(s => s.OnError(error));
@@ -136,22 +135,16 @@ namespace Reaqtor.QueryEngine.Mocks
 
             lock (_lock)
             {
-                subs = new List<Subscription>(_subscriptions);
+                subs = [.. _subscriptions];
             }
 
             subs.ForEach(s => s.OnNext(value));
         }
 
-        private class Subscription : ISubscription, IObserver<T>, IOperator, IKnownResource
+        private class Subscription(MockObservable<T> obs, IObserver<T> sink) : ISubscription, IObserver<T>, IOperator, IKnownResource
         {
-            private readonly MockObservable<T> _parent;
-            private readonly IObserver<T> _sink;
-
-            public Subscription(MockObservable<T> obs, IObserver<T> sink)
-            {
-                _parent = obs;
-                _sink = sink;
-            }
+            private readonly MockObservable<T> _parent = obs;
+            private readonly IObserver<T> _sink = sink;
 
             public Uri Uri { get; private set; }
 

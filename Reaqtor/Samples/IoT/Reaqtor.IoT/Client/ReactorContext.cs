@@ -35,11 +35,8 @@ namespace Reaqtor.IoT
     // The most commonly mapped artifact types are likely observables and observers.
     //
 
-    public class ReactorContext : ReactiveClientContext
+    public class ReactorContext(MiniQueryEngine engine) : ReactiveClientContext(new ExpressionServices(), engine?.ServiceProvider)
     {
-        public ReactorContext(MiniQueryEngine engine) : base(new ExpressionServices(), engine?.ServiceProvider)
-        {
-        }
 
         //
         // Details of expression services are quite deep, but the essence is that these provide a place to

@@ -12,21 +12,16 @@ namespace Reaqtive.Tasks
     /// <summary>
     /// Task that can process items using an <see cref="IYieldableItemProcessor"/>.
     /// </summary>
-    public sealed class YieldableItemProcessingTask : ISchedulerTask, IYieldableSchedulerTask
+    /// <remarks>
+    /// Initializes a new instance of the <see cref="YieldableItemProcessingTask"/> class.
+    /// </remarks>
+    /// <param name="processor">The processor.</param>
+    public sealed class YieldableItemProcessingTask(IYieldableItemProcessor processor) : ISchedulerTask, IYieldableSchedulerTask
     {
         private const int TaskPriority = 2;
         private const int BatchSize = 128;
 
-        private readonly IYieldableItemProcessor _processor;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="YieldableItemProcessingTask"/> class.
-        /// </summary>
-        /// <param name="processor">The processor.</param>
-        public YieldableItemProcessingTask(IYieldableItemProcessor processor)
-        {
-            _processor = processor ?? throw new ArgumentNullException(nameof(processor));
-        }
+        private readonly IYieldableItemProcessor _processor = processor ?? throw new ArgumentNullException(nameof(processor));
 
         /// <summary>
         /// Gets task priority.

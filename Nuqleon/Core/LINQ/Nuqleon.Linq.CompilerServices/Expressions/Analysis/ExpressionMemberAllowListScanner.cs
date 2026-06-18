@@ -21,7 +21,7 @@ namespace System.Linq.CompilerServices
     /// </summary>
     public class ExpressionMemberAllowListScanner : ExpressionMemberAllowListScannerBase
     {
-        private readonly Dictionary<Type, Entry> _entries = new();
+        private readonly Dictionary<Type, Entry> _entries = [];
 
         /// <summary>
         /// Creates a new allow list scanner for members. To complete instantiation, initialize the DeclaringTypes and Members properties, e.g. by using collection initializers.
@@ -163,7 +163,7 @@ namespace System.Linq.CompilerServices
              *       of closed generic methods to match against.
              */
             private readonly HashSet<MemberInfo> _members = new(new MemberInfoEqualityComparer());
-            private readonly HashSet<MethodInfo> _closedGenericMethods = new();
+            private readonly HashSet<MethodInfo> _closedGenericMethods = [];
 
             public bool IsInclusive { get; set; }
 

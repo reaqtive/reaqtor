@@ -32,8 +32,8 @@ namespace System.Linq.Expressions
             if (expression == null)
                 throw new ArgumentNullException(nameof(expression));
 
-            var create = typeof(FuncletExpression<>).MakeGenericType(expression.Type).GetMethod(nameof(FuncletExpression<int>.CreateNew), BindingFlags.Static | BindingFlags.NonPublic);
-            return (FuncletExpression)create.Invoke(obj: null, new object[] { expression });
+            var create = typeof(FuncletExpression<>).MakeGenericType(expression.Type).GetMethod(nameof(FuncletExpression<>.CreateNew), BindingFlags.Static | BindingFlags.NonPublic);
+            return (FuncletExpression)create.Invoke(obj: null, [expression]);
         }
 
         /// <summary>

@@ -19,7 +19,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Instantiates the type-based expression rewriter.
         /// </summary>
-        public TypeBasedExpressionRewriter() => _typeRewriters = new List<TypedRewriter>();
+        public TypeBasedExpressionRewriter() => _typeRewriters = [];
 
         /// <summary>
         /// Visits an expression, looping over the list of user supplied
@@ -88,22 +88,16 @@ namespace System.Linq.CompilerServices
         /// <returns>State to associate with the given parameter.</returns>
         protected override ParameterExpression GetState(ParameterExpression parameter) => parameter;
 
-        private sealed class TypedRewriter
+        private sealed class TypedRewriter(Type type, Func<Expression, Expression> rewriter)
         {
-            private readonly Type _type;
-            private readonly Func<Expression, Expression> _rewriter;
+            private readonly Type _type = type;
+            private readonly Func<Expression, Expression> _rewriter = rewriter;
             private readonly bool _isOpenGeneric;
 
             public TypedRewriter(Type type, Func<Expression, Expression> rewriter, bool isOpenGeneric)
                 : this(type, rewriter)
             {
                 _isOpenGeneric = isOpenGeneric;
-            }
-
-            public TypedRewriter(Type type, Func<Expression, Expression> rewriter)
-            {
-                _type = type;
-                _rewriter = rewriter;
             }
 
             public bool Match(Expression node)

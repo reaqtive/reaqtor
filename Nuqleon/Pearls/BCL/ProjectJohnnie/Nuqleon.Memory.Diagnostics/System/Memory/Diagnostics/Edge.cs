@@ -16,21 +16,17 @@ namespace System.Memory.Diagnostics
     /// <remarks>
     /// Use the generic <see cref="Edge{T}"/> variant to get access to the source object of the edge.
     /// </remarks>
-    public abstract class Edge : IEdge
+    /// <remarks>
+    /// Creates a new edge using the specified <paramref name="access"/>.
+    /// </remarks>
+    /// <param name="access">The access representation of the edge.</param>
+    public abstract class Edge(Access access) : IEdge
     {
-        /// <summary>
-        /// Creates a new edge using the specified <paramref name="access"/>.
-        /// </summary>
-        /// <param name="access">The access representation of the edge.</param>
-        protected Edge(Access access)
-        {
-            Access = access;
-        }
 
         /// <summary>
         /// Gets the access representation of the edge.
         /// </summary>
-        public Access Access { get; }
+        public Access Access { get; } = access;
 
         /// <summary>
         /// Creates an edge originating from the specified <paramref name="origin"/> and using the specified <paramref name="access"/>.

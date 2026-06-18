@@ -4,6 +4,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 using Reaqtive.Scheduler;
@@ -15,23 +16,15 @@ namespace Reaqtive.TestingFramework
     /// </summary>
     /// <typeparam name="TAbsolute">Absolute time representation type.</typeparam>
     /// <typeparam name="TRelative">Relative time representation type.</typeparam>
-    public abstract class VirtualTimeLogicalScheduler<TAbsolute, TRelative> : IScheduler, ISchedulerExceptionHandler
+    public abstract class VirtualTimeLogicalScheduler<TAbsolute, TRelative>(
+        VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> physical,
+        VirtualTimeLogicalScheduler<TAbsolute, TRelative> parent) : IScheduler, ISchedulerExceptionHandler
         where TAbsolute : IComparable<TAbsolute>
     {
-        private readonly VirtualTimeLogicalScheduler<TAbsolute, TRelative> _parent;
-        private readonly List<VirtualTimeLogicalScheduler<TAbsolute, TRelative>> _children;
-        private readonly List<IWorkItem<TAbsolute>> _tasks;
-        private readonly object _gate = new();
-
-        protected VirtualTimeLogicalScheduler(
-            VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> physical,
-            VirtualTimeLogicalScheduler<TAbsolute, TRelative> parent)
-        {
-            Physical = physical;
-            _parent = parent;
-            _tasks = new List<IWorkItem<TAbsolute>>();
-            _children = new List<VirtualTimeLogicalScheduler<TAbsolute, TRelative>>();
-        }
+        private readonly VirtualTimeLogicalScheduler<TAbsolute, TRelative> _parent = parent;
+        private readonly List<VirtualTimeLogicalScheduler<TAbsolute, TRelative>> _children = [];
+        private readonly List<IWorkItem<TAbsolute>> _tasks = [];
+        private readonly Lock _gate = new();
 
         /// <summary>
         /// Gets the current time. Currently, only physical time. Can be virtual in the future.
@@ -204,7 +197,7 @@ namespace Reaqtive.TestingFramework
         /// <summary>
         /// Gets the underlying physical scheduler.
         /// </summary>
-        protected VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> Physical { get; private set; }
+        protected VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> Physical { get; private set; } = physical;
 
         /// <summary>
         /// Determines whether the calling thread has access to the scheduler.

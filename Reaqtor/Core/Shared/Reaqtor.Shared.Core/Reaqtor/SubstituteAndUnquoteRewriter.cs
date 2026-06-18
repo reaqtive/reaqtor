@@ -16,16 +16,12 @@ namespace Reaqtor
     /// <summary>
     /// Visitor to rewrite the types of expression tree nodes while also unquoting unary expressions representing quotes.
     /// </summary>
-    public class SubstituteAndUnquoteRewriter : TypeSubstitutionExpressionVisitor
+    /// <remarks>
+    /// Creates a new type substitution and unquoting visitor using the specified type map.
+    /// </remarks>
+    /// <param name="map">Dictionary mapping original types to their rewrite targets.</param>
+    public class SubstituteAndUnquoteRewriter(IDictionary<Type, Type> map) : TypeSubstitutionExpressionVisitor(new Impl(map))
     {
-        /// <summary>
-        /// Creates a new type substitution and unquoting visitor using the specified type map.
-        /// </summary>
-        /// <param name="map">Dictionary mapping original types to their rewrite targets.</param>
-        public SubstituteAndUnquoteRewriter(IDictionary<Type, Type> map)
-            : base(new Impl(map))
-        {
-        }
 
         /// <summary>
         /// Visit invocation expressions to strip out invocations of the identity function.
@@ -91,13 +87,8 @@ namespace Reaqtor
             return false;
         }
 
-        private sealed class Impl : TypeSubstitutor
+        private sealed class Impl(IDictionary<Type, Type> map) : TypeSubstitutor(map)
         {
-            public Impl(IDictionary<Type, Type> map)
-                : base(map)
-            {
-            }
-
             protected override Type VisitGenericClosed(Type type)
             {
                 if (type.GetGenericTypeDefinition() == typeof(Expression<>))

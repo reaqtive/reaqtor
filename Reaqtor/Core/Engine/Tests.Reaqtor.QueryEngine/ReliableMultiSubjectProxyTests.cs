@@ -309,14 +309,9 @@ namespace Tests.Reaqtor.QueryEngine
             {
             }
 
-            private sealed class Observer : IReliableObserver<T>
+            private sealed class Observer(ReliableMultiSubjectProxyTests.ReliableSubject<T> parent) : IReliableObserver<T>
             {
-                private readonly ReliableSubject<T> _parent;
-
-                public Observer(ReliableSubject<T> parent)
-                {
-                    _parent = parent;
-                }
+                private readonly ReliableSubject<T> _parent = parent;
 
                 public Uri ResubscribeUri => throw new NotImplementedException();
 
@@ -341,19 +336,13 @@ namespace Tests.Reaqtor.QueryEngine
             }
         }
 
-        private sealed class ReliableSubcription<T> : ReliableSubscriptionBase
+        private sealed class ReliableSubcription<T>(Subject<Tuple<T, long>> subject, IReliableObserver<T> observer) : ReliableSubscriptionBase
         {
-            private readonly Subject<Tuple<T, long>> _subject;
-            private readonly IReliableObserver<T> _observer;
+            private readonly Subject<Tuple<T, long>> _subject = subject;
+            private readonly IReliableObserver<T> _observer = observer;
 
             private IDisposable _disposable;
             private int _isDisposed = 0;
-
-            public ReliableSubcription(Subject<Tuple<T, long>> subject, IReliableObserver<T> observer)
-            {
-                _subject = subject;
-                _observer = observer;
-            }
 
             public override Uri ResubscribeUri => throw new NotImplementedException();
 
@@ -380,14 +369,9 @@ namespace Tests.Reaqtor.QueryEngine
             public bool IsDisposed => _isDisposed == 1;
         }
 
-        private sealed class TestSubject<T> : IReliableMultiSubject<T>
+        private sealed class TestSubject<T>(IReliableObserver<T> instance) : IReliableMultiSubject<T>
         {
-            private readonly IReliableObserver<T> _instance;
-
-            public TestSubject(IReliableObserver<T> instance)
-            {
-                _instance = instance;
-            }
+            private readonly IReliableObserver<T> _instance = instance;
 
             public IReliableObserver<T> CreateObserver()
             {
