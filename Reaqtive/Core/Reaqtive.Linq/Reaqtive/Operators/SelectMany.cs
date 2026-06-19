@@ -44,7 +44,7 @@ namespace Reaqtive.Operators
             {
                 _isStopped = false;
 
-                _innerSubscriptions = [];
+                _innerSubscriptions = new CompositeSubscription();
                 _sourceSubscription = Params._source.Subscribe(this);
 
                 return new ISubscription[] { _sourceSubscription, _innerSubscriptions };

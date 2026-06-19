@@ -322,6 +322,17 @@ namespace System.Memory
 
                     return res;
                 }
+
+                protected override void DisposeCore()
+                {
+                    //
+                    // This synchronized wrapper owns both the underlying cache and the gate it
+                    // created (see SynchronizedFactory.Create), so it is responsible for disposing
+                    // them. (The sibling ImplBase<T, R> follows the same pattern for its cache.)
+                    //
+                    _cache.Dispose();
+                    _gate.Dispose();
+                }
             }
 
             private sealed class SynchronizedTrimmable<T>(ITrimmable<T> trimmable, ReaderWriterLockSlim gate) : ITrimmable<T>

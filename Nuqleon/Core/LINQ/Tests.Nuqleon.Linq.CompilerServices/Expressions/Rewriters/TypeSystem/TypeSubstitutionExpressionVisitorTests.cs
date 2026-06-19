@@ -1201,6 +1201,7 @@ namespace Tests.System.Linq.CompilerServices
 
 #pragma warning disable 0649
 #pragma warning disable IDE0060 // Remove unused parameter
+#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning disable CA1822 // Mark static
         private sealed class Bar(int x)
         {
@@ -1258,6 +1259,7 @@ namespace Tests.System.Linq.CompilerServices
             public int Age { get; set; }
         }
 #pragma warning restore CA1822
+#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 #pragma warning restore 0649
 

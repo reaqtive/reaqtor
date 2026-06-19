@@ -114,6 +114,19 @@ built, not shipped; their project references are not maintained. See `archive/RE
 - Two `Tests.*`-named **non-test** projects (a data "Catalog" and a VB fixture library, both
   `IsTestProject=false`) were being built as MTP executables by the name-based heuristic; forced them
   back to libraries.
+- **`CA2000`/`CA2213` disposal analyzers (stricter on the .NET 10 SDK).** The pre-existing
+  `AnalysisMode=All` + `TreatWarningsAsErrors` (in `Directory.Build.props` since 2021) meets the newer
+  CA analyzers in the .NET 10 SDK, which flag a large, **codebase-wide** wave of IDisposable
+  diagnostics the .NET 7/8 SDK did not (≈64 `CA2000`/`CA2213` sites). CI only ever reported the first
+  handful because each build job fails fast on the first project. These are overwhelmingly false
+  positives over the reactive/operator patterns here (back-pointers to an owning operator/subject,
+  fields disposed via `DisposeCore`/`OnDispose` hooks the analyzer doesn't model, ownership transferred
+  to a returned wrapper), so they are **deferred wholesale via `NoWarn` in `Directory.Build.props`**
+  (joining the existing `CA1305;CA1822;CA1854` deferral, issue #143) rather than churning core code —
+  consistent with this PR staying a framework migration. The one genuine leak the wave surfaced —
+  `SynchronizedFactory.Impl<T,R>` in `MemoizationCacheFactoryExtensions.cs` never disposing its owned
+  `_cache`/`_gate` — was **fixed in code** (a `DisposeCore()` override matching its sibling
+  `ImplBase<T,R>`), not merely suppressed.
 
 ## Compromises & deferred work
 

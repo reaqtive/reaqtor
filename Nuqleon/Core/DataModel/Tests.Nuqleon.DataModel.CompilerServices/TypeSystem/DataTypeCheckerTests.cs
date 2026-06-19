@@ -424,6 +424,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
 #pragma warning restore CA1822
 
 #pragma warning disable IDE0060 // Remove unused parameter (accessed through reflection)
+#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
         private class CtorMissingMapping(int x)
         {
             [Mapping("x")]
@@ -441,6 +442,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             [Mapping("x")]
             public string X { get; set; }
         }
+#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 
         private enum EnumMissingMapping

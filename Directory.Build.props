@@ -11,6 +11,18 @@
     <NoWarn>$(NoWarn);IDE0079;IDE0090;CA1305;CA1822;CA1854</NoWarn>
 
     <!--
+    The .NET 10 SDK's code analyzers (with AnalysisMode=All + TreatWarningsAsErrors) flag a large,
+    codebase-wide wave of IDisposable diagnostics that the .NET 7/8 SDK this repo last built on did
+    not: CA2000 ("dispose before losing scope") and CA2213 ("disposable field never disposed"). These
+    are overwhelmingly false positives over the reactive/operator patterns here (back-pointers to an
+    owning operator/subject, fields disposed via DisposeCore/OnDispose hooks the analyzer doesn't model,
+    and ownership transferred to a returned wrapper). Suppressed wholesale as deferred analyzer churn,
+    consistent with the .NET 10 framework-migration scope (cf. issue #143). NB: the one *genuine* leak
+    this surfaced (SynchronizedFactory.Impl in MemoizationCacheFactoryExtensions never disposing its
+    cache/gate) was fixed in code, not merely suppressed. Revisit alongside #143. -->
+    <NoWarn>$(NoWarn);CA2000;CA2213</NoWarn>
+
+    <!--
     The Reaqtive/Reaqtor operators use a deliberate, long-standing convention of terse private
     nested type names (e.g. '_' for the primary operator/observer and 'i' for a secondary inner
     observer). The C# 14 compiler flags all-lower-case type names with CS8981 ("may become a

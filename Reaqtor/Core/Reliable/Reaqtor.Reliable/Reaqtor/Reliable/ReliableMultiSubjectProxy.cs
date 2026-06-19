@@ -26,7 +26,7 @@ namespace Reaqtor.Reliable
 #pragma warning disable CA2213 // Not disposing `_inputs`; instead, we dispose the underlying resources.
 
             private readonly Uri _uri = uri;
-            private readonly StableCompositeSubscription _inputs = [];
+            private readonly StableCompositeSubscription _inputs = new();
 
             private volatile IReliableObserver<TInput> _observer;
 

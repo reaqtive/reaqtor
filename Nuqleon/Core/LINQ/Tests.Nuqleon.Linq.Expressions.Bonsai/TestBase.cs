@@ -23,6 +23,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
         protected static SimpleTypeSlim SlimType => TypeSlimExtensions.IntegerType;
 
 #pragma warning disable IDE0060 // Remove unused parameter
+#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning disable CA1822 // Mark static
         protected class Foo(int i, int j)
         {
@@ -62,6 +63,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
         protected class Baz
         {
         }
+#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 
         protected static Expression ExpressionRoundtrip(Expression e)

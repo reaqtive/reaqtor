@@ -1225,6 +1225,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
 #pragma warning disable 0649
 #pragma warning disable IDE0060 // Remove unused parameter
+#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
         private sealed class TestBar(int x)
         {
             public int this[int x] => throw new NotImplementedException();
@@ -1283,6 +1284,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             public int Age { get; set; }
         }
 #pragma warning restore 0649
+#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 
         #endregion

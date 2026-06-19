@@ -370,6 +370,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter (test code)
+#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
         public class Qux
         {
             public Qux()
@@ -404,6 +405,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             [Mapping("foo")]
             public int X { get; set; }
         }
+#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 
         private class Holder<T>

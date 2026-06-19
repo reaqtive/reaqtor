@@ -328,8 +328,6 @@ namespace System.Linq.CompilerServices
         }
 
 #if USE_SLIM
-
-<<<<<<< TODO: Unmerged change from project 'Nuqleon.Linq.Expressions.Bonsai', Before:
         private sealed class ParameterBasedTupletizer : ScopedExpressionSlimVisitor<Expression>
 #else
         private sealed class ParameterBasedTupletizer : ScopedExpressionVisitor<Expression>
@@ -341,44 +339,6 @@ namespace System.Linq.CompilerServices
             {
                 _map = map;
             }
-=======
-        private sealed class ParameterBasedTupletizer(Dictionary<ParameterExpression, Expression> map) : ScopedExpressionSlimVisitor<Expression>
-#else
-        private sealed class ParameterBasedTupletizer : ScopedExpressionVisitor<Expression>
-#endif
-        {
-            private readonly Dictionary<ParameterExpression, Expression> _map = map;
->>>>>>> After
-        private sealed class ParameterBasedTupletizer : ScopedExpressionSlimVisitor<Expression>
-#else
-        private sealed class ParameterBasedTupletizer(Dictionary<ParameterExpression, Expression> map)
-<<<<<<< TODO: Unmerged change from project 'Nuqleon.Linq.Expressions.Bonsai', Before:
-        private sealed class ParameterBasedDetupletizer : ScopedExpressionSlimVisitor<Expression>
-#else
-        private sealed class ParameterBasedDetupletizer : ScopedExpressionVisitor<Expression>
-#endif
-        {
-            private readonly ParameterExpression _tupleParameter;
-            private readonly IReadOnlyList<Expression> _parameters;
-
-            public ParameterBasedDetupletizer(ParameterExpression tupleParameter, IReadOnlyList<Expression> parameters)
-            {
-                _tupleParameter = tupleParameter;
-                _parameters = parameters;
-            }
-=======
-        private sealed class ParameterBasedDetupletizer(ParameterExpression tupleParameter, IReadOnlyList<Expression> parameters) : ScopedExpressionSlimVisitor<Expression>
-#else
-        private sealed class ParameterBasedDetupletizer : ScopedExpressionVisitor<Expression>
-#endif
-        {
-            private readonly ParameterExpression _tupleParameter = tupleParameter;
-            private readonly IReadOnlyList<Expression> _parameters = parameters;
->>>>>>> After
- : ScopedExpressionVisitor<Expression>
-#endif
-        {
-            private readonly Dictionary<ParameterExpression, Expression> _map = map;
 
             protected override Expression GetState(ParameterExpression parameter) => parameter;
 
@@ -499,11 +459,17 @@ namespace System.Linq.CompilerServices
 #if USE_SLIM
         private sealed class ParameterBasedDetupletizer : ScopedExpressionSlimVisitor<Expression>
 #else
-        private sealed class ParameterBasedDetupletizer(ParameterExpression tupleParameter, IReadOnlyList<Expression> parameters) : ScopedExpressionVisitor<Expression>
+        private sealed class ParameterBasedDetupletizer : ScopedExpressionVisitor<Expression>
 #endif
         {
-            private readonly ParameterExpression _tupleParameter = tupleParameter;
-            private readonly IReadOnlyList<Expression> _parameters = parameters;
+            private readonly ParameterExpression _tupleParameter;
+            private readonly IReadOnlyList<Expression> _parameters;
+
+            public ParameterBasedDetupletizer(ParameterExpression tupleParameter, IReadOnlyList<Expression> parameters)
+            {
+                _tupleParameter = tupleParameter;
+                _parameters = parameters;
+            }
 
             protected override Expression GetState(ParameterExpression parameter)
             {
@@ -787,8 +753,8 @@ namespace System.Linq.CompilerServices
 
         internal const int TupleTypeCount = 9; // NB: Keep this in sync with the arrays below
 
-        internal static readonly Type[] TupleTypes =
-        [
+        internal static readonly Type[] TupleTypes = new Type[]
+        {
 #if USE_SLIM
             typeof(Placeholder).ToTypeSlim(), // Placeholder for the user-supplied unit type
             typeof(Tuple<>).ToTypeSlim(),
@@ -810,11 +776,10 @@ namespace System.Linq.CompilerServices
             typeof(Tuple<,,,,,,>),
             typeof(Tuple<,,,,,,,>),
 #endif
-        ];
+        };
 
-        internal static readonly string[] ItemNames =
-        // NB: Ensure that this matches the last tuple type's size
-        [
+        internal static readonly string[] ItemNames = new string[] // NB: Ensure that this matches the last tuple type's size
+        {
             null,
             "Item1",
             "Item2",
@@ -823,7 +788,7 @@ namespace System.Linq.CompilerServices
             "Item5",
             "Item6",
             "Item7",
-        ];
+        };
 
         private sealed class Placeholder
         {
