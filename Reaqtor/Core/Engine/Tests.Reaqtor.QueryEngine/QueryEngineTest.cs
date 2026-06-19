@@ -312,9 +312,14 @@ namespace Tests.Reaqtor.QueryEngine
 
         protected abstract IScheduler GetScheduler();
 
-        private sealed class TestTraceListener(Action<string> onWrite) : TraceListener
+        private sealed class TestTraceListener : TraceListener
         {
-            private readonly Action<string> _onWrite = onWrite;
+            private readonly Action<string> _onWrite;
+
+            public TestTraceListener(Action<string> onWrite)
+            {
+                _onWrite = onWrite;
+            }
 
             public override void Write(string message)
             {

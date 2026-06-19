@@ -92,12 +92,13 @@ namespace System.Memory
                 return new Impl<T, R>(() => _factory.Create(function, options, comparer));
             }
 
-            internal abstract class ImplBase<T, R>(Func<IMemoizationCache<T, R>> factory) : MemoizationCacheBase<T, R>, IServiceProvider
+            internal abstract class ImplBase<T, R> : MemoizationCacheBase<T, R>, IServiceProvider
             {
 #pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
-                protected readonly ThreadLocal<IMemoizationCache<T, R>> _cache = new ThreadLocal<IMemoizationCache<T, R>>(factory, trackAllValues: true);
-
+                protected readonly ThreadLocal<IMemoizationCache<T, R>> _cache;
 #pragma warning restore CA2213, IDE0079
+
+                public ImplBase(Func<IMemoizationCache<T, R>> factory) => _cache = new ThreadLocal<IMemoizationCache<T, R>>(factory, trackAllValues: true);
 
                 protected override R GetOrAddCore(T argument) => _cache.Value.GetOrAdd(argument);
 
@@ -114,8 +115,13 @@ namespace System.Memory
                 public abstract object GetService(Type serviceType);
             }
 
-            internal class Impl<T, R>(Func<IMemoizationCache<T, R>> factory) : ImplBase<T, R>(factory)
+            internal class Impl<T, R> : ImplBase<T, R>
             {
+                public Impl(Func<IMemoizationCache<T, R>> factory)
+                    : base(factory)
+                {
+                }
+
                 protected override int CountCore => _cache.Value.Count;
 
                 protected override string DebugViewCore => _cache.Value.DebugView;
@@ -125,8 +131,13 @@ namespace System.Memory
                 public override object GetService(Type serviceType) => _cache.Value.GetService(serviceType);
             }
 
-            internal class ImplUnion<T, R>(Func<IMemoizationCache<T, R>> factory) : ImplBase<T, R>(factory)
+            internal class ImplUnion<T, R> : ImplBase<T, R>
             {
+                public ImplUnion(Func<IMemoizationCache<T, R>> factory)
+                    : base(factory)
+                {
+                }
+
                 protected override int CountCore => _cache.Values.Sum(v => v.Count);
 
                 protected override string DebugViewCore
@@ -180,9 +191,11 @@ namespace System.Memory
                 }
             }
 
-            private sealed class UnionTrimmable<T>(IEnumerable children) : ITrimmable<T>
+            private sealed class UnionTrimmable<T> : ITrimmable<T>
             {
-                private readonly IEnumerable _children = children;
+                private readonly IEnumerable _children;
+
+                public UnionTrimmable(IEnumerable children) => _children = children;
 
                 public int Trim(Func<T, bool> shouldTrim)
                 {
@@ -202,9 +215,11 @@ namespace System.Memory
             }
         }
 
-        private sealed class SynchronizedFactory(IMemoizationCacheFactory factory) : IMemoizationCacheFactory
+        private sealed class SynchronizedFactory : IMemoizationCacheFactory
         {
-            private readonly IMemoizationCacheFactory _factory = factory;
+            private readonly IMemoizationCacheFactory _factory;
+
+            public SynchronizedFactory(IMemoizationCacheFactory factory) => _factory = factory;
 
             public IMemoizationCache<T, R> Create<T, R>(Func<T, R> function, MemoizationOptions options, IEqualityComparer<T> comparer)
             {
@@ -234,10 +249,16 @@ namespace System.Memory
                 return new Impl<T, R>(cache, gate);
             }
 
-            private sealed class Impl<T, R>(IMemoizationCache<T, R> cache, ReaderWriterLockSlim gate) : MemoizationCacheBase<T, R>, IServiceProvider
+            private sealed class Impl<T, R> : MemoizationCacheBase<T, R>, IServiceProvider
             {
-                private readonly IMemoizationCache<T, R> _cache = cache;
-                private readonly ReaderWriterLockSlim _gate = gate;
+                private readonly IMemoizationCache<T, R> _cache;
+                private readonly ReaderWriterLockSlim _gate;
+
+                public Impl(IMemoizationCache<T, R> cache, ReaderWriterLockSlim gate)
+                {
+                    _cache = cache;
+                    _gate = gate;
+                }
 
                 protected override int CountCore
                 {
@@ -335,10 +356,16 @@ namespace System.Memory
                 }
             }
 
-            private sealed class SynchronizedTrimmable<T>(ITrimmable<T> trimmable, ReaderWriterLockSlim gate) : ITrimmable<T>
+            private sealed class SynchronizedTrimmable<T> : ITrimmable<T>
             {
-                private readonly ITrimmable<T> _trimmable = trimmable;
-                private readonly ReaderWriterLockSlim _gate = gate;
+                private readonly ITrimmable<T> _trimmable;
+                private readonly ReaderWriterLockSlim _gate;
+
+                public SynchronizedTrimmable(ITrimmable<T> trimmable, ReaderWriterLockSlim gate)
+                {
+                    _trimmable = trimmable;
+                    _gate = gate;
+                }
 
                 public int Trim(Func<T, bool> shouldTrim)
                 {

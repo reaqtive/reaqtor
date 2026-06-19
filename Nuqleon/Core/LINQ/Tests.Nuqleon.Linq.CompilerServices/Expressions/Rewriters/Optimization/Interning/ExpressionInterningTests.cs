@@ -1309,13 +1309,20 @@ namespace Tests.System.Linq.CompilerServices
             CloneAndAssert(e);
         }
 
-        private sealed class Qux(int x)
+        private sealed class Qux
         {
+            public Qux(int x)
+            {
+                X = x;
+                Foos = [];
+                Bar = new Bar2();
+            }
+
             public int X
             {
                 get;
                 private set;
-            } = x;
+            }
 
             public string Baz
             {
@@ -1327,13 +1334,13 @@ namespace Tests.System.Linq.CompilerServices
             {
                 get;
                 private set;
-            } = new Bar2();
+            }
 
             public List<int> Foos
             {
                 get;
                 private set;
-            } = [];
+            }
         }
 
         private sealed class Bar2

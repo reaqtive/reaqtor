@@ -37,11 +37,7 @@ namespace Reaqtive.Storage
         /// </list>
         /// This enables derived types to decide on the storage details of heap items.
         /// </remarks>
-        /// <remarks>
-        /// Creates a new entity representing a heap.
-        /// </remarks>
-        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-        private abstract partial class HeapBase(PersistedObjectSpace parent) : PersistableBase(parent)
+        private abstract partial class HeapBase : PersistableBase
         {
             //
             // NB: We use numeric key representations for all data structures below and on edit pages. This prevents having to keep strings alive when save and load operations happen infrequently.
@@ -97,6 +93,15 @@ namespace Reaqtive.Storage
             /// The pending edits obtained from <see cref="_dirty"/> on the last call to <see cref="SaveCore(IStateWriter)"/>, for use by <see cref="OnSavedCore"/> to edit <see cref="_keys"/> upon a successful save operation.
             /// </summary>
             private DirtyState[] _dirtyHistory;
+
+            /// <summary>
+            /// Creates a new entity representing a heap.
+            /// </summary>
+            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+            public HeapBase(PersistedObjectSpace parent)
+                : base(parent)
+            {
+            }
 
             /// <summary>
             /// Deletes the heap from storage.

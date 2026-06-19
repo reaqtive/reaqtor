@@ -13,15 +13,22 @@ using Reaqtive;
 
 namespace Reaqtor.QueryEngine.Mocks
 {
-    internal class MockReactiveEngineProvider(MockQueryEngineRegistry registry, RegistryQueryProviderBase queryProvider) : IReactiveEngineProvider
+    internal class MockReactiveEngineProvider : IReactiveEngineProvider
     {
-        private readonly MockQueryEngineRegistry _registry = registry;
-        private readonly QueryEngineBinder _binder = new FullBinder(registry);
-        private readonly RegistryQueryProviderBase _queryProvider = queryProvider;
+        private readonly MockQueryEngineRegistry _registry;
+        private readonly QueryEngineBinder _binder;
+        private readonly RegistryQueryProviderBase _queryProvider;
 
         public MockReactiveEngineProvider(MockQueryEngineRegistry registry)
             : this(registry, new RegistryQueryProvider(registry))
         {
+        }
+
+        public MockReactiveEngineProvider(MockQueryEngineRegistry registry, RegistryQueryProviderBase queryProvider)
+        {
+            _registry = registry;
+            _binder = new FullBinder(registry);
+            _queryProvider = queryProvider;
         }
 
         public void CreateSubscription(Uri subscriptionUri, Expression subscription, object state)

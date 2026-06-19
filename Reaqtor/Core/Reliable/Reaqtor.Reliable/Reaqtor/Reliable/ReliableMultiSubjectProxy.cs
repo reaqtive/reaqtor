@@ -10,9 +10,11 @@ using Reaqtive;
 
 namespace Reaqtor.Reliable
 {
-    public sealed class ReliableMultiSubjectProxy<TInput, TOutput>(Uri uri) : IReliableMultiSubject<TInput, TOutput>
+    public sealed class ReliableMultiSubjectProxy<TInput, TOutput> : IReliableMultiSubject<TInput, TOutput>
     {
-        private readonly Uri _uri = uri ?? throw new ArgumentNullException(nameof(uri));
+        private readonly Uri _uri;
+
+        public ReliableMultiSubjectProxy(Uri uri) => _uri = uri ?? throw new ArgumentNullException(nameof(uri));
 
         public IReliableObserver<TInput> CreateObserver() => new ObserverProxy(_uri);
 
@@ -20,15 +22,17 @@ namespace Reaqtor.Reliable
 
         public void Dispose() { }
 
-        private sealed class ObserverProxy(Uri uri) : IReliableObserver<TInput>, IOperator, ISubscription
+        private sealed class ObserverProxy : IReliableObserver<TInput>, IOperator, ISubscription
         {
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA2213 // Not disposing `_inputs`; instead, we dispose the underlying resources.
 
-            private readonly Uri _uri = uri;
+            private readonly Uri _uri;
             private readonly StableCompositeSubscription _inputs = new();
 
             private volatile IReliableObserver<TInput> _observer;
+
+            public ObserverProxy(Uri uri) => _uri = uri;
 
             #region IOperator
 

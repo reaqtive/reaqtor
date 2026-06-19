@@ -16,9 +16,11 @@ namespace Reaqtor.Shebang.Extensions
     // using a visitor pattern for purposes of state saving and loading.
     //
 
-    internal sealed class TimerObservable(TimeSpan period) : SubscribableBase<DateTimeOffset>
+    internal sealed class TimerObservable : SubscribableBase<DateTimeOffset>
     {
-        private readonly TimeSpan _period = period;
+        private readonly TimeSpan _period;
+
+        public TimerObservable(TimeSpan period) => _period = period;
 
         protected override ISubscription SubscribeCore(IObserver<DateTimeOffset> observer) => new Subscription(_period, observer);
 
@@ -27,12 +29,15 @@ namespace Reaqtor.Shebang.Extensions
         // the engine's scheduler, which is critical to support checkpoint/recovery.
         //
 
-        private sealed class Subscription(TimeSpan parent, IObserver<DateTimeOffset> observer) : ContextSwitchOperator<TimeSpan, DateTimeOffset>(parent, observer), IUnloadableOperator
+        private sealed class Subscription : ContextSwitchOperator<TimeSpan, DateTimeOffset>, IUnloadableOperator
         {
 #pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
             private Timer _timer;
-
 #pragma warning restore CA2213
+
+            public Subscription(TimeSpan parent, IObserver<DateTimeOffset> observer) : base(parent, observer)
+            {
+            }
 
             public override string Name => "sb:Timer";
 

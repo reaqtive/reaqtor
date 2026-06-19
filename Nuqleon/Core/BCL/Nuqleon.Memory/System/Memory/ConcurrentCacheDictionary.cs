@@ -15,9 +15,14 @@ using System.Diagnostics;
 
 namespace System.Memory
 {
-    internal sealed class ConcurrentCacheDictionary<K, T>(IEqualityComparer<K> comparer) : ICacheDictionary<K, T>
+    internal sealed class ConcurrentCacheDictionary<K, T> : ICacheDictionary<K, T>
     {
-        private readonly ConcurrentDictionary<Maybe<K>, T> _dictionary = new ConcurrentDictionary<Maybe<K>, T>(new MaybeEqualityComparer<K>(comparer ?? FastEqualityComparer<K>.Default));
+        private readonly ConcurrentDictionary<Maybe<K>, T> _dictionary;
+
+        public ConcurrentCacheDictionary(IEqualityComparer<K> comparer)
+        {
+            _dictionary = new ConcurrentDictionary<Maybe<K>, T>(new MaybeEqualityComparer<K>(comparer ?? FastEqualityComparer<K>.Default));
+        }
 
         public int Count => _dictionary.Count;
 

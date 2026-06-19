@@ -13,10 +13,16 @@ using System.Collections.Generic;
 
 namespace System.Linq.Expressions
 {
-    internal sealed class ListArgumentProviderSlim(IArgumentProviderSlim provider, ExpressionSlim arg0) : IList<ExpressionSlim>
+    internal sealed class ListArgumentProviderSlim : IList<ExpressionSlim>
     {
-        private readonly IArgumentProviderSlim _provider = provider;
-        private readonly ExpressionSlim _arg0 = arg0;
+        private readonly IArgumentProviderSlim _provider;
+        private readonly ExpressionSlim _arg0;
+
+        public ListArgumentProviderSlim(IArgumentProviderSlim provider, ExpressionSlim arg0)
+        {
+            _provider = provider;
+            _arg0 = arg0;
+        }
 
         public ExpressionSlim this[int index]
         {

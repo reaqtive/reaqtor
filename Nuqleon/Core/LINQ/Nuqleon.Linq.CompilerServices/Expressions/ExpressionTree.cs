@@ -417,9 +417,14 @@ namespace System.Linq.Expressions
         protected override ITree<ExpressionTreeNode> UpdateCore(IEnumerable<ITree<ExpressionTreeNode>> children) => new ExpressionTreeUpdate(children).Visit(MemberMemberBinding);
     }
 
-    internal sealed class ExpressionTreeUpdate(IEnumerable<ITree<ExpressionTreeNode>> children) : ExpressionVisitorNarrow<ExpressionTree>
+    internal sealed class ExpressionTreeUpdate : ExpressionVisitorNarrow<ExpressionTree>
     {
-        private readonly ExpressionTreeBase[] _children = [.. children.Cast<ExpressionTreeBase>()];
+        private readonly ExpressionTreeBase[] _children;
+
+        public ExpressionTreeUpdate(IEnumerable<ITree<ExpressionTreeNode>> children)
+        {
+            _children = [.. children.Cast<ExpressionTreeBase>()];
+        }
 
         protected override ExpressionTree VisitBinary(BinaryExpression node)
         {

@@ -28,9 +28,14 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(ElementAt<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<ElementAt<TSource>, TSource>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<ElementAt<TSource>, TSource>, IObserver<TSource>
         {
             private int _currentIndex;
+
+            public _(ElementAt<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:ElementAt";
 

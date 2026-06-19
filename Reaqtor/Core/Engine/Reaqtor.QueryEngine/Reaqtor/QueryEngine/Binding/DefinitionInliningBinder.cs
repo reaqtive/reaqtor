@@ -16,15 +16,9 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Binder that rewrites an expression by inlining definitions.
     /// </summary>
-    /// <remarks>
-    /// Creates a binder that inlines definitions which are looked up in the specified <paramref name="registry"/>.
-    /// Foreign functions (that are no returning reactive types) can be looked up using <paramref name="lookupForeignFunction"/>
-    /// </remarks>
-    /// <param name="registry">Registry used to look up reactive artifact definitions.</param>
-    /// <param name="lookupForeignFunction">Function to look up foreign functions. Can return null to indicate no binding target is found..</param>
-    internal class DefinitionInliningBinder(IQueryEngineRegistry registry, Func<string, Expression> lookupForeignFunction) : QueryEngineBinder(registry)
+    internal class DefinitionInliningBinder : QueryEngineBinder
     {
-        private readonly Func<string, Expression> _lookupForeignFunction = lookupForeignFunction;
+        private readonly Func<string, Expression> _lookupForeignFunction;
 
         /// <summary>
         /// Creates a binder that inlines definitions which are looked up in the specified <paramref name="registry"/>.
@@ -33,6 +27,18 @@ namespace Reaqtor.QueryEngine
         public DefinitionInliningBinder(IQueryEngineRegistry registry)
             : this(registry, lookupForeignFunction: null)
         {
+        }
+
+        /// <summary>
+        /// Creates a binder that inlines definitions which are looked up in the specified <paramref name="registry"/>.
+        /// Foreign functions (that are no returning reactive types) can be looked up using <paramref name="lookupForeignFunction"/>
+        /// </summary>
+        /// <param name="registry">Registry used to look up reactive artifact definitions.</param>
+        /// <param name="lookupForeignFunction">Function to look up foreign functions. Can return null to indicate no binding target is found..</param>
+        public DefinitionInliningBinder(IQueryEngineRegistry registry, Func<string, Expression> lookupForeignFunction)
+            : base(registry)
+        {
+            _lookupForeignFunction = lookupForeignFunction;
         }
 
         protected override Expression LookupOther(string id, Type type, Type funcType)

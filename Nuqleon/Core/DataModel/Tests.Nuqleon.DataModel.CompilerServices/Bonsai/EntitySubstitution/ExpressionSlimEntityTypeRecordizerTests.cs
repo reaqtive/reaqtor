@@ -345,16 +345,26 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             public string Foo { get; set; }
         }
 
-        private class MissingMapping(int x)
+        private class MissingMapping
         {
+            public MissingMapping(int x)
+            {
+                X = x;
+            }
+
             [Mapping("foo")]
-            public int X { get; set; } = x;
+            public int X { get; set; }
         }
 
-        private class NonMatchingMapping([Mapping("bar")] int x)
+        private class NonMatchingMapping
         {
+            public NonMatchingMapping([Mapping("bar")] int x)
+            {
+                X = x;
+            }
+
             [Mapping("foo")]
-            public int X { get; set; } = x;
+            public int X { get; set; }
         }
 
         private class DuplicateMapping

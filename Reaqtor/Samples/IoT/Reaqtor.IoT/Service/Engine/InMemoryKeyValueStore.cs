@@ -115,10 +115,12 @@ namespace Reaqtor.IoT
             }
         }
 
-        private sealed class Transaction(InMemoryKeyValueStore parent) : IKeyValueStoreTransaction
+        private sealed class Transaction : IKeyValueStoreTransaction
         {
-            private readonly InMemoryKeyValueStore _parent = parent;
+            private readonly InMemoryKeyValueStore _parent;
             private readonly Dictionary<string, Dictionary<string, byte[]>> _edits = [];
+
+            public Transaction(InMemoryKeyValueStore parent) => _parent = parent;
 
             public byte[] this[string tableName, string key]
             {
@@ -361,9 +363,11 @@ namespace Reaqtor.IoT
             }
         }
 
-        private sealed class Table(string name) : IKeyValueTable<string, byte[]>
+        private sealed class Table : IKeyValueTable<string, byte[]>
         {
-            private readonly string _name = name;
+            private readonly string _name;
+
+            public Table(string name) => _name = name;
 
             public ITransactedKeyValueTable<string, byte[]> Enter(IKeyValueStoreTransaction transaction) => new Impl(transaction, _name);
 
@@ -390,9 +394,11 @@ namespace Reaqtor.IoT
             }
         }
 
-        private sealed class Reader(InMemoryKeyValueStore store) : IStateReader
+        private sealed class Reader : IStateReader
         {
-            private readonly InMemoryKeyValueStore _store = store;
+            private readonly InMemoryKeyValueStore _store;
+
+            public Reader(InMemoryKeyValueStore store) => _store = store;
 
             public void Dispose() { }
 
@@ -447,10 +453,12 @@ namespace Reaqtor.IoT
             }
         }
 
-        private sealed class Writer(InMemoryKeyValueStore store) : IStateWriter
+        private sealed class Writer : IStateWriter
         {
-            private readonly InMemoryKeyValueStore _store = store;
+            private readonly InMemoryKeyValueStore _store;
             private readonly Dictionary<(string, string), MemoryStream> _edits = [];
+
+            public Writer(InMemoryKeyValueStore store) => _store = store;
 
             public CheckpointKind CheckpointKind => CheckpointKind.Differential;
 

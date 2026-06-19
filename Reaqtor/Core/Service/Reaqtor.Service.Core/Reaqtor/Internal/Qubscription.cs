@@ -12,13 +12,19 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal class Qubscription(Expression expression, IReactiveQueryProvider provider) : ReactiveQubscriptionBase(provider)
+    internal class Qubscription : ReactiveQubscriptionBase
     {
+        public Qubscription(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
         protected override void DisposeCore()
         {
             ((ReactiveQueryProviderBase)base.Provider).DeleteSubscription(this);
         }
 
-        public override Expression Expression { get; } = expression;
+        public override Expression Expression { get; }
     }
 }

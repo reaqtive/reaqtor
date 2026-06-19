@@ -16,15 +16,23 @@ namespace Reaqtive.TestingFramework
     /// </summary>
     /// <typeparam name="TAbsolute">Absolute time representation type.</typeparam>
     /// <typeparam name="TRelative">Relative time representation type.</typeparam>
-    public abstract class VirtualTimeLogicalScheduler<TAbsolute, TRelative>(
-        VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> physical,
-        VirtualTimeLogicalScheduler<TAbsolute, TRelative> parent) : IScheduler, ISchedulerExceptionHandler
+    public abstract class VirtualTimeLogicalScheduler<TAbsolute, TRelative> : IScheduler, ISchedulerExceptionHandler
         where TAbsolute : IComparable<TAbsolute>
     {
-        private readonly VirtualTimeLogicalScheduler<TAbsolute, TRelative> _parent = parent;
-        private readonly List<VirtualTimeLogicalScheduler<TAbsolute, TRelative>> _children = [];
-        private readonly List<IWorkItem<TAbsolute>> _tasks = [];
+        private readonly VirtualTimeLogicalScheduler<TAbsolute, TRelative> _parent;
+        private readonly List<VirtualTimeLogicalScheduler<TAbsolute, TRelative>> _children;
+        private readonly List<IWorkItem<TAbsolute>> _tasks;
         private readonly Lock _gate = new();
+
+        protected VirtualTimeLogicalScheduler(
+            VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> physical,
+            VirtualTimeLogicalScheduler<TAbsolute, TRelative> parent)
+        {
+            Physical = physical;
+            _parent = parent;
+            _tasks = [];
+            _children = [];
+        }
 
         /// <summary>
         /// Gets the current time. Currently, only physical time. Can be virtual in the future.
@@ -197,7 +205,7 @@ namespace Reaqtive.TestingFramework
         /// <summary>
         /// Gets the underlying physical scheduler.
         /// </summary>
-        protected VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> Physical { get; private set; } = physical;
+        protected VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> Physical { get; private set; }
 
         /// <summary>
         /// Determines whether the calling thread has access to the scheduler.

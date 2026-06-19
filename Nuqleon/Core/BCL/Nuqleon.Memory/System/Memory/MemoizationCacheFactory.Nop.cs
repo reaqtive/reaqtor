@@ -36,9 +36,11 @@ namespace System.Memory
                 return new Cache<T, TResult>(function);
             }
 
-            internal sealed class Cache<T, R>(Func<T, R> function) : MemoizationCacheBase<T, R>
+            internal sealed class Cache<T, R> : MemoizationCacheBase<T, R>
             {
-                private readonly Func<T, R> _function = function;
+                private readonly Func<T, R> _function;
+
+                public Cache(Func<T, R> function) => _function = function;
 
                 protected override R GetOrAddCore(T argument) => _function(argument);
 

@@ -22,12 +22,19 @@ using System.Reactive.Subjects;
 
 namespace Rxcel
 {
-    internal sealed class Cell(Sheet sheet) : IDisposable
+    internal sealed class Cell : IDisposable
     {
-        private readonly Sheet _sheet = sheet;
-        private readonly BehaviorSubject<double?> _subject = new BehaviorSubject<double?>(null);
-        private readonly SerialDisposable _subscription = new SerialDisposable();
+        private readonly Sheet _sheet;
+        private readonly BehaviorSubject<double?> _subject;
+        private readonly SerialDisposable _subscription;
         private LambdaExpression _expr;
+
+        public Cell(Sheet sheet)
+        {
+            _sheet = sheet;
+            _subject = new BehaviorSubject<double?>(null);
+            _subscription = new SerialDisposable();
+        }
 
         public string Value
         {

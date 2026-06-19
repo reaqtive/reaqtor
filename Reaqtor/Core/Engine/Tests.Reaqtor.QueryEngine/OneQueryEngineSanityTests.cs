@@ -2800,9 +2800,14 @@ namespace Tests.Reaqtor.QueryEngine
                 return new Sub(this);
             }
 
-            private sealed class Sub(OneQueryEngineSanityTests.MyReliableObservable<T> parent) : ReliableSubscriptionBase
+            private sealed class Sub : ReliableSubscriptionBase
             {
-                private readonly MyReliableObservable<T> _parent = parent;
+                private readonly MyReliableObservable<T> _parent;
+
+                public Sub(MyReliableObservable<T> parent)
+                {
+                    _parent = parent;
+                }
 
                 public override Uri ResubscribeUri => throw new NotImplementedException();
 

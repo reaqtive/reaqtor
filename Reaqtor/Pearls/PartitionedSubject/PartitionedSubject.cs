@@ -15,10 +15,16 @@ using System.Reactive.Disposables;
 
 namespace PartitionedSubject
 {
-    internal class PartitionedSubject<T, K>(Func<T, K> keySelector, IEqualityComparer<K> comparer) : IObserver<T>
+    internal class PartitionedSubject<T, K> : IObserver<T>
     {
-        private readonly ConcurrentDictionary<K, IObserver<T>> _observers = new ConcurrentDictionary<K, IObserver<T>>(comparer);
-        private readonly Func<T, K> _keySelector = keySelector;
+        private readonly ConcurrentDictionary<K, IObserver<T>> _observers;
+        private readonly Func<T, K> _keySelector;
+
+        public PartitionedSubject(Func<T, K> keySelector, IEqualityComparer<K> comparer)
+        {
+            _keySelector = keySelector;
+            _observers = new ConcurrentDictionary<K, IObserver<T>>(comparer);
+        }
 
         public void OnCompleted()
         {

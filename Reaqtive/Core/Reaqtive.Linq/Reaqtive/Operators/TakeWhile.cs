@@ -26,8 +26,13 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(TakeWhile<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<TakeWhile<TSource>, TSource>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<TakeWhile<TSource>, TSource>, IObserver<TSource>
         {
+            public _(TakeWhile<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
+
             public override string Name => "rc:TakeWhile";
 
             public override Version Version => Versioning.v1;
@@ -94,9 +99,14 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(TakeWhileIndexed<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<TakeWhileIndexed<TSource>, TSource>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<TakeWhileIndexed<TSource>, TSource>, IObserver<TSource>
         {
             private int _currentIndex;
+
+            public _(TakeWhileIndexed<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:TakeWhile+Index";
 

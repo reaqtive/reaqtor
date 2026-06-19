@@ -12,13 +12,19 @@ using System.Collections.Generic;
 
 namespace System.Linq.CompilerServices
 {
-    internal sealed class Label<TValue>(ITree<TValue> tree, IList<Match> labels)
+    internal sealed class Label<TValue>
     {
-        public ITree<TValue> Tree { get; } = tree;
+        public Label(ITree<TValue> tree, IList<Match> labels)
+        {
+            Tree = tree;
+            Labels = labels;
+        }
+
+        public ITree<TValue> Tree { get; }
 
         public TValue Value => Tree.Value;
 
-        public IList<Match> Labels { get; } = labels;
+        public IList<Match> Labels { get; }
 
         public override string ToString() => ToString(withValue: true);
 

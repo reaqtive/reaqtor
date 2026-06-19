@@ -17,16 +17,22 @@ namespace Reaqtor.QueryEngine
     /// Supports checkpointing of sequence number watermarks to support replay of events after failover.
     /// </summary>
     /// <typeparam name="T">The type of the events.</typeparam>
-    /// <remarks>
-    /// Creates a new reliable observable converter.
-    /// </remarks>
-    /// <param name="source">The reliable observable to subscribe to.</param>
-    /// <param name="switchContext">true if events need to be context switched into the engine via the scheduler; otherwise, false.</param>
-    internal sealed class ReliableSubscriptionInput<T>(IReliableObservable<T> source, bool switchContext) : SubscribableBase<T>
+    internal sealed class ReliableSubscriptionInput<T> : SubscribableBase<T>
     {
-        private readonly IReliableObservable<T> _source = source;
+        private readonly IReliableObservable<T> _source;
 
-        private readonly bool _switchContext = switchContext;
+        private readonly bool _switchContext;
+
+        /// <summary>
+        /// Creates a new reliable observable converter.
+        /// </summary>
+        /// <param name="source">The reliable observable to subscribe to.</param>
+        /// <param name="switchContext">true if events need to be context switched into the engine via the scheduler; otherwise, false.</param>
+        public ReliableSubscriptionInput(IReliableObservable<T> source, bool switchContext)
+        {
+            _source = source;
+            _switchContext = switchContext;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<T> observer)
         {

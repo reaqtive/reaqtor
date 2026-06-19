@@ -11,9 +11,15 @@ using Reaqtor.Reliable.Expressions;
 
 namespace Reaqtor.Reliable.Service
 {
-    public class ReliableQubscription(Expression expression, IReliableQueryProvider provider) : ReliableQubscriptionBase(provider)
+    public class ReliableQubscription : ReliableQubscriptionBase
     {
-        public override Expression Expression { get; } = expression;
+        public ReliableQubscription(Expression expression, IReliableQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         public override Uri ResubscribeUri => ((ReliableQueryProviderBase)Provider).GetSubscriptionResubscribeUri(this);
 

@@ -758,11 +758,18 @@ namespace Tests.Reaqtor.QueryEngine
         Unload,
     }
 
-    internal class TestEngine(Func<IStateWriter, CancellationToken, IProgress<int>, Task> checkpoint, Func<IStateReader, CancellationToken, IProgress<int>, Task> recover, Func<IProgress<int>, Task> unload) : ICheckpointable
+    internal class TestEngine : ICheckpointable
     {
-        private readonly Func<IStateWriter, CancellationToken, IProgress<int>, Task> _checkpoint = checkpoint;
-        private readonly Func<IStateReader, CancellationToken, IProgress<int>, Task> _recover = recover;
-        private readonly Func<IProgress<int>, Task> _unload = unload;
+        private readonly Func<IStateWriter, CancellationToken, IProgress<int>, Task> _checkpoint;
+        private readonly Func<IStateReader, CancellationToken, IProgress<int>, Task> _recover;
+        private readonly Func<IProgress<int>, Task> _unload;
+
+        public TestEngine(Func<IStateWriter, CancellationToken, IProgress<int>, Task> checkpoint, Func<IStateReader, CancellationToken, IProgress<int>, Task> recover, Func<IProgress<int>, Task> unload)
+        {
+            _checkpoint = checkpoint;
+            _recover = recover;
+            _unload = unload;
+        }
 
         public Task CheckpointAsync(IStateWriter writer, CancellationToken token, IProgress<int> progress)
         {

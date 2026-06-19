@@ -1001,9 +1001,14 @@ namespace Tests.System.Linq.CompilerServices
 
         }
 
-        private sealed class TypeErasureChecker(Type[] disallow) : ExpressionVisitor
+        private sealed class TypeErasureChecker : ExpressionVisitor
         {
-            private readonly Checker _checker = new Checker(disallow);
+            private readonly Checker _checker;
+
+            public TypeErasureChecker(Type[] disallow)
+            {
+                _checker = new Checker(disallow);
+            }
 
             public override Expression Visit(Expression node)
             {
@@ -1015,9 +1020,14 @@ namespace Tests.System.Linq.CompilerServices
                 return base.Visit(node);
             }
 
-            private sealed class Checker(Type[] disallow) : TypeVisitor
+            private sealed class Checker : TypeVisitor
             {
-                private readonly Type[] _disallow = disallow;
+                private readonly Type[] _disallow;
+
+                public Checker(Type[] disallow)
+                {
+                    _disallow = disallow;
+                }
 
                 public override Type Visit(Type type)
                 {
@@ -1201,10 +1211,13 @@ namespace Tests.System.Linq.CompilerServices
 
 #pragma warning disable 0649
 #pragma warning disable IDE0060 // Remove unused parameter
-#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning disable CA1822 // Mark static
-        private sealed class Bar(int x)
+        private sealed class Bar
         {
+            public Bar(int x)
+            {
+            }
+
             public int this[int x] => throw new NotImplementedException();
 
             public static string Baz;
@@ -1225,8 +1238,12 @@ namespace Tests.System.Linq.CompilerServices
             public static Bar operator -(Bar b) => throw new NotImplementedException();
         }
 
-        private sealed class Foo(long x)
+        private sealed class Foo
         {
+            public Foo(long x)
+            {
+            }
+
             public static string Baz;
             public long Qux { get; set; }
             public Foo Joey { get; private set; }
@@ -1245,8 +1262,12 @@ namespace Tests.System.Linq.CompilerServices
             public static Foo operator -(Foo b) => throw new NotImplementedException();
         }
 
-        private sealed class Baz(int x)
+        private sealed class Baz
         {
+            public Baz(int x)
+            {
+            }
+
             public int x;
             public int Y { get; private set; }
             public int Z(int x) { return 42; }
@@ -1259,7 +1280,6 @@ namespace Tests.System.Linq.CompilerServices
             public int Age { get; set; }
         }
 #pragma warning restore CA1822
-#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 #pragma warning restore 0649
 

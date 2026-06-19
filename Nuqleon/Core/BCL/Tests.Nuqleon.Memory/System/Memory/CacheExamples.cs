@@ -89,9 +89,14 @@ namespace Tests.System.Memory
                     : new DummyReference(item);
             }
 
-            private sealed class DummyReference(string value) : IDiscardable<string>
+            private sealed class DummyReference : IDiscardable<string>
             {
-                public string Value { get; } = value;
+                public DummyReference(string value)
+                {
+                    Value = value;
+                }
+
+                public string Value { get; }
 
                 public void Dispose()
                 {

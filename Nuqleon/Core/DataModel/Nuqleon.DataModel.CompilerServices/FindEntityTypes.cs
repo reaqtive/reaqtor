@@ -164,9 +164,11 @@ namespace Nuqleon.DataModel.CompilerServices
                 return base.VisitMethod(method);
             }
 
-            private sealed class FindEntityDataTypes(FindEntityTypes.Impl parent) : TypeVisitor
+            private sealed class FindEntityDataTypes : TypeVisitor
             {
-                private readonly Impl _parent = parent;
+                private readonly Impl _parent;
+
+                public FindEntityDataTypes(Impl parent) => _parent = parent;
 
                 public override Type Visit(Type type)
                 {
@@ -213,11 +215,18 @@ namespace Nuqleon.DataModel.CompilerServices
             }
         }
 
-        private sealed class TransitiveClosureVisitor(Action<KeyValuePair<Type, StructuralDataType>> enqueue, Action<KeyValuePair<Type, PrimitiveDataType>> addEnumeration) : DataTypeVisitor
+        private sealed class TransitiveClosureVisitor : DataTypeVisitor
         {
-            private readonly Action<KeyValuePair<Type, StructuralDataType>> _enqueue = enqueue;
-            private readonly Action<KeyValuePair<Type, PrimitiveDataType>> _addEnumeration = addEnumeration;
-            private readonly HashSet<Type> _processed = [];
+            private readonly Action<KeyValuePair<Type, StructuralDataType>> _enqueue;
+            private readonly Action<KeyValuePair<Type, PrimitiveDataType>> _addEnumeration;
+            private readonly HashSet<Type> _processed;
+
+            public TransitiveClosureVisitor(Action<KeyValuePair<Type, StructuralDataType>> enqueue, Action<KeyValuePair<Type, PrimitiveDataType>> addEnumeration)
+            {
+                _enqueue = enqueue;
+                _addEnumeration = addEnumeration;
+                _processed = [];
+            }
 
             protected override DataType VisitStructural(StructuralDataType type)
             {

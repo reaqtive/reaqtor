@@ -29,15 +29,21 @@ namespace Reaqtive.Storage
     /// </summary>
     /// <typeparam name="TKey">The type of the keys stored in the key/value store.</typeparam>
     /// <typeparam name="TValue">The type of the values stored in the key/value store.</typeparam>
-    /// <remarks>
-    /// Creates a new instance of <see cref="DeleteEdit{TKey, TValue}"/> representing the addition or deletion of a key/value store entry with the specified <paramref name="key"/> and <paramref name="value"/>.
-    /// </remarks>
-    /// <param name="key">The key of the key/value store entry to add or edit.</param>
-    /// <param name="value">The value of the key/value store entry to add or edit.</param>
-    internal sealed class AddOrUpdateEdit<TKey, TValue>(TKey key, TValue value) : Edit<TKey, TValue>
+    internal sealed class AddOrUpdateEdit<TKey, TValue> : Edit<TKey, TValue>
     {
-        private readonly TKey _key = key;
-        private readonly TValue _value = value;
+        private readonly TKey _key;
+        private readonly TValue _value;
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DeleteEdit{TKey, TValue}"/> representing the addition or deletion of a key/value store entry with the specified <paramref name="key"/> and <paramref name="value"/>.
+        /// </summary>
+        /// <param name="key">The key of the key/value store entry to add or edit.</param>
+        /// <param name="value">The value of the key/value store entry to add or edit.</param>
+        public AddOrUpdateEdit(TKey key, TValue value)
+        {
+            _key = key;
+            _value = value;
+        }
 
         /// <summary>
         /// Dispatches to the <see cref="ISnapshotVisitor{TKey, TValue}.AddOrUpdate(TKey, TValue)"/> method on the <paramref name="visitor"/>.
@@ -51,13 +57,18 @@ namespace Reaqtive.Storage
     /// </summary>
     /// <typeparam name="TKey">The type of the keys stored in the key/value store.</typeparam>
     /// <typeparam name="TValue">The type of the values stored in the key/value store.</typeparam>
-    /// <remarks>
-    /// Creates a new instance of <see cref="DeleteEdit{TKey, TValue}"/> representing the deletion of a key/value store entry with the specified <paramref name="key"/>.
-    /// </remarks>
-    /// <param name="key">The key of the key/value store entry to delete.</param>
-    internal sealed class DeleteEdit<TKey, TValue>(TKey key) : Edit<TKey, TValue>
+    internal sealed class DeleteEdit<TKey, TValue> : Edit<TKey, TValue>
     {
-        private readonly TKey _key = key;
+        private readonly TKey _key;
+
+        /// <summary>
+        /// Creates a new instance of <see cref="DeleteEdit{TKey, TValue}"/> representing the deletion of a key/value store entry with the specified <paramref name="key"/>.
+        /// </summary>
+        /// <param name="key">The key of the key/value store entry to delete.</param>
+        public DeleteEdit(TKey key)
+        {
+            _key = key;
+        }
 
         /// <summary>
         /// Dispatches to the <see cref="ISnapshotVisitor{TKey, TValue}.Delete(TKey)"/> method on the <paramref name="visitor"/>.

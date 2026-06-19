@@ -13,9 +13,14 @@ using System.IO;
 
 namespace Utilities
 {
-    public sealed class AddOrUpdateStateWriterOperation(string category, string key, MemoryStream data) : StateWriterOperation(category, key)
+    public sealed class AddOrUpdateStateWriterOperation : StateWriterOperation
     {
-        private readonly MemoryStream _data = data;
+        private readonly MemoryStream _data;
+
+        public AddOrUpdateStateWriterOperation(string category, string key, MemoryStream data) : base(category, key)
+        {
+            _data = data;
+        }
 
         public override StateWriterOperationKind Kind => StateWriterOperationKind.AddOrUpdate;
 

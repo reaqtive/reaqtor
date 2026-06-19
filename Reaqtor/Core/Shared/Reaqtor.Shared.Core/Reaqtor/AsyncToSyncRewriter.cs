@@ -77,7 +77,7 @@ namespace Reaqtor
             return re2;
         }
 
-        private sealed class TypeSubst(IDictionary<Type, Type> map) : TypeSubstitutionExpressionVisitor(map)
+        private sealed class TypeSubst : TypeSubstitutionExpressionVisitor
         {
 #pragma warning disable format
             private static readonly Dictionary<Type, HashSet<string>> s_droppable = new()
@@ -109,8 +109,12 @@ namespace Reaqtor
                 { typeof(IAsyncReactiveSubscriptionFactory<,>), new HashSet<string> { "CreateAsync" } },
                 { typeof(IAsyncReactiveQubscriptionFactory<,>), new HashSet<string> { "CreateAsync" } },
             };
-
 #pragma warning restore format
+
+            public TypeSubst(IDictionary<Type, Type> map)
+                : base(map)
+            {
+            }
 
             protected override Type ResolveType(Type originalType)
             {

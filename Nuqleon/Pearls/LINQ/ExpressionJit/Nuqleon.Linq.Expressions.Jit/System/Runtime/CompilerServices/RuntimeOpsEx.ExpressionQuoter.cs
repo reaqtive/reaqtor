@@ -22,12 +22,7 @@ namespace System.Runtime.CompilerServices
         /// <summary>
         /// Quotes expressions at runtime by performing binding steps on unbound variables.
         /// </summary>
-        /// <remarks>
-        /// Creates a new expression quoter.
-        /// </remarks>
-        /// <param name="locals">The hoisted locals information gathered by the compiler at compile time.</param>
-        /// <param name="closure">The closure to access for the binding of hoisted variables.</param>
-        private sealed class ExpressionQuoter(HoistedLocals locals, IRuntimeVariables closure) : BetterExpressionVisitor
+        private sealed class ExpressionQuoter : BetterExpressionVisitor
         {
             /// <summary>
             /// Stack of nested declaration scopes.
@@ -38,12 +33,23 @@ namespace System.Runtime.CompilerServices
             /// The hoisted locals information gathered by the compiler at compile time.
             /// Used to traverse the parent chain and to resolve indices of variable slots.
             /// </summary>
-            private readonly HoistedLocals _locals = locals;
+            private readonly HoistedLocals _locals;
 
             /// <summary>
             /// The closure to access for the binding of hoisted variables.
             /// </summary>
-            private readonly IRuntimeVariables _closure = closure;
+            private readonly IRuntimeVariables _closure;
+
+            /// <summary>
+            /// Creates a new expression quoter.
+            /// </summary>
+            /// <param name="locals">The hoisted locals information gathered by the compiler at compile time.</param>
+            /// <param name="closure">The closure to access for the binding of hoisted variables.</param>
+            public ExpressionQuoter(HoistedLocals locals, IRuntimeVariables closure)
+            {
+                _locals = locals;
+                _closure = closure;
+            }
 
             /// <summary>
             /// Visit lambda expressions to perform scope tracking.

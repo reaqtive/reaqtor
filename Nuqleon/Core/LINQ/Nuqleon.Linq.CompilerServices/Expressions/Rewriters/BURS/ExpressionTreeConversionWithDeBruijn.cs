@@ -68,10 +68,17 @@ namespace System.Linq.CompilerServices
         }
     }
 
-    internal sealed class DeBruijnParameter(ParameterExpression parameter, int scope, int index) : ExpressionTree<ParameterExpression>(parameter)
+    internal sealed class DeBruijnParameter : ExpressionTree<ParameterExpression>
     {
-        private readonly int _scope = scope;
-        private readonly int _index = index;
+        private readonly int _scope;
+        private readonly int _index;
+
+        public DeBruijnParameter(ParameterExpression parameter, int scope, int index)
+            : base(parameter)
+        {
+            _scope = scope;
+            _index = index;
+        }
 
         public override bool Equals(object obj) => Equals(obj as ExpressionTreeBase);
 
@@ -82,8 +89,13 @@ namespace System.Linq.CompilerServices
         public override string ToStringFormat() => "Parameter[@" + _scope + "." + _index + " : " + Expression.Type.ToCSharpString(useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false) + "]";
     }
 
-    internal sealed class ParameterDeclaration(ParameterExpression parameter) : ExpressionTree<ParameterExpression>(parameter)
+    internal sealed class ParameterDeclaration : ExpressionTree<ParameterExpression>
     {
+        public ParameterDeclaration(ParameterExpression parameter)
+            : base(parameter)
+        {
+        }
+
         public override bool Equals(object obj) => Equals(obj as ExpressionTreeBase);
 
         public override bool Equals(ExpressionTreeBase other) => other is ParameterDeclaration pd && base.Expression.Type == pd.Expression.Type;

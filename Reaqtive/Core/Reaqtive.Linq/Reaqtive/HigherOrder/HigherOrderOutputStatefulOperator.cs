@@ -13,13 +13,7 @@ namespace Reaqtive
     /// </summary>
     /// <typeparam name="TParam">Type of the parameters passed to the operator.</typeparam>
     /// <typeparam name="TResult">Type of the elements produced by the operator in the result sequence. This type should derive from ISubscribable&lt;T&gt; (for some value of T) but this constraint is not enforced at this layer of the class hierarchy.</typeparam>
-    /// <remarks>
-    /// Creates a new hgher order output operator instance using the given parameters and the
-    /// observer to report downstream notifications to.
-    /// </remarks>
-    /// <param name="parent">Parameters used by the operator.</param>
-    /// <param name="observer">Observer receiving the operator's output.</param>
-    internal abstract class HigherOrderOutputStatefulOperatorBase<TParam, TResult>(TParam parent, IObserver<TResult> observer) : StatefulUnaryOperator<TParam, TResult>(parent, observer)
+    internal abstract class HigherOrderOutputStatefulOperatorBase<TParam, TResult> : StatefulUnaryOperator<TParam, TResult>
     {
         #region Documentation
 
@@ -73,7 +67,19 @@ namespace Reaqtive
         private int _refCount;
 
         #endregion
+
         #region Constructors
+
+        /// <summary>
+        /// Creates a new hgher order output operator instance using the given parameters and the
+        /// observer to report downstream notifications to.
+        /// </summary>
+        /// <param name="parent">Parameters used by the operator.</param>
+        /// <param name="observer">Observer receiving the operator's output.</param>
+        protected HigherOrderOutputStatefulOperatorBase(TParam parent, IObserver<TResult> observer)
+            : base(parent, observer)
+        {
+        }
 
         #endregion
 
@@ -344,9 +350,14 @@ namespace Reaqtive
         /// <summary>
         /// Ref count manager subscribed to the tollbooth stream to observe AddRef/Release requests.
         /// </summary>
-        private sealed class RefCountManager(HigherOrderOutputStatefulOperatorBase<TParam, TResult> parent) : TinyObserver<bool>
+        private sealed class RefCountManager : TinyObserver<bool>
         {
-            private readonly HigherOrderOutputStatefulOperatorBase<TParam, TResult> _parent = parent;
+            private readonly HigherOrderOutputStatefulOperatorBase<TParam, TResult> _parent;
+
+            public RefCountManager(HigherOrderOutputStatefulOperatorBase<TParam, TResult> parent)
+            {
+                _parent = parent;
+            }
 
             protected override void OnNextCore(bool value)
             {
@@ -364,9 +375,14 @@ namespace Reaqtive
         /// <summary>
         /// Collector subscribed to the collector stream to observe stream collection requests.
         /// </summary>
-        private sealed class Collector(HigherOrderOutputStatefulOperatorBase<TParam, TResult> parent) : TinyObserver<Uri>
+        private sealed class Collector : TinyObserver<Uri>
         {
-            private readonly HigherOrderOutputStatefulOperatorBase<TParam, TResult> _parent = parent;
+            private readonly HigherOrderOutputStatefulOperatorBase<TParam, TResult> _parent;
+
+            public Collector(HigherOrderOutputStatefulOperatorBase<TParam, TResult> parent)
+            {
+                _parent = parent;
+            }
 
             protected override void OnNextCore(Uri value)
             {
@@ -380,10 +396,16 @@ namespace Reaqtive
         /// Reference-counted subscription used to clean-up the source subscription after all subscriptions to the
         /// inner streams as well as the subscription to the higher-order output sequence have been disposed.
         /// </summary>
-        protected class RefCountSubscription(HigherOrderOutputStatefulOperatorBase<TParam, TResult> parent) : ISubscription
+        protected class RefCountSubscription : ISubscription
         {
-            private readonly HigherOrderOutputStatefulOperatorBase<TParam, TResult> _parent = parent;
-            private readonly SingleAssignmentSubscription _inner = new SingleAssignmentSubscription();
+            private readonly HigherOrderOutputStatefulOperatorBase<TParam, TResult> _parent;
+            private readonly SingleAssignmentSubscription _inner;
+
+            public RefCountSubscription(HigherOrderOutputStatefulOperatorBase<TParam, TResult> parent)
+            {
+                _parent = parent;
+                _inner = new SingleAssignmentSubscription();
+            }
 
             public ISubscription Subscription
             {
@@ -418,17 +440,21 @@ namespace Reaqtive
     /// <typeparam name="TElement">Type of the elements in the inner sequences produced by the operator.</typeparam>
     /// <typeparam name="TResult">Type of the elements produced by the operator in the result sequence. This type should derive from ISubscribable&lt;TElement&gt;.</typeparam>
     /// <typeparam name="TInnerArgs">Type of the arguments passed to the inner sequences created by the operator.</typeparam>
-    /// <remarks>
-    /// Creates a new hgher order output operator instance using the given parameters and the
-    /// observer to report downstream notifications to.
-    /// </remarks>
-    /// <param name="parent">Parameters used by the operator.</param>
-    /// <param name="observer">Observer receiving the operator's output.</param>
-    internal abstract class HigherOrderOutputStatefulOperator<TParam, TSource, TElement, TResult, TInnerArgs>(TParam parent, IObserver<TResult> observer) : HigherOrderOutputStatefulOperatorBase<TParam, TResult>(parent, observer), IObserver<TSource>, IDependencyOperator
+    internal abstract class HigherOrderOutputStatefulOperator<TParam, TSource, TElement, TResult, TInnerArgs> : HigherOrderOutputStatefulOperatorBase<TParam, TResult>, IObserver<TSource>, IDependencyOperator
         where TResult : ISubscribable<TElement>
     {
-
         #region Constructors
+
+        /// <summary>
+        /// Creates a new hgher order output operator instance using the given parameters and the
+        /// observer to report downstream notifications to.
+        /// </summary>
+        /// <param name="parent">Parameters used by the operator.</param>
+        /// <param name="observer">Observer receiving the operator's output.</param>
+        protected HigherOrderOutputStatefulOperator(TParam parent, IObserver<TResult> observer)
+            : base(parent, observer)
+        {
+        }
 
         #endregion
 
@@ -564,9 +590,14 @@ namespace Reaqtive
         /// Simple implementation of a subject that does subscription reference counting via a tollbooth
         /// for use by higher order operators run without a reactive environment.
         /// </summary>
-        private sealed class SimpleRefCountSubject(IObserver<bool> refCount) : SimpleSubject<TElement>
+        private sealed class SimpleRefCountSubject : SimpleSubject<TElement>
         {
-            private readonly IObserver<bool> _refCount = refCount;
+            private readonly IObserver<bool> _refCount;
+
+            public SimpleRefCountSubject(IObserver<bool> refCount)
+            {
+                _refCount = refCount;
+            }
 
             public override ISubscription Subscribe(IObserver<TElement> observer)
             {
@@ -574,10 +605,16 @@ namespace Reaqtive
                 return new Subscription(res, this);
             }
 
-            private sealed class Subscription(ISubscription inner, HigherOrderOutputStatefulOperator<TParam, TSource, TElement, TResult, TInnerArgs>.SimpleRefCountSubject parent) : ISubscription, IOperator
+            private sealed class Subscription : ISubscription, IOperator
             {
-                private readonly ISubscription _inner = inner;
-                private readonly SimpleRefCountSubject _parent = parent;
+                private readonly ISubscription _inner;
+                private readonly SimpleRefCountSubject _parent;
+
+                public Subscription(ISubscription inner, SimpleRefCountSubject parent)
+                {
+                    _inner = inner;
+                    _parent = parent;
+                }
 
                 public void Accept(ISubscriptionVisitor visitor)
                 {
@@ -625,16 +662,20 @@ namespace Reaqtive
     /// </summary>
     /// <typeparam name="TParam">Type of the parameters passed to the operator.</typeparam>
     /// <typeparam name="TSource">Type of the elements received by the operator.</typeparam>
-    /// <remarks>
-    /// Creates a new hgher order output operator instance using the given parameters and the
-    /// observer to report downstream notifications to.
-    /// </remarks>
-    /// <param name="parent">Parameters used by the operator.</param>
-    /// <param name="observer">Observer receiving the operator's output.</param>
-    internal abstract class HigherOrderOutputStatefulOperator<TParam, TSource>(TParam parent, IObserver<ISubscribable<TSource>> observer) : HigherOrderOutputStatefulOperator<TParam, TSource, TSource, ISubscribable<TSource>, object>(parent, observer)
+    internal abstract class HigherOrderOutputStatefulOperator<TParam, TSource> : HigherOrderOutputStatefulOperator<TParam, TSource, TSource, ISubscribable<TSource>, object>
     {
-
         #region Constructors
+
+        /// <summary>
+        /// Creates a new hgher order output operator instance using the given parameters and the
+        /// observer to report downstream notifications to.
+        /// </summary>
+        /// <param name="parent">Parameters used by the operator.</param>
+        /// <param name="observer">Observer receiving the operator's output.</param>
+        protected HigherOrderOutputStatefulOperator(TParam parent, IObserver<ISubscribable<TSource>> observer)
+            : base(parent, observer)
+        {
+        }
 
         #endregion
 

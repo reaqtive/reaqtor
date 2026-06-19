@@ -18,12 +18,13 @@ namespace Reaqtor
     /// <summary>
     /// Base class for the implementation of subscription factories represented by an expression tree.
     /// </summary>
-    /// <remarks>
-    /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subscription factory.</param>
-    public abstract class AsyncReactiveQubscriptionFactoryBase(IAsyncReactiveQueryProvider provider) : IAsyncReactiveQubscriptionFactory
+    public abstract class AsyncReactiveQubscriptionFactoryBase : IAsyncReactiveQubscriptionFactory
     {
+        /// <summary>
+        /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subscription factory.</param>
+        protected AsyncReactiveQubscriptionFactoryBase(IAsyncReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Creates a new subscription with the specified subscription URI.
@@ -67,7 +68,7 @@ namespace Reaqtor
         /// <summary>
         /// Gets the query provider that is associated with the subscription factory.
         /// </summary>
-        public IAsyncReactiveQueryProvider Provider { get; } = provider;
+        public IAsyncReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subscription factory.
@@ -79,12 +80,13 @@ namespace Reaqtor
     /// Base class for the implementation of parameterized subscription factories represented by an expression tree.
     /// </summary>
     /// <typeparam name="TArgs">Type of the parameter passed to the subscription factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subscription factory.</param>
-    public abstract class AsyncReactiveQubscriptionFactoryBase<TArgs>(IAsyncReactiveQueryProvider provider) : IAsyncReactiveQubscriptionFactory<TArgs>
+    public abstract class AsyncReactiveQubscriptionFactoryBase<TArgs> : IAsyncReactiveQubscriptionFactory<TArgs>
     {
+        /// <summary>
+        /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subscription factory.</param>
+        protected AsyncReactiveQubscriptionFactoryBase(IAsyncReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Creates a new subscription with the specified subscription URI.
@@ -131,7 +133,7 @@ namespace Reaqtor
         /// <summary>
         /// Gets the query provider that is associated with the subscription factory.
         /// </summary>
-        public IAsyncReactiveQueryProvider Provider { get; } = provider;
+        public IAsyncReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subscription factory.

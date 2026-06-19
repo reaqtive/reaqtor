@@ -120,31 +120,48 @@ namespace Reaqtor
 
         #region Private implementation
 
-        private sealed class QueryableDictionary<T>(IQueryProvider provider, Expression expression) : QueryableDictionaryBase<Uri, T>
+        private sealed class QueryableDictionary<T> : QueryableDictionaryBase<Uri, T>
         {
+            public QueryableDictionary(IQueryProvider provider, Expression expression)
+            {
+                Provider = provider;
+                Expression = expression;
+            }
+
             public override IEnumerator<KeyValuePair<Uri, T>> GetEnumerator() => Provider.Execute<IEnumerable<KeyValuePair<Uri, T>>>(Expression).GetEnumerator();
 
-            public override Expression Expression { get; } = expression;
+            public override Expression Expression { get; }
 
-            public override IQueryProvider Provider { get; } = provider;
+            public override IQueryProvider Provider { get; }
         }
 
-        private sealed class Queryable<T>(IQueryProvider provider, Expression expression) : IQueryable<T>
+        private sealed class Queryable<T> : IQueryable<T>
         {
+            public Queryable(IQueryProvider provider, Expression expression)
+            {
+                Provider = provider;
+                Expression = expression;
+            }
+
             public IEnumerator<T> GetEnumerator() => Provider.Execute<IEnumerable<T>>(Expression).GetEnumerator();
 
             IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
             public Type ElementType => typeof(T);
 
-            public Expression Expression { get; } = expression;
+            public Expression Expression { get; }
 
-            public IQueryProvider Provider { get; } = provider;
+            public IQueryProvider Provider { get; }
         }
 
-        private sealed class QueryProvider(ReactiveMetadataBase parent) : IQueryProvider
+        private sealed class QueryProvider : IQueryProvider
         {
-            private readonly ReactiveMetadataBase _parent = parent;
+            private readonly ReactiveMetadataBase _parent;
+
+            public QueryProvider(ReactiveMetadataBase parent)
+            {
+                _parent = parent;
+            }
 
             public IQueryableDictionary<Uri, T> CreateSource<T>(string name)
             {

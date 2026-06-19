@@ -9,11 +9,15 @@ namespace Reaqtor.QueryEngine.Events
     /// <summary>
     /// Event arguments involving a stream factory.
     /// </summary>
-    /// <remarks>
-    /// Creates a new instance of <see cref="StreamFactoryEventArgs"/> class for the specified entity.
-    /// </remarks>
-    /// <param name="entity">The entity representing the stream factory.</param>
-    internal sealed class StreamFactoryEventArgs(IReactiveResource entity) : ReactiveEntityEventArgs(entity.Uri, entity, ReactiveEntityKind.StreamFactory)
+    internal sealed class StreamFactoryEventArgs : ReactiveEntityEventArgs
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="StreamFactoryEventArgs"/> class for the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity representing the stream factory.</param>
+        public StreamFactoryEventArgs(IReactiveResource entity)
+            : base(entity.Uri, entity, ReactiveEntityKind.StreamFactory)
+        {
+        }
     }
 }

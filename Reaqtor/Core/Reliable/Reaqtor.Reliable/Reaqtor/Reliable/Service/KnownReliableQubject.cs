@@ -9,8 +9,14 @@ using Reaqtor.Reliable.Expressions;
 
 namespace Reaqtor.Reliable.Service
 {
-    public class KnownReliableQubject<TInput, TOutput>(Expression expression, Uri uri, IReliableQueryProvider provider) : ReliableQubject<TInput, TOutput>(expression, provider), IKnownResource
+    public class KnownReliableQubject<TInput, TOutput> : ReliableQubject<TInput, TOutput>, IKnownResource
     {
-        public Uri Uri { get; } = uri;
+        public KnownReliableQubject(Expression expression, Uri uri, IReliableQueryProvider provider)
+            : base(expression, provider)
+        {
+            Uri = uri;
+        }
+
+        public Uri Uri { get; }
     }
 }

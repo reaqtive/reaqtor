@@ -16,16 +16,23 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal sealed class GenericTypeDef(TypeRef genericTypeDefinition, params TypeRef[] genericTypeArguments) : TypeDef
+    internal sealed class GenericTypeDef : TypeDef
     {
         #region Fields
 
-        private readonly TypeRef _genericTypeDefinition = genericTypeDefinition;
-        private readonly TypeRef[] _genericTypeArguments = genericTypeArguments;
+        private readonly TypeRef _genericTypeDefinition;
+        private readonly TypeRef[] _genericTypeArguments;
         private TypeSlim _type;
 
         #endregion
+
         #region Constructors
+
+        public GenericTypeDef(TypeRef genericTypeDefinition, params TypeRef[] genericTypeArguments)
+        {
+            _genericTypeDefinition = genericTypeDefinition;
+            _genericTypeArguments = genericTypeArguments;
+        }
 
         #endregion
 

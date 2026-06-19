@@ -12,9 +12,11 @@ using System.Runtime.ExceptionServices;
 
 namespace System.Memory
 {
-    internal class ValueOrErrorError<T>(ExceptionDispatchInfo error) : IValueOrError<T>
+    internal class ValueOrErrorError<T> : IValueOrError<T>
     {
-        private readonly ExceptionDispatchInfo _error = error;
+        private readonly ExceptionDispatchInfo _error;
+
+        public ValueOrErrorError(ExceptionDispatchInfo error) => _error = error;
 
         public ValueOrErrorKind Kind => ValueOrErrorKind.Error;
 

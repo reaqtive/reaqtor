@@ -132,19 +132,28 @@ namespace System.Linq.CompilerServices
             }
         }
 
-        private sealed class TypeTupletizer(IEnumerable<Type> subst, Expression unit) : TypeVisitor
+        private sealed class TypeTupletizer : TypeVisitor
         {
             private static ConstructorInfo InvalidOperationExceptionCtor => field ??= typeof(InvalidOperationException).GetConstructor([typeof(string)]);
 
-            private readonly Expression _unit = unit;
+            private readonly Expression _unit;
 
-            public Dictionary<Type, Type> TypeMap { get; } = subst.ToDictionary(t => t, t => default(Type));
+            public TypeTupletizer(IEnumerable<Type> subst, Expression unit)
+            {
+                TypeMap = subst.ToDictionary(t => t, t => default(Type));
+                ConstructorMap = [];
+                PropertyMap = [];
+                ConstantConverters = [];
+                _unit = unit;
+            }
 
-            public Dictionary<Type, Func<NewExpression, Func<Expression, Expression>, Expression>> ConstructorMap { get; } = [];
+            public Dictionary<Type, Type> TypeMap { get; }
 
-            public Dictionary<Type, Func<MemberExpression, Func<Expression, Expression>, Expression>> PropertyMap { get; } = [];
+            public Dictionary<Type, Func<NewExpression, Func<Expression, Expression>, Expression>> ConstructorMap { get; }
 
-            public Dictionary<Type, Func<object, Func<object, object>, object>> ConstantConverters { get; } = [];
+            public Dictionary<Type, Func<MemberExpression, Func<Expression, Expression>, Expression>> PropertyMap { get; }
+
+            public Dictionary<Type, Func<object, Func<object, object>, object>> ConstantConverters { get; }
 
             public override Type Visit(Type type)
             {
@@ -363,11 +372,19 @@ namespace System.Linq.CompilerServices
             }
         }
 
-        private sealed class Tupletizer(Dictionary<Type, Type> typeMap, Dictionary<Type, Func<NewExpression, Func<Expression, Expression>, Expression>> ctorMap, Dictionary<Type, Func<MemberExpression, Func<Expression, Expression>, Expression>> propMap, Dictionary<Type, Func<object, Func<object, object>, object>> constConv) : TypeSubstitutionExpressionVisitor(typeMap)
+        private sealed class Tupletizer : TypeSubstitutionExpressionVisitor
         {
-            private readonly Dictionary<Type, Func<NewExpression, Func<Expression, Expression>, Expression>> _ctorMap = ctorMap;
-            private readonly Dictionary<Type, Func<MemberExpression, Func<Expression, Expression>, Expression>> _propMap = propMap;
-            private readonly Dictionary<Type, Func<object, Func<object, object>, object>> _constConv = constConv;
+            private readonly Dictionary<Type, Func<NewExpression, Func<Expression, Expression>, Expression>> _ctorMap;
+            private readonly Dictionary<Type, Func<MemberExpression, Func<Expression, Expression>, Expression>> _propMap;
+            private readonly Dictionary<Type, Func<object, Func<object, object>, object>> _constConv;
+
+            public Tupletizer(Dictionary<Type, Type> typeMap, Dictionary<Type, Func<NewExpression, Func<Expression, Expression>, Expression>> ctorMap, Dictionary<Type, Func<MemberExpression, Func<Expression, Expression>, Expression>> propMap, Dictionary<Type, Func<object, Func<object, object>, object>> constConv)
+                : base(typeMap)
+            {
+                _ctorMap = ctorMap;
+                _propMap = propMap;
+                _constConv = constConv;
+            }
 
             protected override Expression VisitNew(NewExpression node)
             {

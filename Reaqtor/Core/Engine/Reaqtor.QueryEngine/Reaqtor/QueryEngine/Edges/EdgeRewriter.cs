@@ -103,11 +103,18 @@ namespace Reaqtor.QueryEngine
             return result;
         }
 
-        private sealed class Visitor(string uriPrefix, IQueryEngineRegistry registry) : ScopedExpressionVisitor<ParameterExpression>
+        private sealed class Visitor : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly string _uriPrefix = uriPrefix;
-            private readonly QueryEngineBinder _binder = new FullBinder(registry);
-            private readonly List<EdgeDescription> _edges = [];
+            private readonly string _uriPrefix;
+            private readonly QueryEngineBinder _binder;
+            private readonly List<EdgeDescription> _edges;
+
+            public Visitor(string uriPrefix, IQueryEngineRegistry registry)
+            {
+                _uriPrefix = uriPrefix;
+                _binder = new FullBinder(registry);
+                _edges = [];
+            }
 
             public IEnumerable<EdgeDescription> Edges => _edges;
 

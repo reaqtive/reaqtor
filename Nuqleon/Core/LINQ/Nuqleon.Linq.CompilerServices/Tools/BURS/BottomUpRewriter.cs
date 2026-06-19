@@ -344,16 +344,22 @@ namespace System.Linq.CompilerServices
             return res;
         }
 
-        private sealed class State(int state, WildcardTraversalMap<TSource> wildcardTraversals)
+        private sealed class State
         {
             public State(int value)
                 : this(value, new WildcardTraversalMap<TSource>())
             {
             }
 
-            public int Value { get; } = state;
+            public State(int state, WildcardTraversalMap<TSource> wildcardTraversals)
+            {
+                Value = state;
+                WildcardTraversals = wildcardTraversals;
+            }
 
-            public WildcardTraversalMap<TSource> WildcardTraversals { get; } = wildcardTraversals;
+            public int Value { get; }
+
+            public WildcardTraversalMap<TSource> WildcardTraversals { get; }
         }
 
         #endregion

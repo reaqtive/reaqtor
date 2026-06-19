@@ -23,8 +23,13 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(IgnoreElements<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<IgnoreElements<TSource>, TSource>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<IgnoreElements<TSource>, TSource>, IObserver<TSource>
         {
+            public _(IgnoreElements<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
+
             public override string Name => "rc:IgnoreElements";
 
             public override Version Version => Versioning.v1;

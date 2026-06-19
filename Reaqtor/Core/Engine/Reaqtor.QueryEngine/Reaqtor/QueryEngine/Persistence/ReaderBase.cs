@@ -15,16 +15,22 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Base class for state readers.
     /// </summary>
-    /// <remarks>
-    /// Creates a reader from the specified underlying <paramref name="stream"/>.
-    /// </remarks>
-    /// <param name="stream">The stream to read from.</param>
-    /// <param name="policy">The serialization policy to use when deserializing objects.</param>
-    internal class ReaderBase(Stream stream, ISerializationPolicy policy) : IDisposable
+    internal class ReaderBase : IDisposable
     {
-        private readonly ISerializationPolicy _policy = policy;
-        protected readonly Stream _stream = stream;
+        private readonly ISerializationPolicy _policy;
+        protected readonly Stream _stream;
         protected ISerializer _serializer;
+
+        /// <summary>
+        /// Creates a reader from the specified underlying <paramref name="stream"/>.
+        /// </summary>
+        /// <param name="stream">The stream to read from.</param>
+        /// <param name="policy">The serialization policy to use when deserializing objects.</param>
+        public ReaderBase(Stream stream, ISerializationPolicy policy)
+        {
+            _stream = stream;
+            _policy = policy;
+        }
 
         /// <summary>
         /// Reads and asserts the magic header.

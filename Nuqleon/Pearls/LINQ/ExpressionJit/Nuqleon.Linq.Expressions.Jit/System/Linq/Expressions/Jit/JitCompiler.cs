@@ -549,30 +549,36 @@ namespace System.Linq.Expressions.Jit
             /// <summary>
             /// Struct containing information about an inner lambda expression.
             /// </summary>
-            /// <remarks>
-            /// Creates a new value containing information about an inner lambda expression.
-            /// </remarks>
-            /// <param name="lambda">
-            /// The rewritten inner lambda expression which can be passed to the constructor of
-            /// the <paramref name="thunkType"/>.
-            /// </param>
-            /// <param name="thunkType">
-            /// The thunk type compatible with the <paramref name="lambda"/> in order to
-            /// perform JIT compilation.
-            /// </param>
-            private readonly struct LambdaInfo(LambdaExpression lambda, Type thunkType)
+            private readonly struct LambdaInfo
             {
                 /// <summary>
                 /// The rewritten inner lambda expression which can be passed to the constructor
                 /// of the <see cref="ThunkType"/>.
                 /// </summary>
-                public readonly LambdaExpression Lambda = lambda;
+                public readonly LambdaExpression Lambda;
 
                 /// <summary>
                 /// The thunk type compatible with the <see cref="Lambda"/> in order to perform JIT
                 /// compilation.
                 /// </summary>
-                public readonly Type ThunkType = thunkType;
+                public readonly Type ThunkType;
+
+                /// <summary>
+                /// Creates a new value containing information about an inner lambda expression.
+                /// </summary>
+                /// <param name="lambda">
+                /// The rewritten inner lambda expression which can be passed to the constructor of
+                /// the <paramref name="thunkType"/>.
+                /// </param>
+                /// <param name="thunkType">
+                /// The thunk type compatible with the <paramref name="lambda"/> in order to
+                /// perform JIT compilation.
+                /// </param>
+                public LambdaInfo(LambdaExpression lambda, Type thunkType)
+                {
+                    Lambda = lambda;
+                    ThunkType = thunkType;
+                }
             }
 
             /// <summary>

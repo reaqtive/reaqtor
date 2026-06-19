@@ -75,8 +75,13 @@ namespace Tests
             OneWayParseException(exprs, typeof(InvalidDescriptorBonsaiDeserializer).GetConstructors().Single());
         }
 
-        private sealed class MissingDescriptorBonsaiDeserializer(Json.Expression state) : TestBonsaiDeserializer(state)
+        private sealed class MissingDescriptorBonsaiDeserializer : TestBonsaiDeserializer
         {
+            public MissingDescriptorBonsaiDeserializer(Json.Expression state)
+                : base(state)
+            {
+            }
+
             public override ExpressionSlim VisitArray(Json.ArrayExpression node)
             {
                 var newElements = new Json.Expression[node.Elements.Count];
@@ -87,8 +92,13 @@ namespace Tests
             }
         }
 
-        private sealed class InvalidDescriptorBonsaiDeserializer(Json.Expression state) : TestBonsaiDeserializer(state)
+        private sealed class InvalidDescriptorBonsaiDeserializer : TestBonsaiDeserializer
         {
+            public InvalidDescriptorBonsaiDeserializer(Json.Expression state)
+                : base(state)
+            {
+            }
+
             public override ExpressionSlim VisitArray(Json.ArrayExpression node)
             {
                 var newElements = new Json.Expression[node.Elements.Count];
@@ -149,8 +159,13 @@ namespace Tests
             OneWayParseException(exprs, typeof(EmptyArraysBonsaiDeserializer).GetConstructors().Single());
         }
 
-        private sealed class EmptyArraysBonsaiDeserializer(Json.Expression state) : TestBonsaiDeserializer(state)
+        private sealed class EmptyArraysBonsaiDeserializer : TestBonsaiDeserializer
         {
+            public EmptyArraysBonsaiDeserializer(Json.Expression state)
+                : base(state)
+            {
+            }
+
             protected override ExpressionSlim VisitArrayIndexExpression(Json.ArrayExpression node)
             {
                 var newNode = Json.Expression.Array([]);
@@ -356,32 +371,52 @@ namespace Tests
             public int B { get; set; }
         }
 
-        private sealed class InvalidMemberBindingBonsaiDeserializer1(Json.Expression state) : TestBonsaiDeserializer(state)
+        private sealed class InvalidMemberBindingBonsaiDeserializer1 : TestBonsaiDeserializer
         {
+            public InvalidMemberBindingBonsaiDeserializer1(Json.Expression state)
+                : base(state)
+            {
+            }
+
             protected override MemberBindingSlim VisitMemberBinding(Json.Expression node)
             {
                 return base.VisitMemberBinding(Json.Expression.Object(new Dictionary<string, Json.Expression>()));
             }
         }
 
-        private sealed class InvalidMemberBindingBonsaiDeserializer2(Json.Expression state) : TestBonsaiDeserializer(state)
+        private sealed class InvalidMemberBindingBonsaiDeserializer2 : TestBonsaiDeserializer
         {
+            public InvalidMemberBindingBonsaiDeserializer2(Json.Expression state)
+                : base(state)
+            {
+            }
+
             protected override MemberBindingSlim VisitMemberBinding(Json.Expression node)
             {
                 return base.VisitMemberBinding(Json.Expression.Array([]));
             }
         }
 
-        private sealed class InvalidMemberBindingBonsaiDeserializer3(Json.Expression state) : TestBonsaiDeserializer(state)
+        private sealed class InvalidMemberBindingBonsaiDeserializer3 : TestBonsaiDeserializer
         {
+            public InvalidMemberBindingBonsaiDeserializer3(Json.Expression state)
+                : base(state)
+            {
+            }
+
             protected override MemberBindingSlim VisitMemberBinding(Json.Expression node)
             {
                 return base.VisitMemberBinding(Json.Expression.Array(new[] { Json.Expression.Number("0") }));
             }
         }
 
-        private sealed class InvalidMemberBindingBonsaiDeserializer4(Json.Expression state) : TestBonsaiDeserializer(state)
+        private sealed class InvalidMemberBindingBonsaiDeserializer4 : TestBonsaiDeserializer
         {
+            public InvalidMemberBindingBonsaiDeserializer4(Json.Expression state)
+                : base(state)
+            {
+            }
+
             protected override MemberBindingSlim VisitMemberBinding(Json.Expression node)
             {
                 return base.VisitMemberBinding(Json.Expression.Array(new[] { Json.Expression.String("foo") }));
@@ -406,8 +441,13 @@ namespace Tests
             OneWayParseException(exprs, typeof(InvalidNewExpressionBonsaiDeserializer2).GetConstructors().Single());
         }
 
-        private sealed class InvalidNewExpressionBonsaiDeserializer1(Json.Expression state) : TestBonsaiDeserializer(state)
+        private sealed class InvalidNewExpressionBonsaiDeserializer1 : TestBonsaiDeserializer
         {
+            public InvalidNewExpressionBonsaiDeserializer1(Json.Expression state)
+                : base(state)
+            {
+            }
+
             protected override ExpressionSlim VisitNewExpression(Json.ArrayExpression node)
             {
                 var newElements = new Json.Expression[node.Elements.Count];
@@ -418,8 +458,13 @@ namespace Tests
             }
         }
 
-        private sealed class InvalidNewExpressionBonsaiDeserializer2(Json.Expression state) : TestBonsaiDeserializer(state)
+        private sealed class InvalidNewExpressionBonsaiDeserializer2 : TestBonsaiDeserializer
         {
+            public InvalidNewExpressionBonsaiDeserializer2(Json.Expression state)
+                : base(state)
+            {
+            }
+
             protected override ExpressionSlim VisitNewExpression(Json.ArrayExpression node)
             {
                 var newElements = new Json.Expression[node.Elements.Count];
@@ -448,23 +493,37 @@ namespace Tests
         }
     }
 
-    internal class TestBonsaiSerializer(SerializationState state) : ExpressionSlimToBonsaiConverter(state)
+    internal class TestBonsaiSerializer : ExpressionSlimToBonsaiConverter
     {
+        public TestBonsaiSerializer(SerializationState state)
+            : base(state)
+        {
+        }
+
         protected override Json.Expression VisitConstantValue(ObjectSlim value)
         {
             return Json.Expression.String("0");
         }
     }
 
-    internal class TestBonsaiDeserializer(Json.Expression state) : BonsaiToExpressionSlimConverter(new DeserializationState(state, BonsaiVersion.Default))
+    internal class TestBonsaiDeserializer : BonsaiToExpressionSlimConverter
     {
+        public TestBonsaiDeserializer(Json.Expression state)
+            : base(new DeserializationState(state, BonsaiVersion.Default))
+        {
+        }
+
         protected override ObjectSlim VisitConstantValue(Json.Expression value, TypeSlim type)
         {
             return null;
         }
     }
 
-    internal sealed class InvalidIndexExpressionBonsaiDeserializer(Json.Expression state) : TestBonsaiDeserializer(state)
+    internal sealed class InvalidIndexExpressionBonsaiDeserializer : TestBonsaiDeserializer
     {
+        public InvalidIndexExpressionBonsaiDeserializer(Json.Expression state)
+            : base(state)
+        {
+        }
     }
 }

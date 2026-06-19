@@ -75,18 +75,22 @@ namespace Reaqtive
         /// <summary>
         /// Represents an OnNext notification to an observer.
         /// </summary>
-        /// <remarks>
-        /// Constructs a notification of a new value.
-        /// </remarks>
         [DebuggerDisplay("OnNext({Value})")]
         [Serializable]
-        internal sealed class OnNextNotification(T value) : Notification<T>
+        internal sealed class OnNextNotification : Notification<T>
         {
+            /// <summary>
+            /// Constructs a notification of a new value.
+            /// </summary>
+            public OnNextNotification(T value)
+            {
+                Value = value;
+            }
 
             /// <summary>
             /// Returns the value of an OnNext notification.
             /// </summary>
-            public override T Value { get; } = value;
+            public override T Value { get; }
 
             /// <summary>
             /// Returns <c>null</c>.
@@ -144,13 +148,17 @@ namespace Reaqtive
         /// <summary>
         /// Represents an OnError notification to an observer.
         /// </summary>
-        /// <remarks>
-        /// Constructs a notification of an exception.
-        /// </remarks>
         [DebuggerDisplay("OnError({Exception})")]
         [Serializable]
-        internal sealed class OnErrorNotification(Exception exception) : Notification<T>
+        internal sealed class OnErrorNotification : Notification<T>
         {
+            /// <summary>
+            /// Constructs a notification of an exception.
+            /// </summary>
+            public OnErrorNotification(Exception exception)
+            {
+                Exception = exception;
+            }
 
             /// <summary>
             /// Throws the exception.
@@ -160,7 +168,7 @@ namespace Reaqtive
             /// <summary>
             /// Returns the exception.
             /// </summary>
-            public override Exception Exception { get; } = exception;
+            public override Exception Exception { get; }
 
             /// <summary>
             /// Returns <c>false</c>.

@@ -756,9 +756,14 @@ namespace Reaqtor.QueryEngine
             return expression.ToExpression(_expressionPolicy.ExpressionFactory, _expressionPolicy.ReflectionProvider);
         }
 
-        private sealed class QuoteConverter(IExpressionEvaluationPolicy expressionPolicy) : DataConverter
+        private sealed class QuoteConverter : DataConverter
         {
-            private readonly IExpressionEvaluationPolicy _expressionPolicy = expressionPolicy;
+            private readonly IExpressionEvaluationPolicy _expressionPolicy;
+
+            public QuoteConverter(IExpressionEvaluationPolicy expressionPolicy)
+            {
+                _expressionPolicy = expressionPolicy;
+            }
 
             public override object ConvertFrom(object value, Type sourceType, Type targetType)
             {

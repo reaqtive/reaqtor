@@ -131,12 +131,7 @@ namespace System.Memory
         /// Strongly typed implementation of an editor for instances of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of the object instances being edited.</typeparam>
-        /// <remarks>
-        /// Creates a new editor using the specified <paramref name="comparer"/> to check whether instances
-        /// of the type are deemed equivalent.
-        /// </remarks>
-        /// <param name="comparer">The compare used to determine whether instances are equivalent.</param>
-        private sealed class Editor<T>(IEqualityComparer<T> comparer) : HeapEditor
+        private sealed class Editor<T> : HeapEditor
         {
             /// <summary>
             /// Dictionary mapping object instances on shared copies. Upon encountering an instance of the type,
@@ -144,7 +139,17 @@ namespace System.Memory
             /// original instance is replaced by the equivalent shared instance. If not, the first occurrence of
             /// the instance is added to the dictionary.
             /// </summary>
-            private readonly Dictionary<T, T> _map = new Dictionary<T, T>(comparer);
+            private readonly Dictionary<T, T> _map;
+
+            /// <summary>
+            /// Creates a new editor using the specified <paramref name="comparer"/> to check whether instances
+            /// of the type are deemed equivalent.
+            /// </summary>
+            /// <param name="comparer">The compare used to determine whether instances are equivalent.</param>
+            public Editor(IEqualityComparer<T> comparer)
+            {
+                _map = new Dictionary<T, T>(comparer);
+            }
 
             /// <summary>
             /// Optionally replaces the specified object by a shared copy.

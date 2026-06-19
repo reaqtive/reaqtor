@@ -145,9 +145,14 @@ namespace Reaqtor.QueryEngine
                     return false;
                 }
 
-                private sealed class RegistryKeyEnumerable(IQueryEngineRegistry registry) : IEnumerable<ReactiveEntity>
+                private sealed class RegistryKeyEnumerable : IEnumerable<ReactiveEntity>
                 {
-                    private readonly IQueryEngineRegistry _registry = registry;
+                    private readonly IQueryEngineRegistry _registry;
+
+                    public RegistryKeyEnumerable(IQueryEngineRegistry registry)
+                    {
+                        _registry = registry;
+                    }
 
                     public IEnumerator<ReactiveEntity> GetEnumerator()
                     {

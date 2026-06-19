@@ -164,8 +164,13 @@ namespace System.Linq.Expressions
         public override ReadOnlyCollection<MemberInfoSlim> Members => null;
     }
 
-    internal sealed class NewReferenceTypeExpressionSlim0(ConstructorInfoSlim constructor) : NewReferenceTypeExpressionSlim(constructor)
+    internal sealed class NewReferenceTypeExpressionSlim0 : NewReferenceTypeExpressionSlim
     {
+        public NewReferenceTypeExpressionSlim0(ConstructorInfoSlim constructor)
+            : base(constructor)
+        {
+        }
+
         public override int ArgumentCount => 0;
 
         public override ExpressionSlim GetArgument(int index)
@@ -181,9 +186,15 @@ namespace System.Linq.Expressions
         }
     }
 
-    internal class FullNewReferenceTypeExpressionSlim(ConstructorInfoSlim constructor, ReadOnlyCollection<ExpressionSlim> arguments) : NewReferenceTypeExpressionSlim(constructor)
+    internal class FullNewReferenceTypeExpressionSlim : NewReferenceTypeExpressionSlim
     {
-        private readonly ReadOnlyCollection<ExpressionSlim> _arguments = arguments;
+        private readonly ReadOnlyCollection<ExpressionSlim> _arguments;
+
+        public FullNewReferenceTypeExpressionSlim(ConstructorInfoSlim constructor, ReadOnlyCollection<ExpressionSlim> arguments)
+            : base(constructor)
+        {
+            _arguments = arguments;
+        }
 
         public override int ArgumentCount => _arguments.Count;
 
@@ -199,9 +210,15 @@ namespace System.Linq.Expressions
         }
     }
 
-    internal sealed class FullNewReferenceTypeExpressionSlimWithMembers(ConstructorInfoSlim constructor, ReadOnlyCollection<ExpressionSlim> arguments, ReadOnlyCollection<MemberInfoSlim> members) : FullNewReferenceTypeExpressionSlim(constructor, arguments)
+    internal sealed class FullNewReferenceTypeExpressionSlimWithMembers : FullNewReferenceTypeExpressionSlim
     {
-        public override ReadOnlyCollection<MemberInfoSlim> Members { get; } = members;
+        public FullNewReferenceTypeExpressionSlimWithMembers(ConstructorInfoSlim constructor, ReadOnlyCollection<ExpressionSlim> arguments, ReadOnlyCollection<MemberInfoSlim> members)
+            : base(constructor, arguments)
+        {
+            Members = members;
+        }
+
+        public override ReadOnlyCollection<MemberInfoSlim> Members { get; }
 
         internal override NewExpressionSlim Rewrite(IList<ExpressionSlim> args)
         {

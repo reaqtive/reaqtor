@@ -17,7 +17,7 @@ using System.Linq.Expressions;
 
 namespace SampleTrees.Query
 {
-    public class QueryNodeType(string name) : IEqualityComparer<QueryNodeType>
+    public class QueryNodeType : IEqualityComparer<QueryNodeType>
     {
         public static readonly QueryNodeType Empty = new("Empty");
         public static readonly QueryNodeType Quote = new("Quote");
@@ -29,7 +29,9 @@ namespace SampleTrees.Query
         public static readonly QueryNodeType Top = new("Top");
         public static readonly QueryNodeType Wildcard = new("Wildcard");
 
-        public string Name { get; } = name;
+        public QueryNodeType(string name) => Name = name;
+
+        public string Name { get; }
 
         public bool Equals(QueryNodeType x, QueryNodeType y) => ReferenceEquals(x, y);
 
@@ -88,17 +90,28 @@ namespace SampleTrees.Query
         }
     }
 
-    public class QueryWildcard(string name) : QueryExpr(QueryNodeType.Wildcard)
+    public class QueryWildcard : QueryExpr
     {
-        public string Name { get; } = name;
+        public QueryWildcard(string name)
+            : base(QueryNodeType.Wildcard)
+        {
+            Name = name;
+        }
+
+        public string Name { get; }
 
         public override string ToStringFormat() => Name;
 
         protected override QueryExpr Update(IEnumerable<QueryExpr> children) => throw new NotImplementedException();
     }
 
-    public class NullaryQueryExpr(QueryNodeType nodeType) : QueryExpr(nodeType)
+    public class NullaryQueryExpr : QueryExpr
     {
+        public NullaryQueryExpr(QueryNodeType nodeType)
+            : base(nodeType)
+        {
+        }
+
         protected override QueryExpr Update(IEnumerable<QueryExpr> children) => this;
     }
 
@@ -114,23 +127,41 @@ namespace SampleTrees.Query
         public override string ToStringFormat() => "Empty";
     }
 
-    public class Source(IQueryable queryable) : NullaryQueryExpr(QueryNodeType.Source)
+    public class Source : NullaryQueryExpr
     {
-        public IQueryable Queryable { get; } = queryable;
+        public Source(IQueryable queryable)
+            : base(QueryNodeType.Source)
+        {
+            Queryable = queryable;
+        }
+
+        public IQueryable Queryable { get; }
 
         public override string ToStringFormat() => "Source(" + (Queryable != null ? Queryable.ToString() : "<unbound>") + ")";
     }
 
-    public class Constant(ConstantExpression expression) : NullaryQueryExpr(QueryNodeType.Constant)
+    public class Constant : NullaryQueryExpr
     {
-        public ConstantExpression Expression { get; } = expression;
+        public Constant(ConstantExpression expression)
+            : base(QueryNodeType.Constant)
+        {
+            Expression = expression;
+        }
+
+        public ConstantExpression Expression { get; }
 
         public override string ToStringFormat() => Expression.ToString();
     }
 
-    public class Funclet(Expression<Func<object>> eval) : QueryExpr(QueryNodeType.Lazy)
+    public class Funclet : QueryExpr
     {
-        public Expression<Func<object>> EvalFunc { get; } = eval;
+        public Funclet(Expression<Func<object>> eval)
+            : base(QueryNodeType.Lazy)
+        {
+            EvalFunc = eval;
+        }
+
+        public Expression<Func<object>> EvalFunc { get; }
 
         public override string ToStringFormat() => "Lazy(" + EvalFunc + ")";
 
@@ -145,16 +176,28 @@ namespace SampleTrees.Query
         }
     }
 
-    public class Quote(LambdaExpression lambda) : NullaryQueryExpr(QueryNodeType.Quote)
+    public class Quote : NullaryQueryExpr
     {
-        public LambdaExpression Lambda { get; } = lambda;
+        public Quote(LambdaExpression lambda)
+            : base(QueryNodeType.Quote)
+        {
+            Lambda = lambda;
+        }
+
+        public LambdaExpression Lambda { get; }
 
         public override string ToStringFormat() => Lambda.ToString();
     }
 
-    public abstract class UnaryQueryExpr(QueryNodeType nodeType, QueryExpr source, params QueryExpr[] arguments) : QueryExpr(nodeType, new[] { source }.Concat(arguments).ToArray())
+    public abstract class UnaryQueryExpr : QueryExpr
     {
-        public QueryExpr Source { get; } = source;
+        public UnaryQueryExpr(QueryNodeType nodeType, QueryExpr source, params QueryExpr[] arguments)
+            : base(nodeType, new[] { source }.Concat(arguments).ToArray())
+        {
+            Source = source;
+        }
+
+        public QueryExpr Source { get; }
 
         public override string ToStringFormat() => Value.ToString() + "(" + string.Join(", ", Enumerable.Range(0, Children.Count).Select(i => "{" + i + "}").ToArray()) + ")";
 
@@ -163,8 +206,13 @@ namespace SampleTrees.Query
         protected abstract IEnumerable<string> GetParametersToString();
     }
 
-    public class Filter(QueryExpr source, QueryExpr predicate) : UnaryQueryExpr(QueryNodeType.Filter, source, predicate)
+    public class Filter : UnaryQueryExpr
     {
+        public Filter(QueryExpr source, QueryExpr predicate)
+            : base(QueryNodeType.Filter, source, predicate)
+        {
+        }
+
         public LambdaExpression Predicate => ((Quote)Children.ElementAt(1)).Lambda;
 
         protected override QueryExpr Update(IEnumerable<QueryExpr> children)
@@ -179,8 +227,13 @@ namespace SampleTrees.Query
         }
     }
 
-    public class Projection(QueryExpr source, QueryExpr selector) : UnaryQueryExpr(QueryNodeType.Projection, source, selector)
+    public class Projection : UnaryQueryExpr
     {
+        public Projection(QueryExpr source, QueryExpr selector)
+            : base(QueryNodeType.Projection, source, selector)
+        {
+        }
+
         public LambdaExpression Selector => ((Quote)Children.ElementAt(1)).Lambda;
 
         protected override QueryExpr Update(IEnumerable<QueryExpr> children)
@@ -195,8 +248,13 @@ namespace SampleTrees.Query
         }
     }
 
-    public class Top(QueryExpr source, Constant count) : UnaryQueryExpr(QueryNodeType.Top, source, count)
+    public class Top : UnaryQueryExpr
     {
+        public Top(QueryExpr source, Constant count)
+            : base(QueryNodeType.Top, source, count)
+        {
+        }
+
         public int Count => (int)((Constant)Children.ElementAt(1)).Expression.Value;
 
         protected override QueryExpr Update(IEnumerable<QueryExpr> children)

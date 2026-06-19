@@ -12,9 +12,14 @@ using System;
 
 namespace PartitionedSubject
 {
-    internal class ListObserver<T>(params IObserver<T>[] observers) : IObserver<T>
+    internal class ListObserver<T> : IObserver<T>
     {
-        private readonly IObserver<T>[] _observers = observers;
+        private readonly IObserver<T>[] _observers;
+
+        public ListObserver(params IObserver<T>[] observers)
+        {
+            _observers = observers;
+        }
 
         public void OnCompleted()
         {

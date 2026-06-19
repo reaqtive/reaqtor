@@ -9,13 +9,18 @@ namespace Reaqtive
     /// <summary>
     /// Visitor to initialize subscriptions.
     /// </summary>
-    /// <remarks>
-    /// Creates a new subscription initialization visitor for the specified subscription.
-    /// </remarks>
-    /// <param name="subscription">Subscription visited by this visitor.</param>
-    public class SubscriptionInitializeVisitor(ISubscription subscription)
+    public class SubscriptionInitializeVisitor
     {
-        private readonly ISubscription _subscription = subscription ?? throw new ArgumentNullException(nameof(subscription));
+        private readonly ISubscription _subscription;
+
+        /// <summary>
+        /// Creates a new subscription initialization visitor for the specified subscription.
+        /// </summary>
+        /// <param name="subscription">Subscription visited by this visitor.</param>
+        public SubscriptionInitializeVisitor(ISubscription subscription)
+        {
+            _subscription = subscription ?? throw new ArgumentNullException(nameof(subscription));
+        }
 
         /// <summary>
         /// Initializes the operators in the subscription by setting the specified operator context and starting the operators.
@@ -149,9 +154,14 @@ namespace Reaqtive
             protected override void VisitCore(IOperator node) => node.Subscribe();
         }
 
-        private sealed class SetContextVisitor(IOperatorContext context) : SubscriptionVisitor
+        private sealed class SetContextVisitor : SubscriptionVisitor
         {
-            private readonly IOperatorContext _context = context;
+            private readonly IOperatorContext _context;
+
+            public SetContextVisitor(IOperatorContext context)
+            {
+                _context = context;
+            }
 
             protected override void VisitCore(IOperator node) => node.SetContext(_context);
         }

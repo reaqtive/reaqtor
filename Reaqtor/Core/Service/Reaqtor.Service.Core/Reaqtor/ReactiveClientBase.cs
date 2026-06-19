@@ -16,15 +16,20 @@ namespace Reaqtor
     /// <summary>
     /// Base class for reactive processing clients.
     /// </summary>
-    /// <remarks>
-    /// Creates a new reactive processing client using the specified query provider object.
-    /// </remarks>
-    /// <param name="queryProvider">Query provider that is used to build observables, observers, and streams.</param>
-    public abstract partial class ReactiveClientBase(ReactiveQueryProviderBase queryProvider) : IReactiveClient
+    public abstract partial class ReactiveClientBase : IReactiveClient
     {
         #region Constructor & fields
 
-        private readonly ReactiveQueryProviderBase _queryProvider = queryProvider ?? throw new ArgumentNullException(nameof(queryProvider));
+        private readonly ReactiveQueryProviderBase _queryProvider;
+
+        /// <summary>
+        /// Creates a new reactive processing client using the specified query provider object.
+        /// </summary>
+        /// <param name="queryProvider">Query provider that is used to build observables, observers, and streams.</param>
+        protected ReactiveClientBase(ReactiveQueryProviderBase queryProvider)
+        {
+            _queryProvider = queryProvider ?? throw new ArgumentNullException(nameof(queryProvider));
+        }
 
         #endregion
 

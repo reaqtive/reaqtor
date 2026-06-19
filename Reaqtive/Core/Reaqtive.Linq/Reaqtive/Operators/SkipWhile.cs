@@ -26,9 +26,14 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(SkipWhile<TSource> source, IObserver<TSource> observer) : StatefulUnaryOperator<SkipWhile<TSource>, TSource>(source, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<SkipWhile<TSource>, TSource>, IObserver<TSource>
         {
             private bool _running;
+
+            public _(SkipWhile<TSource> source, IObserver<TSource> observer)
+                : base(source, observer)
+            {
+            }
 
             public override string Name => "rc:SkipWhile";
 
@@ -112,10 +117,15 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(SkipWhileIndexed<TSource> source, IObserver<TSource> observer) : StatefulUnaryOperator<SkipWhileIndexed<TSource>, TSource>(source, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<SkipWhileIndexed<TSource>, TSource>, IObserver<TSource>
         {
             private bool _running;
             private int _currentIndex;
+
+            public _(SkipWhileIndexed<TSource> source, IObserver<TSource> observer)
+                : base(source, observer)
+            {
+            }
 
             public override string Name => "rc:SkipWhile+Index";
 

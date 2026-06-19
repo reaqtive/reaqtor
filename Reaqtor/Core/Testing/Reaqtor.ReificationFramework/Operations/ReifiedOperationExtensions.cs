@@ -346,18 +346,28 @@ namespace Reaqtor.ReificationFramework
             }
         }
 
-        private sealed class ServiceOperationExpressionRewriter(IDictionary<Expression, Expression> targets) : ServiceOperationVisitor
+        private sealed class ServiceOperationExpressionRewriter : ServiceOperationVisitor
         {
-            private readonly Visitor _visitor = new Visitor(targets);
+            private readonly Visitor _visitor;
+
+            public ServiceOperationExpressionRewriter(IDictionary<Expression, Expression> targets)
+            {
+                _visitor = new Visitor(targets);
+            }
 
             protected override Expression VisitExpression(Expression expression)
             {
                 return _visitor.Visit(expression);
             }
 
-            private sealed class Visitor(IDictionary<Expression, Expression> rewrites) : ExpressionVisitor
+            private sealed class Visitor : ExpressionVisitor
             {
-                private readonly IDictionary<Expression, Expression> _rewrites = rewrites;
+                private readonly IDictionary<Expression, Expression> _rewrites;
+
+                public Visitor(IDictionary<Expression, Expression> rewrites)
+                {
+                    _rewrites = rewrites;
+                }
 
                 public override Expression Visit(Expression node)
                 {
@@ -371,9 +381,14 @@ namespace Reaqtor.ReificationFramework
             }
         }
 
-        private sealed class ServiceOperationUriRewriter(Func<Uri, Uri> uriMapping) : ServiceOperationVisitor
+        private sealed class ServiceOperationUriRewriter : ServiceOperationVisitor
         {
-            private readonly Func<Uri, Uri> _uriMapping = uriMapping;
+            private readonly Func<Uri, Uri> _uriMapping;
+
+            public ServiceOperationUriRewriter(Func<Uri, Uri> uriMapping)
+            {
+                _uriMapping = uriMapping;
+            }
 
             protected override Uri VisitUri(Uri uri)
             {
@@ -399,9 +414,14 @@ namespace Reaqtor.ReificationFramework
                 return substitutor.Visit(expression);
             }
 
-            private sealed class FreeVariableSubstitutor(IDictionary<ParameterExpression, ParameterExpression> substitutions) : ScopedExpressionVisitor<ParameterExpression>
+            private sealed class FreeVariableSubstitutor : ScopedExpressionVisitor<ParameterExpression>
             {
-                private readonly IDictionary<ParameterExpression, ParameterExpression> _substitutions = substitutions;
+                private readonly IDictionary<ParameterExpression, ParameterExpression> _substitutions;
+
+                public FreeVariableSubstitutor(IDictionary<ParameterExpression, ParameterExpression> substitutions)
+                {
+                    _substitutions = substitutions;
+                }
 
                 protected override Expression VisitParameter(ParameterExpression node)
                 {

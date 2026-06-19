@@ -219,9 +219,11 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             }
         }
 
-        private sealed class MockOptimizer(Func<QueryTree, QueryTree> optimize) : IOptimizer
+        private sealed class MockOptimizer : IOptimizer
         {
-            private readonly Func<QueryTree, QueryTree> _optimize = optimize;
+            private readonly Func<QueryTree, QueryTree> _optimize;
+
+            public MockOptimizer(Func<QueryTree, QueryTree> optimize) => _optimize = optimize;
 
             public QueryTree Optimize(QueryTree queryTree) => _optimize(queryTree);
         }

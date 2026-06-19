@@ -26,21 +26,24 @@ namespace Nuqleon.Json.Serialization
     /// <summary>
     /// JSON serializer and deserializer.
     /// </summary>
-    /// <remarks>
-    /// Creates a new JSON (de)serializer.
-    /// </remarks>
-    /// <param name="type">Type used in deserialization.</param>
-    public sealed class JsonSerializer(Type type)
+    public sealed class JsonSerializer
     {
         #region Private fields
 
         /// <summary>
         /// Type used for deserialization.
         /// </summary>
-        private readonly Type _type = type ?? throw new ArgumentNullException(nameof(type));
+        private readonly Type _type;
 
         #endregion
+
         #region Constructors
+
+        /// <summary>
+        /// Creates a new JSON (de)serializer.
+        /// </summary>
+        /// <param name="type">Type used in deserialization.</param>
+        public JsonSerializer(Type type) => _type = type ?? throw new ArgumentNullException(nameof(type));
 
         #endregion
 

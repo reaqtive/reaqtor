@@ -6,11 +6,18 @@ using System;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Scan<TSource, TAccumulate>(ISubscribable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> accumulate) : SubscribableBase<TAccumulate>
+    internal sealed class Scan<TSource, TAccumulate> : SubscribableBase<TAccumulate>
     {
-        private readonly ISubscribable<TSource> _source = source;
-        private readonly TAccumulate _seed = seed;
-        private readonly Func<TAccumulate, TSource, TAccumulate> _accumulate = accumulate;
+        private readonly ISubscribable<TSource> _source;
+        private readonly TAccumulate _seed;
+        private readonly Func<TAccumulate, TSource, TAccumulate> _accumulate;
+
+        public Scan(ISubscribable<TSource> source, TAccumulate seed, Func<TAccumulate, TSource, TAccumulate> accumulate)
+        {
+            _source = source;
+            _seed = seed;
+            _accumulate = accumulate;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<TAccumulate> observer)
         {
@@ -82,20 +89,31 @@ namespace Reaqtive.Operators
         }
     }
 
-    internal sealed class Scan<TSource>(ISubscribable<TSource> source, Func<TSource, TSource, TSource> Scan) : SubscribableBase<TSource>
+    internal sealed class Scan<TSource> : SubscribableBase<TSource>
     {
-        private readonly ISubscribable<TSource> _source = source;
-        private readonly Func<TSource, TSource, TSource> _Scan = Scan;
+        private readonly ISubscribable<TSource> _source;
+        private readonly Func<TSource, TSource, TSource> _Scan;
+
+        public Scan(ISubscribable<TSource> source, Func<TSource, TSource, TSource> Scan)
+        {
+            _source = source;
+            _Scan = Scan;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<TSource> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(Scan<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<Scan<TSource>, TSource>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<Scan<TSource>, TSource>, IObserver<TSource>
         {
             private bool _hasValue;
             private TSource _result;
+
+            public _(Scan<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Scan+Simple";
 

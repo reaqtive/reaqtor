@@ -14,22 +14,27 @@ namespace System.Memory
     /// Representation of a memoized delegate including a reference to the memoization cache.
     /// </summary>
     /// <typeparam name="TDelegate">Type of the delegate.</typeparam>
-    /// <remarks>
-    /// Creates a new memoized delegate representation.
-    /// </remarks>
-    /// <param name="function">The memoized delegate.</param>
-    /// <param name="cache">The memoization cache.</param>
-    internal sealed class MemoizedDelegate<TDelegate>(TDelegate function, IMemoizationCache cache) : IMemoizedDelegate<TDelegate>
+    internal sealed class MemoizedDelegate<TDelegate> : IMemoizedDelegate<TDelegate>
     {
+        /// <summary>
+        /// Creates a new memoized delegate representation.
+        /// </summary>
+        /// <param name="function">The memoized delegate.</param>
+        /// <param name="cache">The memoization cache.</param>
+        public MemoizedDelegate(TDelegate function, IMemoizationCache cache)
+        {
+            Delegate = function;
+            Cache = cache;
+        }
 
         /// <summary>
         /// Gets the memoization cache.
         /// </summary>
-        public IMemoizationCache Cache { get; } = cache;
+        public IMemoizationCache Cache { get; }
 
         /// <summary>
         /// Gets the memoized delegate.
         /// </summary>
-        public TDelegate Delegate { get; } = function;
+        public TDelegate Delegate { get; }
     }
 }

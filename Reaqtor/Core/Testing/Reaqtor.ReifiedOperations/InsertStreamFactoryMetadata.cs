@@ -14,10 +14,15 @@ using System.Linq.Expressions;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class InsertStreamFactoryMetadata(Uri streamFactoryUri, Expression expression, object state) : InsertMetadataOperation(ServiceOperationKind.InsertStreamFactoryMetadata, streamFactoryUri, expression, state)
+    public class InsertStreamFactoryMetadata : InsertMetadataOperation
     {
         public InsertStreamFactoryMetadata(Uri streamFactoryUri)
             : this(streamFactoryUri, null, null)
+        {
+        }
+
+        public InsertStreamFactoryMetadata(Uri streamFactoryUri, Expression expression, object state)
+            : base(ServiceOperationKind.InsertStreamFactoryMetadata, streamFactoryUri, expression, state)
         {
         }
     }

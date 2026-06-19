@@ -13,7 +13,11 @@ using System;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class LookupMetadataOperation(ServiceOperationKind kind, Uri targetObjectUri) : MetadataOperation(kind, targetObjectUri, expression: null, state: null)
+    public class LookupMetadataOperation : MetadataOperation
     {
+        public LookupMetadataOperation(ServiceOperationKind kind, Uri targetObjectUri)
+            : base(kind, targetObjectUri, expression: null, state: null)
+        {
+        }
     }
 }

@@ -15,17 +15,18 @@ namespace Reaqtor
     /// <summary>
     /// Base class for the implementation of subscriptions represented by an expression tree.
     /// </summary>
-    /// <remarks>
-    /// Creates a new subscription represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the observable.</param>
-    public abstract class AsyncReactiveQubscriptionBase(IAsyncReactiveQueryProvider provider) : AsyncReactiveSubscriptionBase, IAsyncReactiveQubscription
+    public abstract class AsyncReactiveQubscriptionBase : AsyncReactiveSubscriptionBase, IAsyncReactiveQubscription
     {
+        /// <summary>
+        /// Creates a new subscription represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the observable.</param>
+        protected AsyncReactiveQubscriptionBase(IAsyncReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subscription.
         /// </summary>
-        public IAsyncReactiveQueryProvider Provider { get; } = provider;
+        public IAsyncReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subscription.

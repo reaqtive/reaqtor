@@ -548,16 +548,12 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// State reader wrapper supporting unloading.
         /// </summary>
-        /// <remarks>
-        /// Creates a new state reader wrapper.
-        /// </remarks>
-        /// <param name="reader">State reader to wrap.</param>
-        private sealed class StateReader(IStateReader reader) : IStateReader, IUnloadable
+        private sealed class StateReader : IStateReader, IUnloadable
         {
             /// <summary>
             /// Wrapped state reader.
             /// </summary>
-            private readonly IStateReader _reader = reader;
+            private readonly IStateReader _reader;
 
             /// <summary>
             /// Flag indicating a dispose operation was requested.
@@ -568,6 +564,15 @@ namespace Reaqtor.QueryEngine
             /// Flag indicating an unload operation has taken place.
             /// </summary>
             private int _unloaded;
+
+            /// <summary>
+            /// Creates a new state reader wrapper.
+            /// </summary>
+            /// <param name="reader">State reader to wrap.</param>
+            public StateReader(IStateReader reader)
+            {
+                _reader = reader;
+            }
 
             /// <summary>
             /// Get the list of categories which are part of the state of the engine that was saved in the store.
@@ -651,16 +656,12 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// State writer wrapper supporting unloading.
         /// </summary>
-        /// <remarks>
-        /// Creates a new state writer wrapper.
-        /// </remarks>
-        /// <param name="writer">State writer to wrap.</param>
-        private sealed class StateWriter(IStateWriter writer) : IStateWriter, IUnloadable
+        private sealed class StateWriter : IStateWriter, IUnloadable
         {
             /// <summary>
             /// Wrapped state writer.
             /// </summary>
-            private readonly IStateWriter _writer = writer;
+            private readonly IStateWriter _writer;
 
             /// <summary>
             /// Flag indicating a dispose operation was requested.
@@ -671,6 +672,15 @@ namespace Reaqtor.QueryEngine
             /// Flag indicating an unload operation has taken place.
             /// </summary>
             private int _unloaded;
+
+            /// <summary>
+            /// Creates a new state writer wrapper.
+            /// </summary>
+            /// <param name="writer">State writer to wrap.</param>
+            public StateWriter(IStateWriter writer)
+            {
+                _writer = writer;
+            }
 
             /// <summary>
             /// The checkpoint kind.

@@ -6,9 +6,14 @@ using System;
 
 namespace Reaqtive
 {
-    internal class ToTypedMultiSubject<TInput, TOutput>(IMultiSubject innerSubject) : IMultiSubject<TInput, TOutput>
+    internal class ToTypedMultiSubject<TInput, TOutput> : IMultiSubject<TInput, TOutput>
     {
-        private readonly IMultiSubject _innerSubject = innerSubject;
+        private readonly IMultiSubject _innerSubject;
+
+        public ToTypedMultiSubject(IMultiSubject innerSubject)
+        {
+            _innerSubject = innerSubject;
+        }
 
         public IObserver<TInput> CreateObserver()
         {

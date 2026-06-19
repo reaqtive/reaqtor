@@ -22,11 +22,7 @@ namespace Nuqleon.Json.Parser
     /// <summary>
     /// Tokenizer for JSON code.
     /// </summary>
-    /// <remarks>
-    /// Creates a new tokenizer for JSON code.
-    /// </remarks>
-    /// <param name="input">JSON code text.</param>
-    internal sealed class Tokenizer(string input)
+    internal sealed class Tokenizer
     {
         #region Private fields
 
@@ -61,10 +57,17 @@ namespace Nuqleon.Json.Parser
         /// <summary>
         /// JSON code text.
         /// </summary>
-        private readonly string _input = input;
+        private readonly string _input;
 
         #endregion
+
         #region Constructors
+
+        /// <summary>
+        /// Creates a new tokenizer for JSON code.
+        /// </summary>
+        /// <param name="input">JSON code text.</param>
+        public Tokenizer(string input) => _input = input;
 
         #endregion
 

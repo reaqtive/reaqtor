@@ -19,16 +19,21 @@ namespace System.Runtime.CompilerServices
         /// Implementation of <see cref="IRuntimeVariables"/> providing access to variables through
         /// strong boxes.
         /// </summary>
-        /// <remarks>
-        /// Creates an <see cref="IRuntimeVariables"/> object providing access to the specified variables.
-        /// </remarks>
-        /// <param name="boxes">The strong boxes used as variable storage locations.</param>
-        private sealed class RuntimeVariables(IStrongBox[] boxes) : IRuntimeVariables
+        private sealed class RuntimeVariables : IRuntimeVariables
         {
             /// <summary>
             /// The strong boxes used as variable storage locations.
             /// </summary>
-            private readonly IStrongBox[] _boxes = boxes;
+            private readonly IStrongBox[] _boxes;
+
+            /// <summary>
+            /// Creates an <see cref="IRuntimeVariables"/> object providing access to the specified variables.
+            /// </summary>
+            /// <param name="boxes">The strong boxes used as variable storage locations.</param>
+            public RuntimeVariables(IStrongBox[] boxes)
+            {
+                _boxes = boxes;
+            }
 
             /// <summary>
             /// Gets or sets the variable at the specified index.

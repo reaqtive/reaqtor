@@ -7,8 +7,13 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.QueryEngine.ReificationFramework
 {
-    internal class ReificationReactiveServiceContext(IReactiveEngineProvider provider) : ReactiveServiceContext(new BetaReducingExpressionServices(), provider)
+    internal class ReificationReactiveServiceContext : ReactiveServiceContext
     {
+        public ReificationReactiveServiceContext(IReactiveEngineProvider provider)
+            : base(new BetaReducingExpressionServices(), provider)
+        {
+        }
+
         private sealed class BetaReducingExpressionServices : ReactiveExpressionServices
         {
             public BetaReducingExpressionServices()

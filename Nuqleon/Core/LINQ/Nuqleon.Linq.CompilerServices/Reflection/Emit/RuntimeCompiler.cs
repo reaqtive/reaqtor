@@ -712,12 +712,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Helper type to create structural types.
         /// </summary>
-        /// <remarks>
-        /// Creates a new structural type generator on the specified builder and with the specified properties.
-        /// </remarks>
-        /// <param name="builder">Build to emit the type definition on.</param>
-        /// <param name="properties">Properties to declare on the type.</param>
-        private abstract class StructuralTypeGenerator(TypeBuilder builder, IEnumerable<RuntimeCompiler.PropertyDeclaration> properties)
+        private abstract class StructuralTypeGenerator
         {
             #region Fields
 
@@ -744,21 +739,34 @@ namespace System.Linq.CompilerServices
             /// <summary>
             /// Type builder to emit members on.
             /// </summary>
-            protected readonly TypeBuilder _builder = builder;
+            protected readonly TypeBuilder _builder;
 
             /// <summary>
             /// Sequence of properties, in the requested order of declaration.
             /// </summary>
-            protected readonly IEnumerable<PropertyDeclaration> _properties = properties;
+            protected readonly IEnumerable<PropertyDeclaration> _properties;
 
             /// <summary>
             /// Mapping of property names to their backing fields.
             /// Contents are initialized by EmitFieldsAndProperties.
             /// </summary>
-            protected readonly Dictionary<string, FieldBuilder> _fields = [];
+            protected readonly Dictionary<string, FieldBuilder> _fields;
 
             #endregion
+
             #region Constructors
+
+            /// <summary>
+            /// Creates a new structural type generator on the specified builder and with the specified properties.
+            /// </summary>
+            /// <param name="builder">Build to emit the type definition on.</param>
+            /// <param name="properties">Properties to declare on the type.</param>
+            public StructuralTypeGenerator(TypeBuilder builder, IEnumerable<PropertyDeclaration> properties)
+            {
+                _builder = builder;
+                _properties = properties;
+                _fields = [];
+            }
 
             #endregion
 
@@ -1022,13 +1030,17 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Helper type to create anonymous types.
         /// </summary>
-        /// <remarks>
-        /// Creates a new anonymous type generator on the specified builder and with the specified properties.
-        /// </remarks>
-        /// <param name="builder">Build to emit the type definition on.</param>
-        /// <param name="properties">Properties to declare on the type.</param>
-        private sealed class AnonymousTypeGenerator(TypeBuilder builder, IEnumerable<RuntimeCompiler.PropertyDeclaration> properties) : StructuralTypeGenerator(builder, properties)
+        private sealed class AnonymousTypeGenerator : StructuralTypeGenerator
         {
+            /// <summary>
+            /// Creates a new anonymous type generator on the specified builder and with the specified properties.
+            /// </summary>
+            /// <param name="builder">Build to emit the type definition on.</param>
+            /// <param name="properties">Properties to declare on the type.</param>
+            public AnonymousTypeGenerator(TypeBuilder builder, IEnumerable<PropertyDeclaration> properties)
+                : base(builder, properties)
+            {
+            }
 
             #region Methods
 
@@ -1065,13 +1077,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Helper type to create record types.
         /// </summary>
-        /// <remarks>
-        /// Creates a new record type generator on the specified builder and with the specified properties.
-        /// </remarks>
-        /// <param name="builder">Build to emit the type definition on.</param>
-        /// <param name="properties">Properties to declare on the type.</param>
-        /// <param name="valueEquality">Indicates whether to emit a record type with value equality semantics.</param>
-        private sealed class RecordTypeGenerator(TypeBuilder builder, IEnumerable<RuntimeCompiler.PropertyDeclaration> properties, bool valueEquality) : StructuralTypeGenerator(builder, properties)
+        private sealed class RecordTypeGenerator : StructuralTypeGenerator
         {
             /// <summary>
             /// Cached default constructor for <see cref="object"/>.
@@ -1081,7 +1087,19 @@ namespace System.Linq.CompilerServices
             /// <summary>
             /// Indicates whether to emit a record type with value equality semantics.
             /// </summary>
-            private readonly bool _valueEquality = valueEquality;
+            private readonly bool _valueEquality;
+
+            /// <summary>
+            /// Creates a new record type generator on the specified builder and with the specified properties.
+            /// </summary>
+            /// <param name="builder">Build to emit the type definition on.</param>
+            /// <param name="properties">Properties to declare on the type.</param>
+            /// <param name="valueEquality">Indicates whether to emit a record type with value equality semantics.</param>
+            public RecordTypeGenerator(TypeBuilder builder, IEnumerable<PropertyDeclaration> properties, bool valueEquality)
+                : base(builder, properties)
+            {
+                _valueEquality = valueEquality;
+            }
 
             /// <summary>
             /// Emits the single constructor on the TypeBuilder.

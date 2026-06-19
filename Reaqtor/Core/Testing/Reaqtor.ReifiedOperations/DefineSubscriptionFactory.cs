@@ -14,10 +14,15 @@ using System.Linq.Expressions;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class DefineSubscriptionFactory(Uri subscriptionFactoryUri, Expression subscriptionFactory, object state) : DefineServiceOperation(ServiceOperationKind.DefineSubscriptionFactory, subscriptionFactoryUri, subscriptionFactory, state)
+    public class DefineSubscriptionFactory : DefineServiceOperation
     {
         public DefineSubscriptionFactory(Uri subscriptionFactoryUri)
             : this(subscriptionFactoryUri, subscriptionFactory: null, state: null)
+        {
+        }
+
+        public DefineSubscriptionFactory(Uri subscriptionFactoryUri, Expression subscriptionFactory, object state)
+            : base(ServiceOperationKind.DefineSubscriptionFactory, subscriptionFactoryUri, subscriptionFactory, state)
         {
         }
     }

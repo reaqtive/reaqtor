@@ -9,10 +9,17 @@ using Reaqtive.Testing;
 
 namespace Reaqtive.TestingFramework.Mocks
 {
-    internal sealed class ApplySubscribable<T>(ISubscribable<T> source, TestScheduler scheduler, params Recorded<SubscriptionAction>[] actions) : MockSubscribable<T>(scheduler)
+    internal sealed class ApplySubscribable<T> : MockSubscribable<T>
     {
-        private readonly Recorded<SubscriptionAction>[] _actions = actions ?? throw new ArgumentNullException(nameof(actions));
-        private readonly ISubscribable<T> _source = source ?? throw new ArgumentNullException(nameof(source));
+        private readonly Recorded<SubscriptionAction>[] _actions;
+        private readonly ISubscribable<T> _source;
+
+        public ApplySubscribable(ISubscribable<T> source, TestScheduler scheduler, params Recorded<SubscriptionAction>[] actions)
+            : base(scheduler)
+        {
+            _source = source ?? throw new ArgumentNullException(nameof(source));
+            _actions = actions ?? throw new ArgumentNullException(nameof(actions));
+        }
 
         public override ISubscription Subscribe(IObserver<T> observer) => new _(this, base.Subscribe(observer));
 

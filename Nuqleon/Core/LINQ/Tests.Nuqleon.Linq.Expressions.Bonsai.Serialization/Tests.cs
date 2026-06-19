@@ -2758,13 +2758,20 @@ namespace Tests
             Assert.AreEqual(d08.ToCSharpString(), e.ToCSharpString());
         }
 
-        private sealed class Qux(int x)
+        private sealed class Qux
         {
+            public Qux(int x)
+            {
+                X = x;
+                Foos = [];
+                Bar = new Bar();
+            }
+
             public int X
             {
                 get;
                 private set;
-            } = x;
+            }
 
             public string Baz
             {
@@ -2776,13 +2783,13 @@ namespace Tests
             {
                 get;
                 private set;
-            } = new Bar();
+            }
 
             public List<int> Foos
             {
                 get;
                 private set;
-            } = [];
+            }
         }
 
         private sealed class Bar
@@ -2837,14 +2844,24 @@ namespace Tests
             Assert.AreEqual(42, r08.Compile()(new Fooy(42)));
         }
 
-        private sealed class Bary(int qux)
+        private sealed class Bary
         {
-            public int Qux { get; set; } = qux;
+            public Bary(int qux)
+            {
+                Qux = qux;
+            }
+
+            public int Qux { get; set; }
         }
 
-        private sealed class Fooy(int qux)
+        private sealed class Fooy
         {
-            public int Qux { get; set; } = qux;
+            public Fooy(int qux)
+            {
+                Qux = qux;
+            }
+
+            public int Qux { get; set; }
         }
 
         private sealed class MyTypeResolver : ITypeResolutionService
@@ -3711,12 +3728,12 @@ namespace Tests
             }
         }
 
-        private sealed class CustomBonsaiExpressionSerializer(TypeSpace typeSpace, InvertedTypeSpace invertedTypeSpace, Func<Type, Func<object, Json.Expression>> liftFactory, Func<Type, Func<Json.Expression, object>> reduceFactory, Version version) : BonsaiExpressionSerializer(version)
+        private sealed class CustomBonsaiExpressionSerializer : BonsaiExpressionSerializer
         {
-            private readonly ExpressionToExpressionSlimConverter _lifter = new ExpressionToExpressionSlimConverter(typeSpace);
-            private readonly ExpressionSlimToExpressionConverter _reducer = new ExpressionSlimToExpressionConverter(invertedTypeSpace);
-            private readonly Func<Type, Func<object, Json.Expression>> _liftFactory = liftFactory;
-            private readonly Func<Type, Func<Json.Expression, object>> _reduceFactory = reduceFactory;
+            private readonly ExpressionToExpressionSlimConverter _lifter;
+            private readonly ExpressionSlimToExpressionConverter _reducer;
+            private readonly Func<Type, Func<object, Json.Expression>> _liftFactory;
+            private readonly Func<Type, Func<Json.Expression, object>> _reduceFactory;
 
             public CustomBonsaiExpressionSerializer(Func<Type, Func<object, Json.Expression>> liftFactory, Func<Type, Func<Json.Expression, object>> reduceFactory)
                 : this(liftFactory, reduceFactory, BonsaiVersion.Default)
@@ -3728,6 +3745,15 @@ namespace Tests
             {
             }
 
+            public CustomBonsaiExpressionSerializer(TypeSpace typeSpace, InvertedTypeSpace invertedTypeSpace, Func<Type, Func<object, Json.Expression>> liftFactory, Func<Type, Func<Json.Expression, object>> reduceFactory, Version version)
+                : base(version)
+            {
+                _lifter = new ExpressionToExpressionSlimConverter(typeSpace);
+                _reducer = new ExpressionSlimToExpressionConverter(invertedTypeSpace);
+                _liftFactory = liftFactory;
+                _reduceFactory = reduceFactory;
+            }
+
             public override ExpressionSlim Lift(Expression expression) => _lifter.Visit(expression);
 
             public override Expression Reduce(ExpressionSlim expression) => _reducer.Visit(expression);
@@ -3737,8 +3763,12 @@ namespace Tests
             protected override Func<Json.Expression, object> GetConstantDeserializer(Type type) => _reduceFactory(type);
         }
 
-        private sealed class Comparator(StructuralTypeEqualityComparator typeComparator) : ExpressionEqualityComparator(typeComparator, typeComparator.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
+        private sealed class Comparator : ExpressionEqualityComparator
         {
+            public Comparator(StructuralTypeEqualityComparator typeComparator)
+                : base(typeComparator, typeComparator.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
+            {
+            }
         }
 
         #endregion

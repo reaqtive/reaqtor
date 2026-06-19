@@ -546,24 +546,30 @@ namespace Reaqtive.Storage
         /// <summary>
         /// Representation of a snapshot returned by <see cref="CreateSnapshot(bool)"/>.
         /// </summary>
-        /// <remarks>
-        /// Creates a new instance of <see cref="Snapshot"/> containing the specified <paramref name="edits"/> to be applied to the persisted key/value store.
-        /// </remarks>
-        /// <param name="parent">The parent transactional dictionary used to make a call to <see cref="TransactionalDictionary{TKey, TValue}.OnCommitted(TransactionalDictionary{TKey, TValue}.Snapshot)"/> when the snapshot was successfully committed.</param>
-        /// <param name="edits">The edits to be applied to the persisted key/value store via the <see cref="Accept(ISnapshotVisitor{TKey, TValue})"/> method.</param>
-        private sealed class Snapshot(TransactionalDictionary<TKey, TValue> parent, Edit<TKey, TValue>[] edits) : ISnapshot<TKey, TValue>
+        private sealed class Snapshot : ISnapshot<TKey, TValue>
         {
             // REVIEW: Should we add a version number to the snapshot so we can detect invalid use patterns (i.e. operating on an old snapshot if a newer one exists)?
 
             /// <summary>
             /// The parent transactional dictionary used to make a call to <see cref="TransactionalDictionary{TKey, TValue}.OnCommitted(TransactionalDictionary{TKey, TValue}.Snapshot)"/> when the snapshot was successfully committed.
             /// </summary>
-            private readonly TransactionalDictionary<TKey, TValue> _parent = parent;
+            private readonly TransactionalDictionary<TKey, TValue> _parent;
 
             /// <summary>
             /// The edits to be applied to the persisted key/value store via the <see cref="Accept(ISnapshotVisitor{TKey, TValue})"/> method.
             /// </summary>
-            private readonly Edit<TKey, TValue>[] _edits = edits;
+            private readonly Edit<TKey, TValue>[] _edits;
+
+            /// <summary>
+            /// Creates a new instance of <see cref="Snapshot"/> containing the specified <paramref name="edits"/> to be applied to the persisted key/value store.
+            /// </summary>
+            /// <param name="parent">The parent transactional dictionary used to make a call to <see cref="TransactionalDictionary{TKey, TValue}.OnCommitted(TransactionalDictionary{TKey, TValue}.Snapshot)"/> when the snapshot was successfully committed.</param>
+            /// <param name="edits">The edits to be applied to the persisted key/value store via the <see cref="Accept(ISnapshotVisitor{TKey, TValue})"/> method.</param>
+            public Snapshot(TransactionalDictionary<TKey, TValue> parent, Edit<TKey, TValue>[] edits)
+            {
+                _parent = parent;
+                _edits = edits;
+            }
 
             /// <summary>
             /// Dispatches all the edits in the snapshot to the appropriate <paramref name="visitor"/> methods.

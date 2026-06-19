@@ -124,22 +124,28 @@ namespace Pearls.Reaqtor.CSE
         /// <summary>
         /// Expression visitor to carry out simple substitutions of parameter expressions.
         /// </summary>
-        /// <remarks>
-        /// Creates a new parameter substitution visitor.
-        /// </remarks>
-        /// <param name="p">Parameter expression to find and substitute.</param>
-        /// <param name="q">Parameter expression to put in place of occurrences of the original parameter expression occurrences.</param>
-        private class SimpleSubst(ParameterExpression p, ParameterExpression q) : ExpressionVisitor
+        private class SimpleSubst : ExpressionVisitor
         {
             /// <summary>
             /// Parameter expression to find and substitute.
             /// </summary>
-            private readonly ParameterExpression _p = p;
+            private readonly ParameterExpression _p;
 
             /// <summary>
             /// Parameter expression to put in place of occurrences of the original parameter expression occurrences.
             /// </summary>
-            private readonly ParameterExpression _q = q;
+            private readonly ParameterExpression _q;
+
+            /// <summary>
+            /// Creates a new parameter substitution visitor.
+            /// </summary>
+            /// <param name="p">Parameter expression to find and substitute.</param>
+            /// <param name="q">Parameter expression to put in place of occurrences of the original parameter expression occurrences.</param>
+            public SimpleSubst(ParameterExpression p, ParameterExpression q)
+            {
+                _p = p;
+                _q = q;
+            }
 
             /// <summary>
             /// Visits parameter expressions to find and replace occurrences of the specified parameter expression.

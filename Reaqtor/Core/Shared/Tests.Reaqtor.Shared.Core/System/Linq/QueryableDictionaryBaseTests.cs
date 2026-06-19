@@ -176,8 +176,14 @@ namespace Tests.Reaqtor.Shared.Core.System.Linq
                 }
             }
 
-            private sealed class Queryable<TElement>(Expression expression, IQueryProvider queryProvider) : IQueryable<TElement>
+            private sealed class Queryable<TElement> : IQueryable<TElement>
             {
+                public Queryable(Expression expression, IQueryProvider queryProvider)
+                {
+                    Expression = expression;
+                    Provider = queryProvider;
+                }
+
                 public IEnumerator<TElement> GetEnumerator()
                 {
                     throw new NotImplementedException();
@@ -190,15 +196,21 @@ namespace Tests.Reaqtor.Shared.Core.System.Linq
 
                 public Type ElementType => typeof(TElement);
 
-                public Expression Expression { get; private set; } = expression;
+                public Expression Expression { get; private set; }
 
-                public IQueryProvider Provider { get; private set; } = queryProvider;
+                public IQueryProvider Provider { get; private set; }
             }
 
-            private sealed class Visitor(Expression target, Expression replacement) : ExpressionVisitor
+            private sealed class Visitor : ExpressionVisitor
             {
-                private readonly Expression _target = target;
-                private readonly Expression _replacement = replacement;
+                private readonly Expression _target;
+                private readonly Expression _replacement;
+
+                public Visitor(Expression target, Expression replacement)
+                {
+                    _target = target;
+                    _replacement = replacement;
+                }
 
                 public override Expression Visit(Expression node)
                 {

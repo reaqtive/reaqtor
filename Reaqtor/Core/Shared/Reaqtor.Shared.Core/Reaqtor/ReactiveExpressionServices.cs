@@ -238,9 +238,11 @@ namespace Reaqtor
 
             public bool TryGetObject(object value, out Expression expression) => _parent.TryGetObject(value, out expression);
 
-            private sealed class Impl(ReactiveExpressionServices.ExpressionInliner parent) : CooperativeExpressionVisitor
+            private sealed class Impl : CooperativeExpressionVisitor
             {
-                private readonly ExpressionInliner _parent = parent;
+                private readonly ExpressionInliner _parent;
+
+                public Impl(ExpressionInliner parent) => _parent = parent;
 
                 protected override Expression VisitConstant(ConstantExpression node)
                 {
@@ -360,15 +362,19 @@ namespace Reaqtor
             }
         }
 
-        private sealed class KnownResourceRewriter(ReactiveExpressionServices parent)
+        private sealed class KnownResourceRewriter
         {
-            private readonly Impl _impl = new Impl(parent);
+            private readonly Impl _impl;
+
+            public KnownResourceRewriter(ReactiveExpressionServices parent) => _impl = new Impl(parent);
 
             public Expression Rewrite(Expression expression) => _impl.Visit(expression);
 
-            private sealed class Impl(ReactiveExpressionServices parent) : ExpressionVisitor
+            private sealed class Impl : ExpressionVisitor
             {
-                private readonly ReactiveExpressionServices _parent = parent;
+                private readonly ReactiveExpressionServices _parent;
+
+                public Impl(ReactiveExpressionServices parent) => _parent = parent;
 
                 protected override Expression VisitMethodCall(MethodCallExpression node)
                 {
@@ -474,9 +480,14 @@ namespace Reaqtor
         /// Common base class for exprssion tree rewriters containing helper methods that are needed
         /// for most client-aware rewrites.
         /// </summary>
-        private abstract class ScopedExpressionRewriterBase(ReactiveExpressionServices parent) : ScopedExpressionVisitor<ParameterExpression>
+        private abstract class ScopedExpressionRewriterBase : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly ReactiveExpressionServices _parent = parent;
+            private readonly ReactiveExpressionServices _parent;
+
+            protected ScopedExpressionRewriterBase(ReactiveExpressionServices parent)
+            {
+                _parent = parent;
+            }
 
             /// <summary>
             /// Checks if the passed expression is the reactive client. The criteria are:
@@ -522,14 +533,21 @@ namespace Reaqtor
         /// <remarks>
         /// Input expressions come in this way typically when code uses the context interface directly.
         /// </remarks>
-        private sealed class ClientInterfaceCallToUriRewriter(ReactiveExpressionServices parent)
+        private sealed class ClientInterfaceCallToUriRewriter
         {
-            private readonly ReactiveExpressionServices _parent = parent;
+            private readonly ReactiveExpressionServices _parent;
+
+            public ClientInterfaceCallToUriRewriter(ReactiveExpressionServices parent) => _parent = parent;
 
             public Expression Rewrite(Expression expression) => new Impl(_parent).Visit(expression);
 
-            private sealed class Impl(ReactiveExpressionServices parent) : ScopedExpressionRewriterBase(parent)
+            private sealed class Impl : ScopedExpressionRewriterBase
             {
+                public Impl(ReactiveExpressionServices parent)
+                    : base(parent)
+                {
+                }
+
                 protected override Expression VisitMethodCall(MethodCallExpression node)
                 {
                     var rewritten = base.VisitMethodCall(node);
@@ -671,14 +689,21 @@ namespace Reaqtor
         ///    var res = aQbservable.SelectMany(x => ctx.Ys(x))
         /// </code>
         /// </remarks>
-        private sealed class KnownResourceInvocationRewriter(ReactiveExpressionServices parent)
+        private sealed class KnownResourceInvocationRewriter
         {
-            private readonly ReactiveExpressionServices _parent = parent;
+            private readonly ReactiveExpressionServices _parent;
+
+            public KnownResourceInvocationRewriter(ReactiveExpressionServices parent) => _parent = parent;
 
             public Expression Rewrite(Expression expression) => new Impl(_parent).Visit(expression);
 
-            private sealed class Impl(ReactiveExpressionServices parent) : ScopedExpressionRewriterBase(parent)
+            private sealed class Impl : ScopedExpressionRewriterBase
             {
+                public Impl(ReactiveExpressionServices parent)
+                    : base(parent)
+                {
+                }
+
                 protected override Expression VisitInvocation(InvocationExpression node)
                 {
                     var rewritten = base.VisitInvocation(node);

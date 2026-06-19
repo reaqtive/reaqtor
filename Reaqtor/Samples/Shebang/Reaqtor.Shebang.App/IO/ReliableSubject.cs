@@ -101,9 +101,11 @@ namespace Reaqtor.Shebang.App
             }
         }
 
-        private sealed class Observer(IReliableObserver<T> observer) : IObserver<(long sequenceId, T item)>
+        private sealed class Observer : IObserver<(long sequenceId, T item)>
         {
-            private readonly IReliableObserver<T> _observer = observer;
+            private readonly IReliableObserver<T> _observer;
+
+            public Observer(IReliableObserver<T> observer) => _observer = observer;
 
             public void OnCompleted() => _observer.OnCompleted();
 
@@ -112,10 +114,16 @@ namespace Reaqtor.Shebang.App
             public void OnNext((long sequenceId, T item) value) => _observer.OnNext(value.item, value.sequenceId);
         }
 
-        private sealed class Subscription(ReliableSubject<T> parent, IObserver<(long sequenceId, T item)> observer) : IDisposable
+        private sealed class Subscription : IDisposable
         {
-            private readonly ReliableSubject<T> _parent = parent;
-            private IObserver<(long sequenceId, T item)> _observer = observer;
+            private readonly ReliableSubject<T> _parent;
+            private IObserver<(long sequenceId, T item)> _observer;
+
+            public Subscription(ReliableSubject<T> parent, IObserver<(long sequenceId, T item)> observer)
+            {
+                _parent = parent;
+                _observer = observer;
+            }
 
             public void Dispose()
             {

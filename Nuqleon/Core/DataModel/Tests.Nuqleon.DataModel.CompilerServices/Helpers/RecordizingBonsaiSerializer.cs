@@ -18,8 +18,13 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices
 {
-    internal class RecordizingBonsaiSerializer(Func<Type, Func<object, Json.Expression>> liftFactory, Func<Type, Func<Json.Expression, object>> reduceFactory) : BonsaiExpressionSerializer(liftFactory, reduceFactory)
+    internal class RecordizingBonsaiSerializer : BonsaiExpressionSerializer
     {
+        public RecordizingBonsaiSerializer(Func<Type, Func<object, Json.Expression>> liftFactory, Func<Type, Func<Json.Expression, object>> reduceFactory)
+            : base(liftFactory, reduceFactory)
+        {
+        }
+
         public override ExpressionSlim Lift(Expression expression)
         {
             return new ExpressionToExpressionSlimConverter(new DataModelTypeSpace()).Visit(expression);

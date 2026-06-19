@@ -212,11 +212,17 @@ namespace System.Linq.Expressions
             public int GetHashCode(Expression obj) => _comparer.GetHashCode(obj);
         }
 
-        private readonly struct ExpressionWithHashCode(LambdaExpression expression) : IEquatable<ExpressionWithHashCode>
+        private readonly struct ExpressionWithHashCode : IEquatable<ExpressionWithHashCode>
         {
-            private readonly int _hashCode = FastExpressionEqualityComparer.Instance.GetHashCode(expression);
+            private readonly int _hashCode;
 
-            public LambdaExpression Expression { get; } = expression;
+            public ExpressionWithHashCode(LambdaExpression expression)
+            {
+                Expression = expression;
+                _hashCode = FastExpressionEqualityComparer.Instance.GetHashCode(expression);
+            }
+
+            public LambdaExpression Expression { get; }
 
             public override bool Equals(object obj) => obj is ExpressionWithHashCode e && Equals(e);
 

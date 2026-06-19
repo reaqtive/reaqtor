@@ -501,9 +501,11 @@ namespace Nuqleon.DataModel.TypeSystem
             public int GetHashCode(object obj) => RuntimeHelpers.GetHashCode(obj);
         }
 
-        private sealed class PropertyEntry(DataProperty property)
+        private sealed class PropertyEntry
         {
-            public DataProperty Property = property;
+            public PropertyEntry(DataProperty property) => Property = property;
+
+            public DataProperty Property;
             public bool HasVisited;
         }
     }

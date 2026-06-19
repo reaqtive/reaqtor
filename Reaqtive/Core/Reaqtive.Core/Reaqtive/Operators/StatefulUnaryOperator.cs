@@ -13,16 +13,21 @@ namespace Reaqtive
     /// </summary>
     /// <typeparam name="TParam">Type of the parameters passed to the observer.</typeparam>
     /// <typeparam name="TResult">Element type of the result sequence produced by the operator.</typeparam>
-    /// <remarks>
-    /// Creates a new stateful operator instance using the given parameters and the
-    /// observer to report downstream notifications to.
-    /// </remarks>
-    /// <param name="parent">Parameters used by the operator.</param>
-    /// <param name="observer">Observer receiving the operator's output.</param>
-    public abstract class StatefulUnaryOperator<TParam, TResult>(TParam parent, IObserver<TResult> observer) : VersionedUnaryOperator<TParam, TResult>(parent, observer), IStatefulOperator
+    public abstract class StatefulUnaryOperator<TParam, TResult> : VersionedUnaryOperator<TParam, TResult>, IStatefulOperator
     {
         private StateChangedManager _stateful;
         private bool _disposedFromState;
+
+        /// <summary>
+        /// Creates a new stateful operator instance using the given parameters and the
+        /// observer to report downstream notifications to.
+        /// </summary>
+        /// <param name="parent">Parameters used by the operator.</param>
+        /// <param name="observer">Observer receiving the operator's output.</param>
+        protected StatefulUnaryOperator(TParam parent, IObserver<TResult> observer)
+            : base(parent, observer)
+        {
+        }
 
         /// <summary>
         /// Gets a flag indicating whether state has changed since the last time the

@@ -15,15 +15,21 @@ namespace Reaqtor.QueryEngine
     /// <remarks>
     /// For more information, see Reaqtor\Nuqleon\Reactive\HighOrderOutputStatefulOperator.cs.
     /// </remarks>
-    internal sealed class RefCountSubject<T>(Uri refCountUri, Uri collectorUri) : InnerSubject<T>
+    internal sealed class RefCountSubject<T> : InnerSubject<T>
     {
-        private readonly Uri _refCountStreamUri = refCountUri;
-        private readonly Uri _collectorStreamUri = collectorUri;
+        private readonly Uri _refCountStreamUri;
+        private readonly Uri _collectorStreamUri;
 
         private IOperatorContext _context;
 
         private IObserver<bool> _refCount;
         private IObserver<Uri> _collector;
+
+        public RefCountSubject(Uri refCountUri, Uri collectorUri)
+        {
+            _refCountStreamUri = refCountUri;
+            _collectorStreamUri = collectorUri;
+        }
 
         public override void SetContext(IOperatorContext context)
         {

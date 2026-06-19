@@ -47,7 +47,7 @@ namespace System.Linq.CompilerServices
         protected ScopedExpressionVisitor()
 #endif
         {
-            _symbolTable = [];
+            _symbolTable = new ScopedSymbolTable<ParameterExpression, TState>();
         }
 
         /// <summary>

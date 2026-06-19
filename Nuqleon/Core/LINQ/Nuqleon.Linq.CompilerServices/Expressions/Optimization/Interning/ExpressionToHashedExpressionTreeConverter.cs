@@ -14,9 +14,11 @@ using System.Linq.CompilerServices;
 
 namespace System.Linq.Expressions
 {
-    internal sealed class ExpressionToHashedExpressionTreeConverter(Func<ExpressionEqualityComparator> comparatorFactory) : ExpressionVisitor<ITree<HashedNode>>
+    internal sealed class ExpressionToHashedExpressionTreeConverter : ExpressionVisitor<ITree<HashedNode>>
     {
-        private readonly Func<ExpressionEqualityComparator> _comparatorFactory = comparatorFactory;
+        private readonly Func<ExpressionEqualityComparator> _comparatorFactory;
+
+        public ExpressionToHashedExpressionTreeConverter(Func<ExpressionEqualityComparator> comparatorFactory) => _comparatorFactory = comparatorFactory;
 
         private static Hasher GetNodeHash(Expression expression)
         {

@@ -746,9 +746,12 @@ namespace Tests.System.Linq.CompilerServices
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
-#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
-        private sealed class Bar(int x, string y)
+        private sealed class Bar
         {
+            public Bar(int x, string y)
+            {
+            }
+
             public int Foo { get; set; }
             public Qux Qux { get; set; }
             public List<int> Xs { get; set; }
@@ -756,13 +759,16 @@ namespace Tests.System.Linq.CompilerServices
             public int ooF { get; set; }
         }
 
-        private sealed class Foo(string y, int x)
+        private sealed class Foo
         {
+            public Foo(string y, int x)
+            {
+            }
+
             public int Bar { get; set; }
             public Baz Baz { get; set; }
             public HashSet<int> Ys { get; set; }
         }
-#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 
         private sealed class Qux

@@ -10,11 +10,13 @@
 
 namespace System.Memory
 {
-    internal class ValueOrErrorValue<T>(T value) : IValueOrError<T>
+    internal class ValueOrErrorValue<T> : IValueOrError<T>
     {
+        public ValueOrErrorValue(T value) => Value = value;
+
         public ValueOrErrorKind Kind => ValueOrErrorKind.Value;
 
-        public T Value { get; } = value;
+        public T Value { get; }
 
         public Exception Exception => throw new InvalidOperationException("The object represents a value and does not have an error.");
     }

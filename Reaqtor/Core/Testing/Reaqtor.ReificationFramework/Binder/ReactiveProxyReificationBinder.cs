@@ -17,16 +17,21 @@ namespace Reaqtor.ReificationFramework
     /// <summary>
     /// A reified operation binder for client environments.
     /// </summary>
-    /// <remarks>
-    /// Instantiates the binder.
-    /// </remarks>
-    /// <param name="clientFactory">A client environment factory.</param>
-    public class ReactiveProxyReificationBinder(Func<IReactiveClientEnvironment> clientFactory) : IReificationBinder<IReactiveClientEnvironment>
+    public class ReactiveProxyReificationBinder : IReificationBinder<IReactiveClientEnvironment>
     {
         private static readonly MethodInfo s_waitMethod = (MethodInfo)ReflectionHelpers.InfoOf((Task t) => t.Wait());
         private static readonly PropertyInfo s_getContextProperty = (PropertyInfo)ReflectionHelpers.InfoOf((IReactiveClientEnvironment env) => env.Context);
 
-        private readonly Func<IReactiveClientEnvironment> _clientFactory = clientFactory;
+        private readonly Func<IReactiveClientEnvironment> _clientFactory;
+
+        /// <summary>
+        /// Instantiates the binder.
+        /// </summary>
+        /// <param name="clientFactory">A client environment factory.</param>
+        public ReactiveProxyReificationBinder(Func<IReactiveClientEnvironment> clientFactory)
+        {
+            _clientFactory = clientFactory;
+        }
 
         /// <summary>
         /// Binds a service operation to the environment.
@@ -136,14 +141,22 @@ namespace Reaqtor.ReificationFramework
             ).BetaReduce();
         }
 
-        private sealed class ContextOptimizer(ParameterExpression envParam, ParameterExpression ctxParam) : ExpressionVisitor
+        private sealed class ContextOptimizer : ExpressionVisitor
         {
             private static readonly Expression s_empty = Expression.Empty();
 
-            private readonly ParameterExpression _envParam = envParam;
-            private readonly ParameterExpression _ctxParam = ctxParam;
+            private readonly ParameterExpression _envParam;
+            private readonly ParameterExpression _ctxParam;
 
-            private readonly List<ParameterExpression> _ctxReplacements = [];
+            private readonly List<ParameterExpression> _ctxReplacements;
+
+            public ContextOptimizer(ParameterExpression envParam, ParameterExpression ctxParam)
+            {
+                _envParam = envParam;
+                _ctxParam = ctxParam;
+
+                _ctxReplacements = [];
+            }
 
             protected override Expression VisitBinary(BinaryExpression node)
             {

@@ -391,23 +391,30 @@ namespace Reaqtive.Storage
             /// Statically typed wrapper for a persisted array with element type <typeparamref name="T"/>.
             /// </summary>
             /// <typeparam name="T">The type of the elements stored in the array.</typeparam>
-            /// <remarks>
-            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-            /// </remarks>
-            /// <param name="id">The identifier of the array.</param>
-            /// <param name="storage">The storage entity representing the array.</param>
-            /// <param name="array">The initial array. This could either be the result of deserializing persisted state, or an array containing default values for a new entity.</param>
-            private sealed class Wrapper<T>(string id, PersistedObjectSpace.Array storage, T[] array) : PersistedBase(id), IPersistedArray<T>, IArrayPersistence
+            private sealed class Wrapper<T> : PersistedBase, IPersistedArray<T>, IArrayPersistence
             {
                 /// <summary>
                 /// The storage entity being wrapped.
                 /// </summary>
-                private readonly Array _storage = storage;
+                private readonly Array _storage;
 
                 /// <summary>
                 /// The stored array, always reflecting the latest in-memory state.
                 /// </summary>
-                private readonly T[] _array = array;
+                private readonly T[] _array;
+
+                /// <summary>
+                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+                /// </summary>
+                /// <param name="id">The identifier of the array.</param>
+                /// <param name="storage">The storage entity representing the array.</param>
+                /// <param name="array">The initial array. This could either be the result of deserializing persisted state, or an array containing default values for a new entity.</param>
+                public Wrapper(string id, Array storage, T[] array)
+                    : base(id)
+                {
+                    _storage = storage;
+                    _array = array;
+                }
 
                 /// <summary>
                 /// Gets or sets the element at the specified <paramref name="index"/> in the array.

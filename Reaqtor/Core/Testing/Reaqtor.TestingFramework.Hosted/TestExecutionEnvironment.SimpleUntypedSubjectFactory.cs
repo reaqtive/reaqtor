@@ -9,9 +9,14 @@ namespace Reaqtor.TestingFramework
 {
     public partial class TestExecutionEnvironment
     {
-        private class SimpleUntypedSubjectFactory<I, O>(TestExecutionEnvironment parent) : IReactiveQubjectFactory<I, O>
+        private class SimpleUntypedSubjectFactory<I, O> : IReactiveQubjectFactory<I, O>
         {
-            private readonly TestExecutionEnvironment _parent = parent;
+            private readonly TestExecutionEnvironment _parent;
+
+            public SimpleUntypedSubjectFactory(TestExecutionEnvironment parent)
+            {
+                _parent = parent;
+            }
 
             public IReactiveQubject<I, O> Create(Uri streamUri, object state)
             {

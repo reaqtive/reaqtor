@@ -13,9 +13,15 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.QueryEngine
 {
-    internal sealed class EntityReader(Stream stream, IQueryEngineRegistry registry, ISerializationPolicy policy) : ReaderBase(stream, policy)
+    internal sealed class EntityReader : ReaderBase
     {
-        private readonly IQueryEngineRegistry _registry = registry;
+        private readonly IQueryEngineRegistry _registry;
+
+        public EntityReader(Stream stream, IQueryEngineRegistry registry, ISerializationPolicy policy)
+            : base(stream, policy)
+        {
+            _registry = registry;
+        }
 
         public ReactiveEntity Load(ReactiveEntityKind kind)
         {

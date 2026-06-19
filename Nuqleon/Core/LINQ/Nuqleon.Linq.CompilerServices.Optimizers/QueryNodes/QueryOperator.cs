@@ -15,12 +15,16 @@ namespace System.Linq.CompilerServices.Optimizers
     /// <summary>
     /// A representation of a query expression operator.
     /// </summary>
-    /// <remarks>
-    /// Creates a representation of a query expression operator.
-    /// </remarks>
-    /// <param name="elementType">The element type of the resulting monad.</param>
-    public abstract class QueryOperator(Type elementType) : MonadMember(elementType)
+    public abstract class QueryOperator : MonadMember
     {
+        /// <summary>
+        /// Creates a representation of a query expression operator.
+        /// </summary>
+        /// <param name="elementType">The element type of the resulting monad.</param>
+        protected QueryOperator(Type elementType)
+            : base(elementType)
+        {
+        }
 
         /// <summary>
         /// Gets the <see cref="Optimizers.QueryNodeType"/> of the <see cref="QueryTree"/>.

@@ -172,9 +172,15 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
                 }
             }
 
-            private class DataModelBonsaiExpressionSerializer(InvertedTypeSpace invertedTypeSpace, Func<Type, Func<object, JsonExpression>> liftFactory, Func<Type, Func<JsonExpression, object>> reduceFactory, Version version) : BonsaiExpressionSerializer(liftFactory, reduceFactory, version)
+            private class DataModelBonsaiExpressionSerializer : BonsaiExpressionSerializer
             {
-                private readonly ExpressionSlimToExpressionConverter _reducer = new ExpressionSlimToExpressionConverter(invertedTypeSpace);
+                private readonly ExpressionSlimToExpressionConverter _reducer;
+
+                public DataModelBonsaiExpressionSerializer(InvertedTypeSpace invertedTypeSpace, Func<Type, Func<object, JsonExpression>> liftFactory, Func<Type, Func<JsonExpression, object>> reduceFactory, Version version)
+                    : base(liftFactory, reduceFactory, version)
+                {
+                    _reducer = new ExpressionSlimToExpressionConverter(invertedTypeSpace);
+                }
 
                 public override Expression Reduce(ExpressionSlim expression)
                 {

@@ -14,8 +14,13 @@ using Reaqtor;
 
 namespace Tests.Reaqtor.Client
 {
-    internal class TestClientContext(IReactiveServiceProvider serviceProvider) : ReactiveClientContext(new TestExpressionServices(), serviceProvider)
+    internal class TestClientContext : ReactiveClientContext
     {
+        public TestClientContext(IReactiveServiceProvider serviceProvider)
+            : base(new TestExpressionServices(), serviceProvider)
+        {
+        }
+
         private sealed class TestExpressionServices : ReactiveExpressionServices
         {
             public TestExpressionServices()

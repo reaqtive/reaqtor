@@ -19,11 +19,7 @@ namespace System.Memory
     /// Cache implementation for types that do not need to be deconstructed.
     /// </summary>
     /// <typeparam name="T">Type of the objects kept in the cache.</typeparam>
-    /// <remarks>
-    /// Instantiates the cache with the provided cache storage.
-    /// </remarks>
-    /// <param name="storage">The cache storage.</param>
-    public class Cache<T>(ICacheStorage<T> storage) : ICache<T>
+    public class Cache<T> : ICache<T>
     {
         /// <summary>
         /// Instantiates the cache with a default cache storage.
@@ -34,9 +30,18 @@ namespace System.Memory
         }
 
         /// <summary>
+        /// Instantiates the cache with the provided cache storage.
+        /// </summary>
+        /// <param name="storage">The cache storage.</param>
+        public Cache(ICacheStorage<T> storage)
+        {
+            Storage = storage ?? throw new ArgumentNullException(nameof(storage));
+        }
+
+        /// <summary>
         /// Internally visible cache storage used to optimize composed caches.
         /// </summary>
-        internal ICacheStorage<T> Storage { get; private set; } = storage ?? throw new ArgumentNullException(nameof(storage));
+        internal ICacheStorage<T> Storage { get; private set; }
 
         /// <summary>
         /// Deconstructs the instance into cacheable and non-cacheable
@@ -61,10 +66,16 @@ namespace System.Memory
             return new CacheReference(entry, this);
         }
 
-        private sealed class CacheReference(IReference<T> entry, Cache<T> cache) : DiscardableBase<T>
+        private sealed class CacheReference : DiscardableBase<T>
         {
-            private readonly Cache<T> _cache = cache;
-            private IReference<T> _entry = entry;
+            private readonly Cache<T> _cache;
+            private IReference<T> _entry;
+
+            public CacheReference(IReference<T> entry, Cache<T> cache)
+            {
+                _entry = entry;
+                _cache = cache;
+            }
 
             public override T Value
             {
@@ -98,13 +109,9 @@ namespace System.Memory
     /// <typeparam name="T">Type of the objects kept in the cache.</typeparam>
     /// <typeparam name="TCached">Type of the cacheable component of the cached type.</typeparam>
     /// <typeparam name="TNonCached">Type of the non-cacheable component of the cached type.</typeparam>
-    /// <remarks>
-    /// Instantiates the cache with the cache to use for cached component.
-    /// </remarks>
-    /// <param name="innerCache">The inner cache.</param>
-    public abstract class Cache<T, TCached, TNonCached>(ICache<TCached> innerCache) : ICache<T>
+    public abstract class Cache<T, TCached, TNonCached> : ICache<T>
     {
-        private readonly ICache<TCached> _innerCache = innerCache ?? throw new ArgumentNullException(nameof(innerCache));
+        private readonly ICache<TCached> _innerCache;
 
         /// <summary>
         /// Instantiates the cache with a default cache policy and equality comparer.
@@ -112,6 +119,15 @@ namespace System.Memory
         protected Cache()
             : this(new Cache<TCached>())
         {
+        }
+
+        /// <summary>
+        /// Instantiates the cache with the cache to use for cached component.
+        /// </summary>
+        /// <param name="innerCache">The inner cache.</param>
+        protected Cache(ICache<TCached> innerCache)
+        {
+            _innerCache = innerCache ?? throw new ArgumentNullException(nameof(innerCache));
         }
 
         /// <summary>
@@ -148,14 +164,21 @@ namespace System.Memory
         /// <returns>The reconstructed instance.</returns>
         protected abstract T Reconstruct(Deconstructed<TCached, TNonCached> deconstructed);
 
-        private sealed class CacheReference(
-            IReference<TCached> cached,
-            TNonCached nonCached,
-            Cache<T, TCached, TNonCached> cache) : DiscardableBase<T>
+        private sealed class CacheReference : DiscardableBase<T>
         {
-            private readonly TNonCached _nonCached = nonCached;
-            private readonly Cache<T, TCached, TNonCached> _cache = cache;
-            private IReference<TCached> _cached = cached;
+            private readonly TNonCached _nonCached;
+            private readonly Cache<T, TCached, TNonCached> _cache;
+            private IReference<TCached> _cached;
+
+            public CacheReference(
+                IReference<TCached> cached,
+                TNonCached nonCached,
+                Cache<T, TCached, TNonCached> cache)
+            {
+                _cached = cached;
+                _nonCached = nonCached;
+                _cache = cache;
+            }
 
             public override T Value
             {

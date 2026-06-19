@@ -9,12 +9,16 @@ namespace Reaqtor.QueryEngine.Events
     /// <summary>
     /// Event arguments involving a subscription.
     /// </summary>
-    /// <remarks>
-    /// Creates a new instance of <see cref="SubscriptionEventArgs"/> class for the specified entity.
-    /// </remarks>
-    /// <param name="entity">The entity representing the subscription.</param>
-    internal sealed class SubscriptionEventArgs(SubscriptionEntity entity) : ReactiveEntityEventArgs(entity.Uri, entity, ReactiveEntityKind.Subscription)
+    internal sealed class SubscriptionEventArgs : ReactiveEntityEventArgs
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="SubscriptionEventArgs"/> class for the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity representing the subscription.</param>
+        public SubscriptionEventArgs(SubscriptionEntity entity)
+            : base(entity.Uri, entity, ReactiveEntityKind.Subscription)
+        {
+        }
 
         /// <summary>
         /// Gets the subscription entity.

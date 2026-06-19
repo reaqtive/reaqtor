@@ -835,12 +835,19 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             }
         }
 
-        private class StructuralHelper(StructuralDataTypeKinds kind) : IEnumerable<KeyValuePair<string, Type>>
+        private class StructuralHelper : IEnumerable<KeyValuePair<string, Type>>
         {
             private readonly Lock _gate = new();
-            private readonly StructuralDataTypeKinds _kind = kind;
-            private readonly List<KeyValuePair<string, Type>> _properties = [];
-            private readonly Dictionary<string, object> _values = [];
+            private readonly StructuralDataTypeKinds _kind;
+            private readonly List<KeyValuePair<string, Type>> _properties;
+            private readonly Dictionary<string, object> _values;
+
+            public StructuralHelper(StructuralDataTypeKinds kind)
+            {
+                _kind = kind;
+                _properties = [];
+                _values = [];
+            }
 
             public void Add(string name, Type type, object value)
             {

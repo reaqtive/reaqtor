@@ -20,13 +20,8 @@ namespace Reaqtor.Reactive
     /// <summary>
     /// This interface supports hosting infrastructure for the operator library in a query engine.
     /// </summary>
-    /// <remarks>
-    /// Creates a new execution environment.
-    /// </remarks>
-    /// <param name="environment">The underlying base environment.</param>
-    /// <param name="reactive">The reactive service used to manage auxiliary artifacts.</param>
     [EditorBrowsable(EditorBrowsableState.Never)]
-    public partial class HigherOrderExecutionEnvironment(IExecutionEnvironment environment, IReactive reactive) : IHigherOrderExecutionEnvironment
+    public partial class HigherOrderExecutionEnvironment : IHigherOrderExecutionEnvironment
     {
 #pragma warning disable IDE0034 // Simplify 'default' expression (used in ReflectionHelpers.InfoOf calls)
 
@@ -35,8 +30,19 @@ namespace Reaqtor.Reactive
         private static readonly Uri s_innerSubjectUri = new("rx://subject/inner");
         private static readonly Uri s_refCountSubjectUri = new("rx://subject/inner/refCount");
 
-        private readonly IExecutionEnvironment _environment = environment;
-        private readonly IReactive _reactive = reactive;
+        private readonly IExecutionEnvironment _environment;
+        private readonly IReactive _reactive;
+
+        /// <summary>
+        /// Creates a new execution environment.
+        /// </summary>
+        /// <param name="environment">The underlying base environment.</param>
+        /// <param name="reactive">The reactive service used to manage auxiliary artifacts.</param>
+        public HigherOrderExecutionEnvironment(IExecutionEnvironment environment, IReactive reactive)
+        {
+            _environment = environment;
+            _reactive = reactive;
+        }
 
         /// <summary>
         /// Gets the subject with the specified identifier from the execution environment.

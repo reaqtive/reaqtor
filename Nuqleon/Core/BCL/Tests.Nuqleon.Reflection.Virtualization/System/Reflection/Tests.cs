@@ -1193,9 +1193,11 @@ namespace Tests.System.Reflection.Virtualization
         }
 
         [AttributeUsage(AttributeTargets.Parameter)]
-        private sealed class MyAttribute(int value) : Attribute
+        private sealed class MyAttribute : Attribute
         {
-            public int Value { get; } = value;
+            public MyAttribute(int value) => Value = value;
+
+            public int Value { get; }
         }
 #pragma warning restore CA1822
 #pragma warning restore CS0414

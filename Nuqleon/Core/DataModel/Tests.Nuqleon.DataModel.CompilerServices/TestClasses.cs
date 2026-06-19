@@ -361,8 +361,13 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         }
     }
 
-    public class TupleClass(int item1) : Tuple<int>(item1)
+    public class TupleClass : Tuple<int>
     {
+        public TupleClass(int item1)
+            : base(item1)
+        {
+        }
+
         public int Property { get; set; }
     }
 

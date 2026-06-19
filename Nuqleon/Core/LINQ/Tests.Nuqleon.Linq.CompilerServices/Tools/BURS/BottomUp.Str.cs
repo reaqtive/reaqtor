@@ -31,11 +31,17 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         public abstract string Eval();
     }
 
-    internal sealed class ConstStrTree(string value) : StrTree(StrKind.Const)
+    internal sealed class ConstStrTree : StrTree
     {
         public static readonly ConstStrTree Empty = new("");
 
-        public new string Value { get; } = value;
+        public ConstStrTree(string value)
+            : base(StrKind.Const)
+        {
+            Value = value;
+        }
+
+        public new string Value { get; }
 
         public override string Eval() => Value;
 
@@ -44,8 +50,13 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         public override string ToStringFormat() => "Const(" + Value + ")";
     }
 
-    internal sealed class UnaryStrTree(StrKind kind, StrTree operand) : StrTree(kind, [operand])
+    internal sealed class UnaryStrTree : StrTree
     {
+        public UnaryStrTree(StrKind kind, StrTree operand)
+            : base(kind, [operand])
+        {
+        }
+
         public override string Eval()
         {
             return Value switch
@@ -62,8 +73,13 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         }
     }
 
-    internal sealed class ConcatStrTree(params StrTree[] children) : StrTree(StrKind.Concat, children)
+    internal sealed class ConcatStrTree : StrTree
     {
+        public ConcatStrTree(params StrTree[] children)
+            : base(StrKind.Concat, children)
+        {
+        }
+
         public override string Eval()
         {
             return string.Concat(Children.Cast<StrTree>().Select(c => c.Eval()));
@@ -75,9 +91,15 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         }
     }
 
-    internal sealed class VariableStrTree(ParameterExpression variable) : StrTree(StrKind.Variable)
+    internal sealed class VariableStrTree : StrTree
     {
-        public ParameterExpression Variable { get; } = variable;
+        public VariableStrTree(ParameterExpression variable)
+            : base(StrKind.Variable)
+        {
+            Variable = variable;
+        }
+
+        public ParameterExpression Variable { get; }
 
         public override string Eval() => throw new NotImplementedException();
 

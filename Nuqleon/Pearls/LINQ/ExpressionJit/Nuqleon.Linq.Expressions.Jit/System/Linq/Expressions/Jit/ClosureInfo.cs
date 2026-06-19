@@ -16,22 +16,28 @@ namespace System.Linq.Expressions.Jit
     /// <summary>
     /// A closure information object providing facilities to emit variable storage operations for hoisted locals.
     /// </summary>
-    /// <remarks>
-    /// Creates a new closure information object.
-    /// </remarks>
-    /// <param name="closureType">The closure type providing hoisted variable storage.</param>
-    /// <param name="fieldMap">The closure type providing hoisted variable storage.</param>
-    internal sealed class ClosureInfo(Type closureType, Dictionary<ParameterExpression, ClosureFieldInfo> fieldMap)
+    internal sealed class ClosureInfo
     {
         /// <summary>
         /// The closure type providing hoisted variable storage.
         /// </summary>
-        public readonly Type ClosureType = closureType;
+        public readonly Type ClosureType;
 
         /// <summary>
         /// The closure type providing hoisted variable storage.
         /// </summary>
-        public readonly Dictionary<ParameterExpression, ClosureFieldInfo> FieldMap = fieldMap;
+        public readonly Dictionary<ParameterExpression, ClosureFieldInfo> FieldMap;
+
+        /// <summary>
+        /// Creates a new closure information object.
+        /// </summary>
+        /// <param name="closureType">The closure type providing hoisted variable storage.</param>
+        /// <param name="fieldMap">The closure type providing hoisted variable storage.</param>
+        public ClosureInfo(Type closureType, Dictionary<ParameterExpression, ClosureFieldInfo> fieldMap)
+        {
+            ClosureType = closureType;
+            FieldMap = fieldMap;
+        }
 
         /// <summary>
         /// Gets an expression tree to access the specified hoisted variable from the specified closure.

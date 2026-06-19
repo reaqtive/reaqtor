@@ -148,16 +148,21 @@ namespace Pearls.Reaqtor.CSE
         /// <summary>
         /// Comparer used to sort expressions in a canonical order, used to improve the likelihood fo sharing of subexpressions.
         /// </summary>
-        /// <remarks>
-        /// Creates a new expression comparer using the specified range variable used in filter predicates.
-        /// </remarks>
-        /// <param name="p">Range variable of the filter predicates.</param>
-        private class ExpressionSorter(ParameterExpression p) : IComparer<Expression>
+        private class ExpressionSorter : IComparer<Expression>
         {
             /// <summary>
             /// Range variable of the filter predicates.
             /// </summary>
-            private readonly ParameterExpression _p = p;
+            private readonly ParameterExpression _p;
+
+            /// <summary>
+            /// Creates a new expression comparer using the specified range variable used in filter predicates.
+            /// </summary>
+            /// <param name="p">Range variable of the filter predicates.</param>
+            public ExpressionSorter(ParameterExpression p)
+            {
+                _p = p;
+            }
 
             /// <summary>
             /// Compares the specified expressions to establish an order.
@@ -206,16 +211,21 @@ namespace Pearls.Reaqtor.CSE
             /// <summary>
             /// Expression visitor to find member accesses on the range variable.
             /// </summary>
-            /// <remarks>
-            /// Creates a new member finder using the specified range variable used in filter predicates.
-            /// </remarks>
-            /// <param name="p">Range variable of the filter predicates.</param>
-            private class MemberFinder(ParameterExpression p) : ExpressionVisitor
+            private class MemberFinder : ExpressionVisitor
             {
                 /// <summary>
                 /// Range variable of the filter predicates.
                 /// </summary>
-                private readonly ParameterExpression _p = p;
+                private readonly ParameterExpression _p;
+
+                /// <summary>
+                /// Creates a new member finder using the specified range variable used in filter predicates.
+                /// </summary>
+                /// <param name="p">Range variable of the filter predicates.</param>
+                public MemberFinder(ParameterExpression p)
+                {
+                    _p = p;
+                }
 
                 /// <summary>
                 /// Gets the member accesses on the range variable that were found in the analyzed expression.

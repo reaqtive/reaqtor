@@ -128,11 +128,16 @@ namespace Test.Reaqtive.Expressions
                 return new ExpressionWithEnvironment(expression);
             }
 
-            private sealed class ExpressionWithEnvironment(Expression expression) : IExpressionWithEnvironment
+            private sealed class ExpressionWithEnvironment : IExpressionWithEnvironment
             {
+                public ExpressionWithEnvironment(Expression expression)
+                {
+                    Expression = expression;
+                }
+
                 public IReadOnlyList<Binding> Bindings => EmptyReadOnlyCollection<Binding>.Instance;
 
-                public Expression Expression { get; } = expression;
+                public Expression Expression { get; }
             }
         }
     }

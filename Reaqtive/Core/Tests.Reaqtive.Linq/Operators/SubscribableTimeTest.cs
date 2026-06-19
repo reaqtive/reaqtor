@@ -804,17 +804,30 @@ namespace Test.Reaqtive.Operators
             return trace;
         }
 
-        private class TestLogger(List<Recorded<SubscribableTimeTest.LogEntry>> logs, TraceSource trace)
+        private class TestLogger
         {
-            public IEnumerable<Recorded<LogEntry>> Logs { get; } = logs;
-            public TraceSource TraceSource { get; } = trace;
+            public TestLogger(List<Recorded<LogEntry>> logs, TraceSource trace)
+            {
+                Logs = logs;
+                TraceSource = trace;
+            }
+
+            public IEnumerable<Recorded<LogEntry>> Logs { get; }
+            public TraceSource TraceSource { get; }
         }
 
-        private class MyListener(IClockable<long> clock, Action<long, string> onMessage) : TraceListener
+        private class MyListener : TraceListener
         {
-            private readonly IClockable<long> _clock = clock;
-            private readonly Action<long, string> _onMessage = onMessage;
-            private readonly List<string> _buffer = [];
+            private readonly IClockable<long> _clock;
+            private readonly Action<long, string> _onMessage;
+            private readonly List<string> _buffer;
+
+            public MyListener(IClockable<long> clock, Action<long, string> onMessage)
+            {
+                _clock = clock;
+                _onMessage = onMessage;
+                _buffer = [];
+            }
 
             public override void Write(string message)
             {

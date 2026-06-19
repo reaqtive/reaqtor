@@ -6,18 +6,29 @@ using System;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Finally<T>(ISubscribable<T> source, Action @finally) : SubscribableBase<T>
+    internal sealed class Finally<T> : SubscribableBase<T>
     {
-        private readonly ISubscribable<T> _source = source;
-        private readonly Action _finally = @finally;
+        private readonly ISubscribable<T> _source;
+        private readonly Action _finally;
+
+        public Finally(ISubscribable<T> source, Action @finally)
+        {
+            _source = source;
+            _finally = @finally;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<T> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(Finally<T> parent, IObserver<T> observer) : StatefulUnaryOperator<Finally<T>, T>(parent, observer), IObserver<T>
+        private sealed class _ : StatefulUnaryOperator<Finally<T>, T>, IObserver<T>
         {
+            public _(Finally<T> parent, IObserver<T> observer)
+                : base(parent, observer)
+            {
+            }
+
             public override string Name => "rc:Finally";
 
             public override Version Version => Versioning.v1;

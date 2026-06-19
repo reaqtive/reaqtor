@@ -138,17 +138,23 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             }
         }
 
-        private sealed class CheckpointInfo(InMemoryStateStore store, CheckpointKind kind)
+        private sealed class CheckpointInfo
         {
+            public CheckpointInfo(InMemoryStateStore store, CheckpointKind kind)
+            {
+                Store = store;
+                Kind = kind;
+            }
+
             public DateTime Creation { get; set; }
 
             public DateTime LatestUpdate { get; set; }
 
-            public InMemoryStateStore Store { get; } = store;
+            public InMemoryStateStore Store { get; }
 
             public string Id => Store.Id;
 
-            public CheckpointKind Kind { get; } = kind;
+            public CheckpointKind Kind { get; }
         }
     }
 }

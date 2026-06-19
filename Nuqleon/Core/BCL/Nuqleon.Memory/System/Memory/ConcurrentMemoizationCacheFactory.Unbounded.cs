@@ -40,12 +40,20 @@ namespace System.Memory
                 }
             }
 
-            private sealed class Cache<T, R>(Func<T, R> function, IEqualityComparer<T> comparer) : UnboundedMemoizationCacheBase<T, R>(function, new ConcurrentCacheDictionary<T, R>(comparer))
+            private sealed class Cache<T, R> : UnboundedMemoizationCacheBase<T, R>
             {
+                public Cache(Func<T, R> function, IEqualityComparer<T> comparer)
+                    : base(function, new ConcurrentCacheDictionary<T, R>(comparer))
+                {
+                }
             }
 
-            private sealed class CacheWithException<T, R>(Func<T, R> function, IEqualityComparer<T> comparer) : UnboundedMemoizationCacheWithExceptionBase<T, R>(function, new ConcurrentCacheDictionary<T, IValueOrError<R>>(comparer))
+            private sealed class CacheWithException<T, R> : UnboundedMemoizationCacheWithExceptionBase<T, R>
             {
+                public CacheWithException(Func<T, R> function, IEqualityComparer<T> comparer)
+                    : base(function, new ConcurrentCacheDictionary<T, IValueOrError<R>>(comparer))
+                {
+                }
             }
         }
     }

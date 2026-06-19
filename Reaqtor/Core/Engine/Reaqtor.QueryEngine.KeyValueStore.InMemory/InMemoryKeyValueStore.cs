@@ -293,10 +293,16 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
                 _parent.FinishedOperation?.Invoke(this, operation);
             }
 
-            private sealed class ProjectingEnumerator<T, R>(IEnumerator<T> source, Func<T, R> selector) : IEnumerator<R>
+            private sealed class ProjectingEnumerator<T, R> : IEnumerator<R>
             {
-                private readonly Func<T, R> _selector = selector;
-                private readonly IEnumerator<T> _source = source;
+                private readonly Func<T, R> _selector;
+                private readonly IEnumerator<T> _source;
+
+                public ProjectingEnumerator(IEnumerator<T> source, Func<T, R> selector)
+                {
+                    _source = source;
+                    _selector = selector;
+                }
 
                 public R Current => _selector(_source.Current);
 
@@ -310,9 +316,14 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             }
         }
 
-        private sealed class KeyValueTableImpl(string prefix) : IKeyValueTable<string, byte[]>
+        private sealed class KeyValueTableImpl : IKeyValueTable<string, byte[]>
         {
-            internal readonly string _prefix = prefix;
+            internal readonly string _prefix;
+
+            public KeyValueTableImpl(string prefix)
+            {
+                _prefix = prefix;
+            }
 
             public ITransactedKeyValueTable<string, byte[]> Enter(IKeyValueStoreTransaction transaction)
             {

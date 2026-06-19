@@ -21,9 +21,15 @@ namespace Reaqtor.QueryEngine
         /// and is backed by the core engine's <see cref="CoreReactiveEngine.CreateArtifactAsync{T}"/> (for create and define
         /// operations) and <see cref="CoreReactiveEngine.DeleteArtifactAsync{T}"/> (for delete and undefine operations) methods.
         /// </remarks>
-        private sealed class AsyncReactiveEngineProvider(CheckpointingQueryEngine.CoreReactiveEngine engine) : IReactiveServiceProvider
+        private sealed class AsyncReactiveEngineProvider : IReactiveServiceProvider
         {
-            private readonly CoreReactiveEngine _engine = engine;
+            private readonly CoreReactiveEngine _engine;
+
+            public AsyncReactiveEngineProvider(CoreReactiveEngine engine)
+            {
+                _engine = engine;
+                Provider = new AsyncQueryProvider(engine.Registry);
+            }
 
             public Task CreateSubscriptionAsync(Uri subscriptionUri, Expression subscription, object state, CancellationToken token)
             {
@@ -96,7 +102,7 @@ namespace Reaqtor.QueryEngine
                 return _engine.UndefineSubscriptionFactoryAsync(subscriptionFactoryUri, token);
             }
 
-            public IQueryProvider Provider { get; } = new AsyncQueryProvider(engine.Registry);
+            public IQueryProvider Provider { get; }
         }
     }
 }

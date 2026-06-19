@@ -16,11 +16,17 @@ namespace Nuqleon.Json.Serialization
     /// <summary>
     /// Provides a context for the emitter which can be used to access resources and settings.
     /// </summary>
-    internal partial class EmitterContext(FastJsonSerializerFactory.EmitterStringBuilder builderString, FastJsonSerializerFactory.EmitterWriterBuilder builderWriter) : IClearable
+    internal partial class EmitterContext : IClearable
     {
 #if !NO_IO
-        private readonly FastJsonSerializerFactory.EmitterStringBuilder _builderString = builderString;
-        private readonly FastJsonSerializerFactory.EmitterWriterBuilder _builderWriter = builderWriter;
+        private readonly FastJsonSerializerFactory.EmitterStringBuilder _builderString;
+        private readonly FastJsonSerializerFactory.EmitterWriterBuilder _builderWriter;
+
+        public EmitterContext(FastJsonSerializerFactory.EmitterStringBuilder builderString, FastJsonSerializerFactory.EmitterWriterBuilder builderWriter)
+        {
+            _builderString = builderString;
+            _builderWriter = builderWriter;
+        }
 #else
         private readonly FastJsonSerializerFactory.EmitterStringBuilder _builderString;
 

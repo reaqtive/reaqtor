@@ -20,14 +20,24 @@ using Reaqtive.Storage;
 
 namespace Reaqtive.Operators
 {
-    public abstract class Buffer<TSource>(ISubscribable<TSource> source) : SubscribableBase<IList<TSource>>
+    public abstract class Buffer<TSource> : SubscribableBase<IList<TSource>>
     {
-        private protected readonly ISubscribable<TSource> _source = source;
+        private protected readonly ISubscribable<TSource> _source;
 
-        protected abstract class Sink<TParams>(TParams parent, IObserver<IList<TSource>> observer) : StatefulUnaryOperator<TParams, IList<TSource>>(parent, observer), IObserver<TSource>
+        protected Buffer(ISubscribable<TSource> source)
+        {
+            _source = source;
+        }
+
+        protected abstract class Sink<TParams> : StatefulUnaryOperator<TParams, IList<TSource>>, IObserver<TSource>
             where TParams : Buffer<TSource>
         {
             private IPersistedObjectSpace _storage;
+
+            protected Sink(TParams parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             protected IPersistedObjectSpace Storage => _storage;
 
@@ -56,10 +66,15 @@ namespace Reaqtive.Operators
             public abstract void OnCompleted();
         }
 
-        protected abstract class OneSink<TParams>(TParams parent, IObserver<IList<TSource>> observer) : Sink<TParams>(parent, observer)
+        protected abstract class OneSink<TParams> : Sink<TParams>
             where TParams : Buffer<TSource>
         {
             private IPersistedList<TSource> _buffer;
+
+            protected OneSink(TParams parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             protected bool HasRecovered { get; private set; }
 
@@ -172,10 +187,15 @@ namespace Reaqtive.Operators
             }
         }
 
-        protected abstract class SyncOneSink<TParams>(TParams parent, IObserver<IList<TSource>> observer) : OneSink<TParams>(parent, observer)
+        protected abstract class SyncOneSink<TParams> : OneSink<TParams>
             where TParams : Buffer<TSource>
         {
             private protected readonly object _gate = new();
+
+            protected SyncOneSink(TParams parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             protected override IList<TSource> NextBuffer()
             {
@@ -210,11 +230,16 @@ namespace Reaqtive.Operators
             }
         }
 
-        protected abstract class ManySink<TParams>(TParams parent, IObserver<IList<TSource>> observer) : Sink<TParams>(parent, observer)
+        protected abstract class ManySink<TParams> : Sink<TParams>
             where TParams : Buffer<TSource>
         {
             private IPersistedQueue<string> _persistedBuffers;
             private Queue<IPersistedList<TSource>> _buffers;
+
+            protected ManySink(TParams parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             protected override void OnStart()
             {
@@ -361,10 +386,15 @@ namespace Reaqtive.Operators
             }
         }
 
-        protected abstract class SyncManySink<TParams>(TParams parent, IObserver<IList<TSource>> observer) : ManySink<TParams>(parent, observer)
+        protected abstract class SyncManySink<TParams> : ManySink<TParams>
             where TParams : Buffer<TSource>
         {
             private protected readonly object _gate = new();
+
+            protected SyncManySink(TParams parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             protected override bool OpenBuffer()
             {
@@ -408,16 +438,27 @@ namespace Reaqtive.Operators
         }
     }
 
-    public sealed class BufferDuration<TSource>(ISubscribable<TSource> source, TimeSpan duration) : Buffer<TSource>(source)
+    public sealed class BufferDuration<TSource> : Buffer<TSource>
     {
-        private readonly TimeSpan _duration = duration;
+        private readonly TimeSpan _duration;
+
+        public BufferDuration(ISubscribable<TSource> source, TimeSpan duration)
+            : base(source)
+        {
+            _duration = duration;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<IList<TSource>> observer) => new _(this, observer);
 
-        private sealed class _(BufferDuration<TSource> parent, IObserver<IList<TSource>> observer) : SyncOneSink<BufferDuration<TSource>>(parent, observer), ISchedulerTask
+        private sealed class _ : SyncOneSink<BufferDuration<TSource>>, ISchedulerTask
         {
             private DateTimeOffset? _nextTick;
             private IOperatorContext _context;
+
+            public _(BufferDuration<TSource> parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Buffer/Time/D";
 
@@ -496,19 +537,31 @@ namespace Reaqtive.Operators
         }
     }
 
-    public sealed class BufferDurationShift<TSource>(ISubscribable<TSource> source, TimeSpan duration, TimeSpan shift) : Buffer<TSource>(source)
+    public sealed class BufferDurationShift<TSource> : Buffer<TSource>
     {
-        private readonly TimeSpan _duration = duration;
-        private readonly TimeSpan _shift = shift;
+        private readonly TimeSpan _duration;
+        private readonly TimeSpan _shift;
+
+        public BufferDurationShift(ISubscribable<TSource> source, TimeSpan duration, TimeSpan shift)
+            : base(source)
+        {
+            _duration = duration;
+            _shift = shift;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<IList<TSource>> observer) => new _(this, observer);
 
-        private sealed class _(BufferDurationShift<TSource> parent, IObserver<IList<TSource>> observer) : SyncManySink<BufferDurationShift<TSource>>(parent, observer), ISchedulerTask
+        private sealed class _ : SyncManySink<BufferDurationShift<TSource>>, ISchedulerTask
         {
             private DateTimeOffset? _nextTick;
             private DateTimeOffset _nextOpen;
             private DateTimeOffset _nextClose;
             private IOperatorContext _context;
+
+            public _(BufferDurationShift<TSource> parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Buffer/Time/D+S";
 
@@ -656,15 +709,26 @@ namespace Reaqtive.Operators
         }
     }
 
-    public sealed class BufferCount<TSource>(ISubscribable<TSource> source, int count) : Buffer<TSource>(source)
+    public sealed class BufferCount<TSource> : Buffer<TSource>
     {
-        private readonly int _count = count;
+        private readonly int _count;
+
+        public BufferCount(ISubscribable<TSource> source, int count)
+            : base(source)
+        {
+            _count = count;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<IList<TSource>> observer) => new _(this, observer);
 
-        private sealed class _(BufferCount<TSource> parent, IObserver<IList<TSource>> observer) : OneSink<BufferCount<TSource>>(parent, observer)
+        private sealed class _ : OneSink<BufferCount<TSource>>
         {
             private int _remaining;
+
+            public _(BufferCount<TSource> parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Buffer/Count/N";
 
@@ -717,16 +781,28 @@ namespace Reaqtive.Operators
         }
     }
 
-    public sealed class BufferCountSkip<TSource>(ISubscribable<TSource> source, int count, int skip) : Buffer<TSource>(source)
+    public sealed class BufferCountSkip<TSource> : Buffer<TSource>
     {
-        private readonly int _count = count;
-        private readonly int _skip = skip;
+        private readonly int _count;
+        private readonly int _skip;
+
+        public BufferCountSkip(ISubscribable<TSource> source, int count, int skip)
+            : base(source)
+        {
+            _count = count;
+            _skip = skip;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<IList<TSource>> observer) => new _(this, observer);
 
-        private sealed class _(BufferCountSkip<TSource> parent, IObserver<IList<TSource>> observer) : ManySink<BufferCountSkip<TSource>>(parent, observer)
+        private sealed class _ : ManySink<BufferCountSkip<TSource>>
         {
             private int _n;
+
+            public _(BufferCountSkip<TSource> parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Buffer/Count/N+S";
 
@@ -779,14 +855,21 @@ namespace Reaqtive.Operators
         }
     }
 
-    public sealed class BufferDurationCount<TSource>(ISubscribable<TSource> source, TimeSpan duration, int count) : Buffer<TSource>(source)
+    public sealed class BufferDurationCount<TSource> : Buffer<TSource>
     {
-        private readonly TimeSpan _duration = duration;
-        private readonly int _count = count;
+        private readonly TimeSpan _duration;
+        private readonly int _count;
+
+        public BufferDurationCount(ISubscribable<TSource> source, TimeSpan duration, int count)
+            : base(source)
+        {
+            _duration = duration;
+            _count = count;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<IList<TSource>> observer) => new _(this, observer);
 
-        private sealed class _(BufferDurationCount<TSource> parent, IObserver<IList<TSource>> observer) : SyncOneSink<BufferDurationCount<TSource>>(parent, observer), ISchedulerTask
+        private sealed class _ : SyncOneSink<BufferDurationCount<TSource>>, ISchedulerTask
         {
             private DateTimeOffset _nextTick;
             private int _remaining;
@@ -794,6 +877,11 @@ namespace Reaqtive.Operators
             private volatile int _nextId;
 
             private IOperatorContext _context;
+
+            public _(BufferDurationCount<TSource> parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override void SetContext(IOperatorContext context)
             {

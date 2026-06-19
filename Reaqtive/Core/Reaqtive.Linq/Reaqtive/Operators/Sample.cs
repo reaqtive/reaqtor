@@ -28,7 +28,7 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(Sample<TSource, TSample> parent, IObserver<TSource> observer) : StatefulOperator<Sample<TSource, TSample>, TSource>(parent, observer)
+        private sealed class _ : StatefulOperator<Sample<TSource, TSample>, TSource>
         {
             private readonly Lock _syncLock = new();
 
@@ -45,8 +45,12 @@ namespace Reaqtive.Operators
 
 #pragma warning disable CA2213 // "never disposed." This ends up in Inputs, all of which are disposed by the base class
             private ISubscription _sourceSubscription;
-
 #pragma warning restore CA2213
+
+            public _(Sample<TSource, TSample> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Sample";
 
@@ -131,9 +135,14 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private sealed class SourceObserver(Sample<TSource, TSample>._ parent) : IObserver<TSource>
+            private sealed class SourceObserver : IObserver<TSource>
             {
-                private readonly _ _parent = parent;
+                private readonly _ _parent;
+
+                public SourceObserver(_ parent)
+                {
+                    _parent = parent;
+                }
 
                 public void OnCompleted()
                 {
@@ -151,9 +160,14 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private sealed class SamplerObserver(Sample<TSource, TSample>._ parent) : IObserver<TSample>
+            private sealed class SamplerObserver : IObserver<TSample>
             {
-                private readonly _ _parent = parent;
+                private readonly _ _parent;
+
+                public SamplerObserver(_ parent)
+                {
+                    _parent = parent;
+                }
 
                 public void OnCompleted()
                 {

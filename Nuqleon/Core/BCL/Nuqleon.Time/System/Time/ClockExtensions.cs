@@ -47,10 +47,17 @@ namespace System.Time
             return new Monotonic(clock, adjust: true);
         }
 
-        private sealed class Monotonic(IClock clock, bool adjust) : IClock
+        private sealed class Monotonic : IClock
         {
-            private readonly bool _adjust = adjust;
-            private readonly IClock _clock = clock;
+            private readonly bool _adjust;
+            private readonly IClock _clock;
+
+            public Monotonic(IClock clock, bool adjust)
+            {
+                _clock = clock;
+                Now = clock.Now;
+                _adjust = adjust;
+            }
 
             public long Now
             {
@@ -74,7 +81,7 @@ namespace System.Time
 
                     return now;
                 }
-            } = clock.Now;
+            }
         }
     }
 }

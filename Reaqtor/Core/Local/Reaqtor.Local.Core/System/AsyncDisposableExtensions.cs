@@ -62,9 +62,11 @@ namespace System
             return new Disposable(disposable);
         }
 
-        private sealed class Disposable(IAsyncDisposable disposable) : IDisposable
+        private sealed class Disposable : IDisposable
         {
-            private readonly IAsyncDisposable _disposable = disposable;
+            private readonly IAsyncDisposable _disposable;
+
+            public Disposable(IAsyncDisposable disposable) => _disposable = disposable;
 
             public void Dispose()
             {

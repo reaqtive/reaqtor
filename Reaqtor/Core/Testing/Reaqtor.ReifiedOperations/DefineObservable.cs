@@ -14,10 +14,15 @@ using System.Linq.Expressions;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class DefineObservable(Uri observableUri, Expression observable, object state) : DefineServiceOperation(ServiceOperationKind.DefineObservable, observableUri, observable, state)
+    public class DefineObservable : DefineServiceOperation
     {
         public DefineObservable(Uri observableUri)
             : this(observableUri, observable: null, state: null)
+        {
+        }
+
+        public DefineObservable(Uri observableUri, Expression observable, object state)
+            : base(ServiceOperationKind.DefineObservable, observableUri, observable, state)
         {
         }
     }

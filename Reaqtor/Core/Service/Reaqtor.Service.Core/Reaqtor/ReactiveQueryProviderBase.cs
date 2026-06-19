@@ -16,14 +16,18 @@ namespace Reaqtor
     /// <summary>
     /// Base class for reactive processing query providers, used to build observables, observers, and subjects represented by expression trees.
     /// </summary>
-    /// <remarks>
-    /// Creates a new reactive processing query provider with default factory method implementations.
-    /// </remarks>
-    /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
-    public abstract partial class ReactiveQueryProviderBase(IReactiveExpressionServices expressionServices) : IReactiveQueryProvider
+    public abstract partial class ReactiveQueryProviderBase : IReactiveQueryProvider
     {
-
         #region Constructor & fields
+
+        /// <summary>
+        /// Creates a new reactive processing query provider with default factory method implementations.
+        /// </summary>
+        /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
+        protected ReactiveQueryProviderBase(IReactiveExpressionServices expressionServices)
+        {
+            ExpressionServices = expressionServices ?? throw new ArgumentNullException(nameof(expressionServices));
+        }
 
         #endregion
 
@@ -32,7 +36,7 @@ namespace Reaqtor
         /// <summary>
         /// Gets the expression services object, used to perform expression tree manipulations.
         /// </summary>
-        public IReactiveExpressionServices ExpressionServices { get; } = expressionServices ?? throw new ArgumentNullException(nameof(expressionServices));
+        public IReactiveExpressionServices ExpressionServices { get; }
 
         #endregion
 

@@ -12,7 +12,7 @@ using System.Text;
 
 namespace System.Linq.Expressions
 {
-    internal sealed class ExpressionSlimPrettyPrinter(StringBuilder sb) : ExpressionSlimVisitor
+    internal sealed class ExpressionSlimPrettyPrinter : ExpressionSlimVisitor
     {
         /// <summary>
         /// Shared StringBuilder pool with the following rationale for settings:
@@ -36,7 +36,12 @@ namespace System.Linq.Expressions
         private static readonly Dictionary<int, string> s_expressionTypeToString = Enum.GetValues(typeof(ExpressionType)).Cast<ExpressionType>().ToDictionary(e => (int)e, e => e.ToString());
         private static readonly Dictionary<int, string> s_gotoExpressionKindToString = Enum.GetValues(typeof(GotoExpressionKind)).Cast<GotoExpressionKind>().ToDictionary(e => (int)e, e => e.ToString());
 
-        private readonly StringBuilder _sb = sb;
+        private readonly StringBuilder _sb;
+
+        public ExpressionSlimPrettyPrinter(StringBuilder sb)
+        {
+            _sb = sb;
+        }
 
         protected internal override ExpressionSlim VisitBinary(BinaryExpressionSlim node)
         {

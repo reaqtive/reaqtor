@@ -6,7 +6,11 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    public class CreateObserver(Uri streamUri) : CreateServiceOperation(ServiceOperationKind.CreateObserver, streamUri, expression: null, state: null)
+    public class CreateObserver : CreateServiceOperation
     {
+        public CreateObserver(Uri streamUri)
+            : base(ServiceOperationKind.CreateObserver, streamUri, expression: null, state: null)
+        {
+        }
     }
 }

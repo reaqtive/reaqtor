@@ -1061,13 +1061,20 @@ namespace Tests.System.Linq.Expressions.Bonsai
             RoundtripAndAssert(e);
         }
 
-        private sealed class ThisQux(int x)
+        private sealed class ThisQux
         {
+            public ThisQux(int x)
+            {
+                X = x;
+                Foos = [];
+                Bar = new ThisBar();
+            }
+
             public int X
             {
                 get;
                 private set;
-            } = x;
+            }
 
             public string Baz
             {
@@ -1079,13 +1086,13 @@ namespace Tests.System.Linq.Expressions.Bonsai
             {
                 get;
                 private set;
-            } = new ThisBar();
+            }
 
             public List<int> Foos
             {
                 get;
                 private set;
-            } = [];
+            }
         }
 
         private sealed class ThisBar

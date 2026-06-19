@@ -22,13 +22,18 @@ namespace Nuqleon.DataModel.TypeSystem
     /// <summary>
     /// Abstract base class for data types that conform to the data model.
     /// </summary>
-    /// <remarks>
-    /// Creates a new data type of the specified kind.
-    /// </remarks>
-    /// <param name="type">Underlying CLR type.</param>
-    public abstract class DataType(Type type)
+    public abstract class DataType
     {
         private static readonly ObjectPool<DataTypePrinter> s_printerPool = new(() => new DataTypePrinter());
+
+        /// <summary>
+        /// Creates a new data type of the specified kind.
+        /// </summary>
+        /// <param name="type">Underlying CLR type.</param>
+        protected DataType(Type type)
+        {
+            UnderlyingType = type;
+        }
 
         /// <summary>
         /// Gets the kind of the data type.
@@ -38,7 +43,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <summary>
         /// Gets the underlying CLR type.
         /// </summary>
-        public Type UnderlyingType { get; } = type;
+        public Type UnderlyingType { get; }
 
         /// <summary>
         /// Reduces the data type to a simpler data type representation.

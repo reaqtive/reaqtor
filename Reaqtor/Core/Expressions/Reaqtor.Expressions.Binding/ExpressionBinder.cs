@@ -99,9 +99,11 @@ namespace Reaqtor.Expressions.Binding
         /// <returns>Expression with the bindings applied to perform inlining.</returns>
         protected virtual Expression Inline(Expression expression, IDictionary<ParameterExpression, Expression> bindings) => new Inliner(bindings).Visit(expression);
 
-        private sealed class Inliner(IDictionary<ParameterExpression, Expression> map) : ScopedExpressionVisitor<Expression>
+        private sealed class Inliner : ScopedExpressionVisitor<Expression>
         {
-            private readonly IDictionary<ParameterExpression, Expression> _map = map;
+            private readonly IDictionary<ParameterExpression, Expression> _map;
+
+            public Inliner(IDictionary<ParameterExpression, Expression> map) => _map = map;
 
             protected override Expression GetState(ParameterExpression parameter) => parameter;
 

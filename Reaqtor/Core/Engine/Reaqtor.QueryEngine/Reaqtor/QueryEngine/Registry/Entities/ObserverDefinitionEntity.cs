@@ -12,8 +12,13 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Represents an observer in a QueryEngineRegistry.
     /// </summary>
-    internal class ObserverDefinitionEntity(Uri uri, Expression expression, object state) : DefinitionEntity(uri, expression, state), IReactiveObserverDefinition
+    internal class ObserverDefinitionEntity : DefinitionEntity, IReactiveObserverDefinition
     {
+        public ObserverDefinitionEntity(Uri uri, Expression expression, object state)
+            : base(uri, expression, state)
+        {
+        }
+
         public override ReactiveEntityKind Kind => ReactiveEntityKind.Observer;
 
         public static ObserverDefinitionEntity CreateInvalidInstance(Uri uri) => new InvalidEntity(uri);

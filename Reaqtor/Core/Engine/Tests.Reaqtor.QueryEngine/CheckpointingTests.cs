@@ -961,10 +961,16 @@ namespace Tests.Reaqtor.QueryEngine
             return new GentleDictionary<string, IEnumerable<string>>(res, () => Array.Empty<string>());
         }
 
-        private sealed class GentleDictionary<K, T>(IDictionary<K, T> dictionary, Func<T> getEmpty)
+        private sealed class GentleDictionary<K, T>
         {
-            private readonly IDictionary<K, T> _dictionary = dictionary;
-            private readonly Func<T> _getEmpty = getEmpty;
+            private readonly IDictionary<K, T> _dictionary;
+            private readonly Func<T> _getEmpty;
+
+            public GentleDictionary(IDictionary<K, T> dictionary, Func<T> getEmpty)
+            {
+                _dictionary = dictionary;
+                _getEmpty = getEmpty;
+            }
 
             public T this[K key]
             {
@@ -1728,9 +1734,15 @@ namespace Tests.Reaqtor.QueryEngine
 
             protected override ISubscription SubscribeCore(IObserver<int> observer) => new _(this, observer);
 
-            private sealed class _(CheckpointingTests.MySubscribable p, IObserver<int> o) : StatefulUnaryOperator<MySubscribable, int>(p, o)
+            private sealed class _ : StatefulUnaryOperator<MySubscribable, int>
             {
-                private int _state = 42;
+                private int _state;
+
+                public _(MySubscribable p, IObserver<int> o)
+                    : base(p, o)
+                {
+                    _state = 42;
+                }
 
                 protected override void OnStart()
                 {
@@ -1765,11 +1777,19 @@ namespace Tests.Reaqtor.QueryEngine
             }
         }
 
-        public class MyStateWriter(InMemoryStateStore stateStore, CheckpointKind checkpointKind) : InMemoryStateWriter(stateStore, checkpointKind)
+        public class MyStateWriter : InMemoryStateWriter
         {
-            private readonly TaskCompletionSource<bool> _start = new TaskCompletionSource<bool>();
-            private readonly TaskCompletionSource<bool> _continue = new TaskCompletionSource<bool>();
-            private readonly TaskCompletionSource<bool> _completed = new TaskCompletionSource<bool>();
+            private readonly TaskCompletionSource<bool> _start;
+            private readonly TaskCompletionSource<bool> _continue;
+            private readonly TaskCompletionSource<bool> _completed;
+
+            public MyStateWriter(InMemoryStateStore stateStore, CheckpointKind checkpointKind)
+                : base(stateStore, checkpointKind)
+            {
+                _start = new TaskCompletionSource<bool>();
+                _continue = new TaskCompletionSource<bool>();
+                _completed = new TaskCompletionSource<bool>();
+            }
 
             public Task CommitStarted => _start.Task;
 
@@ -3063,19 +3083,26 @@ namespace Tests.Reaqtor.QueryEngine
                 return obj;
             }
 
-            private abstract class Disposable(Action onDispose) : IDisposable
+            private abstract class Disposable : IDisposable
             {
-                private readonly Action _onDispose = onDispose;
+                private readonly Action _onDispose;
+
+                public Disposable(Action onDispose) => _onDispose = onDispose;
 
                 public void Dispose() => _onDispose();
 
                 public abstract EventWaitHandle OnSubscribe { get; }
             }
 
-            private sealed class R<T>(Action onDispose) : Disposable(onDispose), IReliableMultiSubject<T>
+            private sealed class R<T> : Disposable, IReliableMultiSubject<T>
             {
                 private readonly Subject<Tuple<T, long>> _subject = new();
                 private readonly AutoResetEvent _onSubscribe = new(false);
+
+                public R(Action onDispose)
+                    : base(onDispose)
+                {
+                }
 
                 public override EventWaitHandle OnSubscribe => _onSubscribe;
 
@@ -3083,9 +3110,11 @@ namespace Tests.Reaqtor.QueryEngine
 
                 public IReliableSubscription Subscribe(IReliableObserver<T> observer) => new Sub(this, observer);
 
-                private sealed class Observer(SubjectManager.R<T> parent) : IReliableObserver<T>
+                private sealed class Observer : IReliableObserver<T>
                 {
-                    private readonly R<T> _parent = parent;
+                    private readonly R<T> _parent;
+
+                    public Observer(R<T> parent) => _parent = parent;
 
                     public Uri ResubscribeUri => throw new NotImplementedException();
 
@@ -3098,12 +3127,18 @@ namespace Tests.Reaqtor.QueryEngine
                     public void OnCompleted() => _parent._subject.OnCompleted();
                 }
 
-                private sealed class Sub(SubjectManager.R<T> parent, IReliableObserver<T> observer) : ReliableSubscriptionBase
+                private sealed class Sub : ReliableSubscriptionBase
                 {
-                    private readonly R<T> _parent = parent;
-                    private readonly IReliableObserver<T> _observer = observer;
+                    private readonly R<T> _parent;
+                    private readonly IReliableObserver<T> _observer;
 
                     private IDisposable _disposable;
+
+                    public Sub(R<T> parent, IReliableObserver<T> observer)
+                    {
+                        _parent = parent;
+                        _observer = observer;
+                    }
 
                     public override Uri ResubscribeUri => throw new NotImplementedException();
 
@@ -3128,10 +3163,15 @@ namespace Tests.Reaqtor.QueryEngine
                 }
             }
 
-            private sealed class S<T>(Action onDispose) : Disposable(onDispose), IMultiSubject<T>
+            private sealed class S<T> : Disposable, IMultiSubject<T>
             {
                 private readonly Subject<T> _subject = new();
                 private readonly AutoResetEvent _onSubscribe = new(false);
+
+                public S(Action onDispose)
+                    : base(onDispose)
+                {
+                }
 
                 public override EventWaitHandle OnSubscribe => _onSubscribe;
 
@@ -3141,9 +3181,14 @@ namespace Tests.Reaqtor.QueryEngine
 
                 IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => Subscribe(observer);
 
-                private sealed class Sub(SubjectManager.S<T> parent, IObserver<T> observer) : Operator<S<T>, T>(parent, observer)
+                private sealed class Sub : Operator<S<T>, T>
                 {
                     private IDisposable _disposable;
+
+                    public Sub(S<T> parent, IObserver<T> observer)
+                        : base(parent, observer)
+                    {
+                    }
 
                     protected override void OnStart()
                     {
@@ -3162,12 +3207,17 @@ namespace Tests.Reaqtor.QueryEngine
                 }
             }
 
-            private sealed class U(Action onDispose) : Disposable(onDispose), IMultiSubject
+            private sealed class U : Disposable, IMultiSubject
             {
                 private readonly AutoResetEvent _onSubscribe = new(false);
 
                 private readonly Lock _subjectGate = new();
                 private object _subject;
+
+                public U(Action onDispose)
+                    : base(onDispose)
+                {
+                }
 
                 public override EventWaitHandle OnSubscribe => _onSubscribe;
 
@@ -3188,15 +3238,22 @@ namespace Tests.Reaqtor.QueryEngine
                     return (Subject<T>)_subject;
                 }
 
-                private sealed class IO<T>(SubjectManager.U parent) : SubscribableBase<T>
+                private sealed class IO<T> : SubscribableBase<T>
                 {
-                    private readonly U _parent = parent;
+                    private readonly U _parent;
+
+                    public IO(U parent) => _parent = parent;
 
                     protected override ISubscription SubscribeCore(IObserver<T> observer) => new _(this, observer);
 
-                    private sealed class _(U.IO<T> parent, IObserver<T> observer) : Operator<IO<T>, T>(parent, observer)
+                    private sealed class _ : Operator<IO<T>, T>
                     {
                         private IDisposable _disposable;
+
+                        public _(IO<T> parent, IObserver<T> observer)
+                            : base(parent, observer)
+                        {
+                        }
 
                         protected override void OnStart()
                         {
@@ -4884,13 +4941,18 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreEqual(terminateOn, stateWriter.GetItemWriterCalls);
         }
 
-        private sealed class ThrowingStateWriter(int throwAfter) : IStateWriter
+        private sealed class ThrowingStateWriter : IStateWriter
         {
             private readonly ConcurrentQueue<Stream> _stream = new();
 
-            private readonly int _throwAfter = throwAfter;
+            private readonly int _throwAfter;
 
             private int _getItemWriterCalls;
+
+            public ThrowingStateWriter(int throwAfter)
+            {
+                _throwAfter = throwAfter;
+            }
 
             public bool IsRollbackCalled
             {

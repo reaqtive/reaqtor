@@ -13,16 +13,20 @@ namespace System.Linq.CompilerServices.Optimizers
     /// <summary>
     /// A representation of the monad member like source nodes and the results of operators.
     /// </summary>
-    /// <remarks>
-    /// Creates a representation of a monad member.
-    /// </remarks>
-    /// <param name="elementType">The element type of the monad.</param>
-    public abstract class MonadMember(Type elementType) : QueryTree
+    public abstract class MonadMember : QueryTree
     {
+        /// <summary>
+        /// Creates a representation of a monad member.
+        /// </summary>
+        /// <param name="elementType">The element type of the monad.</param>
+        protected MonadMember(Type elementType)
+        {
+            ElementType = elementType;
+        }
 
         /// <summary>
         /// The element type of the monad.
         /// </summary>
-        public Type ElementType { get; } = elementType;
+        public Type ElementType { get; }
     }
 }

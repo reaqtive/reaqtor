@@ -21,17 +21,18 @@ namespace Reaqtor
     /// <typeparam name="TOutput">Type of the data produced by the subjects created by the factory.</typeparam>
     /// <typeparam name="TArg1">Type of the first parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg2">Type of the second parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -89,17 +90,18 @@ namespace Reaqtor
     /// <typeparam name="TArg1">Type of the first parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg2">Type of the second parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg3">Type of the third parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -161,17 +163,18 @@ namespace Reaqtor
     /// <typeparam name="TArg2">Type of the second parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg3">Type of the third parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg4">Type of the fourth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -237,17 +240,18 @@ namespace Reaqtor
     /// <typeparam name="TArg3">Type of the third parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg4">Type of the fourth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg5">Type of the fifth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -317,17 +321,18 @@ namespace Reaqtor
     /// <typeparam name="TArg4">Type of the fourth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg5">Type of the fifth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg6">Type of the sixth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -401,17 +406,18 @@ namespace Reaqtor
     /// <typeparam name="TArg5">Type of the fifth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg6">Type of the sixth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg7">Type of the seventh parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -489,17 +495,18 @@ namespace Reaqtor
     /// <typeparam name="TArg6">Type of the sixth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg7">Type of the seventh parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg8">Type of the eighth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -581,17 +588,18 @@ namespace Reaqtor
     /// <typeparam name="TArg7">Type of the seventh parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg8">Type of the eighth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg9">Type of the ninth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -677,17 +685,18 @@ namespace Reaqtor
     /// <typeparam name="TArg8">Type of the eighth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg9">Type of the ninth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg10">Type of the tenth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -777,17 +786,18 @@ namespace Reaqtor
     /// <typeparam name="TArg9">Type of the ninth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg10">Type of the tenth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg11">Type of the eleventh parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -881,17 +891,18 @@ namespace Reaqtor
     /// <typeparam name="TArg10">Type of the tenth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg11">Type of the eleventh parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg12">Type of the twelfth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -989,17 +1000,18 @@ namespace Reaqtor
     /// <typeparam name="TArg11">Type of the eleventh parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg12">Type of the twelfth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg13">Type of the thirteenth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -1101,17 +1113,18 @@ namespace Reaqtor
     /// <typeparam name="TArg12">Type of the twelfth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg13">Type of the thirteenth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg14">Type of the fourteenth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -1217,17 +1230,18 @@ namespace Reaqtor
     /// <typeparam name="TArg13">Type of the thirteenth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg14">Type of the fourteenth parameter passed to the subject factory.</typeparam>
     /// <typeparam name="TArg15">Type of the fifteenth parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(IReactiveQueryProvider provider) : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>
+    public abstract class ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> : IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected ReactiveQubjectFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IReactiveQueryProvider Provider { get; } = provider;
+        public IReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.

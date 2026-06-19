@@ -13,13 +13,25 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal sealed class KnownQubscriptionFactory(Expression expression, Uri subscriptionFactoryUri, IAsyncReactiveQueryProvider provider) : QubscriptionFactory(expression, provider), IKnownResource
+    internal sealed class KnownQubscriptionFactory : QubscriptionFactory, IKnownResource
     {
-        public Uri Uri { get; } = subscriptionFactoryUri;
+        public KnownQubscriptionFactory(Expression expression, Uri subscriptionFactoryUri, IAsyncReactiveQueryProvider provider)
+            : base(expression, provider)
+        {
+            Uri = subscriptionFactoryUri;
+        }
+
+        public Uri Uri { get; }
     }
 
-    internal sealed class KnownQubscriptionFactory<TArg>(Expression expression, Uri subscriptionFactoryUri, IAsyncReactiveQueryProvider provider) : QubscriptionFactory<TArg>(expression, provider), IKnownResource
+    internal sealed class KnownQubscriptionFactory<TArg> : QubscriptionFactory<TArg>, IKnownResource
     {
-        public Uri Uri { get; } = subscriptionFactoryUri;
+        public KnownQubscriptionFactory(Expression expression, Uri subscriptionFactoryUri, IAsyncReactiveQueryProvider provider)
+            : base(expression, provider)
+        {
+            Uri = subscriptionFactoryUri;
+        }
+
+        public Uri Uri { get; }
     }
 }

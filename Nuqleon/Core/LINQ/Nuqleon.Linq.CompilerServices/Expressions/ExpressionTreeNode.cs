@@ -16,17 +16,21 @@ namespace System.Linq.Expressions
     /// <summary>
     /// Base class for expression tree nodes.
     /// </summary>
-    /// <remarks>
-    /// Creates a new expression tree node of the specified node type.
-    /// </remarks>
-    /// <param name="nodeType">Type of the expression tree node.</param>
-    public abstract class ExpressionTreeNode(ExpressionTreeNodeType nodeType) : IEquatable<ExpressionTreeNode>
+    public abstract class ExpressionTreeNode : IEquatable<ExpressionTreeNode>
     {
+        /// <summary>
+        /// Creates a new expression tree node of the specified node type.
+        /// </summary>
+        /// <param name="nodeType">Type of the expression tree node.</param>
+        protected ExpressionTreeNode(ExpressionTreeNodeType nodeType)
+        {
+            NodeType = nodeType;
+        }
 
         /// <summary>
         /// Gets the type of the expression tree node.
         /// </summary>
-        public ExpressionTreeNodeType NodeType { get; } = nodeType;
+        public ExpressionTreeNodeType NodeType { get; }
 
         /// <summary>
         /// Checks whether the current node is equal to the specified object.
@@ -75,17 +79,22 @@ namespace System.Linq.Expressions
     /// <summary>
     /// Represents an expression tree node containing an expression.
     /// </summary>
-    /// <remarks>
-    /// Creates an expression tree node containing an expression.
-    /// </remarks>
-    /// <param name="expression">Expression contained in the expression tree.</param>
-    public sealed class ExpressionExpressionTreeNode(Expression expression) : ExpressionTreeNode(ExpressionTreeNodeType.Expression), IEquatable<ExpressionExpressionTreeNode>
+    public sealed class ExpressionExpressionTreeNode : ExpressionTreeNode, IEquatable<ExpressionExpressionTreeNode>
     {
+        /// <summary>
+        /// Creates an expression tree node containing an expression.
+        /// </summary>
+        /// <param name="expression">Expression contained in the expression tree.</param>
+        public ExpressionExpressionTreeNode(Expression expression)
+            : base(ExpressionTreeNodeType.Expression)
+        {
+            Expression = expression ?? throw new ArgumentNullException(nameof(expression));
+        }
 
         /// <summary>
         /// Gets the expression contained in the expression tree.
         /// </summary>
-        public Expression Expression { get; } = expression ?? throw new ArgumentNullException(nameof(expression));
+        public Expression Expression { get; }
 
         /// <summary>
         /// Checks whether the current node is equal to the specified expression tree node.
@@ -210,17 +219,22 @@ namespace System.Linq.Expressions
     /// <summary>
     /// Represents an expression tree node containing an element initializer.
     /// </summary>
-    /// <remarks>
-    /// Creates an expression tree node containing an element initializer.
-    /// </remarks>
-    /// <param name="elementInit">Element initializer contained in the expression tree.</param>
-    public sealed class ElementInitExpressionTreeNode(ElementInit elementInit) : ExpressionTreeNode(ExpressionTreeNodeType.ElementInit), IEquatable<ElementInitExpressionTreeNode>
+    public sealed class ElementInitExpressionTreeNode : ExpressionTreeNode, IEquatable<ElementInitExpressionTreeNode>
     {
+        /// <summary>
+        /// Creates an expression tree node containing an element initializer.
+        /// </summary>
+        /// <param name="elementInit">Element initializer contained in the expression tree.</param>
+        public ElementInitExpressionTreeNode(ElementInit elementInit)
+            : base(ExpressionTreeNodeType.ElementInit)
+        {
+            ElementInit = elementInit ?? throw new ArgumentNullException(nameof(elementInit));
+        }
 
         /// <summary>
         /// Gets the element initializer contained in the expression tree.
         /// </summary>
-        public ElementInit ElementInit { get; } = elementInit ?? throw new ArgumentNullException(nameof(elementInit));
+        public ElementInit ElementInit { get; }
 
         /// <summary>
         /// Checks whether the current node is equal to the specified element initializer expression tree node.
@@ -269,18 +283,23 @@ namespace System.Linq.Expressions
     /// <summary>
     /// Represents an expression tree node containing a member binding.
     /// </summary>
-    /// <remarks>
-    /// Creates an expression tree node containing a member binding.
-    /// </remarks>
-    /// <param name="nodeType">Type of the member binding node.</param>
-    /// <param name="binding">Member binding contained in the expression tree.</param>
-    public abstract class MemberBindingExpressionTreeNode(ExpressionTreeNodeType nodeType, MemberBinding binding) : ExpressionTreeNode(nodeType), IEquatable<MemberBindingExpressionTreeNode>
+    public abstract class MemberBindingExpressionTreeNode : ExpressionTreeNode, IEquatable<MemberBindingExpressionTreeNode>
     {
+        /// <summary>
+        /// Creates an expression tree node containing a member binding.
+        /// </summary>
+        /// <param name="nodeType">Type of the member binding node.</param>
+        /// <param name="binding">Member binding contained in the expression tree.</param>
+        protected MemberBindingExpressionTreeNode(ExpressionTreeNodeType nodeType, MemberBinding binding)
+            : base(nodeType)
+        {
+            MemberBinding = binding;
+        }
 
         /// <summary>
         /// Gets the member binding contained in the expression tree.
         /// </summary>
-        public MemberBinding MemberBinding { get; } = binding;
+        public MemberBinding MemberBinding { get; }
 
         /// <summary>
         /// Checks whether the current node is equal to the specified expression tree node.

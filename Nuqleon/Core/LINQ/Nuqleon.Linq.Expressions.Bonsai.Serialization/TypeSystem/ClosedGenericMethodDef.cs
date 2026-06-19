@@ -16,15 +16,22 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal sealed class ClosedGenericMethodDef(Json.Expression genericMethodDefinition, TypeRef[] genericArguments) : MemberDef
+    internal sealed class ClosedGenericMethodDef : MemberDef
     {
         #region Fields
 
-        private readonly Json.Expression _genericMethodDefinition = genericMethodDefinition;
-        private readonly TypeRef[] _genericArguments = genericArguments;
+        private readonly Json.Expression _genericMethodDefinition;
+        private readonly TypeRef[] _genericArguments;
 
         #endregion
+
         #region Constructors
+
+        public ClosedGenericMethodDef(Json.Expression genericMethodDefinition, TypeRef[] genericArguments)
+        {
+            _genericMethodDefinition = genericMethodDefinition;
+            _genericArguments = genericArguments;
+        }
 
         #endregion
 

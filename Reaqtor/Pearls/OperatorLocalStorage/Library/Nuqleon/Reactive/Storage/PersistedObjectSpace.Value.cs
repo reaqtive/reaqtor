@@ -75,11 +75,7 @@ namespace Reaqtive.Storage
         /// data/value = 42
         /// </c>
         /// </remarks>
-        /// <remarks>
-        /// Creates a new entity representing a value.
-        /// </remarks>
-        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-        private sealed class Value(PersistedObjectSpace parent) : PersistableBase(parent)
+        private sealed class Value : PersistableBase
         {
             /// <summary>
             /// The category to store the data in.
@@ -95,6 +91,15 @@ namespace Reaqtive.Storage
             /// The eventual object containing the value, set by <see cref="Load(IStateReader)"/> and deserialized by <see cref="Restore{T}"/>.
             /// </summary>
             private EventualObject _data;
+
+            /// <summary>
+            /// Creates a new entity representing a value.
+            /// </summary>
+            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+            public Value(PersistedObjectSpace parent)
+                : base(parent)
+            {
+            }
 
             /// <summary>
             /// Gets the kind of the entity. Always returns <see cref="PersistableKind.Value"/>.
@@ -226,29 +231,41 @@ namespace Reaqtive.Storage
             /// Statically typed wrapper for a persisted value of type <typeparamref name="T"/>.
             /// </summary>
             /// <typeparam name="T">The type of the persisted value.</typeparam>
-            /// <remarks>
-            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-            /// </remarks>
-            /// <param name="id">The identifier of the value.</param>
-            /// <param name="storage">The storage entity representing the value.</param>
-            /// <param name="value">The initial value. This could either be the result of deserializing persisted state, or a default value for a new entity.</param>
-            private sealed class Wrapper<T>(string id, PersistedObjectSpace.Value storage, T value) : PersistedBase(id), IPersistedValue<T>, IValuePersistence
+            private sealed class Wrapper<T> : PersistedBase, IPersistedValue<T>, IValuePersistence
             {
                 /// <summary>
                 /// The storage entity being wrapped.
                 /// </summary>
-                private readonly Value _storage = storage;
+                private readonly Value _storage;
+
+                /// <summary>
+                /// The stored value, always reflecting the latest in-memory state.
+                /// </summary>
+                private T _value;
+
+                /// <summary>
+                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+                /// </summary>
+                /// <param name="id">The identifier of the value.</param>
+                /// <param name="storage">The storage entity representing the value.</param>
+                /// <param name="value">The initial value. This could either be the result of deserializing persisted state, or a default value for a new entity.</param>
+                public Wrapper(string id, Value storage, T value)
+                    : base(id)
+                {
+                    _storage = storage;
+                    _value = value;
+                }
 
                 /// <summary>
                 /// Gets or sets the value.
                 /// </summary>
                 public T Value
                 {
-                    get;
+                    get => _value;
 
                     set
                     {
-                        field = value;
+                        _value = value;
 
                         //
                         // Track the edit in the storage entity.
@@ -256,7 +273,7 @@ namespace Reaqtive.Storage
 
                         _storage.Edit();
                     }
-                } = value;
+                }
 
                 /// <summary>
                 /// Saves the value to the specified <paramref name="stream"/>.
@@ -273,7 +290,7 @@ namespace Reaqtive.Storage
                     //         at a higher level and the definition-site type should be persisted to enable performing such checks.
                     //
 
-                    serializerFactory.GetSerializer<T>().Serialize(Value, stream);
+                    serializerFactory.GetSerializer<T>().Serialize(_value, stream);
                 }
             }
         }

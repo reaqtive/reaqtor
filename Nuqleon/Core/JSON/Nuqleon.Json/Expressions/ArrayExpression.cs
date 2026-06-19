@@ -138,11 +138,7 @@ namespace Nuqleon.Json.Expressions
     /// <summary>
     /// Expression tree node representing a JSON array with an fixed number of elements.
     /// </summary>
-    /// <remarks>
-    /// Creates a new array expression with the specified first element. Other elements are maintained by the derived class.
-    /// </remarks>
-    /// <param name="element1">First element in the array.</param>
-    internal abstract class ArrayExpressionN(Expression element1) : ArrayExpression
+    internal abstract class ArrayExpressionN : ArrayExpression
     {
         /*
          * Implementation note:
@@ -171,10 +167,20 @@ namespace Nuqleon.Json.Expressions
         /// <summary>
         /// First element, or a ReadOnlyCollection&lt;Expression&gt; after the first access to the Elements property has occurred.
         /// </summary>
-        private object _element1 = element1;
+        private object _element1;
 
         #endregion
+
         #region Constructors
+
+        /// <summary>
+        /// Creates a new array expression with the specified first element. Other elements are maintained by the derived class.
+        /// </summary>
+        /// <param name="element1">First element in the array.</param>
+        public ArrayExpressionN(Expression element1)
+        {
+            _element1 = element1;
+        }
 
         #endregion
 

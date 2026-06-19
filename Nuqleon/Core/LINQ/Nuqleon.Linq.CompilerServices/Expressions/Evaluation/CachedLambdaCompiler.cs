@@ -449,10 +449,16 @@ namespace System.Linq.Expressions
             /// <returns>Original expression with outlining steps applied.</returns>
             public static Expression Outline(Expression expression, ICompiledDelegateCache cache, IConstantHoister hoister) => new Visitor(cache, hoister).Visit(expression);
 
-            private sealed class Visitor(ICompiledDelegateCache cache, IConstantHoister hoister) : ExpressionVisitor
+            private sealed class Visitor : ExpressionVisitor
             {
-                private readonly ICompiledDelegateCache _cache = cache;
-                private readonly IConstantHoister _hoister = hoister;
+                private readonly ICompiledDelegateCache _cache;
+                private readonly IConstantHoister _hoister;
+
+                public Visitor(ICompiledDelegateCache cache, IConstantHoister hoister)
+                {
+                    _cache = cache;
+                    _hoister = hoister;
+                }
 
                 protected override Expression VisitUnary(UnaryExpression node)
                 {

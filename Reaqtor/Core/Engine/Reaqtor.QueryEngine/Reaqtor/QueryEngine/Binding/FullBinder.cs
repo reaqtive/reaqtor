@@ -15,12 +15,17 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Binder that binds all artifacts (and not just definitions).
     /// </summary>
-    /// <remarks>
-    /// Creates a binder that binds all unbound variables which are looked up in the specified <paramref name="registry"/>.
-    /// </remarks>
-    /// <param name="registry">Registry used to look up reactive artifacts.</param>
-    internal class FullBinder(IQueryEngineRegistry registry) : QueryEngineBinder(registry)
+    internal class FullBinder : QueryEngineBinder
     {
+        /// <summary>
+        /// Creates a binder that binds all unbound variables which are looked up in the specified <paramref name="registry"/>.
+        /// </summary>
+        /// <param name="registry">Registry used to look up reactive artifacts.</param>
+        public FullBinder(IQueryEngineRegistry registry)
+            : base(registry)
+        {
+        }
+
         protected override Expression LookupOther(string id, Type type, Type funcType)
         {
             if (!TryGetOtherExpression(id, out Expression result, out _))

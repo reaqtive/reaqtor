@@ -13,9 +13,14 @@ namespace System
             return new AnonymousDisposable(dispose);
         }
 
-        private sealed class AnonymousDisposable(Action dispose) : IDisposable
+        private sealed class AnonymousDisposable : IDisposable
         {
-            private Action _dispose = dispose;
+            private Action _dispose;
+
+            public AnonymousDisposable(Action dispose)
+            {
+                _dispose = dispose;
+            }
 
             public void Dispose()
             {

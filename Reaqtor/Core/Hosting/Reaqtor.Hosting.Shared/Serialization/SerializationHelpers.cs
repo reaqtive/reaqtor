@@ -22,12 +22,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
     /// Helper class to serialize and deserialize expressions and data model-
     /// compliant objects.
     /// </summary>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="SerializationHelpers"/> class
-    /// to serialize and deserialize expressions and data model-compliant objects.
-    /// </remarks>
-    /// <param name="dataConverters">The data converters to use while deserializing.</param>
-    public class SerializationHelpers(DataConverter[] dataConverters)
+    public class SerializationHelpers
     {
         /// <summary>
         /// Resource pool for JSON expression readers and writers.
@@ -37,17 +32,17 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// <summary>
         /// The method definition used to serialize data.
         /// </summary>
-        private readonly MethodInfo _serializeToMethod = ((MethodInfo)ReflectionHelpers.InfoOf((JsonDataSerializer j) => j.SerializeTo(default(object), default(JsonWriter)))).GetGenericMethodDefinition();
+        private readonly MethodInfo _serializeToMethod;
 
         /// <summary>
         /// The method definition used to deserialize data.
         /// </summary>
-        private readonly MethodInfo _deserializeFromMethod = ((MethodInfo)ReflectionHelpers.InfoOf((JsonDataSerializer j) => j.DeserializeFrom<object>(default(JsonReader)))).GetGenericMethodDefinition();
+        private readonly MethodInfo _deserializeFromMethod;
 
         /// <summary>
         /// The data converters to use while deserializing.
         /// </summary>
-        private readonly DataConverter[] _dataConverters = dataConverters;
+        private readonly DataConverter[] _dataConverters;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SerializationHelpers"/> class
@@ -56,6 +51,18 @@ namespace Reaqtor.Hosting.Shared.Serialization
         public SerializationHelpers()
             : this([])
         {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SerializationHelpers"/> class
+        /// to serialize and deserialize expressions and data model-compliant objects.
+        /// </summary>
+        /// <param name="dataConverters">The data converters to use while deserializing.</param>
+        public SerializationHelpers(DataConverter[] dataConverters)
+        {
+            _dataConverters = dataConverters;
+            _serializeToMethod = ((MethodInfo)ReflectionHelpers.InfoOf((JsonDataSerializer j) => j.SerializeTo(default(object), default(JsonWriter)))).GetGenericMethodDefinition();
+            _deserializeFromMethod = ((MethodInfo)ReflectionHelpers.InfoOf((JsonDataSerializer j) => j.DeserializeFrom<object>(default(JsonReader)))).GetGenericMethodDefinition();
         }
 
         /// <summary>
@@ -156,13 +163,18 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// <summary>
         /// Simple expression serializer class using data serialization hooks.
         /// </summary>
-        /// <remarks>
-        /// Instantiate the expression serializer.
-        /// </remarks>
-        /// <param name="parent">The parent serialization helpers.</param>
-        protected class SerializationHelpersExpressionSerializer(SerializationHelpers parent) : BonsaiExpressionSerializer
+        protected class SerializationHelpersExpressionSerializer : BonsaiExpressionSerializer
         {
-            private readonly SerializationHelpers _parent = parent;
+            private readonly SerializationHelpers _parent;
+
+            /// <summary>
+            /// Instantiate the expression serializer.
+            /// </summary>
+            /// <param name="parent">The parent serialization helpers.</param>
+            public SerializationHelpersExpressionSerializer(SerializationHelpers parent)
+            {
+                _parent = parent;
+            }
 
             /// <summary>
             /// The data serializer used to serialize constants.

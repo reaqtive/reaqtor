@@ -18,22 +18,28 @@ namespace Reaqtive.Storage
     /// </summary>
     /// <typeparam name="TKey">The type of the keys stored in the map.</typeparam>
     /// <typeparam name="TValue">The type of the values stored in the map.</typeparam>
-    /// <remarks>
-    /// Creates a new bi-directional map using the specified comparers.
-    /// </remarks>
-    /// <param name="keyComparer">The comparer to use to compare keys.</param>
-    /// <param name="valueComparer">The compare to use to compare values.</param>
-    internal sealed class Map<TKey, TValue>(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
+    internal sealed class Map<TKey, TValue>
     {
         /// <summary>
         /// Dictionary from keys to values.
         /// </summary>
-        private readonly Dictionary<TKey, TValue> _keyToValue = new Dictionary<TKey, TValue>(keyComparer);
+        private readonly Dictionary<TKey, TValue> _keyToValue;
 
         /// <summary>
         /// Dictionary from values to keys.
         /// </summary>
-        private readonly Dictionary<TValue, TKey> _valueToKey = new Dictionary<TValue, TKey>(valueComparer);
+        private readonly Dictionary<TValue, TKey> _valueToKey;
+
+        /// <summary>
+        /// Creates a new bi-directional map using the specified comparers.
+        /// </summary>
+        /// <param name="keyComparer">The comparer to use to compare keys.</param>
+        /// <param name="valueComparer">The compare to use to compare values.</param>
+        public Map(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
+        {
+            _keyToValue = new Dictionary<TKey, TValue>(keyComparer);
+            _valueToKey = new Dictionary<TValue, TKey>(valueComparer);
+        }
 
         /// <summary>
         /// Gets the keys in the map.

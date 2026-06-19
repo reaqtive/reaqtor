@@ -208,9 +208,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
             }
         }
 
-        private sealed class PureIndexers(long seed)
+        private sealed class PureIndexers
         {
-            private readonly long _seed = seed;
+            private readonly long _seed;
+
+            public PureIndexers(long seed) => _seed = seed;
 
             public long this[int a] => _seed + a;
             public long this[int a, int b, int c] => _seed + a * b - c;

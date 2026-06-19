@@ -87,10 +87,16 @@ namespace Reaqtive
             }
         }
 
-        private sealed class Binary(ISubscription subscription1, ISubscription subscription2) : StaticCompositeSubscriptionBase
+        private sealed class Binary : StaticCompositeSubscriptionBase
         {
-            private readonly ISubscription _subscription1 = subscription1;
-            private readonly ISubscription _subscription2 = subscription2;
+            private readonly ISubscription _subscription1;
+            private readonly ISubscription _subscription2;
+
+            public Binary(ISubscription subscription1, ISubscription subscription2)
+            {
+                _subscription1 = subscription1;
+                _subscription2 = subscription2;
+            }
 
             public override void Accept(ISubscriptionVisitor visitor)
             {

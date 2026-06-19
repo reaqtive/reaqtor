@@ -12,17 +12,26 @@ using Reaqtive.Tasks;
 
 namespace Reaqtive.Operators
 {
-    internal abstract class Window<TSource>(ISubscribable<TSource> source) : SubscribableBase<ISubscribable<TSource>>
+    internal abstract class Window<TSource> : SubscribableBase<ISubscribable<TSource>>
     {
-        private readonly ISubscribable<TSource> _source = source;
+        private readonly ISubscribable<TSource> _source;
 
-        protected abstract class Sink<TParam>(TParam parent, IObserver<ISubscribable<TSource>> observer) : HigherOrderOutputStatefulOperator<TParam, TSource>(parent, observer)
+        public Window(ISubscribable<TSource> source)
+        {
+            _source = source;
+        }
+
+        protected abstract class Sink<TParam> : HigherOrderOutputStatefulOperator<TParam, TSource>
             where TParam : Window<TSource>
         {
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private RefCountSubscription _subscription;
-
 #pragma warning restore CA2213
+
+            public Sink(TParam parent, IObserver<ISubscribable<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             protected override string InnerStreamPrefix => "rx://tunnel/window/";
 
@@ -71,12 +80,17 @@ namespace Reaqtive.Operators
             }
         }
 
-        protected abstract class OneSink<TParam>(TParam parent, IObserver<ISubscribable<TSource>> observer) : Sink<TParam>(parent, observer)
+        protected abstract class OneSink<TParam> : Sink<TParam>
             where TParam : Window<TSource>
         {
             private readonly Lock _gate = new();
             private IObserver<TSource> _currentWindow;
             private Uri _currentWindowUri;
+
+            public OneSink(TParam parent, IObserver<ISubscribable<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             protected override IEnumerable<Uri> DependenciesCore
             {
@@ -229,7 +243,7 @@ namespace Reaqtive.Operators
             }
         }
 
-        protected abstract class ManySink<TParam>(TParam parent, IObserver<ISubscribable<TSource>> observer) : Sink<TParam>(parent, observer)
+        protected abstract class ManySink<TParam> : Sink<TParam>
             where TParam : Window<TSource>
         {
             private const string MAXWINDOWCOUNTSETTING = "rx://operators/window/settings/maxWindowCount";
@@ -237,6 +251,11 @@ namespace Reaqtive.Operators
 
             private readonly Lock _gate = new();
             private readonly Queue<Entry> _currentWindows = new();
+
+            public ManySink(TParam parent, IObserver<ISubscribable<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override void SetContext(IOperatorContext context)
             {
@@ -433,19 +452,30 @@ namespace Reaqtive.Operators
         }
     }
 
-    internal sealed class WindowDuration<TSource>(ISubscribable<TSource> source, TimeSpan duration) : Window<TSource>(source)
+    internal sealed class WindowDuration<TSource> : Window<TSource>
     {
-        private readonly TimeSpan _duration = duration;
+        private readonly TimeSpan _duration;
+
+        public WindowDuration(ISubscribable<TSource> source, TimeSpan duration)
+            : base(source)
+        {
+            _duration = duration;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<ISubscribable<TSource>> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(WindowDuration<TSource> parent, IObserver<ISubscribable<TSource>> observer) : OneSink<WindowDuration<TSource>>(parent, observer), ISchedulerTask
+        private sealed class _ : OneSink<WindowDuration<TSource>>, ISchedulerTask
         {
             private DateTimeOffset _nextTick;
             private bool _recovered;
+
+            public _(WindowDuration<TSource> parent, IObserver<ISubscribable<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Window/Time/D";
 
@@ -519,22 +549,34 @@ namespace Reaqtive.Operators
         }
     }
 
-    internal sealed class WindowDurationShift<TSource>(ISubscribable<TSource> source, TimeSpan duration, TimeSpan shift) : Window<TSource>(source)
+    internal sealed class WindowDurationShift<TSource> : Window<TSource>
     {
-        private readonly TimeSpan _duration = duration;
-        private readonly TimeSpan _shift = shift;
+        private readonly TimeSpan _duration;
+        private readonly TimeSpan _shift;
+
+        public WindowDurationShift(ISubscribable<TSource> source, TimeSpan duration, TimeSpan shift)
+            : base(source)
+        {
+            _duration = duration;
+            _shift = shift;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<ISubscribable<TSource>> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(WindowDurationShift<TSource> parent, IObserver<ISubscribable<TSource>> observer) : ManySink<WindowDurationShift<TSource>>(parent, observer), ISchedulerTask
+        private sealed class _ : ManySink<WindowDurationShift<TSource>>, ISchedulerTask
         {
             private DateTimeOffset _nextTick;
             private DateTimeOffset _nextOpen;
             private DateTimeOffset _nextClose;
             private bool _recovered;
+
+            public _(WindowDurationShift<TSource> parent, IObserver<ISubscribable<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Window/Time/D+S";
 
@@ -679,19 +721,30 @@ namespace Reaqtive.Operators
         }
     }
 
-    internal sealed class WindowCount<TSource>(ISubscribable<TSource> source, int count) : Window<TSource>(source)
+    internal sealed class WindowCount<TSource> : Window<TSource>
     {
-        private readonly int _count = count;
+        private readonly int _count;
+
+        public WindowCount(ISubscribable<TSource> source, int count)
+            : base(source)
+        {
+            _count = count;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<ISubscribable<TSource>> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(WindowCount<TSource> parent, IObserver<ISubscribable<TSource>> observer) : OneSink<WindowCount<TSource>>(parent, observer)
+        private sealed class _ : OneSink<WindowCount<TSource>>
         {
             private int _remaining;
             private bool _recovered;
+
+            public _(WindowCount<TSource> parent, IObserver<ISubscribable<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Window/Count/N";
 
@@ -741,20 +794,32 @@ namespace Reaqtive.Operators
         }
     }
 
-    internal sealed class WindowCountSkip<TSource>(ISubscribable<TSource> source, int count, int skip) : Window<TSource>(source)
+    internal sealed class WindowCountSkip<TSource> : Window<TSource>
     {
-        private readonly int _count = count;
-        private readonly int _skip = skip;
+        private readonly int _count;
+        private readonly int _skip;
+
+        public WindowCountSkip(ISubscribable<TSource> source, int count, int skip)
+            : base(source)
+        {
+            _count = count;
+            _skip = skip;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<ISubscribable<TSource>> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(WindowCountSkip<TSource> parent, IObserver<ISubscribable<TSource>> observer) : ManySink<WindowCountSkip<TSource>>(parent, observer)
+        private sealed class _ : ManySink<WindowCountSkip<TSource>>
         {
             private long _count;
             private bool _recovered;
+
+            public _(WindowCountSkip<TSource> parent, IObserver<ISubscribable<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Window/Count/N+S";
 
@@ -828,23 +893,35 @@ namespace Reaqtive.Operators
         }
     }
 
-    internal sealed class WindowDurationCount<TSource>(ISubscribable<TSource> source, TimeSpan duration, int count) : Window<TSource>(source)
+    internal sealed class WindowDurationCount<TSource> : Window<TSource>
     {
-        private readonly TimeSpan _duration = duration;
-        private readonly int _count = count;
+        private readonly TimeSpan _duration;
+        private readonly int _count;
+
+        public WindowDurationCount(ISubscribable<TSource> source, TimeSpan duration, int count)
+            : base(source)
+        {
+            _duration = duration;
+            _count = count;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<ISubscribable<TSource>> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(WindowDurationCount<TSource> parent, IObserver<ISubscribable<TSource>> observer) : OneSink<WindowDurationCount<TSource>>(parent, observer), ISchedulerTask
+        private sealed class _ : OneSink<WindowDurationCount<TSource>>, ISchedulerTask
         {
             private DateTimeOffset _nextTick;
             private int _remaining;
             private volatile int _id;
             private volatile int _nextId;
             private bool _recovered;
+
+            public _(WindowDurationCount<TSource> parent, IObserver<ISubscribable<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Window/Ferry";
 

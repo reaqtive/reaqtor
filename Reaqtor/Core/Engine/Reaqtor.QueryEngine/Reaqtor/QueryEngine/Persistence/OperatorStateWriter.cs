@@ -13,14 +13,18 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Factory for state writers with a specified serialization policy.
     /// </summary>
-    /// <remarks>
-    /// Creates a state writer factory to write to the specified underlying <paramref name="stream"/>, using the
-    /// specified serialization <paramref name="policy"/>.
-    /// </remarks>
-    /// <param name="stream">The stream to write to.</param>
-    /// <param name="policy">The serialization policy used to serialize values.</param>
-    internal sealed class OperatorStateWriterFactory(Stream stream, ISerializationPolicy policy) : WriterBase(stream, policy), IOperatorStateWriterFactory
+    internal sealed class OperatorStateWriterFactory : WriterBase, IOperatorStateWriterFactory
     {
+        /// <summary>
+        /// Creates a state writer factory to write to the specified underlying <paramref name="stream"/>, using the
+        /// specified serialization <paramref name="policy"/>.
+        /// </summary>
+        /// <param name="stream">The stream to write to.</param>
+        /// <param name="policy">The serialization policy used to serialize values.</param>
+        public OperatorStateWriterFactory(Stream stream, ISerializationPolicy policy)
+            : base(stream, policy)
+        {
+        }
 
         /// <summary>
         /// Creates a new operator state writer for the specified operator.

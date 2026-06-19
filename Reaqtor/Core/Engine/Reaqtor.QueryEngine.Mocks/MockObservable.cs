@@ -69,12 +69,14 @@ namespace Reaqtor.QueryEngine.Mocks
         }
     }
 
-    public class MockObservable<T>(string id) : IObservable<T>, ISubscribable<T>, IObserver<T>
+    public class MockObservable<T> : IObservable<T>, ISubscribable<T>, IObserver<T>
     {
         private readonly List<Subscription> _subscriptions = [];
         private readonly Lock _lock = new();
 
-        public string Id { get; } = id;
+        public MockObservable(string id) => Id = id;
+
+        public string Id { get; }
 
         public IEnumerable<IKnownResource> Subscriptions => _subscriptions;
 
@@ -141,10 +143,16 @@ namespace Reaqtor.QueryEngine.Mocks
             subs.ForEach(s => s.OnNext(value));
         }
 
-        private class Subscription(MockObservable<T> obs, IObserver<T> sink) : ISubscription, IObserver<T>, IOperator, IKnownResource
+        private class Subscription : ISubscription, IObserver<T>, IOperator, IKnownResource
         {
-            private readonly MockObservable<T> _parent = obs;
-            private readonly IObserver<T> _sink = sink;
+            private readonly MockObservable<T> _parent;
+            private readonly IObserver<T> _sink;
+
+            public Subscription(MockObservable<T> obs, IObserver<T> sink)
+            {
+                _parent = obs;
+                _sink = sink;
+            }
 
             public Uri Uri { get; private set; }
 

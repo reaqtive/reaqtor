@@ -8,12 +8,16 @@ using Reaqtive;
 
 namespace Reaqtor.Reactive
 {
-    internal sealed class MultiSubjectSubscriptionProxy<TInput, TOutput>(Uri uri, IObserver<TOutput> observer) : UnaryOperator<Uri, TOutput>(uri, observer)
+    internal sealed class MultiSubjectSubscriptionProxy<TInput, TOutput> : UnaryOperator<Uri, TOutput>
     {
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
         private readonly SingleAssignmentSubscription _subscription = new();
-
 #pragma warning restore CA2213
+
+        public MultiSubjectSubscriptionProxy(Uri uri, IObserver<TOutput> observer)
+            : base(uri, observer)
+        {
+        }
 
         protected override ISubscription OnSubscribe()
         {

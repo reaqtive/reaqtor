@@ -9,8 +9,10 @@ using Reaqtor.Reliable.Client;
 
 namespace Reaqtor.Reliable.Expressions
 {
-    public abstract class ReliableQubscriptionFactoryBase(IReliableQueryProvider provider) : IReliableQubscriptionFactory
+    public abstract class ReliableQubscriptionFactoryBase : IReliableQubscriptionFactory
     {
+        protected ReliableQubscriptionFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+
         public IReliableQubscription Create(Uri subscriptionUri, object state = null)
         {
             if (subscriptionUri == null)
@@ -29,13 +31,15 @@ namespace Reaqtor.Reliable.Expressions
 
         protected abstract IReliableQubscription CreateCore(Uri subscriptionUri, object state);
 
-        public IReliableQueryProvider Provider { get; } = provider;
+        public IReliableQueryProvider Provider { get; }
 
         public abstract Expression Expression { get; }
     }
 
-    public abstract class ReliableQubscriptionFactoryBase<TArg>(IReliableQueryProvider provider) : IReliableQubscriptionFactory<TArg>
+    public abstract class ReliableQubscriptionFactoryBase<TArg> : IReliableQubscriptionFactory<TArg>
     {
+        protected ReliableQubscriptionFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+
         public IReliableQubscription Create(Uri subscriptionUri, TArg argument, object state = null)
         {
             if (subscriptionUri == null)
@@ -54,7 +58,7 @@ namespace Reaqtor.Reliable.Expressions
 
         protected abstract IReliableQubscription CreateCore(Uri subscriptionUri, TArg argument, object state);
 
-        public IReliableQueryProvider Provider { get; } = provider;
+        public IReliableQueryProvider Provider { get; }
 
         public abstract Expression Expression { get; }
     }

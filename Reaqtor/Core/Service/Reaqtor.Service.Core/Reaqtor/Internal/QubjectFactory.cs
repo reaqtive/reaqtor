@@ -13,9 +13,15 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal class QubjectFactory<TInput, TOutput>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput>(provider)
+    internal class QubjectFactory<TInput, TOutput> : ReactiveQubjectFactoryBase<TInput, TOutput>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, object state)
         {
@@ -23,9 +29,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg argument, object state)
         {

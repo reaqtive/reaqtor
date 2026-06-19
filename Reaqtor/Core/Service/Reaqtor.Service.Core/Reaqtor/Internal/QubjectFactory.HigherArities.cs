@@ -14,9 +14,15 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, object state)
         {
@@ -24,9 +30,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, object state)
         {
@@ -34,9 +46,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, object state)
         {
@@ -44,9 +62,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, object state)
         {
@@ -54,9 +78,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, object state)
         {
@@ -64,9 +94,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, object state)
         {
@@ -74,9 +110,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, object state)
         {
@@ -84,9 +126,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, object state)
         {
@@ -94,9 +142,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, object state)
         {
@@ -104,9 +158,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, object state)
         {
@@ -114,9 +174,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, object state)
         {
@@ -124,9 +190,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, object state)
         {
@@ -134,9 +206,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, object state)
         {
@@ -144,9 +222,15 @@ namespace Reaqtor
         }
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(Expression expression, IReactiveQueryProvider provider) : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(provider)
+    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>
     {
-        public override Expression Expression { get; } = expression;
+        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, TArg15 arg15, object state)
         {

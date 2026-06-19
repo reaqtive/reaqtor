@@ -22,11 +22,7 @@ namespace Reaqtive.Storage
         /// <summary>
         /// Registry of persisted entities in a persisted object space.
         /// </summary>
-        /// <remarks>
-        /// Creates a new registry instance for the specified <paramref name="parent"/> persisted object space.
-        /// </remarks>
-        /// <param name="parent">The parent persisted object space this registry belongs to.</param>
-        private sealed class Registry(PersistedObjectSpace parent) : TransactionalDictionary<string, IPersistable>
+        private sealed class Registry : TransactionalDictionary<string, IPersistable>
         {
             /// <summary>
             /// Map of persisted entity kind discriminators to factories to instantiate persisted entities, used during recovery (see <see cref="Load"/>).
@@ -48,7 +44,7 @@ namespace Reaqtive.Storage
             /// <summary>
             /// The parent persisted object space this registry belongs to.
             /// </summary>
-            private readonly PersistedObjectSpace _parent = parent;
+            private readonly PersistedObjectSpace _parent;
 
             /// <summary>
             /// State manager to keep track of the deleted persisted entities. Each entry represents an entity that has been deleted from the persisted object space, with deletion pending in the persisted key/value store.
@@ -64,6 +60,15 @@ namespace Reaqtive.Storage
             /// List of persisted entities that are part of the latest <see cref="Save(IStateWriter)"/> operation, for use by <see cref="OnSaved"/> to call <see cref="IPersistable.OnSaved"/> upon successful commit.
             /// </summary>
             private List<IPersistable> _edits;
+
+            /// <summary>
+            /// Creates a new registry instance for the specified <paramref name="parent"/> persisted object space.
+            /// </summary>
+            /// <param name="parent">The parent persisted object space this registry belongs to.</param>
+            public Registry(PersistedObjectSpace parent)
+            {
+                _parent = parent;
+            }
 
             /// <summary>
             /// Loads the registry from the specified state <paramref name="reader"/>.
@@ -253,22 +258,28 @@ namespace Reaqtive.Storage
             /// <summary>
             /// Snapshot visitor used to persist changes to the registry to a given <see cref="IStateWriter"/>.
             /// </summary>
-            /// <remarks>
-            /// Snapshot visitor used to persist changes to the registry to the given <paramref name="writer"/>.
-            /// </remarks>
-            /// <param name="writer">The state writer to persist changes to.</param>
-            /// <param name="serializer">The serializer to use for writing <see cref="Descriptor"/> values for registry entries.</param>
-            private sealed class SnapshotVisitor(IStateWriter writer, ISerializer<PersistedObjectSpace.Descriptor> serializer) : ISnapshotVisitor<string, IPersistable>
+            private sealed class SnapshotVisitor : ISnapshotVisitor<string, IPersistable>
             {
                 /// <summary>
                 /// The state writer to persist changes to.
                 /// </summary>
-                private readonly IStateWriter _writer = writer;
+                private readonly IStateWriter _writer;
 
                 /// <summary>
                 /// The serializer to use for writing <see cref="Descriptor"/> values for registry entries.
                 /// </summary>
-                private readonly ISerializer<Descriptor> _serializer = serializer;
+                private readonly ISerializer<Descriptor> _serializer;
+
+                /// <summary>
+                /// Snapshot visitor used to persist changes to the registry to the given <paramref name="writer"/>.
+                /// </summary>
+                /// <param name="writer">The state writer to persist changes to.</param>
+                /// <param name="serializer">The serializer to use for writing <see cref="Descriptor"/> values for registry entries.</param>
+                public SnapshotVisitor(IStateWriter writer, ISerializer<Descriptor> serializer)
+                {
+                    _writer = writer;
+                    _serializer = serializer;
+                }
 
                 /// <summary>
                 /// Adds or updates the key/value store index entry for the persisted entity <paramref name="value"/> identified using the specified <paramref name="key"/>.

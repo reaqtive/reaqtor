@@ -23,11 +23,12 @@ namespace Tests.System.Linq.Expressions.Bonsai
         protected static SimpleTypeSlim SlimType => TypeSlimExtensions.IntegerType;
 
 #pragma warning disable IDE0060 // Remove unused parameter
-#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning disable CA1822 // Mark static
-        protected class Foo(int i, int j)
+        protected class Foo
         {
-            public int baz = 0;
+            public int baz;
+
+            public Foo(int i, int j) { baz = 0; }
 
             public int this[int i, int j] => i * j;
 
@@ -40,9 +41,11 @@ namespace Tests.System.Linq.Expressions.Bonsai
             public Bar Element { get; set; }
         }
 
-        protected class Qux(int i, int j)
+        protected class Qux
         {
-            public int baz = 0;
+            public int baz;
+
+            public Qux(int i, int j) { baz = 0; }
 
             public int this[int i, int j] => i * j;
 
@@ -63,7 +66,6 @@ namespace Tests.System.Linq.Expressions.Bonsai
         protected class Baz
         {
         }
-#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 
         protected static Expression ExpressionRoundtrip(Expression e)

@@ -433,13 +433,24 @@ namespace Tests.System.Reflection
             }
         }
 
-        private sealed class NotSupportedMemberInfoSlim(MemberTypes types) : MemberInfoSlim(typeof(int).ToTypeSlim())
+        private sealed class NotSupportedMemberInfoSlim : MemberInfoSlim
         {
-            public override MemberTypes MemberType { get; } = types;
+            public NotSupportedMemberInfoSlim(MemberTypes types)
+                : base(typeof(int).ToTypeSlim())
+            {
+                MemberType = types;
+            }
+
+            public override MemberTypes MemberType { get; }
         }
 
-        private sealed class NotSupportedOverride(TypeSlimEqualityComparer tq) : MemberInfoSlimEqualityComparator(tq)
+        private sealed class NotSupportedOverride : MemberInfoSlimEqualityComparator
         {
+            public NotSupportedOverride(TypeSlimEqualityComparer tq)
+                : base(tq)
+            {
+            }
+
             protected override bool EqualsCustom(MemberInfoSlim x, MemberInfoSlim y) => true;
 
             protected override bool EqualsEvent(MemberInfoSlim x, MemberInfoSlim y) => true;

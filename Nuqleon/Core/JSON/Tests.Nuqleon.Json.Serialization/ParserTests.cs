@@ -229,8 +229,13 @@ namespace Tests
     }
 
 #if !NO_IO
-    internal sealed class Reader(string s) : System.IO.StringReader(s)
+    internal sealed class Reader : System.IO.StringReader
     {
+        public Reader(string s)
+            : base(s)
+        {
+        }
+
         public int Position { get; private set; }
 
         public override int Read()

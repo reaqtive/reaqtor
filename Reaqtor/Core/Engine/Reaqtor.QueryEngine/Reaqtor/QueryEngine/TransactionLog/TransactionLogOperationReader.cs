@@ -11,13 +11,17 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Reader for transaction log entries from a stream.
     /// </summary>
-    /// <remarks>
-    /// Creates a <see cref="TransactionLogOperationReader"/> to read operations from the specified <paramref name="stream"/>.
-    /// </remarks>
-    /// <param name="stream">The stream to load from.</param>
-    /// <param name="policy">The serialization policy to use when serializing objects.</param>
-    internal sealed class TransactionLogOperationReader(Stream stream, ISerializationPolicy policy) : ReaderBase(stream, policy)
+    internal sealed class TransactionLogOperationReader : ReaderBase
     {
+        /// <summary>
+        /// Creates a <see cref="TransactionLogOperationReader"/> to read operations from the specified <paramref name="stream"/>.
+        /// </summary>
+        /// <param name="stream">The stream to load from.</param>
+        /// <param name="policy">The serialization policy to use when serializing objects.</param>
+        public TransactionLogOperationReader(Stream stream, ISerializationPolicy policy)
+            : base(stream, policy)
+        {
+        }
 
         /// <summary>
         /// Loads the artifact operation from the underlying stream.

@@ -350,7 +350,6 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter (entities are purely here for tests and are reflected upon)
-#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
         private class Bar
         {
             [Mapping("foos")]
@@ -381,24 +380,35 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             public string Foo { get; set; }
         }
 
-        private class MissingMapping(int x)
+        private class MissingMapping
         {
+            public MissingMapping(int x)
+            {
+            }
+
             [Mapping("foo")]
             public int X { get; set; }
         }
 
-        private class NonMatchingMapping([Mapping("bar")] int x)
+        private class NonMatchingMapping
         {
+            public NonMatchingMapping([Mapping("bar")] int x)
+            {
+            }
+
             [Mapping("foo")]
             public int X { get; set; }
         }
 
-        private class DuplicateMapping([Mapping("foo")] int x, [Mapping("foo")] int y)
+        private class DuplicateMapping
         {
+            public DuplicateMapping([Mapping("foo")] int x, [Mapping("foo")] int y)
+            {
+            }
+
             [Mapping("foo")]
             public int X { get; set; }
         }
-#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 
         private class Holder<T>

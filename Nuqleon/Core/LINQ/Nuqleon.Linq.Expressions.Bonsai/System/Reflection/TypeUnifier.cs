@@ -22,15 +22,11 @@ namespace System.Reflection
     /// <summary>
     /// Pairwise checker for unification of type slims to types.
     /// </summary>
-    /// <remarks>
-    /// Instantiates a type unifier.
-    /// </remarks>
-    /// <param name="safe">true if no exceptions should be thrown, false otherwise.</param>
-    public class TypeUnifier(bool safe)
+    public class TypeUnifier
     {
-        private readonly Dictionary<TypeSlim, Type> _entries = [];
-        private readonly Dictionary<Type, TypeSlim> _wildcards = [];
-        private readonly bool _safe = safe;
+        private readonly Dictionary<TypeSlim, Type> _entries;
+        private readonly Dictionary<Type, TypeSlim> _wildcards;
+        private readonly bool _safe;
 
         /// <summary>
         /// Instantiates a type unifier with safe flag set to false.
@@ -38,6 +34,17 @@ namespace System.Reflection
         public TypeUnifier()
             : this(safe: false)
         {
+        }
+
+        /// <summary>
+        /// Instantiates a type unifier.
+        /// </summary>
+        /// <param name="safe">true if no exceptions should be thrown, false otherwise.</param>
+        public TypeUnifier(bool safe)
+        {
+            _safe = safe;
+            _entries = [];
+            _wildcards = [];
         }
 
         /// <summary>

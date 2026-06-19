@@ -14,12 +14,17 @@ using Reaqtor.TestingFramework;
 
 namespace Reaqtor.QueryEngine.ReificationFramework
 {
-    public class QueryEngineReificationBinder(bool templatize = false) : IReificationBinder<QueryEngineEnvironment>
+    public class QueryEngineReificationBinder : IReificationBinder<QueryEngineEnvironment>
     {
         private static readonly PropertyInfo s_metadataCtx = ((PropertyInfo)ReflectionHelpers.InfoOf((QueryEngineEnvironment env) => env.MetadataContext));
         private static readonly PropertyInfo s_engineCtx = ((PropertyInfo)ReflectionHelpers.InfoOf((QueryEngineEnvironment env) => env.EngineContext));
 
-        private readonly bool _templatize = templatize;
+        private readonly bool _templatize;
+
+        public QueryEngineReificationBinder(bool templatize = false)
+        {
+            _templatize = templatize;
+        }
 
         public Expression<Action<QueryEngineEnvironment>> Bind(ServiceOperation operation)
         {
@@ -239,16 +244,26 @@ namespace Reaqtor.QueryEngine.ReificationFramework
             }
         }
 
-        private sealed class ContextOptimizer(ParameterExpression envParam, ParameterExpression metadataParam, ParameterExpression engineParam) : ExpressionVisitor
+        private sealed class ContextOptimizer : ExpressionVisitor
         {
             private static readonly Expression s_empty = Expression.Empty();
 
-            private readonly ParameterExpression _envParam = envParam;
-            private readonly ParameterExpression _metadataParam = metadataParam;
-            private readonly ParameterExpression _engineParam = engineParam;
+            private readonly ParameterExpression _envParam;
+            private readonly ParameterExpression _metadataParam;
+            private readonly ParameterExpression _engineParam;
 
-            private readonly List<ParameterExpression> _metadataReplacements = [];
-            private readonly List<ParameterExpression> _engineReplacements = [];
+            private readonly List<ParameterExpression> _metadataReplacements;
+            private readonly List<ParameterExpression> _engineReplacements;
+
+            public ContextOptimizer(ParameterExpression envParam, ParameterExpression metadataParam, ParameterExpression engineParam)
+            {
+                _envParam = envParam;
+                _metadataParam = metadataParam;
+                _engineParam = engineParam;
+
+                _metadataReplacements = [];
+                _engineReplacements = [];
+            }
 
             protected override Expression VisitBinary(BinaryExpression node)
             {
@@ -308,11 +323,17 @@ namespace Reaqtor.QueryEngine.ReificationFramework
             }
         }
 
-        private sealed class OptimizedPair(ParameterExpression variable, Expression expression)
+        private sealed class OptimizedPair
         {
-            public ParameterExpression Variable { get; } = variable;
+            public OptimizedPair(ParameterExpression variable, Expression expression)
+            {
+                Variable = variable;
+                Expression = expression;
+            }
 
-            public Expression Expression { get; } = expression;
+            public ParameterExpression Variable { get; }
+
+            public Expression Expression { get; }
         }
     }
 }

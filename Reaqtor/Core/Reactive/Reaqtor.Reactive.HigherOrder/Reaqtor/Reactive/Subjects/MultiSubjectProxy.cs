@@ -15,13 +15,18 @@ namespace Reaqtor.Reactive
     /// <summary>
     /// A proxy for subjects.
     /// </summary>
-    /// <remarks>
-    /// Create the subject proxy.
-    /// </remarks>
-    /// <param name="uri">The subject URI.</param>
-    public class MultiSubjectProxy(Uri uri) : IMultiSubject
+    public class MultiSubjectProxy : IMultiSubject
     {
-        private readonly Uri _uri = uri ?? throw new ArgumentNullException(nameof(uri));
+        private readonly Uri _uri;
+
+        /// <summary>
+        /// Create the subject proxy.
+        /// </summary>
+        /// <param name="uri">The subject URI.</param>
+        public MultiSubjectProxy(Uri uri)
+        {
+            _uri = uri ?? throw new ArgumentNullException(nameof(uri));
+        }
 
         /// <summary>
         /// Gets an observer to push elements into the subject.
@@ -48,9 +53,14 @@ namespace Reaqtor.Reactive
         /// </summary>
         public void Dispose() { }
 
-        private sealed class ObservableProxy<T>(Uri uri) : SubscribableBase<T>
+        private sealed class ObservableProxy<T> : SubscribableBase<T>
         {
-            private readonly Uri _uri = uri;
+            private readonly Uri _uri;
+
+            public ObservableProxy(Uri uri)
+            {
+                _uri = uri;
+            }
 
             protected override ISubscription SubscribeCore(IObserver<T> observer)
             {
@@ -64,13 +74,18 @@ namespace Reaqtor.Reactive
     /// </summary>
     /// <typeparam name="TInput">The subject input type.</typeparam>
     /// <typeparam name="TOutput">The subject output type.</typeparam>
-    /// <remarks>
-    /// Create the subject proxy.
-    /// </remarks>
-    /// <param name="uri">The subject URI.</param>
-    public class MultiSubjectProxy<TInput, TOutput>(Uri uri) : IMultiSubject<TInput, TOutput>
+    public class MultiSubjectProxy<TInput, TOutput> : IMultiSubject<TInput, TOutput>
     {
-        private readonly Uri _uri = uri ?? throw new ArgumentNullException(nameof(uri));
+        private readonly Uri _uri;
+
+        /// <summary>
+        /// Create the subject proxy.
+        /// </summary>
+        /// <param name="uri">The subject URI.</param>
+        public MultiSubjectProxy(Uri uri)
+        {
+            _uri = uri ?? throw new ArgumentNullException(nameof(uri));
+        }
 
         /// <summary>
         /// Creates a new observer that can be used to push elements into the subject.

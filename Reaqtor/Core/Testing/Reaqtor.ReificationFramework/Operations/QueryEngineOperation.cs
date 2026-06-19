@@ -10,30 +10,36 @@ namespace Reaqtor.ReificationFramework
     /// <summary>
     /// Operation applied to a query engine.
     /// </summary>
-    /// <remarks>
-    /// Creates a query engine operation.
-    /// </remarks>
-    /// <param name="kind">The kind of reified operation.</param>
-    /// <param name="targetObjectUri">The target query engine instance.</param>
-    /// <param name="state">The state passed to the operation.</param>
     [Serializable]
-    public class QueryEngineOperation(QueryEngineOperationKind kind, Uri targetObjectUri, object state)
+    public class QueryEngineOperation
     {
+        /// <summary>
+        /// Creates a query engine operation.
+        /// </summary>
+        /// <param name="kind">The kind of reified operation.</param>
+        /// <param name="targetObjectUri">The target query engine instance.</param>
+        /// <param name="state">The state passed to the operation.</param>
+        public QueryEngineOperation(QueryEngineOperationKind kind, Uri targetObjectUri, object state)
+        {
+            Kind = kind;
+            TargetObjectUri = targetObjectUri;
+            State = state;
+        }
 
         /// <summary>
         /// The kind of reified operation.
         /// </summary>
-        public QueryEngineOperationKind Kind { get; } = kind;
+        public QueryEngineOperationKind Kind { get; }
 
         /// <summary>
         /// The target query engine instance.
         /// </summary>
-        public Uri TargetObjectUri { get; } = targetObjectUri;
+        public Uri TargetObjectUri { get; }
 
         /// <summary>
         /// The state passed to the operation.
         /// </summary>
-        public object State { get; } = state;
+        public object State { get; }
 
         /// <summary>
         /// Gets a string representation of the operation.

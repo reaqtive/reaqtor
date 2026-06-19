@@ -18,18 +18,23 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
     /// A slim representation of a constructor that contains information about
     /// mapping attributes on the constructor parameters.
     /// </summary>
-    /// <remarks>
-    /// Initializes the slim representation of the constructor.
-    /// </remarks>
-    /// <param name="declaringType">The declaring type.</param>
-    /// <param name="parameterTypes">The parameter types.</param>
-    /// <param name="parameterMappings">The parameter mappings.</param>
-    public sealed class DataModelConstructorInfoSlim(TypeSlim declaringType, ReadOnlyCollection<TypeSlim> parameterTypes, ReadOnlyCollection<string> parameterMappings) : ConstructorInfoSlim(declaringType, parameterTypes)
+    public sealed class DataModelConstructorInfoSlim : ConstructorInfoSlim
     {
+        /// <summary>
+        /// Initializes the slim representation of the constructor.
+        /// </summary>
+        /// <param name="declaringType">The declaring type.</param>
+        /// <param name="parameterTypes">The parameter types.</param>
+        /// <param name="parameterMappings">The parameter mappings.</param>
+        public DataModelConstructorInfoSlim(TypeSlim declaringType, ReadOnlyCollection<TypeSlim> parameterTypes, ReadOnlyCollection<string> parameterMappings)
+            : base(declaringType, parameterTypes)
+        {
+            ParameterMappings = parameterMappings ?? throw new ArgumentNullException(nameof(parameterMappings));
+        }
 
         /// <summary>
         /// Gets the ordered list of parameter mappings used on the constructor.
         /// </summary>
-        public ReadOnlyCollection<string> ParameterMappings { get; } = parameterMappings ?? throw new ArgumentNullException(nameof(parameterMappings));
+        public ReadOnlyCollection<string> ParameterMappings { get; }
     }
 }

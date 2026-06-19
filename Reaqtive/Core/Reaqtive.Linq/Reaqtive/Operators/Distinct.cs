@@ -31,12 +31,17 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(Distinct<TResult, TKey> parent, IObserver<TResult> observer) : StatefulUnaryOperator<Distinct<TResult, TKey>, TResult>(parent, observer), IObserver<TResult>
+        private sealed class _ : StatefulUnaryOperator<Distinct<TResult, TKey>, TResult>, IObserver<TResult>
         {
             private const string MAXDISTINCTELEMENTS = "rx://operators/distinct/settings/maxDistinctElements";
             private int _maxDistinctElements;
 
             private HashSet<TKey> _keySet;
+
+            public _(Distinct<TResult, TKey> parent, IObserver<TResult> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override void SetContext(IOperatorContext context)
             {

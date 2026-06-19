@@ -90,10 +90,16 @@ namespace Reaqtor.QueryEngine.Mocks
             return obj;
         }
 
-        private abstract class Operator(Action<Uri, object> onStart, Action<Uri> onDispose) : IOperator
+        private abstract class Operator : IOperator
         {
-            private readonly Action<Uri> _onDispose = onDispose;
-            private readonly Action<Uri, object> _onStart = onStart;
+            private readonly Action<Uri> _onDispose;
+            private readonly Action<Uri, object> _onStart;
+
+            public Operator(Action<Uri, object> onStart, Action<Uri> onDispose)
+            {
+                _onStart = onStart;
+                _onDispose = onDispose;
+            }
 
             public IEnumerable<ISubscription> Inputs => Array.Empty<ISubscription>();
 
@@ -123,10 +129,15 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private sealed class Reliable<T>(Action<Uri, object> onCreate, Action<Uri> onDispose) : Operator(onCreate, onDispose), IReliableMultiSubject<T>
+        private sealed class Reliable<T> : Operator, IReliableMultiSubject<T>
         {
             private readonly Subject<Tuple<T, long>> _subject = new();
             private readonly AutoResetEvent _onSubscribe = new(false);
+
+            public Reliable(Action<Uri, object> onCreate, Action<Uri> onDispose)
+                : base(onCreate, onDispose)
+            {
+            }
 
             public override EventWaitHandle OnSubscribe => _onSubscribe;
 
@@ -140,9 +151,11 @@ namespace Reaqtor.QueryEngine.Mocks
                 _subject?.Dispose();
             }
 
-            private sealed class Observer(SubjectManager.Reliable<T> parent) : IReliableObserver<T>
+            private sealed class Observer : IReliableObserver<T>
             {
-                private readonly Reliable<T> _parent = parent;
+                private readonly Reliable<T> _parent;
+
+                public Observer(Reliable<T> parent) => _parent = parent;
 
                 public Uri ResubscribeUri => throw new NotImplementedException();
 
@@ -155,15 +168,20 @@ namespace Reaqtor.QueryEngine.Mocks
                 public void OnCompleted() => _parent._subject.OnCompleted();
             }
 
-            private sealed class Sub(SubjectManager.Reliable<T> parent, IReliableObserver<T> observer) : ReliableSubscriptionBase
+            private sealed class Sub : ReliableSubscriptionBase
             {
-                private readonly Reliable<T> _parent = parent;
-                private readonly IReliableObserver<T> _observer = observer;
+                private readonly Reliable<T> _parent;
+                private readonly IReliableObserver<T> _observer;
 
 #pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
                 private IDisposable _disposable;
-
 #pragma warning restore CA2213
+
+                public Sub(Reliable<T> parent, IReliableObserver<T> observer)
+                {
+                    _parent = parent;
+                    _observer = observer;
+                }
 
                 public override Uri ResubscribeUri => throw new NotImplementedException();
 
@@ -188,10 +206,15 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private sealed class Typed<T>(Action<Uri, object> onCreate, Action<Uri> onDispose) : Operator(onCreate, onDispose), IMultiSubject<T>
+        private sealed class Typed<T> : Operator, IMultiSubject<T>
         {
             private readonly Subject<T> _subject = new();
             private readonly AutoResetEvent _onSubscribe = new(false);
+
+            public Typed(Action<Uri, object> onCreate, Action<Uri> onDispose)
+                : base(onCreate, onDispose)
+            {
+            }
 
             public override EventWaitHandle OnSubscribe => _onSubscribe;
 
@@ -201,12 +224,16 @@ namespace Reaqtor.QueryEngine.Mocks
 
             IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => Subscribe(observer);
 
-            private sealed class Sub(SubjectManager.Typed<T> parent, IObserver<T> observer) : Operator<Typed<T>, T>(parent, observer)
+            private sealed class Sub : Operator<Typed<T>, T>
             {
 #pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood OnDispose
                 private IDisposable _disposable;
-
 #pragma warning restore CA2213
+
+                public Sub(Typed<T> parent, IObserver<T> observer)
+                    : base(parent, observer)
+                {
+                }
 
                 protected override void OnStart()
                 {
@@ -225,7 +252,7 @@ namespace Reaqtor.QueryEngine.Mocks
             }
         }
 
-        private sealed class Untyped(Action<Uri, object> onCreate, Action<Uri> onDispose) : Operator(onCreate, onDispose), IMultiSubject
+        private sealed class Untyped : Operator, IMultiSubject
         {
             private readonly AutoResetEvent _onSubscribe = new(false);
 
@@ -233,6 +260,11 @@ namespace Reaqtor.QueryEngine.Mocks
             private object _subject;
             private object _contextSwitchedSubject;
             private ISubscription _contextSwitchedSubscription;
+
+            public Untyped(Action<Uri, object> onCreate, Action<Uri> onDispose)
+                : base(onCreate, onDispose)
+            {
+            }
 
             public override EventWaitHandle OnSubscribe => _onSubscribe;
 
@@ -288,18 +320,24 @@ namespace Reaqtor.QueryEngine.Mocks
                 return (Subject<T>)_contextSwitchedSubject;
             }
 
-            private sealed class IO<T>(SubjectManager.Untyped parent) : SubscribableBase<T>
+            private sealed class IO<T> : SubscribableBase<T>
             {
-                private readonly Untyped _parent = parent;
+                private readonly Untyped _parent;
+
+                public IO(Untyped parent) => _parent = parent;
 
                 protected override ISubscription SubscribeCore(IObserver<T> observer) => new _(this, observer);
 
-                private sealed class _(Untyped.IO<T> parent, IObserver<T> observer) : Operator<IO<T>, T>(parent, observer)
+                private sealed class _ : Operator<IO<T>, T>
                 {
 #pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood OnDispose
                     private IDisposable _disposable;
-
 #pragma warning restore CA2213
+
+                    public _(IO<T> parent, IObserver<T> observer)
+                        : base(parent, observer)
+                    {
+                    }
 
                     protected override void OnStart()
                     {

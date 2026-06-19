@@ -17,13 +17,18 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Templatizes expressions using a query engine registry as the backing store.
     /// </summary>
-    /// <remarks>
-    /// Instantiate the templatization helper.
-    /// </remarks>
-    /// <param name="registry">The registry containing templates.</param>
-    internal class QueryEngineRegistryTemplatizer(QueryEngineRegistry registry)
+    internal class QueryEngineRegistryTemplatizer
     {
-        private readonly QueryEngineRegistry _registry = registry;
+        private readonly QueryEngineRegistry _registry;
+
+        /// <summary>
+        /// Instantiate the templatization helper.
+        /// </summary>
+        /// <param name="registry">The registry containing templates.</param>
+        public QueryEngineRegistryTemplatizer(QueryEngineRegistry registry)
+        {
+            _registry = registry;
+        }
 
         /// <summary>
         /// Templatize an expression, using an existing template in the
@@ -170,9 +175,14 @@ namespace Reaqtor.QueryEngine
             return binder.Visit(body);
         }
 
-        private sealed class Binder(Dictionary<ParameterExpression, Expression> bindings) : ScopedExpressionVisitor<ParameterExpression>
+        private sealed class Binder : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly Dictionary<ParameterExpression, Expression> _bindings = bindings;
+            private readonly Dictionary<ParameterExpression, Expression> _bindings;
+
+            public Binder(Dictionary<ParameterExpression, Expression> bindings)
+            {
+                _bindings = bindings;
+            }
 
             protected override Expression VisitParameter(ParameterExpression node)
             {

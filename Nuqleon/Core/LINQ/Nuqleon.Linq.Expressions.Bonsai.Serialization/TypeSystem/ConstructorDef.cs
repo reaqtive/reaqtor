@@ -15,15 +15,23 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal sealed class ConstructorDef(TypeRef declaringType, ConstructorInfoSlim constructor, params TypeRef[] parameters) : DeclaredMemberDef(declaringType)
+    internal sealed class ConstructorDef : DeclaredMemberDef
     {
         #region Fields
 
-        private readonly ConstructorInfoSlim _constructor = constructor;
-        private readonly TypeRef[] _parameters = parameters;
+        private readonly ConstructorInfoSlim _constructor;
+        private readonly TypeRef[] _parameters;
 
         #endregion
+
         #region Constructors
+
+        public ConstructorDef(TypeRef declaringType, ConstructorInfoSlim constructor, params TypeRef[] parameters)
+            : base(declaringType)
+        {
+            _constructor = constructor;
+            _parameters = parameters;
+        }
 
         #endregion
 

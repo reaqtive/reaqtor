@@ -13,22 +13,28 @@ namespace Reaqtive.Tasks
     /// Simple action task.
     /// </summary>
     /// <typeparam name="T">Type of the parameter passed to the task.</typeparam>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="ActionTask"/> class.
-    /// </remarks>
-    /// <param name="action">The action.</param>
-    /// <param name="state">The state to pass to the action.</param>
-    public sealed class ActionTask<T>(Action<T> action, T state) : ISchedulerTask
+    public sealed class ActionTask<T> : ISchedulerTask
     {
         /// <summary>
         /// The action.
         /// </summary>
-        private readonly Action<T> _action = action ?? throw new ArgumentNullException(nameof(action));
+        private readonly Action<T> _action;
 
         /// <summary>
         /// The state to pass to the action.
         /// </summary>
-        private readonly T _state = state;
+        private readonly T _state;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ActionTask"/> class.
+        /// </summary>
+        /// <param name="action">The action.</param>
+        /// <param name="state">The state to pass to the action.</param>
+        public ActionTask(Action<T> action, T state)
+        {
+            _action = action ?? throw new ArgumentNullException(nameof(action));
+            _state = state;
+        }
 
         /// <summary>
         /// Gets task priority.

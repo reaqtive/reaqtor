@@ -124,9 +124,14 @@ namespace Tests.Reaqtor.Shared.Core
             }));
         }
 
-        private sealed class Enumerable(IEnumerator e) : IEnumerable
+        private sealed class Enumerable : IEnumerable
         {
-            private readonly IEnumerator _e = e;
+            private readonly IEnumerator _e;
+
+            public Enumerable(IEnumerator e)
+            {
+                _e = e;
+            }
 
             IEnumerator IEnumerable.GetEnumerator()
             {
@@ -134,9 +139,14 @@ namespace Tests.Reaqtor.Shared.Core
             }
         }
 
-        private sealed class Enumerable<T>(IEnumerator<T> e) : IEnumerable<T>
+        private sealed class Enumerable<T> : IEnumerable<T>
         {
-            private readonly IEnumerator<T> _e = e;
+            private readonly IEnumerator<T> _e;
+
+            public Enumerable(IEnumerator<T> e)
+            {
+                _e = e;
+            }
 
             public IEnumerator<T> GetEnumerator()
             {

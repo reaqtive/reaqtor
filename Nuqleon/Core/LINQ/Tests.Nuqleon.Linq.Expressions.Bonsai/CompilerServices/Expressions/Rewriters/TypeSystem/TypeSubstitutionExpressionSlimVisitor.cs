@@ -1016,9 +1016,14 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
         }
 
-        private sealed class TypeErasureChecker(Type[] disallow) : ExpressionVisitor
+        private sealed class TypeErasureChecker : ExpressionVisitor
         {
-            private readonly Checker _checker = new Checker(disallow);
+            private readonly Checker _checker;
+
+            public TypeErasureChecker(Type[] disallow)
+            {
+                _checker = new Checker(disallow);
+            }
 
             public override Expression Visit(Expression node)
             {
@@ -1030,9 +1035,14 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
                 return base.Visit(node);
             }
 
-            private sealed class Checker(Type[] disallow) : TypeVisitor
+            private sealed class Checker : TypeVisitor
             {
-                private readonly Type[] _disallow = disallow;
+                private readonly Type[] _disallow;
+
+                public Checker(Type[] disallow)
+                {
+                    _disallow = disallow;
+                }
 
                 public override Type Visit(Type type)
                 {
@@ -1187,8 +1197,13 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             Assert.IsTrue(new ExpressionEqualityComparer(() => new Comparator(new StructuralTypeEqualityComparator())).Equals(la, lb));
         }
 
-        private sealed class Comparator(StructuralTypeEqualityComparator typeComparer) : ExpressionEqualityComparator(typeComparer, typeComparer.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
+        private sealed class Comparator : ExpressionEqualityComparator
         {
+            public Comparator(StructuralTypeEqualityComparator typeComparer)
+                : base(typeComparer, typeComparer.MemberComparer, EqualityComparer<object>.Default, EqualityComparer<CallSiteBinder>.Default)
+            {
+            }
+
             public override bool Equals(Expression x, Expression y)
             {
                 return base.Equals(x, y);
@@ -1225,9 +1240,12 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
 #pragma warning disable 0649
 #pragma warning disable IDE0060 // Remove unused parameter
-#pragma warning disable CS9113 // Parameter is unread (intentional test fixture)
-        private sealed class TestBar(int x)
+        private sealed class TestBar
         {
+            public TestBar(int x)
+            {
+            }
+
             public int this[int x] => throw new NotImplementedException();
 
             public static string Baz;
@@ -1248,8 +1266,12 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             public static TestBar operator -(TestBar b) => throw new NotImplementedException();
         }
 
-        private sealed class TestFoo(long x)
+        private sealed class TestFoo
         {
+            public TestFoo(long x)
+            {
+            }
+
             public static string Baz;
             public long Qux { get; set; }
             public TestFoo Joey { get; private set; }
@@ -1269,8 +1291,12 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         }
 
 #pragma warning disable CA1822 // Mark static
-        private sealed class TestBaz(int x)
+        private sealed class TestBaz
         {
+            public TestBaz(int x)
+            {
+            }
+
             public int x;
             public int Y { get; private set; }
             public int Z(int x) { return 42; }
@@ -1284,7 +1310,6 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             public int Age { get; set; }
         }
 #pragma warning restore 0649
-#pragma warning restore CS9113 // Parameter is unread (intentional test fixture)
 #pragma warning restore IDE0060 // Remove unused parameter
 
         #endregion

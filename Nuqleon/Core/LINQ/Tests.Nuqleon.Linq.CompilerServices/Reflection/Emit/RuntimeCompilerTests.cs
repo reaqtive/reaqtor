@@ -778,9 +778,11 @@ namespace Tests.System.Linq.CompilerServices
         }
 
         [AttributeUsage(AttributeTargets.Property | AttributeTargets.Parameter, AllowMultiple = false)]
-        public sealed class FooAttribute(string uri) : Attribute
+        public sealed class FooAttribute : Attribute
         {
-            public string Uri { get; } = uri;
+            public FooAttribute(string uri) => Uri = uri;
+
+            public string Uri { get; }
         }
 
         #endregion

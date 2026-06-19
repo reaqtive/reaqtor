@@ -7,9 +7,11 @@ using System.Collections.Generic;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
-    public class RemoveOperationResult<TKey, TValue>(bool keyDoesNotExist) : OperationResult<TKey, TValue>
+    public class RemoveOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
     {
-        private readonly bool _keyDoesNotExist = keyDoesNotExist;
+        private readonly bool _keyDoesNotExist;
+
+        public RemoveOperationResult(bool keyDoesNotExist) => _keyDoesNotExist = keyDoesNotExist;
 
         public override Exception Exception => _keyDoesNotExist ? new KeyNotFoundException() : null;
 

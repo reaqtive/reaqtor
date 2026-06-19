@@ -87,14 +87,18 @@ namespace Reaqtive.Operators
         /// Implementation of a scheduler task for timers.
         /// </summary>
         /// <typeparam name="TParam">Type of the parameters passed to the observer.</typeparam>
-        /// <remarks>
-        /// Creates a new timer task instance using the given parameters and the
-        /// observer to report timer events to.
-        /// </remarks>
-        /// <param name="parent">Parameters used by the timer.</param>
-        /// <param name="observer">Observer receiving the timer's output.</param>
-        private abstract class TimerTask<TParam>(TParam parent, IObserver<long> observer) : StatefulUnaryOperator<TParam, long>(parent, observer), ISchedulerTask
+        private abstract class TimerTask<TParam> : StatefulUnaryOperator<TParam, long>, ISchedulerTask
         {
+            /// <summary>
+            /// Creates a new timer task instance using the given parameters and the
+            /// observer to report timer events to.
+            /// </summary>
+            /// <param name="parent">Parameters used by the timer.</param>
+            /// <param name="observer">Observer receiving the timer's output.</param>
+            protected TimerTask(TParam parent, IObserver<long> observer)
+                : base(parent, observer)
+            {
+            }
 
             /// <summary>
             /// Gets task priority.
@@ -159,12 +163,7 @@ namespace Reaqtive.Operators
         /// <summary>
         /// Base class for timers.
         /// </summary>
-        /// <remarks>
-        /// Initializes a new instance of the <see cref="TimerBase"/> class.
-        /// </remarks>
-        /// <param name="parent">The parent.</param>
-        /// <param name="observer">The observer.</param>
-        private abstract class TimerBase(Timer parent, IObserver<long> observer) : TimerTask<Timer>(parent, observer)
+        private abstract class TimerBase : TimerTask<Timer>
         {
             /// <summary>
             /// Counter used to assign unique instance identifiers, in a way similar to Task.Id.
@@ -174,7 +173,18 @@ namespace Reaqtive.Operators
             /// <summary>
             /// A unique identifier for the timer.
             /// </summary>
-            protected readonly int _id = Interlocked.Increment(ref s_count);
+            protected readonly int _id;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="TimerBase"/> class.
+            /// </summary>
+            /// <param name="parent">The parent.</param>
+            /// <param name="observer">The observer.</param>
+            public TimerBase(Timer parent, IObserver<long> observer)
+                : base(parent, observer)
+            {
+                _id = Interlocked.Increment(ref s_count);
+            }
 
             /// <summary>
             /// Gets a friendly string representation of the operator.
@@ -189,12 +199,7 @@ namespace Reaqtive.Operators
         /// <summary>
         /// Implementation of a single timer subscription.
         /// </summary>
-        /// <remarks>
-        /// Initializes a new instance of the <see cref="Single"/> class.
-        /// </remarks>
-        /// <param name="parent">The parent.</param>
-        /// <param name="observer">The observer.</param>
-        private sealed class Single(Timer parent, IObserver<long> observer) : TimerBase(parent, observer)
+        private sealed class Single : TimerBase
         {
             /// <summary>
             /// The next absolute time that the timer should fire.
@@ -210,6 +215,16 @@ namespace Reaqtive.Operators
             /// The timer has fired. Will be used for checkpointing.
             /// </summary>
             private bool _hasFired;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Single"/> class.
+            /// </summary>
+            /// <param name="parent">The parent.</param>
+            /// <param name="observer">The observer.</param>
+            public Single(Timer parent, IObserver<long> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Timer+Single";
 
@@ -338,12 +353,7 @@ namespace Reaqtive.Operators
         /// <summary>
         /// Implementation of a periodic timer subscription.
         /// </summary>
-        /// <remarks>
-        /// Initializes a new instance of the <see cref="Periodic"/> class.
-        /// </remarks>
-        /// <param name="parent">The parent.</param>
-        /// <param name="observer">The observer.</param>
-        private sealed class Periodic(Timer parent, IObserver<long> observer) : TimerBase(parent, observer)
+        private sealed class Periodic : TimerBase
         {
             /// <summary>
             /// The next absolute time that the timer should fire.
@@ -359,6 +369,16 @@ namespace Reaqtive.Operators
             /// The counter.
             /// </summary>
             private long _counter;
+
+            /// <summary>
+            /// Initializes a new instance of the <see cref="Periodic"/> class.
+            /// </summary>
+            /// <param name="parent">The parent.</param>
+            /// <param name="observer">The observer.</param>
+            public Periodic(Timer parent, IObserver<long> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Timer+Period";
 

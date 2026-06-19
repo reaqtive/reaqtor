@@ -52,16 +52,29 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         private static int Normalize(int i) => i == -1 ? 0 : i;
     }
 
-    internal sealed class SerializationDomain(Version version) : Domain
+    internal sealed class SerializationDomain : Domain
     {
-        private readonly Dictionary<TypeSlim, TypeRef> _types = [];
-        private readonly Dictionary<AssemblySlim, int> _assemblies = [];
-        private readonly Dictionary<MemberInfoSlim, int> _members = [];
-        private readonly List<TypeDef> _typeDefs = [];
-        private readonly List<MemberDef> _memberDefs = [];
-        private readonly List<AssemblySlim> _assemblyDefs = [];
+        private readonly Dictionary<TypeSlim, TypeRef> _types;
+        private readonly Dictionary<AssemblySlim, int> _assemblies;
+        private readonly Dictionary<MemberInfoSlim, int> _members;
+        private readonly List<TypeDef> _typeDefs;
+        private readonly List<MemberDef> _memberDefs;
+        private readonly List<AssemblySlim> _assemblyDefs;
 
-        protected override Version Version { get; } = version;
+        public SerializationDomain(Version version)
+        {
+            _types = [];
+            _assemblies = [];
+            _members = [];
+
+            _typeDefs = [];
+            _assemblyDefs = [];
+            _memberDefs = [];
+
+            Version = version;
+        }
+
+        protected override Version Version { get; }
 
         public TypeRef AddType(TypeSlim type) => AddType(type, s_noTypesCollection);
 

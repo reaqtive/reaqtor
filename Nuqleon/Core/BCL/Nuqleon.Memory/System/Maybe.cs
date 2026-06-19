@@ -10,8 +10,10 @@
 
 namespace System
 {
-    internal readonly struct Maybe<T>(T value)
+    internal readonly struct Maybe<T>
     {
-        public T Value { get; } = value;
+        public Maybe(T value) => Value = value;
+
+        public T Value { get; }
     }
 }

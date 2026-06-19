@@ -750,9 +750,14 @@ namespace System.Linq.CompilerServices
                 return res;
             }
 
-            private sealed class MemberBindingEvaluator(PartialExpressionEvaluatorBase.Impl parent) : ExpressionVisitor
+            private sealed class MemberBindingEvaluator : ExpressionVisitor
             {
-                private readonly Impl _parent = parent;
+                private readonly Impl _parent;
+
+                public MemberBindingEvaluator(Impl parent)
+                {
+                    _parent = parent;
+                }
 
                 public MemberBinding Visit(MemberBinding node)
                 {

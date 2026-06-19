@@ -4,9 +4,11 @@
 
 namespace System.Diagnostics
 {
-    internal sealed class StopwatchImpl(Stopwatch stopwatch) : IStopwatch
+    internal sealed class StopwatchImpl : IStopwatch
     {
-        private readonly Stopwatch _stopwatch = stopwatch;
+        private readonly Stopwatch _stopwatch;
+
+        public StopwatchImpl(Stopwatch stopwatch) => _stopwatch = stopwatch;
 
         public TimeSpan Elapsed => _stopwatch.Elapsed;
 

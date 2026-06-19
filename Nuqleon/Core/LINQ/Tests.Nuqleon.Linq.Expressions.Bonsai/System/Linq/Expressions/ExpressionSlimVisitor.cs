@@ -468,9 +468,14 @@ namespace System.Linq.Expressions
             Assert.AreEqual(42, value);
         }
 
-        private class LabelTargetFinder(string name) : ExpressionSlimVisitor
+        private class LabelTargetFinder : ExpressionSlimVisitor
         {
-            private readonly string _name = name;
+            private readonly string _name;
+
+            public LabelTargetFinder(string name)
+            {
+                _name = name;
+            }
 
             internal LabelTargetSlim Target
             {
@@ -496,10 +501,16 @@ namespace System.Linq.Expressions
             }
         }
 
-        private class LabelTargetSubstitutor(LabelTargetSlim before, LabelTargetSlim after) : ExpressionSlimVisitor
+        private class LabelTargetSubstitutor : ExpressionSlimVisitor
         {
-            private readonly LabelTargetSlim _before = before;
-            private readonly LabelTargetSlim _after = after;
+            private readonly LabelTargetSlim _before;
+            private readonly LabelTargetSlim _after;
+
+            public LabelTargetSubstitutor(LabelTargetSlim before, LabelTargetSlim after)
+            {
+                _before = before;
+                _after = after;
+            }
 
             protected internal override LabelTargetSlim VisitLabelTarget(LabelTargetSlim node)
             {
@@ -510,9 +521,14 @@ namespace System.Linq.Expressions
             }
         }
 
-        private class ParameterFinder(string name) : ExpressionSlimVisitor
+        private class ParameterFinder : ExpressionSlimVisitor
         {
-            private readonly string _name = name;
+            private readonly string _name;
+
+            public ParameterFinder(string name)
+            {
+                _name = name;
+            }
 
             internal ParameterExpressionSlim Parameter
             {
@@ -538,10 +554,16 @@ namespace System.Linq.Expressions
             }
         }
 
-        private class ParameterSubstitutor(ParameterExpressionSlim before, ParameterExpressionSlim after) : ExpressionSlimVisitor
+        private class ParameterSubstitutor : ExpressionSlimVisitor
         {
-            private readonly ParameterExpressionSlim _before = before;
-            private readonly ParameterExpressionSlim _after = after;
+            private readonly ParameterExpressionSlim _before;
+            private readonly ParameterExpressionSlim _after;
+
+            public ParameterSubstitutor(ParameterExpressionSlim before, ParameterExpressionSlim after)
+            {
+                _before = before;
+                _after = after;
+            }
 
             protected internal override ExpressionSlim VisitParameter(ParameterExpressionSlim node)
             {

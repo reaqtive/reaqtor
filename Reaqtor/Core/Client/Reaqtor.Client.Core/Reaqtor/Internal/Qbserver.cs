@@ -15,12 +15,18 @@ using System.Threading.Tasks;
 
 namespace Reaqtor
 {
-    internal class Qbserver<T>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQbserverBase<T>(provider)
+    internal class Qbserver<T> : AsyncReactiveQbserverBase<T>
     {
         private int _initializing = 0;
         private volatile IAsyncReactiveObserver<T> _observer;
 
-        public override Expression Expression { get; } = expression;
+        public Qbserver(Expression expression, IAsyncReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+        }
+
+        public override Expression Expression { get; }
 
         protected override Task OnNextAsyncCore(T value, CancellationToken token)
         {

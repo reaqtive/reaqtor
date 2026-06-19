@@ -28,15 +28,23 @@ namespace Nuqleon.DataModel.CompilerServices
     /// <summary>
     /// Replaces entity types with anonymous or record types.
     /// </summary>
-    /// <remarks>
-    /// Create an entity type substitutor.
-    /// </remarks>
-    /// <param name="typeMap">A map to use to replace types.</param>
-    public abstract class EntityTypeSubstitutor(IDictionary<Type, Type> typeMap) : TypeSubstitutionExpressionVisitor(typeMap)
+    public abstract class EntityTypeSubstitutor : TypeSubstitutionExpressionVisitor
     {
         #region Fields & constructors
 
-        private readonly EnumAwareTypeSubstitutor _subst = new EnumAwareTypeSubstitutor(typeMap);
+        private readonly EnumAwareTypeSubstitutor _subst;
+
+        /// <summary>
+        /// Create an entity type substitutor.
+        /// </summary>
+        /// <param name="typeMap">A map to use to replace types.</param>
+        protected EntityTypeSubstitutor(IDictionary<Type, Type> typeMap)
+            : base(typeMap)
+        {
+            TypeMap = typeMap ?? throw new ArgumentNullException(nameof(typeMap));
+            ConstantsMap = new Dictionary<object, object>();
+            _subst = new EnumAwareTypeSubstitutor(typeMap);
+        }
 
         #endregion
 
@@ -45,7 +53,7 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <summary>
         /// Gets a reference to the type map so that mappings can be added.
         /// </summary>
-        public IDictionary<Type, Type> TypeMap { get; } = typeMap ?? throw new ArgumentNullException(nameof(typeMap));
+        public IDictionary<Type, Type> TypeMap { get; }
 
         /// <summary>
         /// The parent of this type substitution visitor, which has an `Apply` method
@@ -57,7 +65,7 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <summary>
         /// Gets a reference to the constants map of converted constant values.
         /// </summary>
-        public IDictionary<object, object> ConstantsMap { get; } = new Dictionary<object, object>();
+        public IDictionary<object, object> ConstantsMap { get; }
 
         #endregion
 
@@ -884,12 +892,16 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <summary>
         /// Sentinel expression type which can be used to indicate absence of assignment of a member in a structural type.
         /// </summary>
-        /// <remarks>
-        /// Creates a new sentinel expression with the specified underlying type.
-        /// </remarks>
-        /// <param name="type">Underlying type of the expression.</param>
-        protected class UnassignedExpression(Type type) : Expression
+        protected class UnassignedExpression : Expression
         {
+            /// <summary>
+            /// Creates a new sentinel expression with the specified underlying type.
+            /// </summary>
+            /// <param name="type">Underlying type of the expression.</param>
+            public UnassignedExpression(Type type)
+            {
+                Type = type;
+            }
 
             /// <summary>
             /// Returns Extension.
@@ -899,7 +911,7 @@ namespace Nuqleon.DataModel.CompilerServices
             /// <summary>
             /// Gets the underlying type.
             /// </summary>
-            public override Type Type { get; } = type;
+            public override Type Type { get; }
 
             /// <summary>
             /// Always returns true.

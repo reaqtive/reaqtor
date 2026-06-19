@@ -179,11 +179,18 @@ namespace Tests.Reaqtor.QueryEngine
             public EventWaitHandle RemoveLock { get; private set; }
         }
 
-        private sealed class BlockingCollection<TKey, TValue>(IEqualityComparer<TKey> comparer, EventWaitHandle blockAdd, EventWaitHandle blockRemove) : IReactiveEntityCollection<TKey, TValue>
+        private sealed class BlockingCollection<TKey, TValue> : IReactiveEntityCollection<TKey, TValue>
         {
-            private readonly IReactiveEntityCollection<TKey, TValue> _inner = new ReactiveEntityCollection<TKey, TValue>(comparer);
-            private readonly EventWaitHandle _blockAdd = blockAdd;
-            private readonly EventWaitHandle _blockRemove = blockRemove;
+            private readonly IReactiveEntityCollection<TKey, TValue> _inner;
+            private readonly EventWaitHandle _blockAdd;
+            private readonly EventWaitHandle _blockRemove;
+
+            public BlockingCollection(IEqualityComparer<TKey> comparer, EventWaitHandle blockAdd, EventWaitHandle blockRemove)
+            {
+                _inner = new ReactiveEntityCollection<TKey, TValue>(comparer);
+                _blockAdd = blockAdd;
+                _blockRemove = blockRemove;
+            }
 
             public bool ContainsKey(TKey key)
             {

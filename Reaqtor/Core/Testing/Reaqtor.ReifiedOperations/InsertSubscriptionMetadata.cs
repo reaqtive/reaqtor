@@ -14,10 +14,15 @@ using System.Linq.Expressions;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class InsertSubscriptionMetadata(Uri subscriptionUri, Expression expression, object state) : InsertMetadataOperation(ServiceOperationKind.InsertSubscriptionMetadata, subscriptionUri, expression, state)
+    public class InsertSubscriptionMetadata : InsertMetadataOperation
     {
         public InsertSubscriptionMetadata(Uri subscriptionUri)
             : this(subscriptionUri, null, null)
+        {
+        }
+
+        public InsertSubscriptionMetadata(Uri subscriptionUri, Expression expression, object state)
+            : base(ServiceOperationKind.InsertSubscriptionMetadata, subscriptionUri, expression, state)
         {
         }
     }

@@ -16,23 +16,28 @@ namespace System.Linq.CompilerServices
     /// <summary>
     /// Binding of a parameter expression to a value.
     /// </summary>
-    /// <remarks>
-    /// Creates a new binding with the specified parameter and value.
-    /// </remarks>
-    /// <param name="parameter">Parameter that's bound by the specified value.</param>
-    /// <param name="value">Value the specified parameter is bound to.</param>
-    public readonly struct Binding(ParameterExpression parameter, Expression value) : IEquatable<Binding>
+    public readonly struct Binding : IEquatable<Binding>
     {
+        /// <summary>
+        /// Creates a new binding with the specified parameter and value.
+        /// </summary>
+        /// <param name="parameter">Parameter that's bound by the specified value.</param>
+        /// <param name="value">Value the specified parameter is bound to.</param>
+        public Binding(ParameterExpression parameter, Expression value)
+        {
+            Parameter = parameter;
+            Value = value;
+        }
 
         /// <summary>
         /// Gets the bound parameter.
         /// </summary>
-        public ParameterExpression Parameter { get; } = parameter;
+        public ParameterExpression Parameter { get; }
 
         /// <summary>
         /// Gets the value of the binding.
         /// </summary>
-        public Expression Value { get; } = value;
+        public Expression Value { get; }
 
         /// <summary>
         /// Checks if an instance is equal to the current instance.

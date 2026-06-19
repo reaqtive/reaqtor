@@ -18,21 +18,14 @@ namespace System.Linq.Expressions
     /// <summary>
     /// A heap for compacting expressions by hoisting constants and sharing the remaining template.
     /// </summary>
-    /// <remarks>
-    /// Initializes the expression heap with the given template cache.
-    /// </remarks>
-    /// <param name="hoister">The constant hoister.</param>
-    /// <param name="cacheFactory">
-    /// Creates the template cache using the given equality comparer.
-    /// </param>
-    public class ExpressionHeap(IConstantHoister hoister, Func<IEqualityComparer<Expression>, ICache<Expression>> cacheFactory) : Cache<Expression, Expression, IReadOnlyIndexed>((cacheFactory ?? throw new ArgumentNullException(nameof(cacheFactory)))(Comparer.Instance))
+    public class ExpressionHeap : Cache<Expression, Expression, IReadOnlyIndexed>
     {
         /// <summary>
         /// A single boxed instance of `Unit` for use as a separator in the bundle.
         /// </summary>
         private static readonly object s_canary = new Unit();
 
-        private readonly IConstantHoister _hoister = hoister ?? throw new ArgumentNullException(nameof(hoister));
+        private readonly IConstantHoister _hoister;
 
         /// <summary>
         /// Initializes the expression heap with a default constant hoister and template cache.
@@ -49,6 +42,19 @@ namespace System.Linq.Expressions
         public ExpressionHeap(IConstantHoister hoister)
             : this(hoister, comparer => new Cache<Expression>(new CacheStorage<Expression>(comparer)))
         {
+        }
+
+        /// <summary>
+        /// Initializes the expression heap with the given template cache.
+        /// </summary>
+        /// <param name="hoister">The constant hoister.</param>
+        /// <param name="cacheFactory">
+        /// Creates the template cache using the given equality comparer.
+        /// </param>
+        public ExpressionHeap(IConstantHoister hoister, Func<IEqualityComparer<Expression>, ICache<Expression>> cacheFactory)
+            : base((cacheFactory ?? throw new ArgumentNullException(nameof(cacheFactory)))(Comparer.Instance))
+        {
+            _hoister = hoister ?? throw new ArgumentNullException(nameof(hoister));
         }
 
         /// <summary>
@@ -265,9 +271,11 @@ namespace System.Linq.Expressions
             }
         }
 
-        private sealed class Revisitor(Dictionary<ParameterExpression, ExpressionHeap.SlotValue> values) : ScopedExpressionVisitor<ParameterExpression>
+        private sealed class Revisitor : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly Dictionary<ParameterExpression, SlotValue> _values = values;
+            private readonly Dictionary<ParameterExpression, SlotValue> _values;
+
+            public Revisitor(Dictionary<ParameterExpression, SlotValue> values) => _values = values;
 
             protected override Expression VisitParameter(ParameterExpression node)
             {
@@ -292,11 +300,17 @@ namespace System.Linq.Expressions
             protected override ParameterExpression GetState(ParameterExpression parameter) => parameter;
         }
 
-        private readonly struct SlotValue(object value, ExpressionHeap.SlotKind kind)
+        private readonly struct SlotValue
         {
-            public object Value { get; } = value;
+            public SlotValue(object value, SlotKind kind)
+            {
+                Value = value;
+                Kind = kind;
+            }
 
-            public SlotKind Kind { get; } = kind;
+            public object Value { get; }
+
+            public SlotKind Kind { get; }
         }
 
         private enum SlotKind : byte

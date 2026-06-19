@@ -72,9 +72,11 @@ namespace Reaqtor.IoT
             }
         }
 
-        private sealed class ReliableObserver<T>(ReliableSubject<T> subject) : IReliableObserver<T>
+        private sealed class ReliableObserver<T> : IReliableObserver<T>
         {
-            private readonly ReliableSubject<T> _subject = subject;
+            private readonly ReliableSubject<T> _subject;
+
+            public ReliableObserver(ReliableSubject<T> subject) => _subject = subject;
 
             public Uri ResubscribeUri => throw new NotImplementedException();
 
@@ -87,17 +89,25 @@ namespace Reaqtor.IoT
             public void OnStarted() { }
         }
 
-        private sealed class ReliableObservable<T>(ReliableSubject<T> subject) : IReliableObservable<T>
+        private sealed class ReliableObservable<T> : IReliableObservable<T>
         {
-            private readonly ReliableSubject<T> _subject = subject;
+            private readonly ReliableSubject<T> _subject;
+
+            public ReliableObservable(ReliableSubject<T> subject) => _subject = subject;
 
             public IReliableSubscription Subscribe(IReliableObserver<T> observer) => new Subscription(_subject, observer);
 
-            private sealed class Subscription(ReliableSubject<T> subject, IReliableObserver<T> observer) : IReliableSubscription
+            private sealed class Subscription : IReliableSubscription
             {
-                private readonly ReliableSubject<T> _subject = subject;
-                private readonly IReliableObserver<T> _observer = observer;
+                private readonly ReliableSubject<T> _subject;
+                private readonly IReliableObserver<T> _observer;
                 private IDisposable _subscription;
+
+                public Subscription(ReliableSubject<T> subject, IReliableObserver<T> observer)
+                {
+                    _subject = subject;
+                    _observer = observer;
+                }
 
                 public Uri ResubscribeUri => throw new NotImplementedException("Used for engine-to-engine communication; N/A here.");
 
@@ -200,9 +210,11 @@ namespace Reaqtor.IoT
             }
         }
 
-        private sealed class Observer(IReliableObserver<T> observer) : IObserver<(long sequenceId, T item)>
+        private sealed class Observer : IObserver<(long sequenceId, T item)>
         {
-            private readonly IReliableObserver<T> _observer = observer;
+            private readonly IReliableObserver<T> _observer;
+
+            public Observer(IReliableObserver<T> observer) => _observer = observer;
 
             public void OnCompleted() => _observer.OnCompleted();
 
@@ -211,10 +223,16 @@ namespace Reaqtor.IoT
             public void OnNext((long sequenceId, T item) value) => _observer.OnNext(value.item, value.sequenceId);
         }
 
-        private sealed class Subscription(ReliableSubject<T> parent, IObserver<(long sequenceId, T item)> observer) : IDisposable
+        private sealed class Subscription : IDisposable
         {
-            private readonly ReliableSubject<T> _parent = parent;
-            private IObserver<(long sequenceId, T item)> _observer = observer;
+            private readonly ReliableSubject<T> _parent;
+            private IObserver<(long sequenceId, T item)> _observer;
+
+            public Subscription(ReliableSubject<T> parent, IObserver<(long sequenceId, T item)> observer)
+            {
+                _parent = parent;
+                _observer = observer;
+            }
 
             public void Dispose()
             {

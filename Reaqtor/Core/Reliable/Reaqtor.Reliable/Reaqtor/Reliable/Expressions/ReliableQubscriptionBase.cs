@@ -8,9 +8,11 @@ using Reaqtor.Reliable.Client;
 
 namespace Reaqtor.Reliable.Expressions
 {
-    public abstract class ReliableQubscriptionBase(IReliableQueryProvider provider) : ReliableReactiveSubscriptionBase, IReliableQubscription
+    public abstract class ReliableQubscriptionBase : ReliableReactiveSubscriptionBase, IReliableQubscription
     {
-        public IReliableQueryProvider Provider { get; } = provider;
+        protected ReliableQubscriptionBase(IReliableQueryProvider provider) => Provider = provider;
+
+        public IReliableQueryProvider Provider { get; }
 
         public abstract Expression Expression { get; }
     }

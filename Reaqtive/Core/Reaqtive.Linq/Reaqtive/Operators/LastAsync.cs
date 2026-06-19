@@ -27,10 +27,15 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(LastAsync<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<LastAsync<TSource>, TSource>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<LastAsync<TSource>, TSource>, IObserver<TSource>
         {
             private bool _hasValue;
             private TSource _lastValue = default;
+
+            public _(LastAsync<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Last";
 

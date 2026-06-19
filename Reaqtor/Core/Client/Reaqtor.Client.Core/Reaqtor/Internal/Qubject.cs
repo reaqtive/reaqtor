@@ -15,11 +15,18 @@ using System.Threading.Tasks;
 
 namespace Reaqtor
 {
-    internal class Qubject<TInput, TOutput>(Expression expression, IAsyncReactiveQueryProvider provider) : AsyncReactiveQubjectBase<TInput, TOutput>(provider)
+    internal class Qubject<TInput, TOutput> : AsyncReactiveQubjectBase<TInput, TOutput>
     {
-        private readonly IAsyncReactiveQbserver<TInput> _observer = provider.CreateQbserver<TInput>(expression);
+        private readonly IAsyncReactiveQbserver<TInput> _observer;
 
-        public override Expression Expression { get; } = expression;
+        public Qubject(Expression expression, IAsyncReactiveQueryProvider provider)
+            : base(provider)
+        {
+            Expression = expression;
+            _observer = provider.CreateQbserver<TInput>(expression);
+        }
+
+        public override Expression Expression { get; }
 
         #region Observer
 

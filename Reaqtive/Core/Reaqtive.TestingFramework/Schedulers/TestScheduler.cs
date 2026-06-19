@@ -167,14 +167,21 @@ namespace Reaqtive.TestingFramework
             return new MockOperatorContext { Scheduler = this, ExecutionEnvironment = environment, TraceSource = trace, Settings = settings };
         }
 
-        private sealed class ActionTask<TState>(Action<IScheduler, TState> action, TState state) : ISchedulerTask
+        private sealed class ActionTask<TState> : ISchedulerTask
         {
-            private readonly Action<IScheduler, TState> _action = action;
-            private readonly TState _state = state;
+            private readonly Action<IScheduler, TState> _action;
+            private readonly TState _state;
+
+            public ActionTask(Action<IScheduler, TState> action, TState state)
+            {
+                _action = action;
+                _state = state;
+                IsRunnable = true;
+            }
 
             public long Priority => 0;
 
-            public bool IsRunnable { get; set; } = true;
+            public bool IsRunnable { get; set; }
 
             public bool Execute(IScheduler scheduler)
             {

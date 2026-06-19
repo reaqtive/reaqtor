@@ -26,10 +26,16 @@ namespace Tests.Reaqtor.QueryEngine
             return new SynchronizedReliableObserver<T>(observer, scheduler);
         }
 
-        private sealed class SynchronizedObserver<T>(IObserver<T> observer, IScheduler scheduler) : ObserverBase<T>
+        private sealed class SynchronizedObserver<T> : ObserverBase<T>
         {
-            private readonly IObserver<T> _observer = observer;
-            private readonly IScheduler _scheduler = scheduler;
+            private readonly IObserver<T> _observer;
+            private readonly IScheduler _scheduler;
+
+            public SynchronizedObserver(IObserver<T> observer, IScheduler scheduler)
+            {
+                _observer = observer;
+                _scheduler = scheduler;
+            }
 
             protected override void OnCompletedCore()
             {
@@ -76,10 +82,16 @@ namespace Tests.Reaqtor.QueryEngine
             }
         }
 
-        private sealed class SynchronizedReliableObserver<T>(IReliableObserver<T> observer, IScheduler scheduler) : IReliableObserver<T>
+        private sealed class SynchronizedReliableObserver<T> : IReliableObserver<T>
         {
-            private readonly IReliableObserver<T> _observer = observer;
-            private readonly IScheduler _scheduler = scheduler;
+            private readonly IReliableObserver<T> _observer;
+            private readonly IScheduler _scheduler;
+
+            public SynchronizedReliableObserver(IReliableObserver<T> observer, IScheduler scheduler)
+            {
+                _observer = observer;
+                _scheduler = scheduler;
+            }
 
             public void OnNext(T item, long sequenceId)
             {

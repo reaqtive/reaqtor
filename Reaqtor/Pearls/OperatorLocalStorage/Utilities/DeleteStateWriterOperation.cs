@@ -10,8 +10,12 @@
 
 namespace Utilities
 {
-    public sealed class DeleteStateWriterOperation(string category, string key) : StateWriterOperation(category, key)
+    public sealed class DeleteStateWriterOperation : StateWriterOperation
     {
+        public DeleteStateWriterOperation(string category, string key) : base(category, key)
+        {
+        }
+
         public override StateWriterOperationKind Kind => StateWriterOperationKind.Delete;
 
         public override void Apply(Store store)

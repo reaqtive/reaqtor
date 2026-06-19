@@ -9,17 +9,25 @@ using Reaqtive.Scheduler;
 
 namespace Test.Reaqtive.Scheduler.Tasks
 {
-    internal sealed class MessageQueueBasedTask<T>(ConcurrentQueue<int> queue, int batchSize, T state, Func<IScheduler, ConcurrentQueue<int>, int, T, bool> action) : ISchedulerTask
+    internal sealed class MessageQueueBasedTask<T> : ISchedulerTask
     {
-        private readonly ConcurrentQueue<int> _queue = queue;
-        private readonly int _batchSize = batchSize;
-        private readonly Func<IScheduler, ConcurrentQueue<int>, int, T, bool> _action = action;
+        private readonly ConcurrentQueue<int> _queue;
+        private readonly int _batchSize;
+        private readonly Func<IScheduler, ConcurrentQueue<int>, int, T, bool> _action;
+
+        public MessageQueueBasedTask(ConcurrentQueue<int> queue, int batchSize, T state, Func<IScheduler, ConcurrentQueue<int>, int, T, bool> action)
+        {
+            _queue = queue;
+            _batchSize = batchSize;
+            _action = action;
+            State = state;
+        }
 
         public long Priority { get; private set; }
 
         public bool IsRunnable => !_queue.IsEmpty;
 
-        public T State { get; private set; } = state;
+        public T State { get; private set; }
 
         public bool Execute(IScheduler scheduler) => _action(scheduler, _queue, _batchSize, State);
 

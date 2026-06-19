@@ -9,11 +9,18 @@ using Reaqtive.Testing;
 
 namespace Reaqtive.TestingFramework.Mocks
 {
-    public abstract class MockSubscribable<T>(IClockable<long> clock) : ITestableSubscribable<T>
+    public abstract class MockSubscribable<T> : ITestableSubscribable<T>
     {
-        protected IClockable<long> Clock { get; } = clock ?? throw new ArgumentNullException(nameof(clock));
+        protected MockSubscribable(IClockable<long> clock)
+        {
+            Clock = clock ?? throw new ArgumentNullException(nameof(clock));
+            Subscriptions = [];
+            TheObserver = NopObserver<T>.Instance;
+        }
 
-        public IList<Subscription> Subscriptions { get; } = [];
+        protected IClockable<long> Clock { get; }
+
+        public IList<Subscription> Subscriptions { get; }
 
         public abstract IList<Recorded<Notification<T>>> ObserverMessages { get; }
 
@@ -42,6 +49,6 @@ namespace Reaqtive.TestingFramework.Mocks
         {
         }
 
-        protected IObserver<T> TheObserver { get; set; } = NopObserver<T>.Instance;
+        protected IObserver<T> TheObserver { get; set; }
     }
 }

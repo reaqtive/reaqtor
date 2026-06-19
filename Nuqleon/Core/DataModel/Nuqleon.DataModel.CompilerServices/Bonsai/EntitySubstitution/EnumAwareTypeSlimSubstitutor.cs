@@ -13,9 +13,11 @@ using System.Reflection;
 
 namespace Nuqleon.DataModel.CompilerServices.Bonsai
 {
-    internal sealed class EnumAwareTypeSlimSubstitutor(IDictionary<TypeSlim, TypeSlim> typeMap) : TypeSlimVisitor
+    internal sealed class EnumAwareTypeSlimSubstitutor : TypeSlimVisitor
     {
-        private readonly IDictionary<TypeSlim, TypeSlim> _typeMap = typeMap;
+        private readonly IDictionary<TypeSlim, TypeSlim> _typeMap;
+
+        public EnumAwareTypeSlimSubstitutor(IDictionary<TypeSlim, TypeSlim> typeMap) => _typeMap = typeMap;
 
         public TypeSlim Rewrite(TypeSlim type) => Visit(type);
 

@@ -65,8 +65,13 @@ namespace Test.Reaqtive
             countdown.Wait();
         }
 
-        private sealed class MyOp<TResult>(IObserver<TResult> observer) : ContextSwitchOperator<bool, TResult>(false, observer)
+        private sealed class MyOp<TResult> : ContextSwitchOperator<bool, TResult>
         {
+            public MyOp(IObserver<TResult> observer)
+                : base(false, observer)
+            {
+            }
+
             public override string Name => "test:MyOp";
 
             public override Version Version => new(1, 0, 0, 0);

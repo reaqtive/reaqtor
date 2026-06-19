@@ -254,13 +254,20 @@ namespace Tests.Reaqtor.QueryEngine
         {
         }
 
-        private sealed class QuotedFoo(QuoterTests.IFoo value, Expression expression, int argument) : IQuoted<IFoo>, IFoo
+        private sealed class QuotedFoo : IQuoted<IFoo>, IFoo
         {
-            public IFoo Value { get; } = value;
+            public QuotedFoo(IFoo value, Expression expression, int argument)
+            {
+                Value = value;
+                Expression = expression;
+                Argument = argument;
+            }
 
-            public Expression Expression { get; } = expression;
+            public IFoo Value { get; }
 
-            public int Argument { get; } = argument;
+            public Expression Expression { get; }
+
+            public int Argument { get; }
         }
 
         private sealed class Quotable : IExpressible

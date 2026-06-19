@@ -9,11 +9,13 @@ using Reaqtor.Reliable.Client;
 
 namespace Reaqtor.Reliable.Expressions
 {
-    public abstract class ReliableQbservableBase<T>(IReliableQueryProvider provider) : ReliableReactiveObservableBase<T>, IReliableQbservable<T>
+    public abstract class ReliableQbservableBase<T> : ReliableReactiveObservableBase<T>, IReliableQbservable<T>
     {
+        protected ReliableQbservableBase(IReliableQueryProvider provider) => Provider = provider;
+
         public Type ElementType => typeof(T);
 
-        public IReliableQueryProvider Provider { get; } = provider;
+        public IReliableQueryProvider Provider { get; }
 
         public abstract Expression Expression { get; }
 

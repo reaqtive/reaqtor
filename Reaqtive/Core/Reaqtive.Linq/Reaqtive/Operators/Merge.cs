@@ -8,19 +8,31 @@ using System.Threading;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Merge<TSource>(params ISubscribable<TSource>[] sources) : SubscribableBase<TSource>
+    internal sealed class Merge<TSource> : SubscribableBase<TSource>
     {
-        private readonly ISubscribable<TSource>[] _sources = sources;
+        private readonly ISubscribable<TSource>[] _sources;
+
+        public Merge(params ISubscribable<TSource>[] sources)
+        {
+            _sources = sources;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<TSource> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(Merge<TSource> parent, IObserver<TSource> observer) : StatefulOperator<Merge<TSource>, TSource>(parent, observer)
+        private sealed class _ : StatefulOperator<Merge<TSource>, TSource>
         {
-            private readonly Lock _gate = new Lock();
-            private readonly bool[] _done = new bool[parent._sources.Length];
+            private readonly Lock _gate;
+            private readonly bool[] _done;
+
+            public _(Merge<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+                _gate = new Lock();
+                _done = new bool[parent._sources.Length];
+            }
 
             public override string Name => "rc:Merge-N";
 
@@ -105,11 +117,17 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private sealed class Observer(Merge<TSource>._ parent, int index) : IObserver<TSource>
+            private sealed class Observer : IObserver<TSource>
             {
-                private readonly int _index = index;
-                private readonly _ _parent = parent;
+                private readonly int _index;
+                private readonly _ _parent;
                 private ISubscription _subscription;
+
+                public Observer(_ parent, int index)
+                {
+                    _parent = parent;
+                    _index = index;
+                }
 
                 public ISubscription Subscription
                 {

@@ -275,18 +275,30 @@ namespace Utilities
             private static IEnumerable<string> GetNames(MemberInfo member) => new[] { member.GetCustomAttribute<MappingAttribute>()?.Uri ?? member.Name };
         }
 
-        private sealed class ProjectingSerializer<TInput, TOutput>(Func<TInput, TOutput> selector, ISerializer<TOutput> serializer) : ISerializer<TInput>
+        private sealed class ProjectingSerializer<TInput, TOutput> : ISerializer<TInput>
         {
-            private readonly Func<TInput, TOutput> _selector = selector;
-            private readonly ISerializer<TOutput> _serializer = serializer;
+            private readonly Func<TInput, TOutput> _selector;
+            private readonly ISerializer<TOutput> _serializer;
+
+            public ProjectingSerializer(Func<TInput, TOutput> selector, ISerializer<TOutput> serializer)
+            {
+                _selector = selector;
+                _serializer = serializer;
+            }
 
             public void Serialize(TInput value, Stream stream) => _serializer.Serialize(_selector(value), stream);
         }
 
-        private sealed class ProjectingDeserializer<TInput, TOutput>(Func<TOutput, TInput> selector, IDeserializer<TOutput> deserializer) : IDeserializer<TInput>
+        private sealed class ProjectingDeserializer<TInput, TOutput> : IDeserializer<TInput>
         {
-            private readonly Func<TOutput, TInput> _selector = selector;
-            private readonly IDeserializer<TOutput> _deserializer = deserializer;
+            private readonly Func<TOutput, TInput> _selector;
+            private readonly IDeserializer<TOutput> _deserializer;
+
+            public ProjectingDeserializer(Func<TOutput, TInput> selector, IDeserializer<TOutput> deserializer)
+            {
+                _selector = selector;
+                _deserializer = deserializer;
+            }
 
             public TInput Deserialize(Stream stream) => _selector(_deserializer.Deserialize(stream));
         }

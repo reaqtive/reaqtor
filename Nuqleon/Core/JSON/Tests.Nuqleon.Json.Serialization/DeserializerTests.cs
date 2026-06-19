@@ -1049,9 +1049,14 @@ namespace Tests
         }
 
         [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property)]
-        private sealed class IdentifierAttribute(string id) : Attribute
+        private sealed class IdentifierAttribute : Attribute
         {
-            public string Id = id;
+            public IdentifierAttribute(string id)
+            {
+                Id = id;
+            }
+
+            public string Id;
         }
     }
 }

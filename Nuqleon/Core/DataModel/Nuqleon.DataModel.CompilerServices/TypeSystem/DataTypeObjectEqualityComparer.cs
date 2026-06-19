@@ -20,10 +20,6 @@ namespace Nuqleon.DataModel.TypeSystem
     /// <summary>
     /// Equality comparer for objects with data model-compliant types.
     /// </summary>
-    /// <remarks>
-    /// Instantiates the comparer with a custom comparator factory.
-    /// </remarks>
-    /// <param name="comparatorFactory">Produces comparator instances to compute equivalence and hash codes.</param>
 #if SUPPORT_SUBSET_TYPES
     /// <remarks>
     /// The left object (i.e., the expected object) may contain a subset
@@ -32,11 +28,11 @@ namespace Nuqleon.DataModel.TypeSystem
     /// </remarks>
 #endif
     [KnownType]
-    public class DataTypeObjectEqualityComparer(Func<DataTypeObjectEqualityComparator> comparatorFactory) : IEqualityComparer<object>
+    public class DataTypeObjectEqualityComparer : IEqualityComparer<object>
     {
         private static readonly ObjectPool<DataTypeObjectEqualityComparator> s_pool = new(() => new DataTypeObjectEqualityComparator());
 
-        private readonly Func<DataTypeObjectEqualityComparator> _comparatorFactory = comparatorFactory;
+        private readonly Func<DataTypeObjectEqualityComparator> _comparatorFactory;
         private readonly bool _isPooled;
 
         /// <summary>
@@ -46,6 +42,15 @@ namespace Nuqleon.DataModel.TypeSystem
             : this(s_pool.Allocate)
         {
             _isPooled = true;
+        }
+
+        /// <summary>
+        /// Instantiates the comparer with a custom comparator factory.
+        /// </summary>
+        /// <param name="comparatorFactory">Produces comparator instances to compute equivalence and hash codes.</param>
+        public DataTypeObjectEqualityComparer(Func<DataTypeObjectEqualityComparator> comparatorFactory)
+        {
+            _comparatorFactory = comparatorFactory;
         }
 
         /// <summary>

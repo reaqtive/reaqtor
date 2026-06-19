@@ -9,15 +9,20 @@ using Reaqtor.Reliable.Expressions;
 
 namespace Reaqtor.Reliable.Service
 {
-    /// <summary>
-    /// Creates a new reactive processing client using the specified expression services object.
-    /// </summary>
-    /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
-    public abstract class ReliableReactiveClientBase(IReactiveExpressionServices expressionServices) : IReliableReactiveClient
+    public abstract class ReliableReactiveClientBase : IReliableReactiveClient
     {
         #region Constructor & fields
 
-        private readonly IReactiveExpressionServices _expressionServices = expressionServices ?? throw new ArgumentNullException(nameof(expressionServices));
+        private readonly IReactiveExpressionServices _expressionServices;
+
+        /// <summary>
+        /// Creates a new reactive processing client using the specified expression services object.
+        /// </summary>
+        /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
+        protected ReliableReactiveClientBase(IReactiveExpressionServices expressionServices)
+        {
+            _expressionServices = expressionServices ?? throw new ArgumentNullException(nameof(expressionServices));
+        }
 
         #endregion
 

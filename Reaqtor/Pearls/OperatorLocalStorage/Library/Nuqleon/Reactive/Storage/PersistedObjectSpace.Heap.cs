@@ -37,11 +37,7 @@ namespace Reaqtive.Storage
         ///   <item><c>heap.Remove(v)</c> results in <c>Delete($"items/{getKeyOf(v)}")</c></item>
         /// </list>
         /// </remarks>
-        /// <remarks>
-        /// Creates a new entity representing a heap.
-        /// </remarks>
-        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-        private abstract partial class Heap(PersistedObjectSpace parent) : HeapBase(parent)
+        private abstract partial class Heap : HeapBase
         {
             /// <summary>
             /// The category to store the data (i.e. the heap elements) in.
@@ -52,6 +48,14 @@ namespace Reaqtive.Storage
             /// The list of pairs that associate storage keys to the eventual objects containing the heap elements, set by <see cref="LoadCore(IStateReader)"/> and deserialized by a <c>Restore</c> method in a derived type.
             /// </summary>
             protected List<(long key, EventualObject data)> _data;
+
+            /// <summary>
+            /// Creates a new entity representing a heap.
+            /// </summary>
+            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+            public Heap(PersistedObjectSpace parent) : base(parent)
+            {
+            }
 
             /// <summary>
             /// Deletes the heap item with the specified <paramref name="key"/> from storage.

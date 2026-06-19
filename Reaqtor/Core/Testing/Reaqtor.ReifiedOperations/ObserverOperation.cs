@@ -13,7 +13,11 @@ using System;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class ObserverOperation(ServiceOperationKind kind, Uri observerUri) : ServiceOperation(kind, observerUri, state: null)
+    public class ObserverOperation : ServiceOperation
     {
+        public ObserverOperation(ServiceOperationKind kind, Uri observerUri)
+            : base(kind, observerUri, state: null)
+        {
+        }
     }
 }

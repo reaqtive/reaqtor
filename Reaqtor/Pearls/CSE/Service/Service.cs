@@ -34,11 +34,7 @@ namespace Pearls.Reaqtor.CSE
     /// <summary>
     /// Implementation of an event processing service.
     /// </summary>
-    /// <remarks>
-    /// Creates a new event processing service.
-    /// </remarks>
-    /// <param name="registry">Registry containing resources that can be bound.</param>
-    internal class Service(Registry registry)
+    internal class Service
     {
         /// <summary>
         /// Counter for subscription activity logging.
@@ -51,9 +47,18 @@ namespace Pearls.Reaqtor.CSE
         private readonly Dictionary<Expression, HotArtifact> _hotArtifacts = new(new ExpressionEqualityComparer()); // TODO: omitted locking strategies
 
         /// <summary>
+        /// Creates a new event processing service.
+        /// </summary>
+        /// <param name="registry">Registry containing resources that can be bound.</param>
+        public Service(Registry registry)
+        {
+            Registry = registry;
+        }
+
+        /// <summary>
         /// Gets the registry containing resources that can be bound.
         /// </summary>
-        public Registry Registry { get; } = registry;
+        public Registry Registry { get; }
 
         /// <summary>
         /// Gets or sets the logger for diagnostic output.
@@ -136,28 +141,35 @@ namespace Pearls.Reaqtor.CSE
         /// <summary>
         /// Disposable resource representing a subscription that can be cancelled.
         /// </summary>
-        /// <remarks>
-        /// Creates a new disposable resource representing a subscription that can be cancelled.
-        /// </remarks>
-        /// <param name="parent">Service owning the subscription resource.</param>
-        /// <param name="disposable">Underlying disposable resource used to cancel the subscription. This is the Rx subscription.</param>
-        /// <param name="artifacts">Hot artifacts used by the subscription.</param>
-        private class Disposable(Service parent, IDisposable disposable, IEnumerable<Service.HotArtifact> artifacts) : IDisposable
+        private class Disposable : IDisposable
         {
             /// <summary>
             /// Service owning the subscription resource.
             /// </summary>
-            private readonly Service _parent = parent;
+            private readonly Service _parent;
 
             /// <summary>
             /// Hot artifacts used by the subscription.
             /// </summary>
-            private readonly IEnumerable<HotArtifact> _artifacts = artifacts;
+            private readonly IEnumerable<HotArtifact> _artifacts;
 
             /// <summary>
             /// Underlying disposable resource used to cancel the subscription. This is the Rx subscription.
             /// </summary>
-            private IDisposable _disposable = disposable;
+            private IDisposable _disposable;
+
+            /// <summary>
+            /// Creates a new disposable resource representing a subscription that can be cancelled.
+            /// </summary>
+            /// <param name="parent">Service owning the subscription resource.</param>
+            /// <param name="disposable">Underlying disposable resource used to cancel the subscription. This is the Rx subscription.</param>
+            /// <param name="artifacts">Hot artifacts used by the subscription.</param>
+            public Disposable(Service parent, IDisposable disposable, IEnumerable<HotArtifact> artifacts)
+            {
+                _parent = parent;
+                _disposable = disposable;
+                _artifacts = artifacts;
+            }
 
             /// <summary>
             /// Disposes the resource. This operation is idempotent.
@@ -176,16 +188,12 @@ namespace Pearls.Reaqtor.CSE
         /// <summary>
         /// Scans an expression for reusable resources and rewrites the expression accordingly.
         /// </summary>
-        /// <remarks>
-        /// Creates a new scanner for expressions.
-        /// </remarks>
-        /// <param name="parent">Service this scanner instance belongs to.</param>
-        private class Scanner(Service parent) : ExpressionVisitor
+        private class Scanner : ExpressionVisitor
         {
             /// <summary>
             /// Service this scanner instance belongs to.
             /// </summary>
-            private readonly Service _parent = parent;
+            private readonly Service _parent;
 
             // NOTE: When implemented properly with concurrency in mind, resources may need a transient state of "requested" to prevent
             //       them from being reclaimed in between detecting a new usage and the AddRef operation. Either way, the logic to keep
@@ -195,6 +203,15 @@ namespace Pearls.Reaqtor.CSE
             /// List of hot artifacts that were used in the rewritten expression. Upon disposal of the subscription, these resources need to be released.
             /// </summary>
             private readonly List<HotArtifact> _artifacts = [];
+
+            /// <summary>
+            /// Creates a new scanner for expressions.
+            /// </summary>
+            /// <param name="parent">Service this scanner instance belongs to.</param>
+            public Scanner(Service parent)
+            {
+                _parent = parent;
+            }
 
             /// <summary>
             /// Gets the list of hot artifacts that were used in the rewritten expression. Upon disposal of the subscription, these resources need to be released.
@@ -289,18 +306,23 @@ namespace Pearls.Reaqtor.CSE
         /// <summary>
         /// Analyzes whether an expression is suiteable for sharing its results through a hot artifact.
         /// </summary>
-        /// <remarks>
-        /// Creates a new shareability analyzer for expressions.
-        /// </remarks>
-        /// <param name="parent">Service whose registry to use in the analysis.</param>
-        private class ShareabilityAnalyzer(Service parent) : ExpressionVisitor
+        private class ShareabilityAnalyzer : ExpressionVisitor
         {
             // TODO: omitted purity analysis of sub-expressions; allow list scanner can mitigate this omission partially
 
             /// <summary>
             /// Service whose registry to use in the analysis.
             /// </summary>
-            private readonly Service _parent = parent;
+            private readonly Service _parent;
+
+            /// <summary>
+            /// Creates a new shareability analyzer for expressions.
+            /// </summary>
+            /// <param name="parent">Service whose registry to use in the analysis.</param>
+            public ShareabilityAnalyzer(Service parent)
+            {
+                _parent = parent;
+            }
 
             /// <summary>
             /// Gets whether the expression that has been analyzed is suitable for sharing its results through a hot artifact.

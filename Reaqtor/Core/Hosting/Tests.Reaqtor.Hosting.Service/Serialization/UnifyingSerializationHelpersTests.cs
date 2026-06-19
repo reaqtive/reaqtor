@@ -238,15 +238,25 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             public override IQueryProvider Provider => _queryable.Provider;
         }
 
-        private class MockResource<T>(Uri uri) : IReactiveResource
+        private class MockResource<T> : IReactiveResource
         {
-            public Uri Uri { get; } = uri;
+            public MockResource(Uri uri)
+            {
+                Uri = uri;
+            }
+
+            public Uri Uri { get; }
 
             public Expression Expression => Expression.Default(typeof(T));
         }
 
-        private class MockDefinedResource<T>(Uri uri) : MockResource<T>(uri), IReactiveDefinedResource
+        private class MockDefinedResource<T> : MockResource<T>, IReactiveDefinedResource
         {
+            public MockDefinedResource(Uri uri)
+                : base(uri)
+            {
+            }
+
             public bool IsParameterized => typeof(T).FindGenericType(typeof(Func<,>)) != null;
 
             public object State => null;
@@ -264,8 +274,13 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private class MockProcessResource<T>(Uri uri) : MockResource<T>(uri), IReactiveProcessResource
+        private class MockProcessResource<T> : MockResource<T>, IReactiveProcessResource
         {
+            public MockProcessResource(Uri uri)
+                : base(uri)
+            {
+            }
+
             public object State => null;
 
             public DateTimeOffset CreationTime => throw new NotImplementedException();
@@ -276,8 +291,13 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class MockObservable<T>(Uri uri) : MockDefinedResource<IReactiveQbservable<T>>(uri), IReactiveObservableDefinition
+        private sealed class MockObservable<T> : MockDefinedResource<IReactiveQbservable<T>>, IReactiveObservableDefinition
         {
+            public MockObservable(Uri uri)
+                : base(uri)
+            {
+            }
+
             public IReactiveQbservable<TResult> ToObservable<TResult>()
             {
                 throw new NotImplementedException();
@@ -289,8 +309,13 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class MockParameterizedObservable<TParam, T>(Uri uri) : MockDefinedResource<Func<TParam, IReactiveQbservable<T>>>(uri), IReactiveObservableDefinition
+        private sealed class MockParameterizedObservable<TParam, T> : MockDefinedResource<Func<TParam, IReactiveQbservable<T>>>, IReactiveObservableDefinition
         {
+            public MockParameterizedObservable(Uri uri)
+                : base(uri)
+            {
+            }
+
             public IReactiveQbservable<TResult> ToObservable<TResult>()
             {
                 throw new NotImplementedException();
@@ -302,8 +327,13 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class MockObserver<T>(Uri uri) : MockDefinedResource<IReactiveQbserver<T>>(uri), IReactiveObserverDefinition
+        private sealed class MockObserver<T> : MockDefinedResource<IReactiveQbserver<T>>, IReactiveObserverDefinition
         {
+            public MockObserver(Uri uri)
+                : base(uri)
+            {
+            }
+
             public IReactiveQbserver<TResult> ToObserver<TResult>()
             {
                 throw new NotImplementedException();
@@ -315,8 +345,13 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class MockStreamFactory<T>(Uri uri) : MockDefinedResource<IReactiveQubjectFactory<T, T>>(uri), IReactiveStreamFactoryDefinition
+        private sealed class MockStreamFactory<T> : MockDefinedResource<IReactiveQubjectFactory<T, T>>, IReactiveStreamFactoryDefinition
         {
+            public MockStreamFactory(Uri uri)
+                : base(uri)
+            {
+            }
+
             public IReactiveQubjectFactory<TInput, TOutput> ToStreamFactory<TInput, TOutput>()
             {
                 throw new NotImplementedException();
@@ -328,8 +363,13 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class MockSubscriptionFactory(Uri uri) : MockDefinedResource<IReactiveQubscriptionFactory>(uri), IReactiveSubscriptionFactoryDefinition
+        private sealed class MockSubscriptionFactory : MockDefinedResource<IReactiveQubscriptionFactory>, IReactiveSubscriptionFactoryDefinition
         {
+            public MockSubscriptionFactory(Uri uri)
+                : base(uri)
+            {
+            }
+
             public IReactiveQubscriptionFactory ToSubscriptionFactory()
             {
                 throw new NotImplementedException();
@@ -341,16 +381,26 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class MockStream<T>(Uri uri) : MockProcessResource<IReactiveQubject<T>>(uri), IReactiveStreamProcess
+        private sealed class MockStream<T> : MockProcessResource<IReactiveQubject<T>>, IReactiveStreamProcess
         {
+            public MockStream(Uri uri)
+                : base(uri)
+            {
+            }
+
             public IReactiveQubject<TInput, TOutput> ToStream<TInput, TOutput>()
             {
                 throw new NotImplementedException();
             }
         }
 
-        private sealed class MockSubscription(Uri uri) : MockProcessResource<IReactiveQubscription>(uri), IReactiveSubscriptionProcess
+        private sealed class MockSubscription : MockProcessResource<IReactiveQubscription>, IReactiveSubscriptionProcess
         {
+            public MockSubscription(Uri uri)
+                : base(uri)
+            {
+            }
+
             public IReactiveQubscription ToSubscription()
             {
                 throw new NotImplementedException();

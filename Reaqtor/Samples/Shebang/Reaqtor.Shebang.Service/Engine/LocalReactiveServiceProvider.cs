@@ -12,9 +12,14 @@ using System.Threading.Tasks;
 
 namespace Reaqtor.Shebang.Service
 {
-    public class LocalReactiveServiceProvider(IReactiveServiceProvider provider) : IReactiveServiceProvider
+    public class LocalReactiveServiceProvider : IReactiveServiceProvider
     {
-        private readonly IReactiveServiceProvider _provider = provider;
+        private readonly IReactiveServiceProvider _provider;
+
+        public LocalReactiveServiceProvider(IReactiveServiceProvider provider)
+        {
+            _provider = provider;
+        }
 
         public IQueryProvider Provider => _provider.Provider;
 
@@ -145,9 +150,11 @@ namespace Reaqtor.Shebang.Service
             private bool IsUnboundParameter(ParameterExpression parameter) => !TryLookup(parameter, out _);
         }
 
-        private sealed class QueryProvider(IQueryProvider provider) : IQueryProvider
+        private sealed class QueryProvider : IQueryProvider
         {
-            private readonly IQueryProvider _provider = provider;
+            private readonly IQueryProvider _provider;
+
+            public QueryProvider(IQueryProvider provider) => _provider = provider;
 
             public IQueryable CreateQuery(Expression expression)
             {

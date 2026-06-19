@@ -15,10 +15,14 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal sealed class OpenGenericMethodDef(TypeRef declaringType, GenericDefinitionMethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters) : MethodDef(declaringType, method, returnType, parameters)
+    internal sealed class OpenGenericMethodDef : MethodDef
     {
-
         #region Constructors
+
+        public OpenGenericMethodDef(TypeRef declaringType, GenericDefinitionMethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters)
+            : base(declaringType, method, returnType, parameters)
+        {
+        }
 
         #endregion
 

@@ -12,16 +12,21 @@ namespace Reaqtive.Tasks
     /// <summary>
     /// Task that can process items using an <see cref="IItemProcessor"/>.
     /// </summary>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="ItemProcessingTask"/> class.
-    /// </remarks>
-    /// <param name="processor">The processor.</param>
-    public sealed class ItemProcessingTask(IItemProcessor processor) : ISchedulerTask
+    public sealed class ItemProcessingTask : ISchedulerTask
     {
         private const int TaskPriority = 2;
         private const int BatchSize = 128;
 
-        private readonly IItemProcessor _processor = processor ?? throw new ArgumentNullException(nameof(processor));
+        private readonly IItemProcessor _processor;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="ItemProcessingTask"/> class.
+        /// </summary>
+        /// <param name="processor">The processor.</param>
+        public ItemProcessingTask(IItemProcessor processor)
+        {
+            _processor = processor ?? throw new ArgumentNullException(nameof(processor));
+        }
 
         /// <summary>
         /// Gets task priority.

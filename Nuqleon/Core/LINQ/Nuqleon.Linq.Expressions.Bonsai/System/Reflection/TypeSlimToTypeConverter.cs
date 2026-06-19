@@ -20,23 +20,31 @@ namespace System.Reflection
     /// <summary>
     /// A type slim visitor that recursively visits slim types and returns the CLR types they represent.
     /// </summary>
-    /// <remarks>
-    /// Instantiates a type slim to type converter.
-    /// </remarks>
-    /// <param name="provider">The reflection provider to use.</param>
-    internal class TypeSlimToTypeConverter(IReflectionProvider provider) : TypeSlimVisitor<Type, Type, Type, Type, Type, Type, Type>
+    internal class TypeSlimToTypeConverter : TypeSlimVisitor<Type, Type, Type, Type, Type, Type, Type>
     {
         #region Fields
 
-        private readonly IReflectionProvider _provider = provider;
-        private readonly Dictionary<TypeSlim, Type> _typeMap = [];
-        private readonly Stack<Dictionary<TypeSlim, Type>> _genericParameterContext = new Stack<Dictionary<TypeSlim, Type>>();
+        private readonly IReflectionProvider _provider;
+        private readonly Dictionary<TypeSlim, Type> _typeMap;
+        private readonly Stack<Dictionary<TypeSlim, Type>> _genericParameterContext;
 
         // TODO: Implement cache eviction policies
         private static readonly ConcurrentDictionary<SlimName, Type> s_simpleTypeCache = new();
 
         #endregion
+
         #region Constructors
+
+        /// <summary>
+        /// Instantiates a type slim to type converter.
+        /// </summary>
+        /// <param name="provider">The reflection provider to use.</param>
+        public TypeSlimToTypeConverter(IReflectionProvider provider)
+        {
+            _provider = provider;
+            _typeMap = [];
+            _genericParameterContext = new Stack<Dictionary<TypeSlim, Type>>();
+        }
 
         #endregion
 
@@ -322,10 +330,16 @@ namespace System.Reflection
         /// <summary>
         /// Slim representation of an assembly name and type name pair.
         /// </summary>
-        private readonly struct SlimName(string assemblyName, string typeName) : IEquatable<SlimName>
+        private readonly struct SlimName : IEquatable<SlimName>
         {
-            public string AssemblyName { get; } = assemblyName;
-            public string TypeName { get; } = typeName;
+            public SlimName(string assemblyName, string typeName)
+            {
+                AssemblyName = assemblyName;
+                TypeName = typeName;
+            }
+
+            public string AssemblyName { get; }
+            public string TypeName { get; }
 
             public override bool Equals(object obj) => obj is SlimName name && Equals(name);
 

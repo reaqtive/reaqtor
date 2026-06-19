@@ -15,7 +15,7 @@ using System.Linq.Expressions;
 
 namespace SampleTrees.Numerical
 {
-    public class NumNodeType(string name) : IEqualityComparer<NumNodeType>
+    public class NumNodeType : IEqualityComparer<NumNodeType>
     {
         public static readonly NumNodeType Val = new("Val");
         public static readonly NumNodeType Plus = new("Plus");
@@ -24,7 +24,9 @@ namespace SampleTrees.Numerical
         public static readonly NumNodeType TimesPlus = new("TimesPlus");
         public static readonly NumNodeType Wildcard = new("Wildcard");
 
-        public string Name { get; } = name;
+        public NumNodeType(string name) => Name = name;
+
+        public string Name { get; }
 
         public bool Equals(NumNodeType x, NumNodeType y) => ReferenceEquals(x, y);
 
@@ -33,8 +35,13 @@ namespace SampleTrees.Numerical
         public override string ToString() => Name;
     }
 
-    public abstract class NumExpr(NumNodeType type, params NumExpr[] children) : Tree<NumNodeType>(type, children)
+    public abstract class NumExpr : Tree<NumNodeType>
     {
+        protected NumExpr(NumNodeType type, params NumExpr[] children)
+            : base(type, children)
+        {
+        }
+
         public abstract int Eval();
     }
 
@@ -43,59 +50,97 @@ namespace SampleTrees.Numerical
         public NumExpr CreateWildcard(ParameterExpression hole) => new NumWildcard(hole.Name);
     }
 
-    public class NumWildcard(string name) : NumExpr(NumNodeType.Wildcard)
+    public class NumWildcard : NumExpr
     {
-        public string Name { get; } = name;
+        public NumWildcard(string name)
+            : base(NumNodeType.Wildcard)
+        {
+            Name = name;
+        }
+
+        public string Name { get; }
 
         public override string ToStringFormat() => Name;
 
         public override int Eval() => throw new NotImplementedException();
     }
 
-    public class Val(int value) : NumExpr(NumNodeType.Val)
+    public class Val : NumExpr
     {
         public static readonly Val Zero = new(0);
         public static readonly Val One = new(1);
 
-        public new int Value { get; } = value;
+        public Val(int value)
+            : base(NumNodeType.Val)
+        {
+            Value = value;
+        }
+
+        public new int Value { get; }
 
         public override string ToStringFormat() => Value.ToString();
 
         public override int Eval() => Value;
     }
 
-    public class Inc(NumExpr operand) : NumExpr(NumNodeType.Inc, operand)
+    public class Inc : NumExpr
     {
-        public NumExpr Operand { get; } = operand;
+        public Inc(NumExpr operand)
+            : base(NumNodeType.Inc, operand)
+        {
+            Operand = operand;
+        }
+
+        public NumExpr Operand { get; }
 
         public override string ToStringFormat() => "Inc({0})";
 
         public override int Eval() => Operand.Eval() + 1;
     }
 
-    public abstract class BinNumExpr(NumNodeType type, NumExpr left, NumExpr right) : NumExpr(type, left, right)
+    public abstract class BinNumExpr : NumExpr
     {
+        public BinNumExpr(NumNodeType type, NumExpr left, NumExpr right)
+            : base(type, left, right)
+        {
+        }
+
         public NumExpr Left => (NumExpr)Children[0];
 
         public NumExpr Right => (NumExpr)Children[1];
     }
 
-    public class Plus(NumExpr left, NumExpr right) : BinNumExpr(NumNodeType.Plus, left, right)
+    public class Plus : BinNumExpr
     {
+        public Plus(NumExpr left, NumExpr right)
+            : base(NumNodeType.Plus, left, right)
+        {
+        }
+
         public override string ToStringFormat() => "Plus({0}, {1})";
 
         public override int Eval() => Left.Eval() + Right.Eval();
     }
 
-    public class Times(NumExpr left, NumExpr right) : BinNumExpr(NumNodeType.Times, left, right)
+    public class Times : BinNumExpr
     {
+        public Times(NumExpr left, NumExpr right)
+            : base(NumNodeType.Times, left, right)
+        {
+        }
+
         public override string ToStringFormat() => "Times({0}, {1})";
 
         public override int Eval() => Left.Eval() * Right.Eval();
     }
 
-    public class TimesPlus(NumExpr first, NumExpr second, NumExpr third) : NumExpr(NumNodeType.TimesPlus, first, second, third)
+    public class TimesPlus : NumExpr
     {
+        public TimesPlus(NumExpr first, NumExpr second, NumExpr third)
+            : base(NumNodeType.TimesPlus, first, second, third)
+        {
+        }
+
         public NumExpr First => (NumExpr)Children[0];
 
         public NumExpr Second => (NumExpr)Children[1];

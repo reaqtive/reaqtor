@@ -15,9 +15,14 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(Empty<TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<Empty<TResult>, TResult>(parent, observer)
+        private sealed class _ : StatefulUnaryOperator<Empty<TResult>, TResult>
         {
             private IOperatorContext _context;
+
+            public _(Empty<TResult> parent, IObserver<TResult> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Empty";
 

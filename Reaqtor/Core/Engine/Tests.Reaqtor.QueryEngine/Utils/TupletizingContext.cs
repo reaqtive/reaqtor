@@ -15,8 +15,13 @@ using Reaqtor.Service.Core;
 
 namespace Tests.Reaqtor.QueryEngine
 {
-    internal class TupletizingClientContext(IReactiveServiceProvider provider) : ReactiveClientContext(new ExpressionService(), provider)
+    internal class TupletizingClientContext : ReactiveClientContext
     {
+        public TupletizingClientContext(IReactiveServiceProvider provider)
+            : base(new ExpressionService(), provider)
+        {
+        }
+
         private class ExpressionService : ReactiveExpressionServices
         {
             public ExpressionService()
@@ -96,13 +101,23 @@ namespace Tests.Reaqtor.QueryEngine
         }
     }
 
-    public class TupletizingContext(IReactive innerService) : ReactiveServiceContext(new ExpressionService(), new Engine(innerService))
+    public class TupletizingContext : ReactiveServiceContext
     {
-        private class Engine(IReactive innerService) : IReactiveEngineProvider
+        public TupletizingContext(IReactive innerService)
+            : base(new ExpressionService(), new Engine(innerService))
+        {
+        }
+
+        private class Engine : IReactiveEngineProvider
         {
             private static readonly MethodInfo _invokeTypedExpressionHelper1 = ((MethodInfo)ReflectionHelpers.InfoOf(() => InvokeTypedExpressionHelper<object, object>(null, null))).GetGenericMethodDefinition();
 
-            private readonly IReactive _innerService = innerService;
+            private readonly IReactive _innerService;
+
+            public Engine(IReactive innerService)
+            {
+                _innerService = innerService;
+            }
 
             public void CreateSubscription(Uri subscriptionUri, Expression subscription, object state)
             {

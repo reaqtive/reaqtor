@@ -212,8 +212,13 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 return base.VisitMethodCall(node);
             }
 
-            private sealed class Impl(IDictionary<Type, Type> map) : TypeSubstitutor(map)
+            private sealed class Impl : TypeSubstitutor
             {
+                public Impl(IDictionary<Type, Type> map)
+                    : base(map)
+                {
+                }
+
                 protected override Type VisitGenericClosed(Type type)
                 {
                     if (type.GetGenericTypeDefinition() == typeof(Expression<>))

@@ -323,18 +323,28 @@ namespace Test.Reaqtive
             public bool CheckDisposed => IsDisposed;
         }
 
-        private sealed class Return<TResult>(TResult value) : SubscribableBase<TResult>
+        private sealed class Return<TResult> : SubscribableBase<TResult>
         {
-            private readonly TResult _value = value;
+            private readonly TResult _value;
+
+            public Return(TResult value)
+            {
+                _value = value;
+            }
 
             protected override ISubscription SubscribeCore(IObserver<TResult> observer)
             {
                 return new _(this, observer);
             }
 
-            private sealed class _(MultiSubjectBaseTests.Return<TResult> parent, IObserver<TResult> observer) : Operator<Return<TResult>, TResult>(parent, observer)
+            private sealed class _ : Operator<Return<TResult>, TResult>
             {
                 private IOperatorContext _context;
+
+                public _(Return<TResult> parent, IObserver<TResult> observer)
+                    : base(parent, observer)
+                {
+                }
 
                 public override void SetContext(IOperatorContext context)
                 {

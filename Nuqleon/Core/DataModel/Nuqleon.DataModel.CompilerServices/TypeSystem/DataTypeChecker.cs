@@ -52,17 +52,29 @@ namespace Nuqleon.DataModel.TypeSystem
             return res ? null : errors;
         }
 
-        private sealed class Impl(bool allowCycles) : DataModelTypeVisitorBase<bool>, IClearable
+        private sealed class Impl : DataModelTypeVisitorBase<bool>, IClearable
         {
-            private readonly bool _allowCycles = allowCycles;
-            private readonly Stack<Record> _stack = new Stack<Record>();
-            private readonly List<DataTypeError> _errors = [];
+            private readonly bool _allowCycles;
+            private readonly Stack<Record> _stack;
+            private readonly List<DataTypeError> _errors;
 
-            private sealed class Record(Type type)
+            public Impl(bool allowCycles)
+            {
+                _allowCycles = allowCycles;
+                _stack = new Stack<Record>();
+                _errors = [];
+            }
+
+            private sealed class Record
             {
                 private List<string> _errors;
 
-                public Type Type { get; } = type;
+                public Record(Type type)
+                {
+                    Type = type;
+                }
+
+                public Type Type { get; }
 
                 public List<string> Errors
                 {

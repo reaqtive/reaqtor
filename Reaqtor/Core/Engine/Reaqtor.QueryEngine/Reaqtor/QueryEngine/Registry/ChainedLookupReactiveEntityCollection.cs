@@ -13,14 +13,19 @@ namespace Reaqtor.QueryEngine
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TValue">The type of the value in the first underlying collection.</typeparam>
     /// <typeparam name="TOtherValue">The type of the value in the second underlying collection.</typeparam>
-    /// <remarks>
-    /// Creates a new reactive entity collection using a primary and secondary (fallback) underlying collection.
-    /// </remarks>
-    /// <param name="collection">The first underlying collection to look up entities.</param>
-    /// <param name="otherCollection">The second underlying collection to fall back to if lookup for an entity fails in the first collection.</param>
-    /// <param name="convertOther">Conversion function to make the second underlying collection's values compatible with the first underlying collection's values.</param>
-    internal sealed class ChainedLookupReactiveEntityCollection<TKey, TValue, TOtherValue>(IReactiveEntityCollection<TKey, TValue> collection, IReactiveEntityCollection<TKey, TOtherValue> otherCollection, Func<TOtherValue, TValue> convertOther) : CooperativeLookupReactiveEntityCollection<TKey, TValue, Tuple<IReactiveEntityCollection<TKey, TOtherValue>, Func<TOtherValue, TValue>>>(collection, TryLookupOther, Tuple.Create(otherCollection, convertOther))
+    internal sealed class ChainedLookupReactiveEntityCollection<TKey, TValue, TOtherValue> : CooperativeLookupReactiveEntityCollection<TKey, TValue, Tuple<IReactiveEntityCollection<TKey, TOtherValue>, Func<TOtherValue, TValue>>>
     {
+        /// <summary>
+        /// Creates a new reactive entity collection using a primary and secondary (fallback) underlying collection.
+        /// </summary>
+        /// <param name="collection">The first underlying collection to look up entities.</param>
+        /// <param name="otherCollection">The second underlying collection to fall back to if lookup for an entity fails in the first collection.</param>
+        /// <param name="convertOther">Conversion function to make the second underlying collection's values compatible with the first underlying collection's values.</param>
+        public ChainedLookupReactiveEntityCollection(IReactiveEntityCollection<TKey, TValue> collection, IReactiveEntityCollection<TKey, TOtherValue> otherCollection, Func<TOtherValue, TValue> convertOther)
+            : base(collection, TryLookupOther, Tuple.Create(otherCollection, convertOther))
+        {
+        }
+
         private static bool TryLookupOther(Tuple<IReactiveEntityCollection<TKey, TOtherValue>, Func<TOtherValue, TValue>> tuple, TKey key, out TValue value)
         {
             if (tuple.Item1.TryGetValue(key, out TOtherValue other))
@@ -40,13 +45,18 @@ namespace Reaqtor.QueryEngine
     /// </summary>
     /// <typeparam name="TKey">The type of the key.</typeparam>
     /// <typeparam name="TValue">The type of the value.</typeparam>
-    /// <remarks>
-    /// Creates a new reactive entity collection using a primary and secondary (fallback) underlying collection.
-    /// </remarks>
-    /// <param name="collection">The first underlying collection to look up entities.</param>
-    /// <param name="otherCollection">The second underlying collection to fall back to if lookup for an entity fails in the first collection.</param>
-    internal sealed class ChainedLookupReactiveEntityCollection<TKey, TValue>(IReactiveEntityCollection<TKey, TValue> collection, IReadOnlyReactiveEntityCollection<TKey, TValue> otherCollection) : CooperativeLookupReactiveEntityCollection<TKey, TValue, IReadOnlyReactiveEntityCollection<TKey, TValue>>(collection, TryLookupOther, otherCollection)
+    internal sealed class ChainedLookupReactiveEntityCollection<TKey, TValue> : CooperativeLookupReactiveEntityCollection<TKey, TValue, IReadOnlyReactiveEntityCollection<TKey, TValue>>
     {
+        /// <summary>
+        /// Creates a new reactive entity collection using a primary and secondary (fallback) underlying collection.
+        /// </summary>
+        /// <param name="collection">The first underlying collection to look up entities.</param>
+        /// <param name="otherCollection">The second underlying collection to fall back to if lookup for an entity fails in the first collection.</param>
+        public ChainedLookupReactiveEntityCollection(IReactiveEntityCollection<TKey, TValue> collection, IReadOnlyReactiveEntityCollection<TKey, TValue> otherCollection)
+            : base(collection, TryLookupOther, otherCollection)
+        {
+        }
+
         private static bool TryLookupOther(IReadOnlyReactiveEntityCollection<TKey, TValue> otherCollection, TKey key, out TValue value)
         {
             return otherCollection.TryGetValue(key, out value);

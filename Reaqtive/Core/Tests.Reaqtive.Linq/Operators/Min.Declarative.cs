@@ -344,9 +344,14 @@ namespace Test.Reaqtive.Operators
             });
         }
 
-        private sealed class ThrowingComparer<T>(Exception ex) : IComparer<T>
+        private sealed class ThrowingComparer<T> : IComparer<T>
         {
-            private readonly Exception _ex = ex;
+            private readonly Exception _ex;
+
+            public ThrowingComparer(Exception ex)
+            {
+                _ex = ex;
+            }
 
             public int Compare(T x, T y)
             {

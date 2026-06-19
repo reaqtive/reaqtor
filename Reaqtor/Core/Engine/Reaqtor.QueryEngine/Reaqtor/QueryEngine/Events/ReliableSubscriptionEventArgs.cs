@@ -9,12 +9,16 @@ namespace Reaqtor.QueryEngine.Events
     /// <summary>
     /// Event arguments involving a reliable subscription.
     /// </summary>
-    /// <remarks>
-    /// Creates a new instance of <see cref="ReliableSubscriptionEventArgs"/> class for the specified entity.
-    /// </remarks>
-    /// <param name="entity">The entity representing the reliable subscription.</param>
-    internal sealed class ReliableSubscriptionEventArgs(ReliableSubscriptionEntity entity) : ReactiveEntityEventArgs(entity.Uri, entity, ReactiveEntityKind.ReliableSubscription)
+    internal sealed class ReliableSubscriptionEventArgs : ReactiveEntityEventArgs
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="ReliableSubscriptionEventArgs"/> class for the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity representing the reliable subscription.</param>
+        public ReliableSubscriptionEventArgs(ReliableSubscriptionEntity entity)
+            : base(entity.Uri, entity, ReactiveEntityKind.ReliableSubscription)
+        {
+        }
 
         /// <summary>
         /// Gets the reliable subscription entity.

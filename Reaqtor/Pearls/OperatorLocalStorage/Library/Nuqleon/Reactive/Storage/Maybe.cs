@@ -14,21 +14,26 @@ namespace Reaqtive.Storage
     /// Struct representing a value or the absence of a value.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    /// <remarks>
-    /// Creates a new instance of <see cref="Maybe{T}"/> with the specified value.
-    /// </remarks>
-    /// <param name="value">The value to set.</param>
-    internal readonly struct Maybe<T>(T value)
+    internal readonly struct Maybe<T>
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="Maybe{T}"/> with the specified value.
+        /// </summary>
+        /// <param name="value">The value to set.</param>
+        public Maybe(T value)
+        {
+            HasValue = true;
+            Value = value;
+        }
 
         /// <summary>
         /// Gets a value indicating whether this instance contains a value in <see cref="Value"/>.
         /// </summary>
-        public bool HasValue { get; } = true;
+        public bool HasValue { get; }
 
         /// <summary>
         /// Gets the value contained by this instance in case <see cref="HasValue"/> is set to <c>true</c>; otherwise, returns the default value.
         /// </summary>
-        public T Value { get; } = value;
+        public T Value { get; }
     }
 }

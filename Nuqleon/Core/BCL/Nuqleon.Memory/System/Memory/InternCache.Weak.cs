@@ -14,11 +14,17 @@ namespace System.Memory
 {
     public static partial class InternCache
     {
-        private sealed class Weak<T>(Func<T, T> clone, IMemoizedDelegate<Func<T, WeakReference<T>>> @delegate) : IWeakInternCache<T>, IServiceProvider
+        private sealed class Weak<T> : IWeakInternCache<T>, IServiceProvider
             where T : class
         {
-            private readonly Func<T, T> _clone = clone;
-            private readonly IMemoizedDelegate<Func<T, WeakReference<T>>> _delegate = @delegate;
+            private readonly Func<T, T> _clone;
+            private readonly IMemoizedDelegate<Func<T, WeakReference<T>>> _delegate;
+
+            public Weak(Func<T, T> clone, IMemoizedDelegate<Func<T, WeakReference<T>>> @delegate)
+            {
+                _clone = clone;
+                _delegate = @delegate;
+            }
 
             public string DebugView => _delegate.Cache.DebugView;
 

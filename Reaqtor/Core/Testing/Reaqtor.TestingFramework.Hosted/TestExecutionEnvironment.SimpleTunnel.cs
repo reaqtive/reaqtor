@@ -8,9 +8,15 @@ namespace Reaqtor.TestingFramework
 {
     public partial class TestExecutionEnvironment
     {
-        private class SimpleTunnel<T>(TestExecutionEnvironment parent, Uri streamUri, IObserver<bool> refCount) : NotSoSimpleSubject<T>(parent, streamUri)
+        private class SimpleTunnel<T> : NotSoSimpleSubject<T>
         {
-            private readonly IObserver<bool> _refCount = refCount;
+            private readonly IObserver<bool> _refCount;
+
+            public SimpleTunnel(TestExecutionEnvironment parent, Uri streamUri, IObserver<bool> refCount)
+                : base(parent, streamUri)
+            {
+                _refCount = refCount;
+            }
 
             protected override void AddRef()
             {

@@ -8,21 +8,31 @@ using System.Globalization;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class ToList<TSource>(ISubscribable<TSource> source) : SubscribableBase<IList<TSource>>
+    internal sealed class ToList<TSource> : SubscribableBase<IList<TSource>>
     {
-        private readonly ISubscribable<TSource> _source = source;
+        private readonly ISubscribable<TSource> _source;
+
+        public ToList(ISubscribable<TSource> source)
+        {
+            _source = source;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<IList<TSource>> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(ToList<TSource> parent, IObserver<IList<TSource>> observer) : StatefulUnaryOperator<ToList<TSource>, IList<TSource>>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<ToList<TSource>, IList<TSource>>, IObserver<TSource>
         {
             private const string MAXLISTSIZESETTING = "rx://operators/toList/settings/maxListSize";
             private int _maxListSize;
 
             private List<TSource> _values;
+
+            public _(ToList<TSource> parent, IObserver<IList<TSource>> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override void SetContext(IOperatorContext context)
             {

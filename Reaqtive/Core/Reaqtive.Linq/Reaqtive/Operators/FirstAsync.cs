@@ -27,8 +27,13 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(FirstAsync<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<FirstAsync<TSource>, TSource>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<FirstAsync<TSource>, TSource>, IObserver<TSource>
         {
+            public _(FirstAsync<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
+
             public override string Name => "rc:First";
 
             public override Version Version => Versioning.v1;

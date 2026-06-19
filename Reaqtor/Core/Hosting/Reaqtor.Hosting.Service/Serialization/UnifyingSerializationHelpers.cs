@@ -24,19 +24,24 @@ namespace Reaqtor.Hosting.Shared.Serialization
     /// This serializer unifies slim types against CLR types for unbound parameters
     /// sourced from definitions in <see cref="IReactiveMetadata"/>.
     /// </remarks>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="UnifyingSerializationHelpers"/>
-    /// class to serialize and deserialize expressions and data model-compliant objects.
-    /// </remarks>
-    /// <param name="metadata">
-    /// The source of unbound parameter definitions for unification.
-    /// </param>
-    public class UnifyingSerializationHelpers(IReactiveMetadata metadata) : SerializationHelpers
+    public class UnifyingSerializationHelpers : SerializationHelpers
     {
         /// <summary>
         /// The metadata definitions interface.
         /// </summary>
-        private readonly IReactiveMetadata _metadata = metadata;
+        private readonly IReactiveMetadata _metadata;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="UnifyingSerializationHelpers"/>
+        /// class to serialize and deserialize expressions and data model-compliant objects.
+        /// </summary>
+        /// <param name="metadata">
+        /// The source of unbound parameter definitions for unification.
+        /// </param>
+        public UnifyingSerializationHelpers(IReactiveMetadata metadata)
+        {
+            _metadata = metadata;
+        }
 
         /// <summary>
         /// Create an expression serializer.
@@ -186,13 +191,17 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// awareness of data model projection peculiarities.
         /// </summary>
         /// TODO: Remove this once the DataModel project is updated with this implementation
-        /// <remarks>
-        /// Creates a new expression converter using the type space obtained
-        /// from unification.
-        /// </remarks>
-        /// <param name="typeSpace">Type space containing type mappings.</param>
-        private sealed class DataModelExpressionSlimToExpressionConverter(UnifyingSerializationHelpers.DataModelInvertedTypeSpace typeSpace) : ExpressionSlimToExpressionConverter(typeSpace)
+        private sealed class DataModelExpressionSlimToExpressionConverter : ExpressionSlimToExpressionConverter
         {
+            /// <summary>
+            /// Creates a new expression converter using the type space obtained
+            /// from unification.
+            /// </summary>
+            /// <param name="typeSpace">Type space containing type mappings.</param>
+            public DataModelExpressionSlimToExpressionConverter(DataModelInvertedTypeSpace typeSpace)
+                : base(typeSpace)
+            {
+            }
 
             /// <summary>
             /// Visits a member assignment slim tree node to produce a member assignment,
@@ -274,24 +283,30 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// An expression serializer that performs type unification against
         /// free variable definitions before reducing to Linq expressions.
         /// </summary>
-        /// <remarks>
-        /// Instantiates the expression serializer.
-        /// </remarks>
-        /// <param name="parent">
-        /// A reference to the parent serialization helpers, which has a reference
-        /// to the Reactive metadata.
-        /// </param>
-        private sealed class TypeUnifyingExpressionSerializer(UnifyingSerializationHelpers parent) : SerializationHelpersExpressionSerializer(parent)
+        private sealed class TypeUnifyingExpressionSerializer : SerializationHelpersExpressionSerializer
         {
             /// <summary>
             /// The parent helpers with a field for the metadata definitions interface.
             /// </summary>
-            private readonly UnifyingSerializationHelpers _parent = parent;
+            private readonly UnifyingSerializationHelpers _parent;
 
             /// <summary>
             /// The inverted type space for this serializer instance.
             /// </summary>
             private DataModelInvertedTypeSpace _invertedTypeSpace;
+
+            /// <summary>
+            /// Instantiates the expression serializer.
+            /// </summary>
+            /// <param name="parent">
+            /// A reference to the parent serialization helpers, which has a reference
+            /// to the Reactive metadata.
+            /// </param>
+            public TypeUnifyingExpressionSerializer(UnifyingSerializationHelpers parent)
+                : base(parent)
+            {
+                _parent = parent;
+            }
 
             /// <summary>
             /// Creates a slim expression to expression reducer.

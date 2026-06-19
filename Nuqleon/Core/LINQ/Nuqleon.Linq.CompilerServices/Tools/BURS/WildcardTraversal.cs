@@ -12,11 +12,17 @@ using System.Collections.Generic;
 
 namespace System.Linq.CompilerServices
 {
-    internal sealed class WildcardTraversal<TSource>(TSource wildcard)
+    internal sealed class WildcardTraversal<TSource>
     {
-        private readonly Stack<int> _path = new Stack<int>();
+        private readonly Stack<int> _path;
 
-        public TSource Wildcard { get; } = wildcard;
+        public WildcardTraversal(TSource wildcard)
+        {
+            _path = new Stack<int>();
+            Wildcard = wildcard;
+        }
+
+        public TSource Wildcard { get; }
 
         public void Push(int next) => _path.Push(next);
 

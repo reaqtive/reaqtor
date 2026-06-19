@@ -38,13 +38,18 @@ namespace Reaqtive.Operators
             }
         }
 
-        private abstract class _(DelaySubscription<T> parent, IObserver<T> observer) : StatefulUnaryOperator<DelaySubscription<T>, T>(parent, observer), IObserver<T>
+        private abstract class _ : StatefulUnaryOperator<DelaySubscription<T>, T>, IObserver<T>
         {
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
             private readonly SingleAssignmentSubscription _subscription = new();
 #pragma warning restore CA2213
             private IOperatorContext _context;
             private bool _subscribed;
+
+            public _(DelaySubscription<T> parent, IObserver<T> observer)
+                : base(parent, observer)
+            {
+            }
 
             public abstract DateTimeOffset SubscribeAt
             {
@@ -152,9 +157,14 @@ namespace Reaqtive.Operators
             }
         }
 
-        private sealed class Relative(DelaySubscription<T> parent, IObserver<T> observer) : _(parent, observer)
+        private sealed class Relative : _
         {
             private DateTimeOffset _calculated;
+
+            public Relative(DelaySubscription<T> parent, IObserver<T> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rx:DelaySubscription+Relative";
 
@@ -184,8 +194,13 @@ namespace Reaqtive.Operators
             }
         }
 
-        private sealed class Absolute(DelaySubscription<T> parent, IObserver<T> observer) : _(parent, observer)
+        private sealed class Absolute : _
         {
+            public Absolute(DelaySubscription<T> parent, IObserver<T> observer)
+                : base(parent, observer)
+            {
+            }
+
             public override DateTimeOffset SubscribeAt => Params._absolute.Value;
 
             public override string Name => "rx:DelaySubscription+Absolute";

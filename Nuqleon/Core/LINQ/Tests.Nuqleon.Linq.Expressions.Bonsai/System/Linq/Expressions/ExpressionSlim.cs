@@ -3064,9 +3064,14 @@ namespace Tests.System.Linq.Expressions
             }
         }
 
-        private sealed class ArgVisitor(int index) : ExpressionSlimVisitor
+        private sealed class ArgVisitor : ExpressionSlimVisitor
         {
-            private readonly int _index = index;
+            private readonly int _index;
+
+            public ArgVisitor(int index)
+            {
+                _index = index;
+            }
 
             protected internal override ExpressionSlim VisitParameter(ParameterExpressionSlim node)
             {

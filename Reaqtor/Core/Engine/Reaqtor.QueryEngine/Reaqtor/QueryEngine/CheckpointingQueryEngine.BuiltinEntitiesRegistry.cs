@@ -174,9 +174,13 @@ namespace Reaqtor.QueryEngine
 #pragma warning restore IDE0079
             }
 
-            private sealed class ExternalLookupReactiveEntityCollection<TDefinitionEntity>(IReactiveEntityCollection<string, TDefinitionEntity> local, TryLookup<IReactiveMetadata, string, TDefinitionEntity> lookupFunc, IReactiveMetadata external) : CooperativeLookupReactiveEntityCollection<string, TDefinitionEntity, IReactiveMetadata>(local, lookupFunc, external)
+            private sealed class ExternalLookupReactiveEntityCollection<TDefinitionEntity> : CooperativeLookupReactiveEntityCollection<string, TDefinitionEntity, IReactiveMetadata>
                 where TDefinitionEntity : DefinitionEntity
             {
+                public ExternalLookupReactiveEntityCollection(IReactiveEntityCollection<string, TDefinitionEntity> local, TryLookup<IReactiveMetadata, string, TDefinitionEntity> lookupFunc, IReactiveMetadata external)
+                    : base(local, lookupFunc, external)
+                {
+                }
             }
 
             public bool TryLookupObserver(IReactiveMetadata metadata, string key, out ObserverDefinitionEntity entity)

@@ -15,21 +15,29 @@ namespace Reaqtor.Shebang.Extensions
     // Similar to EgressObserver<T> but receives events from the outside world.
     //
 
-    internal sealed class IngressObservable<T>(string name) : ISubscribable<T>
+    internal sealed class IngressObservable<T> : ISubscribable<T>
     {
-        private readonly string _name = name;
+        private readonly string _name;
+
+        public IngressObservable(string name) => _name = name;
 
         public ISubscription Subscribe(IObserver<T> observer) => new Subscription(this, observer);
 
         IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => throw new NotSupportedException();
 
-        private sealed class Subscription(IngressObservable<T> parent, IObserver<T> observer) : ContextSwitchOperator<IngressObservable<T>, T>(parent, observer), IReliableObserver<T>, IUnloadableOperator
+        private sealed class Subscription : ContextSwitchOperator<IngressObservable<T>, T>, IReliableObserver<T>, IUnloadableOperator
         {
 #pragma warning disable CA2213 // "never disposed." Analyzer hasn't understood DisposeCore
             private IReliableSubscription _subscription;
 #pragma warning restore CA2213
-            private long _sequenceId = -1;
+            private long _sequenceId;
             private long _watermark;
+
+            public Subscription(IngressObservable<T> parent, IObserver<T> observer)
+                : base(parent, observer)
+            {
+                _sequenceId = -1; // NB: To start from the event that is published rather than replaying all of the history (when using 0).
+            }
 
             public override string Name => "sb:Ingress";
 

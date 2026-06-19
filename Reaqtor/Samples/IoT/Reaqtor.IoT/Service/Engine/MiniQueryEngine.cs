@@ -25,7 +25,7 @@ namespace Reaqtor.IoT
     // Query engine implementation, specializing the Reactor Core engine on a few facilities.
     //
 
-    public sealed class MiniQueryEngine(Uri uri, IScheduler scheduler, IKeyValueStore store, IngressEgressManager iemgr) : CheckpointingQueryEngine(uri, new Resolver(), scheduler, new Registry(), store, SerializationPolicy.Default, s_map)
+    public sealed class MiniQueryEngine : CheckpointingQueryEngine
     {
         private static readonly IQuotedTypeConversionTargets s_map = QuotedTypeConversionTargets.From(new Dictionary<Type, Type>
         {
@@ -34,7 +34,13 @@ namespace Reaqtor.IoT
             { typeof(ReactiveQubjectFactory), typeof(ReliableSubjectFactory) },
         });
 
-        private readonly IngressEgressManager _iemgr = iemgr;
+        private readonly IngressEgressManager _iemgr;
+
+        public MiniQueryEngine(Uri uri, IScheduler scheduler, IKeyValueStore store, IngressEgressManager iemgr)
+             : base(uri, new Resolver(), scheduler, new Registry(), store, SerializationPolicy.Default, s_map)
+        {
+            _iemgr = iemgr;
+        }
 
         protected override IHostedOperatorContext CreateOperatorContext(Uri instanceId)
         {

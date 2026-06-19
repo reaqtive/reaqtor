@@ -14,10 +14,16 @@ using System.Linq.Expressions;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class DefineServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, Expression expression, object state) : ServiceOperation(kind, targetObjectUri, state)
+    public class DefineServiceOperation : ServiceOperation
     {
+        public DefineServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, Expression expression, object state)
+            : base(kind, targetObjectUri, state)
+        {
+            Expression = expression;
+        }
+
         [field: NonSerialized]
-        public Expression Expression { get; } = expression;
+        public Expression Expression { get; }
 
         public override string ToString() => base.ToString() + " - " + Expression;
     }

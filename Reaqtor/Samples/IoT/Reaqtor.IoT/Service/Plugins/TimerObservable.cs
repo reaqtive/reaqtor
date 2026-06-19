@@ -16,9 +16,11 @@ namespace Reaqtor.IoT
     // using a visitor pattern for purposes of state saving and loading.
     //
 
-    public sealed class TimerObservable(TimeSpan period) : SubscribableBase<DateTimeOffset>
+    public sealed class TimerObservable : SubscribableBase<DateTimeOffset>
     {
-        private readonly TimeSpan _period = period;
+        private readonly TimeSpan _period;
+
+        public TimerObservable(TimeSpan period) => _period = period;
 
         protected override ISubscription SubscribeCore(IObserver<DateTimeOffset> observer) => new Subscription(_period, observer);
 
@@ -27,9 +29,13 @@ namespace Reaqtor.IoT
         // the engine's scheduler, which is critical to support checkpoint/recovery.
         //
 
-        private sealed class Subscription(TimeSpan parent, IObserver<DateTimeOffset> observer) : ContextSwitchOperator<TimeSpan, DateTimeOffset>(parent, observer), IUnloadableOperator
+        private sealed class Subscription : ContextSwitchOperator<TimeSpan, DateTimeOffset>, IUnloadableOperator
         {
             private Timer _timer;
+
+            public Subscription(TimeSpan parent, IObserver<DateTimeOffset> observer) : base(parent, observer)
+            {
+            }
 
             public override string Name => "iot:Timer";
 

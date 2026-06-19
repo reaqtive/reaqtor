@@ -294,13 +294,20 @@ namespace System.Linq.CompilerServices.Optimizers
                 protected abstract bool TryVisitLeaf(IList<MemberExpression> memberChain, Expression leaf, out Expression result);
             }
 
-            private sealed class ValidateMemberAccessesAndInlineVisitor(NewExpression anonymousConstructor, ParameterExpression converted, ParameterExpression initial) : MemberChainAndNewExpressionLeafVisitor(anonymousConstructor)
+            private sealed class ValidateMemberAccessesAndInlineVisitor : MemberChainAndNewExpressionLeafVisitor
             {
-                private readonly ParameterExpression _initial = initial;
-                private readonly ParameterExpression _converted = converted;
+                private readonly ParameterExpression _initial;
+                private readonly ParameterExpression _converted;
 
                 private int _unboundInitialParameters;
                 private int _convertedScopes;
+
+                public ValidateMemberAccessesAndInlineVisitor(NewExpression anonymousConstructor, ParameterExpression converted, ParameterExpression initial)
+                    : base(anonymousConstructor)
+                {
+                    _initial = initial;
+                    _converted = converted;
+                }
 
                 public bool Valid => _unboundInitialParameters == 0;
 
@@ -369,11 +376,17 @@ namespace System.Linq.CompilerServices.Optimizers
                 }
             }
 
-            private sealed class ValidateMemberAccessVisitor(NewExpression anonymousConstructor, ParameterExpression initial) : MemberChainAndNewExpressionLeafVisitor(anonymousConstructor)
+            private sealed class ValidateMemberAccessVisitor : MemberChainAndNewExpressionLeafVisitor
             {
-                private readonly ParameterExpression _initial = initial;
+                private readonly ParameterExpression _initial;
 
                 private int _unboundInitialParameters;
+
+                public ValidateMemberAccessVisitor(NewExpression anonymousConstructor, ParameterExpression initial)
+                    : base(anonymousConstructor)
+                {
+                    _initial = initial;
+                }
 
                 public bool Valid => _unboundInitialParameters == 0;
 
@@ -404,11 +417,19 @@ namespace System.Linq.CompilerServices.Optimizers
                 }
             }
 
-            private sealed class InlineFlattenedTypeVisitor(NewExpression anonymousConstructor, ParameterExpression converted, ParameterExpression initial, Impl.AnonymousTypeFlattener flattener) : MemberChainAndNewExpressionLeafVisitor(anonymousConstructor)
+            private sealed class InlineFlattenedTypeVisitor : MemberChainAndNewExpressionLeafVisitor
             {
-                private readonly ParameterExpression _initial = initial;
-                private readonly ParameterExpression _converted = converted;
-                private readonly AnonymousTypeFlattener _flattener = flattener;
+                private readonly ParameterExpression _initial;
+                private readonly ParameterExpression _converted;
+                private readonly AnonymousTypeFlattener _flattener;
+
+                public InlineFlattenedTypeVisitor(NewExpression anonymousConstructor, ParameterExpression converted, ParameterExpression initial, AnonymousTypeFlattener flattener)
+                    : base(anonymousConstructor)
+                {
+                    _initial = initial;
+                    _converted = converted;
+                    _flattener = flattener;
+                }
 
                 protected override Expression VisitLambda<T>(Expression<T> node)
                 {

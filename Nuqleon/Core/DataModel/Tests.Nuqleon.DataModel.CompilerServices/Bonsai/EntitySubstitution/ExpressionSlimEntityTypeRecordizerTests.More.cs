@@ -464,10 +464,15 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             AssertRecordizationException<InvalidOperationException>(exp);
         }
 
-        private class Foo3([Mapping("bar")] string bar)
+        private class Foo3
         {
+            public Foo3([Mapping("bar")] string bar)
+            {
+                Bar = bar;
+            }
+
             [Mapping("bar")]
-            public string Bar { get; set; } = bar;
+            public string Bar { get; set; }
 
             public int Baz { get; set; }
         }

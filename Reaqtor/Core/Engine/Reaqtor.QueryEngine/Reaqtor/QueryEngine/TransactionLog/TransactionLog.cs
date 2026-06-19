@@ -143,10 +143,16 @@ namespace Reaqtor.QueryEngine
         /// <returns>Handle to the transaction scope; enables abandoning changes by clearing the transaction.</returns>
         public IScopedTransactionLog Scope(IKeyValueStoreTransaction transaction) => new ScopedTransactionLog(this, transaction);
 
-        private sealed class ScopedTransactionLog(ITransactionLog transactionLog, IKeyValueStoreTransaction transaction) : IScopedTransactionLog
+        private sealed class ScopedTransactionLog : IScopedTransactionLog
         {
-            private readonly ITransactionLog _transactionLog = transactionLog;
-            private readonly IKeyValueStoreTransaction _transaction = transaction;
+            private readonly ITransactionLog _transactionLog;
+            private readonly IKeyValueStoreTransaction _transaction;
+
+            public ScopedTransactionLog(ITransactionLog transactionLog, IKeyValueStoreTransaction transaction)
+            {
+                _transactionLog = transactionLog;
+                _transaction = transaction;
+            }
 
             public void Clear()
             {

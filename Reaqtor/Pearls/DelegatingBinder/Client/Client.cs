@@ -10,9 +10,14 @@ using System.Reflection;
 
 namespace DelegatingBinder
 {
-    internal class Client(IService service)
+    internal class Client
     {
-        private readonly IQProvider _provider = new Provider(service);
+        private readonly IQProvider _provider;
+
+        public Client(IService service)
+        {
+            _provider = new Provider(service);
+        }
 
         public IQbservable<T> GetObservable<T>(string id)
         {
@@ -34,11 +39,17 @@ namespace DelegatingBinder
             return new SubjectFactoryProxy<T>(Expression.Parameter(typeof(IQubjectFactory<T>), id), _provider);
         }
 
-        private class ObservableProxy<T>(Expression expression, IQProvider provider) : IQbservable<T>
+        private class ObservableProxy<T> : IQbservable<T>
         {
-            public Expression Expression { get; } = expression;
+            public ObservableProxy(Expression expression, IQProvider provider)
+            {
+                Expression = expression;
+                Provider = provider;
+            }
 
-            public IQProvider Provider { get; } = provider;
+            public Expression Expression { get; }
+
+            public IQProvider Provider { get; }
 
             public IQubscription Subscribe(string id, IQbserver<T> observer)
             {
@@ -49,11 +60,17 @@ namespace DelegatingBinder
             }
         }
 
-        private class ObserverProxy<T>(Expression expression, IQProvider provider) : IQbserver<T>
+        private class ObserverProxy<T> : IQbserver<T>
         {
-            public Expression Expression { get; } = expression;
+            public ObserverProxy(Expression expression, IQProvider provider)
+            {
+                Expression = expression;
+                Provider = provider;
+            }
 
-            public IQProvider Provider { get; } = provider;
+            public Expression Expression { get; }
+
+            public IQProvider Provider { get; }
 
             public void OnNext(T value)
             {
@@ -63,11 +80,17 @@ namespace DelegatingBinder
             }
         }
 
-        private class SubscriptionProxy(Expression expression, IQProvider provider) : IQubscription
+        private class SubscriptionProxy : IQubscription
         {
-            public Expression Expression { get; } = expression;
+            public SubscriptionProxy(Expression expression, IQProvider provider)
+            {
+                Expression = expression;
+                Provider = provider;
+            }
 
-            public IQProvider Provider { get; } = provider;
+            public Expression Expression { get; }
+
+            public IQProvider Provider { get; }
 
             public void Dispose()
             {
@@ -77,11 +100,17 @@ namespace DelegatingBinder
             }
         }
 
-        private class SubjectFactoryProxy<T>(Expression expression, IQProvider provider) : IQubjectFactory<T>
+        private class SubjectFactoryProxy<T> : IQubjectFactory<T>
         {
-            public Expression Expression { get; } = expression;
+            public SubjectFactoryProxy(Expression expression, IQProvider provider)
+            {
+                Expression = expression;
+                Provider = provider;
+            }
 
-            public IQProvider Provider { get; } = provider;
+            public Expression Expression { get; }
+
+            public IQProvider Provider { get; }
 
             public IQubject<T> Create(string id)
             {
@@ -92,11 +121,17 @@ namespace DelegatingBinder
             }
         }
 
-        private class SubjectProxy<T>(Expression expression, IQProvider provider) : IQubject<T>
+        private class SubjectProxy<T> : IQubject<T>
         {
-            public Expression Expression { get; } = expression;
+            public SubjectProxy(Expression expression, IQProvider provider)
+            {
+                Expression = expression;
+                Provider = provider;
+            }
 
-            public IQProvider Provider { get; } = provider;
+            public Expression Expression { get; }
+
+            public IQProvider Provider { get; }
 
             public void Dispose()
             {
@@ -114,9 +149,14 @@ namespace DelegatingBinder
             }
         }
 
-        private class Provider(IService service) : IQProvider
+        private class Provider : IQProvider
         {
-            public IService Service { get; } = service;
+            public Provider(IService service)
+            {
+                Service = service;
+            }
+
+            public IService Service { get; }
 
             public IQbservable<T> CreateObservable<T>(Expression expression)
             {

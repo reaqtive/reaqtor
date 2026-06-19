@@ -24,13 +24,18 @@ namespace System.Memory
         /// <summary>
         /// Implementation of a factory for memoization caches with an LRU cache eviction strategy.
         /// </summary>
-        /// <remarks>
-        /// Creates a new LRU cache with the specified maximum capacity.
-        /// </remarks>
-        /// <param name="maxCapacity">The maximum capacity of the cache.</param>
-        private sealed class LruImpl(int maxCapacity) : IMemoizationCacheFactory
+        private sealed class LruImpl : IMemoizationCacheFactory
         {
-            private readonly int _maxCapacity = maxCapacity;
+            private readonly int _maxCapacity;
+
+            /// <summary>
+            /// Creates a new LRU cache with the specified maximum capacity.
+            /// </summary>
+            /// <param name="maxCapacity">The maximum capacity of the cache.</param>
+            public LruImpl(int maxCapacity)
+            {
+                _maxCapacity = maxCapacity;
+            }
 
             /// <summary>
             /// Creates a memoization cache for the specified <paramref name="function"/> using the specified <paramref name="comparer"/> to compare cache entries.

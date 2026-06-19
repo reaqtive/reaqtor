@@ -19,16 +19,21 @@ namespace Nuqleon.Json.Serialization
         /// JSON deserializer for objects of type <typeparamref name="T"/>.
         /// </summary>
         /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
-        /// <remarks>
-        /// Creates a new deserializer given the specified parser implementations.
-        /// </remarks>
-        /// <param name="parseString">The parser to use to deserialize JSON payloads from string inputs.</param>
-        /// <param name="parseReader">The parser to use to deserialize JSON payloads from text reader inputs.</param>
-        private sealed class SafeDeserializer<T>(ParseStringFunc<T> parseString, ParseReaderFunc<T> parseReader) : DeserializerBase<T>(parseString, parseReader)
+        private sealed class SafeDeserializer<T> : DeserializerBase<T>
         {
-            private readonly ObjectPool<ParserContext> _contextPool = new ObjectPool<ParserContext>(() => new ParserContext());
+            private readonly ObjectPool<ParserContext> _contextPool;
 
 #if !NO_IO
+            /// <summary>
+            /// Creates a new deserializer given the specified parser implementations.
+            /// </summary>
+            /// <param name="parseString">The parser to use to deserialize JSON payloads from string inputs.</param>
+            /// <param name="parseReader">The parser to use to deserialize JSON payloads from text reader inputs.</param>
+            public SafeDeserializer(ParseStringFunc<T> parseString, ParseReaderFunc<T> parseReader)
+                : base(parseString, parseReader)
+            {
+                _contextPool = new ObjectPool<ParserContext>(() => new ParserContext());
+            }
 #else
             /// <summary>
             /// Creates a new deserializer given the specified parser implementation.

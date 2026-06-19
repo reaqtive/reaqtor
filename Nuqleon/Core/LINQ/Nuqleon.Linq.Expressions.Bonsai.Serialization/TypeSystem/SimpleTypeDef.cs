@@ -15,16 +15,23 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal sealed class SimpleTypeDef(string typeName, int assembly) : TypeDef
+    internal sealed class SimpleTypeDef : TypeDef
     {
         #region Fields
 
-        private readonly string _typeName = typeName;
-        private readonly int _assembly = assembly;
+        private readonly string _typeName;
+        private readonly int _assembly;
         private TypeSlim _type;
 
         #endregion
+
         #region Constructors
+
+        public SimpleTypeDef(string typeName, int assembly)
+        {
+            _typeName = typeName;
+            _assembly = assembly;
+        }
 
         #endregion
 

@@ -13,22 +13,27 @@ namespace System.Linq.Expressions
     /// <summary>
     /// Event arguments for a cache event.
     /// </summary>
-    /// <remarks>
-    /// Creates a new event argument associated with the specified cache entry.
-    /// </remarks>
-    /// <param name="expression">Lambda expression used as the key of the cache entry.</param>
-    /// <param name="delegate">Delegate used as the value of the cache entry.</param>
-    public class CacheEventArgs(LambdaExpression expression, Delegate @delegate) : EventArgs
+    public class CacheEventArgs : EventArgs
     {
+        /// <summary>
+        /// Creates a new event argument associated with the specified cache entry.
+        /// </summary>
+        /// <param name="expression">Lambda expression used as the key of the cache entry.</param>
+        /// <param name="delegate">Delegate used as the value of the cache entry.</param>
+        public CacheEventArgs(LambdaExpression expression, Delegate @delegate)
+        {
+            Lambda = expression;
+            Delegate = @delegate;
+        }
 
         /// <summary>
         /// Gets the lambda expression used as the key of the cache entry.
         /// </summary>
-        public LambdaExpression Lambda { get; } = expression;
+        public LambdaExpression Lambda { get; }
 
         /// <summary>
         /// Gets the delegate used as the value of the cache entry.
         /// </summary>
-        public Delegate Delegate { get; } = @delegate;
+        public Delegate Delegate { get; }
     }
 }

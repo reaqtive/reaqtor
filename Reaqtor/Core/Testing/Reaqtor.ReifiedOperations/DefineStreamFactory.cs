@@ -14,10 +14,15 @@ using System.Linq.Expressions;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class DefineStreamFactory(Uri streamFactoryUri, Expression streamFactory, object state) : DefineServiceOperation(ServiceOperationKind.DefineStreamFactory, streamFactoryUri, streamFactory, state)
+    public class DefineStreamFactory : DefineServiceOperation
     {
         public DefineStreamFactory(Uri streamFactoryUri)
             : this(streamFactoryUri, streamFactory: null, state: null)
+        {
+        }
+
+        public DefineStreamFactory(Uri streamFactoryUri, Expression streamFactory, object state)
+            : base(ServiceOperationKind.DefineStreamFactory, streamFactoryUri, streamFactory, state)
         {
         }
     }

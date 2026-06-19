@@ -87,9 +87,14 @@ namespace Tests.System.Linq.CompilerServices
             Assert.AreEqual(typeof(long).MakeByRefType(), subst.Visit(typeof(int).MakeByRefType()));
         }
 
-        private class SubstituteSimpleTypeVisitor(Dictionary<Type, Type> subst) : TypeVisitor
+        private class SubstituteSimpleTypeVisitor : TypeVisitor
         {
-            private readonly Dictionary<Type, Type> _subst = subst;
+            private readonly Dictionary<Type, Type> _subst;
+
+            public SubstituteSimpleTypeVisitor(Dictionary<Type, Type> subst)
+            {
+                _subst = subst;
+            }
 
             protected override Type VisitSimple(Type type)
             {
@@ -114,9 +119,14 @@ namespace Tests.System.Linq.CompilerServices
             Assert.AreEqual(typeof(Func<string, IEnumerable<int>>), subst.Visit(typeof(Func<string, List<int>>)));
         }
 
-        private class SubstituteGenericTypeVisitor(Dictionary<Type, Type> subst) : TypeVisitor
+        private class SubstituteGenericTypeVisitor : TypeVisitor
         {
-            private readonly Dictionary<Type, Type> _subst = subst;
+            private readonly Dictionary<Type, Type> _subst;
+
+            public SubstituteGenericTypeVisitor(Dictionary<Type, Type> subst)
+            {
+                _subst = subst;
+            }
 
             protected override Type VisitGenericTypeDefinition(Type type)
             {

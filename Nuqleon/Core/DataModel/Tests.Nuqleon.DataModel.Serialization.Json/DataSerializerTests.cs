@@ -1228,9 +1228,11 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
             T Eval();
         }
 
-        private class Num<T>(T value) : INum<T>
+        private class Num<T> : INum<T>
         {
-            private readonly T _value = value;
+            private readonly T _value;
+
+            public Num(T value) => _value = value;
 
             public T Eval() => _value;
         }
@@ -1245,11 +1247,13 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         {
         }
 
-        private class Qum<T>(Expression expression) : IQum<T>
+        private class Qum<T> : IQum<T>
         {
+            public Qum(Expression expression) => Expression = expression;
+
             public T Eval() => Expression.Evaluate<T>();
 
-            public Expression Expression { get; } = expression;
+            public Expression Expression { get; }
         }
 
         private class BarConv : DataConverter
@@ -1418,8 +1422,13 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
                 }
             }
 
-            private class DataModelBonsaiExpressionSerializer(Func<Type, Func<object, JsonExpression>> liftFactory, Func<Type, Func<JsonExpression, object>> reduceFactory) : BonsaiExpressionSerializer(liftFactory, reduceFactory)
+            private class DataModelBonsaiExpressionSerializer : BonsaiExpressionSerializer
             {
+                public DataModelBonsaiExpressionSerializer(Func<Type, Func<object, JsonExpression>> liftFactory, Func<Type, Func<JsonExpression, object>> reduceFactory)
+                    : base(liftFactory, reduceFactory)
+                {
+                }
+
                 public override Expression Reduce(ExpressionSlim expression)
                 {
                     return new ExpressionSlimToExpressionConverter(new DataModelInvertedTypeSpace()).Visit(expression);

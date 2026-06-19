@@ -665,7 +665,7 @@ namespace System
             return new TypePrinter(useNamespaceQualifiedNames, useCSharpTypeAliases, disallowCompilerGeneratedTypes).Visit(type);
         }
 
-        private sealed class TypePrinter(bool useNamespaceQualifiedNames, bool useCSharpTypeAliases, bool disallowCompilerGeneratedTypes) : TypeVisitor<string>
+        private sealed class TypePrinter : TypeVisitor<string>
         {
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable format // (Formatted as a table.)
@@ -691,9 +691,16 @@ namespace System
 #pragma warning restore format
 #pragma warning restore IDE0079
 
-            private readonly bool _useNamespaceQualifiedNames = useNamespaceQualifiedNames;
-            private readonly bool _useCSharpTypeAliases = useCSharpTypeAliases;
-            private readonly bool _disallowCompilerGeneratedTypes = disallowCompilerGeneratedTypes;
+            private readonly bool _useNamespaceQualifiedNames;
+            private readonly bool _useCSharpTypeAliases;
+            private readonly bool _disallowCompilerGeneratedTypes;
+
+            public TypePrinter(bool useNamespaceQualifiedNames, bool useCSharpTypeAliases, bool disallowCompilerGeneratedTypes)
+            {
+                _useNamespaceQualifiedNames = useNamespaceQualifiedNames;
+                _useCSharpTypeAliases = useCSharpTypeAliases;
+                _disallowCompilerGeneratedTypes = disallowCompilerGeneratedTypes;
+            }
 
             public override string Visit(Type type)
             {
@@ -1048,10 +1055,16 @@ namespace System
             return error;
         }
 
-        private sealed class TypeUnifier(IEqualityComparer<Type> comparer) : TypeEqualityComparer
+        private sealed class TypeUnifier : TypeEqualityComparer
         {
-            private readonly IEqualityComparer<Type> _comparer = comparer;
-            private readonly Dictionary<Type, TypeHolder> _map = [];
+            private readonly IEqualityComparer<Type> _comparer;
+            private readonly Dictionary<Type, TypeHolder> _map;
+
+            public TypeUnifier(IEqualityComparer<Type> comparer)
+            {
+                _comparer = comparer;
+                _map = [];
+            }
 
             public Dictionary<Type, Type> Map => _map.ToDictionary(e => e.Key, e => e.Value.Type);
 
@@ -1192,9 +1205,14 @@ namespace System
             }
         }
 
-        private sealed class LeftTypeUnifier(IEqualityComparer<Type> comparer) : TypeEqualityComparer
+        private sealed class LeftTypeUnifier : TypeEqualityComparer
         {
-            private readonly IEqualityComparer<Type> _comparer = comparer;
+            private readonly IEqualityComparer<Type> _comparer;
+
+            public LeftTypeUnifier(IEqualityComparer<Type> comparer)
+            {
+                _comparer = comparer;
+            }
 
             public Dictionary<Type, Type> Map { get; } = [];
 

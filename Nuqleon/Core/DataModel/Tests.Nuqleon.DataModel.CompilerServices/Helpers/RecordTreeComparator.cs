@@ -19,8 +19,13 @@ using Nuqleon.DataModel;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices
 {
-    internal class RecordTreeComparator(TypeComparator typeComparer) : ExpressionComparator(typeComparer, ObjectComparator.CreateInstance())
+    internal class RecordTreeComparator : ExpressionComparator
     {
+        public RecordTreeComparator(TypeComparator typeComparer)
+            : base(typeComparer, ObjectComparator.CreateInstance())
+        {
+        }
+
         public override bool Equals(Expression x, Expression y)
         {
             if (x == null && y == null)

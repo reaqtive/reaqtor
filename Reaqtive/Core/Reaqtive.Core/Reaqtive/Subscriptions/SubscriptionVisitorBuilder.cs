@@ -13,14 +13,19 @@ namespace Reaqtive
     /// Builder for subscription visitors performing actions on each operator node in a subscription tree.
     /// </summary>
     /// <typeparam name="T1">Type of the operators processed by the visitor's action. This type should implement IOperator.</typeparam>
-    /// <remarks>
-    /// Creates a new builder for subscription visitors with the specified action to visit operator nodes.
-    /// </remarks>
-    /// <param name="visit1">Action applied to each operator node of the specified type.</param>
-    public class SubscriptionVisitorBuilder<T1>(Action<T1> visit1)
+    public class SubscriptionVisitorBuilder<T1>
         where T1 : class, IOperator
     {
-        private readonly Action<T1> _visit1 = visit1;
+        private readonly Action<T1> _visit1;
+
+        /// <summary>
+        /// Creates a new builder for subscription visitors with the specified action to visit operator nodes.
+        /// </summary>
+        /// <param name="visit1">Action applied to each operator node of the specified type.</param>
+        public SubscriptionVisitorBuilder(Action<T1> visit1)
+        {
+            _visit1 = visit1;
+        }
 
         /// <summary>
         /// Creates a new subscription visitor that applies the specified action to each operator node of the specified type in a subscription tree, in addition to the current visitor's action.
@@ -49,17 +54,23 @@ namespace Reaqtive
     /// </summary>
     /// <typeparam name="T1">Type of the operators processed by the visitor's first action. This type should implement IOperator.</typeparam>
     /// <typeparam name="T2">Type of the operators processed by the visitor's second action. This type should implement IOperator.</typeparam>
-    /// <remarks>
-    /// Creates a new builder for subscription visitors with the specified actions to visit operator nodes.
-    /// </remarks>
-    /// <param name="visit1">Action applied to each operator node of type <typeparamref name="T1"/>.</param>
-    /// <param name="visit2">Action applied to each operator node of type <typeparamref name="T2"/>.</param>
-    public class SubscriptionVisitorBuilder<T1, T2>(Action<T1> visit1, Action<T2> visit2)
+    public class SubscriptionVisitorBuilder<T1, T2>
         where T1 : class, IOperator
         where T2 : class, IOperator
     {
-        private readonly Action<T1> _visit1 = visit1;
-        private readonly Action<T2> _visit2 = visit2;
+        private readonly Action<T1> _visit1;
+        private readonly Action<T2> _visit2;
+
+        /// <summary>
+        /// Creates a new builder for subscription visitors with the specified actions to visit operator nodes.
+        /// </summary>
+        /// <param name="visit1">Action applied to each operator node of type <typeparamref name="T1"/>.</param>
+        /// <param name="visit2">Action applied to each operator node of type <typeparamref name="T2"/>.</param>
+        public SubscriptionVisitorBuilder(Action<T1> visit1, Action<T2> visit2)
+        {
+            _visit1 = visit1;
+            _visit2 = visit2;
+        }
 
         /// <summary>
         /// Applies the visitor to the specified subscription.

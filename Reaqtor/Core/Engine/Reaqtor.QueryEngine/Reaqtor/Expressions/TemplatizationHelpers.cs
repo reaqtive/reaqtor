@@ -127,10 +127,16 @@ namespace Reaqtor.Expressions
             };
         }
 
-        private sealed class TemplateSubstitutor(ParameterExpression search, ParameterExpression replacement) : ScopedExpressionVisitor<ParameterExpression>
+        private sealed class TemplateSubstitutor : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly ParameterExpression _search = search;
-            private readonly ParameterExpression _replacement = replacement;
+            private readonly ParameterExpression _search;
+            private readonly ParameterExpression _replacement;
+
+            public TemplateSubstitutor(ParameterExpression search, ParameterExpression replacement)
+            {
+                _search = search;
+                _replacement = replacement;
+            }
 
             protected override Expression VisitParameter(ParameterExpression node)
             {

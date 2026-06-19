@@ -30,11 +30,7 @@ namespace Nuqleon.Json.Serialization
         /// Utility to build parsers optimized for a specified type.
         /// </summary>
         /// <remarks>This type is thread-safe.</remarks>
-        /// <remarks>
-        /// Creates a new parser builder using the specified <paramref name="resolver"/> to resolve JSON key names for members.
-        /// </remarks>
-        /// <param name="resolver">Resolver used to resolve JSON key names for members.</param>
-        internal class ParserReaderBuilder(INameResolver resolver)
+        internal class ParserReaderBuilder
         {
             //
             // NB: These are static cached delegates for primitive type parsers; they get lazily set on first usage.
@@ -106,7 +102,13 @@ namespace Nuqleon.Json.Serialization
             // THREADING: Implementations of INameProvider are assumed to be thread-safe.
             //
 
-            private readonly INameResolver _resolver = resolver;
+            private readonly INameResolver _resolver;
+
+            /// <summary>
+            /// Creates a new parser builder using the specified <paramref name="resolver"/> to resolve JSON key names for members.
+            /// </summary>
+            /// <param name="resolver">Resolver used to resolve JSON key names for members.</param>
+            public ParserReaderBuilder(INameResolver resolver) => _resolver = resolver;
 
             /// <summary>
             /// Creates a specialized parser that can deserialize an object of type <typeparamref name="T"/>.

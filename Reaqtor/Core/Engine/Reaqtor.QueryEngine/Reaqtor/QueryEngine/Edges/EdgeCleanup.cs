@@ -12,15 +12,26 @@ namespace Reaqtor.QueryEngine
     /// Operator inserted during expression rewrites to clean up edges.
     /// </summary>
     /// <typeparam name="TResult">The type of the events flowing through the operator.</typeparam>
-    internal sealed class EdgeCleanup<TResult>(ISubscribable<TResult> source, EdgeDescription[] edges) : SubscribableBase<TResult>
+    internal sealed class EdgeCleanup<TResult> : SubscribableBase<TResult>
     {
-        private readonly ISubscribable<TResult> _source = source;
-        private readonly EdgeDescription[] _edges = edges;
+        private readonly ISubscribable<TResult> _source;
+        private readonly EdgeDescription[] _edges;
+
+        public EdgeCleanup(ISubscribable<TResult> source, EdgeDescription[] edges)
+        {
+            _source = source;
+            _edges = edges;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<TResult> observer) => new Impl(this, observer);
 
-        private sealed class Impl(EdgeCleanup<TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<EdgeCleanup<TResult>, TResult>(parent, observer), IObserver<TResult>
+        private sealed class Impl : StatefulUnaryOperator<EdgeCleanup<TResult>, TResult>, IObserver<TResult>
         {
+            public Impl(EdgeCleanup<TResult> parent, IObserver<TResult> observer)
+                : base(parent, observer)
+            {
+            }
+
             public override string Name => "rce:EdgeCleanup";
 
             public override Version Version => Versioning.v1;

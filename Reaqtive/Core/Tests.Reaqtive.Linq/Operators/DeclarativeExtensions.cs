@@ -59,10 +59,16 @@ namespace Test.Reaqtive.Operators
         }
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        private sealed class ExceptionSubscribable<T>(Action ex, bool onSubscribe) : ISubscribable<T>
+        private sealed class ExceptionSubscribable<T> : ISubscribable<T>
         {
-            private readonly Action _exception = ex;
-            private readonly bool _onSubscribe = onSubscribe;
+            private readonly Action _exception;
+            private readonly bool _onSubscribe;
+
+            public ExceptionSubscribable(Action ex, bool onSubscribe)
+            {
+                _exception = ex;
+                _onSubscribe = onSubscribe;
+            }
 
             public ISubscription Subscribe(IObserver<T> observer)
             {
@@ -79,8 +85,13 @@ namespace Test.Reaqtive.Operators
                 return Subscribe(observer);
             }
 
-            private sealed class _(DeclarativeExtensions.ExceptionSubscribable<T> parent, IObserver<T> obv) : Operator<ExceptionSubscribable<T>, T>(parent, obv)
+            private sealed class _ : Operator<ExceptionSubscribable<T>, T>
             {
+                public _(ExceptionSubscribable<T> parent, IObserver<T> obv)
+                    : base(parent, obv)
+                {
+                }
+
                 public override void SetContext(IOperatorContext context)
                 {
                     if (!Params._onSubscribe)

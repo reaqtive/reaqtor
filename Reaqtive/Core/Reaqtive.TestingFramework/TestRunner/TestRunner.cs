@@ -10,13 +10,20 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Reaqtive.TestingFramework.TestRunner
 {
-    internal class TestRunner(object instance, MethodInfo method)
+    internal class TestRunner
     {
-        private readonly object _instance = instance;
-        private readonly Lazy<ExpectedExceptionAttribute> _expectedException = new Lazy<ExpectedExceptionAttribute>(
-                () => method.GetCustomAttribute<ExpectedExceptionAttribute>());
+        private readonly object _instance;
+        private readonly Lazy<ExpectedExceptionAttribute> _expectedException;
 
-        public MethodInfo TestMethod { get; private set; } = method;
+        public TestRunner(object instance, MethodInfo method)
+        {
+            _instance = instance;
+            TestMethod = method;
+            _expectedException = new Lazy<ExpectedExceptionAttribute>(
+                () => method.GetCustomAttribute<ExpectedExceptionAttribute>());
+        }
+
+        public MethodInfo TestMethod { get; private set; }
 
         public void Run()
         {

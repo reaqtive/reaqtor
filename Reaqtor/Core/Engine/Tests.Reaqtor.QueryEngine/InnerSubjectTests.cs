@@ -591,10 +591,16 @@ namespace Tests.Reaqtor.QueryEngine
                 return new Qubject<TInput, TOutput>(this, uri);
             }
 
-            private sealed class Qubject<TInput, TOutput>(InnerSubjectTests.MiniService parent, Uri uri) : IReactiveQubject<TInput, TOutput>
+            private sealed class Qubject<TInput, TOutput> : IReactiveQubject<TInput, TOutput>
             {
-                private readonly MiniService _parent = parent;
-                private readonly Uri _uri = uri;
+                private readonly MiniService _parent;
+                private readonly Uri _uri;
+
+                public Qubject(MiniService parent, Uri uri)
+                {
+                    _parent = parent;
+                    _uri = uri;
+                }
 
                 public void Dispose()
                 {

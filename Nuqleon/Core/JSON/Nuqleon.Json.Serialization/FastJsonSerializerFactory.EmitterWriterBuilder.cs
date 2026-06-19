@@ -29,11 +29,7 @@ namespace Nuqleon.Json.Serialization
         /// Utility to build emitters optimized for a specified type.
         /// </summary>
         /// <remarks>This type is thread-safe.</remarks>
-        /// <remarks>
-        /// Creates a new emitter builder using the specified <paramref name="provider"/> to obtain JSON key names for members.
-        /// </remarks>
-        /// <param name="provider">Provider used to obtain JSON key names for members.</param>
-        internal class EmitterWriterBuilder(INameProvider provider)
+        internal class EmitterWriterBuilder
         {
             //
             // NB: These are static cached delegates for primitive type emitters; they get lazily set on first usage.
@@ -124,7 +120,13 @@ namespace Nuqleon.Json.Serialization
             // THREADING: Implementations of INameProvider are assumed to be thread-safe.
             //
 
-            private readonly INameProvider _provider = provider;
+            private readonly INameProvider _provider;
+
+            /// <summary>
+            /// Creates a new emitter builder using the specified <paramref name="provider"/> to obtain JSON key names for members.
+            /// </summary>
+            /// <param name="provider">Provider used to obtain JSON key names for members.</param>
+            public EmitterWriterBuilder(INameProvider provider) => _provider = provider;
 
             /// <summary>
             /// Creates a specialized emitter that can serialize an object of type <typeparamref name="T"/>.

@@ -23,22 +23,31 @@ namespace System.Memory
         /// Implementation of a factory for memoization caches with a ranking-based eviction strategy.
         /// </summary>
         /// <typeparam name="TMetric">Type of the metric to rank cache entries by.</typeparam>
-        /// <remarks>
-        /// Creates a memoization cache factory for memoization caches that use an eviction strategy based on a function to rank cache entries based on metrics.
-        /// </remarks>
-        /// <param name="ranker">The ranker function used to obtain the metric for each entry upon evicting entries from the cache.</param>
-        /// <param name="maxCapacity">The maximum capacity of memoization caches returned by the factory.</param>
-        /// <param name="ageThreshold">The threshold used to decide whether an entry has aged sufficiently in order to be considered for eviction. E.g. a value of 0.9 means that the youngest 10% of entries cannot get evicted.</param>
-        /// <param name="stopwatchFactory">The stopwatch factory used to create stopwatches that measure access times and function invocation times. If omitted, the default stopwatch is used.</param>
-        /// <param name="descending">Indicates whether the ranker should evict entries with the highest or lowest score.</param>
-        /// <returns>Memoization cache factory for memoization caches that use a ranking-based cache eviction strategy.</returns>
-        private sealed class EvictImpl<TMetric>(Func<IMemoizationCacheEntryMetrics, TMetric> ranker, int maxCapacity, double ageThreshold, IStopwatchFactory stopwatchFactory, bool descending) : IMemoizationCacheFactory
+        private sealed class EvictImpl<TMetric> : IMemoizationCacheFactory
         {
-            private readonly Func<IMemoizationCacheEntryMetrics, TMetric> _ranker = ranker;
-            private readonly int _maxCapacity = maxCapacity;
-            private readonly bool _descending = descending;
-            private readonly double _ageThreshold = ageThreshold;
-            private readonly IStopwatchFactory _stopwatchFactory = stopwatchFactory ?? StopwatchFactory.Diagnostics;
+            private readonly Func<IMemoizationCacheEntryMetrics, TMetric> _ranker;
+            private readonly int _maxCapacity;
+            private readonly bool _descending;
+            private readonly double _ageThreshold;
+            private readonly IStopwatchFactory _stopwatchFactory;
+
+            /// <summary>
+            /// Creates a memoization cache factory for memoization caches that use an eviction strategy based on a function to rank cache entries based on metrics.
+            /// </summary>
+            /// <param name="ranker">The ranker function used to obtain the metric for each entry upon evicting entries from the cache.</param>
+            /// <param name="maxCapacity">The maximum capacity of memoization caches returned by the factory.</param>
+            /// <param name="ageThreshold">The threshold used to decide whether an entry has aged sufficiently in order to be considered for eviction. E.g. a value of 0.9 means that the youngest 10% of entries cannot get evicted.</param>
+            /// <param name="stopwatchFactory">The stopwatch factory used to create stopwatches that measure access times and function invocation times. If omitted, the default stopwatch is used.</param>
+            /// <param name="descending">Indicates whether the ranker should evict entries with the highest or lowest score.</param>
+            /// <returns>Memoization cache factory for memoization caches that use a ranking-based cache eviction strategy.</returns>
+            public EvictImpl(Func<IMemoizationCacheEntryMetrics, TMetric> ranker, int maxCapacity, double ageThreshold, IStopwatchFactory stopwatchFactory, bool descending)
+            {
+                _ranker = ranker;
+                _maxCapacity = maxCapacity;
+                _descending = descending;
+                _ageThreshold = ageThreshold;
+                _stopwatchFactory = stopwatchFactory ?? StopwatchFactory.Diagnostics;
+            }
 
             /// <summary>
             /// Creates a memoization cache for the specified <paramref name="function"/> that doesn't keep cache entry keys alive.

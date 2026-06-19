@@ -87,8 +87,12 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             Assert.IsTrue(res is ConstantExpressionSlim);
         }
 
-        private sealed class Subst(Dictionary<TypeSlim, TypeSlim> typeMap) : EntityTypeSlimSubstitutor(typeMap)
+        private sealed class Subst : EntityTypeSlimSubstitutor
         {
+            public Subst(Dictionary<TypeSlim, TypeSlim> typeMap)
+                : base(typeMap)
+            {
+            }
 
 #if DEBUG
             protected override void CheckConstantStructuralCore(ObjectSlim newValue, StructuralDataType oldDataType) { }

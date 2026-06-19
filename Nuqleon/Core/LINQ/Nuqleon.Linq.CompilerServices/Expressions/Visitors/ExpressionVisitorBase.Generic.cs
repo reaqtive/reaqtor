@@ -200,9 +200,14 @@ namespace System.Linq.CompilerServices
         }
 
 #if !USE_SLIM
-        private sealed class LambdaDispatch(ExpressionVisitor<TExpression> parent) : ExpressionVisitor
+        private sealed class LambdaDispatch : ExpressionVisitor
         {
-            private readonly ExpressionVisitor<TExpression> _parent = parent;
+            private readonly ExpressionVisitor<TExpression> _parent;
+
+            public LambdaDispatch(ExpressionVisitor<TExpression> parent)
+            {
+                _parent = parent;
+            }
 
             protected override ExpressionAlias VisitLambda<T>(Expression<T> node)
             {

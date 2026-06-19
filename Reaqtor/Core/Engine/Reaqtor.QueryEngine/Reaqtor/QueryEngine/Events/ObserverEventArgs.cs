@@ -9,11 +9,15 @@ namespace Reaqtor.QueryEngine.Events
     /// <summary>
     /// Event arguments involving an observer.
     /// </summary>
-    /// <remarks>
-    /// Creates a new instance of <see cref="ObserverEventArgs"/> class for the specified entity.
-    /// </remarks>
-    /// <param name="entity">The entity representing the observer.</param>
-    internal sealed class ObserverEventArgs(IReactiveResource entity) : ReactiveEntityEventArgs(entity.Uri, entity, ReactiveEntityKind.Observer)
+    internal sealed class ObserverEventArgs : ReactiveEntityEventArgs
     {
+        /// <summary>
+        /// Creates a new instance of <see cref="ObserverEventArgs"/> class for the specified entity.
+        /// </summary>
+        /// <param name="entity">The entity representing the observer.</param>
+        public ObserverEventArgs(IReactiveResource entity)
+            : base(entity.Uri, entity, ReactiveEntityKind.Observer)
+        {
+        }
     }
 }

@@ -7,9 +7,11 @@ using System.Collections.Generic;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
-    public class UpdateOperationResult<TKey, TValue>(bool keyNotFound) : OperationResult<TKey, TValue>
+    public class UpdateOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
     {
-        private readonly bool _keyNotFound = keyNotFound;
+        private readonly bool _keyNotFound;
+
+        public UpdateOperationResult(bool keyNotFound) => _keyNotFound = keyNotFound;
 
         public override Exception Exception => _keyNotFound ? new KeyNotFoundException() : null;
 

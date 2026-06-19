@@ -12,8 +12,13 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Represents a stream factory (a.k.a. subject factory) in a QueryEngineRegistry.
     /// </summary>
-    internal class StreamFactoryDefinitionEntity(Uri uri, Expression expression, object state) : DefinitionEntity(uri, expression, state), IReactiveStreamFactoryDefinition
+    internal class StreamFactoryDefinitionEntity : DefinitionEntity, IReactiveStreamFactoryDefinition
     {
+        public StreamFactoryDefinitionEntity(Uri uri, Expression expression, object state)
+            : base(uri, expression, state)
+        {
+        }
+
         public override ReactiveEntityKind Kind => ReactiveEntityKind.StreamFactory;
 
         public static StreamFactoryDefinitionEntity CreateInvalidInstance(Uri uri) => new InvalidEntity(uri);

@@ -164,10 +164,15 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             public int M;
         }
 
-        public class StructuralTypeWithConstructor([Mapping("N")] int n)
+        public class StructuralTypeWithConstructor
         {
+            public StructuralTypeWithConstructor([Mapping("N")] int n)
+            {
+                N = n;
+            }
+
             [Mapping("N")]
-            public int N { get; set; } = n;
+            public int N { get; set; }
         }
 
         #endregion
@@ -516,12 +521,16 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 }
             }
 
-            /// <summary>
-            /// Creates a new sentinel expression with the specified underlying type.
-            /// </summary>
-            /// <param name="type">Underlying type of the expression.</param>
-            private class UnassignedExpression(Type type) : Expression
+            private class UnassignedExpression : Expression
             {
+                /// <summary>
+                /// Creates a new sentinel expression with the specified underlying type.
+                /// </summary>
+                /// <param name="type">Underlying type of the expression.</param>
+                public UnassignedExpression(Type type)
+                {
+                    Type = type;
+                }
 
                 /// <summary>
                 /// Returns Extension.
@@ -531,7 +540,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 /// <summary>
                 /// Gets the underlying type.
                 /// </summary>
-                public override Type Type { get; } = type;
+                public override Type Type { get; }
 
                 /// <summary>
                 /// Always returns true.
@@ -581,9 +590,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
         #region Correctness
 
-        private class ExpressionTypeAsserter(Action<Type> assertType) : ExpressionVisitorWithReflection
+        private class ExpressionTypeAsserter : ExpressionVisitorWithReflection
         {
-            private readonly Action<Type> _assertType = assertType;
+            private readonly Action<Type> _assertType;
+
+            public ExpressionTypeAsserter(Action<Type> assertType)
+            {
+                _assertType = assertType;
+            }
 
             protected override Type VisitType(Type type)
             {
@@ -671,11 +685,18 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             }
         }
 
-        private class AnonymizationChecker(Type[] allow, Type[] disallow, Action<Type> assertStructural) : DataTypeVisitor
+        private class AnonymizationChecker : DataTypeVisitor
         {
-            private readonly Type[] _allow = allow;
-            private readonly Type[] _disallow = disallow;
-            private readonly Action<Type> _assertStructural = assertStructural;
+            private readonly Type[] _allow;
+            private readonly Type[] _disallow;
+            private readonly Action<Type> _assertStructural;
+
+            public AnonymizationChecker(Type[] allow, Type[] disallow, Action<Type> assertStructural)
+            {
+                _allow = allow;
+                _disallow = disallow;
+                _assertStructural = assertStructural;
+            }
 
             public override DataType Visit(DataType type)
             {
@@ -698,9 +719,15 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             }
         }
 
-        private class CheckFailedException(string message, Type type) : Exception(message)
+        private class CheckFailedException : Exception
         {
-            public Type Type { get; } = type;
+            public CheckFailedException(string message, Type type)
+                : base(message)
+            {
+                Type = type;
+            }
+
+            public Type Type { get; }
         }
 
         #endregion

@@ -224,18 +224,29 @@ namespace Tests.Reaqtor.QueryEngine
             return new AwaitSubscribeSubscribable<T>(source, lockName);
         }
 
-        private sealed class AwaitSubscribeSubscribable<T>(ISubscribable<T> source, string lockName) : SubscribableBase<T>
+        private sealed class AwaitSubscribeSubscribable<T> : SubscribableBase<T>
         {
-            private readonly ISubscribable<T> _source = source;
-            private readonly string _lockName = lockName;
+            private readonly ISubscribable<T> _source;
+            private readonly string _lockName;
+
+            public AwaitSubscribeSubscribable(ISubscribable<T> source, string lockName)
+            {
+                _source = source;
+                _lockName = lockName;
+            }
 
             protected override ISubscription SubscribeCore(IObserver<T> observer)
             {
                 return new _(this, observer);
             }
 
-            private sealed class _(TestExtensions.AwaitSubscribeSubscribable<T> o, IObserver<T> v) : Operator<AwaitSubscribeSubscribable<T>, T>(o, v), IObserver<T>
+            private sealed class _ : Operator<AwaitSubscribeSubscribable<T>, T>, IObserver<T>
             {
+                public _(AwaitSubscribeSubscribable<T> o, IObserver<T> v)
+                    : base(o, v)
+                {
+                }
+
                 protected override void OnStart()
                 {
                     try
@@ -277,18 +288,29 @@ namespace Tests.Reaqtor.QueryEngine
             return new BlockSubscribeSubscribable<T>(source, lockName);
         }
 
-        private sealed class BlockSubscribeSubscribable<T>(ISubscribable<T> source, string lockName) : SubscribableBase<T>
+        private sealed class BlockSubscribeSubscribable<T> : SubscribableBase<T>
         {
-            private readonly ISubscribable<T> _source = source;
-            private readonly string _lockName = lockName;
+            private readonly ISubscribable<T> _source;
+            private readonly string _lockName;
+
+            public BlockSubscribeSubscribable(ISubscribable<T> source, string lockName)
+            {
+                _source = source;
+                _lockName = lockName;
+            }
 
             protected override ISubscription SubscribeCore(IObserver<T> observer)
             {
                 return new _(this, observer);
             }
 
-            private sealed class _(TestExtensions.BlockSubscribeSubscribable<T> o, IObserver<T> v) : Operator<BlockSubscribeSubscribable<T>, T>(o, v), IObserver<T>
+            private sealed class _ : Operator<BlockSubscribeSubscribable<T>, T>, IObserver<T>
             {
+                public _(BlockSubscribeSubscribable<T> o, IObserver<T> v)
+                    : base(o, v)
+                {
+                }
+
                 protected override void OnStart()
                 {
                     try
@@ -330,20 +352,33 @@ namespace Tests.Reaqtor.QueryEngine
             return new AwaitDoSubscribable<T>(source, onNextLockName, onErrorLockName, onCompletedLockName);
         }
 
-        private sealed class AwaitDoSubscribable<T>(ISubscribable<T> source, string onNextLockName, string onErrorLockName, string onCompletedLockName) : SubscribableBase<T>
+        private sealed class AwaitDoSubscribable<T> : SubscribableBase<T>
         {
-            private readonly ISubscribable<T> _source = source;
-            private readonly string _onNextLockName = onNextLockName;
-            private readonly string _onErrorLockName = onErrorLockName;
-            private readonly string _onCompletedLockName = onCompletedLockName;
+            private readonly ISubscribable<T> _source;
+            private readonly string _onNextLockName;
+            private readonly string _onErrorLockName;
+            private readonly string _onCompletedLockName;
+
+            public AwaitDoSubscribable(ISubscribable<T> source, string onNextLockName, string onErrorLockName, string onCompletedLockName)
+            {
+                _source = source;
+                _onNextLockName = onNextLockName;
+                _onErrorLockName = onErrorLockName;
+                _onCompletedLockName = onCompletedLockName;
+            }
 
             protected override ISubscription SubscribeCore(IObserver<T> observer)
             {
                 return new _(this, observer);
             }
 
-            private sealed class _(TestExtensions.AwaitDoSubscribable<T> parent, IObserver<T> observer) : Operator<AwaitDoSubscribable<T>, T>(parent, observer), IObserver<T>
+            private sealed class _ : Operator<AwaitDoSubscribable<T>, T>, IObserver<T>
             {
+                public _(AwaitDoSubscribable<T> parent, IObserver<T> observer)
+                    : base(parent, observer)
+                {
+                }
+
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
                     return new ISubscription[] { Params._source.Subscribe(this) };
@@ -390,20 +425,33 @@ namespace Tests.Reaqtor.QueryEngine
             return new BlockDoSubscribable<T>(source, onNextLockName, onErrorLockName, onCompletedLockName);
         }
 
-        private sealed class BlockDoSubscribable<T>(ISubscribable<T> source, string onNextLockName, string onErrorLockName, string onCompletedLockName) : SubscribableBase<T>
+        private sealed class BlockDoSubscribable<T> : SubscribableBase<T>
         {
-            private readonly ISubscribable<T> _source = source;
-            private readonly string _onNextLockName = onNextLockName;
-            private readonly string _onErrorLockName = onErrorLockName;
-            private readonly string _onCompletedLockName = onCompletedLockName;
+            private readonly ISubscribable<T> _source;
+            private readonly string _onNextLockName;
+            private readonly string _onErrorLockName;
+            private readonly string _onCompletedLockName;
+
+            public BlockDoSubscribable(ISubscribable<T> source, string onNextLockName, string onErrorLockName, string onCompletedLockName)
+            {
+                _source = source;
+                _onNextLockName = onNextLockName;
+                _onErrorLockName = onErrorLockName;
+                _onCompletedLockName = onCompletedLockName;
+            }
 
             protected override ISubscription SubscribeCore(IObserver<T> observer)
             {
                 return new _(this, observer);
             }
 
-            private sealed class _(TestExtensions.BlockDoSubscribable<T> parent, IObserver<T> observer) : Operator<BlockDoSubscribable<T>, T>(parent, observer), IObserver<T>
+            private sealed class _ : Operator<BlockDoSubscribable<T>, T>, IObserver<T>
             {
+                public _(BlockDoSubscribable<T> parent, IObserver<T> observer)
+                    : base(parent, observer)
+                {
+                }
+
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
                     return new ISubscription[] { Params._source.Subscribe(this) };
@@ -448,18 +496,29 @@ namespace Tests.Reaqtor.QueryEngine
             return new AwaitDisposeSubscribable<T>(source, lockName);
         }
 
-        private sealed class AwaitDisposeSubscribable<T>(ISubscribable<T> source, string lockName) : SubscribableBase<T>
+        private sealed class AwaitDisposeSubscribable<T> : SubscribableBase<T>
         {
-            private readonly ISubscribable<T> _source = source;
-            private readonly string _lockName = lockName;
+            private readonly ISubscribable<T> _source;
+            private readonly string _lockName;
+
+            public AwaitDisposeSubscribable(ISubscribable<T> source, string lockName)
+            {
+                _source = source;
+                _lockName = lockName;
+            }
 
             protected override ISubscription SubscribeCore(IObserver<T> observer)
             {
                 return new _(this, observer);
             }
 
-            private sealed class _(TestExtensions.AwaitDisposeSubscribable<T> o, IObserver<T> v) : Operator<AwaitDisposeSubscribable<T>, T>(o, v)
+            private sealed class _ : Operator<AwaitDisposeSubscribable<T>, T>
             {
+                public _(AwaitDisposeSubscribable<T> o, IObserver<T> v)
+                    : base(o, v)
+                {
+                }
+
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
                     return new[] { Params._source.Subscribe(Output) };

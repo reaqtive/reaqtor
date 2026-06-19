@@ -26,8 +26,13 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(Select<TSource, TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<Select<TSource, TResult>, TResult>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<Select<TSource, TResult>, TResult>, IObserver<TSource>
         {
+            public _(Select<TSource, TResult> parent, IObserver<TResult> observer)
+                : base(parent, observer)
+            {
+            }
+
             public override string Name => "rc:Select";
 
             public override Version Version => Versioning.v1;
@@ -87,9 +92,14 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(SelectIndexed<TSource, TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<SelectIndexed<TSource, TResult>, TResult>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<SelectIndexed<TSource, TResult>, TResult>, IObserver<TSource>
         {
             private int _currentIndex;
+
+            public _(SelectIndexed<TSource, TResult> parent, IObserver<TResult> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Select+Index";
 

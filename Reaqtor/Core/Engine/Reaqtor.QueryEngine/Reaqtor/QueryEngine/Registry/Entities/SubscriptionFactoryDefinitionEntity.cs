@@ -12,8 +12,13 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Represents a subscription factory in a QueryEngineRegistry.
     /// </summary>
-    internal class SubscriptionFactoryDefinitionEntity(Uri uri, Expression expression, object state) : DefinitionEntity(uri, expression, state), IReactiveSubscriptionFactoryDefinition
+    internal class SubscriptionFactoryDefinitionEntity : DefinitionEntity, IReactiveSubscriptionFactoryDefinition
     {
+        public SubscriptionFactoryDefinitionEntity(Uri uri, Expression expression, object state)
+            : base(uri, expression, state)
+        {
+        }
+
         public override ReactiveEntityKind Kind => ReactiveEntityKind.SubscriptionFactory;
 
         public static SubscriptionFactoryDefinitionEntity CreateInvalidInstance(Uri uri) => new InvalidEntity(uri);

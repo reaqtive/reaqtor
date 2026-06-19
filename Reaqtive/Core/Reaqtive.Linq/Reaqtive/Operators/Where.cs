@@ -26,8 +26,13 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(Where<TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<Where<TResult>, TResult>(parent, observer), IObserver<TResult>
+        private sealed class _ : StatefulUnaryOperator<Where<TResult>, TResult>, IObserver<TResult>
         {
+            public _(Where<TResult> parent, IObserver<TResult> observer)
+                : base(parent, observer)
+            {
+            }
+
             public override string Name => "rc:Where";
 
             public override Version Version => Versioning.v1;
@@ -90,9 +95,14 @@ namespace Reaqtive.Operators
             return new _(this, observer);
         }
 
-        private sealed class _(WhereIndexed<TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<WhereIndexed<TResult>, TResult>(parent, observer), IObserver<TResult>
+        private sealed class _ : StatefulUnaryOperator<WhereIndexed<TResult>, TResult>, IObserver<TResult>
         {
             private int _currentIndex;
+
+            public _(WhereIndexed<TResult> parent, IObserver<TResult> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Where+Index";
 

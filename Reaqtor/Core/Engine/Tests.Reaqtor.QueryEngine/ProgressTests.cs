@@ -253,9 +253,14 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreEqual(2, res);
         }
 
-        private sealed class ReverseComparer<T>(IComparer<T> comparer) : IComparer<T>
+        private sealed class ReverseComparer<T> : IComparer<T>
         {
-            private readonly IComparer<T> _comparer = comparer;
+            private readonly IComparer<T> _comparer;
+
+            public ReverseComparer(IComparer<T> comparer)
+            {
+                _comparer = comparer;
+            }
 
             public int Compare(T x, T y)
             {

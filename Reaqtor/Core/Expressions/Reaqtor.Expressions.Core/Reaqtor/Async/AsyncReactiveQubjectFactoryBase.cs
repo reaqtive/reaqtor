@@ -20,12 +20,13 @@ namespace Reaqtor
     /// </summary>
     /// <typeparam name="TInput">Type of the data received by the subjects created by the factory.</typeparam>
     /// <typeparam name="TOutput">Type of the data produced by the subjects created by the factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class AsyncReactiveQubjectFactoryBase<TInput, TOutput>(IAsyncReactiveQueryProvider provider) : IAsyncReactiveQubjectFactory<TInput, TOutput>
+    public abstract class AsyncReactiveQubjectFactoryBase<TInput, TOutput> : IAsyncReactiveQubjectFactory<TInput, TOutput>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected AsyncReactiveQubjectFactoryBase(IAsyncReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Creates a new stream with the specified stream URI.
@@ -69,7 +70,7 @@ namespace Reaqtor
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IAsyncReactiveQueryProvider Provider { get; } = provider;
+        public IAsyncReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.
@@ -83,12 +84,13 @@ namespace Reaqtor
     /// <typeparam name="TInput">Type of the data received by the subjects created by the factory.</typeparam>
     /// <typeparam name="TOutput">Type of the data produced by the subjects created by the factory.</typeparam>
     /// <typeparam name="TArgs">Type of the parameter passed to the subject factory.</typeparam>
-    /// <remarks>
-    /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
-    /// </remarks>
-    /// <param name="provider">Query provider associated with the subject factory.</param>
-    public abstract class AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArgs>(IAsyncReactiveQueryProvider provider) : IAsyncReactiveQubjectFactory<TInput, TOutput, TArgs>
+    public abstract class AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArgs> : IAsyncReactiveQubjectFactory<TInput, TOutput, TArgs>
     {
+        /// <summary>
+        /// Creates a new subject factory represented by an expression tree, using the specified associated query provider.
+        /// </summary>
+        /// <param name="provider">Query provider associated with the subject factory.</param>
+        protected AsyncReactiveQubjectFactoryBase(IAsyncReactiveQueryProvider provider) => Provider = provider;
 
         /// <summary>
         /// Creates a new stream with the specified stream URI.
@@ -135,7 +137,7 @@ namespace Reaqtor
         /// <summary>
         /// Gets the query provider that is associated with the subject factory.
         /// </summary>
-        public IAsyncReactiveQueryProvider Provider { get; } = provider;
+        public IAsyncReactiveQueryProvider Provider { get; }
 
         /// <summary>
         /// Gets the expression tree representing the subject factory.

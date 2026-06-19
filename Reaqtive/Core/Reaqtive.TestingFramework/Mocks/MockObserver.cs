@@ -9,9 +9,14 @@ using Reaqtive.Testing;
 
 namespace Reaqtive.TestingFramework.Mocks
 {
-    public class MockObserver<T>(TestScheduler scheduler) : ITestableObserver<T>
+    public class MockObserver<T> : ITestableObserver<T>
     {
-        private readonly TestScheduler _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
+        private readonly TestScheduler _scheduler;
+
+        public MockObserver(TestScheduler scheduler)
+        {
+            _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
+        }
 
         public void OnNext(T value)
         {

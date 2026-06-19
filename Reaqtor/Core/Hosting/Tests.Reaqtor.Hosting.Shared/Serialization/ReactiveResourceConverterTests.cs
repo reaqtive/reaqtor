@@ -273,16 +273,28 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             Assert.IsTrue(new ExpressionEqualityComparer().Equals(x.Expression, y.Expression));
         }
 
-        private class Resource(Uri uri, Expression expression) : IAsyncReactiveResource
+        private class Resource : IAsyncReactiveResource
         {
-            public Uri Uri { get; } = uri;
+            public Resource(Uri uri, Expression expression)
+            {
+                Uri = uri;
+                Expression = expression;
+            }
 
-            public Expression Expression { get; } = expression;
+            public Uri Uri { get; }
+
+            public Expression Expression { get; }
         }
 
-        private class ProcessResource(Uri uri, Expression expression, object state) : Resource(uri, expression), IAsyncReactiveProcessResource
+        private class ProcessResource : Resource, IAsyncReactiveProcessResource
         {
-            public object State { get; } = state;
+            public ProcessResource(Uri uri, Expression expression, object state)
+                : base(uri, expression)
+            {
+                State = state;
+            }
+
+            public object State { get; }
 
             public DateTimeOffset CreationTime => DateTimeOffset.Now;
 
@@ -293,17 +305,28 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
 #endif
         }
 
-        private class DefinedResource(Uri uri, Expression expression, object state) : Resource(uri, expression), IAsyncReactiveDefinedResource
+        private class DefinedResource : Resource, IAsyncReactiveDefinedResource
         {
+            public DefinedResource(Uri uri, Expression expression, object state)
+                : base(uri, expression)
+            {
+                State = state;
+            }
+
             public bool IsParameterized => Expression is LambdaExpression;
 
-            public object State { get; } = state;
+            public object State { get; }
 
             public DateTimeOffset DefinitionTime => DateTimeOffset.Now;
         }
 
-        private sealed class Observable(Uri uri, Expression expression, object state) : DefinedResource(uri, expression, state), IAsyncReactiveObservableDefinition
+        private sealed class Observable : DefinedResource, IAsyncReactiveObservableDefinition
         {
+            public Observable(Uri uri, Expression expression, object state)
+                : base(uri, expression, state)
+            {
+            }
+
             public IAsyncReactiveQbservable<T> ToObservable<T>()
             {
                 throw new NotImplementedException();
@@ -315,8 +338,13 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class Observer(Uri uri, Expression expression, object state) : DefinedResource(uri, expression, state), IAsyncReactiveObserverDefinition
+        private sealed class Observer : DefinedResource, IAsyncReactiveObserverDefinition
         {
+            public Observer(Uri uri, Expression expression, object state)
+                : base(uri, expression, state)
+            {
+            }
+
             public IAsyncReactiveQbserver<T> ToObserver<T>()
             {
                 throw new NotImplementedException();
@@ -328,8 +356,13 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class StreamFactory(Uri uri, Expression expression, object state) : DefinedResource(uri, expression, state), IAsyncReactiveStreamFactoryDefinition
+        private sealed class StreamFactory : DefinedResource, IAsyncReactiveStreamFactoryDefinition
         {
+            public StreamFactory(Uri uri, Expression expression, object state)
+                : base(uri, expression, state)
+            {
+            }
+
             public IAsyncReactiveQubjectFactory<TInput, TOutput> ToStreamFactory<TInput, TOutput>()
             {
                 throw new NotImplementedException();
@@ -341,8 +374,13 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class SubscriptionFactory(Uri uri, Expression expression, object state) : DefinedResource(uri, expression, state), IAsyncReactiveSubscriptionFactoryDefinition
+        private sealed class SubscriptionFactory : DefinedResource, IAsyncReactiveSubscriptionFactoryDefinition
         {
+            public SubscriptionFactory(Uri uri, Expression expression, object state)
+                : base(uri, expression, state)
+            {
+            }
+
             public IAsyncReactiveQubscriptionFactory ToSubscriptionFactory()
             {
                 throw new NotImplementedException();
@@ -354,16 +392,26 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             }
         }
 
-        private sealed class Stream(Uri uri, Expression expression, object state) : ProcessResource(uri, expression, state), IAsyncReactiveStreamProcess
+        private sealed class Stream : ProcessResource, IAsyncReactiveStreamProcess
         {
+            public Stream(Uri uri, Expression expression, object state)
+                : base(uri, expression, state)
+            {
+            }
+
             public IAsyncReactiveQubject<TInput, TOutput> ToStream<TInput, TOutput>()
             {
                 throw new NotImplementedException();
             }
         }
 
-        private sealed class Subscription(Uri uri, Expression expression, object state) : ProcessResource(uri, expression, state), IAsyncReactiveSubscriptionProcess
+        private sealed class Subscription : ProcessResource, IAsyncReactiveSubscriptionProcess
         {
+            public Subscription(Uri uri, Expression expression, object state)
+                : base(uri, expression, state)
+            {
+            }
+
             public IAsyncReactiveQubscription ToSubscription()
             {
                 throw new NotImplementedException();

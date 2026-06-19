@@ -8,9 +8,11 @@ using System.Linq;
 
 namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 {
-    public class EnumerateOperationResult<TKey, TValue>(IReadOnlyList<KeyValuePair<TKey, Sequenced<TValue>>> results) : OperationResult<TKey, TValue>
+    public class EnumerateOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
     {
-        private readonly IReadOnlyList<KeyValuePair<TKey, Sequenced<TValue>>> _results = results;
+        private readonly IReadOnlyList<KeyValuePair<TKey, Sequenced<TValue>>> _results;
+
+        public EnumerateOperationResult(IReadOnlyList<KeyValuePair<TKey, Sequenced<TValue>>> results) => _results = results;
 
         public override Exception Exception => null;
 

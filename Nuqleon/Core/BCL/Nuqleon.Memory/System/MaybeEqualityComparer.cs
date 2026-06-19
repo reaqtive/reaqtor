@@ -12,9 +12,11 @@ using System.Collections.Generic;
 
 namespace System
 {
-    internal class MaybeEqualityComparer<K>(IEqualityComparer<K> comparer) : IEqualityComparer<Maybe<K>>
+    internal class MaybeEqualityComparer<K> : IEqualityComparer<Maybe<K>>
     {
-        private readonly IEqualityComparer<K> _comparer = comparer;
+        private readonly IEqualityComparer<K> _comparer;
+
+        public MaybeEqualityComparer(IEqualityComparer<K> comparer) => _comparer = comparer;
 
         public bool Equals(Maybe<K> x, Maybe<K> y) => _comparer.Equals(x.Value, y.Value);
 

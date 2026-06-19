@@ -173,8 +173,13 @@ namespace Test.Reaqtive
             Assert.ThrowsException<NotSupportedException>(() => mor.LoadState(reader, new Version(2, 0, 0, 0)));
         }
 
-        private sealed class MyOperator(IObserver<int> observer) : StatefulUnaryOperator<string, int>("qux", observer), IObserver<int>
+        private sealed class MyOperator : StatefulUnaryOperator<string, int>, IObserver<int>
         {
+            public MyOperator(IObserver<int> observer)
+                : base("qux", observer)
+            {
+            }
+
             public override string Name => "foo";
 
             public override Version Version => new(1, 0, 0, 0);

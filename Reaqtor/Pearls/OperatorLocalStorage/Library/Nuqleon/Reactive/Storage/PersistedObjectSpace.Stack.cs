@@ -85,11 +85,7 @@ namespace Reaqtive.Storage
         ///   <item><c>queue.Pop()</c> results in <c>Edit("metadata/count", count - 1); Delete($"items/{count - 1}")</c></item>
         /// </list>
         /// </remarks>
-        /// <remarks>
-        /// Creates a new entity representing a stack.
-        /// </remarks>
-        /// <param name="parent">The parent object space, used to access serialization facilities.</param>
-        private sealed class Stack(PersistedObjectSpace parent) : PersistableBase(parent)
+        private sealed class Stack : PersistableBase
         {
             /// <summary>
             /// The category to store the metadata (i.e. the element count, using the <see cref="CountKey"/> key) in.
@@ -125,6 +121,15 @@ namespace Reaqtive.Storage
             /// The pending edits obtained from <see cref="_dirty"/> on the last call to <see cref="SaveCore(IStateWriter)"/>, for use by <see cref="OnSavedCore"/> to edit <see cref="_count"/> upon a successful save operation.
             /// </summary>
             private DirtyState[] _dirtyHistory;
+
+            /// <summary>
+            /// Creates a new entity representing a stack.
+            /// </summary>
+            /// <param name="parent">The parent object space, used to access serialization facilities.</param>
+            public Stack(PersistedObjectSpace parent)
+                : base(parent)
+            {
+            }
 
             /// <summary>
             /// Gets the kind of the entity. Always returns <see cref="PersistableKind.Stack"/>.
@@ -542,23 +547,30 @@ namespace Reaqtive.Storage
             /// Statically typed wrapper for a persisted stack with element type <typeparamref name="T"/>.
             /// </summary>
             /// <typeparam name="T">The type of the elements stored in the stack.</typeparam>
-            /// <remarks>
-            /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
-            /// </remarks>
-            /// <param name="id">The identifier of the stack.</param>
-            /// <param name="storage">The storage entity representing the stack.</param>
-            /// <param name="stack">The initial stack. This could either be the result of deserializing persisted state, or an empty stack for a new entity.</param>
-            private sealed class Wrapper<T>(string id, PersistedObjectSpace.Stack storage, Stack<T> stack) : PersistedBase(id), IPersistedStack<T>, IStackPersistence
+            private sealed class Wrapper<T> : PersistedBase, IPersistedStack<T>, IStackPersistence
             {
                 /// <summary>
                 /// The storage entity being wrapped.
                 /// </summary>
-                private readonly Stack _storage = storage;
+                private readonly Stack _storage;
 
                 /// <summary>
                 /// The stored stack, always reflecting the latest in-memory state.
                 /// </summary>
-                private readonly Stack<T> _stack = stack;
+                private readonly Stack<T> _stack;
+
+                /// <summary>
+                /// Creates a new wrapper around the specified <paramref name="storage"/> entity.
+                /// </summary>
+                /// <param name="id">The identifier of the stack.</param>
+                /// <param name="storage">The storage entity representing the stack.</param>
+                /// <param name="stack">The initial stack. This could either be the result of deserializing persisted state, or an empty stack for a new entity.</param>
+                public Wrapper(string id, Stack storage, Stack<T> stack)
+                    : base(id)
+                {
+                    _storage = storage;
+                    _stack = stack;
+                }
 
                 /// <summary>
                 /// Gets the number of elements in the stack.

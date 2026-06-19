@@ -135,11 +135,20 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
 `Directory.Build.props` and do not affect correctness — the build and tests are green without them.
 
 1. **`EnforceCodeStyleInBuild` is currently `false`.** The .NET 10 SDK's formatter/style analyzers
-   (IDE0055 whitespace, IDE0350, …) are far stricter than the SDK this repo was last formatted against,
-   producing a large **style-only** wave. `dotnet format` cannot auto-apply the fixes on this solution
-   today — its MSBuildWorkspace throws on `TryApplyChanges` across the many linked/generated files
-   (related to the pre-existing issue #138). **Follow-up:** a dedicated reformatting pass, then re-enable
-   the property. The `dotnet format` **CI gate is `continueOnError`** until then.
+   (IDE0055 whitespace, IDE0350, …) are far stricter than the SDK this repo was last formatted against.
+   A `dotnet format style` pass **has** now been applied, with two deliberate carve-outs:
+   - **Primary constructors are opted out.** `.editorconfig` sets
+     `csharp_style_prefer_primary_constructors = false` and `dotnet_diagnostic.IDE0290.severity = none`.
+     (An earlier pass had converted ~1,360 types to primary constructors; that conversion was reverted
+     and the rule disabled so it is not (re-)applied.)
+   - **Linked files are excluded.** `dotnet format`'s `MSBuildWorkspace` throws on `TryApplyChanges`
+     across files that are `<Compile Link>`'d into multiple projects with different symbols (the
+     `USE_SLIM` Bonsai links + `Common/TestUtilities/AssertEx.cs`), via
+     `LinkedFileMergeConflictCommentAdditionService` (issue #138 — the same crash that produced
+     unmerged-conflict markers in a prior attempt). Those ~16 files are passed to `dotnet format
+     --exclude` and remain unformatted. **Follow-up:** format the linked files once (#138) and
+     re-enable `EnforceCodeStyleInBuild`. The `dotnet format` **CI gate stays `continueOnError`** until
+     the excluded files are handled.
 2. **`AnalysisLevel` stays at `7.0`** and the temporary `NoWarn` list (issue #143:
    `IDE0079;IDE0090;CA1305;CA1822;CA1854`) is retained. Raising the level / removing the list surfaces a
    separate CA wave.

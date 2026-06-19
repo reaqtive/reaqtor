@@ -38,9 +38,15 @@ namespace Reaqtor.QueryEngine
     /// etc. The subject then internally builds up routing tables by evaluating keys (p => p.Age, p => p.Name) and matching
     /// their values against constant values that occurred in queries (21, "Bart").
     /// </remarks>
-    internal sealed class DelegationBinder(IQueryEngineRegistry registry) : QueryEngineBinder(registry)
+    internal sealed class DelegationBinder : QueryEngineBinder
     {
-        private readonly Dictionary<Expression, IDelegationTarget> targetMapper = [];
+        private readonly Dictionary<Expression, IDelegationTarget> targetMapper;
+
+        public DelegationBinder(IQueryEngineRegistry registry)
+            : base(registry)
+        {
+            targetMapper = [];
+        }
 
         protected override Expression LookupOther(string id, Type type, Type funcType) => null;
 
@@ -106,10 +112,10 @@ namespace Reaqtor.QueryEngine
         /// it finds that exactly one can be delegated to, then it will indicate this to its parent and return. If multiple can be delegated to then
         /// it will delegate to them by visiting the children in the rewrite stage. Then it will indicate to its parent that delegation is complete for this subtree.
         /// </summary>
-        private sealed class DelegationProber(IDictionary<ParameterExpression, IDelegationTarget> delegatableTargets) : ScopedExpressionVisitor<ParameterExpression>
+        private sealed class DelegationProber : ScopedExpressionVisitor<ParameterExpression>
         {
-            private readonly IDictionary<ParameterExpression, IDelegationTarget> _delegatableTargets = delegatableTargets;
-            private readonly Stack<StackFrame> _invocationStack = new Stack<StackFrame>();
+            private readonly IDictionary<ParameterExpression, IDelegationTarget> _delegatableTargets;
+            private readonly Stack<StackFrame> _invocationStack;
 
             private RecursionState _state;
 
@@ -165,6 +171,12 @@ namespace Reaqtor.QueryEngine
                 // A subtree that has already been delegated. This subtree is no longer considered for delegation.
                 // We may want to revisit this but this would require more sophisticated cycle detection
                 Disqualified,
+            }
+
+            public DelegationProber(IDictionary<ParameterExpression, IDelegationTarget> delegatableTargets)
+            {
+                _delegatableTargets = delegatableTargets;
+                _invocationStack = new Stack<StackFrame>();
             }
 
             public Expression Rewrite(Expression expression)

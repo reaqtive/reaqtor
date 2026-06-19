@@ -17,23 +17,28 @@ namespace System.Memory
     /// </summary>
     /// <typeparam name="TCached">Type of the cached component.</typeparam>
     /// <typeparam name="TNonCached">Type of the non-cached component.</typeparam>
-    /// <remarks>
-    /// Creates the deconstructed cached value;
-    /// </remarks>
-    /// <param name="cached">The cached component.</param>
-    /// <param name="nonCached">The non-cached component.</param>
-    public readonly struct Deconstructed<TCached, TNonCached>(TCached cached, TNonCached nonCached) : IEquatable<Deconstructed<TCached, TNonCached>>
+    public readonly struct Deconstructed<TCached, TNonCached> : IEquatable<Deconstructed<TCached, TNonCached>>
     {
+        /// <summary>
+        /// Creates the deconstructed cached value;
+        /// </summary>
+        /// <param name="cached">The cached component.</param>
+        /// <param name="nonCached">The non-cached component.</param>
+        public Deconstructed(TCached cached, TNonCached nonCached)
+        {
+            Cached = cached;
+            NonCached = nonCached;
+        }
 
         /// <summary>
         /// The cached component.
         /// </summary>
-        public TCached Cached { get; } = cached;
+        public TCached Cached { get; }
 
         /// <summary>
         /// The non-cached component.
         /// </summary>
-        public TNonCached NonCached { get; } = nonCached;
+        public TNonCached NonCached { get; }
 
         /// <summary>
         /// Checks if two instances are equal.

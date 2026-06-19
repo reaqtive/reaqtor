@@ -18,9 +18,14 @@ namespace Utilities
     /// <summary>
     /// Implementation of <see cref="IStateReader"/> for the in-memory key/value store implementation in <see cref="Store"/>.
     /// </summary>
-    public sealed class StateReader(Store store) : IStateReader
+    public sealed class StateReader : IStateReader
     {
-        private readonly Store _store = store;
+        private readonly Store _store;
+
+        public StateReader(Store store)
+        {
+            _store = store;
+        }
 
         public void Dispose() { }
 

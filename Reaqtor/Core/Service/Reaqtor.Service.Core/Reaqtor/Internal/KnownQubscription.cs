@@ -13,8 +13,14 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal sealed class KnownQubscription(Expression expression, Uri subscriptionUri, IReactiveQueryProvider provider) : Qubscription(expression, provider), IKnownResource
+    internal sealed class KnownQubscription : Qubscription, IKnownResource
     {
-        public Uri Uri { get; } = subscriptionUri;
+        public KnownQubscription(Expression expression, Uri subscriptionUri, IReactiveQueryProvider provider)
+            : base(expression, provider)
+        {
+            Uri = subscriptionUri;
+        }
+
+        public Uri Uri { get; }
     }
 }

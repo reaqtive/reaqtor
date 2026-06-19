@@ -532,9 +532,11 @@ namespace System
 
         #endregion
 
-        private sealed class AnonymousProgress<T>(Action<T> report) : IProgress<T>
+        private sealed class AnonymousProgress<T> : IProgress<T>
         {
-            private readonly Action<T> _report = report;
+            private readonly Action<T> _report;
+
+            public AnonymousProgress(Action<T> report) => _report = report;
 
             public void Report(T value) => _report(value);
         }

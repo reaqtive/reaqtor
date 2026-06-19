@@ -15,13 +15,9 @@ namespace System.Reflection
     /// <summary>
     /// MemberInfo comparer for structural types.
     /// </summary>
-    /// <remarks>
-    /// Instantiates a MemberInfo comparer for structural type members, using the given comparator factory.
-    /// </remarks>
-    /// <param name="comparatorFactory">Factory to produce comparator instances for performing equals and hash code operations.</param>
-    public class StructuralMemberInfoEqualityComparer(Func<StructuralMemberInfoEqualityComparator> comparatorFactory) : IEqualityComparer<MemberInfo>
+    public class StructuralMemberInfoEqualityComparer : IEqualityComparer<MemberInfo>
     {
-        private readonly Func<StructuralMemberInfoEqualityComparator> _comparatorFactory = comparatorFactory;
+        private readonly Func<StructuralMemberInfoEqualityComparator> _comparatorFactory;
 
         /// <summary>
         /// Instantiates a MemberInfo comparer for structural type members, using a default comparator factory.
@@ -30,6 +26,12 @@ namespace System.Reflection
             : this(() => new StructuralMemberInfoEqualityComparator())
         {
         }
+
+        /// <summary>
+        /// Instantiates a MemberInfo comparer for structural type members, using the given comparator factory.
+        /// </summary>
+        /// <param name="comparatorFactory">Factory to produce comparator instances for performing equals and hash code operations.</param>
+        public StructuralMemberInfoEqualityComparer(Func<StructuralMemberInfoEqualityComparator> comparatorFactory) => _comparatorFactory = comparatorFactory;
 
         /// <summary>
         /// A default instance of the equality comparer.

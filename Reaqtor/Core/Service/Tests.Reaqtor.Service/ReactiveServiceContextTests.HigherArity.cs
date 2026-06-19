@@ -11964,8 +11964,13 @@ namespace Tests.Reaqtor.Service
 
         #endregion
 
-        private sealed class MyParameterizedContext(IReactiveEngineProvider provider) : MyContext(provider)
+        private sealed class MyParameterizedContext : MyContext
         {
+            public MyParameterizedContext(IReactiveEngineProvider provider)
+                : base(provider)
+            {
+            }
+
             [KnownResource(Constants.Observable.XS + "2")]
             public IReactiveQbservable<int> Xs2p(string p1, string p2)
             {

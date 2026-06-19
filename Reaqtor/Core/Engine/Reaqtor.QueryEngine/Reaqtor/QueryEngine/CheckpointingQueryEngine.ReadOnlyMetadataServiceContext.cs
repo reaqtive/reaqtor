@@ -25,9 +25,14 @@ namespace Reaqtor.QueryEngine
             {
             }
 
-            private sealed class ReadOnlyMetadataProvider(CheckpointingQueryEngine.CoreReactiveEngine engine) : IReactiveMetadataEngineProvider
+            private sealed class ReadOnlyMetadataProvider : IReactiveMetadataEngineProvider
             {
-                public IQueryProvider Provider { get; } = new OperatorContextRegistryQueryProvider(engine.Registry);
+                public ReadOnlyMetadataProvider(CoreReactiveEngine engine)
+                {
+                    Provider = new OperatorContextRegistryQueryProvider(engine.Registry);
+                }
+
+                public IQueryProvider Provider { get; }
             }
         }
     }

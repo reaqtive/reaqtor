@@ -10,13 +10,17 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Reader for transaction log entries to a stream.
     /// </summary>
-    /// <remarks>
-    /// Creates a <see cref="TransactionLogOperationWriter"/> to save operations to the specified <paramref name="stream"/>.
-    /// </remarks>
-    /// <param name="stream">The stream to save to.</param>
-    /// <param name="policy">The serialization policy to use when serializing objects.</param>
-    internal sealed class TransactionLogOperationWriter(Stream stream, ISerializationPolicy policy) : WriterBase(stream, policy)
+    internal sealed class TransactionLogOperationWriter : WriterBase
     {
+        /// <summary>
+        /// Creates a <see cref="TransactionLogOperationWriter"/> to save operations to the specified <paramref name="stream"/>.
+        /// </summary>
+        /// <param name="stream">The stream to save to.</param>
+        /// <param name="policy">The serialization policy to use when serializing objects.</param>
+        public TransactionLogOperationWriter(Stream stream, ISerializationPolicy policy)
+            : base(stream, policy)
+        {
+        }
 
         /// <summary>
         /// Saves the artifact operation to the underlying stream.

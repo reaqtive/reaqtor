@@ -157,10 +157,16 @@ namespace Reaqtive
 #pragma warning restore
         }
 
-        private sealed class Subscription(SimpleSubject<T> parent, IObserver<T> observer) : ISubscription
+        private sealed class Subscription : ISubscription
         {
-            private SimpleSubject<T> _parent = parent;
-            private IObserver<T> _observer = observer;
+            private SimpleSubject<T> _parent;
+            private IObserver<T> _observer;
+
+            public Subscription(SimpleSubject<T> parent, IObserver<T> observer)
+            {
+                _parent = parent;
+                _observer = observer;
+            }
 
             public void Accept(ISubscriptionVisitor visitor)
             {

@@ -11,14 +11,7 @@ namespace Reaqtive.Scheduler
     /// Represents a work item using <typeparamref name="TTime"/> to represent due time.
     /// </summary>
     /// <typeparam name="TTime">The type used to represent due time. This type should implement <see cref="IComparable{TTime}"/>.</typeparam>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="WorkItemBase{TTime}" /> class.
-    /// </remarks>
-    /// <param name="scheduler">The logical scheduler that owns the work item.</param>
-    /// <param name="task">The task to execute.</param>
-    /// <param name="dueTime">The due time at which to execute the task.</param>
-    /// <param name="onCompleted">Resource to dispose when the task has finished executing.</param>
-    public class WorkItemBase<TTime>(IScheduler scheduler, ISchedulerTask task, TTime dueTime, IDisposable onCompleted) : IComparable<WorkItemBase<TTime>>, IWorkItem<TTime>
+    public class WorkItemBase<TTime> : IComparable<WorkItemBase<TTime>>, IWorkItem<TTime>
         where TTime : IComparable<TTime>
     {
         /// <summary>
@@ -29,22 +22,37 @@ namespace Reaqtive.Scheduler
         /// <summary>
         /// Should be called when the work item has been completed.
         /// </summary>
-        private readonly IDisposable _onCompleted = onCompleted ?? throw new ArgumentNullException(nameof(onCompleted));
+        private readonly IDisposable _onCompleted;
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="WorkItemBase{TTime}" /> class.
+        /// </summary>
+        /// <param name="scheduler">The logical scheduler that owns the work item.</param>
+        /// <param name="task">The task to execute.</param>
+        /// <param name="dueTime">The due time at which to execute the task.</param>
+        /// <param name="onCompleted">Resource to dispose when the task has finished executing.</param>
+        public WorkItemBase(IScheduler scheduler, ISchedulerTask task, TTime dueTime, IDisposable onCompleted)
+        {
+            Scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
+            Task = task ?? throw new ArgumentNullException(nameof(task));
+            DueTime = dueTime;
+            _onCompleted = onCompleted ?? throw new ArgumentNullException(nameof(onCompleted));
+        }
 
         /// <summary>
         /// Gets the task to execute.
         /// </summary>
-        public ISchedulerTask Task { get; } = task ?? throw new ArgumentNullException(nameof(task));
+        public ISchedulerTask Task { get; }
 
         /// <summary>
         /// Gets the logical scheduler that owns the work item.
         /// </summary>
-        public IScheduler Scheduler { get; } = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
+        public IScheduler Scheduler { get; }
 
         /// <summary>
         /// Gets or sets the due time at which to execute the task.
         /// </summary>
-        public TTime DueTime { get; set; } = dueTime;
+        public TTime DueTime { get; set; }
 
         /// <summary>
         /// Gets the priority at which the task should be scheduled to run.

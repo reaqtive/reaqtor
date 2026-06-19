@@ -208,9 +208,14 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// Cleanup object returned from <see cref="SnapshotAsync"/>, used to trigger truncation after successful checkpoints.
         /// </summary>
-        public sealed class SnapshotCleanup(TransactionLogManager parent)
+        public sealed class SnapshotCleanup
         {
-            private readonly TransactionLogManager _parent = parent;
+            private readonly TransactionLogManager _parent;
+
+            public SnapshotCleanup(TransactionLogManager parent)
+            {
+                _parent = parent;
+            }
 
             /// <summary>
             /// Triggers truncation of the transaction log (everything up to and including the current snapshot that has been
@@ -287,9 +292,14 @@ namespace Reaqtor.QueryEngine
         /// Object returned from <see cref="SnapshotCleanup.LoseReferenceAsync(IKeyValueStoreTransaction)"/>, used to trigger a "garbage collection"
         /// that removes transaction log entries that are no longer reachable.
         /// </summary>
-        public sealed class ReclaimResource(TransactionLogManager parent)
+        public sealed class ReclaimResource
         {
-            private readonly TransactionLogManager _parent = parent;
+            private readonly TransactionLogManager _parent;
+
+            public ReclaimResource(TransactionLogManager parent)
+            {
+                _parent = parent;
+            }
 
             /// <summary>
             /// Starts reclaiming transaction log entries that are no longer reachable. Typically called in a fire-and-forget fashion.

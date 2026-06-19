@@ -14,10 +14,15 @@ using System.Linq.Expressions;
 namespace Reaqtor.TestingFramework
 {
     [Serializable]
-    public class MetadataQuery(Expression expression) : MetadataOperation(ServiceOperationKind.MetadataQuery, targetObjectUri: null, expression, state: null)
+    public class MetadataQuery : MetadataOperation
     {
         public MetadataQuery()
             : this(expression: null)
+        {
+        }
+
+        public MetadataQuery(Expression expression)
+            : base(ServiceOperationKind.MetadataQuery, targetObjectUri: null, expression, state: null)
         {
         }
     }

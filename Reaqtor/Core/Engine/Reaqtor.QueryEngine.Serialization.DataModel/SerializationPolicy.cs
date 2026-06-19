@@ -16,18 +16,24 @@ namespace Reaqtor.QueryEngine
     /// when serializing state during a checkpoint, or when deserializing state from a checkpoint where the persisted
     /// state contains a name and version for the serializer that was used to write the state.
     /// </summary>
-    /// <remarks>
-    /// Creates a serialization policy instance with a specified policy on how to handle expression trees, and a
-    /// default version of the serializer to use.
-    /// </remarks>
-    /// <param name="expressionPolicy">The policy for serializing expressions.</param>
-    /// <param name="defaultVersion">The default version used for new serialization operations.</param>
-    public sealed class SerializationPolicy(IExpressionPolicy expressionPolicy, Version defaultVersion) : ISerializationPolicy
+    public sealed class SerializationPolicy : ISerializationPolicy
     {
         private readonly ConcurrentDictionary<Version, ISerializer> _serializers = new();
-        private readonly IExpressionPolicy _expressionPolicy = expressionPolicy;
+        private readonly IExpressionPolicy _expressionPolicy;
 
-        internal Version DefaultVersion { get; } = defaultVersion;
+        /// <summary>
+        /// Creates a serialization policy instance with a specified policy on how to handle expression trees, and a
+        /// default version of the serializer to use.
+        /// </summary>
+        /// <param name="expressionPolicy">The policy for serializing expressions.</param>
+        /// <param name="defaultVersion">The default version used for new serialization operations.</param>
+        public SerializationPolicy(IExpressionPolicy expressionPolicy, Version defaultVersion)
+        {
+            _expressionPolicy = expressionPolicy;
+            DefaultVersion = defaultVersion;
+        }
+
+        internal Version DefaultVersion { get; }
 
         //
         // NB: This version oscillates in different source code branches of the product, based on roll out of various

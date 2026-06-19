@@ -233,19 +233,25 @@ namespace Reaqtive.Operators
     /// Represents an observer for a source used by an n-ary `CombineLatest` operator.
     /// </summary>
     /// <typeparam name="TInput">The type of the events processed by the nth observer.</typeparam>
-    internal sealed class CombineLatestObserver<TInput>(ICombineLatest parent, int index) : IObserver<TInput>
+    internal sealed class CombineLatestObserver<TInput> : IObserver<TInput>
     {
         /// <summary>
         /// The parent sink to report observer events to.
         /// </summary>
-        private readonly ICombineLatest _parent = parent;
+        private readonly ICombineLatest _parent;
 
         /// <summary>
         /// The index of the observer, i.e. which of the sources it's subscribed to. This value
         /// is used to report values and completion messages to the parent, in order for it to
         /// update the corresponding value and completion tracking state.
         /// </summary>
-        private readonly int _index = index;
+        private readonly int _index;
+
+        public CombineLatestObserver(ICombineLatest parent, int index)
+        {
+            _parent = parent;
+            _index = index;
+        }
 
         /// <summary>
         /// Sets the subscription of the source sequence with this observer.

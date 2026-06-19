@@ -128,9 +128,15 @@ namespace System.Reflection
         }
     }
 
-    internal abstract class GenericTypeSlimN(GenericDefinitionTypeSlim typeDefinition, TypeSlim argument1) : GenericTypeSlim(typeDefinition)
+    internal abstract class GenericTypeSlimN : GenericTypeSlim
     {
-        private object _argument1 = argument1;
+        private object _argument1;
+
+        public GenericTypeSlimN(GenericDefinitionTypeSlim typeDefinition, TypeSlim argument1)
+            : base(typeDefinition)
+        {
+            _argument1 = argument1;
+        }
 
         public override ReadOnlyCollection<TypeSlim> GenericArguments
         {

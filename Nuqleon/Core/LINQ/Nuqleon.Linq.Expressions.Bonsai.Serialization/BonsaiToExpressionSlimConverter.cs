@@ -42,15 +42,21 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
     #endregion
 
-    internal abstract class BonsaiToExpressionSlimConverter(DeserializationState state) : Json.ExpressionVisitor<Expression>
+    internal abstract class BonsaiToExpressionSlimConverter : Json.ExpressionVisitor<Expression>
     {
         #region Fields
 
-        private readonly DeserializationState _state = state;
+        private readonly DeserializationState _state;
         private static readonly ReadOnlyCollection<Expression> s_empty = new TrueReadOnlyCollection<Expression>(Array.Empty<Expression>());
 
         #endregion
+
         #region Constructors
+
+        protected BonsaiToExpressionSlimConverter(DeserializationState state)
+        {
+            _state = state;
+        }
 
         #endregion
 

@@ -826,16 +826,25 @@ namespace System.Memory
             }
         }
 
-        private sealed class History(T obj, Action<ObjectPoolBase<T>.History> remove)
+        private sealed class History
         {
             private const int MAX = 8;
 
             private static int s_counter;
 
-            private readonly Action<History> _remove = remove;
-            private readonly ConcurrentQueue<TraceLog> _traces = new ConcurrentQueue<TraceLog>();
-            public int Id = Interlocked.Increment(ref s_counter);
-            public WeakReference<T> Ref = new WeakReference<T>(obj);
+            private readonly Action<History> _remove;
+            private readonly ConcurrentQueue<TraceLog> _traces;
+
+            public History(T obj, Action<History> remove)
+            {
+                Id = Interlocked.Increment(ref s_counter);
+                Ref = new WeakReference<T>(obj);
+                _remove = remove;
+                _traces = new ConcurrentQueue<TraceLog>();
+            }
+
+            public int Id;
+            public WeakReference<T> Ref;
 
             public void Add(TraceLog log)
             {

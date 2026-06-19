@@ -92,10 +92,16 @@ namespace Reaqtor.ReificationFramework
 
         public IQueryProvider Provider => new QueryProvider(this);
 
-        private sealed class Observer<T>(Uri observerUri, ReificationServiceProvider parent) : IAsyncReactiveObserver<T>
+        private sealed class Observer<T> : IAsyncReactiveObserver<T>
         {
-            private readonly Uri _observerUri = observerUri;
-            private readonly ReificationServiceProvider _parent = parent;
+            private readonly Uri _observerUri;
+            private readonly ReificationServiceProvider _parent;
+
+            public Observer(Uri observerUri, ReificationServiceProvider parent)
+            {
+                _observerUri = observerUri;
+                _parent = parent;
+            }
 
             public async Task OnNextAsync(T value, CancellationToken token)
             {
@@ -113,9 +119,11 @@ namespace Reaqtor.ReificationFramework
             }
         }
 
-        private sealed class QueryProvider(ReificationServiceProvider parent) : IQueryProvider
+        private sealed class QueryProvider : IQueryProvider
         {
-            private readonly ReificationServiceProvider _parent = parent;
+            private readonly ReificationServiceProvider _parent;
+
+            public QueryProvider(ReificationServiceProvider parent) => _parent = parent;
 
             public IQueryable<TElement> CreateQuery<TElement>(Expression expression) => new Queryable<TElement>(this, expression);
 
@@ -137,13 +145,19 @@ namespace Reaqtor.ReificationFramework
 
             public object Execute(Expression expression) => throw new NotImplementedException();
 
-            private sealed class Queryable<T>(IQueryProvider provider, Expression expression) : IQueryable<T>
+            private sealed class Queryable<T> : IQueryable<T>
             {
+                public Queryable(IQueryProvider provider, Expression expression)
+                {
+                    Provider = provider;
+                    Expression = expression;
+                }
+
                 public Type ElementType => typeof(T);
 
-                public Expression Expression { get; } = expression;
+                public Expression Expression { get; }
 
-                public IQueryProvider Provider { get; } = provider;
+                public IQueryProvider Provider { get; }
 
                 public IEnumerator<T> GetEnumerator()
                 {

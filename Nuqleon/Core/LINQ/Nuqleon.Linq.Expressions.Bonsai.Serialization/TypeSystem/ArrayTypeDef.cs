@@ -15,16 +15,23 @@ using Json = Nuqleon.Json.Expressions;
 
 namespace System.Linq.Expressions.Bonsai.Serialization
 {
-    internal sealed class ArrayTypeDef(TypeRef elementType, int? rank) : TypeDef
+    internal sealed class ArrayTypeDef : TypeDef
     {
         #region Fields
 
-        private readonly TypeRef _elementType = elementType;
-        private readonly int? _rank = rank;
+        private readonly TypeRef _elementType;
+        private readonly int? _rank;
         private TypeSlim _type;
 
         #endregion
+
         #region Constructors
+
+        public ArrayTypeDef(TypeRef elementType, int? rank)
+        {
+            _elementType = elementType;
+            _rank = rank;
+        }
 
         #endregion
 

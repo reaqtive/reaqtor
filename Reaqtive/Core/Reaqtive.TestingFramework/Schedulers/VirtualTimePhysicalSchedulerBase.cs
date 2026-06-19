@@ -15,12 +15,7 @@ namespace Reaqtive.TestingFramework
     /// </summary>
     /// <typeparam name="TAbsolute">Absolute time representation type.</typeparam>
     /// <typeparam name="TRelative">Relative time representation type.</typeparam>
-    /// <remarks>
-    /// Initializes a new instance of the <see cref="VirtualTimePhysicalSchedulerBase{TAbsolute, TRelative}"/> class.
-    /// </remarks>
-    /// <param name="comparer">The comparer.</param>
-    /// <param name="initialClock">The initial clock.</param>
-    public abstract class VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative>(IComparer<TAbsolute> comparer, TAbsolute initialClock) where TAbsolute : IComparable<TAbsolute>
+    public abstract class VirtualTimePhysicalSchedulerBase<TAbsolute, TRelative> where TAbsolute : IComparable<TAbsolute>
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="VirtualTimePhysicalSchedulerBase{TAbsolute, TRelative}"/> class.
@@ -30,13 +25,24 @@ namespace Reaqtive.TestingFramework
         }
 
         /// <summary>
+        /// Initializes a new instance of the <see cref="VirtualTimePhysicalSchedulerBase{TAbsolute, TRelative}"/> class.
+        /// </summary>
+        /// <param name="comparer">The comparer.</param>
+        /// <param name="initialClock">The initial clock.</param>
+        protected VirtualTimePhysicalSchedulerBase(IComparer<TAbsolute> comparer, TAbsolute initialClock)
+        {
+            Clock = initialClock;
+            Comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
+        }
+
+        /// <summary>
         /// Gets the scheduler's absolute time clock value.
         /// </summary>
         public TAbsolute Clock
         {
             get;
             protected set;
-        } = initialClock;
+        }
 
         /// <summary>
         /// Gets the comparer used to compare absolute time values.
@@ -45,7 +51,7 @@ namespace Reaqtive.TestingFramework
         {
             get;
             private set;
-        } = comparer ?? throw new ArgumentNullException(nameof(comparer));
+        }
 
         /// <summary>
         /// Starts the scheduler.

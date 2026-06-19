@@ -1413,9 +1413,14 @@ namespace Tests.Reaqtor.QueryEngine
             }
         }
 
-        private class SimpleDelegationTarget<T, R>(Func<ParameterExpression, Expression, Expression> delegationFunc) : IMultiSubject<T, R>, IDelegationTarget, IExpressible
+        private class SimpleDelegationTarget<T, R> : IMultiSubject<T, R>, IDelegationTarget, IExpressible
         {
-            private readonly Func<ParameterExpression, Expression, Expression> _delegationFunc = delegationFunc;
+            private readonly Func<ParameterExpression, Expression, Expression> _delegationFunc;
+
+            public SimpleDelegationTarget(Func<ParameterExpression, Expression, Expression> delegationFunc)
+            {
+                _delegationFunc = delegationFunc;
+            }
 
             public bool CanDelegate(ParameterExpression node, Expression expression)
             {

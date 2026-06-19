@@ -7,10 +7,16 @@ using System.Collections.Generic;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Min<TSource>(ISubscribable<TSource> source, IComparer<TSource> comparer) : SubscribableBase<TSource>
+    internal sealed class Min<TSource> : SubscribableBase<TSource>
     {
-        private readonly ISubscribable<TSource> _source = source;
-        private readonly IComparer<TSource> _comparer = comparer;
+        private readonly ISubscribable<TSource> _source;
+        private readonly IComparer<TSource> _comparer;
+
+        public Min(ISubscribable<TSource> source, IComparer<TSource> comparer)
+        {
+            _source = source;
+            _comparer = comparer;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<TSource> observer)
         {
@@ -24,10 +30,15 @@ namespace Reaqtive.Operators
             }
         }
 
-        private sealed class _(Min<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<Min<TSource>, TSource>(parent, observer), IObserver<TSource>
+        private sealed class _ : StatefulUnaryOperator<Min<TSource>, TSource>, IObserver<TSource>
         {
             private bool _hasValue;
             private TSource _res;
+
+            public _(Min<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Min";
 
@@ -106,9 +117,14 @@ namespace Reaqtive.Operators
             }
         }
 
-        private sealed class N(Min<TSource> parent, IObserver<TSource> observer) : StatefulUnaryOperator<Min<TSource>, TSource>(parent, observer), IObserver<TSource>
+        private sealed class N : StatefulUnaryOperator<Min<TSource>, TSource>, IObserver<TSource>
         {
             private TSource _res;
+
+            public N(Min<TSource> parent, IObserver<TSource> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:MinNullable";
 

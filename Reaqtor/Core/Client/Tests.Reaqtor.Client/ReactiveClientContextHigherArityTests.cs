@@ -12632,8 +12632,13 @@ namespace Tests.Reaqtor.Client
 
         #endregion
 
-        private sealed class MyParameterizedContext(IReactiveServiceProvider provider) : MyContext(provider)
+        private sealed class MyParameterizedContext : MyContext
         {
+            public MyParameterizedContext(IReactiveServiceProvider provider)
+                : base(provider)
+            {
+            }
+
             [KnownResource(Constants.Observable.XS + "2")]
             public IAsyncReactiveQbservable<int> Xs2p(string p1, string p2)
             {

@@ -292,9 +292,11 @@ namespace Tests.System.Memory
         {
             public IDiscardable<T> Create(T value) => new Ref(value);
 
-            private sealed class Ref(T value) : IDiscardable<T>
+            private sealed class Ref : IDiscardable<T>
             {
-                public T Value { get; } = value;
+                public Ref(T value) => Value = value;
+
+                public T Value { get; }
 
                 public void Dispose() { }
             }

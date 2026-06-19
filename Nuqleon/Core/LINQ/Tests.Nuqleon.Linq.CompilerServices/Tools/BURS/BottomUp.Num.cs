@@ -33,12 +33,18 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         IType ITyped.GetType() => NumType.Instance;
     }
 
-    internal sealed class ConstNumTree(int value) : NumTree(NumKind.Const)
+    internal sealed class ConstNumTree : NumTree
     {
         public static readonly ConstNumTree Zero = new(0);
         public static readonly ConstNumTree One = new(1);
 
-        public new int Value { get; } = value;
+        public ConstNumTree(int value)
+            : base(NumKind.Const)
+        {
+            Value = value;
+        }
+
+        public new int Value { get; }
 
         public override int Eval() => Value;
 
@@ -47,8 +53,13 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         public override string ToStringFormat() => "Const(" + Value + ")";
     }
 
-    internal sealed class BinaryNumTree(NumKind kind, NumTree left, NumTree right) : NumTree(kind, [left, right])
+    internal sealed class BinaryNumTree : NumTree
     {
+        public BinaryNumTree(NumKind kind, NumTree left, NumTree right)
+            : base(kind, [left, right])
+        {
+        }
+
         public override int Eval()
         {
             return Value.Kind switch
@@ -65,8 +76,13 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         }
     }
 
-    internal sealed class UnaryNumTree(NumKind kind, NumTree operand) : NumTree(kind, [operand])
+    internal sealed class UnaryNumTree : NumTree
     {
+        public UnaryNumTree(NumKind kind, NumTree operand)
+            : base(kind, [operand])
+        {
+        }
+
         public override int Eval()
         {
             return Value.Kind switch
@@ -82,9 +98,15 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         }
     }
 
-    internal sealed class VariableNumTree(ParameterExpression variable) : NumTree(NumKind.Variable)
+    internal sealed class VariableNumTree : NumTree
     {
-        public ParameterExpression Variable { get; } = variable;
+        public VariableNumTree(ParameterExpression variable)
+            : base(NumKind.Variable)
+        {
+            Variable = variable;
+        }
+
+        public ParameterExpression Variable { get; }
 
         public override int Eval() => throw new NotImplementedException();
 
@@ -114,9 +136,11 @@ namespace Tests.System.Linq.CompilerServices.Tools.BURS
         public bool Equals(IType other) => other == Instance;
     }
 
-    internal sealed class Num(NumKind kind) : IEquatable<Num>
+    internal sealed class Num : IEquatable<Num>
     {
-        public NumKind Kind { get; } = kind;
+        public Num(NumKind kind) => Kind = kind;
+
+        public NumKind Kind { get; }
 
         public bool Equals(Num other)
         {

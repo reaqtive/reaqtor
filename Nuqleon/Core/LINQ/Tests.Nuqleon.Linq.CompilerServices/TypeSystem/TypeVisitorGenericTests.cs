@@ -91,9 +91,11 @@ namespace Tests.System.Linq.CompilerServices
             }
         }
 
-        private class FindUsageTypeVisitor(Type type) : TypeVisitor<bool>
+        private class FindUsageTypeVisitor : TypeVisitor<bool>
         {
-            private readonly Type _type = type;
+            private readonly Type _type;
+
+            public FindUsageTypeVisitor(Type type) => _type = type;
 
             protected override bool MakeArrayType(Type type, bool elementType) => elementType;
 

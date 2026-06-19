@@ -29,9 +29,11 @@ namespace Reaqtor.QueryEngine
         public static IQuotedTypeConversionTargets From(IReadOnlyDictionary<Type, Type> typeMap)
             => new Impl(typeMap ?? throw new ArgumentNullException(nameof(typeMap)));
 
-        private sealed class Impl(IReadOnlyDictionary<Type, Type> typeMap) : IQuotedTypeConversionTargets
+        private sealed class Impl : IQuotedTypeConversionTargets
         {
-            public IReadOnlyDictionary<Type, Type> TypeMap { get; } = typeMap;
+            public Impl(IReadOnlyDictionary<Type, Type> typeMap) => TypeMap = typeMap;
+
+            public IReadOnlyDictionary<Type, Type> TypeMap { get; }
         }
     }
 }

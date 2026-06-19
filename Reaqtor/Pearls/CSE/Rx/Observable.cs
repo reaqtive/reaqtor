@@ -129,9 +129,14 @@ namespace Pearls.Reaqtor.CSE
         /// Anonymous implementation of an observable.
         /// </summary>
         /// <typeparam name="T">Type of the elements produced by the observable sequence.</typeparam>
-        private class AnonymousObservable<T>(Func<IObserver<T>, IDisposable> create) : IObservable<T>
+        private class AnonymousObservable<T> : IObservable<T>
         {
-            private readonly Func<IObserver<T>, IDisposable> _create = create;
+            private readonly Func<IObserver<T>, IDisposable> _create;
+
+            public AnonymousObservable(Func<IObserver<T>, IDisposable> create)
+            {
+                _create = create;
+            }
 
             public IDisposable Subscribe(IObserver<T> observer)
             {

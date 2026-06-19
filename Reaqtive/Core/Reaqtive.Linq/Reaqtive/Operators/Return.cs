@@ -8,18 +8,28 @@ using Reaqtive.Tasks;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class Return<TResult>(TResult value) : SubscribableBase<TResult>
+    internal sealed class Return<TResult> : SubscribableBase<TResult>
     {
-        private readonly TResult _value = value;
+        private readonly TResult _value;
+
+        public Return(TResult value)
+        {
+            _value = value;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<TResult> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(Return<TResult> parent, IObserver<TResult> observer) : StatefulUnaryOperator<Return<TResult>, TResult>(parent, observer)
+        private sealed class _ : StatefulUnaryOperator<Return<TResult>, TResult>
         {
             private IOperatorContext _context;
+
+            public _(Return<TResult> parent, IObserver<TResult> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:Return";
 

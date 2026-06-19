@@ -256,9 +256,11 @@ namespace Tests.System.Linq.Expressions.Optimizers
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
-        private sealed class PureCalls(long seed)
+        private sealed class PureCalls
         {
-            private readonly long _seed = seed;
+            private readonly long _seed;
+
+            public PureCalls(long seed) => _seed = seed;
 
             public static long StaticMethod(int a, int b, int c) => a * b - c;
             public static void StaticMethodVoid(int a) { }

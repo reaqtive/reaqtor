@@ -20,13 +20,23 @@ using Reaqtor.Service.Core;
 
 namespace Engine
 {
-    public sealed class QueryEngineContext(IReactive innerService) : ReactiveServiceContext(new ExpressionService(), new Engine(innerService))
+    public sealed class QueryEngineContext : ReactiveServiceContext
     {
-        private class Engine(IReactive innerService) : IReactiveEngineProvider
+        public QueryEngineContext(IReactive innerService)
+            : base(new ExpressionService(), new Engine(innerService))
+        {
+        }
+
+        private class Engine : IReactiveEngineProvider
         {
             private static readonly MethodInfo _invokeTypedExpressionHelper1 = ((MethodInfo)ReflectionHelpers.InfoOf(() => InvokeTypedExpressionHelper<object, object>(null, null))).GetGenericMethodDefinition();
 
-            private readonly IReactive _innerService = innerService;
+            private readonly IReactive _innerService;
+
+            public Engine(IReactive innerService)
+            {
+                _innerService = innerService;
+            }
 
             public void CreateSubscription(Uri subscriptionUri, Expression subscription, object state)
             {

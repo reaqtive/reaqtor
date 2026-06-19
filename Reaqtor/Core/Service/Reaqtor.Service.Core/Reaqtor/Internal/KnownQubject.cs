@@ -13,8 +13,14 @@ using System.Linq.Expressions;
 
 namespace Reaqtor
 {
-    internal sealed class KnownQubject<TInput, TOuput>(Expression expression, Uri streamUri, IReactiveQueryProvider provider) : Qubject<TInput, TOuput>(expression, provider), IKnownResource
+    internal sealed class KnownQubject<TInput, TOuput> : Qubject<TInput, TOuput>, IKnownResource
     {
-        public Uri Uri { get; } = streamUri;
+        public KnownQubject(Expression expression, Uri streamUri, IReactiveQueryProvider provider)
+            : base(expression, provider)
+        {
+            Uri = streamUri;
+        }
+
+        public Uri Uri { get; }
     }
 }

@@ -352,10 +352,15 @@ namespace Reaqtor.Reliable
             }
         }
 
-        private class Observer(ReliableMultiSubjectBase<T> parent) : IReliableObserver<T>
+        private class Observer : IReliableObserver<T>
         {
-            private readonly ReliableMultiSubjectBase<T> _parent = parent;
+            private readonly ReliableMultiSubjectBase<T> _parent;
             private long _lastSequenceId = -1;
+
+            public Observer(ReliableMultiSubjectBase<T> parent)
+            {
+                _parent = parent;
+            }
 
             public Uri ResubscribeUri => _parent.Id;
 
@@ -375,12 +380,19 @@ namespace Reaqtor.Reliable
             public void OnCompleted() => _parent.OnCompleted();
         }
 
-        protected sealed class Subscription(ReliableMultiSubjectBase<T> parent, IReliableObserver<T> observer, long lastAck) : IReliableSubscription
+        protected sealed class Subscription : IReliableSubscription
         {
-            private readonly ReliableMultiSubjectBase<T> _parent = parent;
-            private readonly IReliableObserver<T> _observer = observer;
-            private long _lastAck = lastAck;
+            private readonly ReliableMultiSubjectBase<T> _parent;
+            private readonly IReliableObserver<T> _observer;
+            private long _lastAck;
             private long _disposed = 1;
+
+            public Subscription(ReliableMultiSubjectBase<T> parent, IReliableObserver<T> observer, long lastAck)
+            {
+                _parent = parent;
+                _observer = observer;
+                _lastAck = lastAck;
+            }
 
             public long LastAck => Interlocked.Read(ref _lastAck);
 

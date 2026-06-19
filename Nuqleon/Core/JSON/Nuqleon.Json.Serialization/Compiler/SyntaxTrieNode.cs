@@ -19,18 +19,23 @@ namespace Nuqleon.Json.Serialization
     /// Represents a node in a syntax trie.
     /// </summary>
     /// <typeparam name="T">Type of the objects associated with terminal productions.</typeparam>
-    /// <remarks>
-    /// Creates a new syntax trie node with the specified character.
-    /// </remarks>
-    /// <param name="value">The character represented by this node.</param>
-    internal sealed class SyntaxTrieNode<T>(char value)
+    internal sealed class SyntaxTrieNode<T>
         where T : class
     {
+        /// <summary>
+        /// Creates a new syntax trie node with the specified character.
+        /// </summary>
+        /// <param name="value">The character represented by this node.</param>
+        public SyntaxTrieNode(char value)
+        {
+            Value = value;
+            Children = new Dictionary<char, SyntaxTrieNode<T>>();
+        }
 
         /// <summary>
         /// Gets the character represented by this node.
         /// </summary>
-        public char Value { get; } = value;
+        public char Value { get; }
 
         /// <summary>
         /// Gets the terminal production associated with this node, or null if the node is not a terminal.
@@ -40,7 +45,7 @@ namespace Nuqleon.Json.Serialization
         /// <summary>
         /// Gets the children of the current node.
         /// </summary>
-        public IDictionary<char, SyntaxTrieNode<T>> Children { get; } = new Dictionary<char, SyntaxTrieNode<T>>();
+        public IDictionary<char, SyntaxTrieNode<T>> Children { get; }
 
         /// <summary>
         /// Compiles the syntax trie node into an expression fragment for efficient lexing and parsing of JSON. This function is recursive and builds up the lexer for an entire syntax trie.

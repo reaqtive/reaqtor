@@ -11,9 +11,14 @@ namespace Reaqtor.QueryEngine
     /// analogous to a multicast delegate.
     /// </summary>
     /// <typeparam name="T">The type of the events processed by the observer.</typeparam>
-    internal sealed class MultiObserver<T>(IObserver<T>[] observers) : IObserver<T>
+    internal sealed class MultiObserver<T> : IObserver<T>
     {
-        public readonly IObserver<T>[] _observers = observers;
+        public readonly IObserver<T>[] _observers;
+
+        public MultiObserver(IObserver<T>[] observers)
+        {
+            _observers = observers;
+        }
 
         public void OnCompleted()
         {

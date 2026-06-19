@@ -10,20 +10,27 @@ using System.Threading;
 
 namespace Reaqtive.Operators
 {
-    internal sealed class SelectMany<TSource, TCollection, TResult>(ISubscribable<TSource> source,
-        Func<TSource, ISubscribable<TCollection>> collectionSelector,
-        Func<TSource, TCollection, TResult> resultSelector) : SubscribableBase<TResult>
+    internal sealed class SelectMany<TSource, TCollection, TResult> : SubscribableBase<TResult>
     {
-        private readonly ISubscribable<TSource> _source = source;
-        private readonly Func<TSource, ISubscribable<TCollection>> _collectionSelector = collectionSelector;
-        private readonly Func<TSource, TCollection, TResult> _resultSelector = resultSelector;
+        private readonly ISubscribable<TSource> _source;
+        private readonly Func<TSource, ISubscribable<TCollection>> _collectionSelector;
+        private readonly Func<TSource, TCollection, TResult> _resultSelector;
+
+        public SelectMany(ISubscribable<TSource> source,
+            Func<TSource, ISubscribable<TCollection>> collectionSelector,
+            Func<TSource, TCollection, TResult> resultSelector)
+        {
+            _source = source;
+            _collectionSelector = collectionSelector;
+            _resultSelector = resultSelector;
+        }
 
         protected override ISubscription SubscribeCore(IObserver<TResult> observer)
         {
             return new _(this, observer);
         }
 
-        private sealed class _(SelectMany<TSource, TCollection, TResult> parent, IObserver<TResult> observer) : HigherOrderInputStatefulOperator<SelectMany<TSource, TCollection, TResult>, TResult>(parent, observer), IObserver<TSource>
+        private sealed class _ : HigherOrderInputStatefulOperator<SelectMany<TSource, TCollection, TResult>, TResult>, IObserver<TSource>
         {
             private const string MAXINNERSUBCOUNTSETTING = "rx://operators/bind/settings/maxConcurrentInnerSubscriptionCount";
             private int _maxInnerCount;
@@ -35,6 +42,11 @@ namespace Reaqtive.Operators
             private CompositeSubscription _innerSubscriptions;
 #pragma warning restore CA2213
             private IOperatorContext _context;
+
+            public _(SelectMany<TSource, TCollection, TResult> parent, IObserver<TResult> observer)
+                : base(parent, observer)
+            {
+            }
 
             public override string Name => "rc:SelectMany";
 
@@ -181,11 +193,16 @@ namespace Reaqtive.Operators
                 }
             }
 
-            private sealed class Observer(SelectMany<TSource, TCollection, TResult>._ parent) : StatefulObserver<TCollection>
+            private sealed class Observer : StatefulObserver<TCollection>
             {
-                private readonly _ _parent = parent;
+                private readonly _ _parent;
                 private ISubscription _subscription;
                 private TSource _value;
+
+                public Observer(_ parent)
+                {
+                    _parent = parent;
+                }
 
                 public Observer(_ parent, TSource value) : this(parent)
                 {

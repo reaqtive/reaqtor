@@ -19,20 +19,16 @@ namespace System.Reflection
     /// <summary>
     /// A container for mappings from slim types to types and slim members to members.
     /// </summary>
-    /// <remarks>
-    /// Creates the type space.
-    /// </remarks>
-    /// <param name="provider">The reflection provider to use.</param>
-    public class InvertedTypeSpace(IReflectionProvider provider)
+    public class InvertedTypeSpace
     {
         #region Fields
 
-        private readonly Dictionary<PropertyInfoSlim, PropertyInfo> _properties = [];
-        private readonly Dictionary<FieldInfoSlim, FieldInfo> _fields = [];
-        private readonly Dictionary<MethodInfoSlim, MethodInfo> _methods = [];
-        private readonly Dictionary<ConstructorInfoSlim, ConstructorInfo> _constructors = [];
-        private readonly TypeSlimToTypeConverter _typeConverter = new TypeSlimToTypeConverter(provider);
-        private readonly IReflectionProvider _provider = provider;
+        private readonly Dictionary<PropertyInfoSlim, PropertyInfo> _properties;
+        private readonly Dictionary<FieldInfoSlim, FieldInfo> _fields;
+        private readonly Dictionary<MethodInfoSlim, MethodInfo> _methods;
+        private readonly Dictionary<ConstructorInfoSlim, ConstructorInfo> _constructors;
+        private readonly TypeSlimToTypeConverter _typeConverter;
+        private readonly IReflectionProvider _provider;
 
         private static readonly Type[] s_emptyTypes = [];
 
@@ -46,6 +42,20 @@ namespace System.Reflection
         public InvertedTypeSpace()
             : this(DefaultReflectionProvider.Instance)
         {
+        }
+
+        /// <summary>
+        /// Creates the type space.
+        /// </summary>
+        /// <param name="provider">The reflection provider to use.</param>
+        public InvertedTypeSpace(IReflectionProvider provider)
+        {
+            _properties = [];
+            _fields = [];
+            _methods = [];
+            _constructors = [];
+            _typeConverter = new TypeSlimToTypeConverter(provider);
+            _provider = provider;
         }
 
         #endregion

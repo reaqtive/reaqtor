@@ -16,15 +16,22 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// Thread-safe in memory state store which holds key-value pair item sorted by categories
     /// and track items removal.
     /// </summary>
-    /// <remarks>
-    /// Create a new <see cref="InMemoryStateStore"/> instance.
-    /// </remarks>
-    /// <param name="id">Store identifier.</param>
     [Serializable]
-    public sealed class InMemoryStateStore(string id)
+    public sealed class InMemoryStateStore
     {
-        private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>> _internalStore = new ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>>();
-        private readonly ConcurrentDictionary<string, ConcurrentBag<string>> _removedItems = new ConcurrentDictionary<string, ConcurrentBag<string>>();
+        private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>> _internalStore;
+        private readonly ConcurrentDictionary<string, ConcurrentBag<string>> _removedItems;
+
+        /// <summary>
+        /// Create a new <see cref="InMemoryStateStore"/> instance.
+        /// </summary>
+        /// <param name="id">Store identifier.</param>
+        public InMemoryStateStore(string id)
+        {
+            Id = id;
+            _internalStore = new ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>>();
+            _removedItems = new ConcurrentDictionary<string, ConcurrentBag<string>>();
+        }
 
         /// <summary>
         /// Loads the state store from the given stream.
@@ -141,7 +148,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <summary>
         /// Store id.
         /// </summary>
-        public string Id { get; private set; } = id;
+        public string Id { get; private set; }
 
         /// <summary>
         /// Get the categories present in the store.

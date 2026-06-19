@@ -23,14 +23,26 @@ namespace System.Memory
         T Key { get; }
     }
 
-    internal class ValueCacheEntry<T, R>(T key, R value) : ValueOrErrorValue<R>(value), ICacheEntry<T, R>
+    internal class ValueCacheEntry<T, R> : ValueOrErrorValue<R>, ICacheEntry<T, R>
     {
-        public T Key { get; } = key;
+        public ValueCacheEntry(T key, R value)
+            : base(value)
+        {
+            Key = key;
+        }
+
+        public T Key { get; }
     }
 
-    internal class ErrorCacheEntry<T, R>(T key, Exception error) : ValueOrErrorError<R>(ExceptionDispatchInfo.Capture(error)), ICacheEntry<T, R>
+    internal class ErrorCacheEntry<T, R> : ValueOrErrorError<R>, ICacheEntry<T, R>
     {
-        public T Key { get; } = key;
+        public ErrorCacheEntry(T key, Exception error)
+            : base(ExceptionDispatchInfo.Capture(error))
+        {
+            Key = key;
+        }
+
+        public T Key { get; }
     }
 
     internal interface ILinkedListNode<T>
@@ -44,14 +56,24 @@ namespace System.Memory
     {
     }
 
-    internal sealed class LruValueCacheEntry<T, R>(T key, R value) : ValueCacheEntry<T, R>(key, value), ILruCacheEntry<T, R>
+    internal sealed class LruValueCacheEntry<T, R> : ValueCacheEntry<T, R>, ILruCacheEntry<T, R>
     {
+        public LruValueCacheEntry(T key, R value)
+            : base(key, value)
+        {
+        }
+
         public ILruCacheEntry<T, R> Previous { get; set; }
         public ILruCacheEntry<T, R> Next { get; set; }
     }
 
-    internal sealed class LruErrorCacheEntry<T, R>(T key, Exception error) : ErrorCacheEntry<T, R>(key, error), ILruCacheEntry<T, R>
+    internal sealed class LruErrorCacheEntry<T, R> : ErrorCacheEntry<T, R>, ILruCacheEntry<T, R>
     {
+        public LruErrorCacheEntry(T key, Exception error)
+            : base(key, error)
+        {
+        }
+
         public ILruCacheEntry<T, R> Previous { get; set; }
         public ILruCacheEntry<T, R> Next { get; set; }
     }
@@ -60,8 +82,13 @@ namespace System.Memory
     {
     }
 
-    internal sealed class MetricsValueCacheEntry<T, R>(T key, R value) : ValueCacheEntry<T, R>(key, value), IMetricsCacheEntry<T, R>
+    internal sealed class MetricsValueCacheEntry<T, R> : ValueCacheEntry<T, R>, IMetricsCacheEntry<T, R>
     {
+        public MetricsValueCacheEntry(T key, R value)
+            : base(key, value)
+        {
+        }
+
         public TimeSpan CreationTime { get; set; }
         public TimeSpan InvokeDuration { get; set; }
         public int HitCount { get; set; }
@@ -73,8 +100,13 @@ namespace System.Memory
         public double SpeedupFactor => (double)InvokeDuration.Ticks / AverageAccessTime.Ticks;
     }
 
-    internal sealed class MetricsErrorCacheEntry<T, R>(T key, Exception error) : ErrorCacheEntry<T, R>(key, error), IMetricsCacheEntry<T, R>
+    internal sealed class MetricsErrorCacheEntry<T, R> : ErrorCacheEntry<T, R>, IMetricsCacheEntry<T, R>
     {
+        public MetricsErrorCacheEntry(T key, Exception error)
+            : base(key, error)
+        {
+        }
+
         public TimeSpan CreationTime { get; set; }
         public TimeSpan InvokeDuration { get; set; }
         public int HitCount { get; set; }
