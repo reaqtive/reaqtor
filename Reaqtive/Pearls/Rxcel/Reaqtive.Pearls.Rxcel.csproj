@@ -3,6 +3,14 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
+    <!--
+      This pearl is a Windows-only WinForms sample (the non-Windows build compiles a NO_UI headless
+      variant - see the WinForms code under '#else' in Program.cs). The .NET 10 SDK's platform-
+      compatibility analyzer (CA1416) flags the WinForms calls here as "reachable on all platforms"
+      even though this branch only ever builds for net10.0-windows. The code is genuinely Windows-only
+      and correctly guarded, and the project is not shipped (IsPackable=false), so suppress CA1416
+      for this Windows build rather than churn the sample. -->
+    <NoWarn>$(NoWarn);CA1416</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition="!$(NETCoreSdkRuntimeIdentifier.StartsWith('win'))">
     <OutputType>Exe</OutputType>
