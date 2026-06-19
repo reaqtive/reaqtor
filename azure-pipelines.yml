@@ -41,17 +41,19 @@ stages:
         command: restore
         projects: All.slnx
 
-    # See https://github.com/reaqtive/reaqtor/issues/138
-    # The current implementation of IDE0001 runs extremely slowly, causing builds to fail,
-    # and we've been unable to find any workaround, so we have to disable this for
-    # certain projects now.
+    # The command + its exclusions live in eng/Run-DotnetFormat.ps1 (single source of
+    # truth shared with local use). It runs `dotnet format style` with two exclusions,
+    # both tracked by https://github.com/reaqtive/reaqtor/issues/138:
+    #   * Nuqleon.Linq.Expressions.Optimizers - IDE0001 is pathologically slow here.
+    #   * ~16 files <Compile Link>'d into multiple projects with different symbols
+    #     (the USE_SLIM Bonsai links); dotnet format crashes merging their per-project
+    #     edits (TryApplyChanges / LinkedFileMergeConflictCommentAdditionService).
+    # Primary-constructor conversion (IDE0290) is disabled in .editorconfig.
     #
-    # NB: The .NET 10 SDK's formatter is much stricter than the .NET 7/8 SDK this repo was last
-    # formatted against, so this check currently reports changes (and `dotnet format` cannot
-    # auto-apply them on this workspace - it throws on TryApplyChanges across the linked/generated
-    # files). The reformatting is a tracked follow-up to the .NET 10 migration; until it lands this
-    # check is advisory (continueOnError) and EnforceCodeStyleInBuild is off (see Directory.Build.props).
-    - script: dotnet format --no-restore --verify-no-changes --exclude Nuqleon\Core\LINQ\Nuqleon.Linq.Expressions.Optimizers --verbosity diagnostic All.slnx
+    # This check stays advisory (continueOnError) until those linked files can be
+    # formatted (#138); EnforceCodeStyleInBuild is off too (see Directory.Build.props).
+    # Once the linked files are handled, drop continueOnError to make it enforcing.
+    - pwsh: ./eng/Run-DotnetFormat.ps1 -Verify -NoRestore
       displayName: Run dotnet-format
       continueOnError: true
 
