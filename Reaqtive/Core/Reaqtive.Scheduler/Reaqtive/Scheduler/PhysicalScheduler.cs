@@ -261,7 +261,7 @@ namespace Reaqtive.Scheduler
                     }
                 }
             })
-            { Priority = ThreadPriority.Highest, IsBackground = true };
+            { Priority = ThreadPriority.Highest };
 
             _heartbeat.Start();
         }

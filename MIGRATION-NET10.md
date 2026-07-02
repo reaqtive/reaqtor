@@ -100,11 +100,13 @@ built, not shipped; their project references are not maintained. See `archive/RE
 
 ## Notable fixes surfaced by the migration
 
-- **MTP process hang (root-caused & fixed).** `PhysicalScheduler`'s worker and heartbeat threads were
-  *foreground* threads, so a scheduler that wasn't explicitly disposed kept the process alive. VSTest
-  force-terminated its host and masked this; under MTP each test project is its own executable that
-  must exit cleanly, so leaked schedulers hung the run. Fixed by making those threads
-  `IsBackground=true` (a scheduler should never keep a process alive on its own).
+- **MTP process lifetime.** `PhysicalScheduler`'s worker and heartbeat threads are *foreground*
+  threads — deliberately so: a live scheduler means the process still has work in flight (e.g.
+  persisting state on shutdown), and it must keep the process alive. Under MTP each test project is
+  its own executable that must exit cleanly (VSTest used to force-terminate its host, masking leaks),
+  so a test that leaks an undisposed scheduler hangs the run. The test suites dispose their
+  schedulers (`using` / `TestCleanup` / `ClassCleanup`); any future MTP hang points at a leaked
+  scheduler that needs disposing — the threads stay foreground by design.
 - **Bonsai/DataModel serialization tests** updated to recognise the net10 core assembly
   (`System.Private.CoreLib 10.0.0.0`) in their `"STD"` normalization helpers.
 - **C# 14 `params` collections in an expression tree** — `string.Format(...)` in a LINQ expression tree
