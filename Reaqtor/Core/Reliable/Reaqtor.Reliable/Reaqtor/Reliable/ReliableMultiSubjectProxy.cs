@@ -28,7 +28,9 @@ namespace Reaqtor.Reliable
 #pragma warning disable CA2213 // Not disposing `_inputs`; instead, we dispose the underlying resources.
 
             private readonly Uri _uri;
+#pragma warning disable IDE0028 // Collection initialization can be simplified. (Deliberate: a collection expression binds to the ISubscription[] constructor via an empty array allocation, tripping CA1825; the parameterless constructor avoids it.)
             private readonly StableCompositeSubscription _inputs = new();
+#pragma warning restore IDE0028
 
             private volatile IReliableObserver<TInput> _observer;
 
@@ -116,7 +118,7 @@ namespace Reaqtor.Reliable
             {
                 _uri = uri;
                 _observer = observer;
-                _inputs = new[] { _subscription };
+                _inputs = [_subscription];
             }
 
             #region IOperator

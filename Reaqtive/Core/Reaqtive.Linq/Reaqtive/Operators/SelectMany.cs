@@ -56,10 +56,12 @@ namespace Reaqtive.Operators
             {
                 _isStopped = false;
 
+#pragma warning disable IDE0028 // Collection initialization can be simplified. (Deliberate: a collection expression binds to the ISubscription[] constructor via an empty array allocation, tripping CA1825; the parameterless constructor avoids it.)
                 _innerSubscriptions = new CompositeSubscription();
+#pragma warning restore IDE0028
                 _sourceSubscription = Params._source.Subscribe(this);
 
-                return new ISubscription[] { _sourceSubscription, _innerSubscriptions };
+                return [_sourceSubscription, _innerSubscriptions];
             }
 
             public override void SetContext(IOperatorContext context)

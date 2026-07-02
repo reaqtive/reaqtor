@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq.CompilerServices.Bonsai;
 using System.Linq.Expressions;
@@ -72,7 +71,7 @@ namespace Reaqtor.Hosting.Shared.Tools
                     // ... that is not a parameterized Reactive entity type...
                     if ((reactiveEntityType & ReactiveEntityType.Func) != ReactiveEntityType.Func)
                     {
-                        AddToReactiveEntities(reactiveEntityType, node, Array.Empty<ExpressionSlim>());
+                        AddToReactiveEntities(reactiveEntityType, node, []);
                     }
                 }
 

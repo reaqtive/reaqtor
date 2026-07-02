@@ -12,7 +12,9 @@ namespace Reaqtor.Reactive
     internal sealed class MultiSubjectObserverProxy<T> : Observer<T>
     {
 #pragma warning disable CA2213 // "never disposed." This ends up in Input, which is disposed by the base class
+#pragma warning disable IDE0028 // Collection initialization can be simplified. (Deliberate: a collection expression binds to the ISubscription[] constructor via an empty array allocation, tripping CA1825; the parameterless constructor avoids it.)
         private readonly StableCompositeSubscription _inputs = new();
+#pragma warning restore IDE0028
 #pragma warning restore CA2213
         private readonly Uri _uri;
 

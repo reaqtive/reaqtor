@@ -156,7 +156,9 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <returns>The categories.</returns>
         public IEnumerable<string> GetCategories()
         {
+#pragma warning disable IDE0305 // Collection initialization can be simplified. (Deliberate: with a collection expression the method body becomes property-shaped and trips CA1024; ToArray keeps the snapshot-copy intent explicit.)
             return _internalStore.Keys.ToArray();
+#pragma warning restore IDE0305
         }
 
         /// <summary>

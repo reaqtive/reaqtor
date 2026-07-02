@@ -52,7 +52,9 @@ namespace Reaqtive.Operators
                     subscriptions[i] = observer.Subscription = subscription;
                 }
 
+#pragma warning disable IDE0028 // Collection initialization can be simplified. (Deliberate: the StaticCompositeSubscription constructor is used precisely because it wraps the array without cloning; a collection expression copies it.)
                 return new StaticCompositeSubscription(subscriptions /* no cloning */);
+#pragma warning restore IDE0028
             }
 
             private void OnCompleted(int index)
