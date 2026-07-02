@@ -18,9 +18,6 @@ namespace System
     /// </summary>
     public abstract class AsyncDisposableBase : IAsyncDisposable
     {
-#pragma warning disable IDE0079 // Remove unnecessary suppressions.
-#pragma warning disable CA1816 // Dispose methods should call SuppressFinalize. (Analyzer does not know about pre-netstandard2.1 IAsyncDisposable.)
-
         /// <summary>
         /// Disposes the resource asynchronously.
         /// </summary>

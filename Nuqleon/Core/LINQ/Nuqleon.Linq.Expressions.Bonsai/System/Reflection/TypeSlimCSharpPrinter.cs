@@ -148,7 +148,7 @@ namespace System.Reflection
             var i = type.Name.LastIndexOf('`');
             if (i >= 0)
             {
-                name = type.Name.Substring(0, i);
+                name = type.Name[..i];
             }
 
             if (i + 1 < type.Name.Length)
@@ -164,7 +164,7 @@ namespace System.Reflection
             var i = name.LastIndexOf('`');
             if (i >= 0)
             {
-                name = name.Substring(0, i);
+                name = name[..i];
             }
 
             return name;

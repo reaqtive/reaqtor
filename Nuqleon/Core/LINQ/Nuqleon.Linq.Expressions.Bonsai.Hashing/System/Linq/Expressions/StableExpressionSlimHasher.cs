@@ -53,7 +53,7 @@ namespace System.Linq.Expressions
                 var comma = name.IndexOf(',', StringComparison.Ordinal);
                 if (comma >= 0)
                 {
-                    name = name.Substring(0, comma);
+                    name = name[..comma];
                 }
             }
 

@@ -767,7 +767,7 @@ namespace System
                 var backtick = name.LastIndexOf('`');
                 if (backtick >= 0)
                 {
-                    nameWithoutArity = nameWithoutArity.Substring(0, backtick);
+                    nameWithoutArity = nameWithoutArity[..backtick];
                 }
 
                 return nameWithoutArity;

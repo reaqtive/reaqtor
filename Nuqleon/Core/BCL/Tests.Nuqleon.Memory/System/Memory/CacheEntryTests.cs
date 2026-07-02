@@ -81,7 +81,7 @@ namespace Tests
                 catch (Exception ex2)
                 {
                     Assert.AreSame(ex, ex2);
-                    Assert.AreEqual(stack, ex2.StackTrace.Substring(0, stack.Length));
+                    Assert.AreEqual(stack, ex2.StackTrace[..stack.Length]);
                 }
 
                 Assert.AreEqual(0, entry.HitCount);
