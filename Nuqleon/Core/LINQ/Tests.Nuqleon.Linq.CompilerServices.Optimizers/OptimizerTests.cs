@@ -30,7 +30,9 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             var cmp = new ExpressionEqualityComparer();
 
             {
+#pragma warning disable IDE0120 // Simplify LINQ expression. (Deliberate: unoptimized Where(...).First() is the input under test for the coalescing optimizer.)
                 var e = Infer(() => new int[0].Where(x => true).First()).Body;
+#pragma warning restore IDE0120
                 var q = new EnumerableToQueryTreeConverter().Convert(e);
                 var c = new CoalescingOptimizer().Optimize(q);
                 var o = c.Reduce();

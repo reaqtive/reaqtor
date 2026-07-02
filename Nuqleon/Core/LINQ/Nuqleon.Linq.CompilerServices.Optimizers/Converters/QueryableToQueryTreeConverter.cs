@@ -20,7 +20,9 @@ namespace System.Linq.CompilerServices.Optimizers
     public class QueryableToQueryTreeConverter
     {
         private static readonly MethodInfo s_first = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First())).GetGenericMethodDefinition();
+#pragma warning disable IDE0034 // Simplify 'default' expression. (Deliberate: the explicit type disambiguates the First() vs First(predicate) overload for InfoOf reflection; a bare 'default' is ambiguous.)
         private static readonly MethodInfo s_firstPredicate = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.First(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();
+#pragma warning restore IDE0034
         private static readonly MethodInfo s_select = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Select(default(Expression<Func<int, int>>)))).GetGenericMethodDefinition();
         private static readonly MethodInfo s_take = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Take(default(int)))).GetGenericMethodDefinition();
         private static readonly MethodInfo s_where = ((MethodInfo)ReflectionHelpers.InfoOf((IQueryable<int> xs) => xs.Where(default(Expression<Func<int, bool>>)))).GetGenericMethodDefinition();

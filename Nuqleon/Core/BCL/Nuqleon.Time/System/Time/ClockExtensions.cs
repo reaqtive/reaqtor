@@ -51,7 +51,9 @@ namespace System.Time
         {
             private readonly bool _adjust;
             private readonly IClock _clock;
+#pragma warning disable IDE0032 // Use auto property. (Deliberate: PR #155 review rejected the auto-property rewrite; the explicit backing field is kept.)
             private long _lastValue;
+#pragma warning restore IDE0032
 
             public Monotonic(IClock clock, bool adjust)
             {

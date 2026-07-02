@@ -196,11 +196,13 @@ namespace Tests
             var a = new A(() => { });
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
+#pragma warning disable IDE0350 // Use implicitly typed lambda. (Deliberate: PR #155 review wants the explicit (ref int x) parameter type kept.)
             Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<A>(default(IMemoizer), a, MemoizationOptions.None));
             Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<A>(mem, default(A), MemoizationOptions.None));
 
             Assert.ThrowsExactly<ArgumentException>(() => FunctionMemoizationExtensions.Memoize<int>(mem, 42, MemoizationOptions.None));
             Assert.ThrowsExactly<NotSupportedException>(() => FunctionMemoizationExtensions.Memoize<R>(mem, (ref int x) => { }, MemoizationOptions.None));
+#pragma warning restore IDE0350 // Use implicitly typed lambda
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -287,11 +289,13 @@ namespace Tests
             var a = new A(() => { });
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
+#pragma warning disable IDE0350 // Use implicitly typed lambda. (Deliberate: PR #155 review wants the explicit (ref string x) parameter type kept.)
             Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<A>(default(IWeakMemoizer), a, MemoizationOptions.None));
             Assert.ThrowsExactly<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<A>(mem, default(A), MemoizationOptions.None));
 
             Assert.ThrowsExactly<ArgumentException>(() => FunctionMemoizationExtensions.MemoizeWeak<int>(mem, 42, MemoizationOptions.None));
             Assert.ThrowsExactly<NotSupportedException>(() => FunctionMemoizationExtensions.MemoizeWeak<Q>(mem, (ref string x) => { }, MemoizationOptions.None));
+#pragma warning restore IDE0350 // Use implicitly typed lambda
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
