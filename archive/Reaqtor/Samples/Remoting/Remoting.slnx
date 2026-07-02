@@ -144,8 +144,6 @@
     <Project Path="Reaqtor.Remoting.ReificationFramework/Reaqtor.Remoting.ReificationFramework.csproj" />
     <Project Path="Reaqtor.Remoting.TestingFramework/Reaqtor.Remoting.TestingFramework.csproj" />
     <Project Path="Reaqtor.Remoting.VersioningTests/Reaqtor.Remoting.VersioningTests.csproj">
-      <BuildType Project="?" />
-      <Platform Project="?" />
       <Build Project="false" />
     </Project>
   </Folder>

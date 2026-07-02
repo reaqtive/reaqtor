@@ -1,0 +1,13 @@
+<Project>
+
+  <!--
+    The archived projects are historical artifacts that are not part of any live solution and are
+    not built by CI. They keep their original inline PackageReference versions, so Central Package
+    Management (enabled by the repository root Directory.Packages.props) is switched off for this
+    subtree to keep the projects restorable as-is for reference purposes.
+  -->
+  <PropertyGroup>
+    <ManagePackageVersionsCentrally>false</ManagePackageVersionsCentrally>
+  </PropertyGroup>
+
+</Project>

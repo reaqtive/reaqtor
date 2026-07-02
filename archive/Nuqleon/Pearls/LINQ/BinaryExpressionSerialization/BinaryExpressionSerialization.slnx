@@ -1,58 +1,18 @@
 <Solution>
   <Folder Name="/deps/">
-    <Project Path="../../../Core/BCL/Nuqleon.Memory/Nuqleon.Memory.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
-    <Project Path="../../../Core/BCL/Nuqleon.Reflection.Virtualization/Nuqleon.Reflection.Virtualization.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
-    <Project Path="../../../Core/BCL/Nuqleon.Time/Nuqleon.Time.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
-    <Project Path="../../../Core/JSON/Nuqleon.Json/Nuqleon.Json.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
-    <Project Path="../../../Core/LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
-    <Project Path="../../../Core/LINQ/Nuqleon.Linq.Expressions.Bonsai.Serialization/Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
-    <Project Path="../../../Core/LINQ/Nuqleon.Linq.Expressions.Bonsai/Nuqleon.Linq.Expressions.Bonsai.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
+    <Project Path="../../../Core/BCL/Nuqleon.Memory/Nuqleon.Memory.csproj" />
+    <Project Path="../../../Core/BCL/Nuqleon.Reflection.Virtualization/Nuqleon.Reflection.Virtualization.csproj" />
+    <Project Path="../../../Core/BCL/Nuqleon.Time/Nuqleon.Time.csproj" />
+    <Project Path="../../../Core/JSON/Nuqleon.Json/Nuqleon.Json.csproj" />
+    <Project Path="../../../Core/LINQ/Nuqleon.Linq.CompilerServices/Nuqleon.Linq.CompilerServices.csproj" />
+    <Project Path="../../../Core/LINQ/Nuqleon.Linq.Expressions.Bonsai.Serialization/Nuqleon.Linq.Expressions.Bonsai.Serialization.csproj" />
+    <Project Path="../../../Core/LINQ/Nuqleon.Linq.Expressions.Bonsai/Nuqleon.Linq.Expressions.Bonsai.csproj" />
   </Folder>
   <Folder Name="/src/">
-    <Project Path="BinaryExpressionSerialization/Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.Perf.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
-    <Project Path="Library/Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
+    <Project Path="BinaryExpressionSerialization/Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.Perf.csproj" />
+    <Project Path="Library/Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj" />
   </Folder>
   <Folder Name="/test/">
-    <Project Path="Tests/Tests.Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj">
-      <BuildType Solution="Release|*" Project="?" />
-      <Platform Solution="Release|*" Project="?" />
-      <Build Solution="Release|*" Project="false" />
-    </Project>
+    <Project Path="Tests/Tests.Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary.csproj" />
   </Folder>
 </Solution>
