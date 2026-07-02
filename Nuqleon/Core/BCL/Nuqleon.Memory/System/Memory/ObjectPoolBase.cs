@@ -768,13 +768,7 @@ namespace System.Memory
 
         private void Write(StringBuilder sb, string str)
         {
-            var parts =
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
-                str.Replace("\r\n", "\n", StringComparison.Ordinal)
-#else
-                str.Replace("\r\n", "\n")
-#endif
-                   .Split('\n');
+            var parts = str.Replace("\r\n", "\n", StringComparison.Ordinal).Split('\n');
 
             foreach (var part in parts)
             {

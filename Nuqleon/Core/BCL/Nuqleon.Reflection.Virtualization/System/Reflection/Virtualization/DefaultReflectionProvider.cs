@@ -217,15 +217,6 @@ namespace System.Reflection
         /// <returns>A <see cref="MethodBase" /> object representing the method or constructor specified by <paramref name="handle" />, in the generic type specified by <paramref name="declaringType" />.</returns>
         public override MethodBase GetMethodFromHandle(RuntimeMethodHandle handle, RuntimeTypeHandle declaringType) => MethodBase.GetMethodFromHandle(handle, declaringType);
 
-#if !NET6_0_OR_GREATER
-        /// <summary>
-        /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>The location of the assembly as specified originally.</returns>
-        public override string GetCodeBase(Assembly assembly) => assembly.CodeBase;
-#endif
-
         /// <summary>
         /// Gets the types defined in the specified <paramref name="assembly"/>.
         /// </summary>
@@ -239,15 +230,6 @@ namespace System.Reflection
         /// <param name="assembly">The assembly to get the entry point for.</param>
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         public override MethodInfo GetEntryPoint(Assembly assembly) => assembly.EntryPoint;
-
-#if !NET6_0_OR_GREATER
-        /// <summary>
-        /// Gets the URI, including escape characters, that represents the codebase.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>A URI with escape characters.</returns>
-        public override string GetEscapedCodeBase(Assembly assembly) => assembly.EscapedCodeBase;
-#endif
 
 #if NET472
         /// <summary>
@@ -264,15 +246,6 @@ namespace System.Reflection
         /// <param name="assembly">The assembly to get the display name for.</param>
         /// <returns>The display name of the assembly.</returns>
         public override string GetFullName(Assembly assembly) => assembly.FullName;
-
-#if !NET6_0_OR_GREATER
-        /// <summary>
-        /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
-        /// </summary>
-        /// <param name="assembly">The assembly to check.</param>
-        /// <returns>true if the assembly was loaded from the global assembly cache; otherwise, false.</returns>
-        public override bool GetGlobalAssemblyCache(Assembly assembly) => assembly.GlobalAssemblyCache;
-#endif
 
         /// <summary>
         /// Gets the host context with which the assembly was loaded.
@@ -1637,7 +1610,6 @@ namespace System.Reflection
         /// <returns>An array of <see cref="MemberInfo" /> objects representing all members defined for the specified type that match the specified binding constraints.-or- An empty array of type <see cref="MemberInfo" />, if no members are defined for the specified type, or if none of the defined members match the binding constraints.</returns>
         public override IReadOnlyList<MemberInfo> GetMembers(Type type, BindingFlags bindingAttr) => type.GetMembers(bindingAttr);
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
         /// <summary>
         /// Searches for the specified method whose parameters match the specified generic parameter count, argument types and modifiers, using the specified binding constraints and the specified calling convention.
         /// </summary>
@@ -1651,7 +1623,6 @@ namespace System.Reflection
         /// <param name="modifiers">An array of <see cref="ParameterModifier" /> objects representing the attributes associated with the corresponding element in the <paramref name="types" /> array. The default binder does not process this parameter.</param>
         /// <returns>An object representing the method that matches the specified requirements, if found; otherwise, null.</returns>
         public override MethodInfo GetMethod(Type type, string name, int genericParameterCount, BindingFlags bindingAttr, Binder binder, CallingConventions callConvention, Type[] types, ParameterModifier[] modifiers) => type.GetMethod(name, genericParameterCount, bindingAttr, binder, callConvention, types, modifiers);
-#endif
 
         /// <summary>
         /// Searches for the specified method whose parameters match the specified argument types and modifiers, using the specified binding constraints and the specified calling convention.

@@ -2140,7 +2140,6 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given expression sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<Expression> obj)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2152,22 +2151,6 @@ namespace System.Linq.CompilerServices
             }
 
             return h.ToHashCode();
-#else
-            unchecked
-            {
-                var h = 17;
-
-                if (obj != null)
-                {
-                    for (int i = 0, n = obj.Count; i < n; i++)
-                    {
-                        h = h * 23 + GetHashCode(obj[i]);
-                    }
-                }
-
-                return h;
-            }
-#endif
         }
 
         /// <summary>
@@ -2177,7 +2160,6 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given parameter expression sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<ParameterExpression> obj)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2189,22 +2171,6 @@ namespace System.Linq.CompilerServices
             }
 
             return h.ToHashCode();
-#else
-            unchecked
-            {
-                var h = 17;
-
-                if (obj != null)
-                {
-                    for (int i = 0, n = obj.Count; i < n; i++)
-                    {
-                        h = h * 23 + GetHashCode(obj[i]);
-                    }
-                }
-
-                return h;
-            }
-#endif
         }
 
         /// <summary>
@@ -2214,7 +2180,6 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given member binding sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<MemberBinding> obj)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2226,22 +2191,6 @@ namespace System.Linq.CompilerServices
             }
 
             return h.ToHashCode();
-#else
-            unchecked
-            {
-                var h = 17;
-
-                if (obj != null)
-                {
-                    for (int i = 0, n = obj.Count; i < n; i++)
-                    {
-                        h = h * 23 + GetHashCode(obj[i]);
-                    }
-                }
-
-                return h;
-            }
-#endif
         }
 
         /// <summary>
@@ -2251,7 +2200,6 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given element initializer sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<ElementInit> obj)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2263,22 +2211,6 @@ namespace System.Linq.CompilerServices
             }
 
             return h.ToHashCode();
-#else
-            unchecked
-            {
-                var h = 17;
-
-                if (obj != null)
-                {
-                    for (int i = 0, n = obj.Count; i < n; i++)
-                    {
-                        h = h * 23 + GetHashCode(obj[i]);
-                    }
-                }
-
-                return h;
-            }
-#endif
         }
 
         /// <summary>
@@ -2288,7 +2220,6 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given switch case sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<SwitchCase> obj)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2300,22 +2231,6 @@ namespace System.Linq.CompilerServices
             }
 
             return h.ToHashCode();
-#else
-            unchecked
-            {
-                var h = 17;
-
-                if (obj != null)
-                {
-                    for (int i = 0, n = obj.Count; i < n; i++)
-                    {
-                        h = h * 23 + GetHashCode(obj[i]);
-                    }
-                }
-
-                return h;
-            }
-#endif
         }
 
         /// <summary>
@@ -2325,7 +2240,6 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code for the given catch block sequence.</returns>
         protected int GetHashCode(ReadOnlyCollection<CatchBlock> obj)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
             HashCode h = default;
 
             if (obj != null)
@@ -2337,22 +2251,6 @@ namespace System.Linq.CompilerServices
             }
 
             return h.ToHashCode();
-#else
-            unchecked
-            {
-                var h = 17;
-
-                if (obj != null)
-                {
-                    for (int i = 0, n = obj.Count; i < n; i++)
-                    {
-                        h = h * 23 + GetHashCode(obj[i]);
-                    }
-                }
-
-                return h;
-            }
-#endif
         }
 
         /// <summary>
@@ -2363,17 +2261,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code composed from the specified values.</returns>
         protected static int Hash(int a, int b)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
             return HashCode.Combine(a, b);
-#else
-            unchecked
-            {
-                var h = 17;
-                h = h * 23 + a;
-                h = h * 23 + b;
-                return h;
-            }
-#endif
         }
 
         /// <summary>
@@ -2385,18 +2273,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code composed from the specified values.</returns>
         protected static int Hash(int a, int b, int c)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
             return HashCode.Combine(a, b, c);
-#else
-            unchecked
-            {
-                var h = 17;
-                h = h * 23 + a;
-                h = h * 23 + b;
-                h = h * 23 + c;
-                return h;
-            }
-#endif
         }
 
         /// <summary>
@@ -2409,19 +2286,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Hash code composed from the specified values.</returns>
         protected static int Hash(int a, int b, int c, int d)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
             return HashCode.Combine(a, b, c, d);
-#else
-            unchecked
-            {
-                var h = 17;
-                h = h * 23 + a;
-                h = h * 23 + b;
-                h = h * 23 + c;
-                h = h * 23 + d;
-                return h;
-            }
-#endif
         }
 
         #endregion
