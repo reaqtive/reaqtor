@@ -2000,16 +2000,16 @@ namespace Tests.Reaqtor.QueryEngine
         }
 
         [TestMethod]
-        public void CheckpointingQueryEngine_Unload()
+        public async Task CheckpointingQueryEngine_Unload()
         {
             using var qe = CreateQueryEngine();
 
-            qe.UnloadAsync().Wait();
+            await qe.UnloadAsync();
 
             Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReactiveService.Empty<int>());
             Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReliableReactiveService.GetObserver<int>(new Uri("test://iv")));
-            Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.CheckpointAsync(new InMemoryStateWriter(new InMemoryStateStore("store"), CheckpointKind.Full)));
-            Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.RecoverAsync(new InMemoryStateReader(new InMemoryStateStore("store"))));
+            await Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.CheckpointAsync(new InMemoryStateWriter(new InMemoryStateStore("store"), CheckpointKind.Full)));
+            await Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.RecoverAsync(new InMemoryStateReader(new InMemoryStateStore("store"))));
         }
 
         [TestMethod]
