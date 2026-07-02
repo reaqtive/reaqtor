@@ -51,11 +51,12 @@ namespace System.Time
         {
             private readonly bool _adjust;
             private readonly IClock _clock;
+            private long _lastValue;
 
             public Monotonic(IClock clock, bool adjust)
             {
                 _clock = clock;
-                Now = clock.Now;
+                _lastValue = clock.Now;
                 _adjust = adjust;
             }
 
@@ -65,7 +66,7 @@ namespace System.Time
                 {
                     var now = _clock.Now;
 
-                    if (now < field)
+                    if (now < _lastValue)
                     {
                         if (!_adjust)
                         {
@@ -73,11 +74,11 @@ namespace System.Time
                         }
                         else
                         {
-                            now = field;
+                            now = _lastValue;
                         }
                     }
 
-                    field = now;
+                    _lastValue = now;
 
                     return now;
                 }

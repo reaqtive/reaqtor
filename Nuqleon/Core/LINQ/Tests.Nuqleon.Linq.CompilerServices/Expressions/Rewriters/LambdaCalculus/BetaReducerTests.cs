@@ -261,7 +261,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void BetaReducer_MathTest()
         {
-            var f = (Expression<Func<int, int, int>>)((x, y) => x * y + Enumerable.Range(0, x).Sum(a => a + y));
+            var f = (Expression<Func<int, int, int>>)((x, y) => x * y + Enumerable.Range(0, x).Select(a => a + y).Sum());
 
             var g = f.Compile();
 
@@ -323,7 +323,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void BetaReducer_Eager2()
         {
-            var a = (Expression<D>)(d => d(d));
+            var a = (Expression<D>)((D d) => d(d));
             var b = Expression.Invoke(a, a);
 
             var r = BetaReducer.ReduceEager(b, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.None, throwOnCycle: false);
@@ -335,7 +335,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void BetaReducer_Eager3()
         {
-            var a = (Expression<D>)(d => d(d));
+            var a = (Expression<D>)((D d) => d(d));
             var b = Expression.Invoke(a, a);
 
             Assert.ThrowsException<InvalidOperationException>(() => BetaReducer.ReduceEager(b, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.None, throwOnCycle: true));

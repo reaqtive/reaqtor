@@ -27,6 +27,7 @@ namespace Rxcel
         private readonly Sheet _sheet;
         private readonly BehaviorSubject<double?> _subject;
         private readonly SerialDisposable _subscription;
+        private string _formula;
         private LambdaExpression _expr;
 
         public Cell(Sheet sheet)
@@ -38,21 +39,21 @@ namespace Rxcel
 
         public string Value
         {
-            get => !string.IsNullOrEmpty(field) ? field : _subject.Value.ToString();
+            get => !string.IsNullOrEmpty(_formula) ? _formula : _subject.Value.ToString();
 
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
                     _expr = null;
-                    field = null;
+                    _formula = null;
                     _subscription.Disposable = Disposable.Empty;
                     _subject.OnNext(null);
                 }
                 else if (double.TryParse(value, out var v))
                 {
                     _expr = null;
-                    field = null;
+                    _formula = null;
                     _subscription.Disposable = Disposable.Empty;
                     _subject.OnNext(v);
                 }
@@ -93,7 +94,7 @@ namespace Rxcel
 
 #pragma warning restore CA1031
 
-                        field = value;
+                        _formula = value;
                     }
                     else
                     {
@@ -179,7 +180,7 @@ namespace Rxcel
                 throw new InvalidOperationException("Cycle detected.");
             }
 
-            var res = Expression.Call(mtd, [.. cells.Select(c => Expression.Constant(c)), .. new Expression[] { f }]);
+            var res = Expression.Call(mtd, [.. cells.Select(c => Expression.Constant(c)), f]);
 
             var src = Expression.Lambda<Func<IObservable<double?>>>(res).Compile()();
 

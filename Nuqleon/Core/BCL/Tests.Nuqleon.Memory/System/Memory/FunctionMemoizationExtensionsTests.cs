@@ -200,7 +200,7 @@ namespace Tests
             Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.Memoize<A>(mem, default(A), MemoizationOptions.None));
 
             Assert.ThrowsException<ArgumentException>(() => FunctionMemoizationExtensions.Memoize<int>(mem, 42, MemoizationOptions.None));
-            Assert.ThrowsException<NotSupportedException>(() => FunctionMemoizationExtensions.Memoize<R>(mem, (ref x) => { }, MemoizationOptions.None));
+            Assert.ThrowsException<NotSupportedException>(() => FunctionMemoizationExtensions.Memoize<R>(mem, (ref int x) => { }, MemoizationOptions.None));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -291,7 +291,7 @@ namespace Tests
             Assert.ThrowsException<ArgumentNullException>(() => FunctionMemoizationExtensions.MemoizeWeak<A>(mem, default(A), MemoizationOptions.None));
 
             Assert.ThrowsException<ArgumentException>(() => FunctionMemoizationExtensions.MemoizeWeak<int>(mem, 42, MemoizationOptions.None));
-            Assert.ThrowsException<NotSupportedException>(() => FunctionMemoizationExtensions.MemoizeWeak<Q>(mem, (ref x) => { }, MemoizationOptions.None));
+            Assert.ThrowsException<NotSupportedException>(() => FunctionMemoizationExtensions.MemoizeWeak<Q>(mem, (ref string x) => { }, MemoizationOptions.None));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

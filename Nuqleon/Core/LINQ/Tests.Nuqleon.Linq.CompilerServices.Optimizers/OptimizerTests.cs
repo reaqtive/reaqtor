@@ -30,7 +30,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             var cmp = new ExpressionEqualityComparer();
 
             {
-                var e = Infer(() => new int[0].First(x => true)).Body;
+                var e = Infer(() => new int[0].Where(x => true).First()).Body;
                 var q = new EnumerableToQueryTreeConverter().Convert(e);
                 var c = new CoalescingOptimizer().Optimize(q);
                 var o = c.Reduce();
