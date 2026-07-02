@@ -71,7 +71,6 @@ namespace System.Memory
     /// <typeparam name="TCached1">Type of the first cached component.</typeparam>
     /// <typeparam name="TCached2">Type of the second cached component.</typeparam>
     /// <typeparam name="TNonCached">Type of the non-cached component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "The point is to bundle a set of arbitrary types.")]
     public struct Deconstructed<TCached1, TCached2, TNonCached> : IEquatable<Deconstructed<TCached1, TCached2, TNonCached>>
     {
         /// <summary>
@@ -155,7 +154,6 @@ namespace System.Memory
     /// <typeparam name="TCached2">Type of the second cached component.</typeparam>
     /// <typeparam name="TCached3">Type of the third cached component.</typeparam>
     /// <typeparam name="TNonCached">Type of the non-cached component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "The point is to bundle a set of arbitrary types.")]
     public struct Deconstructed<TCached1, TCached2, TCached3, TNonCached> : IEquatable<Deconstructed<TCached1, TCached2, TCached3, TNonCached>>
     {
         /// <summary>
@@ -249,7 +247,6 @@ namespace System.Memory
     /// <typeparam name="TCached3">Type of the third cached component.</typeparam>
     /// <typeparam name="TCached4">Type of the fourth cached component.</typeparam>
     /// <typeparam name="TNonCached">Type of the non-cached component.</typeparam>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "The point is to bundle a set of arbitrary types.")]
     public struct Deconstructed<TCached1, TCached2, TCached3, TCached4, TNonCached> : IEquatable<Deconstructed<TCached1, TCached2, TCached3, TCached4, TNonCached>>
     {
         /// <summary>

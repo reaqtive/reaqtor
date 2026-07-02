@@ -6,7 +6,7 @@
 <#@ assembly name="System.Core" #>
 <#@ assembly name="System.Xml" #>
 <#@ assembly name="System.Xml.Linq" #>
-<#@ assembly name="$(ProjectDir)\..\Nuqleon.Documentation\bin\Debug\net472\Nuqleon.Documentation.dll" #>
+<#@ assembly name="$(ProjectDir)\..\Nuqleon.Documentation\bin\Debug\net10.0\Nuqleon.Documentation.dll" #>
 <#@ import namespace="System.Collections" #>
 <#@ import namespace="System.Collections.Concurrent" #>
 <#@ import namespace="System.Collections.Generic" #>
@@ -392,7 +392,6 @@ namespace <#=type.Namespace#><#=test?".Test":""#>
         /// Gets the <#=typeNameDocCref#> instance held by this pooled <#=typeNameEn#> instance.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "<#=typeNameDoc#> is sealed, so we can't inherit from it to provide straight accesses. We want to get as close as direct invocations of the pooled object's members without extra layers of abstractions on the code path.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "No amount of 'security' will protect against aliasing of mutable object instances.")]
         public readonly <#=typeName#> <#=typeNameShort#>;
 
 <#
@@ -844,7 +843,6 @@ namespace <#=type.Namespace#><#=test?".Test":""#>
         /// Creates a new holder for the given pooled <#=typeNameEn#> object.
         /// </summary>
         /// <param name="obj">Pooled <#=typeNameEn#> object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public <#=pooledHolderTypeNameShort#>(PooledObject<<#=pooledTypeName#>> obj)
         {
             _obj = obj;

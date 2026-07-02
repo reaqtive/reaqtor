@@ -295,7 +295,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled dictionary object.
         /// </summary>
         /// <param name="obj">Pooled dictionary object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledDictionaryHolder(PooledObject<PooledDictionary<TKey, TValue>> obj)
         {
             _obj = obj;
@@ -562,7 +561,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled hash set object.
         /// </summary>
         /// <param name="obj">Pooled hash set object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledHashSetHolder(PooledObject<PooledHashSet<T>> obj)
         {
             _obj = obj;
@@ -829,7 +827,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled list object.
         /// </summary>
         /// <param name="obj">Pooled list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledListHolder(PooledObject<PooledList<T>> obj)
         {
             _obj = obj;
@@ -1096,7 +1093,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled queue object.
         /// </summary>
         /// <param name="obj">Pooled queue object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledQueueHolder(PooledObject<PooledQueue<T>> obj)
         {
             _obj = obj;
@@ -1363,7 +1359,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled stack object.
         /// </summary>
         /// <param name="obj">Pooled stack object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledStackHolder(PooledObject<PooledStack<T>> obj)
         {
             _obj = obj;
@@ -1636,7 +1631,6 @@ namespace System.IO
         /// Creates a new holder for the given pooled memory stream object.
         /// </summary>
         /// <param name="obj">Pooled memory stream object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledMemoryStreamHolder(PooledObject<PooledMemoryStream> obj)
         {
             _obj = obj;
@@ -1711,7 +1705,6 @@ namespace System.Text
         /// Gets the <see cref="StringBuilder"/> instance held by this pooled string builder instance.
         /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1051:DoNotDeclareVisibleInstanceFields", Justification = "StringBuilder is sealed, so we can't inherit from it to provide straight accesses. We want to get as close as direct invocations of the pooled object's members without extra layers of abstractions on the code path.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2104:DoNotDeclareReadOnlyMutableReferenceTypes", Justification = "No amount of 'security' will protect against aliasing of mutable object instances.")]
         public readonly StringBuilder StringBuilder;
 
         internal PooledStringBuilder(StringBuilderPool pool)
@@ -1902,7 +1895,6 @@ namespace System.Text
         /// Creates a new holder for the given pooled string builder object.
         /// </summary>
         /// <param name="obj">Pooled string builder object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledStringBuilderHolder(PooledObject<PooledStringBuilder> obj)
         {
             _obj = obj;
@@ -2167,7 +2159,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled array list object.
         /// </summary>
         /// <param name="obj">Pooled array list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledArrayListHolder(PooledObject<PooledArrayList> obj)
         {
             _obj = obj;
@@ -2434,7 +2425,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled hashtable object.
         /// </summary>
         /// <param name="obj">Pooled hashtable object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledHashtableHolder(PooledObject<PooledHashtable> obj)
         {
             _obj = obj;
@@ -2701,7 +2691,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled queue object.
         /// </summary>
         /// <param name="obj">Pooled queue object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledQueueHolder(PooledObject<PooledQueue> obj)
         {
             _obj = obj;
@@ -2968,7 +2957,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled stack object.
         /// </summary>
         /// <param name="obj">Pooled stack object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledStackHolder(PooledObject<PooledStack> obj)
         {
             _obj = obj;
@@ -3321,7 +3309,6 @@ namespace System.Collections
         /// Creates a new holder for the given pooled sorted list object.
         /// </summary>
         /// <param name="obj">Pooled sorted list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledSortedListHolder(PooledObject<PooledSortedList> obj)
         {
             _obj = obj;
@@ -3551,7 +3538,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled linked list object.
         /// </summary>
         /// <param name="obj">Pooled linked list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledLinkedListHolder(PooledObject<PooledLinkedList<T>> obj)
         {
             _obj = obj;
@@ -3824,7 +3810,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled sorted dictionary object.
         /// </summary>
         /// <param name="obj">Pooled sorted dictionary object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledSortedDictionaryHolder(PooledObject<PooledSortedDictionary<TKey, TValue>> obj)
         {
             _obj = obj;
@@ -4183,7 +4168,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled sorted list object.
         /// </summary>
         /// <param name="obj">Pooled sorted list object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledSortedListHolder(PooledObject<PooledSortedList<TKey, TValue>> obj)
         {
             _obj = obj;
@@ -4453,7 +4437,6 @@ namespace System.Collections.Generic
         /// Creates a new holder for the given pooled sorted set object.
         /// </summary>
         /// <param name="obj">Pooled sorted set object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledSortedSetHolder(PooledObject<PooledSortedSet<T>> obj)
         {
             _obj = obj;
@@ -4692,7 +4675,6 @@ namespace System.Collections.Concurrent
         /// Creates a new holder for the given pooled concurrent bag object.
         /// </summary>
         /// <param name="obj">Pooled concurrent bag object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledConcurrentBagHolder(PooledObject<PooledConcurrentBag<T>> obj)
         {
             _obj = obj;
@@ -4965,7 +4947,6 @@ namespace System.Collections.Concurrent
         /// Creates a new holder for the given pooled concurrent dictionary object.
         /// </summary>
         /// <param name="obj">Pooled concurrent dictionary object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledConcurrentDictionaryHolder(PooledObject<PooledConcurrentDictionary<TKey, TValue>> obj)
         {
             _obj = obj;
@@ -5204,7 +5185,6 @@ namespace System.Collections.Concurrent
         /// Creates a new holder for the given pooled concurrent queue object.
         /// </summary>
         /// <param name="obj">Pooled concurrent queue object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledConcurrentQueueHolder(PooledObject<PooledConcurrentQueue<T>> obj)
         {
             _obj = obj;
@@ -5434,7 +5414,6 @@ namespace System.Collections.Concurrent
         /// Creates a new holder for the given pooled concurrent stack object.
         /// </summary>
         /// <param name="obj">Pooled concurrent stack object to create a holder for.</param>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "By design.")]
         public PooledConcurrentStackHolder(PooledObject<PooledConcurrentStack<T>> obj)
         {
             _obj = obj;

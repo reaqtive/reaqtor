@@ -44,8 +44,6 @@ for (var i = 1; i <= n; i++)
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> Memoize<<#=genArgs#>, TResult>(this IMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -100,7 +98,6 @@ for (var i = 1; i <= n; i++)
 }
 #>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> Memoize<<#=genArgs#>, TResult>(this IMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options, <#=comparerPars#>)
         {
             if (memoizer == null)
@@ -254,9 +251,6 @@ for (var i = 1; i <= n; i++)
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> MemoizeWeak<<#=genArgs#>, TResult>(this IWeakMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options = MemoizationOptions.None)
 <#
 for (var i = 1; i <= n; i++)

@@ -20,8 +20,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, TResult>> Memoize<T1, T2, TResult>(this IMemoizer memoizer, Func<T1, T2, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -51,8 +49,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, TResult>> Memoize<T1, T2, T3, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -83,8 +79,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, TResult>> Memoize<T1, T2, T3, T4, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -116,8 +110,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, TResult>> Memoize<T1, T2, T3, T4, T5, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -150,8 +142,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, TResult>> Memoize<T1, T2, T3, T4, T5, T6, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -185,8 +175,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -221,8 +209,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -258,8 +244,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -296,8 +280,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -335,8 +317,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -375,8 +355,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -416,8 +394,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -458,8 +434,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -501,8 +475,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -545,8 +517,6 @@ namespace System.Memory
         /// <param name="function">The function to memoize.</param>
         /// <param name="options">Flags to influence the memoization behavior.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
             if (memoizer == null)
@@ -577,7 +547,6 @@ namespace System.Memory
         /// <param name="comparer1">Comparer to compare the first function argument during lookup in the memoization cache.</param>
         /// <param name="comparer2">Comparer to compare the second function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, TResult>> Memoize<T1, T2, TResult>(this IMemoizer memoizer, Func<T1, T2, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2)
         {
             if (memoizer == null)
@@ -616,7 +585,6 @@ namespace System.Memory
         /// <param name="comparer2">Comparer to compare the second function argument during lookup in the memoization cache.</param>
         /// <param name="comparer3">Comparer to compare the third function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, TResult>> Memoize<T1, T2, T3, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3)
         {
             if (memoizer == null)
@@ -659,7 +627,6 @@ namespace System.Memory
         /// <param name="comparer3">Comparer to compare the third function argument during lookup in the memoization cache.</param>
         /// <param name="comparer4">Comparer to compare the fourth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, TResult>> Memoize<T1, T2, T3, T4, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4)
         {
             if (memoizer == null)
@@ -706,7 +673,6 @@ namespace System.Memory
         /// <param name="comparer4">Comparer to compare the fourth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer5">Comparer to compare the fifth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, TResult>> Memoize<T1, T2, T3, T4, T5, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5)
         {
             if (memoizer == null)
@@ -757,7 +723,6 @@ namespace System.Memory
         /// <param name="comparer5">Comparer to compare the fifth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer6">Comparer to compare the sixth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, TResult>> Memoize<T1, T2, T3, T4, T5, T6, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6)
         {
             if (memoizer == null)
@@ -812,7 +777,6 @@ namespace System.Memory
         /// <param name="comparer6">Comparer to compare the sixth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer7">Comparer to compare the seventh function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7)
         {
             if (memoizer == null)
@@ -871,7 +835,6 @@ namespace System.Memory
         /// <param name="comparer7">Comparer to compare the seventh function argument during lookup in the memoization cache.</param>
         /// <param name="comparer8">Comparer to compare the eighth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8)
         {
             if (memoizer == null)
@@ -934,7 +897,6 @@ namespace System.Memory
         /// <param name="comparer8">Comparer to compare the eighth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer9">Comparer to compare the ninth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9)
         {
             if (memoizer == null)
@@ -1001,7 +963,6 @@ namespace System.Memory
         /// <param name="comparer9">Comparer to compare the ninth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer10">Comparer to compare the tenth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10)
         {
             if (memoizer == null)
@@ -1072,7 +1033,6 @@ namespace System.Memory
         /// <param name="comparer10">Comparer to compare the tenth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer11">Comparer to compare the eleventh function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11)
         {
             if (memoizer == null)
@@ -1147,7 +1107,6 @@ namespace System.Memory
         /// <param name="comparer11">Comparer to compare the eleventh function argument during lookup in the memoization cache.</param>
         /// <param name="comparer12">Comparer to compare the twelfth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12)
         {
             if (memoizer == null)
@@ -1226,7 +1185,6 @@ namespace System.Memory
         /// <param name="comparer12">Comparer to compare the twelfth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer13">Comparer to compare the thirteenth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12, IEqualityComparer<T13> comparer13)
         {
             if (memoizer == null)
@@ -1309,7 +1267,6 @@ namespace System.Memory
         /// <param name="comparer13">Comparer to compare the thirteenth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer14">Comparer to compare the fourteenth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12, IEqualityComparer<T13> comparer13, IEqualityComparer<T14> comparer14)
         {
             if (memoizer == null)
@@ -1396,7 +1353,6 @@ namespace System.Memory
         /// <param name="comparer14">Comparer to compare the fourteenth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer15">Comparer to compare the fifteenth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12, IEqualityComparer<T13> comparer13, IEqualityComparer<T14> comparer14, IEqualityComparer<T15> comparer15)
         {
             if (memoizer == null)
@@ -1487,7 +1443,6 @@ namespace System.Memory
         /// <param name="comparer15">Comparer to compare the fifteenth function argument during lookup in the memoization cache.</param>
         /// <param name="comparer16">Comparer to compare the sixteenth function argument during lookup in the memoization cache.</param>
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12, IEqualityComparer<T13> comparer13, IEqualityComparer<T14> comparer14, IEqualityComparer<T15> comparer15, IEqualityComparer<T16> comparer16)
         {
             if (memoizer == null)
@@ -1596,9 +1551,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, TResult>> MemoizeWeak<T1, T2, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -1680,9 +1632,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, TResult>> MemoizeWeak<T1, T2, T3, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -1770,9 +1719,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, TResult>> MemoizeWeak<T1, T2, T3, T4, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -1866,9 +1812,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -1968,9 +1911,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -2076,9 +2016,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -2190,9 +2127,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -2310,9 +2244,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -2436,9 +2367,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -2568,9 +2496,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -2706,9 +2631,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -2850,9 +2772,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -3000,9 +2919,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -3156,9 +3072,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class
@@ -3318,9 +3231,6 @@ namespace System.Memory
         /// Note that each entry in the weak memoization cache contains a closure over the first function argument due to the curried function application as well as a memoization cache for the second function argument.
         /// E.g. for a unary function there will be a total of 1 + N caches, where N is the number of (live references to) first function arguments that were fed to the memoized function.
         /// </remarks>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1006:DoNotNestGenericTypesInMemberSignatures", Justification = "Design of MemoizedDelegate")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1026:DefaultParametersShouldNotBeUsed", Justification = "Reduction of overloads; defaults are trivial zeros and nulls and can be specified manually if needed.")]
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Reliability", "CA2004:RemoveCallsToGCKeepAlive", Justification = "Not dealing with SafeHandle conversions here")]
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>> MemoizeWeak<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(this IWeakMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> function, MemoizationOptions options = MemoizationOptions.None)
             where T1 : class
             where T2 : class

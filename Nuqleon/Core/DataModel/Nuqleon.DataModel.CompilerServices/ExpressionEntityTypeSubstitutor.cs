@@ -22,7 +22,6 @@ namespace Nuqleon.DataModel.CompilerServices
     /// <summary>
     /// Expression tree visitor to substitute user-defined mapped types with an anonymous or record type.
     /// </summary>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Substitutor", Justification = "Identifier adequately reflects the intent of the class.")]
     public abstract partial class ExpressionEntityTypeSubstitutor
     {
         #region Fields

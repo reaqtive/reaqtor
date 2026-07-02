@@ -35,8 +35,6 @@ for (var i = 1; i <= n; i++)
 <#
 }
 #>
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Naming", "CA1704:IdentifiersShouldBeSpelledCorrectly", MessageId = "Tuplet", Justification = "Tuplets are low-footprint tuples, i.e. ones that are stored as values.")]
-    [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1005:AvoidExcessiveParametersOnGenericTypes", Justification = "Comparable to Tuple design.")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1036:OverrideMethodsOnComparableTypes", Justification = "IComparable support mainly for structural comparison purposes; no way/use to make/making operator overloads private; similar to Tuple design.")]
     public struct Tuplet<<#=genArgs#>> : ITuplet, IEquatable<Tuplet<<#=genArgs#>>>, IComparable, IComparable<Tuplet<<#=genArgs#>>>, IStructuralEquatable, IStructuralComparable
     {
