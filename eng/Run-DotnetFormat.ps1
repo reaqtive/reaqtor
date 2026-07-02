@@ -16,11 +16,13 @@
     2. ~16 source/test files that are <Compile Link>'d into more than one project
        with different preprocessor symbols (the USE_SLIM Bonsai links). When
        `dotnet format` tries to merge the differing per-project edits for such a
-       linked file it throws in TryApplyChanges /
-       LinkedFileMergeConflictCommentAdditionService (and, run from an IDE,
-       produces unmerged-conflict markers). Excluding these files lets the pass
-       complete. Keep this list in sync with the <Compile Include .. Link>
-       entries in the *.Bonsai* project files.
+       linked file it mangles the source: re-verified on SDK 10.0.3xx
+       (2026-07), the pass now completes without throwing in TryApplyChanges but
+       LinkedFileMergeConflictCommentAdditionService writes
+       "<<<<<<< TODO: Unmerged change from project ..." conflict markers into
+       the files. Excluding these files keeps the pass safe. Keep this list in
+       sync with the <Compile Include .. Link> entries in the *.Bonsai* project
+       files.
 
     Primary-constructor conversion (IDE0290) is disabled in .editorconfig, so it
     is not applied by this pass; only whitespace/style fixes are.
