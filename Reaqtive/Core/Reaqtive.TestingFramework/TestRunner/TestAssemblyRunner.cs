@@ -13,7 +13,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Reaqtive.TestingFramework.TestRunner
 {
-    public sealed class TestAssemblyRunner : MarshalByRefObject, IDisposable
+    public sealed class TestAssemblyRunner : IDisposable
     {
         private List<TestClassRunner> _testClasses;
 
@@ -39,9 +39,6 @@ namespace Reaqtive.TestingFramework.TestRunner
         {
             _testClasses.ForEach(r => r.Dispose());
         }
-
-        [Obsolete("This Remoting API is not supported and throws PlatformNotSupportedException.")]
-        public override object InitializeLifetimeService() => null;
 
         private void Report(TimeSpan elapsed)
         {
