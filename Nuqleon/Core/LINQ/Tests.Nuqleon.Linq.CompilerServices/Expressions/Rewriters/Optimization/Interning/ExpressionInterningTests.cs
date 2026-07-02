@@ -42,9 +42,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => Expression.Constant(1).Intern(cache: null), ex => Assert.AreEqual(ex.ParamName, "cache"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ((Expression)null).Intern(new ExpressionInterningCache()), ex => Assert.AreEqual(ex.ParamName, "expression"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ExpressionInterningCache().GetOrAdd(expression: null), ex => Assert.AreEqual(ex.ParamName, "expression"));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => Expression.Constant(1).Intern(cache: null));
+            Assert.AreEqual(ex.ParamName, "cache");
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ((Expression)null).Intern(new ExpressionInterningCache()));
+            Assert.AreEqual(ex2.ParamName, "expression");
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionInterningCache().GetOrAdd(expression: null));
+            Assert.AreEqual(ex3.ParamName, "expression");
         }
 
         #endregion

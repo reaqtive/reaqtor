@@ -24,9 +24,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void UnboundParameterException_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new UnboundParameterException("", expression: null, []), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new UnboundParameterException("", Expression.Constant(42), parameters: null), ex => Assert.AreEqual("parameters", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => UnboundParameterException.ThrowIfOpen(expression: null, ""), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new UnboundParameterException("", expression: null, []));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new UnboundParameterException("", Expression.Constant(42), parameters: null));
+            Assert.AreEqual("parameters", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => UnboundParameterException.ThrowIfOpen(expression: null, ""));
+            Assert.AreEqual("expression", ex3.ParamName);
         }
 
         [TestMethod]
@@ -46,11 +49,10 @@ namespace Tests.System.Linq.CompilerServices
         {
             var f = (Expression<Func<int, int>>)(x => x + 1);
 
-            AssertEx.ThrowsException<UnboundParameterException>(() => UnboundParameterException.ThrowIfOpen(f.Body, "Oops"), ex =>
-            {
-                Assert.AreSame(f.Body, ex.Expression);
-                Assert.IsTrue(f.Parameters.SequenceEqual(ex.Parameters));
-            });
+            var ex = Assert.ThrowsExactly<UnboundParameterException>(() => UnboundParameterException.ThrowIfOpen(f.Body, "Oops"));
+            Assert.AreSame(f.Body, ex.Expression);
+
+            Assert.IsTrue(f.Parameters.SequenceEqual(ex.Parameters));
         }
 
         [TestMethod]

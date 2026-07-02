@@ -33,8 +33,10 @@ for (var j = 1; j <= i; ++j)
 {
     var args = Enumerable.Repeat("innerCache", i).ToArray();
     args[j-1] = "innerCache" + j + ": null";
+    var exName = j == 1 ? "ex" : "ex" + j;
 #>
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache<#=i#>(<#=string.Join(", ", args)#>), ex => Assert.AreEqual("innerCache<#=j#>", ex.ParamName));
+            var <#=exName#> = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache<#=i#>(<#=string.Join(", ", args)#>));
+            Assert.AreEqual("innerCache<#=j#>", <#=exName#>.ParamName);
 <#
 }
 #>

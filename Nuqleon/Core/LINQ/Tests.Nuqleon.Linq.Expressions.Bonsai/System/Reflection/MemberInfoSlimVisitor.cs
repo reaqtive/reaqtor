@@ -26,14 +26,16 @@ namespace Tests.System.Reflection
         public void MemberInfoSlimVisitor_Visit_NullArguments()
         {
             var visitor = new MemberInfoSlimVisitor();
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.Visit(member: null), ex => Assert.AreEqual("member", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.Visit(member: null));
+            Assert.AreEqual("member", ex.ParamName);
         }
 
         [TestMethod]
         public void MemberInfoSlimVisitor_Generic_Visit_NullArguments()
         {
             var visitor = new MyVisitor();
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.Visit(member: null), ex => Assert.AreEqual("member", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.Visit(member: null));
+            Assert.AreEqual("member", ex.ParamName);
         }
 
         [TestMethod]

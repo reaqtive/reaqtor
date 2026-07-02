@@ -332,9 +332,12 @@ namespace Tests.System.Linq.Expressions
             var method = ((MethodCallExpressionSlim)((Expression<Func<string>>)(() => "".ToUpper())).Body.ToExpressionSlim()).Method;
             var conv = ExpressionSlim.Lambda(ExpressionSlim.Empty());
 
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right), ex => Assert.IsTrue(ex.Message.Contains("not a valid binary expression type")));
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method), ex => Assert.IsTrue(ex.Message.Contains("not a valid binary expression type")));
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method, conv), ex => Assert.IsTrue(ex.Message.Contains("not a valid binary expression type")));
+            var ex = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right));
+            Assert.IsTrue(ex.Message.Contains("not a valid binary expression type"));
+            var ex2 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method));
+            Assert.IsTrue(ex2.Message.Contains("not a valid binary expression type"));
+            var ex3 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeBinary(nt, left, right, liftToNull: false, method, conv));
+            Assert.IsTrue(ex3.Message.Contains("not a valid binary expression type"));
         }
 
         [TestMethod]
@@ -971,8 +974,10 @@ namespace Tests.System.Linq.Expressions
             var method = ((MethodCallExpressionSlim)((Expression<Func<string>>)(() => "".ToUpper())).Body.ToExpressionSlim()).Method;
             var typ = TypeSlimExtensions.IntegerType;
 
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ), ex => Assert.IsTrue(ex.Message.Contains("not a valid unary expression type")));
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ, method), ex => Assert.IsTrue(ex.Message.Contains("not a valid unary expression type")));
+            var ex = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ));
+            Assert.IsTrue(ex.Message.Contains("not a valid unary expression type"));
+            var ex2 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.MakeUnary(nt, operand, typ, method));
+            Assert.IsTrue(ex2.Message.Contains("not a valid unary expression type"));
         }
 
         [TestMethod]
@@ -1342,10 +1347,8 @@ namespace Tests.System.Linq.Expressions
             }
 
             {
-                AssertEx.ThrowsException<ArgumentException>(
-                    () => ExpressionSlim.Block(Array.Empty<ExpressionSlim>()),
-                    ex => Assert.AreEqual("expressions", ex.ParamName)
-                );
+                var ex = Assert.ThrowsExactly<ArgumentException>(() => ExpressionSlim.Block(Array.Empty<ExpressionSlim>()));
+                Assert.AreEqual("expressions", ex.ParamName);
             }
         }
 
@@ -1464,10 +1467,8 @@ namespace Tests.System.Linq.Expressions
             }
 
             {
-                AssertEx.ThrowsException<ArgumentNullException>(
-                    () => ExpressionSlim.Switch(t, v, d, m, new List<SwitchCaseSlim> { null }),
-                    ex => Assert.AreEqual("cases[0]", ex.ParamName)
-                );
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlim.Switch(t, v, d, m, new List<SwitchCaseSlim> { null }));
+                Assert.AreEqual("cases[0]", ex.ParamName);
             }
         }
 

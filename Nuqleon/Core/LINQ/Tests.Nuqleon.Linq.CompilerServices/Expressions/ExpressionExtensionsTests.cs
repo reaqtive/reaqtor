@@ -29,9 +29,12 @@ namespace Tests.System.Linq.CompilerServices
         public void ExpressionExtensions_Funcletize_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Funcletize(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Funcletize<int>(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Funcletize<int>(default(Expression<Func<int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Funcletize(default(Expression)));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Funcletize<int>(default(Expression)));
+            Assert.AreEqual("expression", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Funcletize<int>(default(Expression<Func<int>>)));
+            Assert.AreEqual("expression", ex3.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -104,11 +107,10 @@ namespace Tests.System.Linq.CompilerServices
         {
             var f = (Expression<Func<int, int>>)(x => x + 1);
 
-            AssertEx.ThrowsException<UnboundParameterException>(() => f.Body.Funcletize(), ex =>
-            {
-                Assert.AreSame(f.Body, ex.Expression);
-                Assert.IsTrue(f.Parameters.SequenceEqual(ex.Parameters));
-            });
+            var ex = Assert.ThrowsExactly<UnboundParameterException>(() => f.Body.Funcletize());
+            Assert.AreSame(f.Body, ex.Expression);
+
+            Assert.IsTrue(f.Parameters.SequenceEqual(ex.Parameters));
         }
 
         #endregion
@@ -119,17 +121,26 @@ namespace Tests.System.Linq.CompilerServices
         public void ExpressionExtensions_Evaluate_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Evaluate(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(default(Expression<Func<int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Evaluate(default(Expression)));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(default(Expression)));
+            Assert.AreEqual("expression", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(default(Expression<Func<int>>)));
+            Assert.AreEqual("expression", ex3.ParamName);
 
             var cache = new SimpleCompiledDelegateCache();
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Evaluate(default(Expression), cache), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(default(Expression), cache), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(default(Expression<Func<int>>), cache), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Evaluate(Expression.Empty(), cache: null), ex => Assert.AreEqual("cache", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(Expression.Default(typeof(int)), cache: null), ex => Assert.AreEqual("cache", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(() => 42, cache: null), ex => Assert.AreEqual("cache", ex.ParamName));
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Evaluate(default(Expression), cache));
+            Assert.AreEqual("expression", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(default(Expression), cache));
+            Assert.AreEqual("expression", ex5.ParamName);
+            var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(default(Expression<Func<int>>), cache));
+            Assert.AreEqual("expression", ex6.ParamName);
+            var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Evaluate(Expression.Empty(), cache: null));
+            Assert.AreEqual("cache", ex7.ParamName);
+            var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(Expression.Default(typeof(int)), cache: null));
+            Assert.AreEqual("cache", ex8.ParamName);
+            var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.Evaluate<int>(() => 42, cache: null));
+            Assert.AreEqual("cache", ex9.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -194,11 +205,10 @@ namespace Tests.System.Linq.CompilerServices
         {
             var f = (Expression<Func<int, int>>)(x => x + 1);
 
-            AssertEx.ThrowsException<UnboundParameterException>(() => f.Body.Evaluate(), ex =>
-            {
-                Assert.AreSame(f.Body, ex.Expression);
-                Assert.IsTrue(f.Parameters.SequenceEqual(ex.Parameters));
-            });
+            var ex = Assert.ThrowsExactly<UnboundParameterException>(() => f.Body.Evaluate());
+            Assert.AreSame(f.Body, ex.Expression);
+
+            Assert.IsTrue(f.Parameters.SequenceEqual(ex.Parameters));
         }
 
         [TestMethod]

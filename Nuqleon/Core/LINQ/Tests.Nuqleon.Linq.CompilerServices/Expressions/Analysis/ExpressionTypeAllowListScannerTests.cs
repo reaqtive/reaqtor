@@ -30,8 +30,10 @@ namespace Tests.System.Linq.CompilerServices
             Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable)ws.Types).GetEnumerator());
             Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable<Type>)ws.Types).GetEnumerator());
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => ws.Types.Add(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ws.Types.Add(type: null, includeBase: false), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ws.Types.Add(type: null));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ws.Types.Add(type: null, includeBase: false));
+            Assert.AreEqual("type", ex2.ParamName);
         }
 
         [TestMethod]

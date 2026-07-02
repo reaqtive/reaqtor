@@ -27,10 +27,14 @@ namespace System.Linq.Expressions
         {
             var visitor = new ExpressionSlimVisitor();
             Assert.IsNull(visitor.Visit((ExpressionSlim)null));
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.Visit(nodes: null), ex => Assert.AreEqual("nodes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.VisitAndConvert<ExpressionSlim>(nodes: null), ex => Assert.AreEqual("nodes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionSlimVisitor.Visit<ExpressionSlim>(nodes: null, elementVisitor: null), ex => Assert.AreEqual("nodes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionSlimVisitor.Visit<ExpressionSlim>(new List<ExpressionSlim>().AsReadOnly(), elementVisitor: null), ex => Assert.AreEqual("elementVisitor", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.Visit(nodes: null));
+            Assert.AreEqual("nodes", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.VisitAndConvert<ExpressionSlim>(nodes: null));
+            Assert.AreEqual("nodes", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlimVisitor.Visit<ExpressionSlim>(nodes: null, elementVisitor: null));
+            Assert.AreEqual("nodes", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionSlimVisitor.Visit<ExpressionSlim>(new List<ExpressionSlim>().AsReadOnly(), elementVisitor: null));
+            Assert.AreEqual("elementVisitor", ex4.ParamName);
         }
 
         [TestMethod]

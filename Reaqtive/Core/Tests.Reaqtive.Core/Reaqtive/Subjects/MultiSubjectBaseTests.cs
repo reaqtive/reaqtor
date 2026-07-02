@@ -101,8 +101,10 @@ namespace Test.Reaqtive
         {
             var subject = new TestStatefulMultiSubject();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => subject.SaveState(null, subject.Version), ex => Assert.AreEqual("writer", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => subject.LoadState(null, subject.Version), ex => Assert.AreEqual("reader", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => subject.SaveState(null, subject.Version));
+            Assert.AreEqual("writer", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => subject.LoadState(null, subject.Version));
+            Assert.AreEqual("reader", ex2.ParamName);
         }
 
         [TestMethod]

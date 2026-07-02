@@ -31,8 +31,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         [TestMethod]
         public void DataType_FromType_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataType.FromType(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataType.FromType(type: null, allowCycles: false), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DataType.FromType(type: null));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => DataType.FromType(type: null, allowCycles: false));
+            Assert.AreEqual("type", ex2.ParamName);
         }
 
         [TestMethod]
@@ -40,15 +42,19 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         {
             var dt = default(DataType);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataType.TryFromType(type: null, out dt), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataType.TryFromType(type: null, allowCycles: false, out dt), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DataType.TryFromType(type: null, out dt));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => DataType.TryFromType(type: null, allowCycles: false, out dt));
+            Assert.AreEqual("type", ex2.ParamName);
         }
 
         [TestMethod]
         public void DataType_Check_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataType.Check(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataType.Check(type: null, allowCycles: false), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DataType.Check(type: null));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => DataType.Check(type: null, allowCycles: false));
+            Assert.AreEqual("type", ex2.ParamName);
         }
 
         [TestMethod]
@@ -56,8 +62,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         {
             var err = default(ReadOnlyCollection<DataTypeError>);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataType.TryCheck(type: null, out err), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataType.TryCheck(type: null, allowCycles: false, out err), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DataType.TryCheck(type: null, out err));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => DataType.TryCheck(type: null, allowCycles: false, out err));
+            Assert.AreEqual("type", ex2.ParamName);
         }
 
         [TestMethod]
@@ -363,7 +371,8 @@ in  t1
         [TestMethod]
         public void DataType_IsStructuralEntityDataType_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataType.IsStructuralEntityDataType(type: null), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DataType.IsStructuralEntityDataType(type: null));
+            Assert.AreEqual("type", ex.ParamName);
         }
 
         [TestMethod]

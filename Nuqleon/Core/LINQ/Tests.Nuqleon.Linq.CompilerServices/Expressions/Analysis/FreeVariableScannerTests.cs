@@ -24,8 +24,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void FreeVariableScanner_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => FreeVariableScanner.Scan(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => FreeVariableScanner.HasFreeVariables(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => FreeVariableScanner.Scan(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => FreeVariableScanner.HasFreeVariables(expression: null));
+            Assert.AreEqual("expression", ex2.ParamName);
         }
 
         [TestMethod]

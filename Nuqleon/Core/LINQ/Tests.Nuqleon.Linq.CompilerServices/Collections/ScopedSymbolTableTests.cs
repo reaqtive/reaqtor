@@ -23,7 +23,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ScopedSymbolTable_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ScopedSymbolTable<string, string>(symbolComparer: null), ex => Assert.AreEqual("symbolComparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ScopedSymbolTable<string, string>(symbolComparer: null));
+            Assert.AreEqual("symbolComparer", ex.ParamName);
         }
 
         [TestMethod]

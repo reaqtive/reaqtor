@@ -33,7 +33,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void IsAnonymousType_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.IsAnonymousType(type: null), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.IsAnonymousType(type: null));
+            Assert.AreEqual("type", ex.ParamName);
         }
 
         [TestMethod]
@@ -68,7 +69,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void IsClosureType_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.IsClosureClass(type: null), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.IsClosureClass(type: null));
+            Assert.AreEqual("type", ex.ParamName);
         }
 
         [TestMethod]
@@ -110,7 +112,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void IsRecordType_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.IsRecordType(type: null), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.IsRecordType(type: null));
+            Assert.AreEqual("type", ex.ParamName);
         }
 
         [TestMethod]
@@ -133,7 +136,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void IsCompilerGenerated_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.IsCompilerGenerated(type: null), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.IsCompilerGenerated(type: null));
+            Assert.AreEqual("type", ex.ParamName);
         }
 
         [TestMethod]
@@ -151,7 +155,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void IsSzArray_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.IsSZArray(type: null), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.IsSZArray(type: null));
+            Assert.AreEqual("type", ex.ParamName);
         }
 
         [TestMethod]
@@ -176,9 +181,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void FindGenericType_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.FindGenericType(type: null, typeof(IEnumerable<>)), ex => Assert.AreEqual(ex.ParamName, "type"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.FindGenericType(typeof(string), definition: null), ex => Assert.AreEqual(ex.ParamName, "definition"));
-            AssertEx.ThrowsException<ArgumentException>(() => TypeExtensions.FindGenericType(typeof(string), typeof(int)), ex => Assert.AreEqual(ex.ParamName, "definition"));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.FindGenericType(type: null, typeof(IEnumerable<>)));
+            Assert.AreEqual(ex.ParamName, "type");
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.FindGenericType(typeof(string), definition: null));
+            Assert.AreEqual(ex2.ParamName, "definition");
+            var ex3 = Assert.ThrowsExactly<ArgumentException>(() => TypeExtensions.FindGenericType(typeof(string), typeof(int)));
+            Assert.AreEqual(ex3.ParamName, "definition");
         }
 
         [TestMethod]
@@ -239,9 +247,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ToCSharpString_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.ToCSharpString(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.ToCSharpStringPretty(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.ToCSharpString(type: null, useNamespaceQualifiedNames: false, useCSharpTypeAliases: false, disallowCompilerGeneratedTypes: false), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.ToCSharpString(type: null));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.ToCSharpStringPretty(type: null));
+            Assert.AreEqual("type", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.ToCSharpString(type: null, useNamespaceQualifiedNames: false, useCSharpTypeAliases: false, disallowCompilerGeneratedTypes: false));
+            Assert.AreEqual("type", ex3.ParamName);
         }
 
         [TestMethod]
@@ -400,11 +411,16 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void TryUnifyExact_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(type1: null, typeof(int), out _), ex => Assert.AreEqual("type1", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(typeof(int), type2: null, out _), ex => Assert.AreEqual("type2", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(type1: null, typeof(int), EqualityComparer<Type>.Default, out _), ex => Assert.AreEqual("type1", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(typeof(int), type2: null, EqualityComparer<Type>.Default, out _), ex => Assert.AreEqual("type2", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(typeof(int), typeof(int), comparer: null, out _), ex => Assert.AreEqual("comparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(type1: null, typeof(int), out _));
+            Assert.AreEqual("type1", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(typeof(int), type2: null, out _));
+            Assert.AreEqual("type2", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(type1: null, typeof(int), EqualityComparer<Type>.Default, out _));
+            Assert.AreEqual("type1", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(typeof(int), type2: null, EqualityComparer<Type>.Default, out _));
+            Assert.AreEqual("type2", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyExact(typeof(int), typeof(int), comparer: null, out _));
+            Assert.AreEqual("comparer", ex5.ParamName);
         }
 
         [TestMethod]
@@ -442,11 +458,16 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void UnifyExact_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyExact(type1: null, typeof(int)), ex => Assert.AreEqual("type1", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyExact(typeof(int), type2: null), ex => Assert.AreEqual("type2", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyExact(type1: null, typeof(int), EqualityComparer<Type>.Default), ex => Assert.AreEqual("type1", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyExact(typeof(int), type2: null, EqualityComparer<Type>.Default), ex => Assert.AreEqual("type2", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyExact(typeof(int), typeof(int), comparer: null), ex => Assert.AreEqual("comparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyExact(type1: null, typeof(int)));
+            Assert.AreEqual("type1", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyExact(typeof(int), type2: null));
+            Assert.AreEqual("type2", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyExact(type1: null, typeof(int), EqualityComparer<Type>.Default));
+            Assert.AreEqual("type1", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyExact(typeof(int), type2: null, EqualityComparer<Type>.Default));
+            Assert.AreEqual("type2", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyExact(typeof(int), typeof(int), comparer: null));
+            Assert.AreEqual("comparer", ex5.ParamName);
         }
 
         [TestMethod]
@@ -874,11 +895,16 @@ namespace Tests.System.Linq.CompilerServices
         public void TryUnifyWith_ArgumentChecking()
         {
             var res = default(IDictionary<Type, Type>);
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(left: null, typeof(int), out res), ex => Assert.AreEqual("left", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(typeof(int), right: null, out res), ex => Assert.AreEqual("right", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(left: null, typeof(int), EqualityComparer<Type>.Default, out res), ex => Assert.AreEqual("left", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(typeof(int), right: null, EqualityComparer<Type>.Default, out res), ex => Assert.AreEqual("right", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(typeof(int), typeof(int), comparer: null, out res), ex => Assert.AreEqual("comparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(left: null, typeof(int), out res));
+            Assert.AreEqual("left", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(typeof(int), right: null, out res));
+            Assert.AreEqual("right", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(left: null, typeof(int), EqualityComparer<Type>.Default, out res));
+            Assert.AreEqual("left", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(typeof(int), right: null, EqualityComparer<Type>.Default, out res));
+            Assert.AreEqual("right", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.TryUnifyWith(typeof(int), typeof(int), comparer: null, out res));
+            Assert.AreEqual("comparer", ex5.ParamName);
         }
 
         [TestMethod]
@@ -916,11 +942,16 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void UnifyWith_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyWith(left: null, typeof(int)), ex => Assert.AreEqual("left", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyWith(typeof(int), right: null), ex => Assert.AreEqual("right", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyWith(left: null, typeof(int), EqualityComparer<Type>.Default), ex => Assert.AreEqual("left", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyWith(typeof(int), right: null, EqualityComparer<Type>.Default), ex => Assert.AreEqual("right", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeExtensions.UnifyWith(typeof(int), typeof(int), comparer: null), ex => Assert.AreEqual("comparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyWith(left: null, typeof(int)));
+            Assert.AreEqual("left", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyWith(typeof(int), right: null));
+            Assert.AreEqual("right", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyWith(left: null, typeof(int), EqualityComparer<Type>.Default));
+            Assert.AreEqual("left", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyWith(typeof(int), right: null, EqualityComparer<Type>.Default));
+            Assert.AreEqual("right", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.UnifyWith(typeof(int), typeof(int), comparer: null));
+            Assert.AreEqual("comparer", ex5.ParamName);
         }
 
         [TestMethod]
@@ -1394,7 +1425,8 @@ namespace Tests.System.Linq.CompilerServices
 
             if (errorSubstring != null)
             {
-                AssertEx.ThrowsException<InvalidOperationException>(() => target.IsReferenceAssignableFrom(value, out ignored, throwException: true), ex => ex.Message.Contains(errorSubstring));
+                var ex = Assert.ThrowsExactly<InvalidOperationException>(() => target.IsReferenceAssignableFrom(value, out ignored, throwException: true));
+                Assert.IsTrue(ex.Message.Contains(errorSubstring));
             }
         }
     }

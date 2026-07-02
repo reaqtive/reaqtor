@@ -21,8 +21,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void TreeEqualityComparer_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TreeEqualityComparer(comparer: null), ex => Assert.AreEqual("comparer", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TreeEqualityComparer<int>(comparer: null), ex => Assert.AreEqual("comparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new TreeEqualityComparer(comparer: null));
+            Assert.AreEqual("comparer", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new TreeEqualityComparer<int>(comparer: null));
+            Assert.AreEqual("comparer", ex2.ParamName);
         }
 
         [TestMethod]

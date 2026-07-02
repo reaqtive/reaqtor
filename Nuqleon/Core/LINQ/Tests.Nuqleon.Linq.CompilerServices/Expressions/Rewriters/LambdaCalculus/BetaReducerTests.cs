@@ -23,9 +23,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void BetaReducer_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => BetaReducer.Reduce(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => BetaReducer.Reduce(expression: null, BetaReductionNodeTypes.Atoms, BetaReductionRestrictions.None), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => BetaReducer.ReduceEager(expression: null, BetaReductionNodeTypes.Atoms, BetaReductionRestrictions.None, throwOnCycle: false), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => BetaReducer.Reduce(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => BetaReducer.Reduce(expression: null, BetaReductionNodeTypes.Atoms, BetaReductionRestrictions.None));
+            Assert.AreEqual("expression", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => BetaReducer.ReduceEager(expression: null, BetaReductionNodeTypes.Atoms, BetaReductionRestrictions.None, throwOnCycle: false));
+            Assert.AreEqual("expression", ex3.ParamName);
         }
 
         [TestMethod]

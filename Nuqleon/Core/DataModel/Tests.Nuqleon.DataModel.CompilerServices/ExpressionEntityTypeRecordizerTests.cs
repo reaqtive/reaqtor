@@ -36,7 +36,8 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             var etr = new ExpressionEntityTypeRecordizer();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => etr.Apply(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => etr.Apply(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
         }
 
         [TestMethod]

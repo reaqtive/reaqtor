@@ -66,7 +66,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             public void TestArgs()
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.Visit(default(IReadOnlyList<ITree>)), ex => Assert.AreEqual("nodes", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.Visit(default(IReadOnlyList<ITree>)));
+                Assert.AreEqual("nodes", ex.ParamName);
             }
 
             public override ITree Visit(ITree node)
@@ -79,7 +80,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             public void TestArgs()
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.Visit(default(IReadOnlyList<ITree<T>>)), ex => Assert.AreEqual("nodes", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.Visit(default(IReadOnlyList<ITree<T>>)));
+                Assert.AreEqual("nodes", ex.ParamName);
             }
 
             public override ITree<T> Visit(ITree<T> node)

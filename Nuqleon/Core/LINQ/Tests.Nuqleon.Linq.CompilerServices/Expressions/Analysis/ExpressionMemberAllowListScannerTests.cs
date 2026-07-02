@@ -33,10 +33,13 @@ namespace Tests.System.Linq.CompilerServices
             Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable)ws.Members).GetEnumerator());
             Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable<MemberInfo>)ws.Members).GetEnumerator());
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => ws.DeclaringTypes.Add(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ws.DeclaringTypes.Add(type: null, includeBase: false), ex => Assert.AreEqual("type", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ws.DeclaringTypes.Add(type: null));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ws.DeclaringTypes.Add(type: null, includeBase: false));
+            Assert.AreEqual("type", ex2.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => ws.Members.Add(member: null), ex => Assert.AreEqual("member", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ws.Members.Add(member: null));
+            Assert.AreEqual("member", ex3.ParamName);
 
             ws.DeclaringTypes.Add(typeof(string));
             Assert.ThrowsExactly<InvalidOperationException>(() => ws.Members.Add(typeof(string).GetProperty("Length")));

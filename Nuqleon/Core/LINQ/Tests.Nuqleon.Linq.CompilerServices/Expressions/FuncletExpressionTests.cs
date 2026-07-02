@@ -23,8 +23,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void FuncletExpression_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => FuncletExpression.Create(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => FuncletExpression.Create<int>(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => FuncletExpression.Create(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => FuncletExpression.Create<int>(expression: null));
+            Assert.AreEqual("expression", ex2.ParamName);
         }
 
         [TestMethod]

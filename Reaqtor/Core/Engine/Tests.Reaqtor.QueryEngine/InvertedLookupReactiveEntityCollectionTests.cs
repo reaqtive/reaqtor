@@ -22,8 +22,10 @@ namespace Tests.Reaqtor.QueryEngine
         public void InvertedLookupReactiveEntityCollection_ArgumentChecks()
         {
             var inner = new ReactiveEntityCollection<string, string>(StringComparer.Ordinal);
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new InvertedLookupReactiveEntityCollection<string, string>(default(IReactiveEntityCollection<string, string>), StringComparer.Ordinal), ex => Assert.AreEqual("collection", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new InvertedLookupReactiveEntityCollection<string, string>(inner, null), ex => Assert.AreEqual("valueComparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new InvertedLookupReactiveEntityCollection<string, string>(default(IReactiveEntityCollection<string, string>), StringComparer.Ordinal));
+            Assert.AreEqual("collection", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new InvertedLookupReactiveEntityCollection<string, string>(inner, null));
+            Assert.AreEqual("valueComparer", ex2.ParamName);
         }
 
         [TestMethod]

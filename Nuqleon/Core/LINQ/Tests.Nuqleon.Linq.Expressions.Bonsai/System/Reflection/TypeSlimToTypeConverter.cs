@@ -26,9 +26,12 @@ namespace Tests.System.Reflection
         public void TypeSlimToTypeConverter_ArgumentChecks()
         {
             var converter = new TypeSlimToTypeConverter(DefaultReflectionProvider.Instance);
-            AssertEx.ThrowsException<ArgumentNullException>(() => converter.Visit(type: null), ex => Assert.AreEqual(ex.ParamName, "type"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => converter.MapType(typeSlim: null, type: null), ex => Assert.AreEqual(ex.ParamName, "typeSlim"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => converter.MapType(SlimType, type: null), ex => Assert.AreEqual(ex.ParamName, "type"));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => converter.Visit(type: null));
+            Assert.AreEqual(ex.ParamName, "type");
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => converter.MapType(typeSlim: null, type: null));
+            Assert.AreEqual(ex2.ParamName, "typeSlim");
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => converter.MapType(SlimType, type: null));
+            Assert.AreEqual(ex3.ParamName, "type");
         }
 
         [TestMethod]

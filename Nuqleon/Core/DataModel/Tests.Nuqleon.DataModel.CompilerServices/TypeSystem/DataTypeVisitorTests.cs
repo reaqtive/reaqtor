@@ -28,8 +28,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         [TestMethod]
         public void DataTypeVisitor_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(nodes: null, x => x), ex => Assert.AreEqual("nodes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(new List<int> { 5 }.AsReadOnly(), elementVisitor: null), ex => Assert.AreEqual("elementVisitor", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(nodes: null, x => x));
+            Assert.AreEqual("nodes", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(new List<int> { 5 }.AsReadOnly(), elementVisitor: null));
+            Assert.AreEqual("elementVisitor", ex2.ParamName);
         }
 
         [TestMethod]

@@ -26,11 +26,15 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void AnonymousTypeTupletizer_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => AnonymousTypeTupletizer.Tupletize(expression: null, Expression.Constant(1)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => AnonymousTypeTupletizer.Tupletize(Expression.Constant(1), unitValue: null), ex => Assert.AreEqual("unitValue", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => AnonymousTypeTupletizer.Tupletize(expression: null, Expression.Constant(1)));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => AnonymousTypeTupletizer.Tupletize(Expression.Constant(1), unitValue: null));
+            Assert.AreEqual("unitValue", ex2.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => AnonymousTypeTupletizer.Tupletize(expression: null, Expression.Constant(1), excludeVisibleTypes: true), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => AnonymousTypeTupletizer.Tupletize(Expression.Constant(1), unitValue: null, excludeVisibleTypes: true), ex => Assert.AreEqual("unitValue", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => AnonymousTypeTupletizer.Tupletize(expression: null, Expression.Constant(1), excludeVisibleTypes: true));
+            Assert.AreEqual("expression", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => AnonymousTypeTupletizer.Tupletize(Expression.Constant(1), unitValue: null, excludeVisibleTypes: true));
+            Assert.AreEqual("unitValue", ex4.ParamName);
         }
 
         [TestMethod]
@@ -681,7 +685,8 @@ namespace Tests.System.Linq.CompilerServices
         public void AnonymousTypeTupletizer_Unit2()
         {
             var f = (Expression<Func<bool>>)(() => new { }.Equals(new { }));
-            AssertEx.ThrowsException<ArgumentException>(() => AnonymousTypeTupletizer.Tupletize(f, Expression.Constant(false)), ex => Assert.AreEqual("unitValue", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentException>(() => AnonymousTypeTupletizer.Tupletize(f, Expression.Constant(false)));
+            Assert.AreEqual("unitValue", ex.ParamName);
         }
 
         [TestMethod]

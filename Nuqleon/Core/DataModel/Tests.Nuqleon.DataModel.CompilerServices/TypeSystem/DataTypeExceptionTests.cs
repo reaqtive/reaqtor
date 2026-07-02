@@ -37,7 +37,8 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             Assert.AreSame(iex, ex3.InnerException);
             Assert.IsTrue(ex3.ToString().Contains("foo"));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => new DataTypeException(default(DataTypeError)), ex => Assert.AreEqual("error", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new DataTypeException(default(DataTypeError)));
+            Assert.AreEqual("error", ex.ParamName);
 
             var err = new DataTypeError(typeof(int), "bar", [typeof(List<int>)]);
             var ex4 = new DataTypeException(err);

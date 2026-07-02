@@ -26,9 +26,12 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ConstantHoister_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ConstantHoister.Hoist(expression: null, useDefaultForNull: false), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ConstantHoister.Create(useDefaultForNull: false, exclusions: null), ex => Assert.AreEqual("exclusions", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ConstantHoister.Create(useDefaultForNull: false).Hoist(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ConstantHoister.Hoist(expression: null, useDefaultForNull: false));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ConstantHoister.Create(useDefaultForNull: false, exclusions: null));
+            Assert.AreEqual("exclusions", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ConstantHoister.Create(useDefaultForNull: false).Hoist(expression: null));
+            Assert.AreEqual("expression", ex3.ParamName);
         }
 
         [TestMethod]
@@ -154,60 +157,55 @@ namespace Tests.System.Linq.CompilerServices
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
 #pragma warning disable IDE0004 // Cast is redundant.
-            AssertEx.ThrowsException<ArgumentException>(() =>
+            var ex = Assert.ThrowsExactly<ArgumentException>(() =>
             {
                 ConstantHoister.Create(false,
                     (Expression<Func<int, int>>)(h => h + 1)
                 );
-            }, ex =>
-            {
-                Assert.AreEqual(typeof(ArgumentException), ex.GetType());
-                Assert.IsTrue(ex.Message.Contains("not a method call, new, or member access"));
             });
+            Assert.AreEqual(typeof(ArgumentException), ex.GetType());
 
-            AssertEx.ThrowsException<ArgumentException>(() =>
+            Assert.IsTrue(ex.Message.Contains("not a method call, new, or member access"));
+
+            var ex2 = Assert.ThrowsExactly<ArgumentException>(() =>
             {
                 ConstantHoister.Create(false,
                     (Expression<Func<string, string>>)(h => string.Format(h, /* convert */ 42))
                 );
-            }, ex =>
-            {
-                Assert.AreEqual(typeof(ArgumentException), ex.GetType());
-                Assert.IsTrue(ex.Message.Contains("not a constant or a default expression"));
             });
+            Assert.AreEqual(typeof(ArgumentException), ex2.GetType());
 
-            AssertEx.ThrowsException<ArgumentException>(() =>
+            Assert.IsTrue(ex2.Message.Contains("not a constant or a default expression"));
+
+            var ex3 = Assert.ThrowsExactly<ArgumentException>(() =>
             {
                 ConstantHoister.Create(false,
                     (Expression<Func<string>>)(() => string.Format("bar", default(object[])))
                 );
-            }, ex =>
-            {
-                Assert.AreEqual(typeof(ArgumentException), ex.GetType());
-                Assert.IsTrue(ex.Message.Contains("no holes for constants"));
             });
+            Assert.AreEqual(typeof(ArgumentException), ex3.GetType());
 
-            AssertEx.ThrowsException<ArgumentException>(() =>
+            Assert.IsTrue(ex3.Message.Contains("no holes for constants"));
+
+            var ex4 = Assert.ThrowsExactly<ArgumentException>(() =>
             {
                 ConstantHoister.Create(false,
                     (Expression<Func<string, string>>)(h => string.Format("bar", default(object[])))
                 );
-            }, ex =>
-            {
-                Assert.AreEqual(typeof(ArgumentException), ex.GetType());
-                Assert.IsTrue(ex.Message.Contains("not used"));
             });
+            Assert.AreEqual(typeof(ArgumentException), ex4.GetType());
 
-            AssertEx.ThrowsException<ArgumentException>(() =>
+            Assert.IsTrue(ex4.Message.Contains("not used"));
+
+            var ex5 = Assert.ThrowsExactly<ArgumentException>(() =>
             {
                 ConstantHoister.Create(false,
                     (Expression<Func<string, string>>)(h => string.Concat(h, h))
                 );
-            }, ex =>
-            {
-                Assert.AreEqual(typeof(ArgumentException), ex.GetType());
-                Assert.IsTrue(ex.Message.Contains("used multiple times"));
             });
+            Assert.AreEqual(typeof(ArgumentException), ex5.GetType());
+
+            Assert.IsTrue(ex5.Message.Contains("used multiple times"));
 #pragma warning restore IDE0034 // Simplify 'default' expression
 #pragma warning restore IDE0004 // Cast is redundant.
         }

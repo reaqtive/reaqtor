@@ -20,7 +20,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ObjectExtensions_Let()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => 21.Let(default(Func<int, int>)), ex => Assert.AreEqual("function", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => 21.Let(default(Func<int, int>)));
+            Assert.AreEqual("function", ex.ParamName);
             Assert.AreEqual(42, 21.Let(x => x * 2));
         }
     }

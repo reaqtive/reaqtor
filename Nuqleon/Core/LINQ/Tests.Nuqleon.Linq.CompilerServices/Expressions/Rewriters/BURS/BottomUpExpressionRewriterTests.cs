@@ -32,39 +32,65 @@ namespace Tests.System.Linq.CompilerServices
             var burs = new BottomUpExpressionRewriter<ArithExpr>();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ConstantExpression, ArithExpr>>), 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ConstantExpression ce) => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ConstantExpression, ArithExpr>>), 1));
+            Assert.AreEqual("convert", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ConstantExpression ce) => new Const(1), -1));
+            Assert.AreEqual("cost", ex2.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ConstantExpression, ArithExpr>>), _ => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Leaves.Add(ce => new Const(1), default(Expression<Func<ConstantExpression, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ConstantExpression ce) => new Const(1), _ => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Leaves.Add(default(Expression<Func<ConstantExpression, ArithExpr>>), _ => true, 1));
+            Assert.AreEqual("convert", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Leaves.Add(ce => new Const(1), default(Expression<Func<ConstantExpression, bool>>), 1));
+            Assert.AreEqual("predicate", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Leaves.Add((ConstantExpression ce) => new Const(1), _ => true, -1));
+            Assert.AreEqual("cost", ex5.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int>>), () => new Const(1), 1), ex => Assert.AreEqual("pattern", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int, int>>), (x) => new Const(1), 1), ex => Assert.AreEqual("pattern", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int, int, int>>), (x, y) => new Const(1), 1), ex => Assert.AreEqual("pattern", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int, int, int, int>>), (x, y, z) => new Const(1), 1), ex => Assert.AreEqual("pattern", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int, int, int, int, int>>), (x, y, z, a) => new Const(1), 1), ex => Assert.AreEqual("pattern", ex.ParamName));
+            var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int>>), () => new Const(1), 1));
+            Assert.AreEqual("pattern", ex6.ParamName);
+            var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int, int>>), (x) => new Const(1), 1));
+            Assert.AreEqual("pattern", ex7.ParamName);
+            var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int, int, int>>), (x, y) => new Const(1), 1));
+            Assert.AreEqual("pattern", ex8.ParamName);
+            var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int, int, int, int>>), (x, y, z) => new Const(1), 1));
+            Assert.AreEqual("pattern", ex9.ParamName);
+            var ex10 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(default(Expression<Func<int, int, int, int, int>>), (x, y, z, a) => new Const(1), 1));
+            Assert.AreEqual("pattern", ex10.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add(() => 1, default(Expression<Func<ArithExpr>>), 1), ex => Assert.AreEqual("goal", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add((int x) => x + 1, default(Expression<Func<ArithExpr, ArithExpr>>), 1), ex => Assert.AreEqual("goal", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add((int x, int y) => x + y + 1, default(Expression<Func<ArithExpr, ArithExpr, ArithExpr>>), 1), ex => Assert.AreEqual("goal", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add((int x, int y, int z) => x + y + z + 1, default(Expression<Func<ArithExpr, ArithExpr, ArithExpr, ArithExpr>>), 1), ex => Assert.AreEqual("goal", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rules.Add((int x, int y, int z, int a) => x + y + z + a + 1, default(Expression<Func<ArithExpr, ArithExpr, ArithExpr, ArithExpr, ArithExpr>>), 1), ex => Assert.AreEqual("goal", ex.ParamName));
+            var ex11 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add(() => 1, default(Expression<Func<ArithExpr>>), 1));
+            Assert.AreEqual("goal", ex11.ParamName);
+            var ex12 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add((int x) => x + 1, default(Expression<Func<ArithExpr, ArithExpr>>), 1));
+            Assert.AreEqual("goal", ex12.ParamName);
+            var ex13 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add((int x, int y) => x + y + 1, default(Expression<Func<ArithExpr, ArithExpr, ArithExpr>>), 1));
+            Assert.AreEqual("goal", ex13.ParamName);
+            var ex14 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add((int x, int y, int z) => x + y + z + 1, default(Expression<Func<ArithExpr, ArithExpr, ArithExpr, ArithExpr>>), 1));
+            Assert.AreEqual("goal", ex14.ParamName);
+            var ex15 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rules.Add((int x, int y, int z, int a) => x + y + z + a + 1, default(Expression<Func<ArithExpr, ArithExpr, ArithExpr, ArithExpr, ArithExpr>>), 1));
+            Assert.AreEqual("goal", ex15.ParamName);
 
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add(() => 1, () => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add((int x) => x + 1, (x) => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add((int x, int y) => x + y + 1, (x, y) => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add((int x, int y, int z) => x + y + z + 1, (x, y, z) => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Rules.Add((int x, int y, int z, int a) => x + y + z + a + 1, (x, y, z, a) => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex16 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Rules.Add(() => 1, () => new Const(1), -1));
+            Assert.AreEqual("cost", ex16.ParamName);
+            var ex17 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Rules.Add((int x) => x + 1, (x) => new Const(1), -1));
+            Assert.AreEqual("cost", ex17.ParamName);
+            var ex18 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Rules.Add((int x, int y) => x + y + 1, (x, y) => new Const(1), -1));
+            Assert.AreEqual("cost", ex18.ParamName);
+            var ex19 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Rules.Add((int x, int y, int z) => x + y + z + 1, (x, y, z) => new Const(1), -1));
+            Assert.AreEqual("cost", ex19.ParamName);
+            var ex20 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Rules.Add((int x, int y, int z, int a) => x + y + z + a + 1, (x, y, z, a) => new Const(1), -1));
+            Assert.AreEqual("cost", ex20.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<Expression, ArithExpr>>), 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(e => new Const(1), -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex21 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<Expression, ArithExpr>>), 1));
+            Assert.AreEqual("convert", ex21.ParamName);
+            var ex22 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(e => new Const(1), -1));
+            Assert.AreEqual("cost", ex22.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<Expression, ArithExpr>>), _ => true, 1), ex => Assert.AreEqual("convert", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Fallbacks.Add(e => new Const(1), default(Expression<Func<Expression, bool>>), 1), ex => Assert.AreEqual("predicate", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(e => new Const(1), _ => true, -1), ex => Assert.AreEqual("cost", ex.ParamName));
+            var ex23 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Fallbacks.Add(default(Expression<Func<Expression, ArithExpr>>), _ => true, 1));
+            Assert.AreEqual("convert", ex23.ParamName);
+            var ex24 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Fallbacks.Add(e => new Const(1), default(Expression<Func<Expression, bool>>), 1));
+            Assert.AreEqual("predicate", ex24.ParamName);
+            var ex25 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => burs.Fallbacks.Add(e => new Const(1), _ => true, -1));
+            Assert.AreEqual("cost", ex25.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => burs.Rewrite(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex26 = Assert.ThrowsExactly<ArgumentNullException>(() => burs.Rewrite(default(Expression)));
+            Assert.AreEqual("expression", ex26.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

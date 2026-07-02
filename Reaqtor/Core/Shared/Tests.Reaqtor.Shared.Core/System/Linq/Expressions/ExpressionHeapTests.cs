@@ -21,7 +21,8 @@ namespace Tests.Reaqtor.Shared.Core
         [TestMethod]
         public void ExpressionHeap_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ExpressionHeap(default(IConstantHoister)), ex => Assert.AreEqual("hoister", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionHeap(default(IConstantHoister)));
+            Assert.AreEqual("hoister", ex.ParamName);
         }
 
         [TestMethod]

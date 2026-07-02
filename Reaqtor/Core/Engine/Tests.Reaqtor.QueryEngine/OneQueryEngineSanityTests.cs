@@ -1427,13 +1427,11 @@ namespace Tests.Reaqtor.QueryEngine
                 await
                 using (var qe3 = CreateQueryEngine(kvs2))
                 {
-                    AssertEx.ThrowsException<AggregateException>(() => Recover(qe3, state), ex =>
-                    {
-                        var flattened = ex.Flatten();
+                    var ex = Assert.ThrowsExactly<AggregateException>(() => Recover(qe3, state));
+                    var flattened = ex.Flatten();
 
-                        if (flattened.InnerException is not EntityAlreadyExistsException)
-                            Assert.Fail();
-                    });
+                    if (flattened.InnerException is not EntityAlreadyExistsException)
+                        Assert.Fail();
                 }
 
                 // Do it again but handle the exception
@@ -1492,13 +1490,11 @@ namespace Tests.Reaqtor.QueryEngine
                 await
                 using (var qe3 = CreateQueryEngine(kvs))
                 {
-                    AssertEx.ThrowsException<AggregateException>(() => Recover(qe3, state), ex =>
-                    {
-                        var flattened = ex.Flatten();
+                    var ex2 = Assert.ThrowsExactly<AggregateException>(() => Recover(qe3, state));
+                    var flattened = ex2.Flatten();
 
-                        if (flattened.InnerException.Message != "Create, Create")
-                            Assert.Fail();
-                    });
+                    if (flattened.InnerException.Message != "Create, Create")
+                        Assert.Fail();
                 }
 
                 // Handled
@@ -1584,11 +1580,10 @@ namespace Tests.Reaqtor.QueryEngine
                 void fail(object sender, ReifiedOperation<string, byte[]> operation) { throw ex; }
 
                 kvs.StartingOperation += fail;
-                await AssertEx.ThrowsExceptionAsync<MyException>(() =>
+                var e = await Assert.ThrowsExactlyAsync<MyException>(() =>
                     test.DisposeAsync(CancellationToken.None)
-                        .AsTask()
-                    ,
-                    e => Assert.AreSame(ex, e));
+                        .AsTask());
+                Assert.AreSame(ex, e);
 
                 kvs.StartingOperation -= fail;
                 await test.DisposeAsync(CancellationToken.None);

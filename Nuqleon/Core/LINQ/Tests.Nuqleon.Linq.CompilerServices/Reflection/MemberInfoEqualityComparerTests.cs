@@ -169,8 +169,10 @@ namespace Tests.System.Linq.CompilerServices
         {
             var eq = new MemberInfoEqualityComparer();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => eq.ResolveMember(targetType: null, typeof(object).GetMethods().First()), ex => Assert.AreEqual("targetType", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => eq.ResolveMember(typeof(object), member: null), ex => Assert.AreEqual("member", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => eq.ResolveMember(targetType: null, typeof(object).GetMethods().First()));
+            Assert.AreEqual("targetType", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => eq.ResolveMember(typeof(object), member: null));
+            Assert.AreEqual("member", ex2.ParamName);
         }
 
         [TestMethod]

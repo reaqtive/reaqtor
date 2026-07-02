@@ -23,10 +23,14 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionTree_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(ElementInit)), ex => Assert.AreEqual("elementInitializer", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(MemberBinding)), ex => Assert.AreEqual("memberBinding", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ExpressionExpressionTreeNode(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(Expression)));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(ElementInit)));
+            Assert.AreEqual("elementInitializer", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToExpressionTree(default(MemberBinding)));
+            Assert.AreEqual("memberBinding", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionExpressionTreeNode(expression: null));
+            Assert.AreEqual("expression", ex4.ParamName);
         }
 
         [TestMethod]
@@ -43,8 +47,10 @@ namespace Tests.System.Linq.CompilerServices
             var et = Expression.Constant(42).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(ExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(ExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -1091,7 +1097,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionTree_ElementInit_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new ElementInitExpressionTreeNode(elementInit: null), ex => Assert.AreEqual("elementInit", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ElementInitExpressionTreeNode(elementInit: null));
+            Assert.AreEqual("elementInit", ex.ParamName);
         }
 
         [TestMethod]
@@ -1144,15 +1151,18 @@ namespace Tests.System.Linq.CompilerServices
             var et = Expression.ElementInit(typeof(List<int>).GetMethod("Add"), Expression.Constant(2)).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(ExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(ExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
         [TestMethod]
         public void ExpressionTree_MemberAssignment_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new MemberAssignmentExpressionTreeNode(memberAssignment: null), ex => Assert.AreEqual("memberAssignment", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new MemberAssignmentExpressionTreeNode(memberAssignment: null));
+            Assert.AreEqual("memberAssignment", ex.ParamName);
         }
 
         [TestMethod]
@@ -1234,15 +1244,18 @@ namespace Tests.System.Linq.CompilerServices
             var et = (MemberAssignmentExpressionTree)Expression.Bind(typeof(Foo).GetProperty("Baz"), Expression.Constant(2)).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(ExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<ExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(ExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
         [TestMethod]
         public void ExpressionTree_MemberMemberBinding_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new MemberMemberBindingExpressionTreeNode(memberMemberBinding: null), ex => Assert.AreEqual("memberMemberBinding", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new MemberMemberBindingExpressionTreeNode(memberMemberBinding: null));
+            Assert.AreEqual("memberMemberBinding", ex.ParamName);
         }
 
         [TestMethod]
@@ -1328,15 +1341,18 @@ namespace Tests.System.Linq.CompilerServices
             var et = (MemberMemberBindingExpressionTree)Expression.MemberBind(typeof(Bar).GetProperty("Foo"), Expression.Bind(typeof(Foo).GetProperty("Baz"), Expression.Constant(2))).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<MemberBindingExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(MemberBindingExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<MemberBindingExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(MemberBindingExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
         [TestMethod]
         public void ExpressionTree_MemberListBinding_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new MemberListBindingExpressionTreeNode(memberListBinding: null), ex => Assert.AreEqual("memberListBinding", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new MemberListBindingExpressionTreeNode(memberListBinding: null));
+            Assert.AreEqual("memberListBinding", ex.ParamName);
         }
 
         [TestMethod]
@@ -1422,8 +1438,10 @@ namespace Tests.System.Linq.CompilerServices
             var et = (MemberListBindingExpressionTree)Expression.ListBind(typeof(Foo).GetProperty("Xs"), Expression.ElementInit(typeof(List<int>).GetMethod("Add"), Expression.Constant(2))).ToExpressionTree();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(IEnumerable<ElementInitExpressionTree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => et.Update(default(ElementInitExpressionTree[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(IEnumerable<ElementInitExpressionTree>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => et.Update(default(ElementInitExpressionTree[])));
+            Assert.AreEqual("children", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

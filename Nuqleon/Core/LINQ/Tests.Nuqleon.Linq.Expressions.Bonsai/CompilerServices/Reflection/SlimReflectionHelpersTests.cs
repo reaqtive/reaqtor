@@ -26,11 +26,16 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         public void SlimInfoOf_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression<Action>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression<Action<int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression<Func<int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression<Func<int, int>>)), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression)));
+            Assert.AreEqual("expression", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression<Action>)));
+            Assert.AreEqual("expression", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression<Action<int>>)));
+            Assert.AreEqual("expression", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression<Func<int>>)));
+            Assert.AreEqual("expression", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimReflectionHelpers.InfoOf(default(Expression<Func<int, int>>)));
+            Assert.AreEqual("expression", ex5.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

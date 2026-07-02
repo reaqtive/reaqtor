@@ -88,6 +88,10 @@ built, not shipped; their project references are not maintained. See `archive/RE
   `[ExpectedException]` → `Assert.ThrowsExactly` (44 sites), the removed
   `(message, params object[])` assert overloads folded into interpolated messages, and
   `TestMethodAttribute.Execute` → `ExecuteAsync` in `Common/TestUtilities/AssertEx.cs`.
+  The repo's own callback-based `AssertEx.ThrowsException(Async)` helpers (~640 call sites) were
+  subsequently retired in favor of `Assert.ThrowsExactly(Async)`, whose returned exception makes the
+  callback pattern redundant; the legacy helpers moved to `archive/Common/TestUtilities/AssertEx.Legacy.cs`
+  because archived test projects still call them.
 - **MTP package versions must be aligned.** All `Microsoft.Testing.*` packages share a platform major
   version; they are pinned to the **MTP 2.2.3** that MSTest 4.2.3 depends on (a mismatch surfaces as a
   runtime `IDataConsumer` `TypeLoadException`); CodeCoverage 18.x tracks MTP 2.x.

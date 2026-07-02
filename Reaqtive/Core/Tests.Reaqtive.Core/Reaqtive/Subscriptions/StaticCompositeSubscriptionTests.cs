@@ -19,8 +19,10 @@ namespace Test.Reaqtive
         public void StaticCompositeSubscription_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => new StaticCompositeSubscription(default(IEnumerable<ISubscription>)), ex => Assert.AreEqual("subscriptions", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new StaticCompositeSubscription(default(ISubscription[])), ex => Assert.AreEqual("subscriptions", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new StaticCompositeSubscription(default(IEnumerable<ISubscription>)));
+            Assert.AreEqual("subscriptions", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new StaticCompositeSubscription(default(ISubscription[])));
+            Assert.AreEqual("subscriptions", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

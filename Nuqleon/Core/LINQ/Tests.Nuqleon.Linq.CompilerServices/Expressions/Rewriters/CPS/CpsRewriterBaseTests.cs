@@ -31,10 +31,14 @@ namespace Tests.System.Linq.CompilerServices
         {
             public void Do()
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.RewriteCore(expression: null, ""), ex => Assert.AreEqual("expression", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.FindAsyncMethod(method: null), ex => Assert.AreEqual("method", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.GetAsyncMethodName(method: null), ex => Assert.AreEqual("method", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.CheckAsyncMethod(synchronousMethod: null, asynchronousMethod: null), ex => Assert.AreEqual("synchronousMethod", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.RewriteCore(expression: null, ""));
+                Assert.AreEqual("expression", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.FindAsyncMethod(method: null));
+                Assert.AreEqual("method", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.GetAsyncMethodName(method: null));
+                Assert.AreEqual("method", ex3.ParamName);
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.CheckAsyncMethod(synchronousMethod: null, asynchronousMethod: null));
+                Assert.AreEqual("synchronousMethod", ex4.ParamName);
             }
 
             protected override IEnumerable<Type> GetContinuationParameters(MethodInfo method)

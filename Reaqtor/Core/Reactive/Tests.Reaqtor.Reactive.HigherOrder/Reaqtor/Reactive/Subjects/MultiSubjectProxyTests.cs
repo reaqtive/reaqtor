@@ -24,7 +24,8 @@ namespace Test.Reaqtor
         [TestMethod]
         public void MultiSubjectProxy_Untyped_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new MultiSubjectProxy(null), ex => Assert.AreEqual("uri", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new MultiSubjectProxy(null));
+            Assert.AreEqual("uri", ex.ParamName);
         }
 
         [TestMethod]
@@ -104,7 +105,8 @@ namespace Test.Reaqtor
         [TestMethod]
         public void MultiSubjectProxy_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new MultiSubjectProxy<object, object>(null), ex => Assert.AreEqual("uri", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new MultiSubjectProxy<object, object>(null));
+            Assert.AreEqual("uri", ex.ParamName);
         }
 
         [TestMethod]

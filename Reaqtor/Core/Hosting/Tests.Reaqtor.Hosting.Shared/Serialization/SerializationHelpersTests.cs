@@ -17,8 +17,10 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void SerializationHelpers_ArgumentChecks()
         {
             var serializationHelpers = new SerializationHelpers();
-            AssertEx.ThrowsException<ArgumentNullException>(() => serializationHelpers.Serialize(default(object), null), ex => Assert.AreEqual("stream", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => serializationHelpers.Deserialize<object>(null), ex => Assert.AreEqual("stream", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => serializationHelpers.Serialize(default(object), null));
+            Assert.AreEqual("stream", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => serializationHelpers.Deserialize<object>(null));
+            Assert.AreEqual("stream", ex2.ParamName);
         }
     }
 }

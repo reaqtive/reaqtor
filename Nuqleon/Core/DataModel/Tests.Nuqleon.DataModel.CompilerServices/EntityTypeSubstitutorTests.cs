@@ -50,7 +50,8 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 foreach (var e in new Expression[] { e1, e2, e3, e4, e5 })
                 {
-                    AssertEx.ThrowsException<InvalidOperationException>(() => s.Apply(e), ex => Assert.IsTrue(ex.Message.Contains("Grmbl")));
+                    var ex = Assert.ThrowsExactly<InvalidOperationException>(() => s.Apply(e));
+                    Assert.IsTrue(ex.Message.Contains("Grmbl"));
                 }
             }
         }
@@ -72,7 +73,8 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 foreach (var e in new Expression[] { e1, e2, e3, e4, e5 })
                 {
-                    AssertEx.ThrowsException<InvalidOperationException>(() => s.Apply(e), ex => Assert.IsTrue(ex.Message.Contains("Grmbl")));
+                    var ex = Assert.ThrowsExactly<InvalidOperationException>(() => s.Apply(e));
+                    Assert.IsTrue(ex.Message.Contains("Grmbl"));
                 }
             }
         }
@@ -132,7 +134,8 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 foreach (var e in new Expression[] { e1, e2 })
                 {
                     // rewrite unsuccessful
-                    AssertEx.ThrowsException<InvalidOperationException>(() => s.Apply(e), ex => Assert.IsTrue(ex.Message.Contains("Grmbl")));
+                    var ex = Assert.ThrowsExactly<InvalidOperationException>(() => s.Apply(e));
+                    Assert.IsTrue(ex.Message.Contains("Grmbl"));
                 }
             }
         }
@@ -181,13 +184,17 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
             public void Test()
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.Apply(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.Apply(expression: null));
+                Assert.AreEqual("expression", ex.ParamName);
 
                 var prop = (PropertyInfo)ReflectionHelpers.InfoOf(() => DateTime.Now);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, typeof(int), typeof(int), [typeof(int)]), ex => Assert.AreEqual("originalProperty", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, typeof(int), [typeof(int)]), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, typeof(int), propertyType: null, [typeof(int)]), ex => Assert.AreEqual("propertyType", ex.ParamName));
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, typeof(int), typeof(int), [typeof(int)]));
+                Assert.AreEqual("originalProperty", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, typeof(int), [typeof(int)]));
+                Assert.AreEqual("declaringType", ex3.ParamName);
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, typeof(int), propertyType: null, [typeof(int)]));
+                Assert.AreEqual("propertyType", ex4.ParamName);
 
                 var anon1 = new { a = 1 };
                 var anon2 = new { a = 1, b = 2 };

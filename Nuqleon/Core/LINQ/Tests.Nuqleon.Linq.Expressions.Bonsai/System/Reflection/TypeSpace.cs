@@ -25,14 +25,22 @@ namespace Tests.System.Reflection
         public void TypeSpace_ArgumentChecks()
         {
             var ts = new TypeSpace();
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetMember(member: null), ex => Assert.AreEqual(ex.ParamName, "member"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetConstructor(constructor: null), ex => Assert.AreEqual(ex.ParamName, "constructor"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetField(field: null), ex => Assert.AreEqual(ex.ParamName, "field"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetMethod(method: null), ex => Assert.AreEqual(ex.ParamName, "method"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.GetProperty(property: null), ex => Assert.AreEqual(ex.ParamName, "property"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.ConvertType(type: null), ex => Assert.AreEqual(ex.ParamName, "type"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.MapType(type: null, typeSlim: null), ex => Assert.AreEqual(ex.ParamName, "type"));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ts.MapType(typeof(int), typeSlim: null), ex => Assert.AreEqual(ex.ParamName, "typeSlim"));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetMember(member: null));
+            Assert.AreEqual(ex.ParamName, "member");
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetConstructor(constructor: null));
+            Assert.AreEqual(ex2.ParamName, "constructor");
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetField(field: null));
+            Assert.AreEqual(ex3.ParamName, "field");
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetMethod(method: null));
+            Assert.AreEqual(ex4.ParamName, "method");
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetProperty(property: null));
+            Assert.AreEqual(ex5.ParamName, "property");
+            var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.ConvertType(type: null));
+            Assert.AreEqual(ex6.ParamName, "type");
+            var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.MapType(type: null, typeSlim: null));
+            Assert.AreEqual(ex7.ParamName, "type");
+            var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.MapType(typeof(int), typeSlim: null));
+            Assert.AreEqual(ex8.ParamName, "typeSlim");
         }
 
         [TestMethod]

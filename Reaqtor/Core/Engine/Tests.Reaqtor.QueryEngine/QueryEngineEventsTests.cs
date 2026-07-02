@@ -219,12 +219,12 @@ namespace Tests.Reaqtor.QueryEngine
 
             qe.EntitySaveFailed += unhandled;
 
-            AssertEx.ThrowsException<AggregateException>(() => Checkpoint(qe), ex =>
-            {
-                var entitySaveFailedException = ex.Flatten().InnerException as EntitySaveFailedException;
-                Assert.IsNotNull(entitySaveFailedException);
-                Assert.IsTrue(entitySaveFailedException.InnerException is SaveFailureOperator.TestException);
-            });
+            var ex = Assert.ThrowsExactly<AggregateException>(() => Checkpoint(qe));
+            var entitySaveFailedException = ex.Flatten().InnerException as EntitySaveFailedException;
+
+            Assert.IsNotNull(entitySaveFailedException);
+
+            Assert.IsTrue(entitySaveFailedException.InnerException is SaveFailureOperator.TestException);
 
             Assert.AreEqual(2, saveFailureCount);
         }

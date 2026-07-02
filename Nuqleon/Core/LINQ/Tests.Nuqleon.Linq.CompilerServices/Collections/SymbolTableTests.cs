@@ -24,7 +24,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void SymbolTable_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new SymbolTable<string, string>(parent: null, symbolComparer: null), ex => Assert.AreEqual("symbolComparer", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new SymbolTable<string, string>(parent: null, symbolComparer: null));
+            Assert.AreEqual("symbolComparer", ex.ParamName);
         }
 
         [TestMethod]

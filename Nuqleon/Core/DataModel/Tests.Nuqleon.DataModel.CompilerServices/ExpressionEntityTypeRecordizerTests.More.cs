@@ -496,7 +496,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             where T : Exception
         {
             var etr = new ExpressionEntityTypeRecordizer();
-            AssertEx.ThrowsException<T>(() => etr.Apply(exp), assert);
+            assert(Assert.ThrowsExactly<T>(() => etr.Apply(exp)));
         }
 
         private static void AssertRecordizationException<T>(object obj, Action<T> assert)

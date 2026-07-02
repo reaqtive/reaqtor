@@ -27,7 +27,8 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void ReliableMultiSubjectProxy_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => _ = new ReliableMultiSubjectProxy<int, int>(null), ex => Assert.AreEqual("uri", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => _ = new ReliableMultiSubjectProxy<int, int>(null));
+            Assert.AreEqual("uri", ex.ParamName);
         }
 
         [TestMethod]

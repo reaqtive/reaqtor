@@ -43,20 +43,24 @@ namespace Test.Reaqtive.Expressions
         [TestMethod]
         public void ExpressionPolicy_Extensions_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionEvaluationPolicyExtensions.Evaluate<int>(null, Expression.Default(typeof(int))), ex => Assert.AreEqual("policy", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ExpressionEvaluationPolicyExtensions.Evaluate<int>(DefaultExpressionPolicy.Instance, null), ex => Assert.AreEqual("expression", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentException>(() => ExpressionEvaluationPolicyExtensions.Evaluate<int>(new TestPolicy(), Expression.Constant(42)), ex => Assert.AreEqual("policy", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentException>(() =>
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionEvaluationPolicyExtensions.Evaluate<int>(null, Expression.Default(typeof(int))));
+            Assert.AreEqual("policy", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionEvaluationPolicyExtensions.Evaluate<int>(DefaultExpressionPolicy.Instance, null));
+            Assert.AreEqual("expression", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentException>(() => ExpressionEvaluationPolicyExtensions.Evaluate<int>(new TestPolicy(), Expression.Constant(42)));
+            Assert.AreEqual("policy", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentException>(() =>
                 ExpressionEvaluationPolicyExtensions.Evaluate<int>(
                     new TestPolicy()
                     {
                         DelegateCache = new SimpleCompiledDelegateCache()
                     },
                     Expression.Constant(42)
-                ),
-                ex => Assert.AreEqual("policy", ex.ParamName));
+                ));
+            Assert.AreEqual("policy", ex4.ParamName);
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => DefaultExpressionPolicy.Instance.DelegateCache.GetOrAdd(null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => DefaultExpressionPolicy.Instance.DelegateCache.GetOrAdd(null));
+            Assert.AreEqual("expression", ex5.ParamName);
         }
 
         [TestMethod]

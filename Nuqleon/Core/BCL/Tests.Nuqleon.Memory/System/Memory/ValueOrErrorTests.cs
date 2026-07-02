@@ -42,7 +42,8 @@ namespace Tests
 
             Assert.AreSame(ex, val.Exception);
             Assert.AreEqual(ValueOrErrorKind.Error, val.Kind);
-            AssertEx.ThrowsException<Exception>(() => val.Value, err => object.ReferenceEquals(err, ex));
+            var err = Assert.ThrowsExactly<Exception>(() => val.Value);
+            object.ReferenceEquals(err, ex);
         }
     }
 }

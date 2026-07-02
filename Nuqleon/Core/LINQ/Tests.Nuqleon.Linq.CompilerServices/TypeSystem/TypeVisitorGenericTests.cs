@@ -32,16 +32,26 @@ namespace Tests.System.Linq.CompilerServices
         {
             public void RunTests()
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => Visit(default(Type)), ex => Assert.AreEqual("type", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => VisitArray(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => VisitArrayMultidimensional(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => VisitArrayVector(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => VisitByRef(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => VisitGeneric(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => VisitGenericClosed(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => VisitPointer(type: null), ex => Assert.AreEqual("type", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => Visit(default(IEnumerable<Type>)), ex => Assert.AreEqual("types", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => Visit(default(Type[])), ex => Assert.AreEqual("types", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => Visit(default(Type)));
+                Assert.AreEqual("type", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => VisitArray(type: null));
+                Assert.AreEqual("type", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => VisitArrayMultidimensional(type: null));
+                Assert.AreEqual("type", ex3.ParamName);
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => VisitArrayVector(type: null));
+                Assert.AreEqual("type", ex4.ParamName);
+                var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => VisitByRef(type: null));
+                Assert.AreEqual("type", ex5.ParamName);
+                var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => VisitGeneric(type: null));
+                Assert.AreEqual("type", ex6.ParamName);
+                var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => VisitGenericClosed(type: null));
+                Assert.AreEqual("type", ex7.ParamName);
+                var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => VisitPointer(type: null));
+                Assert.AreEqual("type", ex8.ParamName);
+                var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => Visit(default(IEnumerable<Type>)));
+                Assert.AreEqual("types", ex9.ParamName);
+                var ex10 = Assert.ThrowsExactly<ArgumentNullException>(() => Visit(default(Type[])));
+                Assert.AreEqual("types", ex10.ParamName);
             }
 
             protected override bool MakeArrayType(Type type, bool elementType) => throw new NotImplementedException();

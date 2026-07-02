@@ -23,12 +23,18 @@ namespace Tests.System.Reflection
         [TestMethod]
         public void GenericDefinitionMethodInfoSlim_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeSlimExtensions.GetGenericDefinitionMethod(type: null, "bar", genericParameterTypes: null, parameterTypes: null, returnType: null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimType.GetGenericDefinitionMethod(name: null, genericParameterTypes: null, parameterTypes: null, returnType: null), ex => Assert.AreEqual("name", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentException>(() => SlimType.GetGenericDefinitionMethod("", genericParameterTypes: null, parameterTypes: null, returnType: null), ex => Assert.AreEqual("name", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimType.GetGenericDefinitionMethod("foo", genericParameterTypes: null, parameterTypes: null, returnType: null), ex => Assert.AreEqual("parameterTypes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => SlimType.GetGenericDefinitionMethod("foo", genericParameterTypes: null, Empty, returnType: null), ex => Assert.AreEqual("genericParameterTypes", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => SlimType.GetGenericDefinitionMethod("foo", Empty, Empty, returnType: null), ex => Assert.AreEqual("genericParameterTypes", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetGenericDefinitionMethod(type: null, "bar", genericParameterTypes: null, parameterTypes: null, returnType: null));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetGenericDefinitionMethod(name: null, genericParameterTypes: null, parameterTypes: null, returnType: null));
+            Assert.AreEqual("name", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentException>(() => SlimType.GetGenericDefinitionMethod("", genericParameterTypes: null, parameterTypes: null, returnType: null));
+            Assert.AreEqual("name", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetGenericDefinitionMethod("foo", genericParameterTypes: null, parameterTypes: null, returnType: null));
+            Assert.AreEqual("parameterTypes", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetGenericDefinitionMethod("foo", genericParameterTypes: null, Empty, returnType: null));
+            Assert.AreEqual("genericParameterTypes", ex5.ParamName);
+            var ex6 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => SlimType.GetGenericDefinitionMethod("foo", Empty, Empty, returnType: null));
+            Assert.AreEqual("genericParameterTypes", ex6.ParamName);
         }
     }
 }

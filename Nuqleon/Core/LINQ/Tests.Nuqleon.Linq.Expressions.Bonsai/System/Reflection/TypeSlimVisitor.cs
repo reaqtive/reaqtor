@@ -28,8 +28,10 @@ namespace Tests.System.Reflection
         public void TypeSlimVisitor_Visit_NullArguments()
         {
             var visitor = new TypeSlimVisitor();
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.Visit((TypeSlim)null), ex => Assert.AreEqual("type", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => visitor.Visit((ReadOnlyCollection<TypeSlim>)null), ex => Assert.AreEqual("types", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.Visit((TypeSlim)null));
+            Assert.AreEqual("type", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => visitor.Visit((ReadOnlyCollection<TypeSlim>)null));
+            Assert.AreEqual("types", ex2.ParamName);
         }
 
         [TestMethod]

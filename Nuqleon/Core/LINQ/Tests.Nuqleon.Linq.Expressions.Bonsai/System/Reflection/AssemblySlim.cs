@@ -23,8 +23,10 @@ namespace Tests.System.Reflection
         [TestMethod]
         public void AssemblySlim_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentException>(() => new AssemblySlim(name: null), ex => Assert.AreEqual("name", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentException>(() => new AssemblySlim(name: ""), ex => Assert.AreEqual("name", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentException>(() => new AssemblySlim(name: null));
+            Assert.AreEqual("name", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentException>(() => new AssemblySlim(name: ""));
+            Assert.AreEqual("name", ex2.ParamName);
         }
 
         [TestMethod]

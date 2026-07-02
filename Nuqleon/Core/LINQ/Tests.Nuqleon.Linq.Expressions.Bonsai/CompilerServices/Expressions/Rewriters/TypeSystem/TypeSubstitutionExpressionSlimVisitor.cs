@@ -27,9 +27,12 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         [TestMethod]
         public void TypeSubstitutionExpressionSlimVisitor_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TypeSubstitutionExpressionSlimVisitor(default(TypeSlimSubstitutor)), ex => Assert.AreEqual("typeSubstitutor", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TypeSubstitutionExpressionSlimVisitor(default(IDictionary<TypeSlim, TypeSlim>)), ex => Assert.AreEqual("typeMap", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => GetVisitorSimple().Apply(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new TypeSubstitutionExpressionSlimVisitor(default(TypeSlimSubstitutor)));
+            Assert.AreEqual("typeSubstitutor", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new TypeSubstitutionExpressionSlimVisitor(default(IDictionary<TypeSlim, TypeSlim>)));
+            Assert.AreEqual("typeMap", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => GetVisitorSimple().Apply(expression: null));
+            Assert.AreEqual("expression", ex3.ParamName);
 
             new MySubst().Do();
         }
@@ -56,30 +59,43 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
                 var ctor = typeof(MySubst).ToTypeSlim().GetConstructor(EmptyReadOnlyCollection<TypeSlim>.Instance);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveConstructor(originalConstructor: null, t, ts), ex => Assert.AreEqual("originalConstructor", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveConstructor(ctor, declaringType: null, ts), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveConstructor(ctor, t, parameters: null), ex => Assert.AreEqual("parameters", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveConstructor(originalConstructor: null, t, ts));
+                Assert.AreEqual("originalConstructor", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveConstructor(ctor, declaringType: null, ts));
+                Assert.AreEqual("declaringType", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveConstructor(ctor, t, parameters: null));
+                Assert.AreEqual("parameters", ex3.ParamName);
 
                 var prop = typeof(string).ToTypeSlim().GetProperty("Length", typeof(int).ToTypeSlim(), EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: false);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, t, t, ts), ex => Assert.AreEqual("originalProperty", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, t, ts), ex => Assert.AreEqual("declaringType", ex.ParamName));
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(originalProperty: null, t, t, ts));
+                Assert.AreEqual("originalProperty", ex4.ParamName);
+                var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, declaringType: null, t, ts));
+                Assert.AreEqual("declaringType", ex5.ParamName);
                 //AssertEx.Throws<ArgumentNullException>(() => base.ResolveProperty(prop, t, propertyType: null, ts), ex => Assert.AreEqual("propertyType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveProperty(prop, t, t, indexerParameters: null), ex => Assert.AreEqual("indexerParameters", ex.ParamName));
+                var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveProperty(prop, t, t, indexerParameters: null));
+                Assert.AreEqual("indexerParameters", ex6.ParamName);
 
                 var fld = typeof(string).ToTypeSlim().GetField("Empty", typeof(string).ToTypeSlim());
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveField(originalField: null, t, t), ex => Assert.AreEqual("originalField", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveField(fld, declaringType: null, t), ex => Assert.AreEqual("declaringType", ex.ParamName));
+                var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveField(originalField: null, t, t));
+                Assert.AreEqual("originalField", ex7.ParamName);
+                var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveField(fld, declaringType: null, t));
+                Assert.AreEqual("declaringType", ex8.ParamName);
                 //AssertEx.Throws<ArgumentNullException>(() => base.ResolveField(fld, t, fieldType: null), ex => Assert.AreEqual("fieldType", ex.ParamName));
 
                 var mtd = typeof(string).ToTypeSlim().GetSimpleMethod("ToUpper", EmptyReadOnlyCollection<TypeSlim>.Instance, typeof(string).ToTypeSlim());
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(originalMethod: null, t, ts, ts, t), ex => Assert.AreEqual("originalMethod", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, declaringType: null, ts, ts, t), ex => Assert.AreEqual("declaringType", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, t, genericArguments: null, ts, t), ex => Assert.AreEqual("genericArguments", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, parameters: null, t), ex => Assert.AreEqual("parameters", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, ts, returnType: null), ex => Assert.AreEqual("returnType", ex.ParamName));
+                var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(originalMethod: null, t, ts, ts, t));
+                Assert.AreEqual("originalMethod", ex9.ParamName);
+                var ex10 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, declaringType: null, ts, ts, t));
+                Assert.AreEqual("declaringType", ex10.ParamName);
+                var ex11 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, t, genericArguments: null, ts, t));
+                Assert.AreEqual("genericArguments", ex11.ParamName);
+                var ex12 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, parameters: null, t));
+                Assert.AreEqual("parameters", ex12.ParamName);
+                var ex13 = Assert.ThrowsExactly<ArgumentNullException>(() => base.ResolveMethod(mtd, t, ts, ts, returnType: null));
+                Assert.AreEqual("returnType", ex13.ParamName);
             }
         }
 

@@ -23,15 +23,22 @@ namespace Tests.Reaqtor.QueryEngine
         {
             Run((_, sr, sw, ct, pr) =>
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw), ex => Assert.AreEqual("this", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw, ct), ex => Assert.AreEqual("this", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw, pr), ex => Assert.AreEqual("this", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw));
+                Assert.AreEqual("this", ex.ParamName);
+                var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw, ct));
+                Assert.AreEqual("this", ex2.ParamName);
+                var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.CheckpointAsync(null, sw, pr));
+                Assert.AreEqual("this", ex3.ParamName);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr), ex => Assert.AreEqual("this", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr, ct), ex => Assert.AreEqual("this", ex.ParamName));
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr, pr), ex => Assert.AreEqual("this", ex.ParamName));
+                var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr));
+                Assert.AreEqual("this", ex4.ParamName);
+                var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr, ct));
+                Assert.AreEqual("this", ex5.ParamName);
+                var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.RecoverAsync(null, sr, pr));
+                Assert.AreEqual("this", ex6.ParamName);
 
-                AssertEx.ThrowsException<ArgumentNullException>(() => CheckpointableExtensions.UnloadAsync(null), ex => Assert.AreEqual("this", ex.ParamName));
+                var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => CheckpointableExtensions.UnloadAsync(null));
+                Assert.AreEqual("this", ex7.ParamName);
             });
         }
 

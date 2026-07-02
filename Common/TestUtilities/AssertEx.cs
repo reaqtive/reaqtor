@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace Microsoft.VisualStudio.TestTools.UnitTesting
 {
-    public static class AssertEx
+    public static partial class AssertEx
     {
         public static void AreSequenceEqual<T>(IEnumerable<T> expected, IEnumerable<T> actual)
         {
@@ -36,51 +36,6 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
             }
         }
 
-        public static void ThrowsException<T>(Action action, Action<T> assert)
-            where T : Exception
-        {
-            var hasThrown = false;
-
-            try
-            {
-                action();
-            }
-            catch (T ex)
-            {
-                if (typeof(T) != ex.GetType())
-                    Assert.Fail();
-
-                hasThrown = true;
-                assert(ex);
-            }
-
-            Assert.IsTrue(hasThrown);
-        }
-
-        public static void ThrowsException<T>(Func<object> action, Action<T> assert)
-            where T : Exception
-        {
-            ThrowsException(() => { _ = action(); }, assert);
-        }
-
-        public static async Task ThrowsExceptionAsync<T>(Func<Task> action, Action<T> assert)
-            where T : Exception
-        {
-            try
-            {
-                await action();
-            }
-            catch (T ex)
-            {
-                if (typeof(T) != ex.GetType())
-                    Assert.Fail();
-
-                assert(ex);
-                return;
-            }
-
-            Assert.Fail();
-        }
     }
 
     [AttributeUsage(AttributeTargets.Method, AllowMultiple = false)]

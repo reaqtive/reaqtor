@@ -19,15 +19,20 @@ namespace Test.Reaqtive
         public void StableCompositeSubscription_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => new StableCompositeSubscription(default(IEnumerable<ISubscription>)), ex => Assert.AreEqual("subscriptions", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new StableCompositeSubscription(default(ISubscription[])), ex => Assert.AreEqual("subscriptions", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new StableCompositeSubscription(default(IEnumerable<ISubscription>)));
+            Assert.AreEqual("subscriptions", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new StableCompositeSubscription(default(ISubscription[])));
+            Assert.AreEqual("subscriptions", ex2.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             var cs = new StableCompositeSubscription();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => cs.Add(null), ex => Assert.AreEqual("subscription", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cs.AddRange(null), ex => Assert.AreEqual("subscriptions", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => cs.Remove(null), ex => Assert.AreEqual("subscription", ex.ParamName));
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => cs.Add(null));
+            Assert.AreEqual("subscription", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => cs.AddRange(null));
+            Assert.AreEqual("subscriptions", ex4.ParamName);
+            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => cs.Remove(null));
+            Assert.AreEqual("subscription", ex5.ParamName);
         }
 
         [TestMethod]

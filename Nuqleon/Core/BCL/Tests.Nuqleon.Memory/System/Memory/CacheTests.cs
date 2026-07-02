@@ -27,8 +27,10 @@ namespace Tests.System.Memory
         [TestMethod]
         public void Cache_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new Cache<string>(storage: null), ex => Assert.AreEqual("storage", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache(innerCache: null), ex => Assert.AreEqual("innerCache", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new Cache<string>(storage: null));
+            Assert.AreEqual("storage", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache(innerCache: null));
+            Assert.AreEqual("innerCache", ex2.ParamName);
         }
 
         [TestMethod]

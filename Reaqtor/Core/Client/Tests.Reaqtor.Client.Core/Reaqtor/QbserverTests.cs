@@ -65,41 +65,35 @@ namespace Tests.Reaqtor
 
             provider.Acquire.WaitOne();
 
-            AssertEx.ThrowsException<AggregateException>(
-                () =>
+            var ex = Assert.ThrowsExactly<AggregateException>(() =>
                 {
                     observer.OnNextAsync(43, CancellationToken.None).Wait();
-                },
-                ex =>
-                {
-                    var ioe = ex.InnerException as InvalidOperationException;
-                    Assert.IsNotNull(ioe);
-                    Assert.IsTrue(ioe.Message.Contains("Concurrent calls"));
                 });
+            var ioe = ex.InnerException as InvalidOperationException;
 
-            AssertEx.ThrowsException<AggregateException>(
-                () =>
+            Assert.IsNotNull(ioe);
+
+            Assert.IsTrue(ioe.Message.Contains("Concurrent calls"));
+
+            var ex2 = Assert.ThrowsExactly<AggregateException>(() =>
                 {
                     observer.OnErrorAsync(new Exception(), CancellationToken.None).Wait();
-                },
-                ex =>
-                {
-                    var ioe = ex.InnerException as InvalidOperationException;
-                    Assert.IsNotNull(ioe);
-                    Assert.IsTrue(ioe.Message.Contains("Concurrent calls"));
                 });
+            var ioe2 = ex2.InnerException as InvalidOperationException;
 
-            AssertEx.ThrowsException<AggregateException>(
-                () =>
+            Assert.IsNotNull(ioe2);
+
+            Assert.IsTrue(ioe2.Message.Contains("Concurrent calls"));
+
+            var ex3 = Assert.ThrowsExactly<AggregateException>(() =>
                 {
                     observer.OnCompletedAsync(CancellationToken.None).Wait();
-                },
-                ex =>
-                {
-                    var ioe = ex.InnerException as InvalidOperationException;
-                    Assert.IsNotNull(ioe);
-                    Assert.IsTrue(ioe.Message.Contains("Concurrent calls"));
                 });
+            var ioe3 = ex3.InnerException as InvalidOperationException;
+
+            Assert.IsNotNull(ioe3);
+
+            Assert.IsTrue(ioe3.Message.Contains("Concurrent calls"));
 
             var iv = new MyObserver<int>();
 

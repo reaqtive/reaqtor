@@ -44,8 +44,10 @@ namespace System.Reflection
         public void Unify_NullArguments()
         {
             var unifier = new TypeUnifier();
-            AssertEx.ThrowsException<ArgumentNullException>(() => unifier.Unify(typeRich: null, typeSlim: null), ex => Assert.AreEqual("typeRich", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => unifier.Unify(typeof(int), typeSlim: null), ex => Assert.AreEqual("typeSlim", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => unifier.Unify(typeRich: null, typeSlim: null));
+            Assert.AreEqual("typeRich", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => unifier.Unify(typeof(int), typeSlim: null));
+            Assert.AreEqual("typeSlim", ex2.ParamName);
         }
 
         [TestMethod]

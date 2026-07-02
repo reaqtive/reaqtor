@@ -23,8 +23,10 @@ namespace Tests.System.Reflection
         [TestMethod]
         public void ArrayTypeSlim_ArgumentChecks()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => TypeSlim.Array(elementType: null), ex => Assert.AreEqual("elementType", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => TypeSlim.Array(SlimType, -1), ex => Assert.AreEqual("rank", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Array(elementType: null));
+            Assert.AreEqual("elementType", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => TypeSlim.Array(SlimType, -1));
+            Assert.AreEqual("rank", ex2.ParamName);
         }
     }
 }

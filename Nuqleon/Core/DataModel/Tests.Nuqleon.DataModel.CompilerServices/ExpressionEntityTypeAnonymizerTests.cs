@@ -34,7 +34,8 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             var eta = new ExpressionEntityTypeAnonymizer();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => eta.Apply(expression: null), ex => Assert.AreEqual("expression", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => eta.Apply(expression: null));
+            Assert.AreEqual("expression", ex.ParamName);
         }
 
         [TestMethod]

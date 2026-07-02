@@ -26,9 +26,12 @@ namespace Tests.System.Linq.CompilerServices
             var tree = new Tree<int>(42);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => new Tree<int>(42, default(IEnumerable<ITree<int>>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new Tree<int>(42, default(ITree<int>[])), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentOutOfRangeException>(() => tree.ToString(indent: -1), ex => Assert.AreEqual("indent", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new Tree<int>(42, default(IEnumerable<ITree<int>>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new Tree<int>(42, default(ITree<int>[])));
+            Assert.AreEqual("children", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => tree.ToString(indent: -1));
+            Assert.AreEqual("indent", ex3.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -121,9 +124,12 @@ namespace Tests.System.Linq.CompilerServices
             var tree = new Tree<int>(42);
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            AssertEx.ThrowsException<ArgumentNullException>(() => tree.Update(default(IEnumerable<ITree<int>>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ((ITree)tree).Update(default(IEnumerable<ITree>)), ex => Assert.AreEqual("children", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => tree.Update(default(ITree<int>[])), ex => Assert.AreEqual("children", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => tree.Update(default(IEnumerable<ITree<int>>)));
+            Assert.AreEqual("children", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ((ITree)tree).Update(default(IEnumerable<ITree>)));
+            Assert.AreEqual("children", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => tree.Update(default(ITree<int>[])));
+            Assert.AreEqual("children", ex3.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
             new MyTree().TestUpdateArgs();
@@ -190,8 +196,10 @@ namespace Tests.System.Linq.CompilerServices
         public void Tree_Accept_ArgumentChecking()
         {
             var tree = new Tree<int>(42);
-            AssertEx.ThrowsException<ArgumentNullException>(() => tree.Accept(visitor: null), ex => Assert.AreEqual("visitor", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => ((ITree)tree).Accept(visitor: null), ex => Assert.AreEqual("visitor", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => tree.Accept(visitor: null));
+            Assert.AreEqual("visitor", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ((ITree)tree).Accept(visitor: null));
+            Assert.AreEqual("visitor", ex2.ParamName);
         }
 
         [TestMethod]
@@ -239,7 +247,8 @@ namespace Tests.System.Linq.CompilerServices
 
             public void TestUpdateArgs()
             {
-                AssertEx.ThrowsException<ArgumentNullException>(() => base.UpdateCore(children: null), ex => Assert.AreEqual("children", ex.ParamName));
+                var ex = Assert.ThrowsExactly<ArgumentNullException>(() => base.UpdateCore(children: null));
+                Assert.AreEqual("children", ex.ParamName);
             }
         }
 

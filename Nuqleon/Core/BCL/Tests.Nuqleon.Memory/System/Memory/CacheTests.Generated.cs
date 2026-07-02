@@ -15,8 +15,10 @@ namespace Tests.System.Memory
         public void Cache_2SharedComponents_ArgumentChecks()
         {
             var innerCache = new Cache<string>();
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache2(innerCache1: null, innerCache), ex => Assert.AreEqual("innerCache1", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache2(innerCache, innerCache2: null), ex => Assert.AreEqual("innerCache2", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache2(innerCache1: null, innerCache));
+            Assert.AreEqual("innerCache1", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache2(innerCache, innerCache2: null));
+            Assert.AreEqual("innerCache2", ex2.ParamName);
         }
 
         [TestMethod]
@@ -84,9 +86,12 @@ namespace Tests.System.Memory
         public void Cache_3SharedComponents_ArgumentChecks()
         {
             var innerCache = new Cache<string>();
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache3(innerCache1: null, innerCache, innerCache), ex => Assert.AreEqual("innerCache1", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache3(innerCache, innerCache2: null, innerCache), ex => Assert.AreEqual("innerCache2", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache3(innerCache, innerCache, innerCache3: null), ex => Assert.AreEqual("innerCache3", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache3(innerCache1: null, innerCache, innerCache));
+            Assert.AreEqual("innerCache1", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache3(innerCache, innerCache2: null, innerCache));
+            Assert.AreEqual("innerCache2", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache3(innerCache, innerCache, innerCache3: null));
+            Assert.AreEqual("innerCache3", ex3.ParamName);
         }
 
         [TestMethod]
@@ -155,10 +160,14 @@ namespace Tests.System.Memory
         public void Cache_4SharedComponents_ArgumentChecks()
         {
             var innerCache = new Cache<string>();
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache4(innerCache1: null, innerCache, innerCache, innerCache), ex => Assert.AreEqual("innerCache1", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache4(innerCache, innerCache2: null, innerCache, innerCache), ex => Assert.AreEqual("innerCache2", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache4(innerCache, innerCache, innerCache3: null, innerCache), ex => Assert.AreEqual("innerCache3", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => new TestCache4(innerCache, innerCache, innerCache, innerCache4: null), ex => Assert.AreEqual("innerCache4", ex.ParamName));
+            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache4(innerCache1: null, innerCache, innerCache, innerCache));
+            Assert.AreEqual("innerCache1", ex.ParamName);
+            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache4(innerCache, innerCache2: null, innerCache, innerCache));
+            Assert.AreEqual("innerCache2", ex2.ParamName);
+            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache4(innerCache, innerCache, innerCache3: null, innerCache));
+            Assert.AreEqual("innerCache3", ex3.ParamName);
+            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => new TestCache4(innerCache, innerCache, innerCache, innerCache4: null));
+            Assert.AreEqual("innerCache4", ex4.ParamName);
         }
 
         [TestMethod]
