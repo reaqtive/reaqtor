@@ -8,7 +8,9 @@
 // ER, BD - November 2013 - Created this file.
 //
 
+#if DEBUG
 using System;
+#endif
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
