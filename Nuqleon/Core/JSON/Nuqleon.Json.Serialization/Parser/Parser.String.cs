@@ -107,11 +107,7 @@ namespace Nuqleon.Json.Serialization
                     case '"':
                         var end = i;
                         i++;
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                         return str[start..end];
-#else
-                        return str.Substring(start, end - start);
-#endif
                     default:
                         if (char.IsControl(c))
                             throw new ParseException(string.Format(CultureInfo.InvariantCulture, "Expected String at position '{0}'. Unexpected control character '{1}' found in string literal.", b, c), i, ParseError.UnexpectedToken);

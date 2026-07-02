@@ -8,38 +8,3 @@
 // BD - May 2014 - Created this file.
 //
 
-#if !NET6_0_OR_GREATER // https://aka.ms/binaryformatter
-
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using Nuqleon.Json.Parser;
-
-namespace Tests.Nuqleon.Json
-{
-    [TestClass]
-    public class ParseExceptionTests
-    {
-        [TestMethod]
-        public void ParseException_Serialization()
-        {
-            var ex = new ParseException("foo", 42, ParseError.ObjectEmptyMember);
-
-            var fmt = new BinaryFormatter();
-
-            var ms = new MemoryStream();
-            fmt.Serialize(ms, ex);
-
-            ms.Position = 0;
-            var er = (ParseException)fmt.Deserialize(ms);
-
-            Assert.AreEqual(er.Position, ex.Position);
-            Assert.AreEqual(er.Error, ex.Error);
-            Assert.AreEqual(er.Message, ex.Message);
-        }
-    }
-}
-
-#endif

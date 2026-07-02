@@ -341,11 +341,7 @@ namespace System.Linq.Expressions
                             //
                             // Stuff the result in the last expression slot.
                             //
-#if NET6_0_OR_GREATER
                             outerBlock[^1] = result;
-#else
-                            outerBlock[outerBlock.Length - 1] = result;
-#endif
 
                             //
                             // Create the final block to return. Note we set the type explicitly

@@ -269,11 +269,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
                     new ProjectingEnumerator<KeyValuePair<string, byte[]>, KeyValuePair<string, byte[]>>(
                         (IEnumerator<KeyValuePair<string, byte[]>>)res.Result,
                         kvp => new KeyValuePair<string, byte[]>(
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                             kvp.Key[len..],
-#else
-                            kvp.Key.Substring(len),
-#endif
                             kvp.Value
                         )
                     );

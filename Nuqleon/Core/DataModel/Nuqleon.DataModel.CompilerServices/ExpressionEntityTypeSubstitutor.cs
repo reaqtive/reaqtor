@@ -16,11 +16,7 @@ using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
-#if NETSTANDARD2_0
-using Nuqleon.Reflection.Emit;
-#else
 using System.Reflection.Emit;
-#endif
 
 namespace Nuqleon.DataModel.CompilerServices
 {

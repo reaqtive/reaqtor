@@ -13,10 +13,6 @@ using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 
-#if !NET6_0_OR_GREATER // https://aka.ms/binaryformatter
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -44,21 +40,6 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(p.SequenceEqual(ex.Parameters));
         }
 
-#if !NET6_0_OR_GREATER // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void UnboundParameterException_Serialize()
-        {
-            var ex = new UnboundParameterException("Oops", Expression.Constant(42), new[] { Expression.Parameter(typeof(int)) });
-
-            var ms = new MemoryStream();
-            new BinaryFormatter().Serialize(ms, ex);
-            ms.Position = 0;
-
-            var err = (UnboundParameterException)new BinaryFormatter().Deserialize(ms);
-            Assert.IsNotNull(err);
-            Assert.AreEqual(ex.Message, err.Message);
-        }
-#endif
 
         [TestMethod]
         public void UnboundParameterException_ThrowIfOpen_Positive()

@@ -163,9 +163,11 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
 4. **`CS8981` is suppressed.** The operators use a deliberate, long-standing convention of terse private
    nested type names (`_` for the primary operator/observer, `i` for a secondary inner observer); C# 14
    flags all-lowercase type names as possibly-future-reserved.
-5. **Inline dead framework branches remain.** Whole-file-dead polyfills were deleted, but the inactive
-   `#else`/`#if NET472` branches inside otherwise-active files are left in place (they compile to
-   nothing on net10). Stripping them safely is mechanical cleanup best reviewed on its own.
+5. **Inline dead framework branches: swept (#159).** With every live project single-targeting
+   net10.0, all `#if` conditions over TFM symbols became statically decidable; a three-valued
+   evaluator removed the dead branches and unwrapped the live ones (~217 constructs across 88
+   files, pure deletions). Constructs involving real feature flags (`USE_SLIM`, `DEBUG`,
+   `USE_SPAN`, …) are untouched.
 6. **CI coverage on MTP is translated but unverified end-to-end.** The `dotnet test` arguments were
    converted to MTP equivalents (`--coverage` + `codecoverage.runsettings`, `--hangdump-timeout`, the
    reportgenerator glob), but the Azure Pipelines run itself could not be exercised locally — worth a

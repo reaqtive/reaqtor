@@ -561,11 +561,7 @@ namespace System.Linq.Expressions
             {
                 if (n.EndsWith("()", StringComparison.Ordinal))
                 {
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                     n = n[0..^2];
-#else
-                    n = n.Substring(0, n.Length - 2);
-#endif
                 }
             }
 
@@ -626,11 +622,7 @@ namespace System.Linq.Expressions
             {
                 if (n.EndsWith("()", StringComparison.Ordinal))
                 {
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                     n = n[0..^2];
-#else
-                    n = n.Substring(0, n.Length - 2);
-#endif
                 }
             }
 

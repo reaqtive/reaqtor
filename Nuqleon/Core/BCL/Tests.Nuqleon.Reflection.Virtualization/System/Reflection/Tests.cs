@@ -255,12 +255,10 @@ namespace Tests.System.Reflection.Virtualization
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), BindingFlags.Public | BindingFlags.Instance, binder: null, [typeof(int), typeof(int)], modifiers: null));
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, [typeof(int), typeof(int)], modifiers: null));
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, [typeof(int), typeof(int)]));
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, [typeof(int), typeof(int)], modifiers: null));
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, BindingFlags.Public | BindingFlags.Instance, binder: null, [typeof(int), typeof(int)], modifiers: null));
             Assert.AreEqual(substring, p.GetMethod(typeof(string), nameof(string.Substring), genericParameterCount: 0, BindingFlags.Public | BindingFlags.Instance, binder: null, CallingConventions.Any, [typeof(int), typeof(int)], modifiers: null));
-#endif
 
             var isNullOrEmpty = p.GetMethod(typeof(string), nameof(string.IsNullOrEmpty));
             Assert.AreEqual(true, isNullOrEmpty.Invoke(null, [""]));
@@ -1068,11 +1066,6 @@ namespace Tests.System.Reflection.Virtualization
         {
             var asm = typeof(string).Assembly;
 
-#if !NET6_0_OR_GREATER
-            Assert.AreEqual(asm.CodeBase, p.GetCodeBase(asm));
-            Assert.AreEqual(asm.EscapedCodeBase, p.GetEscapedCodeBase(asm));
-            Assert.AreEqual(asm.GlobalAssemblyCache, p.GetGlobalAssemblyCache(asm));
-#endif
 
             Assert.AreEqual(asm.FullName, p.GetFullName(asm));
             Assert.AreEqual(asm.HostContext, p.GetHostContext(asm));

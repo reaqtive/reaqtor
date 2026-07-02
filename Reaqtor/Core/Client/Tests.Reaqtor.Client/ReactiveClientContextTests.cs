@@ -75,9 +75,6 @@ namespace Tests.Reaqtor.Client
         [TestMethod]
         public void ReactiveClientContext_Qubscription_ArgumentChecking()
         {
-#if !NET6_0_OR_GREATER
-            Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).DisposeAsync());
-#endif
             Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).AsDisposable());
         }
 
@@ -886,13 +883,8 @@ namespace Tests.Reaqtor.Client
                     var s1 = ctx.GetSubscription(new Uri(Constants.Subscription.SUB2));
                     var s2 = ctx.GetSubscription(new Uri(Constants.Subscription.SUB3));
 
-#if NET6_0_OR_GREATER // Suppresses CA2012
                     s.DisposeAsync(CancellationToken.None).AsTask();
                     s1.DisposeAsync().AsTask();
-#else
-                    s.DisposeAsync(CancellationToken.None);
-                    s1.DisposeAsync();
-#endif
                     s2.AsDisposable().Dispose();
                 },
                 new DeleteSubscription(new Uri(Constants.Subscription.SUB1)),
@@ -923,9 +915,7 @@ namespace Tests.Reaqtor.Client
                     qubject.SubscribeAsync(ctx.GetObserver<int>(new Uri(Constants.Observer.OB)), new Uri(Constants.Subscription.SUB), null, CancellationToken.None);
 
                     ctx.GetStream<int, int>(new Uri(Constants.Stream.FOO)).DisposeAsync()
-#if NET6_0_OR_GREATER
                         .AsTask()
-#endif
                         .Wait();
                 },
                 new CreateStream(new Uri(Constants.Stream.FOO), createStreamExpression, null),
@@ -995,9 +985,7 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Subscription.SUB1), null).Wait();
 
                     ctx.GetSubscription(new Uri(Constants.Subscription.SUB1)).DisposeAsync()
-#if NET6_0_OR_GREATER
                         .AsTask()
-#endif
                         .Wait();
                 },
                 new CreateSubscription(new Uri(Constants.Subscription.SUB1), createSubscriptionExpression, null),

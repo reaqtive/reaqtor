@@ -53,11 +53,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
         /// <returns>A hash code.</returns>
         public override int GetHashCode() =>
             HashHelpers.Combine(
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                 Name?.GetHashCode(StringComparison.Ordinal) ?? 0,
-#else
-                Name?.GetHashCode() ?? 0,
-#endif
                 Type?.GetHashCode() ?? 0
             );
 

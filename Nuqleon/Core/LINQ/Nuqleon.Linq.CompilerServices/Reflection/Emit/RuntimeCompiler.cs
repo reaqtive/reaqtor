@@ -17,9 +17,6 @@ using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading;
 
-#if NETSTANDARD2_0
-using Nuqleon.Reflection.Emit;
-#endif
 
 namespace System.Linq.CompilerServices
 {
@@ -619,11 +616,7 @@ namespace System.Linq.CompilerServices
         {
             var asmn = new AssemblyName("__GeneratedTypes_" + Guid.NewGuid());
 
-#if NETSTANDARD || NET6_0_OR_GREATER
             var asmb = AssemblyBuilder.DefineDynamicAssembly(
-#else
-            var asmb = AppDomain.CurrentDomain.DefineDynamicAssembly(
-#endif
                 asmn,
                 AssemblyBuilderAccess.RunAndCollect
             );
@@ -883,11 +876,7 @@ namespace System.Linq.CompilerServices
                 {
                     var name = property.Name;
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                     var nameHash = name.GetHashCode(StringComparison.Ordinal);
-#else
-                    var nameHash = name.GetHashCode();
-#endif
 
                     initialHash = (int)((prime * initialHash) + nameHash);
                 }
@@ -913,9 +902,6 @@ namespace System.Linq.CompilerServices
                         var name = property.Name;
                         var type = property.Type;
 
-#if NETSTANDARD2_0
-                        type = type.Unwrap();
-#endif
 
                         var field = _fields[name];
 

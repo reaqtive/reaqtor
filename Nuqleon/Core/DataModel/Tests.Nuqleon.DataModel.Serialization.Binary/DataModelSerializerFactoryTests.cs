@@ -10,9 +10,6 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Threading;
 
-#if !DEBUG && !NET6_0_OR_GREATER // REVIEW: Some behavioral changes with finalization have been found in .NET 5.0 in Release builds.
-using System.Runtime.CompilerServices;
-#endif
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -319,55 +316,6 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             Run(tests);
         }
 
-#if !DEBUG && !NET6_0_OR_GREATER // REVIEW: Some behavioral changes with finalization have been found in .NET 5.0 in Release builds.
-        [TestMethod]
-        public void DataModelSerializerFactory_GarbageCollectibleSerializerWithCycles()
-        {
-            // NB: Test is flaky on Mono.
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                return;
-            }
-
-            var stream = new MemoryStream();
-
-            {
-                Do1(stream);
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-            }
-
-            Assert.AreEqual(1, Volatile.Read(ref MySerializer.Finalized));
-
-            stream.Position = 0;
-
-            {
-                Do2(stream);
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-                GC.Collect();
-            }
-
-            Assert.AreEqual(2, Volatile.Read(ref MySerializer.Finalized));
-
-            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-            static void Do1(MemoryStream stream)
-            {
-                var factory = new MySerializer();
-                factory.Serialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream, null);
-            }
-
-            [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-            static void Do2(MemoryStream stream)
-            {
-                var factory = new MySerializer();
-                factory.Deserialize(typeof(DataModelSerializerFactoryTestCase.OuterCycleType), stream);
-            }
-        }
-#endif
 
         public class Geocoordinate
         {

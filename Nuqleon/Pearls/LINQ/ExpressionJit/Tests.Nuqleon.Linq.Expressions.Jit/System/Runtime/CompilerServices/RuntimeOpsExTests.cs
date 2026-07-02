@@ -361,39 +361,6 @@ namespace Tests
             Assert.AreEqual(44, r[0]);
         }
 
-#if !NET6_0_OR_GREATER // See RuntimeOps. Some functionality is currently not supported.
-        [TestMethod]
-        public void Quote_RuntimeVariables_Hoisted3()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var y = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { y });
-            var definitions = new Dictionary<ParameterExpression, StorageKind>
-            {
-                { y, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
-            };
-            var h = new HoistedLocals(parent: null, variables, definitions);
-
-            var e = Expression.Lambda<Func<int, IRuntimeVariables>>(Expression.RuntimeVariables(x, y), x);
-
-            Assert.AreEqual(typeof(Closure<StrongBox<int>>), h.Closure.ClosureType);
-
-            var c = new Closure<StrongBox<int>> { Item1 = new StrongBox<int>(42) };
-            var q = (Expression<Func<int, IRuntimeVariables>>)RuntimeOpsEx.Quote(e, h, c);
-            var f = q.Compile();
-
-            Assert.AreEqual(41, f(41)[0]);
-            Assert.AreEqual(42, f(41)[1]);
-            Assert.AreEqual(2, f(41).Count);
-
-            var r = f(43);
-            r[0] = 44;
-            r[1] = 45;
-            Assert.AreEqual(44, r[0]);
-            Assert.AreEqual(45, r[1]);
-            Assert.AreEqual(45, c.Item1.Value);
-        }
-#endif
 
         private static HoistedLocals GetEmptyHoistedLocals() => new(parent: null, new ReadOnlyCollection<ParameterExpression>(Array.Empty<ParameterExpression>()), []);
     }

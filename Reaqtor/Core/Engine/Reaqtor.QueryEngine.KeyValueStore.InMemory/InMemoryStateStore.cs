@@ -354,11 +354,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
                         foreach (var chunk in kv2.Value.Buffer(40))
                         {
                             var bytes = BitConverter.ToString(chunk)
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                                 .Replace("-", " ", StringComparison.Ordinal)
-#else
-                                .Replace("-", " ")
-#endif
                                 ;
 
                             var text = chunk.Select(b => (char)b).Aggregate(new StringBuilder(), (sbi, c) => char.IsControl(c) ? sbi.Append('?') : sbi.Append(c), sbi => sbi.ToString());

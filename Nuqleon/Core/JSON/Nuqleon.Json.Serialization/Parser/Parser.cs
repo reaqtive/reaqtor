@@ -582,10 +582,8 @@ namespace Nuqleon.Json.Serialization
 
 #if USE_SPAN
                             res = str.AsSpan(b, i - b);
-#elif NET6_0_OR_GREATER || NETSTANDARD2_1
-                            res = str[b..i];
 #else
-                            res = str.Substring(b, i - b);
+                            res = str[b..i];
 #endif
                             return true;
                         }
@@ -735,11 +733,7 @@ namespace Nuqleon.Json.Serialization
         /// <returns>true if the specified string starts with the specified value at the specified index; otherwise, false.</returns>
         internal static bool StartsWithFast(string str, ref int i, string value)
         {
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
             Debug.Assert(value.IndexOf('\\', System.StringComparison.Ordinal) < 0 && value.IndexOf('"', System.StringComparison.Ordinal) < 0);
-#else
-            Debug.Assert(value.IndexOf('\\') < 0 && value.IndexOf('"') < 0);
-#endif
 
             if (string.CompareOrdinal(str, i, value, 0, value.Length) == 0)
             {

@@ -10,10 +10,6 @@
 
 using System;
 
-#if !NET6_0_OR_GREATER // https://aka.ms/binaryformatter
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
@@ -48,20 +44,5 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
             Assert.AreSame(err, ex.InnerException);
         }
 
-#if !NET6_0_OR_GREATER // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void DataSerializerException_Serialize()
-        {
-            var ex = new DataSerializerException("foo");
-
-            var bf = new BinaryFormatter();
-            var ms = new MemoryStream();
-            bf.Serialize(ms, ex);
-            ms.Position = 0;
-            var res = (DataSerializerException)bf.Deserialize(ms);
-
-            Assert.AreEqual(ex.Message, res.Message);
-        }
-#endif
     }
 }

@@ -20,12 +20,6 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Nuqleon.DataModel;
 using Nuqleon.DataModel.CompilerServices;
 
-#if NETFRAMEWORK
-using System.IO;
-using System.Reflection.Emit;
-
-using Nuqleon.DataModel.CompilerServices.Bonsai;
-#endif
 
 namespace Tests.Nuqleon.DataModel.CompilerServices
 {
@@ -530,63 +524,6 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
         #region Regression Tests
 
-#if NETFRAMEWORK
-        [TestMethod]
-        public void RecordizeSlim_UsingTypesFromLoadedAssembly()
-        {
-            var assemblyName = "Test.dll";
-            var assemblyBase = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString());
-            var assemblyPath = Path.Combine(assemblyBase, assemblyName);
-
-            try
-            {
-                Directory.CreateDirectory(assemblyBase);
-
-                // Emit dynamic assembly.
-                var dynamicAssembly = AppDomain.CurrentDomain.DefineDynamicAssembly(new AssemblyName(Path.GetFileNameWithoutExtension(assemblyName)), AssemblyBuilderAccess.RunAndSave, assemblyBase);
-                var module = dynamicAssembly.DefineDynamicModule("Test", assemblyName);
-                var type = module.DefineType("Test", TypeAttributes.Class | TypeAttributes.Public);
-                var prop = type.DefineProperty("Test", PropertyAttributes.None, typeof(int), Type.EmptyTypes);
-                var getter = type.DefineMethod("get_Test", MethodAttributes.Public);
-                var ilgen = getter.GetILGenerator();
-                ilgen.Emit(OpCodes.Ldc_I4_0);
-                ilgen.Emit(OpCodes.Ret);
-                prop.SetGetMethod(getter);
-                prop.SetCustomAttribute(new CustomAttributeBuilder((ConstructorInfo)ReflectionHelpers.InfoOf(() => new MappingAttribute(null)), new object[] { "foo" }));
-                var res = type.CreateType();
-                dynamicAssembly.Save("Test.dll");
-
-                // Execute test logic in separate AppDomain so binary can be cleaned up.
-                var domain = AppDomain.CreateDomain(MethodBase.GetCurrentMethod().Name, null, new AppDomainSetup { ApplicationBase = AppDomain.CurrentDomain.BaseDirectory });
-                domain.SetData("AssemblyPath", assemblyPath);
-                domain.DoCallBack(() =>
-                {
-                    var remotedAssemblyPath = (string)AppDomain.CurrentDomain.GetData("AssemblyPath");
-                    var assembly = Assembly.LoadFrom(remotedAssemblyPath);
-                    var types = assembly.GetTypes();
-
-                    foreach (var t in types)
-                    {
-                        var expr = Expression.New(t);
-                        var lifter = new ExpressionToExpressionSlimConverter(new DataModelTypeSpace());
-                        var slimExpr = lifter.Visit(expr);
-                        var recordizer = new ExpressionSlimEntityTypeRecordizer();
-
-                        // Test fails if `Apply` throws.
-                        recordizer.Apply(slimExpr);
-                    }
-                });
-                AppDomain.Unload(domain);
-            }
-            finally
-            {
-                try { if (File.Exists(assemblyPath)) File.Delete(assemblyPath); }
-                catch { }
-                try { if (Directory.Exists(assemblyBase)) Directory.Delete(assemblyBase); }
-                catch { }
-            }
-        }
-#endif
 
         #endregion
 

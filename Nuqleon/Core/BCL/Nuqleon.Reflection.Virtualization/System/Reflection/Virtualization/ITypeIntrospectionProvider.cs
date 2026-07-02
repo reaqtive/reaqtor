@@ -426,7 +426,6 @@ namespace System.Reflection
         /// <returns>An array of <see cref="MemberInfo" /> objects representing all members defined for the specified type that match the specified binding constraints.-or- An empty array of type <see cref="MemberInfo" />, if no members are defined for the specified type, or if none of the defined members match the binding constraints.</returns>
         IReadOnlyList<MemberInfo> GetMembers(Type type, BindingFlags bindingAttr);
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
         /// <summary>
         /// Searches for the specified method whose parameters match the specified generic parameter count, argument types and modifiers, using the specified binding constraints and the specified calling convention.
         /// </summary>
@@ -440,7 +439,6 @@ namespace System.Reflection
         /// <param name="modifiers">An array of <see cref="ParameterModifier" /> objects representing the attributes associated with the corresponding element in the <paramref name="types" /> array. The default binder does not process this parameter.</param>
         /// <returns>An object representing the method that matches the specified requirements, if found; otherwise, null.</returns>
         MethodInfo GetMethod(Type type, string name, int genericParameterCount, BindingFlags bindingAttr, Binder binder, CallingConventions callConvention, Type[] types, ParameterModifier[] modifiers);
-#endif
 
         /// <summary>
         /// Searches for the specified method whose parameters match the specified argument types and modifiers, using the specified binding constraints and the specified calling convention.

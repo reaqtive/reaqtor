@@ -8,9 +8,7 @@
 // BD - November 2009 - Created this file.
 //
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
 using System;
-#endif
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -238,11 +236,7 @@ namespace Nuqleon.Json.Parser
                                                     }
                                                     else
                                                     {
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                                                         if (!int.TryParse(_input.AsSpan(i, 4), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int val))
-#else
-                                                        if (!int.TryParse(_input.Substring(i, 4), NumberStyles.AllowHexSpecifier, CultureInfo.InvariantCulture, out int val))
-#endif
                                                         {
                                                             throw new ParseException("Unrecognized Unicode escape sequence.", i, ParseError.InvalidToken);
                                                         }
@@ -454,11 +448,7 @@ namespace Nuqleon.Json.Parser
                 }
             }
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
             return Token.Number(b, _input[b..i]);
-#else
-            return Token.Number(b, _input.Substring(b, i - b));
-#endif
         }
 
         private Token Exponent(int b, ref int i)
@@ -487,11 +477,7 @@ namespace Nuqleon.Json.Parser
                 }
             }
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
             return Token.Number(b, _input[b..i]);
-#else
-            return Token.Number(b, _input.Substring(b, i - b));
-#endif
         }
 
         private char Peek(int i) => i + 1 >= _input.Length ? (char)0 : _input[i + 1];

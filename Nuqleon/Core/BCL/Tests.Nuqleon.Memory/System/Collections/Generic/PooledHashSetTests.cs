@@ -14,10 +14,6 @@ using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-#if !NET6_0_OR_GREATER
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
 
 namespace Tests
 {
@@ -203,37 +199,6 @@ namespace Tests
             }
         }
 
-#if !NET6_0_OR_GREATER // https://aka.ms/binaryformatter
-        [TestMethod]
-        public void PooledHashSet_Serialization()
-        {
-            var ms = new MemoryStream();
-
-            using (var obj = PooledHashSet<string>.New())
-            {
-                var set = obj.HashSet;
-
-                set.Add("qux");
-                set.Add("foo");
-                set.Add("bar");
-                set.Add("baz");
-
-                var fmt = new BinaryFormatter();
-                fmt.Serialize(ms, set);
-            }
-
-            ms.Position = 0;
-
-            {
-                var fmt = new BinaryFormatter();
-                var set = (PooledHashSet<string>)fmt.Deserialize(ms);
-
-                Assert.IsTrue(set.SetEquals(exp));
-
-                set.Free(); // no-op but doesn't throw
-            }
-        }
-#endif
 
         [TestMethod]
         public void PooledHashSet_GottenTooBig()

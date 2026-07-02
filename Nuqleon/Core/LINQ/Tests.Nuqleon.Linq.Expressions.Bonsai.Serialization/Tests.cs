@@ -3008,37 +3008,6 @@ namespace Tests
             Assert.AreEqual(f.Body.ToString(), e08.ToString());
         }
 
-#if NETFRAMEWORK
-        [TestMethod]
-        public void Bonsai_E2E_Jacquard()
-        {
-            Expression<Func<IQueryable<string>, IQueryable<string>>> f = urlsToSearch =>
-                from url in urlsToSearch
-                let client = new System.Net.WebClient
-                {
-                    Headers =
-                    {
-                        { "user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)" }
-                    }
-                }
-                let data = client.OpenRead(url)
-                let reader = new System.IO.StreamReader(data)
-                let s = reader.ReadToEnd()
-                where s.Substring(0, 64).Dump(url)
-                where data.Close()
-                where reader.Close()
-                select s;
-
-            var e = (Expression<Func<IQueryable<string>, IQueryable<string>>>)Roundtrip(f);
-
-            static ExpressionEqualityComparator factory() => new Comparator(new StructuralTypeEqualityComparator());
-            Assert.IsTrue(new ExpressionEqualityComparer(factory).Equals(f, e));
-
-            var e08 = (Expression<Func<IQueryable<string>, IQueryable<string>>>)Roundtrip(f, V08);
-
-            Assert.IsTrue(new ExpressionEqualityComparer(factory).Equals(f, e08));
-        }
-#endif
 
         [TestMethod]
         public void Bonsai_E2E_GenericParameterBindings()

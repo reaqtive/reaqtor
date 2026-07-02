@@ -137,14 +137,8 @@ namespace System.Linq.Expressions
 
             lock (_cache)
             {
-#if NET6_0_OR_GREATER || NETSTANDARD3_1
                 if (_cache.TryAdd(key, cacheEntry)) // PERF: expensive comparer (2)
                 {
-#else
-                if (!_cache.ContainsKey(key)) // PERF: expensive comparer (2)
-                {
-                    _cache[key] = cacheEntry; // PERF: expensive comparer (3)
-#endif
 
                     OnAdded(expression, cacheEntry.Delegate);
 

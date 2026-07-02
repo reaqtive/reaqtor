@@ -62,13 +62,8 @@ namespace System.Reflection
         {
             if (_hashCode == 0)
             {
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                 var hash = Assembly?.Name?.GetHashCode(StringComparison.Ordinal) ?? 0;
                 _hashCode = (int)(hash * TypeSlimEqualityComparator.Prime) + Name.GetHashCode(StringComparison.Ordinal);
-#else
-                var hash = Assembly?.Name?.GetHashCode() ?? 0;
-                _hashCode = (int)(hash * TypeSlimEqualityComparator.Prime) + Name.GetHashCode();
-#endif
             }
 
             return _hashCode;

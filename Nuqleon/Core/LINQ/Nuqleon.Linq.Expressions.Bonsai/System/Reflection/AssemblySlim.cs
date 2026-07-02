@@ -68,11 +68,7 @@ namespace System.Reflection
         /// </summary>
         /// <returns>A hash code for the current instance.</returns>
         public override int GetHashCode() =>
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
             Name.GetHashCode(StringComparison.Ordinal);
-#else
-            Name.GetHashCode();
-#endif
 
         /// <summary>
         /// Returns a friendly string representation of the assembly.

@@ -480,11 +480,7 @@ namespace System.Reflection
 
                 hash = (int)(hash * Prime) + (int)obj.MemberType;
                 hash = (int)(hash * Prime) +
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                     obj.Name.GetHashCode(StringComparison.Ordinal)
-#else
-                    obj.Name.GetHashCode()
-#endif
                     ;
 
                 if (obj.FieldType != null)
@@ -524,11 +520,7 @@ namespace System.Reflection
                 var hash = _typeComparer.GetHashCode(obj.DeclaringType);
 
                 hash = (int)(hash * Prime) +
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                     obj.Name.GetHashCode(StringComparison.Ordinal)
-#else
-                    obj.Name.GetHashCode()
-#endif
                     ;
 
                 if (obj.ReturnType != null)
@@ -646,11 +638,7 @@ namespace System.Reflection
 
                 hash = (int)(hash * Prime) + (int)obj.MemberType;
                 hash = (int)(hash * Prime) +
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                     obj.Name.GetHashCode(StringComparison.Ordinal)
-#else
-                    obj.Name.GetHashCode()
-#endif
                     ;
 
                 if (obj.PropertyType != null)

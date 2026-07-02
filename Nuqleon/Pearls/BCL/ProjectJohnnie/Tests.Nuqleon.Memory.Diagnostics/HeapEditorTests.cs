@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT license.
 // See the LICENSE file in the project root for more information.
 
-#if !NET6_0_OR_GREATER
-using System;
-#endif
 using System.Collections.Generic;
 using System.Memory.Diagnostics;
 using System.Runtime.CompilerServices;
@@ -100,24 +97,6 @@ namespace Tests
             Assert.AreEqual("FOO", p.Value.t.s);
         }
 
-#if !NET6_0_OR_GREATER // NB: Broken due to change to KeyValuePair<K, V> where fields are now read-only (where they weren't before). See test case below.
-        [TestMethod]
-        public void HeapEditor_Basics_Struct_Nested2()
-        {
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                Assert.Inconclusive("Issue on Mono to be investigated.");
-                return;
-            }
-
-            var e = new MyEditor();
-
-            var p = new StrongBox<KeyValuePair<int, KeyValuePair<string, int>>>(new(0, new("foo", 1)));
-            e.Walk(p, _ => true);
-
-            Assert.AreEqual("FOO", p.Value.Value.Key);
-        }
-#endif
 
 #if TODO // NB: Write-backs in heap editor are shallow; this is a known limitation in the Pearl right now.
         [TestMethod]

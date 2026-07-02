@@ -103,9 +103,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public async Task DefineUndefineObservableAsync()
         {
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine();
 
             var ctx = GetQueryEngineReactiveService(qe);
@@ -147,9 +145,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public async Task DefineUndefineObserverAsync()
         {
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine();
 
             var ctx = GetQueryEngineReactiveService(qe);
@@ -191,9 +187,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public async Task DefineUndefineStreamFactoryAsync()
         {
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine();
 
             var ctx = qe.ReactiveService;
@@ -298,9 +292,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public async Task SubscriptionLifecycleAsync()
         {
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine();
 
             var ctx = new TupletizingClientContext(qe.ServiceProvider);
@@ -534,9 +526,7 @@ namespace Tests.Reaqtor.QueryEngine
             }
 
             sub.DisposeAsync(CancellationToken.None)
-#if NET6_0_OR_GREATER
                 .AsTask()
-#endif
                 .Wait();
 
             AssertResult(v1, 10, (i, v) => Assert.AreEqual(i * i, v));
@@ -1099,9 +1089,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1114,9 +1102,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = GetQueryEngineReactiveService(qe2);
@@ -1134,9 +1120,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             InMemoryStateStore state;
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1153,9 +1137,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = GetQueryEngineReactiveService(qe2);
@@ -1171,9 +1153,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1186,9 +1166,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1200,9 +1178,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe3 = CreateQueryEngine(kvs))
             {
                 var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
@@ -1211,9 +1187,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() =>
                     ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None)
-#if NET6_0_OR_GREATER
                         .AsTask()
-#endif
                 );
             }
         }
@@ -1223,9 +1197,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1238,9 +1210,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1256,9 +1226,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe3 = CreateQueryEngine(kvs))
             {
                 var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
@@ -1276,9 +1244,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             InMemoryStateStore state;
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1293,9 +1259,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1311,9 +1275,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe3 = CreateQueryEngine(kvs))
             {
                 var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
@@ -1337,9 +1299,7 @@ namespace Tests.Reaqtor.QueryEngine
             var deleteCreate_delete_id = new Uri("test://sub4");
             var deleteCreate_deleteCreate_id = new Uri("test://sub5");
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1381,9 +1341,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1411,9 +1369,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe3 = CreateQueryEngine(kvs))
             {
                 _ = new TupletizingClientContext(qe3.ServiceProvider);
@@ -1434,9 +1390,7 @@ namespace Tests.Reaqtor.QueryEngine
                 // First create an engine persist a subscription creation in the state store
                 var kvs1 = new InMemoryKeyValueStore();
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe1 = CreateQueryEngine(kvs1))
                 {
                     var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1455,9 +1409,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var kvs2 = new InMemoryKeyValueStore();
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe2 = CreateQueryEngine(kvs2))
                 {
                     var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1472,9 +1424,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Now create engine with first state store (the one that has sub) and second kvs (also has sub)
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe3 = CreateQueryEngine(kvs2))
                 {
                     AssertEx.ThrowsException<AggregateException>(() => Recover(qe3, state), ex =>
@@ -1488,9 +1438,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Do it again but handle the exception
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe4 = CreateQueryEngine(kvs2))
                 {
                     var handled = false;
@@ -1516,9 +1464,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe1 = CreateQueryEngine(kvs))
                 {
                     var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1530,9 +1476,7 @@ namespace Tests.Reaqtor.QueryEngine
                     await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
                 }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe2 = CreateQueryEngine(kvs))
                 {
                     var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
@@ -1545,9 +1489,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Unhandled
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe3 = CreateQueryEngine(kvs))
                 {
                     AssertEx.ThrowsException<AggregateException>(() => Recover(qe3, state), ex =>
@@ -1561,9 +1503,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 // Handled
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
                 await
-#endif
                 using (var qe4 = CreateQueryEngine(kvs))
                 {
                     var handled = false;
@@ -1593,9 +1533,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             InMemoryStateStore state;
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe1 = CreateQueryEngine(kvs))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
@@ -1615,9 +1553,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Crash();
             }
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe2 = CreateQueryEngine(kvs))
             {
                 var ctx2 = GetQueryEngineReactiveService(qe2);
@@ -1633,9 +1569,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using (var qe = CreateQueryEngine(kvs))
             {
                 var ctx = new TupletizingClientContext(qe.ServiceProvider);
@@ -1652,9 +1586,7 @@ namespace Tests.Reaqtor.QueryEngine
                 kvs.StartingOperation += fail;
                 await AssertEx.ThrowsExceptionAsync<MyException>(() =>
                     test.DisposeAsync(CancellationToken.None)
-#if NET6_0_OR_GREATER
                         .AsTask()
-#endif
                     ,
                     e => Assert.AreSame(ex, e));
 
@@ -2233,15 +2165,11 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(actx.Streams.TryGetValue(streamUri, out p));
 
             sub.DisposeAsync(CancellationToken.None)
-#if NET6_0_OR_GREATER
                 .AsTask()
-#endif
                 .Wait();
 
             actx.GetStream<string, string>(streamUri).DisposeAsync(CancellationToken.None)
-#if NET6_0_OR_GREATER
                 .AsTask()
-#endif
                 .Wait();
 
             Assert.IsFalse(actx.Streams.TryGetValue(streamUri, out p));
@@ -2485,9 +2413,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var kvs = new InMemoryKeyValueStore();
 
-#if NET6_0_OR_GREATER // NB: Only using ValueTask-based DisposeAsync in .NET Standard 2.1 and beyond at the moment.
             await
-#endif
             using var qe = CreateQueryEngine(kvs);
 
             var ctx = new TupletizingClientContext(qe.ServiceProvider);

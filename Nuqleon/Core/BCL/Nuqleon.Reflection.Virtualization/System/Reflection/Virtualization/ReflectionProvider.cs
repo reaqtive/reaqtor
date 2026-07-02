@@ -17,10 +17,6 @@ using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 
-#if NET472
-using System.Security.Cryptography.X509Certificates;
-using System.Security.Policy;
-#endif
 
 namespace System.Reflection
 {
@@ -43,16 +39,6 @@ namespace System.Reflection
         /// <returns>The loaded assembly.</returns>
         public abstract Assembly Load(AssemblyName assemblyRef);
 
-#if NET472
-        /// <summary>
-        /// Loads the assembly with a common object file format (COFF)-based image containing an emitted assembly, optionally including symbols and specifying the source for the security context. The assembly is loaded into the application domain of the caller.
-        /// </summary>
-        /// <param name="rawAssembly">A byte array that is a COFF-based image containing an emitted assembly.</param>
-        /// <param name="rawSymbolStore">A byte array that contains the raw bytes representing the symbols for the assembly.</param>
-        /// <param name="securityContextSource">The source of the security context.</param>
-        /// <returns>The loaded assembly.</returns>
-        public abstract Assembly Load(byte[] rawAssembly, byte[] rawSymbolStore, SecurityContextSource securityContextSource);
-#endif
 
         /// <summary>
         /// Loads the contents of an assembly file on the specified path.
@@ -192,14 +178,6 @@ namespace System.Reflection
         /// <returns>A <see cref="MethodBase" /> object representing the method or constructor specified by <paramref name="handle" />, in the generic type specified by <paramref name="declaringType" />.</returns>
         public abstract MethodBase GetMethodFromHandle(RuntimeMethodHandle handle, RuntimeTypeHandle declaringType);
 
-#if !NET6_0_OR_GREATER
-        /// <summary>
-        /// Gets the location of the assembly as specified originally, for example, in an <see cref="AssemblyName" /> object.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>The location of the assembly as specified originally.</returns>
-        public abstract string GetCodeBase(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets the types defined in the specified <paramref name="assembly"/>.
@@ -215,23 +193,7 @@ namespace System.Reflection
         /// <returns>An object that represents the entry point of this assembly. If no entry point is found (for example, the assembly is a DLL), null is returned.</returns>
         public abstract MethodInfo GetEntryPoint(Assembly assembly);
 
-#if !NET6_0_OR_GREATER
-        /// <summary>
-        /// Gets the URI, including escape characters, that represents the codebase.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the location for.</param>
-        /// <returns>A URI with escape characters.</returns>
-        public abstract string GetEscapedCodeBase(Assembly assembly);
-#endif
 
-#if NET472
-        /// <summary>
-        /// Gets the evidence for the specified <paramref name="assembly"/>.
-        /// </summary>
-        /// <param name="assembly">The assembly to get evidence for.</param>
-        /// <returns>The evidence for the specified <paramref name="assembly"/>.</returns>
-        public abstract Evidence GetEvidence(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets the display name of the assembly.
@@ -240,14 +202,6 @@ namespace System.Reflection
         /// <returns>The display name of the assembly.</returns>
         public abstract string GetFullName(Assembly assembly);
 
-#if !NET6_0_OR_GREATER
-        /// <summary>
-        /// Gets a value indicating whether the assembly was loaded from the global assembly cache.
-        /// </summary>
-        /// <param name="assembly">The assembly to check.</param>
-        /// <returns>true if the assembly was loaded from the global assembly cache; otherwise, false.</returns>
-        public abstract bool GetGlobalAssemblyCache(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets the host context with which the assembly was loaded.
@@ -291,14 +245,6 @@ namespace System.Reflection
         /// <returns>The module that contains the manifest for the assembly.</returns>
         public abstract Module GetManifestModule(Assembly assembly);
 
-#if NET472
-        /// <summary>
-        /// Gets the grant set of the specified <paramref name="assembly"/>.
-        /// </summary>
-        /// <param name="assembly">The assembly to get the grant set for.</param>
-        /// <returns>The grant set of the specified <paramref name="assembly"/>.</returns>
-        public abstract PermissionSet GetPermissionSet(Assembly assembly);
-#endif
 
         /// <summary>
         /// Gets a <see cref="bool" /> value indicating whether specified <paramref name="assembly"/> was loaded into the reflection-only context.
@@ -611,7 +557,6 @@ namespace System.Reflection
         /// <returns>An array of type <see cref="FieldInfo" /> representing the global fields defined on the module that match the specified binding flags; if no global fields match the binding flags, an empty array is returned.</returns>
         public abstract IReadOnlyList<FieldInfo> GetFields(Module module, BindingFlags bindingFlags);
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
         /// <summary>
         /// Searches for the specified method whose parameters match the specified generic parameter count, argument types and modifiers, using the specified binding constraints and the specified calling convention.
         /// </summary>
@@ -625,7 +570,6 @@ namespace System.Reflection
         /// <param name="modifiers">An array of <see cref="ParameterModifier" /> objects representing the attributes associated with the corresponding element in the <paramref name="types" /> array. The default binder does not process this parameter.</param>
         /// <returns>An object representing the method that matches the specified requirements, if found; otherwise, null.</returns>
         public abstract MethodInfo GetMethod(Type type, string name, int genericParameterCount, BindingFlags bindingAttr, Binder binder, CallingConventions callConvention, Type[] types, ParameterModifier[] modifiers);
-#endif
 
         /// <summary>
         /// Returns the method implementation in accordance with the specified criteria.
@@ -665,14 +609,6 @@ namespace System.Reflection
         /// <param name="machine">When this method returns, one of the <see cref="ImageFileMachine" /> values indicating the platform targeted by the module.</param>
         public abstract void GetPEKind(Module module, out PortableExecutableKinds peKind, out ImageFileMachine machine);
 
-#if NET472
-        /// <summary>
-        /// Returns an X509Certificate object corresponding to the certificate included in the Authenticode signature of the assembly which this module belongs to. If the assembly has not been Authenticode signed, null is returned.
-        /// </summary>
-        /// <param name="module">The module to get the signer certificate for.</param>
-        /// <returns>An X509Certificate object, or null if the assembly to which this module belongs has not been Authenticode signed.</returns>
-        public abstract X509Certificate GetSignerCertificate(Module module);
-#endif
 
         /// <summary>
         /// Returns the specified type, specifying whether to make a case-sensitive search of the module and whether to throw an exception if the type cannot be found.

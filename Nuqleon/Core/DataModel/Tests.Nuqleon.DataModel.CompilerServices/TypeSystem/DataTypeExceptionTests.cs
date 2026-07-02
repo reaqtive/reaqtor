@@ -11,10 +11,6 @@
 using System;
 using System.Collections.Generic;
 
-#if NETFRAMEWORK
-using System.IO;
-using System.Runtime.Serialization.Formatters.Binary;
-#endif
 
 using Nuqleon.DataModel.TypeSystem;
 
@@ -50,23 +46,5 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             Assert.IsTrue(ex4.ToString().Contains("bar"));
         }
 
-#if NETFRAMEWORK
-        [TestMethod]
-        public void DataTypeException_Serialize()
-        {
-            var err = new DataTypeError(typeof(int), "bar", new[] { typeof(List<int>) });
-            var ex = new DataTypeException(err);
-
-            var ms = new MemoryStream();
-            new BinaryFormatter().Serialize(ms, ex);
-
-            ms.Position = 0;
-            var res = (DataTypeException)new BinaryFormatter().Deserialize(ms);
-
-            Assert.AreEqual(err.Message, res.Error.Message);
-            Assert.AreEqual(err.Type, res.Error.Type);
-            AssertEx.AreSequenceEqual(err.Stack, res.Error.Stack);
-        }
-#endif
     }
 }

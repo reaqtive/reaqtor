@@ -298,11 +298,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
 
             public DateTimeOffset CreationTime => DateTimeOffset.Now;
 
-#if NET6_0_OR_GREATER
             public ValueTask DisposeAsync() => throw new NotImplementedException();
-#else
-            public Task DisposeAsync(System.Threading.CancellationToken token) => throw new NotImplementedException();
-#endif
         }
 
         private class DefinedResource : Resource, IAsyncReactiveDefinedResource

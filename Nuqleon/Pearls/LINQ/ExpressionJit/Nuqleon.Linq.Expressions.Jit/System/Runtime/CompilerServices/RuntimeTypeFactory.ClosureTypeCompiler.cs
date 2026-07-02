@@ -20,42 +20,6 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         private static class ClosureTypeCompiler
         {
-#if !NET6_0_OR_GREATER
-            /// <summary>
-            /// The lock to protect against double-initialization of the module builder.
-            /// </summary>
-            private static readonly object s_lock = new();
-
-            /// <summary>
-            /// The module builder used to emit dynamically generated types.
-            /// </summary>
-            /// <remarks>
-            /// The instance of the module builder is lazily created via the <see cref="Module"/> property.
-            /// </remarks>
-            private static ModuleBuilder s_mod;
-
-            /// <summary>
-            /// Gets the module builder used to emit dynamically generated closure types.
-            /// </summary>
-            private static ModuleBuilder Module
-            {
-                get
-                {
-                    if (s_mod == null)
-                    {
-                        lock (s_lock)
-                        {
-                            if (s_mod == null)
-                            {
-                                s_mod = Assembly.DefineDynamicModule("Closures");
-                            }
-                        }
-                    }
-
-                    return s_mod;
-                }
-            }
-#endif
 
             /// <summary>
             /// The type attributes to use for generated closure types.

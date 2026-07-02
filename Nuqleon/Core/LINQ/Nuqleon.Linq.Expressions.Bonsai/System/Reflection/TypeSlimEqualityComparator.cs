@@ -488,11 +488,7 @@ namespace System.Reflection
                 }
 
                 hash = (int)(hash * Prime) +
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
                     obj.Name.GetHashCode(StringComparison.Ordinal)
-#else
-                    obj.Name.GetHashCode()
-#endif
                     ;
                 return (int)(hash * Prime) + obj.CanWrite.GetHashCode();
             }

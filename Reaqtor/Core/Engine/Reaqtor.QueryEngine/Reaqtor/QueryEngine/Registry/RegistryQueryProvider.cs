@@ -299,11 +299,7 @@ namespace Reaqtor.QueryEngine
 
             public DateTimeOffset CreationTime => throw new NotImplementedException();
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
             public ValueTask DisposeAsync() => throw new NotImplementedException();
-#else
-            public Task DisposeAsync(System.Threading.CancellationToken token) => throw new NotImplementedException();
-#endif
         }
 
         private sealed class AsyncReactiveSubscriptionProcess : AsyncReactiveProcessResource, IAsyncReactiveSubscriptionProcess

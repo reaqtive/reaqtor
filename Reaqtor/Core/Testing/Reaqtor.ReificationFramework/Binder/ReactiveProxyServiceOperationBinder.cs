@@ -22,13 +22,8 @@ namespace Reaqtor.ReificationFramework
         private static readonly Expression<Func<Uri, IReactiveProxy, Task>> s_undefineStreamFactoryExpr = (uri, ctx) => ctx.UndefineStreamFactoryAsync(uri, CancellationToken.None);
         private static readonly Expression<Func<Uri, IReactiveProxy, Task>> s_undefineSubscriptionFactoryExpr = (uri, ctx) => ctx.UndefineSubscriptionFactoryAsync(uri, CancellationToken.None);
 
-#if NET6_0_OR_GREATER || NETSTANDARD2_1
         private static readonly Expression<Func<Uri, IReactiveProxy, Task>> s_disposeStreamExpr = (uri, ctx) => ctx.GetStream<T1, T2>(uri).DisposeAsync().AsTask();
         private static readonly Expression<Func<Uri, IReactiveProxy, Task>> s_disposeSubscriptionExpr = (uri, ctx) => ctx.GetSubscription(uri).DisposeAsync().AsTask();
-#else
-        private static readonly Expression<Func<Uri, IReactiveProxy, Task>> s_disposeStreamExpr = (uri, ctx) => ctx.GetStream<T1, T2>(uri).DisposeAsync(CancellationToken.None);
-        private static readonly Expression<Func<Uri, IReactiveProxy, Task>> s_disposeSubscriptionExpr = (uri, ctx) => ctx.GetSubscription(uri).DisposeAsync(CancellationToken.None);
-#endif
 
         private static readonly ParameterExpression s_this = Expression.Parameter(typeof(IReactiveProxy), Constants.CurrentInstanceUri);
 

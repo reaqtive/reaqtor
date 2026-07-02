@@ -26,20 +26,6 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         private static class ThunkTypeCompiler
         {
-#if !NET6_0_OR_GREATER
-            /// <summary>
-            /// The lock to protect against double-initialization of the module builder.
-            /// </summary>
-            private static readonly object s_lock = new();
-
-            /// <summary>
-            /// The module builder used to emit dynamically generated types.
-            /// </summary>
-            /// <remarks>
-            /// The instance of the module builder is lazily created via the <see cref="Module"/> property.
-            /// </remarks>
-            private static ModuleBuilder s_mod;
-#endif
 
             /// <summary>
             /// Counter to generate unique type names with an integer suffix.
@@ -126,29 +112,6 @@ namespace System.Runtime.CompilerServices
             /// </summary>
             private static readonly MethodInfo s_interlockedIncrement = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), [typeof(int).MakeByRefType()]);
 
-#if !NET6_0_OR_GREATER
-            /// <summary>
-            /// Gets the module builder used to emit dynamically generated thunk (and related) types.
-            /// </summary>
-            private static ModuleBuilder Module
-            {
-                get
-                {
-                    if (s_mod == null)
-                    {
-                        lock (s_lock)
-                        {
-                            if (s_mod == null)
-                            {
-                                s_mod = Assembly.DefineDynamicModule("Thunks");
-                            }
-                        }
-                    }
-
-                    return s_mod;
-                }
-            }
-#endif
 
             /// <summary>
             /// Creates a custom thunk type (and necessary related dispatcher and delegate types) for the specified delegate type.

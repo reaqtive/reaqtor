@@ -17,9 +17,7 @@ using System.Linq.CompilerServices;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 
-#if !NETSTANDARD2_0
 using System.Reflection.Emit;
-#endif
 
 namespace System.Linq.Expressions
 {
@@ -384,10 +382,6 @@ namespace System.Linq.Expressions
             if (ctor == null)
                 return fallback;
 
-#if NETSTANDARD2_0
-            var parameters = parameterTypes.Select(pt => Expression.Parameter(pt)).ToArray();
-            return Expression.Lambda<TDelegate>(Expression.New(ctor, parameters), parameters).Compile();
-#else
             var mtd = new DynamicMethod(".ctor" + type.Name + "@" + parameterTypes.Length, type, parameterTypes, true);
 
             var il = mtd.GetILGenerator();
@@ -401,7 +395,6 @@ namespace System.Linq.Expressions
             il.Emit(OpCodes.Ret);
 
             return (TDelegate)(object)mtd.CreateDelegate(typeof(TDelegate));
-#endif
         }
 
         /// <summary>

@@ -24,7 +24,6 @@ namespace System.Runtime.CompilerServices
         /// </summary>
         private static readonly Lock s_lock = new();
 
-#if NET6_0_OR_GREATER
         //
         // NB: Deals with the following exception:
         //
@@ -60,37 +59,6 @@ namespace System.Runtime.CompilerServices
                 return field;
             }
         }
-#else
-        /// <summary>
-        /// The assembly builder used to emit dynamically generated types.
-        /// </summary>
-        /// <remarks>
-        /// The instance of the assembly builder is lazily created via the <see cref="Assembly"/> property.
-        /// </remarks>
-        private static AssemblyBuilder s_asm;
-
-        /// <summary>
-        /// Gets the assembly builder used to emit dynamically generated types.
-        /// </summary>
-        public static AssemblyBuilder Assembly
-        {
-            get
-            {
-                if (s_asm == null)
-                {
-                    lock (s_lock)
-                    {
-                        if (s_asm == null)
-                        {
-                            s_asm = AssemblyBuilder.DefineDynamicAssembly(new AssemblyName("<>__ExpressionJit"), AssemblyBuilderAccess.RunAndCollect);
-                        }
-                    }
-                }
-
-                return s_asm;
-            }
-        }
-#endif
 
         /// <summary>
         /// Creates a new thunk type (and related dispatcher and inner delegate types) for the specified delegate type.

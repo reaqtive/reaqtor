@@ -11,9 +11,6 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
-#if NETFRAMEWORK
-using System.IO;
-#endif
 using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.Bonsai;
@@ -1300,30 +1297,6 @@ namespace Tests.System.Linq.Expressions.Bonsai
             RoundtripAndAssert(f.Body);
         }
 
-#if NETFRAMEWORK
-        [TestMethod]
-        public void TypeSlimDerivationVisitor_E2E_Jacquard()
-        {
-            Expression<Func<IQueryable<string>, IQueryable<string>>> f = urlsToSearch =>
-                from url in urlsToSearch
-                let client = new global::System.Net.WebClient
-                {
-                    Headers =
-                    {
-                        { "user-agent", "Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.2; .NET CLR 1.0.3705;)" }
-                    }
-                }
-                let data = client.OpenRead(url)
-                let reader = new StreamReader(data)
-                let s = reader.ReadToEnd()
-                where s.Substring(0, 64).Dump(url)
-                where data.Close()
-                where reader.Close()
-                select s;
-
-            RoundtripAndAssert(f);
-        }
-#endif
 
         [TestMethod]
         public void TypeSlimDerivationVisitor_E2E_GenericParameterBindings()
