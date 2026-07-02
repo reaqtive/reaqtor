@@ -13,7 +13,6 @@ using System.Globalization;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class ServiceOperation
     {
         public ServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, object state)

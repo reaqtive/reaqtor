@@ -13,7 +13,6 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class CreateServiceOperation : ServiceOperation
     {
         public CreateServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, Expression expression, object state)

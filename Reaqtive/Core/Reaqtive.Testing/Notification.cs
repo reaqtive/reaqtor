@@ -42,7 +42,6 @@ namespace Reaqtive
     /// Represents a notification to an observer.
     /// </summary>
     /// <typeparam name="T">The type of the elements received by the observer.</typeparam>
-    [Serializable]
     public abstract class Notification<T> : IEquatable<Notification<T>>
     {
         /// <summary>
@@ -76,7 +75,6 @@ namespace Reaqtive
         /// Represents an OnNext notification to an observer.
         /// </summary>
         [DebuggerDisplay("OnNext({Value})")]
-        [Serializable]
         internal sealed class OnNextNotification : Notification<T>
         {
             /// <summary>
@@ -149,7 +147,6 @@ namespace Reaqtive
         /// Represents an OnError notification to an observer.
         /// </summary>
         [DebuggerDisplay("OnError({Exception})")]
-        [Serializable]
         internal sealed class OnErrorNotification : Notification<T>
         {
             /// <summary>
@@ -222,7 +219,6 @@ namespace Reaqtive
         /// Represents an OnCompleted notification to an observer.
         /// </summary>
         [DebuggerDisplay("OnCompleted()")]
-        [Serializable]
         internal sealed class OnCompletedNotification : Notification<T>
         {
             /// <summary>

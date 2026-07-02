@@ -9,7 +9,6 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Exception used to signal the engine has unloaded.
     /// </summary>
-    [Serializable]
     public class EngineUnloadedException : InvalidOperationException
     {
         private const string UNLOADED = "The engine has been unloaded and cannot serve further requests.";

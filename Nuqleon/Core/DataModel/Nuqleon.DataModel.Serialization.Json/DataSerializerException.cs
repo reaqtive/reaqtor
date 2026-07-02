@@ -10,7 +10,6 @@ namespace Nuqleon.DataModel.Serialization.Json
     /// <summary>
     /// Exception thrown when there is an error during serialization.
     /// </summary>
-    [Serializable]
     public sealed class DataSerializerException : SerializationException
     {
         /// <summary>

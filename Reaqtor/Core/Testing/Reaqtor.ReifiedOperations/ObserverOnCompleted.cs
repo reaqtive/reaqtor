@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class ObserverOnCompleted : ObserverOperation
     {
         public ObserverOnCompleted(Uri observerUri)
@@ -21,7 +20,6 @@ namespace Reaqtor.TestingFramework
         }
     }
 
-    [Serializable]
     public class ObserverOnCompleted<T> : ObserverOnCompleted
     {
         public ObserverOnCompleted(Uri observerUri)

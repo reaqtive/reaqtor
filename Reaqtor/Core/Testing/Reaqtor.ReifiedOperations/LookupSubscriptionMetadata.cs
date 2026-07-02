@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class LookupSubscriptionMetadata : LookupMetadataOperation
     {
         public LookupSubscriptionMetadata(Uri subscriptionUri)

@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class DeleteSubscriptionMetadata : DeleteMetadataOperation
     {
         public DeleteSubscriptionMetadata(Uri targetObjectUri)

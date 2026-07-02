@@ -9,7 +9,6 @@ namespace System.Linq.Expressions.Bonsai.Serialization
     /// <summary>
     /// Exception describing an error while parsing a Bonsai expression.
     /// </summary>
-    [Serializable]
     public class BonsaiParseException : Exception
     {
         /// <summary>

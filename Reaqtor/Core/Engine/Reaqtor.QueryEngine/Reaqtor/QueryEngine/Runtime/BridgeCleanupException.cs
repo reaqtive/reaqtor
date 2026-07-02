@@ -9,7 +9,6 @@ using System;
 
 namespace Reaqtor.QueryEngine
 {
-    [Serializable]
     internal class BridgeCleanupException : Exception
     {
         public BridgeCleanupException() { }

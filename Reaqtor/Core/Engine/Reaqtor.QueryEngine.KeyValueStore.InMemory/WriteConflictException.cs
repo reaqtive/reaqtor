@@ -9,7 +9,6 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// <summary>
     /// Exception to indicate a write conflict in the key/value store.
     /// </summary>
-    [Serializable]
     public partial class WriteConflictException : Exception
     {
         /// <summary>

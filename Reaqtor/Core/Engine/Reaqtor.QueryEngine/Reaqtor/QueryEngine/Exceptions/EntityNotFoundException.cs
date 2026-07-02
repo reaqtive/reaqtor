@@ -10,7 +10,6 @@ namespace Reaqtor.QueryEngine
     /// <summary>
     /// Exception indicating that an entity with a given identifier was not found.
     /// </summary>
-    [Serializable]
     public class EntityNotFoundException : ArgumentException
     {
         /// <summary>

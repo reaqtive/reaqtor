@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class LookupStreamFactoryMetadata : LookupMetadataOperation
     {
         public LookupStreamFactoryMetadata(Uri streamFactoryUri)

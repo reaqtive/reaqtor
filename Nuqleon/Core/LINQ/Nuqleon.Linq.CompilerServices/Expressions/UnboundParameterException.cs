@@ -20,15 +20,8 @@ namespace System.Linq.CompilerServices
     /// Exception raised when an expression contains unbound parameters which prevent the expression to be processed.
     /// </summary>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1032:ImplementStandardExceptionConstructors", Justification = "The standard object creation patterns don't apply.")]
-    [Serializable]
     public sealed partial class UnboundParameterException : Exception
     {
-        [NonSerialized]
-        private readonly Expression _expression;
-
-        [NonSerialized]
-        private readonly ReadOnlyCollection<ParameterExpression> _parameters;
-
         /// <summary>
         /// Creates a new unbound parameter exception for the specified expression and the unbound parameters.
         /// </summary>
@@ -41,19 +34,19 @@ namespace System.Linq.CompilerServices
             Debug.Assert(expression != null);
             Debug.Assert(parameters != null);
 
-            _expression = expression;
-            _parameters = parameters.ToReadOnly();
+            Expression = expression;
+            Parameters = parameters.ToReadOnly();
         }
 
         /// <summary>
         /// Gets the expression which has unbound parameters.
         /// </summary>
-        public Expression Expression => _expression;
+        public Expression Expression { get; }
 
         /// <summary>
         /// Gets the unbound parameters in the expression.
         /// </summary>
-        public ReadOnlyCollection<ParameterExpression> Parameters => _parameters;
+        public ReadOnlyCollection<ParameterExpression> Parameters { get; }
 
         private static string CreateMessage(string message, Expression expression, IEnumerable<ParameterExpression> parameters)
         {

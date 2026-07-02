@@ -18,7 +18,6 @@ namespace Nuqleon.Json.Parser
     /// <summary>
     /// Parser exception signaling a parsing error in the input stream.
     /// </summary>
-    [Serializable]
     public class ParseException : Exception
     {
         /// <summary>

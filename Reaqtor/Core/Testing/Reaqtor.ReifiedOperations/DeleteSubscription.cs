@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class DeleteSubscription : DeleteServiceOperation
     {
         public DeleteSubscription(Uri subscriptionUri)

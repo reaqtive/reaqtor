@@ -17,7 +17,6 @@ namespace Reaqtive.Testing
     /// </summary>
     [DebuggerDisplay("({Subscribe}, {Unsubscribe})")]
 #if !NO_SERIALIZABLE
-    [Serializable]
 #endif
     public readonly struct Subscription : IEquatable<Subscription>
     {

@@ -16,7 +16,6 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class CreateStream : CreateServiceOperation
     {
         public CreateStream(Uri streamUri)

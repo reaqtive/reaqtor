@@ -15,13 +15,7 @@ namespace System.Collections.Generic
     /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     public partial class PooledDictionary<TKey, TValue> : Dictionary<TKey, TValue>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly DictionaryPool<TKey, TValue> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledDictionary(DictionaryPool<TKey, TValue> pool)
@@ -73,13 +67,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledDictionary<TKey, TValue>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Dictionary{TKey, TValue}"/> instances.
@@ -363,13 +350,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">The type of elements in the hash set.</typeparam>
     public partial class PooledHashSet<T> : HashSet<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly HashSetPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledHashSet(HashSetPool<T> pool)
@@ -409,13 +390,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledHashSet<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="HashSet{T}"/> instances.
@@ -629,13 +603,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">The type of elements in the list.</typeparam>
     public partial class PooledList<T> : List<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ListPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledList(ListPool<T> pool)
@@ -675,13 +643,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledList<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="List{T}"/> instances.
@@ -895,13 +856,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">Specifies the type of elements in the queue.</typeparam>
     public partial class PooledQueue<T> : Queue<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly QueuePool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledQueue(QueuePool<T> pool)
@@ -941,13 +896,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledQueue<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Queue{T}"/> instances.
@@ -1161,13 +1109,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">Specifies the type of elements in the stack.</typeparam>
     public partial class PooledStack<T> : Stack<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly StackPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledStack(StackPool<T> pool)
@@ -1207,13 +1149,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledStack<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Stack{T}"/> instances.
@@ -1426,13 +1361,7 @@ namespace System.IO
     /// </summary>
     public partial class PooledMemoryStream : MemoryStream, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly MemoryStreamPool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledMemoryStream(MemoryStreamPool pool)
@@ -1481,13 +1410,6 @@ namespace System.IO
 
         partial void ClearCore();
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledMemoryStream
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="MemoryStream"/> instances.
@@ -1963,13 +1885,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledArrayList : ArrayList, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ArrayListPool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledArrayList(ArrayListPool pool)
@@ -2009,13 +1925,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledArrayList
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ArrayList"/> instances.
@@ -2229,13 +2138,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledHashtable : Hashtable, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly HashtablePool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledHashtable(HashtablePool pool)
@@ -2275,13 +2178,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledHashtable
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Hashtable"/> instances.
@@ -2495,13 +2391,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledQueue : Queue, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly QueuePool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledQueue(QueuePool pool)
@@ -2541,13 +2431,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledQueue
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Queue"/> instances.
@@ -2761,13 +2644,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledStack : Stack, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly StackPool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledStack(StackPool pool)
@@ -2807,13 +2684,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledStack
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="Stack"/> instances.
@@ -3027,13 +2897,7 @@ namespace System.Collections
     /// </summary>
     public partial class PooledSortedList : SortedList, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly SortedListPool _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledSortedList(SortedListPool pool)
@@ -3085,13 +2949,6 @@ namespace System.Collections
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledSortedList
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="SortedList"/> instances.
@@ -3380,13 +3237,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">Specifies the element type of the linked list.</typeparam>
     public partial class PooledLinkedList<T> : LinkedList<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly LinkedListPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledLinkedList(LinkedListPool<T> pool)
@@ -3420,13 +3271,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledLinkedList<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="LinkedList{T}"/> instances.
@@ -3610,13 +3454,7 @@ namespace System.Collections.Generic
     /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     public partial class PooledSortedDictionary<TKey, TValue> : SortedDictionary<TKey, TValue>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly SortedDictionaryPool<TKey, TValue> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledSortedDictionary(SortedDictionaryPool<TKey, TValue> pool)
@@ -3656,13 +3494,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledSortedDictionary<TKey, TValue>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="SortedDictionary{TKey, TValue}"/> instances.
@@ -3882,13 +3713,7 @@ namespace System.Collections.Generic
     /// <typeparam name="TValue">The type of values in the collection.</typeparam>
     public partial class PooledSortedList<TKey, TValue> : SortedList<TKey, TValue>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly SortedListPool<TKey, TValue> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledSortedList(SortedListPool<TKey, TValue> pool)
@@ -3940,13 +3765,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledSortedList<TKey, TValue>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="SortedList{TKey, TValue}"/> instances.
@@ -4239,13 +4057,7 @@ namespace System.Collections.Generic
     /// <typeparam name="T">The type of elements in the set.</typeparam>
     public partial class PooledSortedSet<T> : SortedSet<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly SortedSetPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledSortedSet(SortedSetPool<T> pool)
@@ -4285,13 +4097,6 @@ namespace System.Collections.Generic
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledSortedSet<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="SortedSet{T}"/> instances.
@@ -4508,13 +4313,7 @@ namespace System.Collections.Concurrent
     /// <typeparam name="T">The type of the elements to be stored in the collection.</typeparam>
     public partial class PooledConcurrentBag<T> : ConcurrentBag<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ConcurrentBagPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledConcurrentBag(ConcurrentBagPool<T> pool)
@@ -4557,13 +4356,6 @@ namespace System.Collections.Concurrent
 
         partial void ClearCore();
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledConcurrentBag<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ConcurrentBag{T}"/> instances.
@@ -4747,13 +4539,7 @@ namespace System.Collections.Concurrent
     /// <typeparam name="TValue">The type of the values in the dictionary.</typeparam>
     public partial class PooledConcurrentDictionary<TKey, TValue> : ConcurrentDictionary<TKey, TValue>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ConcurrentDictionaryPool<TKey, TValue> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledConcurrentDictionary(ConcurrentDictionaryPool<TKey, TValue> pool)
@@ -4793,13 +4579,6 @@ namespace System.Collections.Concurrent
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledConcurrentDictionary<TKey, TValue>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ConcurrentDictionary{TKey, TValue}"/> instances.
@@ -5018,13 +4797,7 @@ namespace System.Collections.Concurrent
     /// <typeparam name="T">The type of the elements contained in the queue.</typeparam>
     public partial class PooledConcurrentQueue<T> : ConcurrentQueue<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ConcurrentQueuePool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledConcurrentQueue(ConcurrentQueuePool<T> pool)
@@ -5067,13 +4840,6 @@ namespace System.Collections.Concurrent
 
         partial void ClearCore();
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledConcurrentQueue<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ConcurrentQueue{T}"/> instances.
@@ -5256,13 +5022,7 @@ namespace System.Collections.Concurrent
     /// <typeparam name="T">The type of the elements contained in the stack.</typeparam>
     public partial class PooledConcurrentStack<T> : ConcurrentStack<T>, IFreeable, IClearable
     {
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly ConcurrentStackPool<T> _pool;
-#if !NO_SERIALIZATION
-        [NonSerialized]
-#endif
         private readonly int _maxCapacity = 1024;
 
         internal PooledConcurrentStack(ConcurrentStackPool<T> pool)
@@ -5296,13 +5056,6 @@ namespace System.Collections.Concurrent
         }
 
     }
-
-#if !NO_SERIALIZATION
-    [Serializable]
-    partial class PooledConcurrentStack<T>
-    {
-    }
-#endif
 
     /// <summary>
     /// Object pool for <see cref="ConcurrentStack{T}"/> instances.

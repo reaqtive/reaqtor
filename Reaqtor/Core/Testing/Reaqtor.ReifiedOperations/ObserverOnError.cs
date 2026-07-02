@@ -12,7 +12,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class ObserverOnError : ObserverOperation
     {
         public ObserverOnError(Uri observerUri, Exception error)
@@ -26,7 +25,6 @@ namespace Reaqtor.TestingFramework
         public override string ToString() => base.ToString() + " - " + Error;
     }
 
-    [Serializable]
     public class ObserverOnError<T> : ObserverOnError
     {
         public ObserverOnError(Uri observerUri, Exception error)

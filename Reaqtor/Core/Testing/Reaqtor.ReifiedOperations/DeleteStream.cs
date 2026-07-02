@@ -15,7 +15,6 @@ using System;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public class DeleteStream : DeleteServiceOperation
     {
         public DeleteStream(Uri streamUri)

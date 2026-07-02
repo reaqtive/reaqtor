@@ -16,7 +16,6 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     /// Thread-safe in memory state store which holds key-value pair item sorted by categories
     /// and track items removal.
     /// </summary>
-    [Serializable]
     public sealed class InMemoryStateStore
     {
         private readonly ConcurrentDictionary<string, ConcurrentDictionary<string, byte[]>> _internalStore;

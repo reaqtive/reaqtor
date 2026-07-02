@@ -13,7 +13,6 @@ using System.Linq.Expressions;
 
 namespace Reaqtor.TestingFramework
 {
-    [Serializable]
     public abstract class MetadataOperation : ServiceOperation
     {
         protected MetadataOperation(ServiceOperationKind kind, Uri targetObjectUri, Expression expression, object state)

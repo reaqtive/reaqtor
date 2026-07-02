@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -17,7 +16,6 @@ namespace Reaqtor.Hosting.Shared.Tools
     /// <summary>
     /// A dictionary used for organizing occurrences of Reactive entities in an expression.
     /// </summary>
-    [Serializable]
     public class ReactiveEntities : Dictionary<ReactiveEntityType, ReactiveEntitySet>
     {
         /// <summary>

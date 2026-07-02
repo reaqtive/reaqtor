@@ -14,7 +14,6 @@ namespace Reaqtor.Reactive
     /// <summary>
     /// Exception representing failures in higher order subscriptions.
     /// </summary>
-    [Serializable]
     public class HigherOrderSubscriptionFailedException : Exception
     {
         /// <summary>
