@@ -6,27 +6,27 @@ using System;
 using System.Reflection;
 using System.Threading.Tasks;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Reaqtive.TestingFramework.TestRunner
 {
     internal class TestRunner
     {
         private readonly object _instance;
-        private readonly Lazy<ExpectedExceptionAttribute> _expectedException;
 
         public TestRunner(object instance, MethodInfo method)
         {
             _instance = instance;
             TestMethod = method;
-            _expectedException = new Lazy<ExpectedExceptionAttribute>(
-                () => method.GetCustomAttribute<ExpectedExceptionAttribute>());
         }
 
         public MethodInfo TestMethod { get; private set; }
 
         public void Run()
         {
+            //
+            // NB: Support for [ExpectedException] was dropped when moving to MSTest v4, which
+            //     removed ExpectedExceptionAttribute; tests assert exceptions with
+            //     Assert.ThrowsExactly<T> inside the test method instead.
+            //
             try
             {
                 if (TestMethod.ReturnType == typeof(Task))
@@ -47,34 +47,7 @@ namespace Reaqtive.TestingFramework.TestRunner
             }
             catch (TargetInvocationException ex)
             {
-                if (!IsExpected(ex.InnerException))
-                {
-                    throw ex.InnerException;
-                }
-            }
-            catch (Exception ex)
-            {
-                if (!IsExpected(ex))
-                {
-                    throw;
-                }
-            }
-        }
-
-        private bool IsExpected(Exception ex)
-        {
-            var expected = _expectedException.Value;
-            if (expected == null)
-            {
-                return false;
-            }
-            else if (expected.AllowDerivedTypes)
-            {
-                return expected.ExceptionType.IsAssignableFrom(ex.GetType());
-            }
-            else
-            {
-                return expected.ExceptionType == ex.GetType();
+                throw ex.InnerException;
             }
         }
     }

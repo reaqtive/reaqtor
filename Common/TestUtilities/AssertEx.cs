@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Threading.Tasks;
 
 namespace Microsoft.VisualStudio.TestTools.UnitTesting
@@ -87,15 +88,16 @@ namespace Microsoft.VisualStudio.TestTools.UnitTesting
     {
         private readonly int _repeatCount;
 
-        public FlakyTestMethodAttribute(int repeatCount) => _repeatCount = repeatCount;
+        public FlakyTestMethodAttribute(int repeatCount, [CallerFilePath] string callerFilePath = "", [CallerLineNumber] int callerLineNumber = -1)
+            : base(callerFilePath, callerLineNumber) => _repeatCount = repeatCount;
 
-        public override TestResult[] Execute(ITestMethod testMethod)
+        public override async Task<TestResult[]> ExecuteAsync(ITestMethod testMethod)
         {
             var res = new List<TestResult>();
 
             for (int i = 0; i < _repeatCount; i++)
             {
-                foreach (var x in base.Execute(testMethod))
+                foreach (var x in await base.ExecuteAsync(testMethod).ConfigureAwait(false))
                 {
                     x.DisplayName = testMethod.TestMethodName + " - Iteration " + (i + 1);
                     res.Add(x);

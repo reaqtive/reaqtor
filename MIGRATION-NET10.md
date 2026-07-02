@@ -19,7 +19,7 @@ test stack (MSTest)**.
 | Check                                          | Result                                                                                       |
 |------------------------------------------------|----------------------------------------------------------------------------------------------|
 | `dotnet build All.slnx` (Debug **and** Release) | ✅ 0 warnings, 0 errors                                                                       |
-| Full test suite on Microsoft.Testing.Platform  | ✅ **8,583 passing**, 0 failing                                                               |
+| Full test suite on Microsoft.Testing.Platform  | ✅ **8,844 passing**, 0 failing                                                               |
 | `dotnet pack` (Release, `CreatePackage=true`)  | ✅ **68** `net10.0` NuGet packages                                                            |
 | Surviving projects                             | **121** (120 `.csproj` + 1 `.vbproj`), all single-target `net10.0` (Rxcel `net10.0-windows`) |
 | Archived projects                              | **46** (moved to `archive/`, out of all solutions)                                           |
@@ -33,7 +33,7 @@ reviewable on its own and the build stays green across the sequence.
 |----------------------------|------------------------------------------------------------------|--------------------------------------------------------------------------|
 | Target frameworks          | `netstandard2.0;netstandard2.1;net472;net6.0` (+ a few variants) | **`net10.0`** (single); `net10.0-windows` for the one WPF/WinForms pearl |
 | Package versions           | inline `Version=` in 100+ `.csproj`                              | **Central Package Management** (`Directory.Packages.props`)              |
-| Test framework             | MSTest 3.1.1 on the classic **VSTest** runner                    | MSTest **3.11.1** on **Microsoft.Testing.Platform (MTP)**                |
+| Test framework             | MSTest 3.1.1 on the classic **VSTest** runner                    | MSTest **4.2.3** on **Microsoft.Testing.Platform (MTP) 2.2.3**           |
 | Language                   | C# 11                                                            | **C# 14**                                                                |
 | `.NET`-Framework-only code | built (net472 target)                                            | **archived** (Remoting, CAS, `BinaryFormatter`, …)                       |
 
@@ -50,7 +50,7 @@ reviewable on its own and the build stays green across the sequence.
    (it only used portable APIs and was simply never multi-targeted), not archived.
 5. **Samples & Pearls** to `net10.0` (IoT, Shebang; CSE, DelegatingBinder, PartitionedSubject,
    OperatorLocalStorage's `Reaqtive.Storage`, the LINQ pearls). Rxcel keeps its Windows/headless split.
-6. **Microsoft.Testing.Platform** — MSTest 3.1.1 → 3.11.1, `EnableMSTestRunner`, MTP coverage/TRX/
+6. **Microsoft.Testing.Platform** — MSTest 3.1.1 → 4.2.3, `EnableMSTestRunner`, MTP coverage/TRX/
    hangdump extensions, `global.json` `test.runner`, CI test-arg translation,
    `coverlet.runsettings` → `codecoverage.runsettings`.
 7. **C# 14** (`LangVersion`), removed the dead `net472` `Microsoft.CSharp` reference.
@@ -83,13 +83,14 @@ built, not shipped; their project references are not maintained. See `archive/RE
 
 - **Single `net10.0`, not multi-targeting.** Matches the "drop Framework/Standard" goal and lets all
   framework conditionals be eliminated. (net10.0 is an LTS release.)
-- **MSTest 3.11.1, not 4.x.** MTP (the platform) is the requested modernisation, and MSTest 3.11.1 is
-  fully MTP-native. MSTest **4.x** changes the `TestMethodAttribute.Execute` / `GetTestMethodAttribute`
-  extensibility APIs that `Common/TestUtilities/AssertEx.cs` overrides (and that file is linked into
-  every test project), so 4.x would cascade breakages. A v3→v4 bump is a clean, separate follow-up.
+- **MSTest 4.2.3 (current major).** The v3→v4 breaking changes were absorbed as part of the migration:
+  `Assert.ThrowsException(Async)` → `Assert.ThrowsExactly(Async)` (~2,700 call sites),
+  `[ExpectedException]` → `Assert.ThrowsExactly` (44 sites), the removed
+  `(message, params object[])` assert overloads folded into interpolated messages, and
+  `TestMethodAttribute.Execute` → `ExecuteAsync` in `Common/TestUtilities/AssertEx.cs`.
 - **MTP package versions must be aligned.** All `Microsoft.Testing.*` packages share a platform major
-  version; they are pinned to the **MTP 1.9.1** that MSTest 3.11.1 depends on (a mismatch surfaces as a
-  runtime `IDataConsumer` `TypeLoadException`).
+  version; they are pinned to the **MTP 2.2.3** that MSTest 4.2.3 depends on (a mismatch surfaces as a
+  runtime `IDataConsumer` `TypeLoadException`); CodeCoverage 18.x tracks MTP 2.x.
 - **`NET6_0` → `NET6_0_OR_GREATER` rewrite.** The code gated its "modern .NET" branches on the bare
   `NET6_0` symbol (true only when targeting *exactly* net6.0). On net10 that is false, so a naive TFM
   bump would have compiled the **.NET Framework `#else` branches**. The symbol was rewritten on
@@ -154,10 +155,11 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
 2. **`AnalysisLevel` stays at `7.0`** and the temporary `NoWarn` list (issue #143:
    `IDE0079;IDE0090;CA1305;CA1822;CA1854`) is retained. Raising the level / removing the list surfaces a
    separate CA wave.
-3. **MSTest analyzer guidance is suppressed** (`MSTEST0006/0036/0037/0039/0053/0055`, e.g. "use
-   `Assert.ThrowsExactly` instead of `Assert.ThrowsException`"). These have different semantics and
-   cannot be auto-converted safely; adopting them is test-code modernisation. Optional MSTest **v3→v4**
-   is a related follow-up.
+3. **Some MSTest analyzer guidance is suppressed** (`MSTEST0017/0032/0036/0055` — expected/actual
+   argument order, always-true assertions in equality-contract tests, deliberate base-member hiding
+   in the QueryEngine test classes, and intentionally ignored return values). These affect failure
+   messages or style, not test outcomes; adopting them is test-code modernisation. The MSTest
+   **v3→v4** upgrade itself has been done (see key decisions above).
 4. **`CS8981` is suppressed.** The operators use a deliberate, long-standing convention of terse private
    nested type names (`_` for the primary operator/observer, `i` for a secondary inner observer); C# 14
    flags all-lowercase type names as possibly-future-reserved.
@@ -174,7 +176,7 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
 - Per-area gates during the collapse: `dotnet build`/`dotnet test` on each `*.Core.slnx` before moving on.
 - Full solution: `dotnet build All.slnx -c Debug` **and** `-c Release` → clean.
 - Full test suite on MTP: `dotnet test All.slnx --filter "TestCategory!~NonDeterministic_Strong"`
-  → **8,583 pass**, no hangs (with `--hangdump-timeout` as a safety net while diagnosing the hang above).
+  → **8,844 pass**, no hangs (with `--hangdump-timeout` as a safety net while diagnosing the hang above).
 - Packaging: `dotnet build All.slnx -c Release /p:CreatePackage=true` → 68 packages, each containing
   `lib/net10.0`.
 
