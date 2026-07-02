@@ -392,3 +392,6 @@ FodyWeavers.xsd
 .claude/
 .devcontainer/
 .endjin/
+
+# .NET SDK run-file discovery cache (machine-specific, generated)
+dotnet/runfile-discovery/
