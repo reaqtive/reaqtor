@@ -86,7 +86,7 @@ namespace Tests.System.Linq.CompilerServices
             var exprs = new Expression[]
             {
                 Expression.Lambda(Expression.Lambda(add, p1), p0),
-                Expression.Block(new[] { p0 }, Expression.Block(new[] { p1 }, add)),
+                Expression.Block([p0], Expression.Block([p1], add)),
                 Expression.TryCatch(d, Expression.Catch(p0, Expression.TryCatch(d, Expression.Catch(p1, add)))),
             };
 
@@ -296,7 +296,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             public void PushGlobal(ParameterExpression global)
             {
-                Push(new[] { new KeyValuePair<ParameterExpression, ParameterExpression>(global, global) });
+                Push([new KeyValuePair<ParameterExpression, ParameterExpression>(global, global)]);
             }
 
 #if USE_SLIM

@@ -25,7 +25,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Singleton boxed <see cref="int"/> values.
         /// </summary>
-        private static readonly object[] s_int32 = new object[] { 0, 1, 2, 3 };
+        private static readonly object[] s_int32 = [0, 1, 2, 3];
 
         /// <summary>
         /// Creates an expression of type <see cref="ExpressionType.Constant"/> representing a Boolean <paramref name="value"/>.

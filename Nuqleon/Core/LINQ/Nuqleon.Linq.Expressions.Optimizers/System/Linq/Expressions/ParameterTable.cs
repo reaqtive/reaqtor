@@ -28,7 +28,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// A set of parameters on non-generic methods.
         /// </summary>
-        private readonly HashSet<ParameterInfo> Parameters = new();
+        private readonly HashSet<ParameterInfo> Parameters = [];
 
         /// <summary>
         /// Marks the current parameter table as read-only, preventing subsequent mutation.

@@ -749,7 +749,7 @@ namespace System.Linq.Expressions
                     var operandValue = GetConstantValue(convertedOperand);
 
                     var evaluator = GetEvaluator(node.Method);
-                    var convertedResult = Evaluate(node, evaluator, new[] { operandValue });
+                    var convertedResult = Evaluate(node, evaluator, [operandValue]);
 
                     return convertedResult;
                 }

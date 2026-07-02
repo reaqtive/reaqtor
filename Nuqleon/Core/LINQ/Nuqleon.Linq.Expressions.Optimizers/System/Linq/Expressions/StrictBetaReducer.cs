@@ -282,7 +282,7 @@ namespace System.Linq.Expressions
             {
                 if (node.Variable != null)
                 {
-                    _environment.Push(new[] { node.Variable });
+                    _environment.Push([node.Variable]);
                 }
 
                 //

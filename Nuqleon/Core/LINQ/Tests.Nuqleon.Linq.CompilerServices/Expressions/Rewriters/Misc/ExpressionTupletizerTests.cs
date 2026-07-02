@@ -39,17 +39,17 @@ namespace Tests.System.Linq.CompilerServices
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
             AssertEx.ThrowsException<ArgumentNullException>(() => Pack(default(IEnumerable<Expression>)), ex => Assert.AreEqual("expressions", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentException>(() => Pack(Enumerable.Empty<Expression>()), ex => Assert.AreEqual("expressions", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentException>(() => Pack([]), ex => Assert.AreEqual("expressions", ex.ParamName));
 
             AssertEx.ThrowsException<ArgumentNullException>(() => Pack(default(LambdaExpression)), ex => Assert.AreEqual("expression", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => Pack(default(LambdaExpression), typeof(int)), ex => Assert.AreEqual("expression", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => Pack((Expression<Func<int, int>>)(x => x), default(Type)), ex => Assert.AreEqual("voidType", ex.ParamName));
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => Pack(default(Expression), Array.Empty<ParameterExpression>()), ex => Assert.AreEqual("body", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => Pack(default(Expression), []), ex => Assert.AreEqual("body", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => Pack(Expression.Constant(1), default(ParameterExpression[])), ex => Assert.AreEqual("parameters", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => Pack(default(Expression), Array.Empty<ParameterExpression>(), typeof(int)), ex => Assert.AreEqual("body", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => Pack(default(Expression), [], typeof(int)), ex => Assert.AreEqual("body", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => Pack(Expression.Constant(1), default(ParameterExpression[]), typeof(int)), ex => Assert.AreEqual("parameters", ex.ParamName));
-            AssertEx.ThrowsException<ArgumentNullException>(() => Pack(Expression.Constant(1), Array.Empty<ParameterExpression>(), default(Type)), ex => Assert.AreEqual("voidType", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => Pack(Expression.Constant(1), [], default(Type)), ex => Assert.AreEqual("voidType", ex.ParamName));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -359,7 +359,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionTupletizer_VoidShallNotWork()
         {
-            AssertEx.ThrowsException<ArgumentException>(() => Pack(new[] { ((Expression<Action<string>>)(s => Console.WriteLine(s))).Body }), ex =>
+            AssertEx.ThrowsException<ArgumentException>(() => Pack([((Expression<Action<string>>)(s => Console.WriteLine(s))).Body]), ex =>
             {
                 Assert.AreEqual("expressions", ex.ParamName);
                 Assert.IsTrue(ex.Message.Contains("WriteLine"));

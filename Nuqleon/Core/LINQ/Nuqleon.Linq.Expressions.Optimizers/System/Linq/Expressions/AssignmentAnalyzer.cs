@@ -50,8 +50,8 @@ namespace System.Linq.Expressions
         /// <param name="variables">The declared variables to analyze assignment for.</param>
         public AssignmentAnalyzer(ReadOnlyCollection<ParameterExpression> variables)
         {
-            _variables = new HashSet<ParameterExpression>(variables);
-            _assigned = new HashSet<ParameterExpression>();
+            _variables = [.. variables];
+            _assigned = [];
         }
 
         /// <summary>

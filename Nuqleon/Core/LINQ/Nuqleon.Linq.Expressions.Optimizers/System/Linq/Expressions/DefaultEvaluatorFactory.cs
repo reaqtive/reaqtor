@@ -21,7 +21,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// Singleton instance of an empty array of parameters for reuse during expression tree creation.
         /// </summary>
-        private static readonly ParameterExpression[] s_noParams = Array.Empty<ParameterExpression>();
+        private static readonly ParameterExpression[] s_noParams = [];
 
         /// <summary>
         /// Gets an evaluator delegate for the specified <paramref name="member"/>.
@@ -140,7 +140,7 @@ namespace System.Linq.Expressions
                 var n = indexerParameters.Length;
                 if (n == 0)
                 {
-                    pars = new[] { instancePar };
+                    pars = [instancePar];
                     body = Expression.Property(instancePar, property);
                 }
                 else
@@ -193,7 +193,7 @@ namespace System.Linq.Expressions
             {
                 var instancePar = Expression.Parameter(field.DeclaringType, "obj");
 
-                pars = new[] { instancePar };
+                pars = [instancePar];
                 body = Expression.Field(instancePar, field);
             }
 

@@ -562,7 +562,7 @@ namespace System.Linq.CompilerServices
             {
                 if (_labels == null)
                 {
-                    _labels = new Dictionary<LabelTarget, LabelTarget>();
+                    _labels = [];
                 }
                 else if (_labels.TryGetValue(node, out LabelTarget res))
                 {

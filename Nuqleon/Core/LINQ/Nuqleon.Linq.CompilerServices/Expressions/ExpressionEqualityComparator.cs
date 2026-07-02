@@ -1051,7 +1051,7 @@ namespace System.Linq.CompilerServices
                 return false;
             }
 
-            EqualsPush(new[] { x.Variable }, new[] { y.Variable });
+            EqualsPush([x.Variable], [y.Variable]);
 
             var res =
                 Equals(x.Body, y.Body) &&
@@ -1404,7 +1404,7 @@ namespace System.Linq.CompilerServices
         {
             if (!labelMap.TryGetValue(source, out HashSet<LabelTarget> labels))
             {
-                labelMap[source] = labels = new HashSet<LabelTarget>();
+                labelMap[source] = labels = [];
             }
 
             labels.Add(target);
@@ -1967,7 +1967,7 @@ namespace System.Linq.CompilerServices
                 return 17;
             }
 
-            GetHashCodePush(new[] { obj.Variable });
+            GetHashCodePush([obj.Variable]);
 
             var res = Hash(
                 GetHashCode(obj.Body),
@@ -2295,10 +2295,10 @@ namespace System.Linq.CompilerServices
 
         private sealed class LabelData : IClearable
         {
-            public Dictionary<LabelTarget, HashSet<LabelTarget>> DefinitionsLeft { get; } = new();
-            public Dictionary<LabelTarget, HashSet<LabelTarget>> DefinitionsRight { get; } = new();
-            public Dictionary<LabelTarget, HashSet<LabelTarget>> GotosLeft { get; } = new();
-            public Dictionary<LabelTarget, HashSet<LabelTarget>> GotosRight { get; } = new();
+            public Dictionary<LabelTarget, HashSet<LabelTarget>> DefinitionsLeft { get; } = [];
+            public Dictionary<LabelTarget, HashSet<LabelTarget>> DefinitionsRight { get; } = [];
+            public Dictionary<LabelTarget, HashSet<LabelTarget>> GotosLeft { get; } = [];
+            public Dictionary<LabelTarget, HashSet<LabelTarget>> GotosRight { get; } = [];
 
             public bool HasUndefinedLabels
             {

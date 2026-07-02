@@ -26,7 +26,7 @@ namespace System.Linq.Expressions
         /// <summary>
         /// A set of types.
         /// </summary>
-        private readonly HashSet<Type> Types = new();
+        private readonly HashSet<Type> Types = [];
 
         /// <summary>
         /// Marks the current type table as read-only, preventing subsequent mutation.

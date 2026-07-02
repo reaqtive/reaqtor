@@ -30,17 +30,17 @@ namespace System.Linq.Expressions
         /// <summary>
         /// A set of non-generic members which are considered pure.
         /// </summary>
-        private readonly HashSet<MemberInfo> Members = new();
+        private readonly HashSet<MemberInfo> Members = [];
 
         /// <summary>
         /// A set of open generic methods. Any of their closed instantiations is considered to be present in the table.
         /// </summary>
-        private readonly HashSet<MethodInfo> GenericMethods = new();
+        private readonly HashSet<MethodInfo> GenericMethods = [];
 
         /// <summary>
         /// Dictionary mapping of open generic types onto members on these types.
         /// </summary>
-        private readonly Dictionary<Type, HashSet<MemberInfo>> MembersOnGenericTypes = new();
+        private readonly Dictionary<Type, HashSet<MemberInfo>> MembersOnGenericTypes = [];
 
         // CONSIDER: Add an overload that enables visiting the expression to gather all reflection members.
 
@@ -113,7 +113,7 @@ namespace System.Linq.Expressions
 
             foreach (var member in table.MembersOnGenericTypes)
             {
-                MembersOnGenericTypes.Add(member.Key, new HashSet<MemberInfo>(member.Value));
+                MembersOnGenericTypes.Add(member.Key, [.. member.Value]);
             }
         }
 
@@ -268,7 +268,7 @@ namespace System.Linq.Expressions
 
             if (!MembersOnGenericTypes.TryGetValue(definingType, out var members))
             {
-                members = new HashSet<MemberInfo>();
+                members = [];
                 MembersOnGenericTypes.Add(definingType, members);
             }
 

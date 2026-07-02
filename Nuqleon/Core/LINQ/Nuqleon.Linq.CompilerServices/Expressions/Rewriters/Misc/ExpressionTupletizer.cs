@@ -405,7 +405,7 @@ namespace System.Linq.CompilerServices
                 }
 
                 body = expression.Body;
-                parameters = Array.Empty<ParameterExpression>();
+                parameters = [];
                 return;
             }
 
@@ -753,8 +753,8 @@ namespace System.Linq.CompilerServices
 
         internal const int TupleTypeCount = 9; // NB: Keep this in sync with the arrays below
 
-        internal static readonly Type[] TupleTypes = new Type[]
-        {
+        internal static readonly Type[] TupleTypes =
+        [
 #if USE_SLIM
             typeof(Placeholder).ToTypeSlim(), // Placeholder for the user-supplied unit type
             typeof(Tuple<>).ToTypeSlim(),
@@ -776,10 +776,11 @@ namespace System.Linq.CompilerServices
             typeof(Tuple<,,,,,,>),
             typeof(Tuple<,,,,,,,>),
 #endif
-        };
+        ];
 
-        internal static readonly string[] ItemNames = new string[] // NB: Ensure that this matches the last tuple type's size
-        {
+        internal static readonly string[] ItemNames =
+        // NB: Ensure that this matches the last tuple type's size
+        [
             null,
             "Item1",
             "Item2",
@@ -788,7 +789,7 @@ namespace System.Linq.CompilerServices
             "Item5",
             "Item6",
             "Item7",
-        };
+        ];
 
         private sealed class Placeholder
         {

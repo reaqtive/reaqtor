@@ -111,7 +111,7 @@ namespace System.Linq.CompilerServices
 
             if (node.Variable != null)
             {
-                Push(new[] { node.Variable });
+                Push([node.Variable]);
             }
 
             var res = VisitCatchBlockCore(node);
