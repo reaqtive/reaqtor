@@ -89,17 +89,14 @@
     <IsPackable>false</IsPackable>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(IsPlaygroundProject)' == 'false'">
+  <PropertyGroup>
     <!--
-      Disabled for the .NET 10 framework migration. The .NET 10 SDK's formatter/style analyzers
-      (IDE0055, IDE0350, ...) are far stricter than the .NET 7/8 SDK this repo last built on,
-      producing a large style-only wave that is orthogonal to the framework upgrade. `dotnet format`
-      cannot currently auto-apply the fixes on this solution (its MSBuildWorkspace throws on
-      TryApplyChanges across the many linked/generated files - cf. issue #138), so the reformatting
-      is a dedicated follow-up. Re-enable this (and the dotnet-format CI gate) once that pass lands;
-      the framework upgrade itself is complete and the build + tests are green without it.
+      Style violations fail the build (deliberate exceptions carry a per-site #pragma citing
+      their rationale). The dotnet-format CI gate is enforcing too; its solution-scoped
+      exclusions (issue #138) remain for the *apply* path only - build-time enforcement
+      covers the excluded files, so they cannot rot.
     -->
-    <EnforceCodeStyleInBuild>false</EnforceCodeStyleInBuild>
+    <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
   </PropertyGroup>
 
   <ItemGroup>

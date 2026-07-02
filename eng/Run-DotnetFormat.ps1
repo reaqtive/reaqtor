@@ -24,6 +24,13 @@
        sync with the <Compile Include .. Link> entries in the *.Bonsai* project
        files.
 
+       Neither exclusion means the files can rot: EnforceCodeStyleInBuild=true
+       style-checks them on every build. To (re)format them, run dotnet format
+       scoped to a single project - each linked file then has exactly one
+       compilation, so there is no cross-project merge to corrupt (do it once
+       per USE_SLIM view), and passing an explicit --diagnostics list avoids
+       loading IDE0001 for the Optimizers project.
+
     Primary-constructor conversion (IDE0290) is disabled in .editorconfig, so it
     is not applied by this pass; only whitespace/style fixes are.
 

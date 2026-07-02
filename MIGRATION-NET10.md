@@ -136,22 +136,31 @@ built, not shipped; their project references are not maintained. See `archive/RE
 These were **deliberately left for a follow-up** so this PR stays a *framework* migration rather than
 also absorbing a large, separate code-style/analyzer churn. All are documented inline in
 `Directory.Build.props` and do not affect correctness — the build and tests are green without them.
+(Items marked *resolved* were subsequently folded back into this PR.)
 
-1. **`EnforceCodeStyleInBuild` is currently `false`.** The .NET 10 SDK's formatter/style analyzers
-   (IDE0055 whitespace, IDE0350, …) are far stricter than the SDK this repo was last formatted against.
-   A `dotnet format style` pass **has** now been applied, with two deliberate carve-outs:
+1. **`EnforceCodeStyleInBuild` is `true` and the `dotnet format` CI gate is enforcing** (resolved,
+   issue #160). The ~3,500-warning style wave the .NET 10 SDK analyzers produced was cleared in
+   full: a solution-scoped `dotnet format style` pass for the bulk, plus project-scoped passes for
+   the files the solution-scoped run cannot safely touch (see below). Deliberate exceptions carry a
+   per-site `#pragma` citing their rationale (review-kept code shapes, and spots where a style fix
+   would trip an error-severity CA rule such as CA1825/CA1024). Notes that remain true:
    - **Primary constructors are opted out.** `.editorconfig` sets
      `csharp_style_prefer_primary_constructors = false` and `dotnet_diagnostic.IDE0290.severity = none`.
      (An earlier pass had converted ~1,360 types to primary constructors; that conversion was reverted
      and the rule disabled so it is not (re-)applied.)
-   - **Linked files are excluded.** `dotnet format`'s `MSBuildWorkspace` throws on `TryApplyChanges`
-     across files that are `<Compile Link>`'d into multiple projects with different symbols (the
-     `USE_SLIM` Bonsai links + `Common/TestUtilities/AssertEx.cs`), via
-     `LinkedFileMergeConflictCommentAdditionService` (issue #138 — the same crash that produced
-     unmerged-conflict markers in a prior attempt). Those ~16 files are passed to `dotnet format
-     --exclude` and remain unformatted. **Follow-up:** format the linked files once (#138) and
-     re-enable `EnforceCodeStyleInBuild`. The `dotnet format` **CI gate stays `continueOnError`** until
-     the excluded files are handled.
+   - **The #138 exclusions remain, but only for the solution-scoped format path**
+     (`eng/Run-DotnetFormat.ps1`, used by CI's verify gate). The hazard is specific to one file
+     being `<Compile Link>`'d into multiple projects *of the same format workspace with different
+     symbols* (the `USE_SLIM` Bonsai links): the per-project edits then go through
+     `LinkedFileMergeConflictCommentAdditionService`, which writes conflict markers (issue #138).
+     The excluded files themselves are now formatted — each was formatted via *project-scoped*
+     `dotnet format` runs (one per `USE_SLIM` view), where the file has a single compilation and
+     there is nothing to merge — and build-time enforcement keeps them clean. `Nuqleon.Linq.Expressions.Optimizers`
+     stays excluded for a different reason (IDE0001 is pathologically slow there); project-scoped
+     runs with an explicit `--diagnostics` list avoid loading IDE0001 entirely.
+     (Empirically re-verified: `Common/TestUtilities/AssertEx.cs` — linked into every test project
+     but with *identical* symbols — merges cleanly under solution-scoped format and needs no
+     exclusion; an earlier revision of this document was wrong to list it.)
 2. **`AnalysisLevel` stays at `7.0`** and the temporary `NoWarn` list (issue #143:
    `IDE0079;IDE0090;CA1305;CA1822;CA1854`) is retained. Raising the level / removing the list surfaces a
    separate CA wave.

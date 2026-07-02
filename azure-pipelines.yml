@@ -50,12 +50,13 @@ stages:
     #     edits (TryApplyChanges / LinkedFileMergeConflictCommentAdditionService).
     # Primary-constructor conversion (IDE0290) is disabled in .editorconfig.
     #
-    # This check stays advisory (continueOnError) until those linked files can be
-    # formatted (#138); EnforceCodeStyleInBuild is off too (see Directory.Build.props).
-    # Once the linked files are handled, drop continueOnError to make it enforcing.
+    # This check is enforcing. The #138 exclusions above only affect this
+    # solution-scoped *apply/verify* path; the excluded files are still style-checked
+    # at build time (EnforceCodeStyleInBuild=true, see Directory.Build.props), so they
+    # cannot rot. To format them locally, run dotnet format scoped to a single project
+    # (each linked file then has one compilation, so there is no merge to corrupt).
     - pwsh: ./eng/Run-DotnetFormat.ps1 -Verify -NoRestore
       displayName: Run dotnet-format
-      continueOnError: true
 
   - job: Build_and_Pack
     pool:
