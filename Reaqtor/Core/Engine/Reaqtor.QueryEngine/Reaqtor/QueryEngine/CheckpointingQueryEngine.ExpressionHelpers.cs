@@ -39,7 +39,7 @@ namespace Reaqtor.QueryEngine
                     {
                         var args = ExpressionTupletizer.Unpack(Visit(node.Arguments[0]));
 
-                        var newFunctionType = Expression.GetDelegateType([.. args.Select(a => a.Type), .. new[] { node.Type }]);
+                        var newFunctionType = Expression.GetDelegateType([.. args.Select(a => a.Type), node.Type]);
 
                         var newFunction = Expression.Parameter(newFunctionType, function.Name);
 

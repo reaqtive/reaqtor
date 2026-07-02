@@ -794,7 +794,7 @@ namespace Reaqtor
                     // build new type (Func<reduced_argument_types, returntype> or custom delegate type if count of
                     // type arguments is too high)
                     var argTypes = args.Select(arg => arg.Type);
-                    var functionType = Expression.GetDelegateType([.. argTypes, .. new[] { invocation.Type }]);
+                    var functionType = Expression.GetDelegateType([.. argTypes, invocation.Type]);
                     var function = Expression.Parameter(functionType, resourceName);
 
                     return Expression.Invoke(function, args);

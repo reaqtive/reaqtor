@@ -238,7 +238,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
 
             protected override Type MakeFunction(FunctionDataType type, ReadOnlyCollection<Type> parameterTypes, Type returnType)
             {
-                return Expression.GetFuncType([.. parameterTypes, .. new[] { returnType }]); // don't care about actions here for testing
+                return Expression.GetFuncType([.. parameterTypes, returnType]); // don't care about actions here for testing
             }
 
             protected override Type VisitOpenGenericParameter(OpenGenericParameterDataType type)
