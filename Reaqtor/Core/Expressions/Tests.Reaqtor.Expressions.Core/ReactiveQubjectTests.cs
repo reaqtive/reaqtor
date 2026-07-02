@@ -35,8 +35,8 @@ namespace Tests.Reaqtor.Expressions.Core
             var u = new Uri("bar://foo");
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (documents the signature)
-            Assert.ThrowsException<ArgumentNullException>(() => q.Subscribe(default(IReactiveQbserver<int>), u, null));
-            Assert.ThrowsException<ArgumentNullException>(() => q.Subscribe(o, default(Uri), null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => q.Subscribe(default(IReactiveQbserver<int>), u, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => q.Subscribe(o, default(Uri), null));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -45,7 +45,7 @@ namespace Tests.Reaqtor.Expressions.Core
         {
             var q = new MyReactiveQubject<bool, int>(null);
             var o = new MyLocalObserver<int>();
-            Assert.ThrowsException<NotSupportedException>(() => q.Subscribe(o, new Uri("bar://foo"), null));
+            Assert.ThrowsExactly<NotSupportedException>(() => q.Subscribe(o, new Uri("bar://foo"), null));
         }
 
         [TestMethod]

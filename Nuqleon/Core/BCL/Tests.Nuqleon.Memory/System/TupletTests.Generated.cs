@@ -40,7 +40,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int>(1493878332));
             Assert.IsTrue(args1 <= new Tuplet<int>(1493878332));
@@ -105,7 +105,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int>(1849429682, 1751256899));
             Assert.IsTrue(args1 <= new Tuplet<int, int>(1849429682, 1751256899));
@@ -186,7 +186,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int>(864272799, 606339120, 660923900));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int>(864272799, 606339120, 660923900));
@@ -283,7 +283,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int>(1821299734, 291436766, 56609777, 977758626));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int>(1821299734, 291436766, 56609777, 977758626));
@@ -396,7 +396,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int>(642495332, 753171965, 276676877, 1686856785, 97220460));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int>(642495332, 753171965, 276676877, 1686856785, 97220460));
@@ -525,7 +525,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int>(572489589, 1694483652, 1522560149, 1510948432, 137241414, 1508071593));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int>(572489589, 1694483652, 1522560149, 1510948432, 137241414, 1508071593));
@@ -670,7 +670,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int>(1472875538, 1455274364, 893442372, 222821153, 2139036453, 1122443037, 1875720571));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int>(1472875538, 1455274364, 893442372, 222821153, 2139036453, 1122443037, 1875720571));
@@ -831,7 +831,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int>(1154500803, 162572896, 1654036439, 1168362564, 1396494859, 69264986, 11085637, 426465235));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int>(1154500803, 162572896, 1654036439, 1168362564, 1396494859, 69264986, 11085637, 426465235));
@@ -1008,7 +1008,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int>(1113116637, 959489802, 634977204, 1414209729, 1427780075, 968886160, 793414413, 2021882954, 2066152910));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int>(1113116637, 959489802, 634977204, 1414209729, 1427780075, 968886160, 793414413, 2021882954, 2066152910));
@@ -1201,7 +1201,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int>(353570792, 1226995964, 49262773, 840989145, 559776888, 1747912691, 1364683612, 1046410302, 938708246, 2097133255));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int>(353570792, 1226995964, 49262773, 840989145, 559776888, 1747912691, 1364683612, 1046410302, 938708246, 2097133255));
@@ -1410,7 +1410,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int>(1460409939, 185614642, 1516642130, 1779637132, 1249693301, 697996635, 1149977745, 88375853, 1896587492, 927038697, 924366747));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int>(1460409939, 185614642, 1516642130, 1779637132, 1249693301, 697996635, 1149977745, 88375853, 1896587492, 927038697, 924366747));
@@ -1635,7 +1635,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int>(30177915, 843764805, 1616659205, 237467758, 1877734186, 2034555795, 985839498, 349845215, 1867165537, 1451341831, 102676511, 1849976561));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int>(30177915, 843764805, 1616659205, 237467758, 1877734186, 2034555795, 985839498, 349845215, 1867165537, 1451341831, 102676511, 1849976561));
@@ -1876,7 +1876,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int>(344207837, 210587381, 837247700, 575676484, 1147197848, 1745201687, 315854919, 1505388704, 1221338601, 1079040165, 155436728, 672877325, 162977927));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int>(344207837, 210587381, 837247700, 575676484, 1147197848, 1745201687, 315854919, 1505388704, 1221338601, 1079040165, 155436728, 672877325, 162977927));
@@ -2133,7 +2133,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(680831648, 537932661, 436613214, 920702005, 1231546963, 18508365, 1818481944, 533903132, 2040743569, 1667146805, 1197308095, 410163014, 1350131014, 121963850));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(680831648, 537932661, 436613214, 920702005, 1231546963, 18508365, 1818481944, 533903132, 2040743569, 1667146805, 1197308095, 410163014, 1350131014, 121963850));
@@ -2406,7 +2406,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(1862964909, 709707081, 1684019481, 662752809, 1924836516, 236505162, 1064370040, 1925405905, 1068775490, 300636596, 1994976849, 136928363, 1001879028, 1776558442, 1118965621));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(1862964909, 709707081, 1684019481, 662752809, 1924836516, 236505162, 1064370040, 1925405905, 1068775490, 300636596, 1994976849, 136928363, 1001879028, 1776558442, 1118965621));
@@ -2695,7 +2695,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(894414249, 1480982783, 1214195623, 118740352, 818421871, 1331036488, 2130610971, 534555286, 632810145, 1113625852, 1205077457, 1357564654, 1823479611, 328001364, 1304559037, 2023074705));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(894414249, 1480982783, 1214195623, 118740352, 818421871, 1331036488, 2130610971, 534555286, 632810145, 1113625852, 1205077457, 1357564654, 1823479611, 328001364, 1304559037, 2023074705));
@@ -2998,7 +2998,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int>>(281507402, 2114675272, 1553705995, 513994066, 1070216387, 883138676, 958136571, 1935412780, 1464955614, 1678525863, 207046843, 1230469058, 2027799147, 1274940644, 946507394, 825345078, new Tuplet<int>(364923918)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int>>(281507402, 2114675272, 1553705995, 513994066, 1070216387, 883138676, 958136571, 1935412780, 1464955614, 1678525863, 207046843, 1230469058, 2027799147, 1274940644, 946507394, 825345078, new Tuplet<int>(364923918)));
@@ -3107,7 +3107,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int>>(1076057254, 1856287986, 921779016, 790564971, 952858318, 1447426099, 1814403642, 1967142841, 275962899, 1885873278, 1126867573, 470967506, 2133571579, 2087262944, 293954156, 878499208, new Tuplet<int, int>(1797096255, 214392927)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int>>(1076057254, 1856287986, 921779016, 790564971, 952858318, 1447426099, 1814403642, 1967142841, 275962899, 1885873278, 1126867573, 470967506, 2133571579, 2087262944, 293954156, 878499208, new Tuplet<int, int>(1797096255, 214392927)));
@@ -3232,7 +3232,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int>>(2051049710, 1721842594, 1481009741, 130339879, 364584764, 527030178, 1774500739, 2093762387, 581115906, 1456062360, 1361704259, 1111724761, 1431489812, 896176641, 318978190, 1966868667, new Tuplet<int, int, int>(1882597303, 1985242937, 1479065794)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int>>(2051049710, 1721842594, 1481009741, 130339879, 364584764, 527030178, 1774500739, 2093762387, 581115906, 1456062360, 1361704259, 1111724761, 1431489812, 896176641, 318978190, 1966868667, new Tuplet<int, int, int>(1882597303, 1985242937, 1479065794)));
@@ -3373,7 +3373,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int>>(1331337962, 236372791, 751510318, 336244514, 1412090257, 1425869134, 508203584, 867393504, 2096170085, 1412043937, 1177386626, 1825362896, 3112452, 2006511400, 453748237, 1648837195, new Tuplet<int, int, int, int>(1811421970, 974993209, 1665725470, 250575619)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int>>(1331337962, 236372791, 751510318, 336244514, 1412090257, 1425869134, 508203584, 867393504, 2096170085, 1412043937, 1177386626, 1825362896, 3112452, 2006511400, 453748237, 1648837195, new Tuplet<int, int, int, int>(1811421970, 974993209, 1665725470, 250575619)));
@@ -3530,7 +3530,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int>>(722230539, 748397977, 485540954, 394361973, 1897178751, 563246113, 1385529013, 915152710, 1894492958, 239542358, 1539796425, 2147423584, 557011838, 630291214, 2088818802, 1400980589, new Tuplet<int, int, int, int, int>(1515748523, 2051574956, 631091136, 72132169, 743987237)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int>>(722230539, 748397977, 485540954, 394361973, 1897178751, 563246113, 1385529013, 915152710, 1894492958, 239542358, 1539796425, 2147423584, 557011838, 630291214, 2088818802, 1400980589, new Tuplet<int, int, int, int, int>(1515748523, 2051574956, 631091136, 72132169, 743987237)));
@@ -3703,7 +3703,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int>>(1413937401, 1131286497, 835442286, 2068787205, 1834196338, 455710620, 1337894948, 1400408034, 1874428127, 41928216, 606429082, 1739317721, 33744400, 1374973665, 1251833328, 764609580, new Tuplet<int, int, int, int, int, int>(1051045178, 963516654, 1971368698, 514163017, 1710029933, 535954077)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int>>(1413937401, 1131286497, 835442286, 2068787205, 1834196338, 455710620, 1337894948, 1400408034, 1874428127, 41928216, 606429082, 1739317721, 33744400, 1374973665, 1251833328, 764609580, new Tuplet<int, int, int, int, int, int>(1051045178, 963516654, 1971368698, 514163017, 1710029933, 535954077)));
@@ -3892,7 +3892,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int>>(2114956318, 1719192892, 854249433, 300855063, 809284387, 827690485, 1570184411, 134207251, 1465505861, 1587749705, 204182901, 877983323, 447078162, 2017031260, 1232390587, 17694686, new Tuplet<int, int, int, int, int, int, int>(1501248134, 1310193861, 1591727510, 832425546, 1235560812, 1264728858, 1621614627)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int>>(2114956318, 1719192892, 854249433, 300855063, 809284387, 827690485, 1570184411, 134207251, 1465505861, 1587749705, 204182901, 877983323, 447078162, 2017031260, 1232390587, 17694686, new Tuplet<int, int, int, int, int, int, int>(1501248134, 1310193861, 1591727510, 832425546, 1235560812, 1264728858, 1621614627)));
@@ -4097,7 +4097,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int>>(65683638, 1163425122, 337106297, 1229254720, 929885955, 370760834, 507954527, 799168855, 425328642, 850227459, 97578265, 1797763083, 1154168165, 70212858, 1096053640, 2088636117, new Tuplet<int, int, int, int, int, int, int, int>(417640003, 1925271252, 607057736, 593835005, 1973623647, 1423759281, 1018609257, 2115186861)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int>>(65683638, 1163425122, 337106297, 1229254720, 929885955, 370760834, 507954527, 799168855, 425328642, 850227459, 97578265, 1797763083, 1154168165, 70212858, 1096053640, 2088636117, new Tuplet<int, int, int, int, int, int, int, int>(417640003, 1925271252, 607057736, 593835005, 1973623647, 1423759281, 1018609257, 2115186861)));
@@ -4318,7 +4318,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int>>(32420047, 1678149347, 402003797, 245890405, 70379300, 179240144, 1524163444, 789408003, 144815865, 369403083, 26328606, 229728891, 426467320, 44700703, 1586045126, 9411630, new Tuplet<int, int, int, int, int, int, int, int, int>(1756660258, 1300884321, 1366868235, 1210301064, 1544308613, 380358270, 796710473, 1930327475, 1167438951)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int>>(32420047, 1678149347, 402003797, 245890405, 70379300, 179240144, 1524163444, 789408003, 144815865, 369403083, 26328606, 229728891, 426467320, 44700703, 1586045126, 9411630, new Tuplet<int, int, int, int, int, int, int, int, int>(1756660258, 1300884321, 1366868235, 1210301064, 1544308613, 380358270, 796710473, 1930327475, 1167438951)));
@@ -4555,7 +4555,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int>>(539017934, 2013708434, 2092588195, 584105488, 1898862523, 1799545423, 881438874, 619159969, 1225935101, 73252699, 835282155, 1950697912, 111122608, 1421884799, 1568808977, 135375275, new Tuplet<int, int, int, int, int, int, int, int, int, int>(1323978379, 1777861295, 1761350572, 1903587097, 2142982062, 761499815, 427086030, 1115213531, 643113760, 1660328724)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int>>(539017934, 2013708434, 2092588195, 584105488, 1898862523, 1799545423, 881438874, 619159969, 1225935101, 73252699, 835282155, 1950697912, 111122608, 1421884799, 1568808977, 135375275, new Tuplet<int, int, int, int, int, int, int, int, int, int>(1323978379, 1777861295, 1761350572, 1903587097, 2142982062, 761499815, 427086030, 1115213531, 643113760, 1660328724)));
@@ -4808,7 +4808,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int>>(1591309389, 1058009539, 740563841, 1925001765, 1586622404, 977374664, 2088475375, 238533799, 1990066658, 1007250962, 1444783710, 586599560, 259589913, 549016832, 1043861722, 168899469, new Tuplet<int, int, int, int, int, int, int, int, int, int, int>(1090488019, 486956011, 189526492, 854849708, 733150499, 982578570, 955084295, 600745169, 992274473, 1774024085, 1698840982)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int>>(1591309389, 1058009539, 740563841, 1925001765, 1586622404, 977374664, 2088475375, 238533799, 1990066658, 1007250962, 1444783710, 586599560, 259589913, 549016832, 1043861722, 168899469, new Tuplet<int, int, int, int, int, int, int, int, int, int, int>(1090488019, 486956011, 189526492, 854849708, 733150499, 982578570, 955084295, 600745169, 992274473, 1774024085, 1698840982)));
@@ -5077,7 +5077,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int>>(1967419316, 608730818, 102925244, 139818672, 932727292, 1960081966, 1426017329, 61851007, 498546003, 1329582599, 486776634, 596016098, 1298872697, 999013294, 1854060897, 1195035071, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int>(967240171, 536609357, 991725449, 1221052373, 326712765, 2074457149, 46389579, 1013832455, 503291986, 1809648691, 1233068406, 684001618)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int>>(1967419316, 608730818, 102925244, 139818672, 932727292, 1960081966, 1426017329, 61851007, 498546003, 1329582599, 486776634, 596016098, 1298872697, 999013294, 1854060897, 1195035071, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int>(967240171, 536609357, 991725449, 1221052373, 326712765, 2074457149, 46389579, 1013832455, 503291986, 1809648691, 1233068406, 684001618)));
@@ -5362,7 +5362,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int>>(562341240, 1236576436, 1784010333, 1270562248, 727013560, 742015711, 2050305250, 362516019, 875088874, 980543526, 30814288, 360421157, 1558372343, 1620352133, 1449133664, 1905399545, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int>(915457987, 1309093206, 1531111936, 2007910476, 1766826155, 439783187, 1559357249, 1001854901, 1778411959, 1691126021, 1523223151, 1633953158, 1499312343)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int>>(562341240, 1236576436, 1784010333, 1270562248, 727013560, 742015711, 2050305250, 362516019, 875088874, 980543526, 30814288, 360421157, 1558372343, 1620352133, 1449133664, 1905399545, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int>(915457987, 1309093206, 1531111936, 2007910476, 1766826155, 439783187, 1559357249, 1001854901, 1778411959, 1691126021, 1523223151, 1633953158, 1499312343)));
@@ -5663,7 +5663,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int>>(1639633937, 1183371186, 1366276207, 416352092, 1010687323, 89976126, 1496826189, 675609554, 1739499469, 2010693558, 1948984608, 792325046, 332601958, 417385218, 205990876, 435703563, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(1444446143, 1821711180, 1708265669, 937941922, 1531232104, 2107596384, 1560072332, 1835313170, 263043282, 473026953, 2031189758, 770294772, 1823803241, 458785959)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int>>(1639633937, 1183371186, 1366276207, 416352092, 1010687323, 89976126, 1496826189, 675609554, 1739499469, 2010693558, 1948984608, 792325046, 332601958, 417385218, 205990876, 435703563, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(1444446143, 1821711180, 1708265669, 937941922, 1531232104, 2107596384, 1560072332, 1835313170, 263043282, 473026953, 2031189758, 770294772, 1823803241, 458785959)));
@@ -5980,7 +5980,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>>(206270016, 726531417, 999289960, 1280713510, 589150784, 252691488, 1960219262, 1689443450, 1558946385, 286259732, 706571397, 1297333902, 739799881, 919240630, 1813352784, 588735214, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(2028796631, 1292228554, 1948904150, 1831942099, 1926827168, 1547168339, 115379436, 433138017, 1593612726, 822150649, 1134517090, 92828519, 1539718827, 1473884928, 296432290)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>>(206270016, 726531417, 999289960, 1280713510, 589150784, 252691488, 1960219262, 1689443450, 1558946385, 286259732, 706571397, 1297333902, 739799881, 919240630, 1813352784, 588735214, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(2028796631, 1292228554, 1948904150, 1831942099, 1926827168, 1547168339, 115379436, 433138017, 1593612726, 822150649, 1134517090, 92828519, 1539718827, 1473884928, 296432290)));
@@ -6313,7 +6313,7 @@ namespace Tests
             Assert.AreNotEqual(0, cmp1.CompareTo(args2));
             Assert.AreEqual(1, scm1.CompareTo(other: null, Comparer<object>.Default));
 
-            Assert.ThrowsException<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
+            Assert.ThrowsExactly<ArgumentException>(() => scm1.CompareTo("foo", Comparer<object>.Default));
 
             Assert.IsTrue(args1 < new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>>(149724624, 85061457, 2137311089, 508402268, 1303530471, 195548952, 336485606, 1267811416, 645528284, 1083226741, 1613535560, 167702971, 1066092884, 775103539, 474609658, 1894207479, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(1896527837, 1878289748, 962558405, 1491981690, 1019420391, 730047066, 1823160360, 1965361990, 468626595, 1672436720, 1933417727, 1923653348, 2081873034, 1524538634, 1258469106, 2059176506)));
             Assert.IsTrue(args1 <= new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>>(149724624, 85061457, 2137311089, 508402268, 1303530471, 195548952, 336485606, 1267811416, 645528284, 1083226741, 1613535560, 167702971, 1066092884, 775103539, 474609658, 1894207479, new Tuplet<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(1896527837, 1878289748, 962558405, 1491981690, 1019420391, 730047066, 1823160360, 1965361990, 468626595, 1672436720, 1933417727, 1923653348, 2081873034, 1524538634, 1258469106, 2059176506)));

@@ -19,9 +19,9 @@ namespace Tests.Reaqtor.Shared.Core.Reaqtor
         {
 #pragma warning disable IDE0079 // Remove unnecessary suppression (only on .NET 5)
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Makes the intent clear.)
-            Assert.ThrowsException<ArgumentNullException>(() => ResourceNaming.GetThisReferenceExpression((object)null));
-            Assert.ThrowsException<ArgumentNullException>(() => ResourceNaming.GetThisReferenceExpression((Type)null));
-            Assert.ThrowsException<ArgumentNullException>(() => ResourceNaming.IsThisReferenceExpression(typeof(int), null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ResourceNaming.GetThisReferenceExpression((object)null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ResourceNaming.GetThisReferenceExpression((Type)null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ResourceNaming.IsThisReferenceExpression(typeof(int), null));
 #pragma warning restore IDE0004
 #pragma warning restore IDE0079
         }

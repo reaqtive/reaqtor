@@ -105,7 +105,7 @@ namespace Tests.System.Linq.CompilerServices
             var expr = Expression.Lambda(add, p0);
 
             var a1 = new GlobalScopeAsserter();
-            Assert.ThrowsException<UnboundVariableException>(() => a1.Visit(expr));
+            Assert.ThrowsExactly<UnboundVariableException>(() => a1.Visit(expr));
 
             var a2 = new GlobalScopeAsserter();
             a2.GlobalScope.Add(g, g);

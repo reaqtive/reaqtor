@@ -24,8 +24,8 @@ namespace Tests
         [TestMethod]
         public void PooledQueue_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => QueuePool<int>.Create(4, -1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => QueuePool<int>.Create(4, 16, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => QueuePool<int>.Create(4, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => QueuePool<int>.Create(4, 16, -1));
         }
 
         [TestMethod]

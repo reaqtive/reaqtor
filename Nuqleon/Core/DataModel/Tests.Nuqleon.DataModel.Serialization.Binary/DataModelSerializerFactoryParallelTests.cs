@@ -149,7 +149,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
                         var rt = factory.Deserialize(t.OutputType, holder.MemoryStream);
 
-                        Assert.IsTrue(t.Comparer.Equals(t.Value, rt), "Expected: {0} Actual: {1}", t.Value, rt);
+                        Assert.IsTrue(t.Comparer.Equals(t.Value, rt), $"Expected: {t.Value} Actual: {rt}");
                     }
                 );
             }
@@ -168,7 +168,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
 
                     var rt = factory.Deserialize(t.OutputType, holder.MemoryStream);
 
-                    Assert.IsTrue(t.Comparer.Equals(t.Value, rt), "Expected: {0} Actual: {1}", t.Value, rt);
+                    Assert.IsTrue(t.Comparer.Equals(t.Value, rt), $"Expected: {t.Value} Actual: {rt}");
                 }
             );
         }

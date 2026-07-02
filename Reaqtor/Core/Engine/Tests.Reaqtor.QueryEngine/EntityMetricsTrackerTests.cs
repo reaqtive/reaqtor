@@ -34,11 +34,11 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var resource = default(IReactiveResource);
 
-            Assert.ThrowsException<ArgumentNullException>(() => resource.BeginMetric(Metric));
-            Assert.ThrowsException<ArgumentNullException>(() => resource.EndMetric(Metric));
-            Assert.ThrowsException<ArgumentNullException>(() => resource.SetMetric(Metric, TimeSpan.Zero));
-            Assert.ThrowsException<ArgumentNullException>(() => resource.GetMetrics());
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new DummyResource().SetMetric(Metric, TimeSpan.FromSeconds(-1)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => resource.BeginMetric(Metric));
+            Assert.ThrowsExactly<ArgumentNullException>(() => resource.EndMetric(Metric));
+            Assert.ThrowsExactly<ArgumentNullException>(() => resource.SetMetric(Metric, TimeSpan.Zero));
+            Assert.ThrowsExactly<ArgumentNullException>(() => resource.GetMetrics());
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new DummyResource().SetMetric(Metric, TimeSpan.FromSeconds(-1)));
         }
 
         [TestMethod]

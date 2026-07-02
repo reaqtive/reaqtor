@@ -335,7 +335,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var exp = Expression.MakeIndex(Expression.Parameter(typeof(TestBar)), typeof(TestBar).GetProperty("Item"), new[] { Expression.Constant(1) });
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
 
         #endregion
@@ -466,7 +466,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var exp = Expression.Property(Expression.Parameter(typeof(string)), "Length");
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
 
         [TestMethod]
@@ -501,9 +501,9 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             var exp2 = (Expression<Func<TestBar, int>>)(b => b.Wrong2);
             var exp3 = (Expression<Func<TestBar, int>>)(b => b.Wrong3);
 
-            Assert.ThrowsException<ArgumentException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
-            Assert.ThrowsException<ArgumentException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp3.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<ArgumentException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<ArgumentException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp3.ToExpressionSlim()).ToExpression());
         }
 
         [TestMethod]
@@ -513,7 +513,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var exp = (Expression<Func<TestBaz, int>>)(b => b.Y);
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
 
         #endregion
@@ -610,8 +610,8 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             var exp1 = (Expression<Func<TestBaz, int>>)(b => b.Z(5));
             var exp2 = (Expression<Func<TestBaz, int>>)(b => b.A<bool>(5));
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp1.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp2.ToExpressionSlim()).ToExpression());
         }
 
         #endregion
@@ -676,7 +676,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var exp = (Expression<Func<TestBaz>>)(() => new TestBaz(5));
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
 
         [TestMethod]
@@ -958,7 +958,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             var query = (Expression<Func<IEnumerable<Person>, IEnumerable<string>>>)(xs => from x in xs where x.Age > 10 let name = x.Name where name.StartsWith("B") select name.ToUpper() + " is " + x.Age);
 
             var check1 = new TypeErasureChecker([typeof(Person)]);
-            Assert.ThrowsException<InvalidOperationException>(() => check1.Visit(query));
+            Assert.ThrowsExactly<InvalidOperationException>(() => check1.Visit(query));
 
 
             var anon = RuntimeCompiler.CreateAnonymousType(new[]
@@ -977,7 +977,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             check1.Visit(res1);
 
             var check2 = new TypeErasureChecker([anon]);
-            Assert.ThrowsException<InvalidOperationException>(() => check2.Visit(res1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => check2.Visit(res1));
 
 
             var f = ((LambdaExpression)res1).Compile();
@@ -997,7 +997,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             check2.Visit(res2);
 
-            Assert.ThrowsException<InvalidOperationException>(() => check1.Visit(res2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => check1.Visit(res2));
 
             var eq = new ExpressionEqualityComparer();
 
@@ -1067,7 +1067,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var subst = new MyTypeSubstitutionExpressionVisitor();
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(f.ToExpressionSlim()).ToExpression());
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(f.ToExpressionSlim()).ToExpression());
         }
 
         [TestMethod]
@@ -1077,7 +1077,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
 
             var subst = new NotQuiteForgivingTypeSubstitutionExpressionVisitor();
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(f.ToExpressionSlim()));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(f.ToExpressionSlim()));
         }
 
         private sealed class NotQuiteForgivingTypeSubstitutionExpressionVisitor : MyTypeSubstitutionExpressionVisitor
@@ -1159,7 +1159,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
                 { typeof(int), typeof(long) }
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() => subst.Apply(f));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(f));
         }
 
         [TestMethod]

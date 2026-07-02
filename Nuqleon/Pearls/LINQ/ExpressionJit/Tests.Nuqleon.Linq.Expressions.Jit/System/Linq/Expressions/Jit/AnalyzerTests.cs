@@ -18,14 +18,14 @@ namespace Tests
         public void Analyze_Unbound()
         {
             var e = Expression.Lambda<Func<int>>(Expression.Parameter(typeof(int)));
-            Assert.ThrowsException<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
         }
 
         [TestMethod]
         public void Analyze_Extension()
         {
             var e = Expression.Lambda<Func<int>>(new Extension());
-            Assert.ThrowsException<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
         }
 
         [TestMethod]

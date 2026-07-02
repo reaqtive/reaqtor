@@ -215,7 +215,7 @@ namespace Tests
 
                     var i = 0;
 
-                    Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => Parser.SkipOne(str, str.Length, ref i));
+                    Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => Parser.SkipOne(str, str.Length, ref i));
                 }
             }
 
@@ -226,7 +226,7 @@ namespace Tests
                 {
                     var str = prefix + s + suffix;
 
-                    Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => Parser.SkipOne(new Reader(str)));
+                    Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => Parser.SkipOne(new Reader(str)));
                 }
             }
 #endif

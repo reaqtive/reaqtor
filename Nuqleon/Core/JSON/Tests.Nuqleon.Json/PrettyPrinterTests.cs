@@ -23,10 +23,10 @@ namespace Tests
         [TestMethod]
         public void PrettyPrinter_ArgumentChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new PrettyPrinter().Visit(node: null));
-            Assert.ThrowsException<ArgumentNullException>(() => new PrettyPrinter().VisitObject(node: null));
-            Assert.ThrowsException<ArgumentNullException>(() => new PrettyPrinter().VisitArray(node: null));
-            Assert.ThrowsException<ArgumentNullException>(() => new PrettyPrinter().VisitConstant(node: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().Visit(node: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().VisitObject(node: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().VisitArray(node: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new PrettyPrinter().VisitConstant(node: null));
         }
 
         [TestMethod]

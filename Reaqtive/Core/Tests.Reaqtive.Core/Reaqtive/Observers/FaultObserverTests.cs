@@ -16,7 +16,7 @@ namespace Test.Reaqtive
         [TestMethod]
         public void FaultObserver_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new FaultObserver<int>(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new FaultObserver<int>(null));
         }
 
         [TestMethod]
@@ -24,9 +24,9 @@ namespace Test.Reaqtive
         {
             var d = FaultObserver<int>.Disposed;
 
-            Assert.ThrowsException<ObjectDisposedException>(() => d.OnNext(42));
-            Assert.ThrowsException<ObjectDisposedException>(() => d.OnError(new Exception()));
-            Assert.ThrowsException<ObjectDisposedException>(() => d.OnCompleted());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnNext(42));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnError(new Exception()));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnCompleted());
         }
 
         [TestMethod]

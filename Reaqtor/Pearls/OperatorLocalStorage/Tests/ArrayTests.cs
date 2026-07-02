@@ -242,7 +242,7 @@ namespace Tests
             // Assert the new space does not contain the array.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetArray<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetArray<int>("bar"));
 
             //
             // Load the space from the store.
@@ -685,7 +685,7 @@ namespace Tests
             // Assert the array is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetArray<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetArray<int>("bar"));
         });
     }
 }

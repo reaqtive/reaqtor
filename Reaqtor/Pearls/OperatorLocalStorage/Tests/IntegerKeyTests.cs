@@ -22,59 +22,59 @@ namespace Tests
         [TestMethod]
         public void NullAlphabet()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new IntegerKey(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new IntegerKey(default));
         }
 
         [TestMethod]
         public void EmptyAlphabet()
         {
-            Assert.ThrowsException<ArgumentException>(() => new IntegerKey());
+            Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey());
         }
 
         [TestMethod]
         public void OneLetterAlphabet()
         {
-            Assert.ThrowsException<ArgumentException>(() => new IntegerKey('a'));
+            Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey('a'));
         }
 
         [TestMethod]
         public void ReservedAlphabetCharacter()
         {
-            Assert.ThrowsException<ArgumentException>(() => new IntegerKey('a', 'b', '-'));
+            Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey('a', 'b', '-'));
         }
 
         [TestMethod]
         public void NonDistinctAlphabet()
         {
-            Assert.ThrowsException<ArgumentException>(() => new IntegerKey('a', 'b', 'a'));
+            Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey('a', 'b', 'a'));
         }
 
         [TestMethod]
         public void ParseNull()
         {
             var key = new IntegerKey('a', 'b');
-            Assert.ThrowsException<ArgumentNullException>(() => key.Parse(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => key.Parse(default));
         }
 
         [TestMethod]
         public void ParseEmpty()
         {
             var key = new IntegerKey('a', 'b');
-            Assert.ThrowsException<ArgumentException>(() => key.Parse(""));
+            Assert.ThrowsExactly<ArgumentException>(() => key.Parse(""));
         }
 
         [TestMethod]
         public void ParseIncompleteNegative()
         {
             var key = new IntegerKey('a', 'b');
-            Assert.ThrowsException<ArgumentException>(() => key.Parse("-"));
+            Assert.ThrowsExactly<ArgumentException>(() => key.Parse("-"));
         }
 
         [TestMethod]
         public void ParseNotInAlphabet()
         {
             var key = new IntegerKey('a', 'b');
-            Assert.ThrowsException<ArgumentException>(() => key.Parse("abcab"));
+            Assert.ThrowsExactly<ArgumentException>(() => key.Parse("abcab"));
         }
 
         [TestMethod]

@@ -22,11 +22,11 @@ namespace Tests
         [TestMethod]
         public void Memoizer_Create_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Memoizer.Create(factory: null));
-            Assert.ThrowsException<ArgumentNullException>(() => Memoizer.Create(new MyCacheFactory()).Memoize(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.Create(factory: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.Create(new MyCacheFactory()).Memoize(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
 
-            Assert.ThrowsException<ArgumentNullException>(() => Memoizer.CreateWeak(factory: null));
-            Assert.ThrowsException<ArgumentNullException>(() => Memoizer.CreateWeak(new MyWeakCacheFactory()).MemoizeWeak(default(Func<string, string>), MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.CreateWeak(factory: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.CreateWeak(new MyWeakCacheFactory()).MemoizeWeak(default(Func<string, string>), MemoizationOptions.None));
         }
 
         [TestMethod]

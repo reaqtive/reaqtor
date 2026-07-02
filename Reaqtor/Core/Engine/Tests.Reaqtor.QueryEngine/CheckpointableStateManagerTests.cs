@@ -104,8 +104,8 @@ namespace Tests.Reaqtor.QueryEngine
             var res = Test(async e =>
             {
                 await e.UnloadAsync();
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => e.CheckpointAsync(new TestWriter()));
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => e.CheckpointAsync(new TestWriter()));
+                await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => e.CheckpointAsync(new TestWriter()));
+                await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => e.CheckpointAsync(new TestWriter()));
             });
 
             Assert.IsTrue(res.SequenceEqual(new[]
@@ -120,8 +120,8 @@ namespace Tests.Reaqtor.QueryEngine
             var res = Test(async e =>
             {
                 await e.UnloadAsync();
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => e.RecoverAsync(new TestReader()));
-                await Assert.ThrowsExceptionAsync<InvalidOperationException>(() => e.RecoverAsync(new TestReader()));
+                await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => e.RecoverAsync(new TestReader()));
+                await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => e.RecoverAsync(new TestReader()));
             });
 
             Assert.IsTrue(res.SequenceEqual(new[]
@@ -280,10 +280,10 @@ namespace Tests.Reaqtor.QueryEngine
                 {
                     checkpointing = true;
                     await unloadStarted.Task;
-                    Assert.ThrowsException<EngineUnloadedException>(() => w.DeleteItem("foo", "bar"));
-                    Assert.ThrowsException<EngineUnloadedException>(() => w.GetItemWriter("foo", "bar"));
-                    Assert.ThrowsException<EngineUnloadedException>(() => w.Rollback());
-                    await Assert.ThrowsExceptionAsync<EngineUnloadedException>(() => w.CommitAsync());
+                    Assert.ThrowsExactly<EngineUnloadedException>(() => w.DeleteItem("foo", "bar"));
+                    Assert.ThrowsExactly<EngineUnloadedException>(() => w.GetItemWriter("foo", "bar"));
+                    Assert.ThrowsExactly<EngineUnloadedException>(() => w.Rollback());
+                    await Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => w.CommitAsync());
                     await checkpointDone.Task;
                 },
                 (_, ct, p) => Task.FromResult(true),
@@ -321,9 +321,9 @@ namespace Tests.Reaqtor.QueryEngine
                 {
                     recovering = true;
                     await unloadStarted.Task;
-                    Assert.ThrowsException<EngineUnloadedException>(() => { r.GetCategories(); });
-                    Assert.ThrowsException<EngineUnloadedException>(() => { r.TryGetItemKeys("bar", out _); });
-                    Assert.ThrowsException<EngineUnloadedException>(() => { r.TryGetItemReader("bar", "foo", out _); });
+                    Assert.ThrowsExactly<EngineUnloadedException>(() => { r.GetCategories(); });
+                    Assert.ThrowsExactly<EngineUnloadedException>(() => { r.TryGetItemKeys("bar", out _); });
+                    Assert.ThrowsExactly<EngineUnloadedException>(() => { r.TryGetItemReader("bar", "foo", out _); });
                     await recoveryDone.Task;
                 },
                 (p) => { unloading = true; return Task.FromResult(true); }
@@ -388,7 +388,7 @@ namespace Tests.Reaqtor.QueryEngine
             var cts = new CancellationTokenSource();
             cts.Cancel();
 
-            Assert.ThrowsExceptionAsync<OperationCanceledException>(() => s.CheckpointAsync(new TestWriter(), cts.Token)).Wait();
+            Assert.ThrowsExactlyAsync<OperationCanceledException>(() => s.CheckpointAsync(new TestWriter(), cts.Token)).Wait();
         }
 
         [TestMethod]
@@ -434,7 +434,7 @@ namespace Tests.Reaqtor.QueryEngine
             var cts = new CancellationTokenSource();
             cts.Cancel();
 
-            Assert.ThrowsExceptionAsync<OperationCanceledException>(() => s.RecoverAsync(new TestReader(), cts.Token)).Wait();
+            Assert.ThrowsExactlyAsync<OperationCanceledException>(() => s.RecoverAsync(new TestReader(), cts.Token)).Wait();
         }
 
         [TestMethod]
@@ -470,8 +470,8 @@ namespace Tests.Reaqtor.QueryEngine
                 ex.Handle(err => err.Message == "Oops! 0");
             }
 
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => s.CheckpointAsync(new TestWriter())).Wait();
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => s.RecoverAsync(new TestReader())).Wait();
+            Assert.ThrowsExactlyAsync<InvalidOperationException>(() => s.CheckpointAsync(new TestWriter())).Wait();
+            Assert.ThrowsExactlyAsync<InvalidOperationException>(() => s.RecoverAsync(new TestReader())).Wait();
 
             try
             {
@@ -483,16 +483,16 @@ namespace Tests.Reaqtor.QueryEngine
                 ex.Handle(err => err.Message == "Oops! 1");
             }
 
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => s.CheckpointAsync(new TestWriter())).Wait();
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => s.RecoverAsync(new TestReader())).Wait();
+            Assert.ThrowsExactlyAsync<InvalidOperationException>(() => s.CheckpointAsync(new TestWriter())).Wait();
+            Assert.ThrowsExactlyAsync<InvalidOperationException>(() => s.RecoverAsync(new TestReader())).Wait();
 
             Volatile.Write(ref fail, false);
 
             s.UnloadAsync().Wait();
             Assert.AreEqual(2, Volatile.Read(ref i));
 
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => s.CheckpointAsync(new TestWriter())).Wait();
-            Assert.ThrowsExceptionAsync<InvalidOperationException>(() => s.RecoverAsync(new TestReader())).Wait();
+            Assert.ThrowsExactlyAsync<InvalidOperationException>(() => s.CheckpointAsync(new TestWriter())).Wait();
+            Assert.ThrowsExactlyAsync<InvalidOperationException>(() => s.RecoverAsync(new TestReader())).Wait();
 
             s.UnloadAsync().Wait();
             Assert.AreEqual(2, Volatile.Read(ref i));
@@ -519,11 +519,11 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.AreEqual(QueryEngineStatus.Running, s.Status);
 
-            Assert.ThrowsExceptionAsync<ArithmeticException>(() => s.CheckpointAsync(new TestWriter())).Wait();
+            Assert.ThrowsExactlyAsync<ArithmeticException>(() => s.CheckpointAsync(new TestWriter())).Wait();
 
             Assert.AreEqual(QueryEngineStatus.Running, s.Status);
 
-            Assert.ThrowsExceptionAsync<ArithmeticException>(() => s.CheckpointAsync(new TestWriter())).Wait();
+            Assert.ThrowsExactlyAsync<ArithmeticException>(() => s.CheckpointAsync(new TestWriter())).Wait();
 
             Assert.AreEqual(QueryEngineStatus.Running, s.Status);
 
@@ -555,11 +555,11 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.AreEqual(QueryEngineStatus.Running, s.Status);
 
-            Assert.ThrowsExceptionAsync<ArithmeticException>(() => s.RecoverAsync(new TestReader())).Wait();
+            Assert.ThrowsExactlyAsync<ArithmeticException>(() => s.RecoverAsync(new TestReader())).Wait();
 
             Assert.AreEqual(QueryEngineStatus.Running, s.Status);
 
-            Assert.ThrowsExceptionAsync<ArithmeticException>(() => s.RecoverAsync(new TestReader())).Wait();
+            Assert.ThrowsExactlyAsync<ArithmeticException>(() => s.RecoverAsync(new TestReader())).Wait();
 
             Assert.AreEqual(QueryEngineStatus.Running, s.Status);
 
@@ -603,10 +603,10 @@ namespace Tests.Reaqtor.QueryEngine
 
                 writer.Dispose();
 
-                Assert.ThrowsException<ObjectDisposedException>(() => { writer.GetItemWriter("xyz", "bar"); });
-                Assert.ThrowsException<ObjectDisposedException>(() => { writer.DeleteItem("abc", "baz"); });
-                Assert.ThrowsException<ObjectDisposedException>(() => { writer.Rollback(); });
-                Assert.ThrowsException<ObjectDisposedException>(() => { writer.CommitAsync().Wait(); });
+                Assert.ThrowsExactly<ObjectDisposedException>(() => { writer.GetItemWriter("xyz", "bar"); });
+                Assert.ThrowsExactly<ObjectDisposedException>(() => { writer.DeleteItem("abc", "baz"); });
+                Assert.ThrowsExactly<ObjectDisposedException>(() => { writer.Rollback(); });
+                Assert.ThrowsExactly<ObjectDisposedException>(() => { writer.CommitAsync().Wait(); });
 
                 return Task.FromResult(true);
             }
@@ -692,9 +692,9 @@ namespace Tests.Reaqtor.QueryEngine
 
                 reader.Dispose();
 
-                Assert.ThrowsException<ObjectDisposedException>(() => { reader.GetCategories(); });
-                Assert.ThrowsException<ObjectDisposedException>(() => { reader.TryGetItemKeys("bar", out _); });
-                Assert.ThrowsException<ObjectDisposedException>(() => { reader.TryGetItemReader("bar", "foo", out _); });
+                Assert.ThrowsExactly<ObjectDisposedException>(() => { reader.GetCategories(); });
+                Assert.ThrowsExactly<ObjectDisposedException>(() => { reader.TryGetItemKeys("bar", out _); });
+                Assert.ThrowsExactly<ObjectDisposedException>(() => { reader.TryGetItemReader("bar", "foo", out _); });
 
                 return Task.FromResult(true);
             }

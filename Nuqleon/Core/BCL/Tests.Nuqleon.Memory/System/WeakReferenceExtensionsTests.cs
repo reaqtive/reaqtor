@@ -22,9 +22,9 @@ namespace Tests
         public void WeakReferenceExtensions_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => WeakReferenceExtensions.GetTarget(default(WeakReference<string>)));
-            Assert.ThrowsException<ArgumentNullException>(() => WeakReferenceExtensions.GetOrSetTarget(default(WeakReference<string>), () => ""));
-            Assert.ThrowsException<ArgumentNullException>(() => WeakReferenceExtensions.GetOrSetTarget(new WeakReference<string>(""), default(Func<string>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakReferenceExtensions.GetTarget(default(WeakReference<string>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakReferenceExtensions.GetOrSetTarget(default(WeakReference<string>), () => ""));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakReferenceExtensions.GetOrSetTarget(new WeakReference<string>(""), default(Func<string>)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -70,7 +70,7 @@ namespace Tests
 
                 Assert.IsFalse(w.TryGetTarget(out string ignored));
 
-                Assert.ThrowsException<InvalidOperationException>(() => w.GetTarget());
+                Assert.ThrowsExactly<InvalidOperationException>(() => w.GetTarget());
 
                 var s = w.GetOrSetTarget(() => { return "qux".ToUpper(); });
                 Assert.AreEqual("QUX", s);

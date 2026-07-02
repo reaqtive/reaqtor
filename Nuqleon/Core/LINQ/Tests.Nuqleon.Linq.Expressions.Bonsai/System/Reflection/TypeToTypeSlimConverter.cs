@@ -47,8 +47,8 @@ namespace System.Reflection
             Assert.IsTrue(pointerType.IsPointer);
 
             var converter = new TypeToTypeSlimConverter();
-            Assert.ThrowsException<NotSupportedException>(() => converter.Visit(refType));
-            Assert.ThrowsException<NotSupportedException>(() => converter.Visit(pointerType));
+            Assert.ThrowsExactly<NotSupportedException>(() => converter.Visit(refType));
+            Assert.ThrowsExactly<NotSupportedException>(() => converter.Visit(pointerType));
         }
 
         [TestMethod]
@@ -68,7 +68,7 @@ namespace System.Reflection
             var visitor = new TypeToTypeSlimConverter();
             var intTypeSlim = visitor.Visit(typeof(int));
             var longTypeSlim = visitor.Visit(typeof(long));
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.MapType(typeof(int), longTypeSlim));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.MapType(typeof(int), longTypeSlim));
         }
 
         [TestMethod]
@@ -77,7 +77,7 @@ namespace System.Reflection
             var genericParameterType = typeof(List<>).GetGenericArguments()[0];
 
             var visitor = new TypeToTypeSlimConverter();
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.Visit(genericParameterType));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(genericParameterType));
         }
     }
 }

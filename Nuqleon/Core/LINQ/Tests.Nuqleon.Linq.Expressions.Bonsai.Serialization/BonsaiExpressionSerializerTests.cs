@@ -30,8 +30,8 @@ namespace Tests
             var testSerializer = new TestSerializer();
             var bonsai = testSerializer.Serialize(testSerializer.Lift(Expression.Constant(42)));
 
-            Assert.ThrowsException<NotImplementedException>(() => serializer.Serialize(serializer.Lift(Expression.Constant(42))));
-            Assert.ThrowsException<NotImplementedException>(() => serializer.Reduce(serializer.Deserialize(bonsai)));
+            Assert.ThrowsExactly<NotImplementedException>(() => serializer.Serialize(serializer.Lift(Expression.Constant(42))));
+            Assert.ThrowsExactly<NotImplementedException>(() => serializer.Reduce(serializer.Deserialize(bonsai)));
         }
 
         [TestMethod]

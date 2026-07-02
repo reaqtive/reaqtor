@@ -339,7 +339,7 @@ namespace Tests.System.Linq.CompilerServices
                     )
                 );
 
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e1));
 
             var e2 =
                 Expression.Add(
@@ -477,19 +477,19 @@ namespace Tests.System.Linq.CompilerServices
             Assert.AreEqual("Add(Const(2), Const(3))", a1.ToString());
 
             var e2 = ((Expression<Func<Adder>>)(() => new Adder(2) { x = 2, Y = 3 })).Body;
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e2));
 
             var e3 = ((Expression<Func<Adder>>)(() => new Adder { x = 2 })).Body;
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e3));
 
             var e4 = ((Expression<Func<Muller>>)(() => new Muller { x = 2, Y = 3 })).Body;
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e4));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e4));
 
             var e5 = ((Expression<Func<Adder>>)(() => new Adder { Y = 3, x = 2 })).Body; // Order matters due to side-effects
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e5));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e5));
 
             var e6 = ((Expression<Func<Adder>>)(() => new Adder { x = 2, Y = 3, z = 4 })).Body;
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e6));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e6));
         }
 
         [TestMethod]
@@ -521,10 +521,10 @@ namespace Tests.System.Linq.CompilerServices
             Assert.AreEqual("TimesPlus(2, 3, 4)", a1.ToString());
 
             var e2 = ((Expression<Func<MullerAdder>>)(() => new MullerAdder { z = 4, M = { x = 2, Y = 3 } })).Body;
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e2));
 
             var e3 = ((Expression<Func<MullerAdder>>)(() => new MullerAdder { M = { Y = 3, x = 2 }, z = 4 })).Body;
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e3));
         }
 
         [TestMethod]
@@ -556,13 +556,13 @@ namespace Tests.System.Linq.CompilerServices
             Assert.AreEqual("Plus(Plus(1, 2), 3)", a1.ToString());
 
             var e2 = ((Expression<Func<Summer>>)(() => new Summer { })).Body;
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e2));
 
             var e3 = ((Expression<Func<Summer>>)(() => new Summer { Xs = { 1, 2 } })).Body;
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e3));
 
             var e4 = ((Expression<Func<Summer>>)(() => new Summer { Xs = { 1, 2, 3, 4 } })).Body;
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(e4));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(e4));
         }
 
 #pragma warning disable IDE0060 // Remove unused parameter
@@ -844,8 +844,8 @@ namespace Tests.System.Linq.CompilerServices
             var ei = Expression.ElementInit(typeof(List<int>).GetMethod("Add"), Expression.Constant(1)).ToExpressionTree();
             Assert.IsFalse(setnec.Equals(et.Value, ei.Value));
 
-            Assert.ThrowsException<NotImplementedException>(() => setnec.Equals(new FakeNode(), new FakeNode()));
-            Assert.ThrowsException<NotImplementedException>(() => setnec.GetHashCode(new FakeNode()));
+            Assert.ThrowsExactly<NotImplementedException>(() => setnec.Equals(new FakeNode(), new FakeNode()));
+            Assert.ThrowsExactly<NotImplementedException>(() => setnec.GetHashCode(new FakeNode()));
         }
 
         [TestMethod]
@@ -1063,7 +1063,7 @@ namespace Tests.System.Linq.CompilerServices
                 }
                 else
                 {
-                    Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(subject));
+                    Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(subject));
                 }
             };
         }
@@ -1096,7 +1096,7 @@ namespace Tests.System.Linq.CompilerServices
                 }
                 else
                 {
-                    Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(subject));
+                    Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(subject));
                 }
             };
         }
@@ -1129,7 +1129,7 @@ namespace Tests.System.Linq.CompilerServices
                 }
                 else
                 {
-                    Assert.ThrowsException<InvalidOperationException>(() => burs.Rewrite(subject));
+                    Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rewrite(subject));
                 }
             };
         }

@@ -42,7 +42,7 @@ namespace Tests.Reaqtor
         {
             var rewriter = new AsyncToSyncRewriter(new Dictionary<Type, Type>());
 
-            Assert.ThrowsException<InvalidOperationException>(
+            Assert.ThrowsExactly<InvalidOperationException>(
                 () => rewriter.Rewrite(
                     Expression.Invoke(
                         Expression.Parameter(typeof(Func<,,>).MakeGenericType(AsyncObservableType, AsyncObserverType, AsyncSubscriptionType), Constants.SubscribeUri),
@@ -52,7 +52,7 @@ namespace Tests.Reaqtor
                 )
             );
 
-            Assert.ThrowsException<InvalidOperationException>(
+            Assert.ThrowsExactly<InvalidOperationException>(
                 () => rewriter.Rewrite(
                     Expression.Parameter(typeof(int), Constants.SubscribeUri)
                 )

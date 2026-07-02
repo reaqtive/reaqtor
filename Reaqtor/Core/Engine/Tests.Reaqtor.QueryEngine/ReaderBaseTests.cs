@@ -26,13 +26,13 @@ namespace Tests.Reaqtor.QueryEngine
 
             // AD 1.0.0.0 ...
             bytes[0] = b('A');
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadHeader());
             bytes[0] = b('B');
 
             // BD 0.9.0.0 ...
             bytes[2] = 0;
             bytes[6] = 9;
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadHeader());
             bytes[2] = 1;
             bytes[6] = 0;
         }
@@ -46,16 +46,16 @@ namespace Tests.Reaqtor.QueryEngine
             var bytes = stream.ToArray();
 
             // B
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(1)]), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(1)]), SerializationPolicy.Default).ReadHeader());
 
             // BD 1.0
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(10)]), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(10)]), SerializationPolicy.Default).ReadHeader());
 
             // BD 1.0.0.0
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(18)]), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(18)]), SerializationPolicy.Default).ReadHeader());
 
             // BD 1.0.0.0 0 1.0
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(30)]), SerializationPolicy.Default).ReadHeader());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(30)]), SerializationPolicy.Default).ReadHeader());
         }
 
         [TestMethod]
@@ -67,19 +67,19 @@ namespace Tests.Reaqtor.QueryEngine
             var bytes = stream.ToArray();
 
             bytes[0] = 0xDA;
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
             bytes[0] = 0xDE;
 
             bytes[1] = 0xAE;
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
             bytes[1] = 0xAD;
 
             bytes[2] = 0xDA;
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
             bytes[2] = 0xDE;
 
             bytes[3] = 0xAE;
-            Assert.ThrowsException<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
+            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
             bytes[3] = 0xAD;
         }
 

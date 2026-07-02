@@ -25,8 +25,8 @@ namespace Tests
         [TestMethod]
         public void Parser_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => JsonParser.Parse(input: null));
-            Assert.ThrowsException<ArgumentNullException>(() => JsonParser.Parse(input: null, ensureTopLevelObjectOrArray: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => JsonParser.Parse(input: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => JsonParser.Parse(input: null, ensureTopLevelObjectOrArray: false));
         }
 
         [TestMethod]
@@ -110,15 +110,15 @@ namespace Tests
         [TestMethod]
         public void Parser_Errors()
         {
-            Assert.ThrowsException<ParseException>(() => JsonParser.Parse(@"123", ensureTopLevelObjectOrArray: true));
-            Assert.ThrowsException<ParseException>(() => JsonParser.Parse(@"""foo""", ensureTopLevelObjectOrArray: true));
-            Assert.ThrowsException<ParseException>(() => JsonParser.Parse(@"false", ensureTopLevelObjectOrArray: true));
-            Assert.ThrowsException<ParseException>(() => JsonParser.Parse(@"true", ensureTopLevelObjectOrArray: true));
-            Assert.ThrowsException<ParseException>(() => JsonParser.Parse(@"null", ensureTopLevelObjectOrArray: true));
+            Assert.ThrowsExactly<ParseException>(() => JsonParser.Parse(@"123", ensureTopLevelObjectOrArray: true));
+            Assert.ThrowsExactly<ParseException>(() => JsonParser.Parse(@"""foo""", ensureTopLevelObjectOrArray: true));
+            Assert.ThrowsExactly<ParseException>(() => JsonParser.Parse(@"false", ensureTopLevelObjectOrArray: true));
+            Assert.ThrowsExactly<ParseException>(() => JsonParser.Parse(@"true", ensureTopLevelObjectOrArray: true));
+            Assert.ThrowsExactly<ParseException>(() => JsonParser.Parse(@"null", ensureTopLevelObjectOrArray: true));
 
             var assert = new Action<string>(json =>
             {
-                Assert.ThrowsException<ParseException>(() => JsonParser.Parse(json, ensureTopLevelObjectOrArray: false), json);
+                Assert.ThrowsExactly<ParseException>(() => JsonParser.Parse(json, ensureTopLevelObjectOrArray: false), json);
             });
 
             assert(@"n");

@@ -52,12 +52,12 @@ namespace Tests.Reaqtor.QueryEngine
             var values = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q.Select(r => r.Value));
             var enums = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q);
 
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(tryGetValue));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(keys));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(values));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(enums));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.CreateQuery(null));
-            Assert.ThrowsException<NotImplementedException>(() => provider.Provider.CreateQuery<object>(null));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(tryGetValue));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(keys));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(values));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(enums));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.CreateQuery(null));
+            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.CreateQuery<object>(null));
         }
 
         [TestMethod]
@@ -69,9 +69,9 @@ namespace Tests.Reaqtor.QueryEngine
             var nonMemberAccess = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.Select(r => r.Value == null));
             var notByKey = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.SingleOrDefault(r => r.Value == null));
 
-            Assert.ThrowsException<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(multipleMemberAccess));
-            Assert.ThrowsException<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(nonMemberAccess));
-            Assert.ThrowsException<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(notByKey));
+            Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(multipleMemberAccess));
+            Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(nonMemberAccess));
+            Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(notByKey));
         }
 
         [TestMethod]

@@ -64,7 +64,7 @@ namespace Tests
         [TestMethod]
         public void FastSerializer_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => FastJsonSerializerFactory.CreateSerializer<int>(provider: null, settings: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FastJsonSerializerFactory.CreateSerializer<int>(provider: null, settings: null));
         }
 
         [TestMethod]
@@ -350,8 +350,8 @@ namespace Tests
             var cyclic2 = new PersonWithParent { Parent = new PersonWithParent() };
             cyclic2.Parent.Parent = cyclic2;
 
-            Assert.ThrowsException<InvalidOperationException>(() => ser.Serialize(cyclic1));
-            Assert.ThrowsException<InvalidOperationException>(() => ser.Serialize(cyclic2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => ser.Serialize(cyclic1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => ser.Serialize(cyclic2));
         }
 
         [TestMethod]
@@ -399,7 +399,7 @@ namespace Tests
         {
             var ser = FastJsonSerializerFactory.CreateSerializer<IDictionary<string, int>>(provider: null, FastJsonConcurrencyMode.SingleThreaded);
 
-            Assert.ThrowsException<InvalidOperationException>(() => ser.Serialize(new NullableDictionary<string, int> { { null, 42 } }));
+            Assert.ThrowsExactly<InvalidOperationException>(() => ser.Serialize(new NullableDictionary<string, int> { { null, 42 } }));
         }
 
         [TestMethod]
@@ -443,9 +443,9 @@ namespace Tests
         {
             var ser = FastJsonSerializerFactory.CreateSerializer<object>(provider: null, FastJsonConcurrencyMode.SingleThreaded);
 
-            Assert.ThrowsException<NotSupportedException>(() => ser.Serialize(new int[1, 1]));
+            Assert.ThrowsExactly<NotSupportedException>(() => ser.Serialize(new int[1, 1]));
 #if !NO_IO
-            Assert.ThrowsException<NotSupportedException>(() => ser.Serialize(new int[1, 1], new System.IO.StringWriter()));
+            Assert.ThrowsExactly<NotSupportedException>(() => ser.Serialize(new int[1, 1], new System.IO.StringWriter()));
 #endif
         }
 

@@ -27,11 +27,11 @@ namespace Test.Reaqtor.Expressions
         public void QuotedOfT_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => new Quoted<int>(default(Expression)));
-            Assert.ThrowsException<ArgumentNullException>(() => new Quoted<int>(42, default(Expression)));
-            Assert.ThrowsException<ArgumentNullException>(() => new Quoted<int>(42, Expression.Constant(42), default(IExpressionPolicy)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new Quoted<int>(default(Expression)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new Quoted<int>(42, default(Expression)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new Quoted<int>(42, Expression.Constant(42), default(IExpressionPolicy)));
 
-            Assert.ThrowsException<ArgumentException>(() => new Quoted<int>(42, Expression.Constant("hello")));
+            Assert.ThrowsExactly<ArgumentException>(() => new Quoted<int>(42, Expression.Constant("hello")));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

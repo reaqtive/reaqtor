@@ -22,7 +22,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void TypeSubstitutor_ArgumentChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _ = new TypeSubstitutor(map: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => _ = new TypeSubstitutor(map: null));
         }
 
         [TestMethod]

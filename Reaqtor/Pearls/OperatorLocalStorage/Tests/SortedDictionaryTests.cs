@@ -495,7 +495,7 @@ namespace Tests
             // Assert the new space does not contain the sorted dictionary.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSortedDictionary<int, int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSortedDictionary<int, int>("bar"));
 
             //
             // Load the space from the store.
@@ -1486,7 +1486,7 @@ namespace Tests
             // Assert the sorted dictionary is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSortedDictionary<int, int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSortedDictionary<int, int>("bar"));
         });
 
         [TestMethod]
@@ -1551,7 +1551,7 @@ namespace Tests
             // Assert the sorted dictionary is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSortedDictionary<int, int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSortedDictionary<int, int>("bar"));
         });
 
         [TestMethod]
@@ -1616,7 +1616,7 @@ namespace Tests
             // Assert the sorted dictionary is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSortedDictionary<int, int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSortedDictionary<int, int>("bar"));
         });
     }
 }

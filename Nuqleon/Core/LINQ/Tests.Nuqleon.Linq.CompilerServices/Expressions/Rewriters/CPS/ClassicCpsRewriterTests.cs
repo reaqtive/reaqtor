@@ -433,7 +433,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             Expression<Func<int>> f = () => Baz(42);
 
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new ClassicCpsRewriter().Rewrite(f));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new ClassicCpsRewriter().Rewrite(f));
         }
 
         [UseAsyncMethod]

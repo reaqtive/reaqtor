@@ -33,7 +33,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveObserver<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.OnErrorAsync(null).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.OnErrorAsync(null).Wait());
         }
 
         [TestMethod]

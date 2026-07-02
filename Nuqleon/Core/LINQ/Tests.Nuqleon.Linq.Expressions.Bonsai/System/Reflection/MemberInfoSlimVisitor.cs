@@ -104,35 +104,35 @@ namespace Tests.System.Reflection
         {
             var visitor = new A();
             var field = SlimType.GetField("name", fieldType: null);
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.VisitAndConvert<FieldInfoSlim>(field));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.VisitAndConvert<FieldInfoSlim>(field));
         }
 
         [TestMethod]
         public void MemberInfoSlimVisitor_UnknownNodeType()
         {
             var visitor = new MemberInfoSlimVisitor();
-            Assert.ThrowsException<NotSupportedException>(() => visitor.Visit(new MyMember()));
+            Assert.ThrowsExactly<NotSupportedException>(() => visitor.Visit(new MyMember()));
         }
 
         [TestMethod]
         public void MemberInfoSlimVisitor_Generic_UnknownNodeType()
         {
             var visitor = new MyVisitor();
-            Assert.ThrowsException<NotSupportedException>(() => visitor.Visit(new MyMember()));
+            Assert.ThrowsExactly<NotSupportedException>(() => visitor.Visit(new MyMember()));
         }
 
         [TestMethod]
         public void MemberInfoSlimVisitor_UnknownMethodType()
         {
             var visitor = new MemberInfoSlimVisitor();
-            Assert.ThrowsException<NotSupportedException>(() => visitor.Visit(new MyMethod()));
+            Assert.ThrowsExactly<NotSupportedException>(() => visitor.Visit(new MyMethod()));
         }
 
         [TestMethod]
         public void MemberInfoSlimVisitor_Generic_UnknownMethodType()
         {
             var visitor = new MyVisitor();
-            Assert.ThrowsException<NotSupportedException>(() => visitor.Visit(new MyMethod()));
+            Assert.ThrowsExactly<NotSupportedException>(() => visitor.Visit(new MyMethod()));
         }
 
         [TestMethod]

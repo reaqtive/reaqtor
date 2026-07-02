@@ -97,7 +97,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             if (expectThrow)
             {
-                Assert.ThrowsException<OperationCanceledException>(a);
+                Assert.ThrowsExactly<OperationCanceledException>(a);
             }
             else
             {

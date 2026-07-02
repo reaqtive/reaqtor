@@ -51,7 +51,7 @@ namespace Tests.System.Memory
             var ref0 = cache.Create(s);
             ref0.Dispose();
             var unused = default(string[]);
-            Assert.ThrowsException<ObjectDisposedException>(() => unused = ref0.Value);
+            Assert.ThrowsExactly<ObjectDisposedException>(() => unused = ref0.Value);
         }
 
         private sealed class TestCache2 : Cache<string[], string, string, string[]>
@@ -121,7 +121,7 @@ namespace Tests.System.Memory
             var ref0 = cache.Create(s);
             ref0.Dispose();
             var unused = default(string[]);
-            Assert.ThrowsException<ObjectDisposedException>(() => unused = ref0.Value);
+            Assert.ThrowsExactly<ObjectDisposedException>(() => unused = ref0.Value);
         }
 
         private sealed class TestCache3 : Cache<string[], string, string, string, string[]>
@@ -193,7 +193,7 @@ namespace Tests.System.Memory
             var ref0 = cache.Create(s);
             ref0.Dispose();
             var unused = default(string[]);
-            Assert.ThrowsException<ObjectDisposedException>(() => unused = ref0.Value);
+            Assert.ThrowsExactly<ObjectDisposedException>(() => unused = ref0.Value);
         }
 
         private sealed class TestCache4 : Cache<string[], string, string, string, string, string[]>

@@ -21,8 +21,8 @@ namespace Tests
         [TestMethod]
         public void VirtualTimeClock_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _ = new VirtualTimeClock(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _ = new VirtualTimeClock().Now = -1);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new VirtualTimeClock(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new VirtualTimeClock().Now = -1);
         }
 
         [TestMethod]

@@ -17,12 +17,12 @@ namespace Test.Reaqtive
         [TestMethod]
         public void SubscriptionStateVisitor_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new SubscriptionStateVisitor(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionStateVisitor(null));
 
             var s = new SingleAssignmentSubscription();
 
-            Assert.ThrowsException<ArgumentNullException>(() => new SubscriptionStateVisitor(s).LoadState(null));
-            Assert.ThrowsException<ArgumentNullException>(() => new SubscriptionStateVisitor(s).SaveState(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionStateVisitor(s).LoadState(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionStateVisitor(s).SaveState(null));
         }
 
         [TestMethod]

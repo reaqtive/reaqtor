@@ -28,10 +28,9 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
     public class JsonExpressionWriterTests
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void JsonExpressionWriter_ArgumentChecking()
         {
-            new JsonExpressionWriter(pool: null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => new JsonExpressionWriter(pool: null));
         }
 
         [TestMethod]
@@ -51,8 +50,8 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
 
             ((IDisposable)writer).Dispose();
 
-            Assert.ThrowsException<ObjectDisposedException>(() => writer.WriteValue(43));
-            Assert.ThrowsException<ObjectDisposedException>(() => writer.Expression);
+            Assert.ThrowsExactly<ObjectDisposedException>(() => writer.WriteValue(43));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => writer.Expression);
         }
 
         [TestMethod]
@@ -60,7 +59,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         {
             var writer = new JsonExpressionWriter();
 
-            Assert.ThrowsException<InvalidOperationException>(() => writer.Expression);
+            Assert.ThrowsExactly<InvalidOperationException>(() => writer.Expression);
         }
 
         [TestMethod]
@@ -71,7 +70,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             writer.WriteValue(1);
             writer.WriteValue(2);
 
-            Assert.ThrowsException<InvalidOperationException>(() => writer.Expression);
+            Assert.ThrowsExactly<InvalidOperationException>(() => writer.Expression);
         }
 
         [TestMethod]
@@ -313,12 +312,11 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         }
 
         [TestMethod]
-        [ExpectedException(typeof(JsonWriterException))]
         public void JsonExpressionWriter_Primitives_BigInteger()
         {
-            Roundtrip(
+            Assert.ThrowsExactly<JsonWriterException>(() => Roundtrip(
                 (BigInteger)long.MaxValue + 1
-            );
+            ));
         }
 
         [TestMethod]
@@ -498,7 +496,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             var jsonString = Serialize(FloatFormatHandling.String, new { a = float.NaN }).ToString();
             Assert.AreEqual(/*lang=json,strict*/ """{"a":"NaN"}""", jsonString);
 
-            Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = float.NaN }));
+            Assert.ThrowsExactly<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = float.NaN }));
         }
 
         [TestMethod]
@@ -510,7 +508,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             var jsonString = Serialize(FloatFormatHandling.String, new { a = (float?)float.NaN }).ToString();
             Assert.AreEqual(/*lang=json,strict*/ """{"a":"NaN"}""", jsonString);
 
-            Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (float?)float.NaN }));
+            Assert.ThrowsExactly<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (float?)float.NaN }));
         }
 
         [TestMethod]
@@ -522,7 +520,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             var jsonString = Serialize(FloatFormatHandling.String, new { a = double.NaN }).ToString();
             Assert.AreEqual(/*lang=json,strict*/ """{"a":"NaN"}""", jsonString);
 
-            Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = double.NaN }));
+            Assert.ThrowsExactly<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = double.NaN }));
         }
 
         [TestMethod]
@@ -534,7 +532,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             var jsonString = Serialize(FloatFormatHandling.String, new { a = (double?)double.NaN }).ToString();
             Assert.AreEqual(/*lang=json,strict*/ """{"a":"NaN"}""", jsonString);
 
-            Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (double?)double.NaN }));
+            Assert.ThrowsExactly<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (double?)double.NaN }));
         }
 
         [TestMethod]
@@ -546,7 +544,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             var jsonString = Serialize(FloatFormatHandling.String, new { a = float.PositiveInfinity }).ToString();
             Assert.AreEqual(/*lang=json,strict*/ """{"a":"Infinity"}""", jsonString);
 
-            Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = float.PositiveInfinity }));
+            Assert.ThrowsExactly<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = float.PositiveInfinity }));
         }
 
         [TestMethod]
@@ -558,7 +556,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             var jsonString = Serialize(FloatFormatHandling.String, new { a = (float?)float.PositiveInfinity }).ToString();
             Assert.AreEqual(/*lang=json,strict*/ """{"a":"Infinity"}""", jsonString);
 
-            Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (float?)float.PositiveInfinity }));
+            Assert.ThrowsExactly<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (float?)float.PositiveInfinity }));
         }
 
         [TestMethod]
@@ -570,7 +568,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             var jsonString = Serialize(FloatFormatHandling.String, new { a = double.PositiveInfinity }).ToString();
             Assert.AreEqual(/*lang=json,strict*/ """{"a":"Infinity"}""", jsonString);
 
-            Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = double.PositiveInfinity }));
+            Assert.ThrowsExactly<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = double.PositiveInfinity }));
         }
 
         [TestMethod]
@@ -582,7 +580,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             var jsonString = Serialize(FloatFormatHandling.String, new { a = (double?)double.PositiveInfinity }).ToString();
             Assert.AreEqual(/*lang=json,strict*/ """{"a":"Infinity"}""", jsonString);
 
-            Assert.ThrowsException<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (double?)double.PositiveInfinity }));
+            Assert.ThrowsExactly<NotSupportedException>(() => Serialize(FloatFormatHandling.Symbol, new { a = (double?)double.PositiveInfinity }));
         }
 
         [TestMethod]
@@ -611,13 +609,13 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
             AssertNotSupported(w => w.WriteEndConstructor());
             AssertNotSupported(w => w.WriteUndefined());
 
-            Assert.ThrowsException<NotSupportedException>(() =>
+            Assert.ThrowsExactly<NotSupportedException>(() =>
             {
                 var w = new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat };
                 w.WriteValue(DateTime.Now);
             });
 
-            Assert.ThrowsException<NotSupportedException>(() =>
+            Assert.ThrowsExactly<NotSupportedException>(() =>
             {
                 var w = new JsonExpressionWriter() { DateFormatHandling = DateFormatHandling.MicrosoftDateFormat };
                 w.WriteValue(DateTimeOffset.Now);
@@ -627,13 +625,13 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         [TestMethod]
         public void JsonExpressionWriter_InvalidOperation_EndArray()
         {
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 var w = new JsonExpressionWriter();
                 w.WriteEndArray();
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 var w = new JsonExpressionWriter();
                 w.WriteValue(1);
@@ -650,7 +648,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
                 w => w.WriteStartObject(),
             })
             {
-                Assert.ThrowsException<InvalidOperationException>(() =>
+                Assert.ThrowsExactly<InvalidOperationException>(() =>
                 {
                     var w = new JsonExpressionWriter();
                     w.WriteStartArray();
@@ -663,13 +661,13 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         [TestMethod]
         public void JsonExpressionWriter_InvalidOperation_EndObject()
         {
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 var w = new JsonExpressionWriter();
                 w.WriteEndObject();
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 var w = new JsonExpressionWriter();
                 w.WriteValue(1);
@@ -686,7 +684,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
                 w => w.WriteValue(1),
             })
             {
-                Assert.ThrowsException<InvalidOperationException>(() =>
+                Assert.ThrowsExactly<InvalidOperationException>(() =>
                 {
                     var w = new JsonExpressionWriter();
                     w.WriteStartObject();
@@ -706,7 +704,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
                 w => w.WriteStartArray(),
             })
             {
-                Assert.ThrowsException<InvalidOperationException>(() =>
+                Assert.ThrowsExactly<InvalidOperationException>(() =>
                 {
                     var w = new JsonExpressionWriter();
                     w.WriteStartObject();
@@ -758,7 +756,7 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
 
         private static void AssertNotSupported(Action<JsonExpressionWriter> a)
         {
-            Assert.ThrowsException<NotSupportedException>(() => a(new JsonExpressionWriter()));
+            Assert.ThrowsExactly<NotSupportedException>(() => a(new JsonExpressionWriter()));
         }
 
         private sealed class Person

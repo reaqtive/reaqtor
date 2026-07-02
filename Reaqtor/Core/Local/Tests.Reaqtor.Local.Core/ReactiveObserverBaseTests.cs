@@ -31,7 +31,7 @@ namespace Tests
         {
             var s = new MyReactiveObserver<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.OnError(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.OnError(null));
         }
 
         [TestMethod]

@@ -22,12 +22,12 @@ namespace Tests.Reaqtive.Scheduler
             using var ph = PhysicalScheduler.Create();
 
             Assert.IsFalse(ph.CheckAccess());
-            Assert.ThrowsException<InvalidOperationException>(() => ph.VerifyAccess());
+            Assert.ThrowsExactly<InvalidOperationException>(() => ph.VerifyAccess());
 
             using var l = new LogicalScheduler(ph);
 
             Assert.IsFalse(l.CheckAccess());
-            Assert.ThrowsException<InvalidOperationException>(() => l.VerifyAccess());
+            Assert.ThrowsExactly<InvalidOperationException>(() => l.VerifyAccess());
 
             var e = new ManualResetEvent(false);
 

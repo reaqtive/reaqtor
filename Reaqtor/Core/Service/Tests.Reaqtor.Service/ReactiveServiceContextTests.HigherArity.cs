@@ -32,20 +32,20 @@ namespace Tests.Reaqtor.Service
                 ctx =>
                 {
                     var provider = (ReactiveQueryProvider)ctx.Provider;
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -57,20 +57,20 @@ namespace Tests.Reaqtor.Service
                 ctx =>
                 {
                     var provider = (ReactiveQueryProvider)ctx.Provider;
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -82,20 +82,20 @@ namespace Tests.Reaqtor.Service
                 ctx =>
                 {
                     var provider = (ReactiveQueryProvider)ctx.Provider;
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -133,20 +133,20 @@ namespace Tests.Reaqtor.Service
                 ctx =>
                 {
                     var provider = (ReactiveQueryProvider)ctx.Provider;
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -187,20 +187,20 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -211,20 +211,20 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -235,20 +235,20 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -259,21 +259,21 @@ namespace Tests.Reaqtor.Service
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -7022,8 +7022,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", null);
                     ((IReactiveSubjectFactory<int, int, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7082,8 +7082,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7145,8 +7145,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7211,8 +7211,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7280,8 +7280,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7352,8 +7352,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7427,8 +7427,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7505,8 +7505,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7586,8 +7586,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7670,8 +7670,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7757,8 +7757,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7847,8 +7847,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -7940,8 +7940,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -8036,8 +8036,8 @@ namespace Tests.Reaqtor.Service
                     factory.Create(new Uri(Constants.Stream.FOO), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
                     ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -8137,8 +8137,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8183,8 +8183,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8231,8 +8231,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8281,8 +8281,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8333,8 +8333,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8387,8 +8387,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8443,8 +8443,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8501,8 +8501,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8561,8 +8561,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8623,8 +8623,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8687,8 +8687,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8753,8 +8753,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8821,8 +8821,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8891,8 +8891,8 @@ namespace Tests.Reaqtor.Service
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
                     var sub2 = ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(new Uri(Constants.Subscription.SUB2), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).Create(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -8972,7 +8972,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2) => obs(parameter_1, parameter_2),
@@ -8980,7 +8980,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9026,7 +9026,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3) => obs(parameter_1, parameter_2, parameter_3),
@@ -9034,7 +9034,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9083,7 +9083,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4) => obs(parameter_1, parameter_2, parameter_3, parameter_4),
@@ -9091,7 +9091,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9143,7 +9143,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5),
@@ -9151,7 +9151,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9206,7 +9206,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6),
@@ -9214,7 +9214,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9272,7 +9272,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7),
@@ -9280,7 +9280,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9341,7 +9341,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8),
@@ -9349,7 +9349,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9413,7 +9413,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9),
@@ -9421,7 +9421,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9488,7 +9488,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10),
@@ -9496,7 +9496,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9566,7 +9566,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11),
@@ -9574,7 +9574,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9647,7 +9647,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12),
@@ -9655,7 +9655,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9731,7 +9731,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13),
@@ -9739,7 +9739,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9818,7 +9818,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14),
@@ -9826,7 +9826,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9908,7 +9908,7 @@ namespace Tests.Reaqtor.Service
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14, parameter_15) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14, parameter_15),
@@ -9916,7 +9916,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -9988,7 +9988,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2) => obs(parameter_1, parameter_2));
                     ctx.DefineObserver<string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, int>(
                             uri: null,
                             obsExpr,
@@ -9996,7 +9996,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10039,7 +10039,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3) => obs(parameter_1, parameter_2, parameter_3));
                     ctx.DefineObserver<string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10047,7 +10047,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10093,7 +10093,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4) => obs(parameter_1, parameter_2, parameter_3, parameter_4));
                     ctx.DefineObserver<string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10101,7 +10101,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10150,7 +10150,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5));
                     ctx.DefineObserver<string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10158,7 +10158,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10210,7 +10210,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6));
                     ctx.DefineObserver<string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10218,7 +10218,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10273,7 +10273,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7));
                     ctx.DefineObserver<string, string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10281,7 +10281,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10339,7 +10339,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8));
                     ctx.DefineObserver<string, string, string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10347,7 +10347,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10408,7 +10408,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9));
                     ctx.DefineObserver<string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10416,7 +10416,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10480,7 +10480,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10));
                     ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10488,7 +10488,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10555,7 +10555,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11));
                     ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10563,7 +10563,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10633,7 +10633,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12));
                     ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10641,7 +10641,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10714,7 +10714,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13));
                     ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10722,7 +10722,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10798,7 +10798,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14));
                     ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10806,7 +10806,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10885,7 +10885,7 @@ namespace Tests.Reaqtor.Service
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, IReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14, parameter_15) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14, parameter_15));
                     ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10893,7 +10893,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -10959,7 +10959,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, int, int>(
                             uri: null,
                             factory,
@@ -10967,7 +10967,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -10995,7 +10995,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11003,7 +11003,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11031,7 +11031,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11039,7 +11039,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11067,7 +11067,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11075,7 +11075,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11103,7 +11103,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11111,7 +11111,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11139,7 +11139,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11147,7 +11147,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11175,7 +11175,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11183,7 +11183,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11211,7 +11211,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11219,7 +11219,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11247,7 +11247,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11255,7 +11255,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11283,7 +11283,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11291,7 +11291,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11319,7 +11319,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11327,7 +11327,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11355,7 +11355,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11363,7 +11363,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11391,7 +11391,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11399,7 +11399,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11427,7 +11427,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11435,7 +11435,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -11467,7 +11467,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string>(
                             uri: null,
                             factory,
@@ -11475,7 +11475,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11503,7 +11503,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string>(
                             uri: null,
                             factory,
@@ -11511,7 +11511,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11539,7 +11539,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string>(
                             uri: null,
                             factory,
@@ -11547,7 +11547,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11575,7 +11575,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11583,7 +11583,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11611,7 +11611,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11619,7 +11619,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11647,7 +11647,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11655,7 +11655,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11683,7 +11683,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11691,7 +11691,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11719,7 +11719,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11727,7 +11727,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11755,7 +11755,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11763,7 +11763,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11791,7 +11791,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11799,7 +11799,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11827,7 +11827,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11835,7 +11835,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11863,7 +11863,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11871,7 +11871,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11899,7 +11899,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11907,7 +11907,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,
@@ -11935,7 +11935,7 @@ namespace Tests.Reaqtor.Service
                     var factory = ctx.GetSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11943,7 +11943,7 @@ namespace Tests.Reaqtor.Service
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,

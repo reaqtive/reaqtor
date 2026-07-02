@@ -49,7 +49,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
 
             //
             // Exit the last operation.
@@ -67,7 +67,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
         }
 
         [TestMethod]
@@ -98,7 +98,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
 
             //
             // Initiate dispose a second time.
@@ -125,7 +125,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
 
             //
             // Exit the other operation.
@@ -144,7 +144,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
 
             //
             // Dispose is a no-op now.
@@ -160,7 +160,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Cannot enter again.
             //
 
-            Assert.ThrowsException<ObjectDisposedException>(() => o.Enter());
+            Assert.ThrowsExactly<ObjectDisposedException>(() => o.Enter());
         }
 
         [TestMethod]

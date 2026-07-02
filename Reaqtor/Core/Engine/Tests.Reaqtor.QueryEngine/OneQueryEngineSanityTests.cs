@@ -71,13 +71,13 @@ namespace Tests.Reaqtor.QueryEngine
             var kvs = new InMemoryKeyValueStore();
             var ser = SerializationPolicy.Default;
 
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(null, Resolver, sch, Context, kvs, ser, null));
-            Assert.ThrowsException<ArgumentException>(() => new CheckpointingQueryEngine(invalidUri, Resolver, GetScheduler(), Context, kvs, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, null, GetScheduler(), Context, kvs, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, null, Context, kvs, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), null, kvs, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, null, ser, null));
-            Assert.ThrowsException<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, kvs, null, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(null, Resolver, sch, Context, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentException>(() => new CheckpointingQueryEngine(invalidUri, Resolver, GetScheduler(), Context, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, null, GetScheduler(), Context, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, null, Context, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), null, kvs, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, null, ser, null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, kvs, null, null));
         }
 
         [TestMethod]
@@ -93,11 +93,11 @@ namespace Tests.Reaqtor.QueryEngine
             ctx.DefineObservable<string, T>(uri, obs, null);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observables[uri].Expression, Rewrite(obs)));
-            Assert.ThrowsException<EntityAlreadyExistsException>(() => ctx.DefineObservable<string, T>(uri, obs, null));
+            Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineObservable<string, T>(uri, obs, null));
 
             ctx.UndefineObservable(uri);
 
-            Assert.ThrowsException<EntityNotFoundException>(() => ctx.UndefineObservable(uri));
+            Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineObservable(uri));
         }
 
         [TestMethod]
@@ -117,11 +117,11 @@ namespace Tests.Reaqtor.QueryEngine
             await asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observables[uri].Expression, Rewrite((Expression<Func<string, IReactiveQbservable<T>>>)(id => MockObservable.CreateObservable<T>(id).AsQbservable()))));
-            await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None));
 
             await asyncCtx.UndefineObservableAsync(uri, CancellationToken.None);
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() => asyncCtx.UndefineObservableAsync(uri, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineObservableAsync(uri, CancellationToken.None));
         }
 
         [TestMethod]
@@ -137,11 +137,11 @@ namespace Tests.Reaqtor.QueryEngine
             ctx.DefineObserver<string, T>(uri, obv, null);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observers[uri].Expression, Rewrite(obv)));
-            Assert.ThrowsException<EntityAlreadyExistsException>(() => ctx.DefineObserver<string, T>(uri, obv, null));
+            Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineObserver<string, T>(uri, obv, null));
 
             ctx.UndefineObserver(uri);
 
-            Assert.ThrowsException<EntityNotFoundException>(() => ctx.UndefineObserver(uri));
+            Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineObserver(uri));
         }
 
         [TestMethod]
@@ -161,11 +161,11 @@ namespace Tests.Reaqtor.QueryEngine
             await asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observers[uri].Expression, (Expression<Func<string, IObserver<T>>>)(id => MockObserver.CreateObserver<T>(id))));
-            await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None));
 
             await asyncCtx.UndefineObserverAsync(uri, CancellationToken.None);
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() => asyncCtx.UndefineObserverAsync(uri, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineObserverAsync(uri, CancellationToken.None));
         }
 
         [TestMethod]
@@ -181,11 +181,11 @@ namespace Tests.Reaqtor.QueryEngine
             ctx.DefineStreamFactory<int, int>(uri, sf, null);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.StreamFactories[uri].Expression, Rewrite(sf.Expression)));
-            Assert.ThrowsException<EntityAlreadyExistsException>(() => ctx.DefineStreamFactory<int, int>(uri, sf, null));
+            Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineStreamFactory<int, int>(uri, sf, null));
 
             ctx.UndefineStreamFactory(uri);
 
-            Assert.ThrowsException<EntityNotFoundException>(() => ctx.UndefineStreamFactory(uri));
+            Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineStreamFactory(uri));
         }
 
         [TestMethod]
@@ -205,11 +205,11 @@ namespace Tests.Reaqtor.QueryEngine
             await asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None);
 
             Assert.IsTrue(new ExpressionComparator().Equals(ctx.StreamFactories[uri].Expression, Rewrite(sf.Expression)));
-            await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None));
 
             await asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None);
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() => asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None));
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None));
         }
 
         [TestMethod]
@@ -228,7 +228,7 @@ namespace Tests.Reaqtor.QueryEngine
             var obv = ctx.GetObserver<string, int>(MockObserverUri)("v1");
             var sub = src.Subscribe(obv, uri, null);
 
-            Assert.ThrowsException<EntityAlreadyExistsException>(() =>
+            Assert.ThrowsExactly<EntityAlreadyExistsException>(() =>
             {
                 // Subscription with uri already exists
                 src.Subscribe(obv, uri, null);
@@ -254,7 +254,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             o1.OnNext(2); // ignored
 
-            Assert.ThrowsException<EntityNotFoundException>(() =>
+            Assert.ThrowsExactly<EntityNotFoundException>(() =>
             {
                 // Subscription with uri doesn't exist
                 sub.Dispose();
@@ -263,7 +263,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Lazy evaluation - doesn't throw until Dispose is called
             sub = ctx.GetSubscription(uri);
 
-            Assert.ThrowsException<EntityNotFoundException>(() =>
+            Assert.ThrowsExactly<EntityNotFoundException>(() =>
             {
                 // Subscription with uri doesn't exist
                 sub.Dispose();
@@ -314,7 +314,7 @@ namespace Tests.Reaqtor.QueryEngine
             var obv = ctx.GetObserver<string, int>(MockObserverUri)("v1");
             var sub = await src.SubscribeAsync(obv, uri, null, CancellationToken.None);
 
-            await Assert.ThrowsExceptionAsync<EntityAlreadyExistsException>(async () =>
+            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(async () =>
             {
                 // Subscription with uri already exists
                 await src.SubscribeAsync(obv, uri, null);
@@ -340,7 +340,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             o1.OnNext(2); // ignored
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(async () =>
             {
                 // Subscription with uri doesn't exist
                 await sub.DisposeAsync(CancellationToken.None);
@@ -349,7 +349,7 @@ namespace Tests.Reaqtor.QueryEngine
             // Lazy evaluation - doesn't throw until Dispose is called
             sub = ctx.GetSubscription(uri);
 
-            await Assert.ThrowsExceptionAsync<EntityNotFoundException>(async () =>
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(async () =>
             {
                 // Subscription with uri doesn't exist
                 await sub.DisposeAsync(CancellationToken.None);
@@ -444,7 +444,7 @@ namespace Tests.Reaqtor.QueryEngine
             srcs.OnNext(0);
 
             var result = GetObserver<int>("result");
-            AssertResult(result, 1, Assert.AreEqual);
+            AssertResult(result, 1, static (x, y) => Assert.AreEqual(x, y));
             Assert.IsFalse(result.Completed);
             Assert.IsFalse(result.Error);
 
@@ -453,7 +453,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(result.Error);
 
             srcs.OnNext(1);
-            AssertResult(result, 1, Assert.AreEqual);
+            AssertResult(result, 1, static (x, y) => Assert.AreEqual(x, y));
         }
 
         [TestMethod]
@@ -1162,7 +1162,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe2, state);
 
-                Assert.ThrowsException<KeyNotFoundException>(() => ctx2.Subscriptions[new Uri("test://sub1")].Dispose());
+                Assert.ThrowsExactly<KeyNotFoundException>(() => ctx2.Subscriptions[new Uri("test://sub1")].Dispose());
             }
         }
 
@@ -1209,7 +1209,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 Recover(qe3, new InMemoryStateStore("foo"));
 
-                await Assert.ThrowsExceptionAsync<EntityNotFoundException>(() =>
+                await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() =>
                     ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None)
 #if NET6_0_OR_GREATER
                         .AsTask()
@@ -2079,10 +2079,10 @@ namespace Tests.Reaqtor.QueryEngine
 
             qe.UnloadAsync().Wait();
 
-            Assert.ThrowsException<EngineUnloadedException>(() => qe.ReactiveService.Empty<int>());
-            Assert.ThrowsException<EngineUnloadedException>(() => qe.ReliableReactiveService.GetObserver<int>(new Uri("test://iv")));
-            Assert.ThrowsExceptionAsync<EngineUnloadedException>(() => qe.CheckpointAsync(new InMemoryStateWriter(new InMemoryStateStore("store"), CheckpointKind.Full)));
-            Assert.ThrowsExceptionAsync<EngineUnloadedException>(() => qe.RecoverAsync(new InMemoryStateReader(new InMemoryStateStore("store"))));
+            Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReactiveService.Empty<int>());
+            Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReliableReactiveService.GetObserver<int>(new Uri("test://iv")));
+            Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.CheckpointAsync(new InMemoryStateWriter(new InMemoryStateStore("store"), CheckpointKind.Full)));
+            Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.RecoverAsync(new InMemoryStateReader(new InMemoryStateStore("store"))));
         }
 
         [TestMethod]
@@ -2509,14 +2509,14 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreSame(ctx.Streams[new Uri("custom:stream")].Expression, syncCtx.Streams[new Uri("custom:stream")].Expression);
 
             // Not implemented yet
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T1, T>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T1, T>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T, R>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T1, T, R>());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Subscriptions[new Uri("custom:sub")].ToSubscription());
-            Assert.ThrowsException<NotImplementedException>(() => ctx.Streams[new Uri("custom:stream")].ToStream<T, R>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T1, T>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T1, T>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T, R>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T1, T, R>());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Subscriptions[new Uri("custom:sub")].ToSubscription());
+            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Streams[new Uri("custom:stream")].ToStream<T, R>());
 
             var l = syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList();
             CollectionAssert.AreEquivalent(ctx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList());

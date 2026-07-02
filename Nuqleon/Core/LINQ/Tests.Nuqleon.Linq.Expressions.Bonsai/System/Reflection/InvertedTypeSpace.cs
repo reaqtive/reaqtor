@@ -79,25 +79,25 @@ namespace Tests.System.Linq.Expressions.Bonsai
             its.MapType(fooSlim, typeof(Bar));
 
             var ctor = typeof(Foo).GetConstructors().Single();
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(ctor, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(ctor, ts, its));
 
             var field = typeof(Foo).GetField("baz");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(field, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(field, ts, its));
 
             var prop = typeof(Foo).GetProperty("Bar");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(prop, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(prop, ts, its));
 
             var idxProp = typeof(Foo).GetProperty("Item");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(idxProp, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(idxProp, ts, its));
 
             var simple = typeof(Foo).GetMethod("Qux1");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(simple, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(simple, ts, its));
 
             var genericDef = typeof(Foo).GetMethod("Qux2");
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(genericDef, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(genericDef, ts, its));
 
             var generic = genericDef.MakeGenericMethod([typeof(int)]);
-            Assert.ThrowsException<InvalidOperationException>(() => MemberInfoRoundtrip(generic, ts, its));
+            Assert.ThrowsExactly<InvalidOperationException>(() => MemberInfoRoundtrip(generic, ts, its));
         }
     }
 }

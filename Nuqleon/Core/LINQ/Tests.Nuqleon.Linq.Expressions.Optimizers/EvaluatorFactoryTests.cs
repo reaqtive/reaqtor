@@ -93,7 +93,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         public void EvaluatorFactory_Event()
         {
             var evt = typeof(Bar).GetEvent(nameof(Bar.InstanceEvent));
-            Assert.ThrowsException<InvalidOperationException>(() => GetEvaluatorFactory().GetEvaluator(evt));
+            Assert.ThrowsExactly<InvalidOperationException>(() => GetEvaluatorFactory().GetEvaluator(evt));
         }
 
         private static IEvaluatorFactory GetEvaluatorFactory() => new DefaultEvaluatorFactory();

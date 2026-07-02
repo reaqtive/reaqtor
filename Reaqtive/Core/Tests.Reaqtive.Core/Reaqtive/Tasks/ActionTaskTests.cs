@@ -19,8 +19,8 @@ namespace Test.Reaqtive
         public void ActionTask_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => new ActionTask(default(Action)));
-            Assert.ThrowsException<ArgumentNullException>(() => new ActionTask<int>(default(Action<int>), 42));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new ActionTask(default(Action)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new ActionTask<int>(default(Action<int>), 42));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

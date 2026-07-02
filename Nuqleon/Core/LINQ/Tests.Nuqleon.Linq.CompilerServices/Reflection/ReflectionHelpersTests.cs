@@ -35,9 +35,9 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void InfoOf_NoReflectionInfo()
         {
-            Assert.ThrowsException<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Constant(42)));
-            Assert.ThrowsException<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Negate(Expression.Constant(42))));
-            Assert.ThrowsException<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Add(Expression.Constant(1), Expression.Constant(2))));
+            Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Constant(42)));
+            Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Negate(Expression.Constant(42))));
+            Assert.ThrowsExactly<NotSupportedException>(() => ReflectionHelpers.InfoOf(Expression.Add(Expression.Constant(1), Expression.Constant(2))));
         }
 
         [TestMethod]

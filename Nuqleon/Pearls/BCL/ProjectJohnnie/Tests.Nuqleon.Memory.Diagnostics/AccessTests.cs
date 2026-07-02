@@ -18,7 +18,7 @@ namespace Tests
         [TestMethod]
         public void Access_Field_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Access.Field(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Access.Field(null));
         }
 
         [TestMethod]
@@ -58,7 +58,7 @@ namespace Tests
         [TestMethod]
         public void Access_VectorElement_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Access.VectorElement(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Access.VectorElement(-1));
         }
 
         [TestMethod]
@@ -87,9 +87,9 @@ namespace Tests
         [TestMethod]
         public void Access_MultidimensionalArrayElement_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Access.MultidimensionalArrayElement(default));
-            Assert.ThrowsException<ArgumentException>(() => Access.MultidimensionalArrayElement([]));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => Access.MultidimensionalArrayElement(-1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Access.MultidimensionalArrayElement(default));
+            Assert.ThrowsExactly<ArgumentException>(() => Access.MultidimensionalArrayElement([]));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => Access.MultidimensionalArrayElement(-1));
         }
 
         [TestMethod]
@@ -118,9 +118,9 @@ namespace Tests
         [TestMethod]
         public void Access_Composite_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Access.Composite(default));
-            Assert.ThrowsException<ArgumentException>(() => Access.Composite([]));
-            Assert.ThrowsException<ArgumentNullException>(() => Access.Composite([null]));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Access.Composite(default));
+            Assert.ThrowsExactly<ArgumentException>(() => Access.Composite([]));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Access.Composite([null]));
         }
 
         [TestMethod]

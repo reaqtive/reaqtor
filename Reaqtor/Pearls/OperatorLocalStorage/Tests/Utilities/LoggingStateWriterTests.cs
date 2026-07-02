@@ -81,11 +81,11 @@ namespace Tests
                 using var w = new MyWriter { Throw = true };
                 using var writer = new LoggingStateWriter(w, sw);
 
-                Assert.ThrowsException<NotImplementedException>(() => _ = writer.GetItemWriter("bar", "foo"));
-                Assert.ThrowsException<NotImplementedException>(() => writer.DeleteItem("bar", "foo"));
-                Assert.ThrowsException<NotImplementedException>(() => writer.Rollback());
-                Assert.ThrowsException<NotImplementedException>(() => writer.CommitAsync().GetAwaiter().GetResult());
-                Assert.ThrowsException<NotImplementedException>(() => writer.Dispose());
+                Assert.ThrowsExactly<NotImplementedException>(() => _ = writer.GetItemWriter("bar", "foo"));
+                Assert.ThrowsExactly<NotImplementedException>(() => writer.DeleteItem("bar", "foo"));
+                Assert.ThrowsExactly<NotImplementedException>(() => writer.Rollback());
+                Assert.ThrowsExactly<NotImplementedException>(() => writer.CommitAsync().GetAwaiter().GetResult());
+                Assert.ThrowsExactly<NotImplementedException>(() => writer.Dispose());
 
                 w.Throw = false;
             }

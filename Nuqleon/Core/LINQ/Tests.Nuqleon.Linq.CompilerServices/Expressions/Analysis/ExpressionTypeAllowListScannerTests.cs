@@ -27,8 +27,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             var ws = new ExpressionTypeAllowListScanner();
 
-            Assert.ThrowsException<NotSupportedException>(() => ((IEnumerable)ws.Types).GetEnumerator());
-            Assert.ThrowsException<NotSupportedException>(() => ((IEnumerable<Type>)ws.Types).GetEnumerator());
+            Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable)ws.Types).GetEnumerator());
+            Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable<Type>)ws.Types).GetEnumerator());
 
             AssertEx.ThrowsException<ArgumentNullException>(() => ws.Types.Add(type: null), ex => Assert.AreEqual("type", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => ws.Types.Add(type: null, includeBase: false), ex => Assert.AreEqual("type", ex.ParamName));
@@ -58,7 +58,7 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<string, char>>)(s => s[0]),
             })
             {
-                Assert.ThrowsException<NotSupportedException>(() => ws.Visit(e));
+                Assert.ThrowsExactly<NotSupportedException>(() => ws.Visit(e));
             }
         }
 
@@ -92,7 +92,7 @@ namespace Tests.System.Linq.CompilerServices
 #pragma warning restore IDE0004
             })
             {
-                Assert.ThrowsException<NotSupportedException>(() => ws.Visit(e));
+                Assert.ThrowsExactly<NotSupportedException>(() => ws.Visit(e));
             }
         }
 

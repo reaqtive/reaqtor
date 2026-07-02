@@ -464,7 +464,7 @@ namespace Tests
             // Assert the new space does not contain the dictionary.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetDictionary<int, int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetDictionary<int, int>("bar"));
 
             //
             // Load the space from the store.
@@ -1455,7 +1455,7 @@ namespace Tests
             // Assert the dictionary is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetDictionary<int, int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetDictionary<int, int>("bar"));
         });
 
         [TestMethod]
@@ -1520,7 +1520,7 @@ namespace Tests
             // Assert the dictionary is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetDictionary<int, int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetDictionary<int, int>("bar"));
         });
 
         [TestMethod]
@@ -1585,7 +1585,7 @@ namespace Tests
             // Assert the dictionary is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetDictionary<int, int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetDictionary<int, int>("bar"));
         });
     }
 }

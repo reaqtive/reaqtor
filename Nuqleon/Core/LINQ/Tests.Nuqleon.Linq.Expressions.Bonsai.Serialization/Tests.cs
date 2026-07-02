@@ -1711,9 +1711,9 @@ namespace Tests
             var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), new[] { Expression.Constant("foo"), Expression.Constant(0) });
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
-            Assert.ThrowsException<NotSupportedException>(() => Roundtrip(f1, V08));
+            Assert.ThrowsExactly<NotSupportedException>(() => Roundtrip(f1, V08));
 
-            Assert.ThrowsException<NotSupportedException>(() => Roundtrip(f2, V08));
+            Assert.ThrowsExactly<NotSupportedException>(() => Roundtrip(f2, V08));
         }
 
         private static class Staticy
@@ -2009,7 +2009,7 @@ namespace Tests
 
             var m = Expression.MemberInit(Expression.New(rec), Expression.Bind(bar, Expression.Constant(42)));
 
-            Assert.ThrowsException<NotSupportedException>(() => Roundtrip(m, V08));
+            Assert.ThrowsExactly<NotSupportedException>(() => Roundtrip(m, V08));
         }
 
         #endregion
@@ -2315,7 +2315,7 @@ namespace Tests
             }
         }
 
-        [TestMethod, ExpectedException(typeof(OverflowException))]
+        [TestMethod]
         public void Dynamic_BinaryOperation_Checked()
         {
             var op = CSharpDynamic.Binder.BinaryOperation(CSharpDynamic.CSharpBinderFlags.CheckedContext, ExpressionType.Add, typeof(object), new[]
@@ -2331,7 +2331,7 @@ namespace Tests
             var d = (DynamicExpression)Roundtrip(e);
 
             var f = Expression.Lambda<Func<int>>(Expression.Convert(d, typeof(int)));
-            var overflow = f.Compile()();
+            Assert.ThrowsExactly<OverflowException>(() => _ = f.Compile()());
         }
 
         [TestMethod]
@@ -2619,7 +2619,7 @@ namespace Tests
             Assert.AreEqual(-bigOne, f.Compile()());
         }
 
-        [TestMethod, ExpectedException(typeof(OverflowException))]
+        [TestMethod]
         public void Dynamic_UnaryOperation_Checked()
         {
             var op = CSharpDynamic.Binder.UnaryOperation(CSharpDynamic.CSharpBinderFlags.CheckedContext, ExpressionType.Negate, typeof(object), new[]
@@ -2633,7 +2633,7 @@ namespace Tests
             var d = (DynamicExpression)Roundtrip(e);
 
             var f = Expression.Lambda<Func<int>>(Expression.Convert(d, typeof(int)));
-            var overflow = f.Compile()();
+            Assert.ThrowsExactly<OverflowException>(() => _ = f.Compile()());
         }*/
 
         #endregion
@@ -3595,7 +3595,7 @@ namespace Tests
         private static void AssertInvalid(string bonsai)
         {
             var serializer = new SimpleExpressionSerializer();
-            Assert.ThrowsException<BonsaiParseException>(() => serializer.Deserialize(bonsai));
+            Assert.ThrowsExactly<BonsaiParseException>(() => serializer.Deserialize(bonsai));
         }
 
         #endregion

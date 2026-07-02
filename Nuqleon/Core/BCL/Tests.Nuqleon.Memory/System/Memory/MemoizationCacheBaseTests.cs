@@ -49,7 +49,7 @@ namespace Tests
             Assert.AreEqual(0, c.Count);
             Assert.AreNotEqual("foo", c.DebugView);
 
-            Assert.ThrowsException<ObjectDisposedException>(() => c.GetOrAdd(2));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => c.GetOrAdd(2));
         }
 
         [TestMethod]
@@ -83,7 +83,7 @@ namespace Tests
             Assert.AreEqual(0, c.Count);
             Assert.AreNotEqual("foo", c.DebugView);
 
-            Assert.ThrowsException<ObjectDisposedException>(() => c.GetOrAdd(2));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => c.GetOrAdd(2));
         }
 
         private sealed class MyCache : MemoizationCacheBase<int, int>

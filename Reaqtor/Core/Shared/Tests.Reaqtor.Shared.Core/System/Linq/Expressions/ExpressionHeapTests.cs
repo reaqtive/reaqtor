@@ -205,8 +205,8 @@ namespace Tests.Reaqtor.Shared.Core
             comparer.Equals(Expression.Parameter(typeof(int), "foo"), Expression.Parameter(typeof(int), "bar"));
 
             // Equals extension
-            Assert.ThrowsException<NotImplementedException>(() => comparer.Equals(new ExtExpression(), new ExtExpression()));
-            Assert.ThrowsException<NotImplementedException>(() => comparer.GetHashCode(new ExtExpression()));
+            Assert.ThrowsExactly<NotImplementedException>(() => comparer.Equals(new ExtExpression(), new ExtExpression()));
+            Assert.ThrowsExactly<NotImplementedException>(() => comparer.GetHashCode(new ExtExpression()));
         }
 
         private static IEqualityComparer<Expression> GetExpressionHeapComparer()
@@ -218,7 +218,7 @@ namespace Tests.Reaqtor.Shared.Core
 
         private static void AssertEqual(Expression x, Expression y)
         {
-            Assert.IsTrue(Comparer.Default.Equals(x, y), "Expected: {0}{2}Actual: {1}", x, y, Environment.NewLine);
+            Assert.IsTrue(Comparer.Default.Equals(x, y), $"Expected: {x}{Environment.NewLine}Actual: {y}");
         }
 
         private sealed class Comparer : ExpressionEqualityComparer

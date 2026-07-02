@@ -292,7 +292,7 @@ namespace Tests
             // Assert the new space does not contain the stack.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetStack<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetStack<int>("bar"));
 
             //
             // Load the space from the store.
@@ -1391,7 +1391,7 @@ namespace Tests
             // Assert the stack is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
         });
 
         [TestMethod]
@@ -1458,7 +1458,7 @@ namespace Tests
             // Assert the stack is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
         });
 
         [TestMethod]
@@ -1525,7 +1525,7 @@ namespace Tests
             // Assert the stack is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetStack<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetStack<int>("bar"));
         });
     }
 }

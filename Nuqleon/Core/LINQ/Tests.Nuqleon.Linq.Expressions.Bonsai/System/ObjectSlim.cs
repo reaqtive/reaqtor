@@ -35,8 +35,8 @@ namespace Tests.System
             var os1 = ObjectSlim.Create(1, SlimType, typeof(int));
             var os2 = ObjectSlim.Create<string>("1", SlimType, t => o => o);
             AssertEx.ThrowsException<ArgumentNullException>(() => os1.Lift<string>(liftFactory: null), ex => Assert.AreEqual(ex.ParamName, "liftFactory"));
-            Assert.ThrowsException<InvalidOperationException>(() => { var ot = os2.OriginalType; });
-            Assert.ThrowsException<InvalidOperationException>(() => os2.Lift<string>(t => o => o.ToString()));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var ot = os2.OriginalType; });
+            Assert.ThrowsExactly<InvalidOperationException>(() => os2.Lift<string>(t => o => o.ToString()));
         }
 
         [TestMethod]

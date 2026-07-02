@@ -380,7 +380,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var t = new { a = 42 }.GetType();
 
-            Assert.ThrowsException<InvalidOperationException>(() => t.ToCSharpString());
+            Assert.ThrowsExactly<InvalidOperationException>(() => t.ToCSharpString());
 
             var n = t.ToCSharpString(useNamespaceQualifiedNames: true, useCSharpTypeAliases: false, disallowCompilerGeneratedTypes: false);
             Assert.IsTrue(n.StartsWith("<>f__AnonymousType"));
@@ -390,7 +390,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ToCSharpString_MultiDimensionalOfOne()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => typeof(int).MakeArrayType(1).ToCSharpString());
+            Assert.ThrowsExactly<InvalidOperationException>(() => typeof(int).MakeArrayType(1).ToCSharpString());
         }
 
         #endregion
@@ -537,8 +537,8 @@ namespace Tests.System.Linq.CompilerServices
             var t1 = typeof(Func<int, string>);
             var t2 = typeof(Func<T, T>);
 
-            Assert.ThrowsException<InvalidOperationException>(() => t1.UnifyExact(t2));
-            Assert.ThrowsException<InvalidOperationException>(() => t2.UnifyExact(t1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t1.UnifyExact(t2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t2.UnifyExact(t1));
         }
 
         [TestMethod]
@@ -699,8 +699,8 @@ namespace Tests.System.Linq.CompilerServices
             var t1 = typeof(Func<int, R, string>);
             var t2 = typeof(Func<T, T, R>);
 
-            Assert.ThrowsException<InvalidOperationException>(() => t1.UnifyExact(t2));
-            Assert.ThrowsException<InvalidOperationException>(() => t2.UnifyExact(t1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t1.UnifyExact(t2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t2.UnifyExact(t1));
         }
 
         [TestMethod]
@@ -709,8 +709,8 @@ namespace Tests.System.Linq.CompilerServices
             var t1 = typeof(Func<T1, T2, T1, T1, string>);
             var t2 = typeof(Func<T3, T1, int, R, R>);
 
-            Assert.ThrowsException<InvalidOperationException>(() => t1.UnifyExact(t2));
-            Assert.ThrowsException<InvalidOperationException>(() => t2.UnifyExact(t1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t1.UnifyExact(t2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t2.UnifyExact(t1));
         }
 
         [TestMethod]
@@ -719,8 +719,8 @@ namespace Tests.System.Linq.CompilerServices
             var t1 = typeof(Func<T1, T2, T1>);
             var t2 = typeof(Func<int, string, T2>);
 
-            Assert.ThrowsException<InvalidOperationException>(() => t1.UnifyExact(t2));
-            Assert.ThrowsException<InvalidOperationException>(() => t2.UnifyExact(t1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t1.UnifyExact(t2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t2.UnifyExact(t1));
         }
 
         [TestMethod]
@@ -729,8 +729,8 @@ namespace Tests.System.Linq.CompilerServices
             var t1 = typeof(Func<T, R>);
             var t2 = typeof(Func<int, R>);
 
-            Assert.ThrowsException<InvalidOperationException>(() => t1.UnifyExact(t2));
-            Assert.ThrowsException<InvalidOperationException>(() => t2.UnifyExact(t1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t1.UnifyExact(t2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t2.UnifyExact(t1));
         }
 
         [TestMethod]
@@ -739,8 +739,8 @@ namespace Tests.System.Linq.CompilerServices
             var t1 = typeof(Func<IEnumerable<T>>);
             var t2 = typeof(Func<int[]>);
 
-            Assert.ThrowsException<InvalidOperationException>(() => t1.UnifyExact(t2));
-            Assert.ThrowsException<InvalidOperationException>(() => t2.UnifyExact(t1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t1.UnifyExact(t2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t2.UnifyExact(t1));
         }
 
         [TestMethod]
@@ -995,8 +995,8 @@ namespace Tests.System.Linq.CompilerServices
             var t1 = typeof(Func<int, string>);
             var t2 = typeof(Func<T, T>);
 
-            Assert.ThrowsException<InvalidOperationException>(() => t1.UnifyWith(t2));
-            Assert.ThrowsException<InvalidOperationException>(() => t2.UnifyWith(t1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t1.UnifyWith(t2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t2.UnifyWith(t1));
         }
 
         [TestMethod]
@@ -1005,8 +1005,8 @@ namespace Tests.System.Linq.CompilerServices
             var t1 = typeof(Func<IEnumerable<T>>);
             var t2 = typeof(Func<int[]>);
 
-            Assert.ThrowsException<InvalidOperationException>(() => t1.UnifyWith(t2));
-            Assert.ThrowsException<InvalidOperationException>(() => t2.UnifyWith(t1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t1.UnifyWith(t2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t2.UnifyWith(t1));
         }
 
         [TestMethod]
@@ -1092,8 +1092,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void IsReferenceAssignableFrom_NullChecks()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => TypeExtensions.IsReferenceAssignableFrom(lhsType: null, typeof(int), out _));
-            Assert.ThrowsException<ArgumentNullException>(() => TypeExtensions.IsReferenceAssignableFrom(typeof(int), rhsType: null, out _));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.IsReferenceAssignableFrom(lhsType: null, typeof(int), out _));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.IsReferenceAssignableFrom(typeof(int), rhsType: null, out _));
         }
 
         [TestMethod]
@@ -1333,7 +1333,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void IsReferenceAssignableFrom_Unification_NoWildcardAssignments()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => AssertIsNotReferenceAssignableFrom(typeof(T), typeof(R)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => AssertIsNotReferenceAssignableFrom(typeof(T), typeof(R)));
         }
 
         [TestMethod]
@@ -1376,7 +1376,7 @@ namespace Tests.System.Linq.CompilerServices
             unifications ??= new Dictionary<Type, Type>();
 
             var res = target.IsReferenceAssignableFrom(value, out IDictionary<Type, Type> subst);
-            Assert.IsTrue(res, "{0} <: {1}", target, value);
+            Assert.IsTrue(res, $"{target} <: {value}");
 
             Assert.AreEqual(unifications.Count, subst.Count);
             Assert.IsTrue(new HashSet<Type>(unifications.Keys).SetEquals(new HashSet<Type>(subst.Keys)));
@@ -1390,7 +1390,7 @@ namespace Tests.System.Linq.CompilerServices
         private static void AssertIsNotReferenceAssignableFrom(Type target, Type value, string errorSubstring = null)
         {
             var res = target.IsReferenceAssignableFrom(value, out IDictionary<Type, Type> ignored);
-            Assert.IsFalse(res, "{0} !<: {1}", target, value);
+            Assert.IsFalse(res, $"{target} !<: {value}");
 
             if (errorSubstring != null)
             {

@@ -24,13 +24,13 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var ms = new MemoryStream(new byte[5]);
 
-            Assert.ThrowsException<ArgumentNullException>(() => new StreamSegment(null, 0, 5));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new StreamSegment(ms, -1, 5));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new StreamSegment(ms, 0, -1));
-            Assert.ThrowsException<ArgumentException>(() => new StreamSegment(ms, 0, 6));
-            Assert.ThrowsException<ArgumentException>(() => new StreamSegment(ms, 1, 5));
-            Assert.ThrowsException<ArgumentException>(() => new StreamSegment(ms, 4, 2));
-            Assert.ThrowsException<ArgumentException>(() => new StreamSegment(ms, 5, 1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new StreamSegment(null, 0, 5));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new StreamSegment(ms, -1, 5));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new StreamSegment(ms, 0, -1));
+            Assert.ThrowsExactly<ArgumentException>(() => new StreamSegment(ms, 0, 6));
+            Assert.ThrowsExactly<ArgumentException>(() => new StreamSegment(ms, 1, 5));
+            Assert.ThrowsExactly<ArgumentException>(() => new StreamSegment(ms, 4, 2));
+            Assert.ThrowsExactly<ArgumentException>(() => new StreamSegment(ms, 5, 1));
 
             for (long s = 0; s <= 4; s++)
             {
@@ -60,8 +60,8 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var ss = GetPrimeSegment();
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.Position = -1);
-            Assert.ThrowsException<OverflowException>(() => ss.Position = long.MaxValue);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.Position = -1);
+            Assert.ThrowsExactly<OverflowException>(() => ss.Position = long.MaxValue);
         }
 
         [TestMethod]
@@ -85,10 +85,10 @@ namespace Tests.Reaqtor.QueryEngine
 
             var bf = new byte[3];
 
-            Assert.ThrowsException<ArgumentNullException>(() => ss.Read(null, 0, 3));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.Read(bf, -1, 3));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.Read(bf, 0, -1));
-            Assert.ThrowsException<ArgumentException>(() => ss.Read(bf, 0, 4));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ss.Read(null, 0, 3));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.Read(bf, -1, 3));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.Read(bf, 0, -1));
+            Assert.ThrowsExactly<ArgumentException>(() => ss.Read(bf, 0, 4));
         }
 
         [TestMethod]
@@ -179,10 +179,10 @@ namespace Tests.Reaqtor.QueryEngine
 
             var bf = new byte[3];
 
-            Assert.ThrowsException<ArgumentNullException>(() => ss.Write(null, 0, 3));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.Write(bf, -1, 3));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.Write(bf, 0, -1));
-            Assert.ThrowsException<ArgumentException>(() => ss.Write(bf, 0, 4));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ss.Write(null, 0, 3));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.Write(bf, -1, 3));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.Write(bf, 0, -1));
+            Assert.ThrowsExactly<ArgumentException>(() => ss.Write(bf, 0, 4));
         }
 
         [TestMethod]
@@ -244,19 +244,19 @@ namespace Tests.Reaqtor.QueryEngine
 
             ss.Position = 6;
 
-            Assert.ThrowsException<ArgumentException>(() => ss.Write(bf, 0, 2));
+            Assert.ThrowsExactly<ArgumentException>(() => ss.Write(bf, 0, 2));
             Assert.AreEqual(6, ss.Position);
             Assert.IsTrue(ay.SequenceEqual(bs.Skip(2).Take(7)));
 
             ss.Position = 7;
 
-            Assert.ThrowsException<ArgumentException>(() => ss.Write(bf, 0, 1));
+            Assert.ThrowsExactly<ArgumentException>(() => ss.Write(bf, 0, 1));
             Assert.AreEqual(7, ss.Position);
             Assert.IsTrue(ay.SequenceEqual(bs.Skip(2).Take(7)));
 
             ss.Position = 99;
 
-            Assert.ThrowsException<ArgumentException>(() => ss.Write(bf, 0, 3));
+            Assert.ThrowsExactly<ArgumentException>(() => ss.Write(bf, 0, 3));
             Assert.AreEqual(99, ss.Position);
             Assert.IsTrue(ay.SequenceEqual(bs.Skip(2).Take(7)));
         }
@@ -266,7 +266,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             var ss = GetPrimeSegment();
 
-            Assert.ThrowsException<ArgumentException>(() => ss.Seek(1L, (SeekOrigin)99));
+            Assert.ThrowsExactly<ArgumentException>(() => ss.Seek(1L, (SeekOrigin)99));
         }
 
         [TestMethod]
@@ -278,7 +278,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.AreEqual(0, ss.Position);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.Seek(-1, SeekOrigin.Begin));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.Seek(-1, SeekOrigin.Begin));
             Assert.AreEqual(0, ss.Position);
 
             ss.Seek(0, SeekOrigin.Begin);
@@ -324,7 +324,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.AreEqual(0, ss.Position);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.Seek(-1, SeekOrigin.Current));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.Seek(-1, SeekOrigin.Current));
             Assert.AreEqual(0, ss.Position);
 
             ss.Seek(0, SeekOrigin.Current);
@@ -353,7 +353,7 @@ namespace Tests.Reaqtor.QueryEngine
             ss.Seek(+5, SeekOrigin.Current);
             Assert.AreEqual(5, ss.Position);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.Seek(-6, SeekOrigin.Current));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.Seek(-6, SeekOrigin.Current));
             Assert.AreEqual(5, ss.Position);
 
             ss.Seek(3, SeekOrigin.Current);
@@ -378,7 +378,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.AreEqual(0, ss.Position);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.Seek(-8, SeekOrigin.End));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.Seek(-8, SeekOrigin.End));
             Assert.AreEqual(0, ss.Position);
 
             ss.Seek(0, SeekOrigin.End);
@@ -424,11 +424,11 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.AreEqual(0, ss.Position);
             Assert.AreEqual(7, ss.Length);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.SetLength(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.SetLength(-1));
             Assert.AreEqual(0, ss.Position);
             Assert.AreEqual(7, ss.Length);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => ss.SetLength(8));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => ss.SetLength(8));
             Assert.AreEqual(0, ss.Position);
             Assert.AreEqual(7, ss.Length);
 

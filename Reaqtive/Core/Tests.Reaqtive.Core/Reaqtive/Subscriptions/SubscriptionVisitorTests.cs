@@ -52,7 +52,7 @@ namespace Test.Reaqtive
         [TestMethod]
         public void SubscriptionInitializeVisitor_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new SubscriptionInitializeVisitor(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new SubscriptionInitializeVisitor(null));
         }
 
         private interface IMySpecialOperator : IMyOperator

@@ -80,82 +80,74 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         /// Tests null stream to serializer serialize method.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void DataSerialize_Serialize_NullArguments()
         {
-            _jsonSerializer.Serialize<string>(value: null, serialized: null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => _jsonSerializer.Serialize<string>(value: null, serialized: null));
         }
 
         /// <summary>
         /// Tests null stream to serializer deserialize method.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void DataSerialize_Deserialize_NullArguments()
         {
-            _jsonSerializer.Deserialize<string>(serialized: null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => _jsonSerializer.Deserialize<string>(serialized: null));
         }
 
         /// <summary>
         /// Tests garbage stream to serializer deserialize method.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(DataSerializerException))]
         public void DataSerialize_Deserialize_Bad_Stream()
         {
             var writer = new StreamWriter(_stream);
             writer.Write("!@#%"); writer.Flush();
-            _jsonSerializer.Deserialize<int>(_stream);
+            Assert.ThrowsExactly<DataSerializerException>(() => _jsonSerializer.Deserialize<int>(_stream));
         }
 
         /// <summary>
         /// Tests garbage stream to serializer deserialize method.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(DataSerializerException))]
         public void DataSerialize_Deserialize_Bad_TextReader()
         {
-            (_jsonSerializer as JsonDataSerializer)?.DeserializeFrom<int>(new StringReader("!@#%"));
+            Assert.ThrowsExactly<DataSerializerException>(() => (_jsonSerializer as JsonDataSerializer)?.DeserializeFrom<int>(new StringReader("!@#%")));
         }
 
         /// <summary>
         /// Tests garbage stream to serializer deserialize method.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(DataSerializerException))]
         public void DataSerialize_Deserialize_Bad_JsonReader()
         {
-            (_jsonSerializer as JsonDataSerializer)?.DeserializeFrom<int>(new JsonTextReader(new StringReader("!@#%")));
+            Assert.ThrowsExactly<DataSerializerException>(() => (_jsonSerializer as JsonDataSerializer)?.DeserializeFrom<int>(new JsonTextReader(new StringReader("!@#%"))));
         }
 
         /// <summary>
         /// Tests cyclic object passed to to serializer serialize method.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(DataSerializerException))]
         public void DataSerialize_Serialize_Cylic_Stream()
         {
-            _jsonSerializer.Serialize(new Cycle(), _stream);
+            Assert.ThrowsExactly<DataSerializerException>(() => _jsonSerializer.Serialize(new Cycle(), _stream));
         }
 
         /// <summary>
         /// Tests cyclic object passed to to serializer serialize method.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(DataSerializerException))]
         public void DataSerialize_Serialize_Cylic_TextWriter()
         {
-            (_jsonSerializer as JsonDataSerializer)?.SerializeTo(new Cycle(), new StringWriter());
+            Assert.ThrowsExactly<DataSerializerException>(() => (_jsonSerializer as JsonDataSerializer)?.SerializeTo(new Cycle(), new StringWriter()));
         }
 
         /// <summary>
         /// Tests cyclic object passed to to serializer serialize method.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(DataSerializerException))]
         public void DataSerialize_Serialize_Cylic_JsonWriter()
         {
-            (_jsonSerializer as JsonDataSerializer)?.SerializeTo(new Cycle(), new JsonTextWriter(new StringWriter()));
+            Assert.ThrowsExactly<DataSerializerException>(() => (_jsonSerializer as JsonDataSerializer)?.SerializeTo(new Cycle(), new JsonTextWriter(new StringWriter())));
         }
 
         /// <summary>
@@ -536,11 +528,10 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         /// Testing duplicate mapping.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(NotSupportedException))]
         public void DataSerializer_TestDuplicateMapping()
         {
             var expected = new DuplicateMappingClass();
-            _jsonSerializer.Serialize(expected, _stream);
+            Assert.ThrowsExactly<NotSupportedException>(() => _jsonSerializer.Serialize(expected, _stream));
         }
 
 #pragma warning disable IDE0079 // Next supression flagged as redundant on .NET SDK 6
@@ -696,33 +687,30 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         /// Tests the dictionary with a not supported key.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(NotSupportedException))]
         public void DataSerializer_TestDictionaryWithNotSupportedKey()
         {
             var expected = new Dictionary<int, int> { { 1, 2 } };
-            _jsonSerializer.Serialize(expected, _stream);
+            Assert.ThrowsExactly<NotSupportedException>(() => _jsonSerializer.Serialize(expected, _stream));
         }
 
         /// <summary>
         /// Tests the dictionary with mapping.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(NotSupportedException))]
         public void DataSerializer_TestDictionaryWithMapping()
         {
             var expected = new DictionaryWithMapping { { "whatever", 1 } };
-            _jsonSerializer.Serialize(expected, _stream);
+            Assert.ThrowsExactly<NotSupportedException>(() => _jsonSerializer.Serialize(expected, _stream));
         }
 
         /// <summary>
         /// Tests the list with mapping.
         /// </summary>
         [TestMethod]
-        [ExpectedException(typeof(NotSupportedException))]
         public void DataSerializer_TestListWithMapping()
         {
             var expected = new ListWithMapping { "whatever" };
-            _jsonSerializer.Serialize(expected, _stream);
+            Assert.ThrowsExactly<NotSupportedException>(() => _jsonSerializer.Serialize(expected, _stream));
         }
 
         /// <summary>
@@ -1001,14 +989,13 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NotSupportedException))]
         public void DataSerializer_QuotedCustomConverter_Fail()
         {
             var ser = new SerializationHelper(new QuoteConv());
 
             var ms = new MemoryStream();
 
-            ser.DataSerializer.Serialize<Num<int>>(new Num<int>(42), ms);
+            Assert.ThrowsExactly<NotSupportedException>(() => ser.DataSerializer.Serialize<Num<int>>(new Num<int>(42), ms));
         }
 
         [TestMethod]

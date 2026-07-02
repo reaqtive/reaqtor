@@ -27,14 +27,14 @@ namespace Tests
         [TestMethod]
         public void PooledDictionary_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => DictionaryPool<string, int>.Create(4, comparer: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => DictionaryPool<string, int>.Create(4, comparer: null));
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, -1));
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, -1, EqualityComparer<string>.Default));
-            Assert.ThrowsException<ArgumentNullException>(() => DictionaryPool<string, int>.Create(4, 16, comparer: null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, -1, EqualityComparer<string>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => DictionaryPool<string, int>.Create(4, 16, comparer: null));
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, 16, EqualityComparer<string>.Default, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, 16, EqualityComparer<string>.Default, -1));
         }
 
         [TestMethod]

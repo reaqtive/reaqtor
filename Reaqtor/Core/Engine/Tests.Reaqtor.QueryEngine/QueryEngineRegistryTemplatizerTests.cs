@@ -131,7 +131,7 @@ namespace Tests.Reaqtor.QueryEngine
             var templatizer = CreateTemplatizer(registry);
             var templatized = templatizer.Templatize(SimpleExpression);
             registry.Clear();
-            Assert.ThrowsException<InvalidOperationException>(() => templatizer.Detemplatize(templatized));
+            Assert.ThrowsExactly<InvalidOperationException>(() => templatizer.Detemplatize(templatized));
         }
 
         [TestMethod]
@@ -149,7 +149,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(registry.Templates.TryRemove(newTemplate, out templateDefinition));
             Assert.IsTrue(registry.Templates.TryAdd(template, new OtherDefinitionEntity(new Uri(template), templateDefinition.Expression, null)));
 
-            Assert.ThrowsException<ArgumentException>(() => templatizer.Detemplatize(templatized));
+            Assert.ThrowsExactly<ArgumentException>(() => templatizer.Detemplatize(templatized));
         }
 
         [TestMethod]

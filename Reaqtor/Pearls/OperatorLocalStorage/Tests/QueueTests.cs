@@ -293,7 +293,7 @@ namespace Tests
             // Assert the new space does not contain the queue.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetQueue<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetQueue<int>("bar"));
 
             //
             // Load the space from the store.
@@ -878,7 +878,7 @@ namespace Tests
             // Assert the queue is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
         });
 
         [TestMethod]
@@ -947,7 +947,7 @@ namespace Tests
             // Assert the queue is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetValue<int>("bar"));
         });
 
         [TestMethod]
@@ -1016,7 +1016,7 @@ namespace Tests
             // Assert the queue is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetQueue<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetQueue<int>("bar"));
         });
     }
 }

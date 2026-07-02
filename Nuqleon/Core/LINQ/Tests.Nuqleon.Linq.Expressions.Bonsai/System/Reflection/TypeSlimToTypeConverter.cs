@@ -49,7 +49,7 @@ namespace Tests.System.Reflection
             var visitor = new TypeSlimToTypeConverter(DefaultReflectionProvider.Instance);
             var intTypeSlim = typeof(int).ToTypeSlim();
             visitor.MapType(intTypeSlim, typeof(string));
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.MapType(intTypeSlim, typeof(long)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.MapType(intTypeSlim, typeof(long)));
         }
 
 
@@ -59,7 +59,7 @@ namespace Tests.System.Reflection
             var visitor = new TypeSlimToTypeConverter(DefaultReflectionProvider.Instance);
             visitor.Push([]);
             var param = TypeSlim.GenericParameter("T");
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.Visit(param));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(param));
         }
 
         [TestMethod]
@@ -70,11 +70,11 @@ namespace Tests.System.Reflection
 
             if (Type.GetType("Mono.Runtime") == null)
             {
-                Assert.ThrowsException<FileNotFoundException>(() => visitor.Visit(simple));
+                Assert.ThrowsExactly<FileNotFoundException>(() => visitor.Visit(simple));
             }
             else
             {
-                Assert.ThrowsException<TypeLoadException>(() => visitor.Visit(simple));
+                Assert.ThrowsExactly<TypeLoadException>(() => visitor.Visit(simple));
             }
         }
     }

@@ -93,8 +93,8 @@ namespace Tests.System.Linq.CompilerServices
             var myType = new MyType();
             var int32 = new ClrType(typeof(int));
 
-            Assert.ThrowsException<InvalidOperationException>(() => int32.IsAssignableTo(myType));
-            Assert.ThrowsException<InvalidOperationException>(() => int32.Equals(myType));
+            Assert.ThrowsExactly<InvalidOperationException>(() => int32.IsAssignableTo(myType));
+            Assert.ThrowsExactly<InvalidOperationException>(() => int32.Equals(myType));
         }
 
         private sealed class MyType : IType

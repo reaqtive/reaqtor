@@ -32,10 +32,10 @@ namespace Test.Reaqtive.Operators
         public void MaxComparer_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsException<ArgumentNullException>(() => Subscribable.Max<string>(default(ISubscribable<string>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Subscribable.Max<string>(default(ISubscribable<string>)));
 
-            Assert.ThrowsException<ArgumentNullException>(() => Subscribable.Max<string>(default(ISubscribable<string>), StringComparer.Ordinal));
-            Assert.ThrowsException<ArgumentNullException>(() => Subscribable.Max<string>(DummySubscribable<string>.Instance, default(IComparer<string>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Subscribable.Max<string>(default(ISubscribable<string>), StringComparer.Ordinal));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Subscribable.Max<string>(DummySubscribable<string>.Instance, default(IComparer<string>)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 

@@ -228,7 +228,7 @@ namespace Tests.System.Memory.Diagnostics
         [TestMethod]
         public void ObjectSet_Construct_With_Collection_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ObjectSet(collection: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new ObjectSet(collection: null));
         }
 
         [TestMethod]
@@ -331,7 +331,7 @@ namespace Tests.System.Memory.Diagnostics
         {
             var set = new ObjectSet();
 
-            Assert.ThrowsException<ArgumentNullException>(() => set.UnionWith(other: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set.UnionWith(other: null));
 
             var objs = Enumerable.Range(0, 10).Select(_ => new object()).ToArray();
 
@@ -345,7 +345,7 @@ namespace Tests.System.Memory.Diagnostics
         {
             var set = new ObjectSet();
 
-            Assert.ThrowsException<ArgumentNullException>(() => set.IntersectWith(other: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set.IntersectWith(other: null));
 
             set.IntersectWith(Array.Empty<object>());
 
@@ -460,16 +460,16 @@ namespace Tests.System.Memory.Diagnostics
         [TestMethod]
         public void ObjectSet_CopyTo_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ObjectSet().CopyTo(null));
-            Assert.ThrowsException<ArgumentNullException>(() => new ObjectSet().CopyTo(null, 0));
-            Assert.ThrowsException<ArgumentNullException>(() => new ObjectSet().CopyTo(null, 0, 1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new ObjectSet().CopyTo(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new ObjectSet().CopyTo(null, 0));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new ObjectSet().CopyTo(null, 0, 1));
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new ObjectSet().CopyTo(new object[8], -1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new ObjectSet().CopyTo(new object[8], -1, 1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new ObjectSet().CopyTo(new object[8], 0, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new ObjectSet().CopyTo(new object[8], -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new ObjectSet().CopyTo(new object[8], -1, 1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new ObjectSet().CopyTo(new object[8], 0, -1));
 
-            Assert.ThrowsException<ArgumentException>(() => new ObjectSet().CopyTo(new object[8], 8, 1));
-            Assert.ThrowsException<ArgumentException>(() => new ObjectSet().CopyTo(new object[8], 0, 9));
+            Assert.ThrowsExactly<ArgumentException>(() => new ObjectSet().CopyTo(new object[8], 8, 1));
+            Assert.ThrowsExactly<ArgumentException>(() => new ObjectSet().CopyTo(new object[8], 0, 9));
         }
 
         [TestMethod]
@@ -601,7 +601,7 @@ namespace Tests.System.Memory.Diagnostics
 
             var e = nonGenericSet.GetEnumerator();
 
-            Assert.ThrowsException<InvalidOperationException>(() => e.Current);
+            Assert.ThrowsExactly<InvalidOperationException>(() => e.Current);
 
             Assert.IsTrue(e.MoveNext());
             res.Add(e.Current);
@@ -610,7 +610,7 @@ namespace Tests.System.Memory.Diagnostics
             res.Add(e.Current);
 
             Assert.IsFalse(e.MoveNext());
-            Assert.ThrowsException<InvalidOperationException>(() => e.Current);
+            Assert.ThrowsExactly<InvalidOperationException>(() => e.Current);
 
             Assert.IsTrue(set.SetEquals(res));
 
@@ -624,7 +624,7 @@ namespace Tests.System.Memory.Diagnostics
             res.Add(e.Current);
 
             Assert.IsFalse(e.MoveNext());
-            Assert.ThrowsException<InvalidOperationException>(() => e.Current);
+            Assert.ThrowsExactly<InvalidOperationException>(() => e.Current);
 
             Assert.IsTrue(set.SetEquals(res));
         }
@@ -643,8 +643,8 @@ namespace Tests.System.Memory.Diagnostics
 
             set.Add(new object());
 
-            Assert.ThrowsException<InvalidOperationException>(() => e.MoveNext());
-            Assert.ThrowsException<InvalidOperationException>(() => ((IEnumerator)e).Reset());
+            Assert.ThrowsExactly<InvalidOperationException>(() => e.MoveNext());
+            Assert.ThrowsExactly<InvalidOperationException>(() => ((IEnumerator)e).Reset());
         }
 
         [TestMethod]
@@ -659,7 +659,7 @@ namespace Tests.System.Memory.Diagnostics
             var set4 = new ObjectSet();
             var set5 = new ObjectSet(new[] { o1, new object() });
 
-            Assert.ThrowsException<ArgumentNullException>(() => set1.SetEquals(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set1.SetEquals(null));
 
             AssertEquals(set1, set1);
 
@@ -673,8 +673,8 @@ namespace Tests.System.Memory.Diagnostics
             AssertNotEquals(set1, set5);
             AssertNotEquals(set5, set1);
 
-            static void AssertEquals(ObjectSet set, ObjectSet other) => AssertEquality(set, other, Assert.IsTrue);
-            static void AssertNotEquals(ObjectSet set, ObjectSet other) => AssertEquality(set, other, Assert.IsFalse);
+            static void AssertEquals(ObjectSet set, ObjectSet other) => AssertEquality(set, other, static x => Assert.IsTrue(x));
+            static void AssertNotEquals(ObjectSet set, ObjectSet other) => AssertEquality(set, other, static x => Assert.IsFalse(x));
 
             static void AssertEquality(ObjectSet set, ObjectSet other, Action<bool> assert)
             {
@@ -702,7 +702,7 @@ namespace Tests.System.Memory.Diagnostics
             var set5 = new ObjectSet(new[] { o1, o2, new object() });
             var set6 = new ObjectSet(new[] { o1, new object() });
 
-            Assert.ThrowsException<ArgumentNullException>(() => set1.IsSubsetOf(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set1.IsSubsetOf(null));
 
             AssertIsSubsetOf(set1, set1);
 
@@ -720,8 +720,8 @@ namespace Tests.System.Memory.Diagnostics
             AssertIsNotSubsetOf(set5, set1);
             AssertIsNotSubsetOf(set1, set6);
 
-            static void AssertIsSubsetOf(ObjectSet set, ObjectSet other) => AssertSubsetOf(set, other, Assert.IsTrue);
-            static void AssertIsNotSubsetOf(ObjectSet set, ObjectSet other) => AssertSubsetOf(set, other, Assert.IsFalse);
+            static void AssertIsSubsetOf(ObjectSet set, ObjectSet other) => AssertSubsetOf(set, other, static x => Assert.IsTrue(x));
+            static void AssertIsNotSubsetOf(ObjectSet set, ObjectSet other) => AssertSubsetOf(set, other, static x => Assert.IsFalse(x));
 
             static void AssertSubsetOf(ObjectSet set, ObjectSet other, Action<bool> assert)
             {
@@ -744,7 +744,7 @@ namespace Tests.System.Memory.Diagnostics
             var set5 = new ObjectSet(new[] { o1, o2, new object() });
             var set6 = new ObjectSet(new[] { o1, new object() });
 
-            Assert.ThrowsException<ArgumentNullException>(() => set1.IsProperSubsetOf(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set1.IsProperSubsetOf(null));
 
             AssertIsNotProperSubsetOf(set1, set1);
 
@@ -762,8 +762,8 @@ namespace Tests.System.Memory.Diagnostics
             AssertIsNotProperSubsetOf(set5, set1);
             AssertIsNotProperSubsetOf(set1, set6);
 
-            static void AssertIsProperSubsetOf(ObjectSet set, ObjectSet other) => AssertProperSubsetOf(set, other, Assert.IsTrue);
-            static void AssertIsNotProperSubsetOf(ObjectSet set, ObjectSet other) => AssertProperSubsetOf(set, other, Assert.IsFalse);
+            static void AssertIsProperSubsetOf(ObjectSet set, ObjectSet other) => AssertProperSubsetOf(set, other, static x => Assert.IsTrue(x));
+            static void AssertIsNotProperSubsetOf(ObjectSet set, ObjectSet other) => AssertProperSubsetOf(set, other, static x => Assert.IsFalse(x));
 
             static void AssertProperSubsetOf(ObjectSet set, ObjectSet other, Action<bool> assert)
             {
@@ -786,7 +786,7 @@ namespace Tests.System.Memory.Diagnostics
             var set5 = new ObjectSet(new[] { o1, o2, new object() });
             var set6 = new ObjectSet(new[] { o1, new object() });
 
-            Assert.ThrowsException<ArgumentNullException>(() => set1.IsSupersetOf(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set1.IsSupersetOf(null));
 
             AssertIsSupersetOf(set1, set1);
 
@@ -804,8 +804,8 @@ namespace Tests.System.Memory.Diagnostics
             AssertIsSupersetOf(set5, set1);
             AssertIsNotSupersetOf(set1, set6);
 
-            static void AssertIsSupersetOf(ObjectSet set, ObjectSet other) => AssertSupersetOf(set, other, Assert.IsTrue);
-            static void AssertIsNotSupersetOf(ObjectSet set, ObjectSet other) => AssertSupersetOf(set, other, Assert.IsFalse);
+            static void AssertIsSupersetOf(ObjectSet set, ObjectSet other) => AssertSupersetOf(set, other, static x => Assert.IsTrue(x));
+            static void AssertIsNotSupersetOf(ObjectSet set, ObjectSet other) => AssertSupersetOf(set, other, static x => Assert.IsFalse(x));
 
             static void AssertSupersetOf(ObjectSet set, ObjectSet other, Action<bool> assert)
             {
@@ -828,7 +828,7 @@ namespace Tests.System.Memory.Diagnostics
             var set5 = new ObjectSet(new[] { o1, o2, new object() });
             var set6 = new ObjectSet(new[] { o1, new object() });
 
-            Assert.ThrowsException<ArgumentNullException>(() => set1.IsProperSupersetOf(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set1.IsProperSupersetOf(null));
 
             AssertIsNotProperSupersetOf(set1, set1);
 
@@ -846,8 +846,8 @@ namespace Tests.System.Memory.Diagnostics
             AssertIsProperSupersetOf(set5, set1);
             AssertIsNotProperSupersetOf(set1, set6);
 
-            static void AssertIsProperSupersetOf(ObjectSet set, ObjectSet other) => AssertProperSupersetOf(set, other, Assert.IsTrue);
-            static void AssertIsNotProperSupersetOf(ObjectSet set, ObjectSet other) => AssertProperSupersetOf(set, other, Assert.IsFalse);
+            static void AssertIsProperSupersetOf(ObjectSet set, ObjectSet other) => AssertProperSupersetOf(set, other, static x => Assert.IsTrue(x));
+            static void AssertIsNotProperSupersetOf(ObjectSet set, ObjectSet other) => AssertProperSupersetOf(set, other, static x => Assert.IsFalse(x));
 
             static void AssertProperSupersetOf(ObjectSet set, ObjectSet other, Action<bool> assert)
             {
@@ -871,7 +871,7 @@ namespace Tests.System.Memory.Diagnostics
             var set6 = new ObjectSet(new[] { o1, new object() });
             var set7 = new ObjectSet(new[] { new object() });
 
-            Assert.ThrowsException<ArgumentNullException>(() => set1.Overlaps(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set1.Overlaps(null));
 
             AssertOverlaps(set1, set1);
             AssertOverlaps(set1, set2);
@@ -882,8 +882,8 @@ namespace Tests.System.Memory.Diagnostics
             AssertDoesNotOverlap(set1, set3);
             AssertDoesNotOverlap(set1, set7);
 
-            static void AssertOverlaps(ObjectSet set, ObjectSet other) => AssertOverlapsCore(set, other, Assert.IsTrue);
-            static void AssertDoesNotOverlap(ObjectSet set, ObjectSet other) => AssertOverlapsCore(set, other, Assert.IsFalse);
+            static void AssertOverlaps(ObjectSet set, ObjectSet other) => AssertOverlapsCore(set, other, static x => Assert.IsTrue(x));
+            static void AssertDoesNotOverlap(ObjectSet set, ObjectSet other) => AssertOverlapsCore(set, other, static x => Assert.IsFalse(x));
 
             static void AssertOverlapsCore(ObjectSet set, ObjectSet other, Action<bool> assert)
             {
@@ -901,7 +901,7 @@ namespace Tests.System.Memory.Diagnostics
         public void ObjectSet_ExceptWith_ArgumentChecking()
         {
             var set = new ObjectSet();
-            Assert.ThrowsException<ArgumentNullException>(() => set.ExceptWith(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set.ExceptWith(null));
         }
 
         [TestMethod]
@@ -999,7 +999,7 @@ namespace Tests.System.Memory.Diagnostics
         public void ObjectSet_SymmetricExceptWith_ArgumentChecking()
         {
             var set = new ObjectSet();
-            Assert.ThrowsException<ArgumentNullException>(() => set.SymmetricExceptWith(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => set.SymmetricExceptWith(null));
         }
 
         [TestMethod]

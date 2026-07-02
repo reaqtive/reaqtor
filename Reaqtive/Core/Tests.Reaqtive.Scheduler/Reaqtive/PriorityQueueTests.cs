@@ -21,9 +21,9 @@ namespace Tests.Reaqtive.Scheduler
         public void HeapBasedPriorityQueue_ArgumentChecking()
         {
 #pragma warning disable IDE0034 // Simplify 'default' expression (documents signature)
-            Assert.ThrowsException<ArgumentNullException>(() => new HeapBasedPriorityQueue<int>(default(IComparer<int>)));
-            Assert.ThrowsException<ArgumentNullException>(() => new HeapBasedPriorityQueue<int>(10, default(IComparer<int>)));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => new HeapBasedPriorityQueue<int>(-1, Comparer<int>.Default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new HeapBasedPriorityQueue<int>(default(IComparer<int>)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new HeapBasedPriorityQueue<int>(10, default(IComparer<int>)));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => new HeapBasedPriorityQueue<int>(-1, Comparer<int>.Default));
 #pragma warning restore IDE0034 // Simplify 'default' expression
         }
 
@@ -32,8 +32,8 @@ namespace Tests.Reaqtive.Scheduler
         {
             var queue = new HeapBasedPriorityQueue<int>(Comparer<int>.Default);
 
-            Assert.ThrowsException<InvalidOperationException>(() => queue.Peek());
-            Assert.ThrowsException<InvalidOperationException>(() => queue.Dequeue());
+            Assert.ThrowsExactly<InvalidOperationException>(() => queue.Peek());
+            Assert.ThrowsExactly<InvalidOperationException>(() => queue.Dequeue());
             Assert.AreEqual(0, queue.Count);
 
             queue.Enqueue(2);
@@ -67,8 +67,8 @@ namespace Tests.Reaqtive.Scheduler
                 Assert.IsFalse(queue.Contains(i));
             }
 
-            Assert.ThrowsException<InvalidOperationException>(() => queue.Peek());
-            Assert.ThrowsException<InvalidOperationException>(() => queue.Dequeue());
+            Assert.ThrowsExactly<InvalidOperationException>(() => queue.Peek());
+            Assert.ThrowsExactly<InvalidOperationException>(() => queue.Dequeue());
             Assert.AreEqual(0, queue.Count);
         }
 

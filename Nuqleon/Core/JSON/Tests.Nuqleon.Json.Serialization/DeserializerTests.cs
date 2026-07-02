@@ -67,13 +67,13 @@ namespace Tests
         {
             var des = FastJsonSerializerFactory.CreateDeserializer<int>(resolver: null, FastJsonConcurrencyMode.SingleThreaded);
 
-            Assert.ThrowsException<ArgumentNullException>(() => des.Deserialize(default(string)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => des.Deserialize(default(string)));
 #if !NO_IO
-            Assert.ThrowsException<ArgumentNullException>(() => des.Deserialize(default(System.IO.TextReader)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => des.Deserialize(default(System.IO.TextReader)));
 #endif
-            Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize("42a"));
+            Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize("42a"));
 
-            Assert.ThrowsException<ArgumentNullException>(() => FastJsonSerializerFactory.CreateDeserializer<int>(resolver: null, settings: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => FastJsonSerializerFactory.CreateDeserializer<int>(resolver: null, settings: null));
         }
 
         [TestMethod]
@@ -901,10 +901,10 @@ namespace Tests
 
             foreach (var json in inputs)
             {
-                Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(json));
+                Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(json));
 
 #if !NO_IO
-                Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(new System.IO.StringReader(json)));
+                Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => des.Deserialize(new System.IO.StringReader(json)));
 #endif
             }
         }

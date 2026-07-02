@@ -25,7 +25,7 @@ namespace Test.Reaqtive
 
             Assert.AreSame(o1, o2);
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Subscribe(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Subscribe(null));
         }
 
         [TestMethod]
@@ -111,13 +111,13 @@ namespace Test.Reaqtive
             {
                 s.Dispose();
 
-                Assert.ThrowsException<ObjectDisposedException>(() => s.OnNext(42));
-                Assert.ThrowsException<ObjectDisposedException>(() => s.OnError(new Exception()));
-                Assert.ThrowsException<ObjectDisposedException>(() => s.OnCompleted());
+                Assert.ThrowsExactly<ObjectDisposedException>(() => s.OnNext(42));
+                Assert.ThrowsExactly<ObjectDisposedException>(() => s.OnError(new Exception()));
+                Assert.ThrowsExactly<ObjectDisposedException>(() => s.OnCompleted());
 
                 d1.Dispose();
 
-                Assert.ThrowsException<ObjectDisposedException>(() => s.Subscribe());
+                Assert.ThrowsExactly<ObjectDisposedException>(() => s.Subscribe());
             }
         }
     }

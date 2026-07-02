@@ -364,7 +364,7 @@ namespace Tests.Reaqtor.QueryEngine
             var result = GetObserver<int>("result");
             Assert.IsTrue(result.WaitForCount(1, Timeout));
 
-            AssertResult(result, 1, Assert.AreEqual);
+            AssertResult(result, 1, static (x, y) => Assert.AreEqual(x, y));
             Assert.IsFalse(result.Completed);
             Assert.IsFalse(result.Error);
 

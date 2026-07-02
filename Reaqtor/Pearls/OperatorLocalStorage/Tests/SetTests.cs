@@ -610,7 +610,7 @@ namespace Tests
             // Assert the new space does not contain the set.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSet<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSet<int>("bar"));
 
             //
             // Load the space from the store.
@@ -1601,7 +1601,7 @@ namespace Tests
             // Assert the set is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSet<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSet<int>("bar"));
         });
 
         [TestMethod]
@@ -1666,7 +1666,7 @@ namespace Tests
             // Assert the set is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSet<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSet<int>("bar"));
         });
 
         [TestMethod]
@@ -1731,7 +1731,7 @@ namespace Tests
             // Assert the set is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSet<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSet<int>("bar"));
         });
     }
 }

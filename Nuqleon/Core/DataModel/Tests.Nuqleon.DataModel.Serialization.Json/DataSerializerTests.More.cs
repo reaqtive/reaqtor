@@ -42,7 +42,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
 
             foreach (var t in tries)
             {
-                Assert.ThrowsException<ArgumentNullException>(t);
+                Assert.ThrowsExactly<ArgumentNullException>(t);
             }
         }
 
@@ -90,7 +90,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
 
             foreach (var t in tries)
             {
-                Assert.ThrowsException<ArgumentNullException>(t);
+                Assert.ThrowsExactly<ArgumentNullException>(t);
             }
         }
 

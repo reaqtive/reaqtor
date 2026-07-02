@@ -36,15 +36,15 @@ namespace Tests.System.Linq.Expressions
 
             var argProvider = new ListArgumentProviderSlim(c, a0);
 
-            Assert.ThrowsException<NotSupportedException>(() => argProvider[0] = a0);
-            Assert.ThrowsException<NotSupportedException>(() => argProvider.Add(a0));
-            Assert.ThrowsException<NotSupportedException>(() => argProvider.Clear());
-            Assert.ThrowsException<NotSupportedException>(() => argProvider.Insert(0, a0));
-            Assert.ThrowsException<NotSupportedException>(() => argProvider.Remove(a0));
-            Assert.ThrowsException<NotSupportedException>(() => argProvider.RemoveAt(0));
+            Assert.ThrowsExactly<NotSupportedException>(() => argProvider[0] = a0);
+            Assert.ThrowsExactly<NotSupportedException>(() => argProvider.Add(a0));
+            Assert.ThrowsExactly<NotSupportedException>(() => argProvider.Clear());
+            Assert.ThrowsExactly<NotSupportedException>(() => argProvider.Insert(0, a0));
+            Assert.ThrowsExactly<NotSupportedException>(() => argProvider.Remove(a0));
+            Assert.ThrowsExactly<NotSupportedException>(() => argProvider.RemoveAt(0));
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => argProvider[-1]);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => argProvider[2]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => argProvider[-1]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => argProvider[2]);
             Assert.AreSame(a0, argProvider[0]);
             Assert.AreSame(a1, argProvider[1]);
 

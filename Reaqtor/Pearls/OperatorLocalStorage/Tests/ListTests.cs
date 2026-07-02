@@ -648,7 +648,7 @@ namespace Tests
             // Assert the new space does not contain the list.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetList<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetList<int>("bar"));
 
             //
             // Load the space from the store.
@@ -1627,7 +1627,7 @@ namespace Tests
             // Assert the list is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetList<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetList<int>("bar"));
         });
 
         [TestMethod]
@@ -1694,7 +1694,7 @@ namespace Tests
             // Assert the list is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetList<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetList<int>("bar"));
         });
 
         [TestMethod]
@@ -1761,7 +1761,7 @@ namespace Tests
             // Assert the list is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetList<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetList<int>("bar"));
         });
     }
 }

@@ -136,7 +136,7 @@ namespace Tests.System.Memory
             var entry = storage.GetEntry(42);
             storage.ReleaseEntry(entry);
             storage.Dispose();
-            Assert.ThrowsException<ObjectDisposedException>(() => storage.GetEntry(42));
+            Assert.ThrowsExactly<ObjectDisposedException>(() => storage.GetEntry(42));
             storage.Dispose();
         }
 

@@ -29,8 +29,8 @@ namespace Tests
         [TestMethod]
         public void PooledHashSet_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => HashSetPool<string>.Create(4, comparer: null));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => HashSetPool<string>.Create(4, EqualityComparer<string>.Default, -1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => HashSetPool<string>.Create(4, comparer: null));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => HashSetPool<string>.Create(4, EqualityComparer<string>.Default, -1));
         }
 
         [TestMethod]

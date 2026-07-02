@@ -188,9 +188,9 @@ namespace Tests
         {
             var domain = GetDomain();
             AssertEx.ThrowsException<ArgumentNullException>(() => domain.GetMember(expression: null), ex => Assert.AreEqual(ex.ParamName, "expression"));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetMember(Json.Expression.Null()));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("-1")));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("99")));
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Null()));
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("-1")));
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("99")));
         }
 
         [TestMethod]
@@ -199,8 +199,8 @@ namespace Tests
             var domain = GetDomain();
             AssertEx.ThrowsException<ArgumentNullException>(() => domain.GetType((Json.Expression)null), ex => Assert.AreEqual(ex.ParamName, "expression"));
             AssertEx.ThrowsException<ArgumentNullException>(() => domain.GetType((TypeRef)null), ex => Assert.AreEqual(ex.ParamName, "typeRef"));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetType(Json.Expression.Null()));
-            Assert.ThrowsException<BonsaiParseException>(() => domain.GetType(Json.Expression.Number("99")));
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetType(Json.Expression.Null()));
+            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetType(Json.Expression.Number("99")));
         }
 
         private static DeserializationDomain GetDomain()
@@ -225,7 +225,7 @@ namespace Tests
             foreach (var expr in jsonExpressions)
             {
                 var json = Json.Expression.Parse(expr, ensureTopLevelObjectOrArray: false);
-                Assert.ThrowsException<T>(() => new DeserializationDomain(json));
+                Assert.ThrowsExactly<T>(() => new DeserializationDomain(json));
             }
         }
     }

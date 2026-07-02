@@ -180,9 +180,9 @@ namespace Tests.System.Linq.CompilerServices
             var custom1 = new MyCustomMemberInfo();
             var custom2 = new MyCustomMemberInfo();
 
-            Assert.ThrowsException<NotImplementedException>(() => eq.Equals(custom1, custom2));
-            Assert.ThrowsException<NotImplementedException>(() => eq.GetHashCode(custom1));
-            Assert.ThrowsException<NotImplementedException>(() => eq.ResolveMember(typeof(object), custom1));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.Equals(custom1, custom2));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.GetHashCode(custom1));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.ResolveMember(typeof(object), custom1));
         }
 
         [TestMethod]
@@ -193,9 +193,9 @@ namespace Tests.System.Linq.CompilerServices
             var member1 = new MyMemberInfo();
             var member2 = new MyMemberInfo();
 
-            Assert.ThrowsException<NotSupportedException>(() => eq.Equals(member1, member2));
-            Assert.ThrowsException<NotSupportedException>(() => eq.GetHashCode(member1));
-            Assert.ThrowsException<NotSupportedException>(() => eq.ResolveMember(typeof(object), member1));
+            Assert.ThrowsExactly<NotSupportedException>(() => eq.Equals(member1, member2));
+            Assert.ThrowsExactly<NotSupportedException>(() => eq.GetHashCode(member1));
+            Assert.ThrowsExactly<NotSupportedException>(() => eq.ResolveMember(typeof(object), member1));
         }
 
         #endregion

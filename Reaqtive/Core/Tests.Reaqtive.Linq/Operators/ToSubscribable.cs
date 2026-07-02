@@ -320,7 +320,7 @@ namespace Test.Reaqtive.Operators
                     AssertSchedulerThread();
                     completed.Set();
                 },
-                Assert.Fail);
+                () => Assert.Fail());
 
             var s = subject.ToSubscribable().Subscribe(result);
             InitializeSubscription(s);
@@ -336,7 +336,7 @@ namespace Test.Reaqtive.Operators
             var result = Observer.Create<int>(
                 x => { },
                 err => Assert.Fail(),
-                Assert.Fail);
+                () => Assert.Fail());
 
             bool exceptionCaught = false;
             var s = subject.ToSubscribable().Subscribe(result);

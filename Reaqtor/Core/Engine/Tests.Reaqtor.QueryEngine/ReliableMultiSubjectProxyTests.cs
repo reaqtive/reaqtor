@@ -268,7 +268,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var proxy = new ReliableMultiSubjectProxy<int, int>(uri);
                 var sub = SubscribeRoot(Subscribable.Never<int>(), new ObserverToReliableObserver<int>(proxy.CreateObserver()));
-                Assert.ThrowsException<InvalidOperationException>(() => new SubscriptionInitializeVisitor(sub).Initialize(ctx));
+                Assert.ThrowsExactly<InvalidOperationException>(() => new SubscriptionInitializeVisitor(sub).Initialize(ctx));
             });
         }
 
@@ -287,7 +287,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var proxy = new ReliableMultiSubjectProxy<int, int>(uri);
                 var observer = new MockObserver<int>(client);
                 var sub = proxy.ToSubscribable().Subscribe(observer);
-                Assert.ThrowsException<InvalidOperationException>(() => new SubscriptionInitializeVisitor(sub).Initialize(ctx));
+                Assert.ThrowsExactly<InvalidOperationException>(() => new SubscriptionInitializeVisitor(sub).Initialize(ctx));
             });
         }
 

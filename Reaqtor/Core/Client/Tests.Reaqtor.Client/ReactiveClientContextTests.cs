@@ -35,22 +35,22 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int>(null));
 
                     var o = ctx.GetObservable<int>(new Uri(Constants.Observable.XS));
                     var provider = o.Provider;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveObservable<int>)o).SubscribeAsync(null, new Uri(Constants.Subscription.SUB), null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveObservable<int>)o).SubscribeAsync(null, new Uri(Constants.Subscription.SUB), null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveObservable<int>)o).SubscribeAsync(null, new Uri(Constants.Subscription.SUB), null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveObservable<int>)o).SubscribeAsync(null, new Uri(Constants.Subscription.SUB), null, CancellationToken.None));
 
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Makes the intent clear.)
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveObservable<int>)o).SubscribeAsync(((IAsyncReactiveObserver<int>)ctx.GetObserver<int>(new Uri(Constants.Observer.OB))), null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveObservable<int>)o).SubscribeAsync(((IAsyncReactiveObserver<int>)ctx.GetObserver<int>(new Uri(Constants.Observer.OB))), null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveObservable<int>)o).SubscribeAsync(((IAsyncReactiveObserver<int>)ctx.GetObserver<int>(new Uri(Constants.Observer.OB))), null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveObservable<int>)o).SubscribeAsync(((IAsyncReactiveObserver<int>)ctx.GetObserver<int>(new Uri(Constants.Observer.OB))), null, null, CancellationToken.None));
 #pragma warning restore IDE0004
 
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int>(null));
                 }
             );
         }
@@ -61,13 +61,13 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int>(null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
 
-                    Assert.ThrowsException<ArgumentNullException>(() => observer.OnErrorAsync(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => observer.OnErrorAsync(null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => observer.OnErrorAsync(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => observer.OnErrorAsync(null, CancellationToken.None));
                 }
             );
         }
@@ -76,9 +76,9 @@ namespace Tests.Reaqtor.Client
         public void ReactiveClientContext_Qubscription_ArgumentChecking()
         {
 #if !NET6_0_OR_GREATER
-            Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).DisposeAsync());
+            Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).DisposeAsync());
 #endif
-            Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).AsDisposable());
+            Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveQubscription)null).AsDisposable());
         }
 
         [TestMethod]
@@ -87,19 +87,19 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int>(null));
 
                     var factory = ctx.GetStreamFactory<int, int>(new Uri(Constants.StreamFactory.SF));
                     var pfactory = ctx.GetStreamFactory<string, int, int>(new Uri(Constants.StreamFactory.SG));
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int>)factory).CreateAsync(null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int>)factory).CreateAsync(null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int>)factory).CreateAsync(null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int>)factory).CreateAsync(null, null, CancellationToken.None));
 
-                    Assert.ThrowsException<ArgumentNullException>(() => pfactory.CreateAsync(null, "factory_parameter_1", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string>)pfactory).CreateAsync(null, "factory_parameter_1", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string>)pfactory).CreateAsync(null, "factory_parameter_1", null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => pfactory.CreateAsync(null, "factory_parameter_1", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string>)pfactory).CreateAsync(null, "factory_parameter_1", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string>)pfactory).CreateAsync(null, "factory_parameter_1", null, CancellationToken.None));
                 }
             );
         }
@@ -110,19 +110,19 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int>(null));
 
                     var factory = ctx.GetSubscriptionFactory(new Uri(Constants.SubscriptionFactory.SF));
                     var pfactory = ctx.GetSubscriptionFactory<string>(new Uri(Constants.SubscriptionFactory.SG));
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory)factory).CreateAsync(null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory)factory).CreateAsync(null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory)factory).CreateAsync(null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory)factory).CreateAsync(null, null, CancellationToken.None));
 
-                    Assert.ThrowsException<ArgumentNullException>(() => pfactory.CreateAsync(null, "factory_parameter_1", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string>)pfactory).CreateAsync(null, "factory_parameter_1", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string>)pfactory).CreateAsync(null, "factory_parameter_1", null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => pfactory.CreateAsync(null, "factory_parameter_1", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string>)pfactory).CreateAsync(null, "factory_parameter_1", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string>)pfactory).CreateAsync(null, "factory_parameter_1", null, CancellationToken.None));
                 }
             );
         }
@@ -133,8 +133,8 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQbservable<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQbservable<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQbservable<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQbservable<int, int>(null));
                 }
             );
         }
@@ -145,8 +145,8 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQbserver<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQbserver<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQbserver<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQbserver<int, int>(null));
                 }
             );
         }
@@ -157,7 +157,7 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQubject<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQubject<int, int>(null));
                 }
             );
         }
@@ -168,8 +168,8 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQubjectFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQubjectFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQubjectFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQubjectFactory<int, int, int>(null));
                 }
             );
         }
@@ -180,8 +180,8 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQubscriptionFactory(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQubscriptionFactory<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQubscriptionFactory(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQubscriptionFactory<int>(null));
                 }
             );
         }
@@ -192,7 +192,7 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.Provider.CreateQubscription(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.Provider.CreateQubscription(null));
                 }
             );
         }
@@ -203,8 +203,8 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int>(null));
                 }
             );
         }
@@ -215,8 +215,8 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int>(null));
                 }
             );
         }
@@ -227,7 +227,7 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscription(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscription(null));
                 }
             );
         }
@@ -238,7 +238,7 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStream<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStream<int, int>(null));
                 }
             );
         }
@@ -249,8 +249,8 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int>(null));
                 }
             );
         }
@@ -261,8 +261,8 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int>(null));
                 }
             );
         }
@@ -275,10 +275,10 @@ namespace Tests.Reaqtor.Client
                 {
                     var dummyUri = new Uri("io:/dummy");
                     var dummyQbservable = ctx.Provider.CreateQbservable<int>(Expression.Default(typeof(IAsyncReactiveQbservable<int>)));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineObservableAsync<int>(null, dummyQbservable, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineObservableAsync<int>(dummyUri, null, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineObservableAsync<int, int>(null, _ => dummyQbservable, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineObservableAsync<int, int>(dummyUri, null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineObservableAsync<int>(null, dummyQbservable, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineObservableAsync<int>(dummyUri, null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineObservableAsync<int, int>(null, _ => dummyQbservable, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineObservableAsync<int, int>(dummyUri, null, null, CancellationToken.None));
                 }
             );
         }
@@ -291,10 +291,10 @@ namespace Tests.Reaqtor.Client
                 {
                     var dummyUri = new Uri("iv:/dummy");
                     var dummyQbserver = ctx.Provider.CreateQbserver<int>(Expression.Default(typeof(IAsyncReactiveQbserver<int>)));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineObserverAsync<int>(null, dummyQbserver, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineObserverAsync<int>(dummyUri, null, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineObserverAsync<int, int>(null, _ => dummyQbserver, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineObserverAsync<int, int>(dummyUri, null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineObserverAsync<int>(null, dummyQbserver, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineObserverAsync<int>(dummyUri, null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineObserverAsync<int, int>(null, _ => dummyQbserver, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineObserverAsync<int, int>(dummyUri, null, null, CancellationToken.None));
                 }
             );
         }
@@ -308,10 +308,10 @@ namespace Tests.Reaqtor.Client
                     var dummyUri = new Uri("sf:/dummy");
                     var dummyStreamFactory = ctx.Provider.CreateQubjectFactory<int, int>(Expression.Default(typeof(IAsyncReactiveQubjectFactory<int, int>)));
                     var paramDummyStreamFactory = ctx.Provider.CreateQubjectFactory<int, int, int>(Expression.Default(typeof(IAsyncReactiveQubjectFactory<int, int, int>)));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineStreamFactoryAsync<int, int>(null, dummyStreamFactory, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineStreamFactoryAsync<int, int>(dummyUri, null, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineStreamFactoryAsync<int, int, int>(null, paramDummyStreamFactory, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineStreamFactoryAsync<int, int, int>(dummyUri, null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineStreamFactoryAsync<int, int>(null, dummyStreamFactory, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineStreamFactoryAsync<int, int>(dummyUri, null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineStreamFactoryAsync<int, int, int>(null, paramDummyStreamFactory, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineStreamFactoryAsync<int, int, int>(dummyUri, null, null, CancellationToken.None));
                 }
             );
         }
@@ -325,11 +325,11 @@ namespace Tests.Reaqtor.Client
                     var dummyUri = new Uri("sf:/dummy");
                     var dummyStreamFactory = ctx.Provider.CreateQubscriptionFactory(Expression.Default(typeof(IAsyncReactiveQubscriptionFactory)));
                     var paramDummyStreamFactory = ctx.Provider.CreateQubscriptionFactory<int>(Expression.Default(typeof(IAsyncReactiveQubscriptionFactory<int>)));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync(null, dummyStreamFactory, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync(dummyUri, null, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync<int>(null, paramDummyStreamFactory, null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync<int>(dummyUri, default(IAsyncReactiveQubscriptionFactory<int>), null, CancellationToken.None));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync<int>(dummyUri, default(Expression<Func<int, IAsyncReactiveQubscription>>), null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync(null, dummyStreamFactory, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync(dummyUri, null, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync<int>(null, paramDummyStreamFactory, null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync<int>(dummyUri, default(IAsyncReactiveQubscriptionFactory<int>), null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.DefineSubscriptionFactoryAsync<int>(dummyUri, default(Expression<Func<int, IAsyncReactiveQubscription>>), null, CancellationToken.None));
                 }
             );
         }
@@ -340,7 +340,7 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.UndefineObservableAsync(null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.UndefineObservableAsync(null, CancellationToken.None));
                 }
             );
         }
@@ -351,7 +351,7 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.UndefineObserverAsync(null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.UndefineObserverAsync(null, CancellationToken.None));
                 }
             );
         }
@@ -362,7 +362,7 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.UndefineStreamFactoryAsync(null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.UndefineStreamFactoryAsync(null, CancellationToken.None));
                 }
             );
         }
@@ -373,7 +373,7 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.UndefineSubscriptionFactoryAsync(null, CancellationToken.None));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.UndefineSubscriptionFactoryAsync(null, CancellationToken.None));
                 }
             );
         }
@@ -1458,14 +1458,14 @@ namespace Tests.Reaqtor.Client
                 {
                     var prv = ctx.Observables.Provider;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => prv.Execute(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => prv.Execute<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => prv.CreateQuery(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => prv.CreateQuery<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => prv.Execute(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => prv.Execute<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => prv.CreateQuery(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => prv.CreateQuery<int>(null));
 
-                    Assert.ThrowsException<InvalidOperationException>(() => prv.Execute<int>(Expression.Constant("foo")));
-                    Assert.ThrowsException<InvalidOperationException>(() => prv.CreateQuery(Expression.Constant("foo")));
-                    Assert.ThrowsException<InvalidOperationException>(() => prv.CreateQuery(Expression.Default(typeof(IQueryable))));
+                    Assert.ThrowsExactly<InvalidOperationException>(() => prv.Execute<int>(Expression.Constant("foo")));
+                    Assert.ThrowsExactly<InvalidOperationException>(() => prv.CreateQuery(Expression.Constant("foo")));
+                    Assert.ThrowsExactly<InvalidOperationException>(() => prv.CreateQuery(Expression.Default(typeof(IQueryable))));
                 }
             );
         }

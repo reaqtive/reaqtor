@@ -34,8 +34,8 @@ namespace Tests.Nuqleon.Linq.CompilerServices.Reflection.Emit
             Assert.AreEqual("qux, bar, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null", typ.AssemblyQualifiedName);
             Assert.AreEqual("", typ.Namespace);
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = typ.GUID);
-            Assert.ThrowsException<NotSupportedException>(() => _ = typ.GetElementType());
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = typ.GUID);
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = typ.GetElementType());
 
             Assert.IsFalse(typ.HasElementType);
             Assert.IsFalse(typ.IsAbstract);
@@ -70,16 +70,16 @@ namespace Tests.Nuqleon.Linq.CompilerServices.Reflection.Emit
             Assert.AreSame(typ.UnderlyingSystemType, fld.ReflectedType);
             Assert.IsTrue(fld.IsPublic);
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = fld.FieldHandle);
-            Assert.ThrowsException<NotSupportedException>(() => _ = fld.GetValue(new object()));
-            Assert.ThrowsException<NotSupportedException>(() => fld.SetValue(new object(), new object(), BindingFlags.Public, binder: null, culture: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = fld.FieldHandle);
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = fld.GetValue(new object()));
+            Assert.ThrowsExactly<NotSupportedException>(() => fld.SetValue(new object(), new object(), BindingFlags.Public, binder: null, culture: null));
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = typ.GetField("x", BindingFlags.Public));
-            Assert.ThrowsException<NotSupportedException>(() => _ = typ.GetFields(BindingFlags.Public));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = typ.GetField("x", BindingFlags.Public));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = typ.GetFields(BindingFlags.Public));
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = fld.IsDefined(typeof(ObsoleteAttribute)));
-            Assert.ThrowsException<NotSupportedException>(() => _ = fld.GetCustomAttributes(inherit: true));
-            Assert.ThrowsException<NotSupportedException>(() => _ = fld.GetCustomAttributes(typeof(ObsoleteAttribute), inherit: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = fld.IsDefined(typeof(ObsoleteAttribute)));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = fld.GetCustomAttributes(inherit: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = fld.GetCustomAttributes(typeof(ObsoleteAttribute), inherit: true));
 
             var prp = typ.DefineProperty("X", PropertyAttributes.None, typeof(int), Type.EmptyTypes);
 
@@ -104,17 +104,17 @@ namespace Tests.Nuqleon.Linq.CompilerServices.Reflection.Emit
             Assert.AreSame(prp_get.Unwrap(), prp.GetGetMethod());
             Assert.AreSame(prp_set.Unwrap(), prp.GetSetMethod());
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp.GetAccessors());
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp.GetAccessors());
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp.GetValue(new object()));
-            Assert.ThrowsException<NotSupportedException>(() => prp.SetValue(new object(), new object(), BindingFlags.Public, index: null, binder: null, culture: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp.GetValue(new object()));
+            Assert.ThrowsExactly<NotSupportedException>(() => prp.SetValue(new object(), new object(), BindingFlags.Public, index: null, binder: null, culture: null));
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = typ.GetProperty("X", BindingFlags.Public));
-            Assert.ThrowsException<NotSupportedException>(() => _ = typ.GetProperties(BindingFlags.Public));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = typ.GetProperty("X", BindingFlags.Public));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = typ.GetProperties(BindingFlags.Public));
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp.IsDefined(typeof(ObsoleteAttribute)));
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp.GetCustomAttributes(inherit: true));
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp.GetCustomAttributes(typeof(ObsoleteAttribute), inherit: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp.IsDefined(typeof(ObsoleteAttribute)));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp.GetCustomAttributes(inherit: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp.GetCustomAttributes(typeof(ObsoleteAttribute), inherit: true));
 
             Assert.AreEqual("get_X", prp_get.Name);
             Assert.AreEqual(MethodAttributes.Public, prp_get.Attributes);
@@ -123,14 +123,14 @@ namespace Tests.Nuqleon.Linq.CompilerServices.Reflection.Emit
             Assert.AreEqual("get_X", prp_get.GetBaseDefinition().Name);
             Assert.AreEqual(MethodImplAttributes.IL, prp_get.GetMethodImplementationFlags());
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp_get.MethodHandle);
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp_get.MethodHandle);
 
             Assert.IsNull(prp_get.ReturnTypeCustomAttributes);
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp_get.IsDefined(typeof(ObsoleteAttribute)));
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp_get.GetCustomAttributes(inherit: true));
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp_get.GetCustomAttributes(typeof(ObsoleteAttribute), inherit: true));
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp_get.GetParameters());
-            Assert.ThrowsException<NotSupportedException>(() => _ = prp_get.Invoke(new object(), Array.Empty<object>()));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp_get.IsDefined(typeof(ObsoleteAttribute)));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp_get.GetCustomAttributes(inherit: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp_get.GetCustomAttributes(typeof(ObsoleteAttribute), inherit: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp_get.GetParameters());
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = prp_get.Invoke(new object(), Array.Empty<object>()));
 
             var ctor = typ.DefineConstructor(MethodAttributes.Public | MethodAttributes.SpecialName, CallingConventions.Standard, new[] { typeof(int) });
 
@@ -140,16 +140,16 @@ namespace Tests.Nuqleon.Linq.CompilerServices.Reflection.Emit
             Assert.AreSame(typ.UnderlyingSystemType, ctor.ReflectedType);
             Assert.AreEqual(MethodImplAttributes.IL, ctor.GetMethodImplementationFlags());
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = ctor.MethodHandle);
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = ctor.MethodHandle);
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = ctor.IsDefined(typeof(ObsoleteAttribute)));
-            Assert.ThrowsException<NotSupportedException>(() => _ = ctor.GetCustomAttributes(inherit: true));
-            Assert.ThrowsException<NotSupportedException>(() => _ = ctor.GetCustomAttributes(typeof(ObsoleteAttribute), inherit: true));
-            Assert.ThrowsException<NotSupportedException>(() => _ = ctor.GetParameters());
-            Assert.ThrowsException<NotSupportedException>(() => _ = ctor.Invoke(Array.Empty<object>()));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = ctor.IsDefined(typeof(ObsoleteAttribute)));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = ctor.GetCustomAttributes(inherit: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = ctor.GetCustomAttributes(typeof(ObsoleteAttribute), inherit: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = ctor.GetParameters());
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = ctor.Invoke(Array.Empty<object>()));
 
-            Assert.ThrowsException<NotSupportedException>(() => _ = typ.GetConstructor(new[] { typeof(int) }));
-            Assert.ThrowsException<NotSupportedException>(() => _ = typ.GetConstructors(BindingFlags.Public));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = typ.GetConstructor(new[] { typeof(int) }));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = typ.GetConstructors(BindingFlags.Public));
         }
     }
 }

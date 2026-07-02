@@ -28,24 +28,21 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
     public class JsonExpressionReaderTests
     {
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void JsonExpressionReader_ArgumentChecking()
         {
-            new JsonExpressionReader(json: null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => new JsonExpressionReader(json: null));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void JsonExpressionReader_ArgumentChecking_Pool1()
         {
-            new JsonExpressionReader(json: null, new JsonInteropResourcePool());
+            Assert.ThrowsExactly<ArgumentNullException>(() => new JsonExpressionReader(json: null, new JsonInteropResourcePool()));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(ArgumentNullException))]
         public void JsonExpressionReader_ArgumentChecking_Pool2()
         {
-            new JsonExpressionReader(Expression.Null(), pool: null);
+            Assert.ThrowsExactly<ArgumentNullException>(() => new JsonExpressionReader(Expression.Null(), pool: null));
         }
 
         [TestMethod]
@@ -164,10 +161,9 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         }
 
         [TestMethod]
-        [ExpectedException(typeof(JsonReaderException))]
         public void JsonExpressionReader_Primitives_Double_InvalidInput()
         {
-            Deserialize(FloatParseHandling.Double, Expression.Number("12.34???"));
+            Assert.ThrowsExactly<JsonReaderException>(() => Deserialize(FloatParseHandling.Double, Expression.Number("12.34???")));
         }
 
         [TestMethod]
@@ -180,10 +176,9 @@ namespace Tests.Nuqleon.Json.Interop.Newtonsoft
         }
 
         [TestMethod]
-        [ExpectedException(typeof(JsonReaderException))]
         public void JsonExpressionReader_Primitives_Decimal_InvalidInput()
         {
-            Deserialize(FloatParseHandling.Decimal, Expression.Number("12.34???"));
+            Assert.ThrowsExactly<JsonReaderException>(() => Deserialize(FloatParseHandling.Decimal, Expression.Number("12.34???")));
         }
 
         [TestMethod]

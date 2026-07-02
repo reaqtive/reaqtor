@@ -44,7 +44,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var subject = GetSubject(id, svc);
 
-            Assert.ThrowsException<NotSupportedException>(() => ((IReliableMultiSubject<int, int>)subject).CreateObserver());
+            Assert.ThrowsExactly<NotSupportedException>(() => ((IReliableMultiSubject<int, int>)subject).CreateObserver());
         }
 
         [TestMethod]
@@ -55,7 +55,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var subject = GetSubject(id, svc);
 
-            Assert.ThrowsException<NotSupportedException>(() => ((IReliableObservable<int>)subject).Subscribe(null));
+            Assert.ThrowsExactly<NotSupportedException>(() => ((IReliableObservable<int>)subject).Subscribe(null));
         }
 
         [TestMethod]
@@ -111,7 +111,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var xs = (ISubscribable<int>)subject;
                 var iv = Observer.Nop<int>();
 
-                Assert.ThrowsException<InvalidOperationException>(() => xs.Subscribe(iv));
+                Assert.ThrowsExactly<InvalidOperationException>(() => xs.Subscribe(iv));
             }
         }
 
@@ -127,13 +127,13 @@ namespace Tests.Reaqtor.QueryEngine
 
             subject.Seal();
 
-            Assert.ThrowsException<InvalidOperationException>(() =>
+            Assert.ThrowsExactly<InvalidOperationException>(() =>
             {
                 var ctx = CreateOperatorContext(new Uri("tests://qux/1"), svc, new MiniScheduler());
                 new SubscriptionInitializeVisitor(s1).Initialize(ctx);
             });
 
-            Assert.ThrowsException<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
+            Assert.ThrowsExactly<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
         }
 
         [TestMethod]
@@ -165,7 +165,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             o.OnNext(44); // does not throw; by design
 
-            Assert.ThrowsException<ObjectDisposedException>(() =>
+            Assert.ThrowsExactly<ObjectDisposedException>(() =>
             {
                 new SubscriptionInitializeVisitor(s3).Initialize(CreateOperatorContext(new Uri("tests://qux/3"), svc, sch));
             });
@@ -373,7 +373,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Assert.IsFalse(subject.StateChanged);
 
                 // gets sealed immediately upon recovery because it was empty
-                Assert.ThrowsException<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
+                Assert.ThrowsExactly<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
             }
         }
 
@@ -441,7 +441,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Assert.IsFalse(subject.StateChanged);
 
                 // gets sealed after all subscriptions have been recreated
-                Assert.ThrowsException<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
+                Assert.ThrowsExactly<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
 
                 Assert.IsFalse(subject.StateChanged);
             }
@@ -561,7 +561,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Assert.IsFalse(subject.StateChanged);
 
                 // gets sealed after all subscriptions have been recreated
-                Assert.ThrowsException<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
+                Assert.ThrowsExactly<InvalidOperationException>(() => subject.Subscribe(Observer.Nop<int>()));
             }
         }
 

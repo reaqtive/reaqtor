@@ -25,9 +25,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => pt.Add(default(LambdaExpression)));
-            Assert.ThrowsException<ArgumentNullException>(() => pt.Add(default(ParameterInfo)));
-            Assert.ThrowsException<ArgumentNullException>(() => pt.Add(default(ParameterTable)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(LambdaExpression)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(ParameterInfo)));
+            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Add(default(ParameterTable)));
         }
 
         [TestMethod]
@@ -35,7 +35,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<ArgumentNullException>(() => pt.Contains(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => pt.Contains(default));
         }
 
         [TestMethod]
@@ -114,7 +114,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<InvalidOperationException>(() => pt.Add<int, string>(x => "".Substring(x, x)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => pt.Add<int, string>(x => "".Substring(x, x)));
         }
 
         [TestMethod]
@@ -122,7 +122,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<ArgumentException>(() => pt.Add<int, string>(x => "".Substring(0, 1)));
+            Assert.ThrowsExactly<ArgumentException>(() => pt.Add<int, string>(x => "".Substring(0, 1)));
         }
 
         [TestMethod]
@@ -130,7 +130,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
         {
             var pt = new ParameterTable();
 
-            Assert.ThrowsException<ArgumentException>(() => pt.Add(Expression.Lambda<Action>(Expression.Empty())));
+            Assert.ThrowsExactly<ArgumentException>(() => pt.Add(Expression.Lambda<Action>(Expression.Empty())));
         }
 
         [TestMethod]
@@ -141,7 +141,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var m = typeof(string).GetMethod(nameof(string.Substring), [typeof(int), typeof(int)]);
 
-            Assert.ThrowsException<InvalidOperationException>(() => rpt.Add(m.GetParameters()[0]));
+            Assert.ThrowsExactly<InvalidOperationException>(() => rpt.Add(m.GetParameters()[0]));
         }
     }
 }

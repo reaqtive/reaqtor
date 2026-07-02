@@ -194,14 +194,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 var atyp1 = (StructuralDataType)DataType.FromType(anon1.GetType());
                 var atyp2 = (StructuralDataType)DataType.FromType(anon2.GetType());
 
-                Assert.ThrowsException<InvalidOperationException>(() => base.ConvertConstantStructuralAnonymous(anon1, atyp1, atyp2));
+                Assert.ThrowsExactly<InvalidOperationException>(() => base.ConvertConstantStructuralAnonymous(anon1, atyp1, atyp2));
 
                 var tupl1 = new Tuple<int>(1);
                 var tupl2 = new Tuple<int, int>(1, 2);
                 var ttyp1 = (StructuralDataType)DataType.FromType(tupl1.GetType());
                 var ttyp2 = (StructuralDataType)DataType.FromType(tupl2.GetType());
 
-                Assert.ThrowsException<InvalidOperationException>(() => base.ConvertConstantStructuralTuple(tupl1, ttyp1, ttyp2));
+                Assert.ThrowsExactly<InvalidOperationException>(() => base.ConvertConstantStructuralTuple(tupl1, ttyp1, ttyp2));
 
                 var rcrt1 = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("a", typeof(int)) }, valueEquality: true);
                 var rcrt2 = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("a", typeof(int)), new KeyValuePair<string, Type>("b", typeof(int)) }, valueEquality: true);
@@ -209,14 +209,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 var rtyp2 = (StructuralDataType)DataType.FromType(rcrt2);
                 var rcrd1 = Activator.CreateInstance(rcrt1);
 
-                Assert.ThrowsException<InvalidOperationException>(() => base.ConvertConstantStructuralRecord(rcrd1, rtyp1, rtyp2));
+                Assert.ThrowsExactly<InvalidOperationException>(() => base.ConvertConstantStructuralRecord(rcrd1, rtyp1, rtyp2));
 
                 var func1 = new Func<int>(() => 1);
                 var func2 = new Func<int, int>(x => x);
                 var ftyp1 = (FunctionDataType)DataType.FromType(func1.GetType());
                 var ftyp2 = (FunctionDataType)DataType.FromType(func2.GetType());
 
-                Assert.ThrowsException<InvalidOperationException>(() => base.ConvertConstantFunction(func1, ftyp1, ftyp2));
+                Assert.ThrowsExactly<InvalidOperationException>(() => base.ConvertConstantFunction(func1, ftyp1, ftyp2));
             }
 
             protected override Expression CreateNewExpression(Type type, IDictionary<MemberInfo, Expression> memberAssignments)

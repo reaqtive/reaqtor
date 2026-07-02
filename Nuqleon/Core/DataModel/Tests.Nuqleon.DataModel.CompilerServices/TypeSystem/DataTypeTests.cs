@@ -63,7 +63,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         [TestMethod]
         public void DataType_FromType_Cyclic()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => DataType.FromType(typeof(Bar), allowCycles: false));
+            Assert.ThrowsExactly<InvalidOperationException>(() => DataType.FromType(typeof(Bar), allowCycles: false));
 
             var bar = DataType.FromType(typeof(Bar), allowCycles: true);
             Assert.AreEqual(DataTypeKinds.Structural, bar.Kind);
@@ -127,10 +127,10 @@ in  t1
             Assert.IsTrue(p.IsNullable);
             Assert.AreSame(typeof(string), s.UnderlyingType);
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateInstance(default));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance());
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance("foo", "bar"));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(123));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateInstance(default));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance());
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance("foo", "bar"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(123));
 
             var x = s.CreateInstance("bar");
             Assert.AreEqual("bar", x);
@@ -147,10 +147,10 @@ in  t1
             Assert.IsFalse(p.IsNullable);
             Assert.AreSame(typeof(int), s.UnderlyingType);
 
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance());
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(1, 2));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance("bar"));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance([null]));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance());
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(1, 2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance("bar"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance([null]));
 
             var x = s.CreateInstance(42);
             Assert.AreEqual(42, x);
@@ -167,9 +167,9 @@ in  t1
             Assert.IsTrue(p.IsNullable);
             Assert.AreSame(typeof(int?), s.UnderlyingType);
 
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance());
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(1, 2));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance("bar"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance());
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(1, 2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance("bar"));
 
             var x = s.CreateInstance(42);
             Assert.AreEqual(42, x);
@@ -192,11 +192,11 @@ in  t1
             Assert.AreEqual(StructuralDataTypeKinds.Anonymous, s.StructuralKind);
             Assert.AreEqual(2, s.Properties.Count);
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateInstance(default));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance());
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(42));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(42, "foo", 12));
-            Assert.ThrowsException<MissingMethodException>(() => s.CreateInstance("foo", 42)); // Acceptable error
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateInstance(default));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance());
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(42));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(42, "foo", 12));
+            Assert.ThrowsExactly<MissingMethodException>(() => s.CreateInstance("foo", 42)); // Acceptable error
 
             var o = t.CreateInstance(42, "foo");
 
@@ -204,7 +204,7 @@ in  t1
 
             Assert.AreEqual(42, s.Properties[0].GetValue(o));
 
-            Assert.ThrowsException<ArgumentException>(() => s.Properties[0].SetValue(o, 42)); // Acceptable error
+            Assert.ThrowsExactly<ArgumentException>(() => s.Properties[0].SetValue(o, 42)); // Acceptable error
         }
 
         [TestMethod]
@@ -219,10 +219,10 @@ in  t1
             Assert.AreEqual(StructuralDataTypeKinds.Record, s.StructuralKind);
             Assert.AreEqual(2, s.Properties.Count);
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateInstance(default));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(42));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(42, "foo", 12));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance("foo", 42));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateInstance(default));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(42));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(42, "foo", 12));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance("foo", 42));
 
             var o = t.CreateInstance();
             var a = s.Properties.Single(p => p.Name == "a");
@@ -245,10 +245,10 @@ in  t1
             Assert.AreEqual(StructuralDataTypeKinds.Tuple, s.StructuralKind);
             Assert.AreEqual(2, s.Properties.Count);
 
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance());
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(42));
-            Assert.ThrowsException<InvalidOperationException>(() => s.CreateInstance(42, "foo", 12));
-            Assert.ThrowsException<MissingMethodException>(() => s.CreateInstance("foo", 42)); // Acceptable error
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance());
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(42));
+            Assert.ThrowsExactly<InvalidOperationException>(() => s.CreateInstance(42, "foo", 12));
+            Assert.ThrowsExactly<MissingMethodException>(() => s.CreateInstance("foo", 42)); // Acceptable error
 
             var o = t.CreateInstance(42, "foo");
 
@@ -256,7 +256,7 @@ in  t1
 
             Assert.AreEqual(42, s.Properties[0].GetValue(o));
 
-            Assert.ThrowsException<ArgumentException>(() => s.Properties[0].SetValue(o, 42)); // Acceptable error
+            Assert.ThrowsExactly<ArgumentException>(() => s.Properties[0].SetValue(o, 42)); // Acceptable error
         }
 
         [TestMethod]
@@ -277,18 +277,18 @@ in  t1
 
             Assert.AreEqual(3, l.Count);
 
-            Assert.ThrowsException<NotSupportedException>(() => l.Remove(2));
-            Assert.ThrowsException<NotSupportedException>(() => l.RemoveAt(0));
-            Assert.ThrowsException<NotSupportedException>(() => l.Add(7));
+            Assert.ThrowsExactly<NotSupportedException>(() => l.Remove(2));
+            Assert.ThrowsExactly<NotSupportedException>(() => l.RemoveAt(0));
+            Assert.ThrowsExactly<NotSupportedException>(() => l.Add(7));
 
             var b = t.CreateInstance(4);
             Assert.IsTrue(b is int[]);
             var c = a.GetList(b);
             Assert.AreEqual(4, c.Count);
 
-            Assert.ThrowsException<ArgumentNullException>(() => a.CreateInstance(default));
-            Assert.ThrowsException<InvalidOperationException>(() => t.CreateInstance());
-            Assert.ThrowsException<InvalidOperationException>(() => t.CreateInstance(1, 2));
+            Assert.ThrowsExactly<ArgumentNullException>(() => a.CreateInstance(default));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t.CreateInstance());
+            Assert.ThrowsExactly<InvalidOperationException>(() => t.CreateInstance(1, 2));
         }
 
         [TestMethod]
@@ -322,8 +322,8 @@ in  t1
 
             Assert.IsTrue(new[] { 1, 2, 3, 4 }.SequenceEqual(c.Cast<int>()));
 
-            Assert.ThrowsException<InvalidOperationException>(() => t.CreateInstance());
-            Assert.ThrowsException<InvalidOperationException>(() => t.CreateInstance(1, 2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t.CreateInstance());
+            Assert.ThrowsExactly<InvalidOperationException>(() => t.CreateInstance(1, 2));
         }
 
         [TestMethod]
@@ -338,7 +338,7 @@ in  t1
             var b = e.GetExpression(a);
             Assert.AreSame(a, b);
 
-            Assert.ThrowsException<ArgumentNullException>(() => e.CreateInstance(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => e.CreateInstance(default));
             var o = e.CreateInstance(a);
             Assert.AreSame(a, o);
         }
@@ -355,7 +355,7 @@ in  t1
             var h = f.GetFunction(g);
             Assert.AreSame(h, g);
 
-            Assert.ThrowsException<ArgumentNullException>(() => f.CreateInstance(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => f.CreateInstance(default));
             var o = f.CreateInstance(g);
             Assert.AreSame(g, o);
         }
@@ -380,12 +380,12 @@ in  t1
 
             var g = new Func<int, int>(x => x);
             // TODO: OpenGenericParameterDataType should support unification of wildcards.
-            Assert.ThrowsException<InvalidOperationException>(() => f.GetFunction(g));
+            Assert.ThrowsExactly<InvalidOperationException>(() => f.GetFunction(g));
 
-            Assert.ThrowsException<ArgumentNullException>(() => f.CreateInstance(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => f.CreateInstance(default));
 
             // TODO: OpenGenericParameterDataType should support unification of wildcards.
-            Assert.ThrowsException<InvalidOperationException>(() => f.CreateInstance(g));
+            Assert.ThrowsExactly<InvalidOperationException>(() => f.CreateInstance(g));
         }
 
         [TestMethod]
@@ -399,8 +399,8 @@ in  t1
             Assert.AreSame(dt1, dt2);
             Assert.AreSame(dt3, dt4);
 
-            Assert.ThrowsException<NotSupportedException>(() => DataTypeHelpers.FromTypeCached(typeof(NonDTCacheTest), allowCycles: true));
-            Assert.ThrowsException<NotSupportedException>(() => DataTypeHelpers.FromTypeCached(typeof(NonDTCacheTest), allowCycles: false));
+            Assert.ThrowsExactly<NotSupportedException>(() => DataTypeHelpers.FromTypeCached(typeof(NonDTCacheTest), allowCycles: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => DataTypeHelpers.FromTypeCached(typeof(NonDTCacheTest), allowCycles: false));
         }
 
         [TestMethod]
@@ -414,8 +414,8 @@ in  t1
             Assert.AreSame(dt1, dt2);
             Assert.AreSame(dt3, dt4);
 
-            Assert.ThrowsException<NotSupportedException>(() => DataTypeHelpers.FromTypeCached(typeof(NonDTCacheTest), allowCycles: true));
-            Assert.ThrowsException<NotSupportedException>(() => DataTypeHelpers.FromTypeCached(typeof(NonDTCacheTest), allowCycles: false));
+            Assert.ThrowsExactly<NotSupportedException>(() => DataTypeHelpers.FromTypeCached(typeof(NonDTCacheTest), allowCycles: true));
+            Assert.ThrowsExactly<NotSupportedException>(() => DataTypeHelpers.FromTypeCached(typeof(NonDTCacheTest), allowCycles: false));
 
             Assert.IsFalse(DataTypeHelpers.TryFromTypeCached(typeof(NonDTCacheTest), allowCycles: true, out var d));
             Assert.IsFalse(DataTypeHelpers.TryFromTypeCached(typeof(NonDTCacheTest), allowCycles: false, out d));
@@ -441,8 +441,8 @@ in  t1
             DataTypeHelpers.CheckCached(typeof(CacheTest), allowCycles: true);
             DataTypeHelpers.CheckCached(typeof(CacheTest), allowCycles: false);
 
-            Assert.ThrowsException<AggregateException>(() => DataTypeHelpers.CheckCached(typeof(NonDTCacheTest), allowCycles: true));
-            Assert.ThrowsException<AggregateException>(() => DataTypeHelpers.CheckCached(typeof(NonDTCacheTest), allowCycles: false));
+            Assert.ThrowsExactly<AggregateException>(() => DataTypeHelpers.CheckCached(typeof(NonDTCacheTest), allowCycles: true));
+            Assert.ThrowsExactly<AggregateException>(() => DataTypeHelpers.CheckCached(typeof(NonDTCacheTest), allowCycles: false));
         }
 
         [TestMethod]

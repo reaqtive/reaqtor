@@ -318,7 +318,7 @@ namespace Test
 
             foreach (var e in es)
             {
-                Assert.ThrowsException<NotSupportedException>(() => eval.Reduce(e));
+                Assert.ThrowsExactly<NotSupportedException>(() => eval.Reduce(e));
             }
         }
 

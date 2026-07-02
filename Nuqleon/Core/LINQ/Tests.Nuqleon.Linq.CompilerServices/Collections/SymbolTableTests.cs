@@ -38,7 +38,7 @@ namespace Tests.System.Linq.CompilerServices
 
             Assert.IsNull(st.Parent);
 
-            Assert.ThrowsException<InvalidOperationException>(() => st.Add("bar", "qux"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => st.Add("bar", "qux"));
 
             Assert.IsTrue(st.TryGetValue("bar", out Indexed<string> foo));
             Assert.AreEqual("foo", foo.Value);

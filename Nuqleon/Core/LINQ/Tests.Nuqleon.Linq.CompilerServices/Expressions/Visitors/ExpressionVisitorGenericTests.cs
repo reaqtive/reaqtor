@@ -31,7 +31,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionVisitorGeneric_Extension1()
         {
-            Assert.ThrowsException<NotImplementedException>(() => _ = new MyVisitor().Visit(new MyExt()));
+            Assert.ThrowsExactly<NotImplementedException>(() => _ = new MyVisitor().Visit(new MyExt()));
         }
 
         [TestMethod]
@@ -50,7 +50,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionVisitorGeneric_InvalidExpression()
         {
-            Assert.ThrowsException<NotSupportedException>(() => _ = new MyVisitor().Visit(new BrokenExpression()));
+            Assert.ThrowsExactly<NotSupportedException>(() => _ = new MyVisitor().Visit(new BrokenExpression()));
         }
 
         private sealed class BrokenExpression : Expression

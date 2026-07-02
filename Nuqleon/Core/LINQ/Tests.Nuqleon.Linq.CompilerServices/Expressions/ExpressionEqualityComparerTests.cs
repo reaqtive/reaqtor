@@ -1381,8 +1381,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             var eq = CreateComparator();
 
-            Assert.ThrowsException<NotImplementedException>(() => eq.Equals(new MyExt(), new MyExt()));
-            Assert.ThrowsException<NotImplementedException>(() => eq.GetHashCode(new MyExt()));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.Equals(new MyExt(), new MyExt()));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.GetHashCode(new MyExt()));
         }
 
         [TestMethod]
@@ -1480,8 +1480,8 @@ namespace Tests.System.Linq.CompilerServices
             var e1 = Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 1, 1, 1);
             var e2 = Expression.DebugInfo(Expression.SymbolDocument("foo"), 1, 1, 1, 1);
 
-            Assert.ThrowsException<NotImplementedException>(() => eq.Equals(e1, e2));
-            Assert.ThrowsException<NotImplementedException>(() => eq.GetHashCode(e1));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.Equals(e1, e2));
+            Assert.ThrowsExactly<NotImplementedException>(() => eq.GetHashCode(e1));
         }
 
         [TestMethod]
@@ -1542,9 +1542,9 @@ namespace Tests.System.Linq.CompilerServices
         {
             var e = Expression.Constant(42).ToExpressionSlim();
 
-            Assert.ThrowsException<ArgumentNullException>(() => _ = new ExpressionSlimEqualityComparer(null));
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new ExpressionSlimEqualityComparer(() => null).Equals(e, e));
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new ExpressionSlimEqualityComparer(() => null).GetHashCode(e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => _ = new ExpressionSlimEqualityComparer(null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new ExpressionSlimEqualityComparer(() => null).Equals(e, e));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new ExpressionSlimEqualityComparer(() => null).GetHashCode(e));
         }
 #else
         [TestMethod]
@@ -1552,9 +1552,9 @@ namespace Tests.System.Linq.CompilerServices
         {
             var e = Expression.Constant(42);
 
-            Assert.ThrowsException<ArgumentNullException>(() => _ = new ExpressionEqualityComparer(null));
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new ExpressionEqualityComparer(() => null).Equals(e, e));
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new ExpressionEqualityComparer(() => null).GetHashCode(e));
+            Assert.ThrowsExactly<ArgumentNullException>(() => _ = new ExpressionEqualityComparer(null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new ExpressionEqualityComparer(() => null).Equals(e, e));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new ExpressionEqualityComparer(() => null).GetHashCode(e));
         }
 #endif
 

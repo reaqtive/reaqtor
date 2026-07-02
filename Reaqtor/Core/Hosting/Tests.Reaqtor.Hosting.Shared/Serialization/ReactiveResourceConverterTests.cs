@@ -32,9 +32,9 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             AssertEqual(observable, roundtripped);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObservable<object>());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObservable<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObservable<object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObservable<object, object>());
         }
 
         [TestMethod]
@@ -48,9 +48,9 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             AssertEqual(observer, roundtripped);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObserver<object>());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObserver<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObserver<object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObserver<object, object>());
         }
 
         [TestMethod]
@@ -65,9 +65,9 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             Assert.IsFalse(roundtripped.IsParameterized);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToStreamFactory<object, object>());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToStreamFactory<object, object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToStreamFactory<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToStreamFactory<object, object, object>());
         }
 
         [TestMethod]
@@ -82,9 +82,9 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             Assert.IsFalse(roundtripped.IsParameterized);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToSubscriptionFactory());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToSubscriptionFactory<object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToSubscriptionFactory());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToSubscriptionFactory<object>());
         }
 
         [TestMethod]
@@ -98,8 +98,8 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             AssertEqual(stream, roundtripped);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.CreationTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToStream<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.CreationTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToStream<object, object>());
         }
 
         [TestMethod]
@@ -113,8 +113,8 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             AssertEqual(subscription, roundtripped);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.CreationTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToSubscription());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.CreationTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToSubscription());
         }
 
         [TestMethod]
@@ -241,9 +241,9 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
             Assert.AreEqual(((State)observable.State).Bar, ((State)roundtripped.State).Bar);
 
             var unused = default(DateTimeOffset);
-            Assert.ThrowsException<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObservable<object>());
-            Assert.ThrowsException<NotImplementedException>(() => roundtripped.ToObservable<object, object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => unused = roundtripped.DefinitionTime);
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObservable<object>());
+            Assert.ThrowsExactly<NotImplementedException>(() => roundtripped.ToObservable<object, object>());
         }
 
         public class State

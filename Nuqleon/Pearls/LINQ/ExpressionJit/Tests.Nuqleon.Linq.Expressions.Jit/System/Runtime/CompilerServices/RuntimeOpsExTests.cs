@@ -29,8 +29,8 @@ namespace Tests
 
             foreach (var index in new[] { -1, 0, 1 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -51,13 +51,13 @@ namespace Tests
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var index in new[] { -1, 1, 2 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -78,13 +78,13 @@ namespace Tests
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var index in new[] { -1, 1, 2 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -115,23 +115,23 @@ namespace Tests
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var value in new object[] { "bar", 42L })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[1] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[1] = value);
             }
 
             foreach (var value in new object[] { 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[2] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[2] = value);
             }
 
             foreach (var index in new[] { -1, 3, 4 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -155,13 +155,13 @@ namespace Tests
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var index in new[] { -1, 1, 2 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 
@@ -188,13 +188,13 @@ namespace Tests
 
             foreach (var value in new object[] { "bar", 42L, true })
             {
-                Assert.ThrowsException<InvalidCastException>(() => r[0] = value);
+                Assert.ThrowsExactly<InvalidCastException>(() => r[0] = value);
             }
 
             foreach (var index in new[] { -1, 1, 2 })
             {
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index]);
-                Assert.ThrowsException<IndexOutOfRangeException>(() => r[index] = 42);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index]);
+                Assert.ThrowsExactly<IndexOutOfRangeException>(() => r[index] = 42);
             }
         }
 

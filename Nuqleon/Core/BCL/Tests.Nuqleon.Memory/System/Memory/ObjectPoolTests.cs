@@ -24,10 +24,10 @@ namespace Tests
         [TestMethod]
         public void ObjectPool_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => _ = new ObjectPool<MyFreeable>(factory: null));
-            Assert.ThrowsException<ArgumentNullException>(() => _ = new ObjectPool<MyFreeable>(factory: null, size: 4));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _ = new ObjectPool<MyFreeable>(() => new MyFreeable(), size: 0));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => _ = new ObjectPool<MyFreeable>(() => new MyFreeable(), size: -1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => _ = new ObjectPool<MyFreeable>(factory: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => _ = new ObjectPool<MyFreeable>(factory: null, size: 4));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new ObjectPool<MyFreeable>(() => new MyFreeable(), size: 0));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new ObjectPool<MyFreeable>(() => new MyFreeable(), size: -1));
         }
 
         [TestMethod]

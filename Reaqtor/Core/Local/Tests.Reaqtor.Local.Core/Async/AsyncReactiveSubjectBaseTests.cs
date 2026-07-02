@@ -33,7 +33,7 @@ namespace Tests
         {
             var s = new MyAsyncReactiveSubject<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.OnErrorAsync(null, CancellationToken.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.OnErrorAsync(null, CancellationToken.None));
         }
 
         [TestMethod]
@@ -73,8 +73,8 @@ namespace Tests
             var uri = new Uri("foo://bar");
             var state = "qux";
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.SubscribeAsync(null, uri, state, CancellationToken.None));
-            Assert.ThrowsException<ArgumentNullException>(() => s.SubscribeAsync(iv, null, state, CancellationToken.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.SubscribeAsync(null, uri, state, CancellationToken.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.SubscribeAsync(iv, null, state, CancellationToken.None));
         }
 
         [TestMethod]

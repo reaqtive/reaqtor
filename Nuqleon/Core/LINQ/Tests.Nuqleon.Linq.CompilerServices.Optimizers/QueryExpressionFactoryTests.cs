@@ -102,7 +102,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
 
             // Lambda Abstraction
             AssertEx.ThrowsException<ArgumentNullException>(() => factory.LambdaAbstraction(body: null), AssertParameterName("body"));
-            Assert.ThrowsException<ArgumentException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1))));
+            Assert.ThrowsExactly<ArgumentException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1))));
             Assert.IsTrue(comparer.Equals(
                 factory.LambdaAbstraction(Expression.Lambda(Expression.Empty())),
                 unsafeFactory.LambdaAbstraction(Expression.Lambda(Expression.Empty()), [])
@@ -112,7 +112,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
             AssertEx.ThrowsException<ArgumentNullException>(() => factory.LambdaAbstraction(body: null, Array.Empty<QueryTree>().ToReadOnly()), AssertParameterName("body"));
             AssertEx.ThrowsException<ArgumentNullException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), parameters: null), AssertParameterName("parameters"));
 
-            Assert.ThrowsException<ArgumentException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), Array.Empty<QueryTree>().ToReadOnly()));
+            Assert.ThrowsExactly<ArgumentException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), Array.Empty<QueryTree>().ToReadOnly()));
             Assert.IsTrue(comparer.Equals(
                 factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), new QueryTree[] { monadMember1 }.ToReadOnly()),
                 unsafeFactory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), new QueryTree[] { monadMember1 }.ToReadOnly())

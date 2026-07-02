@@ -78,10 +78,10 @@ namespace Tests
                 using var r = new MyReader { Throw = true };
                 using var reader = new LoggingStateReader(r, sw);
 
-                Assert.ThrowsException<NotImplementedException>(() => _ = reader.GetCategories());
-                Assert.ThrowsException<NotImplementedException>(() => _ = reader.TryGetItemKeys("foo", out _));
-                Assert.ThrowsException<NotImplementedException>(() => _ = reader.TryGetItemReader("foo", "bar", out _));
-                Assert.ThrowsException<NotImplementedException>(() => reader.Dispose());
+                Assert.ThrowsExactly<NotImplementedException>(() => _ = reader.GetCategories());
+                Assert.ThrowsExactly<NotImplementedException>(() => _ = reader.TryGetItemKeys("foo", out _));
+                Assert.ThrowsExactly<NotImplementedException>(() => _ = reader.TryGetItemReader("foo", "bar", out _));
+                Assert.ThrowsExactly<NotImplementedException>(() => reader.Dispose());
 
                 r.Throw = false;
             }

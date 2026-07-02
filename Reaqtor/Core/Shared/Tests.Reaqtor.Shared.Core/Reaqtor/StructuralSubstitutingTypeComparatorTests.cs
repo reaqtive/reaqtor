@@ -33,7 +33,7 @@ namespace Tests.Reaqtor.Shared.Core.Reaqtor
 
             var comparer = new StructuralSubstitutingTypeComparator();
             Assert.IsTrue(comparer.Equals(type1, type2));
-            Assert.ThrowsException<InvalidOperationException>(() => comparer.Equals(type3, type2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => comparer.Equals(type3, type2));
         }
 
         [TestMethod]

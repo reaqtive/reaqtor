@@ -129,11 +129,11 @@ namespace Tests
                 var inp = json + suffix;
 
                 var i = 0;
-                Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => Parser.StartsWith(inp, inp.Length, 0, ref i, value));
+                Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => Parser.StartsWith(inp, inp.Length, 0, ref i, value));
 
 #if !NO_IO
                 var reader = new Reader(inp);
-                Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => Parser.StartsWithReader(reader, value));
+                Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => Parser.StartsWithReader(reader, value));
 #endif
             }
         }
@@ -194,7 +194,7 @@ namespace Tests
                     var b = i;
                     var ctx = GetParserContext();
 
-                    Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => parser(str, str.Length, ref i, ctx));
+                    Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => parser(str, str.Length, ref i, ctx));
                 }
             }
         }

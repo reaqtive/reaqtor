@@ -406,14 +406,14 @@ namespace Tests.System.Linq.CompilerServices
             var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
             var props3 = new[] { new StructuralFieldDeclaration("bar", typeof(Bar)) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props); });
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props2));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props2); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props2); });
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props3));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props3); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewAnonymousTypeBuilder(); rtc.DefineAnonymousType(atb, props3); });
 
         }
 
@@ -422,7 +422,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateAnonymousType(props));
         }
 
         [TestMethod]
@@ -540,8 +540,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             var props = new[] { new KeyValuePair<string, Type>("bar", typeof(Bar)) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateClosureType(props));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewClosureTypeBuilder(); rtc.DefineClosureType(atb, props); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateClosureType(props));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewClosureTypeBuilder(); rtc.DefineClosureType(atb, props); });
         }
 
         #endregion
@@ -719,14 +719,14 @@ namespace Tests.System.Linq.CompilerServices
             var props2 = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(BarAttribute), new List<object>().AsReadOnly()) }.AsReadOnly()) };
             var props3 = new[] { new StructuralFieldDeclaration("bar", typeof(Bar)) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props, valueEquality: true); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props, valueEquality: true); });
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props2, valueEquality: true));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props2, valueEquality: true); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props2, valueEquality: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props2, valueEquality: true); });
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props3, valueEquality: true));
-            Assert.ThrowsException<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props3, valueEquality: true); });
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props3, valueEquality: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => { var rtc = new RuntimeCompiler(); var atb = rtc.GetNewRecordTypeBuilder(); rtc.DefineRecordType(atb, props3, valueEquality: true); });
         }
 
         [TestMethod]
@@ -734,7 +734,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var props = new[] { new StructuralFieldDeclaration("bar", typeof(string), new List<CustomAttributeDeclaration> { new CustomAttributeDeclaration(typeof(FooAttribute), new List<object> { 0 }.AsReadOnly()) }.AsReadOnly()) };
 
-            Assert.ThrowsException<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => RuntimeCompiler.CreateRecordType(props, valueEquality: true));
         }
 
         [TestMethod]
@@ -761,7 +761,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             AssertEx.ThrowsException<ArgumentNullException>(() => new CustomAttributeDeclaration(type: null, new List<object>().AsReadOnly()), ex => Assert.AreEqual("type", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => new CustomAttributeDeclaration(typeof(FooAttribute), default(ReadOnlyCollection<object>)), ex => Assert.AreEqual("arguments", ex.ParamName));
-            Assert.ThrowsException<InvalidOperationException>(() => new CustomAttributeDeclaration(typeof(Bar), new List<object>().AsReadOnly()));
+            Assert.ThrowsExactly<InvalidOperationException>(() => new CustomAttributeDeclaration(typeof(Bar), new List<object>().AsReadOnly()));
         }
 
         #endregion

@@ -30,22 +30,22 @@ namespace Tests.Reaqtor.Reliable
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int>(null));
 
                     var o = ctx.GetObservable<int>(new Uri(Constants.Observable.XS));
                     var provider = o.Provider;
 
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Makes the intent clear.)
-                    Assert.ThrowsException<ArgumentNullException>(() => o.Subscribe(null, new Uri(Constants.Subscription.SUB), null));
-                    Assert.ThrowsException<ArgumentNullException>(() => o.Subscribe(((IReliableReactiveObserver<int>)ctx.GetObserver<int>(new Uri("bing://obs"))), null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => o.Subscribe(ctx.GetObserver<int>(new Uri("bing://obs")), null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReliableReactiveObservable<int>)o).Subscribe(null, new Uri(Constants.Subscription.SUB), null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReliableReactiveObservable<int>)o).Subscribe(((IReliableReactiveObserver<int>)ctx.GetObserver<int>(new Uri("bing://obs"))), null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => o.Subscribe(null, new Uri(Constants.Subscription.SUB), null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => o.Subscribe(((IReliableReactiveObserver<int>)ctx.GetObserver<int>(new Uri("bing://obs"))), null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => o.Subscribe(ctx.GetObserver<int>(new Uri("bing://obs")), null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReliableReactiveObservable<int>)o).Subscribe(null, new Uri(Constants.Subscription.SUB), null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReliableReactiveObservable<int>)o).Subscribe(((IReliableReactiveObserver<int>)ctx.GetObserver<int>(new Uri("bing://obs"))), null, null));
 #pragma warning restore IDE0004
 
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int>(null));
                 }
             );
         }
@@ -56,13 +56,13 @@ namespace Tests.Reaqtor.Reliable
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int>(null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     Assert.AreEqual(typeof(int), observer.ElementType);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => observer.OnError(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => observer.OnError(null));
                 }
             );
         }
@@ -73,16 +73,16 @@ namespace Tests.Reaqtor.Reliable
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int>(null));
 
                     var factory = ctx.GetStreamFactory<int, int>(new Uri("bing://foo"));
                     var pfactory = ctx.GetStreamFactory<string, int, int>(new Uri("bing://pfoo"));
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => pfactory.Create(null, "factory_parameter_1", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReliableReactiveSubjectFactory<int, int>)factory).Create(null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReliableReactiveSubjectFactory<int, int, string>)pfactory).Create(null, "factory_parameter_1", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => pfactory.Create(null, "factory_parameter_1", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReliableReactiveSubjectFactory<int, int>)factory).Create(null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReliableReactiveSubjectFactory<int, int, string>)pfactory).Create(null, "factory_parameter_1", null));
                 }
             );
         }
@@ -93,16 +93,16 @@ namespace Tests.Reaqtor.Reliable
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int>(null));
 
                     var factory = ctx.GetSubscriptionFactory(new Uri("bing://foo"));
                     var pfactory = ctx.GetSubscriptionFactory<string>(new Uri("bing://pfoo"));
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => pfactory.Create(null, "factory_parameter_1", null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReliableReactiveSubscriptionFactory)factory).Create(null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReliableReactiveSubscriptionFactory<string>)pfactory).Create(null, "factory_parameter_1", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => pfactory.Create(null, "factory_parameter_1", null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReliableReactiveSubscriptionFactory)factory).Create(null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReliableReactiveSubscriptionFactory<string>)pfactory).Create(null, "factory_parameter_1", null));
                 }
             );
         }
@@ -115,23 +115,23 @@ namespace Tests.Reaqtor.Reliable
                 {
                     var provider = (ReliableQueryProvider)ctx.Provider;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubject<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscription(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubject<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscription(null));
 
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.AcknowledgeRange(null, 0));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.StartSubscription(null, 0));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.GetSubscriptionResubscribeUri(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateObserver<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateSubscription(null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.DeleteStream<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.DeleteSubscription(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.GetObserver<int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.AcknowledgeRange(null, 0));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.StartSubscription(null, 0));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.GetSubscriptionResubscribeUri(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateObserver<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateSubscription(null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.DeleteStream<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.DeleteSubscription(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.GetObserver<int>(null));
                 }
             );
         }
@@ -147,12 +147,12 @@ namespace Tests.Reaqtor.Reliable
                     var provider = s.Provider;
 
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Makes the intent clear.)
-                    Assert.ThrowsException<ArgumentNullException>(() => s.Subscribe(null, new Uri(Constants.Subscription.SUB), null));
-                    Assert.ThrowsException<ArgumentNullException>(() => s.Subscribe(ctx.GetObserver<int>(new Uri("bing://obs")), null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => s.Subscribe(((IReliableReactiveObserver<int>)ctx.GetObserver<int>(new Uri("bing://obs"))), null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReliableReactiveMultiSubject<int, int>)s).Subscribe(null, new Uri(Constants.Subscription.SUB), null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReliableReactiveMultiSubject<int, int>)s).Subscribe(ctx.GetObserver<int>(new Uri("bing://obs")), null, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReliableReactiveMultiSubject<int, int>)s).Subscribe(((IReliableReactiveObserver<int>)ctx.GetObserver<int>(new Uri("bing://obs"))), null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => s.Subscribe(null, new Uri(Constants.Subscription.SUB), null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => s.Subscribe(ctx.GetObserver<int>(new Uri("bing://obs")), null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => s.Subscribe(((IReliableReactiveObserver<int>)ctx.GetObserver<int>(new Uri("bing://obs"))), null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReliableReactiveMultiSubject<int, int>)s).Subscribe(null, new Uri(Constants.Subscription.SUB), null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReliableReactiveMultiSubject<int, int>)s).Subscribe(ctx.GetObserver<int>(new Uri("bing://obs")), null, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReliableReactiveMultiSubject<int, int>)s).Subscribe(((IReliableReactiveObserver<int>)ctx.GetObserver<int>(new Uri("bing://obs"))), null, null));
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
                 }
             );
@@ -167,7 +167,7 @@ namespace Tests.Reaqtor.Reliable
                     var qbserver = ctx.Provider.CreateQbserver<int>(Expression.Default(typeof(IReliableQbserver<int>)));
 
                     var uri = default(Uri);
-                    Assert.ThrowsException<InvalidOperationException>(() => uri = qbserver.ResubscribeUri);
+                    Assert.ThrowsExactly<InvalidOperationException>(() => uri = qbserver.ResubscribeUri);
                 }
             );
         }
@@ -179,8 +179,8 @@ namespace Tests.Reaqtor.Reliable
                 ctx =>
                 {
                     var qubject = ctx.Provider.CreateQubject<int, int>(Expression.Default(typeof(IReliableMultiQubject<int, int>)));
-                    Assert.ThrowsException<InvalidOperationException>(() => qubject.CreateObserver());
-                    Assert.ThrowsException<InvalidOperationException>(() => qubject.Dispose());
+                    Assert.ThrowsExactly<InvalidOperationException>(() => qubject.CreateObserver());
+                    Assert.ThrowsExactly<InvalidOperationException>(() => qubject.Dispose());
                 }
             );
         }
@@ -194,11 +194,11 @@ namespace Tests.Reaqtor.Reliable
                     var qubscription = ctx.Provider.CreateQubscription(Expression.Default(typeof(IReliableQubscription)));
 
                     var uri = default(Uri);
-                    Assert.ThrowsException<InvalidOperationException>(() => uri = qubscription.ResubscribeUri);
+                    Assert.ThrowsExactly<InvalidOperationException>(() => uri = qubscription.ResubscribeUri);
 
-                    Assert.ThrowsException<InvalidOperationException>(() => qubscription.Start(0));
-                    Assert.ThrowsException<InvalidOperationException>(() => qubscription.AcknowledgeRange(0));
-                    Assert.ThrowsException<InvalidOperationException>(() => qubscription.Dispose());
+                    Assert.ThrowsExactly<InvalidOperationException>(() => qubscription.Start(0));
+                    Assert.ThrowsExactly<InvalidOperationException>(() => qubscription.AcknowledgeRange(0));
+                    Assert.ThrowsExactly<InvalidOperationException>(() => qubscription.Dispose());
                 }
             );
         }

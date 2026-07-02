@@ -81,7 +81,7 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void TemplatizationHelpers_SubstituteTemplateId_ThrowsInvalidOperation()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => Expression.New(typeof(int)).SubstituteTemplateId("foo"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Expression.New(typeof(int)).SubstituteTemplateId("foo"));
         }
 
         [TestMethod]

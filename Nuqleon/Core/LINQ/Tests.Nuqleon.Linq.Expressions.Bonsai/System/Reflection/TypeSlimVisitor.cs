@@ -181,11 +181,10 @@ namespace Tests.System.Reflection
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void TypeSlimVisitor_VisitAndConvert_Fail()
         {
             var visitor = new D();
-            visitor.VisitAndConvert<SimpleTypeSlim>(SlimType);
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.VisitAndConvert<SimpleTypeSlim>(SlimType));
         }
 
         private sealed class D : TypeSlimVisitor
@@ -235,7 +234,7 @@ namespace Tests.System.Reflection
 
             var visitor = new TypeSlimVisitor();
 
-            Assert.ThrowsException<NotSupportedException>(() => visitor.Visit(t));
+            Assert.ThrowsExactly<NotSupportedException>(() => visitor.Visit(t));
         }
 
         private sealed class MyTypeSlim : TypeSlim
@@ -359,8 +358,8 @@ namespace Tests.System.Reflection
         {
             public void Test()
             {
-                Assert.ThrowsException<ArgumentNullException>(() => base.Visit(default(ReadOnlyCollection<TypeSlim>)));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitAndConvert<int>(default(ReadOnlyCollection<TypeSlim>)));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.Visit(default(ReadOnlyCollection<TypeSlim>)));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitAndConvert<int>(default(ReadOnlyCollection<TypeSlim>)));
 
                 var ts = new TypeSlim[] { typeof(int).ToTypeSlim(), typeof(long).ToTypeSlim() }.ToReadOnly();
 

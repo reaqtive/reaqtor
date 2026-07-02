@@ -147,7 +147,7 @@ namespace Tests
             // Assert the new space does not contain the linked list.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetLinkedList<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetLinkedList<int>("bar"));
 
             //
             // Load the space from the store.
@@ -3366,7 +3366,7 @@ namespace Tests
             // Assert the linked list is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetLinkedList<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetLinkedList<int>("bar"));
         });
 
         // TODO: Tests that reuse nodes, multiple edits to nodes, etc.

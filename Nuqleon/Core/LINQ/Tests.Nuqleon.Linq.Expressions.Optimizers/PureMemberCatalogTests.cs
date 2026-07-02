@@ -75,12 +75,12 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void PureMemberCatalog_TestTheTests()
         {
-            Assert.ThrowsException<AssertFailedException>(() =>
+            Assert.ThrowsExactly<AssertFailedException>(() =>
             {
                 AssertNonGeneric(typeof(Guid).GetMethod(nameof(Guid.NewGuid)));
             });
 
-            Assert.ThrowsException<AssertFailedException>(() =>
+            Assert.ThrowsExactly<AssertFailedException>(() =>
             {
                 AssertNonGeneric(typeof(Environment).GetProperty(nameof(Environment.TickCount)));
             });

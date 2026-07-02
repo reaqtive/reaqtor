@@ -77,7 +77,7 @@ namespace Tests.Reaqtor.Shared.Core
             Assert.AreEqual(43, ch["foo"]);
             Assert.AreEqual(44, ch["qux"]);
 
-            Assert.ThrowsException<KeyNotFoundException>(() => ch["baz"]);
+            Assert.ThrowsExactly<KeyNotFoundException>(() => ch["baz"]);
         }
 
         [TestMethod]
@@ -164,13 +164,13 @@ namespace Tests.Reaqtor.Shared.Core
         {
             var ch = GetChainedDictionary();
 
-            Assert.ThrowsException<NotImplementedException>(() => ch["baz"] = 45);
-            Assert.ThrowsException<NotImplementedException>(() => ch.Add("baz", 45));
-            Assert.ThrowsException<NotImplementedException>(() => ch.Add(new KeyValuePair<string, int>("baz", 45)));
-            Assert.ThrowsException<NotImplementedException>(() => ch.Clear());
-            Assert.ThrowsException<NotImplementedException>(() => ch.CopyTo(null, 0));
-            Assert.ThrowsException<NotImplementedException>(() => ch.Remove("baz"));
-            Assert.ThrowsException<NotImplementedException>(() => ch.Remove(new KeyValuePair<string, int>("baz", 45)));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch["baz"] = 45);
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Add("baz", 45));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Add(new KeyValuePair<string, int>("baz", 45)));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Clear());
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.CopyTo(null, 0));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Remove("baz"));
+            Assert.ThrowsExactly<NotImplementedException>(() => ch.Remove(new KeyValuePair<string, int>("baz", 45)));
         }
 
         private static IDictionary<string, int> GetChainedDictionary()

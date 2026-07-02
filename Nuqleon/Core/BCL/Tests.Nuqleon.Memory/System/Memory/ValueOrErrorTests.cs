@@ -25,13 +25,13 @@ namespace Tests
 
             Assert.AreEqual(42, val.Value);
             Assert.AreEqual(ValueOrErrorKind.Value, val.Kind);
-            Assert.ThrowsException<InvalidOperationException>(() => val.Exception);
+            Assert.ThrowsExactly<InvalidOperationException>(() => val.Exception);
         }
 
         [TestMethod]
         public void ValueOrError_CreateError_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => ValueOrError.CreateError<int>(exception: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ValueOrError.CreateError<int>(exception: null));
         }
 
         [TestMethod]

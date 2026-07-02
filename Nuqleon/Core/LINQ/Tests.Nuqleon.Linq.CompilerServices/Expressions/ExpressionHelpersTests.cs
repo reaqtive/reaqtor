@@ -66,7 +66,7 @@ namespace Tests.System.Linq.CompilerServices
         public void Unquote_NoLambda()
         {
             var c = Expression.Constant(42);
-            Assert.ThrowsException<InvalidCastException>(() => ExpressionHelpers.Unquote(c));
+            Assert.ThrowsExactly<InvalidCastException>(() => ExpressionHelpers.Unquote(c));
         }
 
         [TestMethod]

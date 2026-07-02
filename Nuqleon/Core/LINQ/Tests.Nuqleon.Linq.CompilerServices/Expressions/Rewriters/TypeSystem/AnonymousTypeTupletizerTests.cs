@@ -407,7 +407,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var e = Expression.New(foo.GetConstructors().Single(), Expression.Constant(1), Expression.Constant(value: null, bar));
 
-            Assert.ThrowsException<NotSupportedException>(() => AnonymousTypeTupletizer.Tupletize(e, Expression.Constant(value: null)));
+            Assert.ThrowsExactly<NotSupportedException>(() => AnonymousTypeTupletizer.Tupletize(e, Expression.Constant(value: null)));
         }
 
         [TestMethod]
@@ -563,7 +563,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var a = e.Update(new Expression[] { arg0, Expression.Constant(arg1.Evaluate<object>(), arg1.Type) });
 
-            Assert.ThrowsException<InvalidOperationException>(() => _ = AnonymousTypeTupletizer.Tupletize(a, Expression.Constant(value: null)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = AnonymousTypeTupletizer.Tupletize(a, Expression.Constant(value: null)));
         }
 
         [TestMethod]

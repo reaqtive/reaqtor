@@ -544,7 +544,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new DefinitionInliningBinder(registry);
             var expression = Expression.Parameter(typeof(IReliableMultiSubject<int, int>), Keys[0]);
-            Assert.ThrowsException<NotImplementedException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<NotImplementedException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -557,7 +557,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new DefinitionInliningBinder(registry);
             var expression = Expression.Parameter(typeof(ISubscription), Keys[0]);
-            Assert.ThrowsException<NotImplementedException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<NotImplementedException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -570,7 +570,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new DefinitionInliningBinder(registry);
             var expression = Expression.Parameter(typeof(IReliableSubscription), Keys[0]);
-            Assert.ThrowsException<NotImplementedException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<NotImplementedException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -665,7 +665,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new FullBinder(registry);
             var expression = Expression.Parameter(typeof(ISubscribable<int>), Keys[0]);
-            Assert.ThrowsException<ArgumentException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<ArgumentException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -759,7 +759,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new FullBinder(registry);
             var expression = Expression.Parameter(typeof(IObserver<int>), Keys[0]);
-            Assert.ThrowsException<ArgumentException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<ArgumentException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -1091,7 +1091,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new FullBinder(registry);
             var expression = Expression.Parameter(typeof(IReliableObservable<int>), Keys[0]);
-            Assert.ThrowsException<ArgumentException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<ArgumentException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -1104,7 +1104,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new FullBinder(registry);
             var expression = Expression.Parameter(typeof(IReliableObserver<int>), Keys[0]);
-            Assert.ThrowsException<ArgumentException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<ArgumentException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -1156,7 +1156,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new FullBinder(registry);
             var expression = Expression.Parameter(typeof(IReliableMultiSubject<int, int>), Keys[0]);
-            Assert.ThrowsException<NotImplementedException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<NotImplementedException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -1169,7 +1169,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new FullBinder(registry);
             var expression = Expression.Parameter(typeof(ISubscription), Keys[0]);
-            Assert.ThrowsException<NotImplementedException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<NotImplementedException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -1182,7 +1182,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var binder = new FullBinder(registry);
             var expression = Expression.Parameter(typeof(IReliableSubscription), Keys[0]);
-            Assert.ThrowsException<NotImplementedException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<NotImplementedException>(() => binder.Bind(expression));
         }
 
         [TestMethod]
@@ -1222,7 +1222,7 @@ namespace Tests.Reaqtor.QueryEngine
             var binder = new FullBinder(registry);
             var expression = Expression.Parameter(st2, Keys[0]);
             var expected = Expression.Default(st2);
-            Assert.ThrowsException<InvalidOperationException>(() => binder.Bind(expression));
+            Assert.ThrowsExactly<InvalidOperationException>(() => binder.Bind(expression));
         }
 
 

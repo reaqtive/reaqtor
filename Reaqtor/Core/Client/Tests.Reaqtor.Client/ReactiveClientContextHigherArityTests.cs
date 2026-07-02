@@ -36,20 +36,20 @@ namespace Tests.Reaqtor.Client
                 ctx =>
                 {
                     var provider = (AsyncReactiveQueryProvider)ctx.Provider;
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -61,20 +61,20 @@ namespace Tests.Reaqtor.Client
                 ctx =>
                 {
                     var provider = (AsyncReactiveQueryProvider)ctx.Provider;
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -86,20 +86,20 @@ namespace Tests.Reaqtor.Client
                 ctx =>
                 {
                     var provider = (AsyncReactiveQueryProvider)ctx.Provider;
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -111,20 +111,20 @@ namespace Tests.Reaqtor.Client
                 ctx =>
                 {
                     var provider = (AsyncReactiveQueryProvider)ctx.Provider;
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -191,20 +191,20 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -215,20 +215,20 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -239,20 +239,20 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -263,20 +263,20 @@ namespace Tests.Reaqtor.Client
             Apply(
                 ctx =>
                 {
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<int, int, int, int, int, int, int, int, int, int, int, int, int, int, int>(null));
                 }
             );
         }
@@ -7025,10 +7025,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7087,10 +7087,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7152,10 +7152,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7220,10 +7220,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7291,10 +7291,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7365,10 +7365,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7442,10 +7442,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7522,10 +7522,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7605,10 +7605,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7691,10 +7691,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7780,10 +7780,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7872,10 +7872,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -7967,10 +7967,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -8065,10 +8065,10 @@ namespace Tests.Reaqtor.Client
                     factory.CreateAsync(new Uri(Constants.Stream.BAR), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null);
                     ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(new Uri(Constants.Stream.QUX), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait();
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(streamUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubjectFactory<int, int, string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.SubscribeAsync(observer, new Uri(Constants.Subscription.SUB), state: null, CancellationToken.None).Wait();
@@ -8167,10 +8167,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8205,10 +8205,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8244,10 +8244,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8284,10 +8284,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8325,10 +8325,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8367,10 +8367,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8410,10 +8410,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8454,10 +8454,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8499,10 +8499,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8545,10 +8545,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8592,10 +8592,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8640,10 +8640,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8689,10 +8689,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8739,10 +8739,10 @@ namespace Tests.Reaqtor.Client
 
                     var sub = factory.CreateAsync(new Uri(Constants.Subscription.SUB1), "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Result;
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null).Wait());
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IAsyncReactiveSubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>)factory).CreateAsync(subscriptionUri: null, "factory_parameter_1", "factory_parameter_2", "factory_parameter_3", "factory_parameter_4", "factory_parameter_5", "factory_parameter_6", "factory_parameter_7", "factory_parameter_8", "factory_parameter_9", "factory_parameter_10", "factory_parameter_11", "factory_parameter_12", "factory_parameter_13", "factory_parameter_14", "factory_parameter_15", state: null, CancellationToken.None).Wait());
 
 #if NET6_0_OR_GREATER // Suppresses CA2012
                     sub.DisposeAsync().AsTask().Wait();
@@ -8801,7 +8801,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2) => obs(parameter_1, parameter_2),
@@ -8810,7 +8810,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -8858,7 +8858,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3) => obs(parameter_1, parameter_2, parameter_3),
@@ -8867,7 +8867,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -8918,7 +8918,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4) => obs(parameter_1, parameter_2, parameter_3, parameter_4),
@@ -8927,7 +8927,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -8981,7 +8981,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5),
@@ -8990,7 +8990,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9047,7 +9047,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6),
@@ -9056,7 +9056,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9116,7 +9116,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7),
@@ -9125,7 +9125,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9188,7 +9188,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8),
@@ -9197,7 +9197,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9263,7 +9263,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9),
@@ -9272,7 +9272,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9341,7 +9341,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10),
@@ -9350,7 +9350,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9422,7 +9422,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11),
@@ -9431,7 +9431,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9506,7 +9506,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12),
@@ -9515,7 +9515,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9593,7 +9593,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13),
@@ -9602,7 +9602,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9683,7 +9683,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14),
@@ -9692,7 +9692,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9776,7 +9776,7 @@ namespace Tests.Reaqtor.Client
                         CancellationToken.None
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             (parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14, parameter_15) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14, parameter_15),
@@ -9785,7 +9785,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservableAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observable: null,
@@ -9858,7 +9858,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2) => obs(parameter_1, parameter_2));
                     ctx.DefineObserverAsync<string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, int>(
                             uri: null,
                             obsExpr,
@@ -9867,7 +9867,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -9911,7 +9911,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3) => obs(parameter_1, parameter_2, parameter_3));
                     ctx.DefineObserverAsync<string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -9920,7 +9920,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -9967,7 +9967,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4) => obs(parameter_1, parameter_2, parameter_3, parameter_4));
                     ctx.DefineObserverAsync<string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -9976,7 +9976,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10026,7 +10026,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5));
                     ctx.DefineObserverAsync<string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10035,7 +10035,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10088,7 +10088,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10097,7 +10097,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10153,7 +10153,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10162,7 +10162,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10221,7 +10221,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10230,7 +10230,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10292,7 +10292,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10301,7 +10301,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10366,7 +10366,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10375,7 +10375,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10443,7 +10443,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10452,7 +10452,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10523,7 +10523,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10532,7 +10532,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10606,7 +10606,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10615,7 +10615,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10692,7 +10692,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10701,7 +10701,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10781,7 +10781,7 @@ namespace Tests.Reaqtor.Client
                     var obsExpr = (Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQbserver<int>>>)((parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14, parameter_15) => obs(parameter_1, parameter_2, parameter_3, parameter_4, parameter_5, parameter_6, parameter_7, parameter_8, parameter_9, parameter_10, parameter_11, parameter_12, parameter_13, parameter_14, parameter_15));
                     ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(new Uri(Constants.StreamFactory.SG), obsExpr, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             uri: null,
                             obsExpr,
@@ -10790,7 +10790,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserverAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int>(
                             new Uri(Constants.StreamFactory.SG),
                             observer: null,
@@ -10860,7 +10860,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, int, int>(
                             uri: null,
                             factory,
@@ -10869,7 +10869,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -10901,7 +10901,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -10910,7 +10910,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -10942,7 +10942,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -10951,7 +10951,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -10983,7 +10983,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -10992,7 +10992,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11024,7 +11024,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11033,7 +11033,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11065,7 +11065,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11074,7 +11074,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11106,7 +11106,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11115,7 +11115,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11147,7 +11147,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11156,7 +11156,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11188,7 +11188,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11197,7 +11197,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11229,7 +11229,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11238,7 +11238,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11270,7 +11270,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11279,7 +11279,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11311,7 +11311,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11320,7 +11320,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11352,7 +11352,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11361,7 +11361,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11393,7 +11393,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(new Uri(Constants.StreamFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             uri: null,
                             factory,
@@ -11402,7 +11402,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, int, int>(
                             new Uri(Constants.StreamFactory.SF),
                             streamFactory: null,
@@ -11438,7 +11438,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string>(
                             uri: null,
                             factory,
@@ -11447,7 +11447,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string>),
@@ -11477,7 +11477,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string>(
                             uri: null,
                             factory,
@@ -11486,7 +11486,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string>(
                             uri: null,
                             default(Expression<Func<string, string, IAsyncReactiveQubscription>>),
@@ -11495,7 +11495,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, IAsyncReactiveQubscription>>),
@@ -11524,7 +11524,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string>(
                             uri: null,
                             factory,
@@ -11533,7 +11533,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string>),
@@ -11563,7 +11563,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string>(
                             uri: null,
                             factory,
@@ -11572,7 +11572,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, IAsyncReactiveQubscription>>),
@@ -11581,7 +11581,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, IAsyncReactiveQubscription>>),
@@ -11610,7 +11610,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string>(
                             uri: null,
                             factory,
@@ -11619,7 +11619,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string>),
@@ -11649,7 +11649,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string>(
                             uri: null,
                             factory,
@@ -11658,7 +11658,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, IAsyncReactiveQubscription>>),
@@ -11667,7 +11667,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, IAsyncReactiveQubscription>>),
@@ -11696,7 +11696,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11705,7 +11705,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string>),
@@ -11735,7 +11735,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11744,7 +11744,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -11753,7 +11753,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -11782,7 +11782,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11791,7 +11791,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string>),
@@ -11821,7 +11821,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11830,7 +11830,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -11839,7 +11839,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -11868,7 +11868,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11877,7 +11877,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string, string>),
@@ -11907,7 +11907,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11916,7 +11916,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -11925,7 +11925,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -11954,7 +11954,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -11963,7 +11963,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string, string, string>),
@@ -11993,7 +11993,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12002,7 +12002,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12011,7 +12011,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12040,7 +12040,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12049,7 +12049,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string, string, string, string>),
@@ -12079,7 +12079,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12088,7 +12088,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12097,7 +12097,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12126,7 +12126,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12135,7 +12135,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string, string, string, string, string>),
@@ -12165,7 +12165,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12174,7 +12174,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12183,7 +12183,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12212,7 +12212,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12221,7 +12221,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string>),
@@ -12251,7 +12251,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12260,7 +12260,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12269,7 +12269,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12298,7 +12298,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12307,7 +12307,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string>),
@@ -12337,7 +12337,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12346,7 +12346,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12355,7 +12355,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12384,7 +12384,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12393,7 +12393,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string>),
@@ -12423,7 +12423,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12432,7 +12432,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12441,7 +12441,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12470,7 +12470,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12479,7 +12479,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string>),
@@ -12509,7 +12509,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12518,7 +12518,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12527,7 +12527,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12556,7 +12556,7 @@ namespace Tests.Reaqtor.Client
 
                     ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12565,7 +12565,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(IAsyncReactiveQubscriptionFactory<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>),
@@ -12595,7 +12595,7 @@ namespace Tests.Reaqtor.Client
                 {
                     ctx.DefineSubscriptionFactoryAsync(new Uri(Constants.SubscriptionFactory.SG), factory, state: null, CancellationToken.None);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             factory,
@@ -12604,7 +12604,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             uri: null,
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),
@@ -12613,7 +12613,7 @@ namespace Tests.Reaqtor.Client
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactoryAsync<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string>(
                             new Uri(Constants.SubscriptionFactory.SF),
                             default(Expression<Func<string, string, string, string, string, string, string, string, string, string, string, string, string, string, string, IAsyncReactiveQubscription>>),

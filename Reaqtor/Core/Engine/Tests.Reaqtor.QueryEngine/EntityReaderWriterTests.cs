@@ -358,7 +358,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 reader.ReadHeader();
 
-                Assert.ThrowsException<InvalidOperationException>(() => reader.Load(ReactiveEntityKind.Observable));
+                Assert.ThrowsExactly<InvalidOperationException>(() => reader.Load(ReactiveEntityKind.Observable));
             }
         }
 

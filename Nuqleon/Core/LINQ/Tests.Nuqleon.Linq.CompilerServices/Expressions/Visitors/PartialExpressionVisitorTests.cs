@@ -58,7 +58,7 @@ namespace Tests.System.Linq.CompilerServices
 
             foreach (var e in es)
             {
-                Assert.ThrowsException<NotSupportedException>(() => v.Visit(e));
+                Assert.ThrowsExactly<NotSupportedException>(() => v.Visit(e));
             }
         }
 

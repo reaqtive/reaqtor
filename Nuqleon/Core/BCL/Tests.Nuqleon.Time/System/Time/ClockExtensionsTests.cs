@@ -21,8 +21,8 @@ namespace Tests
         [TestMethod]
         public void ClockExtensions_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => ClockExtensions.AssertMonotonic(clock: null));
-            Assert.ThrowsException<ArgumentNullException>(() => ClockExtensions.EnsureMonotonic(clock: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ClockExtensions.AssertMonotonic(clock: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ClockExtensions.EnsureMonotonic(clock: null));
         }
 
         [TestMethod]
@@ -47,7 +47,7 @@ namespace Tests
 
             c.Now -= 5;
 
-            Assert.ThrowsException<InvalidOperationException>(() => m.Now);
+            Assert.ThrowsExactly<InvalidOperationException>(() => m.Now);
 
             c.Now += 5;
 

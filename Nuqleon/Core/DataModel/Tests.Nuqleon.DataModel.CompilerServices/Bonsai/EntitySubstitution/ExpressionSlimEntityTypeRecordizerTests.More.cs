@@ -598,7 +598,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             where T : Exception
         {
             var etr = new ExpressionEntityTypeRecordizer();
-            Assert.ThrowsException<T>(() => Roundtrip(exp));
+            Assert.ThrowsExactly<T>(() => Roundtrip(exp));
         }
 
         private static void AssertRecordizationFromExpression(Expression exp, Func<Expression, Type> getRecordType, params object[] args)

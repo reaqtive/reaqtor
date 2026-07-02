@@ -18,7 +18,7 @@ namespace Tests.Reaqtor.Core
         [TestMethod]
         public void AsyncReactiveObserverExtensions_ToObserver_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => AsyncReactiveObserverExtensions.ToObserver<int>(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => AsyncReactiveObserverExtensions.ToObserver<int>(null));
         }
 
         [TestMethod]

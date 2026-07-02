@@ -233,7 +233,7 @@ namespace Tests.System.Linq.CompilerServices
             var x = Expression.Parameter(typeof(int));
             var f = Expression.Invoke(Expression.Lambda(Expression.Constant(1), x), e);
 
-            Assert.ThrowsException<InvalidOperationException>(() => BetaReducer.Reduce(f, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.DisallowDiscard));
+            Assert.ThrowsExactly<InvalidOperationException>(() => BetaReducer.Reduce(f, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.DisallowDiscard));
         }
 
         [TestMethod]
@@ -255,7 +255,7 @@ namespace Tests.System.Linq.CompilerServices
             var x = Expression.Parameter(typeof(int));
             var f = Expression.Invoke(Expression.Lambda(Expression.Add(x, x), x), e);
 
-            Assert.ThrowsException<InvalidOperationException>(() => BetaReducer.Reduce(f, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.ExactlyOnce));
+            Assert.ThrowsExactly<InvalidOperationException>(() => BetaReducer.Reduce(f, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.ExactlyOnce));
         }
 
         [TestMethod]
@@ -338,7 +338,7 @@ namespace Tests.System.Linq.CompilerServices
             var a = (Expression<D>)((D d) => d(d));
             var b = Expression.Invoke(a, a);
 
-            Assert.ThrowsException<InvalidOperationException>(() => BetaReducer.ReduceEager(b, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.None, throwOnCycle: true));
+            Assert.ThrowsExactly<InvalidOperationException>(() => BetaReducer.ReduceEager(b, BetaReductionNodeTypes.Unrestricted, BetaReductionRestrictions.None, throwOnCycle: true));
         }
 
         [TestMethod]

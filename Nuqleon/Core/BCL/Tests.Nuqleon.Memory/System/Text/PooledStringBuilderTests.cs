@@ -24,8 +24,8 @@ namespace Tests
         [TestMethod]
         public void PooledStringBuilder_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => StringBuilderPool.Create(4, -1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => StringBuilderPool.Create(4, 16, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => StringBuilderPool.Create(4, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => StringBuilderPool.Create(4, 16, -1));
         }
 
         [TestMethod]

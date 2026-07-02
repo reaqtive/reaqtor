@@ -100,7 +100,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 {
 
                     var counter = 0;
-                    Assert.ThrowsException<InvalidOperationException>(() =>
+                    Assert.ThrowsExactly<InvalidOperationException>(() =>
                         new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
                             .FixedPoint(throwOnCycle: true)
                             .Optimize(start));
@@ -168,7 +168,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                 {
 
                     var counter = 0;
-                    Assert.ThrowsException<InvalidOperationException>(() =>
+                    Assert.ThrowsExactly<InvalidOperationException>(() =>
                         new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
                             .FixedPoint(throwOnCycle: true)
                             .Optimize(start));
@@ -200,7 +200,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
 
                 {
                     var counter = 0;
-                    Assert.ThrowsException<InvalidOperationException>(() =>
+                    Assert.ThrowsExactly<InvalidOperationException>(() =>
                         new MockOptimizer(_ => ++counter == 1 ? intermediate : (counter == 2 ? end : start))
                             .FixedPoint(throwOnCycle: true, maxIterations: 3)
                             .Optimize(start));

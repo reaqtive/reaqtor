@@ -30,21 +30,21 @@ namespace Tests
         public void BonsaiToExpressionSlimConverter_VisitConstant()
         {
             var deserializer = new TestBonsaiDeserializer(new SerializationState(BonsaiVersion.Default).ToJson());
-            Assert.ThrowsException<BonsaiParseException>(() => deserializer.Visit(Json.Expression.String("foo")));
+            Assert.ThrowsExactly<BonsaiParseException>(() => deserializer.Visit(Json.Expression.String("foo")));
         }
 
         [TestMethod]
         public void BonsaiToExpressionSlimConverter_VisitObject()
         {
             var deserializer = new TestBonsaiDeserializer(new SerializationState(BonsaiVersion.Default).ToJson());
-            Assert.ThrowsException<BonsaiParseException>(() => deserializer.Visit(Json.Expression.Object(new Dictionary<string, Json.Expression>())));
+            Assert.ThrowsExactly<BonsaiParseException>(() => deserializer.Visit(Json.Expression.Object(new Dictionary<string, Json.Expression>())));
         }
 
         [TestMethod]
         public void BonsaiToExpressionSlimConverter_Visit_EmptyArray()
         {
             var deserializer = new TestBonsaiDeserializer(new SerializationState(BonsaiVersion.Default).ToJson());
-            Assert.ThrowsException<BonsaiParseException>(() => deserializer.Visit(Json.Expression.Array([])));
+            Assert.ThrowsExactly<BonsaiParseException>(() => deserializer.Visit(Json.Expression.Array([])));
         }
 
         [TestMethod]
@@ -488,7 +488,7 @@ namespace Tests
                 var slim = slimifier.Visit(expr);
                 var json = serializer.Visit(slim);
                 var deserializer = (BonsaiToExpressionSlimConverter)deserializerCtor.Invoke([state.ToJson()]);
-                Assert.ThrowsException<BonsaiParseException>(() => deserializer.Visit(json));
+                Assert.ThrowsExactly<BonsaiParseException>(() => deserializer.Visit(json));
             }
         }
     }

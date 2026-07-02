@@ -39,8 +39,8 @@ namespace Tests
             //     count has been incremented to 1, so this is not an issue.
             //
 
-            Assert.ThrowsException<DivideByZeroException>(() => entry.AverageAccessTime);
-            Assert.ThrowsException<DivideByZeroException>(() => entry.SpeedupFactor);
+            Assert.ThrowsExactly<DivideByZeroException>(() => entry.AverageAccessTime);
+            Assert.ThrowsExactly<DivideByZeroException>(() => entry.SpeedupFactor);
 
             entry.HitCount++;
             Assert.AreEqual(0L, entry.AverageAccessTime.Ticks);
@@ -96,8 +96,8 @@ namespace Tests
                 //     count has been incremented to 1, so this is not an issue.
                 //
 
-                Assert.ThrowsException<DivideByZeroException>(() => entry.AverageAccessTime);
-                Assert.ThrowsException<DivideByZeroException>(() => entry.SpeedupFactor);
+                Assert.ThrowsExactly<DivideByZeroException>(() => entry.AverageAccessTime);
+                Assert.ThrowsExactly<DivideByZeroException>(() => entry.SpeedupFactor);
 
                 entry.HitCount++;
                 Assert.AreEqual(0L, entry.AverageAccessTime.Ticks);
@@ -138,8 +138,8 @@ namespace Tests
             //     count has been incremented to 1, so this is not an issue.
             //
 
-            Assert.ThrowsException<DivideByZeroException>(() => entry.AverageAccessTime);
-            Assert.ThrowsException<DivideByZeroException>(() => entry.SpeedupFactor);
+            Assert.ThrowsExactly<DivideByZeroException>(() => entry.AverageAccessTime);
+            Assert.ThrowsExactly<DivideByZeroException>(() => entry.SpeedupFactor);
 
             entry.HitCount++;
             Assert.AreEqual(0L, entry.AverageAccessTime.Ticks);

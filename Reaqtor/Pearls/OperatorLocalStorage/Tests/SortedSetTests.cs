@@ -1044,7 +1044,7 @@ namespace Tests
             // Assert the new space does not contain the sorted set.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSortedSet<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSortedSet<int>("bar"));
 
             //
             // Load the space from the store.
@@ -2035,7 +2035,7 @@ namespace Tests
             // Assert the sorted set is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSortedSet<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSortedSet<int>("bar"));
         });
 
         [TestMethod]
@@ -2100,7 +2100,7 @@ namespace Tests
             // Assert the sorted set is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSortedSet<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSortedSet<int>("bar"));
         });
 
         [TestMethod]
@@ -2165,7 +2165,7 @@ namespace Tests
             // Assert the sorted set is gone.
             //
 
-            Assert.ThrowsException<KeyNotFoundException>(() => s.Space.GetSortedSet<int>("bar"));
+            Assert.ThrowsExactly<KeyNotFoundException>(() => s.Space.GetSortedSet<int>("bar"));
         });
 
         // TODO: Add tests for Min, Max, and GetViewBetween.

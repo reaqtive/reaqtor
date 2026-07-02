@@ -12,8 +12,8 @@ namespace System.Linq.Expressions
         [TestMethod]
         public void Compile_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => LambdaExpressionExtensions.Compile(expression: null, CompilationOptions.None));
-            Assert.ThrowsException<ArgumentNullException>(() => LambdaExpressionExtensions.Compile<Action>(expression: null, CompilationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => LambdaExpressionExtensions.Compile(expression: null, CompilationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => LambdaExpressionExtensions.Compile<Action>(expression: null, CompilationOptions.None));
         }
 
         [TestMethod]

@@ -37,9 +37,9 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         [TestMethod]
         public void SlimInfoOf_NoReflectionInfo()
         {
-            Assert.ThrowsException<NotSupportedException>(() => SlimReflectionHelpers.InfoOf(Expression.Constant(42)));
-            Assert.ThrowsException<NotSupportedException>(() => SlimReflectionHelpers.InfoOf(Expression.Negate(Expression.Constant(42))));
-            Assert.ThrowsException<NotSupportedException>(() => SlimReflectionHelpers.InfoOf(Expression.Add(Expression.Constant(1), Expression.Constant(2))));
+            Assert.ThrowsExactly<NotSupportedException>(() => SlimReflectionHelpers.InfoOf(Expression.Constant(42)));
+            Assert.ThrowsExactly<NotSupportedException>(() => SlimReflectionHelpers.InfoOf(Expression.Negate(Expression.Constant(42))));
+            Assert.ThrowsExactly<NotSupportedException>(() => SlimReflectionHelpers.InfoOf(Expression.Add(Expression.Constant(1), Expression.Constant(2))));
         }
 
         [TestMethod]

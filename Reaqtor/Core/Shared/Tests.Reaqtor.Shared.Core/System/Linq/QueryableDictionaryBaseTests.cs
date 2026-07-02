@@ -36,7 +36,7 @@ namespace Tests.Reaqtor.Shared.Core.System.Linq
             var x = default(string);
             AssertExpression(
                 data,
-                qd => Assert.ThrowsException<KeyNotFoundException>(() => x = qd["bar"]),
+                qd => Assert.ThrowsExactly<KeyNotFoundException>(() => x = qd["bar"]),
                 qd => qd.SingleOrDefault(item => item.Key == "bar"));
         }
 

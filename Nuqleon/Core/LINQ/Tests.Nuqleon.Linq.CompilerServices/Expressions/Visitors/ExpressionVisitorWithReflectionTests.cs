@@ -31,8 +31,8 @@ namespace Tests.System.Linq.CompilerServices
         {
             public void Do()
             {
-                Assert.ThrowsException<ArgumentException>(() => base.MakeNewArray(ExpressionType.Add, typeof(int), expressions: null));
-                Assert.ThrowsException<ArgumentException>(() => base.MakeTypeBinary(ExpressionType.Add, expression: null, typeof(int)));
+                Assert.ThrowsExactly<ArgumentException>(() => base.MakeNewArray(ExpressionType.Add, typeof(int), expressions: null));
+                Assert.ThrowsExactly<ArgumentException>(() => base.MakeTypeBinary(ExpressionType.Add, expression: null, typeof(int)));
             }
         }
 

@@ -90,7 +90,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 var eta = new ExpressionEntityTypeAnonymizer();
 
-                Assert.ThrowsException<InvalidOperationException>(() => eta.Apply(e));
+                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(e));
             }
         }
 
@@ -278,7 +278,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 var eta = new ExpressionEntityTypeAnonymizer();
 
-                Assert.ThrowsException<InvalidOperationException>(() => eta.Apply(Expression.Constant(o)));
+                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(Expression.Constant(o)));
             }
         }
 
@@ -320,10 +320,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
             public void Test()
             {
-                Assert.ThrowsException<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(int[]))));
-                Assert.ThrowsException<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(long))));
-                Assert.ThrowsException<NotImplementedException>(() => ConvertConstant(1, new MyDataType(), new MyDataType()));
-                Assert.ThrowsException<NotSupportedException>(() => ConvertConstant(1, new InvalidDataType(), new InvalidDataType()));
+                Assert.ThrowsExactly<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(int[]))));
+                Assert.ThrowsExactly<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(long))));
+                Assert.ThrowsExactly<NotImplementedException>(() => ConvertConstant(1, new MyDataType(), new MyDataType()));
+                Assert.ThrowsExactly<NotSupportedException>(() => ConvertConstant(1, new InvalidDataType(), new InvalidDataType()));
             }
 
             private class MyDataType : DataType

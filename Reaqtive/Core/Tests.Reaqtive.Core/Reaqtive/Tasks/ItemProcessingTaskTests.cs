@@ -18,7 +18,7 @@ namespace Test.Reaqtive
         [TestMethod]
         public void ItemProcessingTask_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => new ItemProcessingTask(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => new ItemProcessingTask(null));
         }
 
         [TestMethod]

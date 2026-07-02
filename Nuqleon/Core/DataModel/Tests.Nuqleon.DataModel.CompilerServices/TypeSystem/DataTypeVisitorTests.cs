@@ -36,7 +36,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         public void DataTypeVisitor_InconsistentRewrite()
         {
             var v = new BrokenQuotationVisitor();
-            Assert.ThrowsException<InvalidOperationException>(() => v.Visit(DataType.FromType(typeof(Expression<Func<int>>))));
+            Assert.ThrowsExactly<InvalidOperationException>(() => v.Visit(DataType.FromType(typeof(Expression<Func<int>>))));
         }
 
         [TestMethod]
@@ -76,7 +76,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             var d = new MyDataType();
             var e = v.Visit(d);
 
-            Assert.ThrowsException<NotImplementedException>(() => _ = new DataTypeVisitor().Visit(d));
+            Assert.ThrowsExactly<NotImplementedException>(() => _ = new DataTypeVisitor().Visit(d));
 
             Assert.AreSame(d, e);
             Assert.AreEqual(d.ToString(), e.ToString());
@@ -88,19 +88,19 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
             var v = new IncompleteVisitor();
 
             var d1 = DataType.FromType(typeof(int[]));
-            Assert.ThrowsException<NotImplementedException>(() => v.Visit(d1));
+            Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d1));
 
             var d2 = DataType.FromType(typeof(bool[]));
             Assert.AreSame(d2, v.Visit(d2));
 
             var d3 = DataType.FromType(new { a = 1 }.GetType());
-            Assert.ThrowsException<NotImplementedException>(() => v.Visit(d3));
+            Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d3));
 
             var d4 = DataType.FromType(new { a = true }.GetType());
             Assert.AreSame(d4, v.Visit(d4));
 
             var d5 = new StructuralDataType(typeof(Foo), new[] { new DataProperty(typeof(Foo).GetField("Bar"), "Bar", DataType.FromType(typeof(int))) }.ToReadOnly(), StructuralDataTypeKinds.Entity);
-            Assert.ThrowsException<NotImplementedException>(() => v.Visit(d5));
+            Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d5));
         }
 
         private class Foo

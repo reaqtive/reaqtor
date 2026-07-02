@@ -200,9 +200,9 @@ namespace Test.Reaqtive
         {
             var s = new MultiSubject<int>();
 
-            Assert.ThrowsException<NotImplementedException>(() => s.CreateObserver());
-            Assert.ThrowsException<NotImplementedException>(() => s.Subscribe(Observer.Nop<int>()));
-            Assert.ThrowsException<NotImplementedException>(() => ((IObservable<int>)s).Subscribe(Observer.Nop<int>()));
+            Assert.ThrowsExactly<NotImplementedException>(() => s.CreateObserver());
+            Assert.ThrowsExactly<NotImplementedException>(() => s.Subscribe(Observer.Nop<int>()));
+            Assert.ThrowsExactly<NotImplementedException>(() => ((IObservable<int>)s).Subscribe(Observer.Nop<int>()));
 
             s.Dispose();
         }
@@ -212,7 +212,7 @@ namespace Test.Reaqtive
         {
             var s = new MultiSubject<int>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Subscribe(default));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Subscribe(default));
 
             s.Dispose();
         }
@@ -299,7 +299,7 @@ namespace Test.Reaqtive
             protected override void LoadStateCore(IOperatorStateReader reader, Version version)
             {
                 LoadStateVersionCalled++;
-                Assert.ThrowsException<NotSupportedException>(() => base.LoadStateCore(reader, version));
+                Assert.ThrowsExactly<NotSupportedException>(() => base.LoadStateCore(reader, version));
             }
 
             protected override void SaveStateCore(IOperatorStateWriter writer)
@@ -311,7 +311,7 @@ namespace Test.Reaqtive
             protected override void SaveStateCore(IOperatorStateWriter writer, Version version)
             {
                 SaveStateVersionCalled++;
-                Assert.ThrowsException<NotSupportedException>(() => base.SaveStateCore(writer, version));
+                Assert.ThrowsExactly<NotSupportedException>(() => base.SaveStateCore(writer, version));
             }
 
             public override void OnStateSaved()

@@ -30,8 +30,8 @@ namespace Tests
         [TestMethod]
         public void PooledMemoryStream_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => MemoryStreamPool.Create(4, -1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => MemoryStreamPool.Create(4, 16, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => MemoryStreamPool.Create(4, -1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => MemoryStreamPool.Create(4, 16, -1));
         }
 
         [TestMethod]
@@ -196,7 +196,7 @@ namespace Tests
         public void PooledMemoryStream_GetBufferAndFree_ArgumentChecking()
         {
             var obj = PooledMemoryStream.GetInstance();
-            Assert.ThrowsException<ArgumentNullException>(() => obj.GetBufferAndFree(processBuffer: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => obj.GetBufferAndFree(processBuffer: null));
         }
 
         [TestMethod]

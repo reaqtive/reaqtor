@@ -19,7 +19,7 @@ namespace Tests
         {
             var w = new FastHeapReferenceWalker();
 
-            Assert.ThrowsException<ArgumentNullException>(() => w.Walk(new object(), fence: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => w.Walk(new object(), fence: null));
         }
 
         [TestMethod]

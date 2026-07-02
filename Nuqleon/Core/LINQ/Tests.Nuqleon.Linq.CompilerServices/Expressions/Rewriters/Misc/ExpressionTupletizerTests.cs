@@ -265,9 +265,9 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionTupletizer_PackAndUnpack_Lambda_Errors()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => Unpack((Expression<Func<int, int>>)(x => x)));
-            Assert.ThrowsException<InvalidOperationException>(() => Unpack((Expression<Func<Tuple<int>, int, int>>)((t, x) => x)));
-            Assert.ThrowsException<InvalidOperationException>(() => Unpack((Expression<Func<object, object>>)(x => x), typeof(object)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Unpack((Expression<Func<int, int>>)(x => x)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Unpack((Expression<Func<Tuple<int>, int, int>>)((t, x) => x)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Unpack((Expression<Func<object, object>>)(x => x), typeof(object)));
         }
 
         [TestMethod]
@@ -303,10 +303,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionTupletizer_Unpack_Errors()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => Unpack(Expression.Constant(1)));
-            Assert.ThrowsException<InvalidOperationException>(() => Unpack(Expression.New(typeof(TupleBar))));
-            Assert.ThrowsException<InvalidOperationException>(() => Unpack(Expression.New(typeof(List<int>))));
-            Assert.ThrowsException<InvalidOperationException>(() => Unpack(((Expression<Func<Tuple<int, int, int, int, int, int, int, int>>>)(() => new Tuple<int, int, int, int, int, int, int, int>(1, 2, 3, 4, 5, 6, 7, 8))).Body));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Unpack(Expression.Constant(1)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Unpack(Expression.New(typeof(TupleBar))));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Unpack(Expression.New(typeof(List<int>))));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Unpack(((Expression<Func<Tuple<int, int, int, int, int, int, int, int>>>)(() => new Tuple<int, int, int, int, int, int, int, int>(1, 2, 3, 4, 5, 6, 7, 8))).Body));
         }
 
         [TestMethod]

@@ -476,7 +476,7 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(i2, ((ExpressionTree<InvocationExpression>)iu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2, a2));
         }
 
         [TestMethod]
@@ -527,9 +527,9 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(l2, ((ExpressionTree<ListInitExpression>)lu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0, a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0, a1, a2, a3, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0, a1, a2, a3, a2));
         }
 
         [TestMethod]
@@ -575,8 +575,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(m2, ((ExpressionTree<MethodCallExpression>)mu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2, a2));
 #pragma warning restore IDE0057
         }
 
@@ -620,8 +620,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(m2, ((ExpressionTree<MethodCallExpression>)mu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
         }
 
         [TestMethod]
@@ -664,8 +664,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(m2, ((ExpressionTree<MemberExpression>)mu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
         }
 
         [TestMethod]
@@ -701,7 +701,7 @@ namespace Tests.System.Linq.CompilerServices
 
             Assert.AreSame(et, mu);
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(et));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(et));
         }
 
         [TestMethod]
@@ -750,9 +750,9 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(m2, ((ExpressionTree<MemberInitExpression>)mu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0, a1));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a0, a1, a2, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a0, a1, a2, a2));
         }
 
         [TestMethod]
@@ -799,8 +799,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(n2, ((ExpressionTree<NewExpression>)nu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2, a3, a3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2, a3, a3));
         }
 
         [TestMethod]
@@ -869,8 +869,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(n2, ((ExpressionTree<NewArrayExpression>)nu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a2, a3, a3));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a2, a3, a3));
         }
 
         [TestMethod]
@@ -912,7 +912,7 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(nt, ((ExpressionTree<Expression<Func<int>>>)lu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(nb, Expression.Parameter(typeof(int)).ToExpressionTree()));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(nb, Expression.Parameter(typeof(int)).ToExpressionTree()));
         }
 
         [TestMethod]
@@ -934,8 +934,8 @@ namespace Tests.System.Linq.CompilerServices
             var eq = new ExpressionEqualityComparer();
             Assert.IsTrue(eq.Equals(nt, ((ExpressionTree<Expression<Func<int, int, int>>>)lu).Expression));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(nb));
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(nb, et.Children[1]));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(nb));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(nb, et.Children[1]));
         }
 
         [TestMethod]
@@ -1134,8 +1134,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(e2, eu.ElementInit));
             Assert.IsTrue(eq.Equals(e2, ev.ElementInit));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1198,8 +1198,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(e2, ((MemberAssignmentExpressionTree)eu).MemberAssignment));
             Assert.IsTrue(eq.Equals(e2, ((MemberAssignmentExpressionTree)ev).MemberAssignment));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1224,8 +1224,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(e2, eu.MemberAssignment));
             Assert.IsTrue(eq.Equals(e2, ev.MemberAssignment));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1290,8 +1290,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(m2, ((MemberMemberBindingExpressionTree)eu).MemberMemberBinding));
             Assert.IsTrue(eq.Equals(m2, ((MemberMemberBindingExpressionTree)ev).MemberMemberBinding));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1318,8 +1318,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(m2, eu.MemberMemberBinding));
             Assert.IsTrue(eq.Equals(m2, ev.MemberMemberBinding));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1384,8 +1384,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(l2, ((MemberListBindingExpressionTree)eu).MemberListBinding));
             Assert.IsTrue(eq.Equals(l2, ((MemberListBindingExpressionTree)ev).MemberListBinding));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]
@@ -1412,8 +1412,8 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(eq.Equals(l2, eu.MemberListBinding));
             Assert.IsTrue(eq.Equals(l2, ev.MemberListBinding));
 
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update());
-            Assert.ThrowsException<InvalidOperationException>(() => et.Update(a1, a1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update());
+            Assert.ThrowsExactly<InvalidOperationException>(() => et.Update(a1, a1));
         }
 
         [TestMethod]

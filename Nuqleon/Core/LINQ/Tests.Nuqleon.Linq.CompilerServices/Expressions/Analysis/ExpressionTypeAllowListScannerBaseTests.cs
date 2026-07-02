@@ -68,7 +68,7 @@ namespace Tests.System.Linq.CompilerServices
 #pragma warning restore IDE0004
             })
             {
-                Assert.ThrowsException<NotSupportedException>(() => aps.Visit(e));
+                Assert.ThrowsExactly<NotSupportedException>(() => aps.Visit(e));
             }
         }
 
@@ -101,7 +101,7 @@ namespace Tests.System.Linq.CompilerServices
 #pragma warning restore IDE0004
             })
             {
-                Assert.ThrowsException<NotSupportedException>(() => aps.Visit(e));
+                Assert.ThrowsExactly<NotSupportedException>(() => aps.Visit(e));
             }
         }
 
@@ -126,7 +126,7 @@ namespace Tests.System.Linq.CompilerServices
 #pragma warning restore IDE0004
             })
             {
-                Assert.ThrowsException<NotSupportedException>(() => cps.Visit(e));
+                Assert.ThrowsExactly<NotSupportedException>(() => cps.Visit(e));
             }
         }
 

@@ -85,7 +85,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 var eta = new ExpressionSlimEntityTypeRecordizer();
                 var converter = new ExpressionToExpressionSlimConverter(new DataModelTypeSpace());
 
-                Assert.ThrowsException<InvalidOperationException>(() => eta.Apply(converter.Visit(e)));
+                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(converter.Visit(e)));
             }
         }
 
@@ -310,7 +310,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 var eta = new ExpressionSlimEntityTypeRecordizer();
                 var converter = new ExpressionToExpressionSlimConverter(new DataModelTypeSpace());
 
-                Assert.ThrowsException<InvalidOperationException>(() => eta.Apply(converter.Visit(Expression.Constant(o))).ToExpression());
+                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(converter.Visit(Expression.Constant(o))).ToExpression());
             }
         }
 #endif

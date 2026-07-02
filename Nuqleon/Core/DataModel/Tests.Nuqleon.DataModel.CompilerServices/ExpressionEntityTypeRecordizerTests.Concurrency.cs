@@ -134,12 +134,12 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             // No shared state in fat recordizer
             var etr = new ExpressionEntityTypeRecordizer();
             var fatRecordized = etr.Apply(expected);
-            Assert.IsTrue(comparer.Equals(expected, fatRecordized), "(Fat) Expected: {0}\nActual: {1}", expected.ToCSharpString(allowCompilerGeneratedNames: true), fatRecordized.ToCSharpString(allowCompilerGeneratedNames: true));
+            Assert.IsTrue(comparer.Equals(expected, fatRecordized), $"(Fat) Expected: {expected.ToCSharpString(allowCompilerGeneratedNames: true)}\nActual: {fatRecordized.ToCSharpString(allowCompilerGeneratedNames: true)}");
 
             // No shared state in fat anonymization
             var eta = new ExpressionEntityTypeAnonymizer();
             var fatAnonymized = etr.Apply(expected);
-            Assert.IsTrue(comparer.Equals(expected, fatAnonymized), "(Fat) Expected: {0}\nActual: {1}", expected.ToCSharpString(allowCompilerGeneratedNames: true), fatAnonymized.ToCSharpString(allowCompilerGeneratedNames: true));
+            Assert.IsTrue(comparer.Equals(expected, fatAnonymized), $"(Fat) Expected: {expected.ToCSharpString(allowCompilerGeneratedNames: true)}\nActual: {fatAnonymized.ToCSharpString(allowCompilerGeneratedNames: true)}");
 
             // No shared state in slim recordizer
             using var stream = new MemoryStream();
@@ -149,7 +149,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             stream.Position = 0;
 
             var slim = helper.Deserialize<Expression>(stream);
-            Assert.IsTrue(comparer.Equals(expected, fatRecordized), "(Slim) Expected: {0}\nActual: {1}", expected.ToCSharpString(allowCompilerGeneratedNames: true), slim.ToCSharpString(allowCompilerGeneratedNames: true));
+            Assert.IsTrue(comparer.Equals(expected, fatRecordized), $"(Slim) Expected: {expected.ToCSharpString(allowCompilerGeneratedNames: true)}\nActual: {slim.ToCSharpString(allowCompilerGeneratedNames: true)}");
         }
     }
 }

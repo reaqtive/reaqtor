@@ -124,7 +124,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
 
             if (!expected.Equals(actual))
             {
-                Assert.IsTrue(DataTypeObjectEqualityComparer.Default.Equals(expected, actual), "Expected: {0}\nActual: {1}", expected, actual);
+                Assert.IsTrue(DataTypeObjectEqualityComparer.Default.Equals(expected, actual), $"Expected: {expected}\nActual: {actual}");
             }
         }
 
@@ -135,7 +135,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
             stream.Position = 0;
             var actual = _jsonSerializer.Deserialize<Expression>(stream);
             var comparer = new ExpressionEqualityComparer(() => new Comparator());
-            Assert.IsTrue(comparer.Equals(expected, actual), "Expected: {0}\nActual: {1}", expected, actual);
+            Assert.IsTrue(comparer.Equals(expected, actual), $"Expected: {expected}\nActual: {actual}");
         }
 
         private sealed class ObjectComparer : IEqualityComparer<object>

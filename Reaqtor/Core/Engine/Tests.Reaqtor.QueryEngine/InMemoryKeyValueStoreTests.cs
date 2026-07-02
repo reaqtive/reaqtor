@@ -65,9 +65,9 @@ namespace Tests.Reaqtor.QueryEngine
         [TestMethod]
         public void InMemoryKeyValueStore_Extensions()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => TransactedKeyValueTable.Clear<string, byte[]>(null));
-            Assert.ThrowsException<ArgumentNullException>(() => TransactedKeyValueTable.TryRemove<string, byte[]>(null, "aa"));
-            Assert.ThrowsException<ArgumentNullException>(() => TransactedKeyValueTable.TryGet<string, byte[]>(null, "aa", out _));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TransactedKeyValueTable.Clear<string, byte[]>(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TransactedKeyValueTable.TryRemove<string, byte[]>(null, "aa"));
+            Assert.ThrowsExactly<ArgumentNullException>(() => TransactedKeyValueTable.TryGet<string, byte[]>(null, "aa", out _));
 
             var kvs = new InMemoryKeyValueStore();
 
@@ -102,7 +102,7 @@ namespace Tests.Reaqtor.QueryEngine
                 CollectionAssert.AreEquivalent(value, new byte[] { 1 });
             }
 
-            Assert.ThrowsException<ArgumentNullException>(() => Transaction.CommitAsync(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Transaction.CommitAsync(null));
         }
 
         [TestMethod]
@@ -302,7 +302,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 tx1.CommitAsync().Wait();
 
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx2.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx2.CommitAsync()).Wait();
             }
         }
 
@@ -327,7 +327,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because contains was false before and true now
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             using (var tx1 = kvs.CreateTransaction())
@@ -342,7 +342,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because contains was true before and false now
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Get
@@ -368,7 +368,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because Get threw before and won't now (since the writer has added the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             using (var tx1 = kvs.CreateTransaction())
@@ -383,7 +383,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because Get returned the original version before but will return the updated version now
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             using (var tx1 = kvs.CreateTransaction())
@@ -398,7 +398,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because Get didn't throw before but will now (since the writer has added the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Update
@@ -424,7 +424,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because Updaete threw before and won't now (since the writer has added the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Add
@@ -450,7 +450,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because Add threw before and won't now (since the writer has removed the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Remove
@@ -476,7 +476,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because Remove threw before and won't now (since the writer has added the key)
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
 
             // Enumerate
@@ -494,7 +494,7 @@ namespace Tests.Reaqtor.QueryEngine
                 tx2.CommitAsync().Wait();
 
                 // Throw because iteration is not consistent with before
-                Assert.ThrowsExceptionAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
+                Assert.ThrowsExactlyAsync<WriteConflictException>(() => tx1.CommitAsync()).Wait();
             }
         }
     }

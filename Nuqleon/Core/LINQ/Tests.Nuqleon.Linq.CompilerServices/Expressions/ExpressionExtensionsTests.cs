@@ -257,11 +257,11 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ExpressionExtensions_Evaluate_Misc4()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => Expression.Constant(42).Evaluate<string>());
-            Assert.ThrowsException<InvalidOperationException>(() => Expression.Default(typeof(int)).Evaluate<string>());
+            Assert.ThrowsExactly<InvalidOperationException>(() => Expression.Constant(42).Evaluate<string>());
+            Assert.ThrowsExactly<InvalidOperationException>(() => Expression.Default(typeof(int)).Evaluate<string>());
 
-            Assert.ThrowsException<InvalidOperationException>(() => Expression.Constant("bar").Evaluate<int>());
-            Assert.ThrowsException<InvalidOperationException>(() => Expression.Default(typeof(string)).Evaluate<int>());
+            Assert.ThrowsExactly<InvalidOperationException>(() => Expression.Constant("bar").Evaluate<int>());
+            Assert.ThrowsExactly<InvalidOperationException>(() => Expression.Default(typeof(string)).Evaluate<int>());
         }
 
         [TestMethod]
@@ -336,10 +336,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ToCSharpString_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToCSharpString(expression: null));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToCSharp(expression: null));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToCSharpString(expression: null, allowCompilerGeneratedNames: false));
-            Assert.ThrowsException<ArgumentNullException>(() => ExpressionExtensions.ToCSharp(expression: null, allowCompilerGeneratedNames: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToCSharpString(expression: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToCSharp(expression: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToCSharpString(expression: null, allowCompilerGeneratedNames: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionExtensions.ToCSharp(expression: null, allowCompilerGeneratedNames: false));
         }
 
         [TestMethod]
@@ -893,12 +893,12 @@ namespace Tests.System.Linq.CompilerServices
                 { Expression.PreDecrementAssign(x), "--x" },
             });
 
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.Decrement(x)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.Increment(x)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.IsTrue(b)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.IsFalse(b)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.Throw(e)));
-            Assert.ThrowsException<NotSupportedException>(() => Print(Expression.Unbox(o, typeof(int))));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.Decrement(x)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.Increment(x)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.IsTrue(b)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.IsFalse(b)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.Throw(e)));
+            Assert.ThrowsExactly<NotSupportedException>(() => Print(Expression.Unbox(o, typeof(int))));
         }
 
         [TestMethod]
@@ -908,10 +908,10 @@ namespace Tests.System.Linq.CompilerServices
 
             var exp = Expression.New(rec);
 
-            Assert.ThrowsException<InvalidOperationException>(() => exp.ToCSharp());
-            Assert.ThrowsException<InvalidOperationException>(() => exp.ToCSharpString());
-            Assert.ThrowsException<InvalidOperationException>(() => exp.ToCSharp(allowCompilerGeneratedNames: false));
-            Assert.ThrowsException<InvalidOperationException>(() => exp.ToCSharpString(allowCompilerGeneratedNames: false));
+            Assert.ThrowsExactly<InvalidOperationException>(() => exp.ToCSharp());
+            Assert.ThrowsExactly<InvalidOperationException>(() => exp.ToCSharpString());
+            Assert.ThrowsExactly<InvalidOperationException>(() => exp.ToCSharp(allowCompilerGeneratedNames: false));
+            Assert.ThrowsExactly<InvalidOperationException>(() => exp.ToCSharpString(allowCompilerGeneratedNames: false));
 
             var cs1 = exp.ToCSharp(allowCompilerGeneratedNames: true);
             var cs2 = exp.ToCSharpString(allowCompilerGeneratedNames: true);

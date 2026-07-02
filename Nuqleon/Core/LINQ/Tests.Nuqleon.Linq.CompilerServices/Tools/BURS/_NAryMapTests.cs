@@ -32,14 +32,14 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(map.TryGetValue(new[] { 42 }, out string answer));
             Assert.AreEqual("Answer", answer);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[[]] = "foo");
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[42, 43] = "foo");
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[[]] = "foo");
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[42, 43] = "foo");
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[[]]);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[42, 43]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[[]]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[42, 43]);
 
             Assert.IsFalse(map.TryGetValue(new[] { 43 }, out _));
-            Assert.ThrowsException<KeyNotFoundException>(() => map[43]);
+            Assert.ThrowsExactly<KeyNotFoundException>(() => map[43]);
         }
 
         [TestMethod]
@@ -59,14 +59,14 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(map.TryGetValue(new[] { 19, 24 }, out string answer2));
             Assert.AreEqual("Answer 2", answer2);
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[19] = "foo");
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[19, 21, 2] = "foo");
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[19] = "foo");
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[19, 21, 2] = "foo");
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[19]);
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => map[19, 21, 2]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[19]);
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[19, 21, 2]);
 
             Assert.IsFalse(map.TryGetValue(new[] { 43 }, out _));
-            Assert.ThrowsException<KeyNotFoundException>(() => map[43]);
+            Assert.ThrowsExactly<KeyNotFoundException>(() => map[43]);
 
             Assert.IsTrue(map.TryGetValue(19, out NAryMapOrLeaf<int, string> partial));
             Assert.IsNotNull(partial.Map);

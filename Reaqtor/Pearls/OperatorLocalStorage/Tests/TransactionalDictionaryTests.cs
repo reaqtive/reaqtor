@@ -34,9 +34,9 @@ namespace Tests
             Assert.IsFalse(d.TryGetValue(1, out _));
             Assert.IsFalse(d.TryGetValue(2, out _));
 
-            Assert.ThrowsException<KeyNotFoundException>(() => _ = d[0]);
-            Assert.ThrowsException<KeyNotFoundException>(() => _ = d[1]);
-            Assert.ThrowsException<KeyNotFoundException>(() => _ = d[2]);
+            Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[0]);
+            Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[1]);
+            Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[2]);
 
             Assert.IsFalse(d.Any());
 
@@ -53,7 +53,7 @@ namespace Tests
                 { 42, 43 } // Add
             };
 
-            Assert.ThrowsException<InvalidOperationException>(() => d.Add(42, -1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => d.Add(42, -1));
 
             Assert.IsTrue(d.ContainsKey(42));
 
@@ -79,7 +79,7 @@ namespace Tests
 
             Assert.IsFalse(d.TryGetValue(42, out var _));
 
-            Assert.ThrowsException<KeyNotFoundException>(() => _ = d[42]);
+            Assert.ThrowsExactly<KeyNotFoundException>(() => _ = d[42]);
 
             Assert.IsFalse(d.Any());
         }
@@ -92,7 +92,7 @@ namespace Tests
                 [42] = 43 // indexer assignment
             };
 
-            Assert.ThrowsException<InvalidOperationException>(() => d.Add(42, -1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => d.Add(42, -1));
 
             Assert.IsTrue(d.ContainsKey(42));
 
@@ -114,7 +114,7 @@ namespace Tests
 
             d[42] = 43;
 
-            Assert.ThrowsException<InvalidOperationException>(() => d.Add(42, -1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => d.Add(42, -1));
 
             Assert.IsTrue(d.ContainsKey(42));
 

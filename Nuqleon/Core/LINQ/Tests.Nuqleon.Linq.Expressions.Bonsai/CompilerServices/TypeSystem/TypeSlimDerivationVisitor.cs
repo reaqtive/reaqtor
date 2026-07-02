@@ -1499,22 +1499,22 @@ namespace Tests.System.Linq.Expressions.Bonsai
     {
         public void Test()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeConditional(node: null, test: null, ifTrue: null, ifFalse: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeConstant(node: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeDefault(node: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeElementInit(node: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeIndex(node: null, @object: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeInvocation(node: null, expression: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeListInit(node: null, newExpression: null, initializers: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMember(node: null, expression: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMemberAssignment(node: null, expression: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMemberInit(node: null, newExpression: null, bindings: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMemberListBinding(node: null, initializers: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMemberMemberBinding(node: null, bindings: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeMethodCall(node: null, @object: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeNew(node: null, arguments: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeNewArray(node: null, expressions: null));
-            Assert.ThrowsException<InvalidOperationException>(() => base.MakeTypeBinary(node: null, expression: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeConditional(node: null, test: null, ifTrue: null, ifFalse: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeConstant(node: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeDefault(node: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeElementInit(node: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeIndex(node: null, @object: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeInvocation(node: null, expression: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeListInit(node: null, newExpression: null, initializers: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMember(node: null, expression: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMemberAssignment(node: null, expression: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMemberInit(node: null, newExpression: null, bindings: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMemberListBinding(node: null, initializers: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMemberMemberBinding(node: null, bindings: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeMethodCall(node: null, @object: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeNew(node: null, arguments: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeNewArray(node: null, expressions: null));
+            Assert.ThrowsExactly<InvalidOperationException>(() => base.MakeTypeBinary(node: null, expression: null));
         }
     }
 

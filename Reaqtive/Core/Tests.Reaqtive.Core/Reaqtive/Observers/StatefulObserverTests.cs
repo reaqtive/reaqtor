@@ -77,7 +77,7 @@ namespace Test.Reaqtive
             Assert.IsTrue(mo.Started);
             Assert.IsTrue(mo.StateChanged);
 
-            Assert.ThrowsException<ArgumentNullException>(() => mo.SaveState(null, mo.Version));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mo.SaveState(null, mo.Version));
 
             var writer = writerFactory.Create(mo);
             mo.SaveState(writer, mo.Version);
@@ -90,7 +90,7 @@ namespace Test.Reaqtive
 
             var reader = readerFactory.Create(mor);
 
-            Assert.ThrowsException<ArgumentNullException>(() => mor.LoadState(null, mor.Version));
+            Assert.ThrowsExactly<ArgumentNullException>(() => mor.LoadState(null, mor.Version));
 
             mor.LoadState(reader, mor.Version);
 
@@ -147,12 +147,12 @@ namespace Test.Reaqtive
             mo.Start();
 
             var writer = writerFactory.Create(mo);
-            Assert.ThrowsException<NotSupportedException>(() => mo.SaveState(writer, new Version(2, 0, 0, 0)));
+            Assert.ThrowsExactly<NotSupportedException>(() => mo.SaveState(writer, new Version(2, 0, 0, 0)));
 
             var mor = new MyObserver();
 
             var reader = readerFactory.Create(mor);
-            Assert.ThrowsException<NotSupportedException>(() => mor.LoadState(reader, new Version(2, 0, 0, 0)));
+            Assert.ThrowsExactly<NotSupportedException>(() => mor.LoadState(reader, new Version(2, 0, 0, 0)));
         }
 
         private sealed class MyObserver : StatefulObserver<int>

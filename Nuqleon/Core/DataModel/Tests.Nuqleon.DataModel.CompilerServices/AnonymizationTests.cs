@@ -183,7 +183,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
         private static void AssertStructurallyEqual(Expression x, Expression y)
         {
-            Assert.IsTrue(new ExpressionComparator().Equals(x, y), "Expected: {0}{1}Actual: {2}", x.ToCSharpString(allowCompilerGeneratedNames: true), Environment.NewLine, y.ToCSharpString(allowCompilerGeneratedNames: true));
+            Assert.IsTrue(new ExpressionComparator().Equals(x, y), $"Expected: {x.ToCSharpString(allowCompilerGeneratedNames: true)}{Environment.NewLine}Actual: {y.ToCSharpString(allowCompilerGeneratedNames: true)}");
         }
 
         private class ExpressionComparator : ExpressionEqualityComparator
@@ -641,14 +641,14 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             private void AssertAnonymized(Type type, Type[] allow, Type[] disallow)
             {
                 var dataType = DataType.FromType(type);
-                var checker = new AnonymizationChecker(allow, disallow, st => Assert.IsTrue(IsAnonymized(st), "Type '{0}' is not anonymized.", st));
+                var checker = new AnonymizationChecker(allow, disallow, st => Assert.IsTrue(IsAnonymized(st), $"Type '{st}' is not anonymized."));
                 try
                 {
                     checker.Visit(dataType);
                 }
                 catch (CheckFailedException ex)
                 {
-                    Assert.Fail("Check failed for type '{0}' with message '{1}'.", ex.Type, ex.Message);
+                    Assert.Fail($"Check failed for type '{ex.Type}' with message '{ex.Message}'.");
                 }
             }
         }

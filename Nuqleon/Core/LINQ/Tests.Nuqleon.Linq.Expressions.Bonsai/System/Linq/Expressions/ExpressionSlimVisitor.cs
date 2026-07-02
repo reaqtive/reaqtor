@@ -40,7 +40,7 @@ namespace System.Linq.Expressions
             var slimifier = new ExpressionToExpressionSlimConverter();
             var expression = Expression.Constant(0);
             var slim = slimifier.Visit(expression) as ConstantExpressionSlim;
-            Assert.ThrowsException<InvalidOperationException>(() => visitor.VisitAndConvert<ConstantExpressionSlim>(slim));
+            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.VisitAndConvert<ConstantExpressionSlim>(slim));
         }
 
         private sealed class A : ExpressionSlimVisitor
@@ -851,7 +851,7 @@ namespace System.Linq.Expressions
         {
             var v = new SimpleVisitor();
 
-            Assert.ThrowsException<NotSupportedException>(() => v.Visit(new FakeNode()));
+            Assert.ThrowsExactly<NotSupportedException>(() => v.Visit(new FakeNode()));
         }
 
         private sealed class SimpleVisitor : ExpressionSlimVisitor<ExpressionType>
@@ -913,37 +913,37 @@ namespace System.Linq.Expressions
         {
             public void Run()
             {
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitBinary(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitBlock(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitCatchBlock(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitConditional(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitConstant(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitDefault(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitElementInit(node: null));
-                Assert.ThrowsException<NotImplementedException>(() => base.VisitExtension(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitGoto(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitIndex(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitInvocation(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitLabel(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitLabelTarget(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitLambda(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitListInit(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitLoop(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMember(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberAssignment(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberBinding(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberInit(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberListBinding(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMemberMemberBinding(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitMethodCall(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitNew(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitNewArray(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitParameter(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitSwitch(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitSwitchCase(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitTry(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitTypeBinary(node: null));
-                Assert.ThrowsException<ArgumentNullException>(() => base.VisitUnary(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitBinary(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitBlock(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitCatchBlock(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitConditional(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitConstant(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitDefault(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitElementInit(node: null));
+                Assert.ThrowsExactly<NotImplementedException>(() => base.VisitExtension(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitGoto(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitIndex(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitInvocation(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLabel(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLabelTarget(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLambda(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitListInit(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitLoop(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMember(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberAssignment(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberBinding(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberInit(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberListBinding(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMemberMemberBinding(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitMethodCall(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitNew(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitNewArray(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitParameter(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitSwitch(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitSwitchCase(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitTry(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitTypeBinary(node: null));
+                Assert.ThrowsExactly<ArgumentNullException>(() => base.VisitUnary(node: null));
             }
 
             protected override int MakeBinary(BinaryExpressionSlim node, int left, int conversion, int right) => throw new NotImplementedException();

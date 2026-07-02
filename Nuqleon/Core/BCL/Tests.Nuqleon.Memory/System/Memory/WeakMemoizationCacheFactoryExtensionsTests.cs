@@ -22,10 +22,10 @@ namespace Tests
         [TestMethod]
         public void WeakMemoizationCacheFactoryExtensions_WithThreadLocal_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactoryExtensions.WithThreadLocal(factory: null));
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactoryExtensions.WithThreadLocal(WeakMemoizationCacheFactory.Unbounded).Create(default(Func<string, string>), MemoizationOptions.None));
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactoryExtensions.WithThreadLocal(factory: null, exposeThreadLocalView: false));
-            Assert.ThrowsException<ArgumentNullException>(() => WeakMemoizationCacheFactoryExtensions.WithThreadLocal(WeakMemoizationCacheFactory.Unbounded, false).Create(default(Func<string, string>), MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactoryExtensions.WithThreadLocal(factory: null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactoryExtensions.WithThreadLocal(WeakMemoizationCacheFactory.Unbounded).Create(default(Func<string, string>), MemoizationOptions.None));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactoryExtensions.WithThreadLocal(factory: null, exposeThreadLocalView: false));
+            Assert.ThrowsExactly<ArgumentNullException>(() => WeakMemoizationCacheFactoryExtensions.WithThreadLocal(WeakMemoizationCacheFactory.Unbounded, false).Create(default(Func<string, string>), MemoizationOptions.None));
         }
 
         [TestMethod]

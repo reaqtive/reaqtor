@@ -30,10 +30,10 @@ namespace Test.Reaqtive
             var cs = new StaticCompositeSubscription();
 
             var s1 = new MySub();
-            Assert.ThrowsException<InvalidOperationException>(() => cs.Add(s1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => cs.Add(s1));
 
             var cs2 = new StaticCompositeSubscription(s1);
-            Assert.ThrowsException<InvalidOperationException>(() => cs.Remove(s1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => cs.Remove(s1));
         }
 
         [TestMethod]

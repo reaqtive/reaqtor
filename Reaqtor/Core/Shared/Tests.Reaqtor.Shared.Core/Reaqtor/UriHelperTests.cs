@@ -16,7 +16,7 @@ namespace Tests.Reaqtor.Shared.Core.Reaqtor
         [TestMethod]
         public void UriHelper_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => UriHelper.ToCanonicalString(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => UriHelper.ToCanonicalString(null));
         }
 
         [TestMethod]

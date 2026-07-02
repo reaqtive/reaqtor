@@ -108,7 +108,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var srcs = source.Synchronize(engine.Scheduler);
 
                 srcs.OnNext(0);
-                AssertResult(GetObserver<int>("result"), 1, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 1, static (x, y) => Assert.AreEqual(x, y));
 
                 // Take checkpoint with stream.
                 Checkpoint(engine, checkpointWithEntities);
@@ -134,7 +134,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var srcs = source.Synchronize(engine.Scheduler);
                 srcs.OnNext(1);
-                AssertResult(GetObserver<int>("result"), 2, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 2, static (x, y) => Assert.AreEqual(x, y));
 
                 reactive.GetObservable<int, int>(observableUri)(1)
                     .Subscribe(
@@ -164,7 +164,7 @@ namespace Tests.Reaqtor.QueryEngine
                 }
 
                 Assert.IsTrue(noStream);
-                AssertResult(GetObserver<int>("result"), 2, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 2, static (x, y) => Assert.AreEqual(x, y));
 
                 var noDefinitions = false;
                 try
@@ -1303,7 +1303,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var srcs = source.Synchronize(engine.Scheduler);
                 srcs.OnNext(0);
-                AssertResult(GetObserver<int>("result"), 1, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 1, static (x, y) => Assert.AreEqual(x, y));
 
                 Checkpoint(engine, checkpoint, CheckpointKind.Differential);
 
@@ -1320,7 +1320,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var source = reactive.GetStream<int, int>(sourceUri);
                 var srcs = source.Synchronize(engine.Scheduler);
                 srcs.OnNext(1);
-                AssertResult(GetObserver<int>("result"), 2, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 2, static (x, y) => Assert.AreEqual(x, y));
 
                 reactive.GetObservable<int, int>(observableUri)(1)
                     .Subscribe(
@@ -1430,7 +1430,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Assert.IsNotNull(res);
 
                 srcs.OnNext(0);
-                AssertResult(GetObserver<int>("result"), 1, Assert.AreEqual);
+                AssertResult(GetObserver<int>("result"), 1, static (x, y) => Assert.AreEqual(x, y));
                 RemoveQueryEngine(engine);
             }
         }

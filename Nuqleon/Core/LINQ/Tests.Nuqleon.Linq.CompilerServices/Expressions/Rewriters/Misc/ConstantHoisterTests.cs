@@ -293,8 +293,8 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ConstantHoister_Custom_Bad()
         {
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new CustomBadHoister1().Hoist(Expression.Constant(1)));
-            Assert.ThrowsException<InvalidOperationException>(() => _ = new CustomBadHoister2().Hoist(Expression.Constant(1)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new CustomBadHoister1().Hoist(Expression.Constant(1)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => _ = new CustomBadHoister2().Hoist(Expression.Constant(1)));
         }
 
         private static ExpressionWithEnvironment HoistAndEval(Expression e)

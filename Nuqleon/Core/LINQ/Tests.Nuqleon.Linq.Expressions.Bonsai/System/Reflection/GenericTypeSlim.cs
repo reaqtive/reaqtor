@@ -130,8 +130,8 @@ namespace Tests.System.Reflection
                 Assert.AreSame(args[i], genArgs[i]);
             }
 
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => type.GetGenericArgument(-1));
-            Assert.ThrowsException<ArgumentOutOfRangeException>(() => type.GetGenericArgument(arity));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => type.GetGenericArgument(-1));
+            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => type.GetGenericArgument(arity));
         }
     }
 }

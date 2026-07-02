@@ -298,13 +298,13 @@ namespace Tests.System.Reflection
 
             var fts1 = new FakeTypeSlim();
             var fts2 = new FakeTypeSlim();
-            Assert.ThrowsException<NotImplementedException>(() => comp.GetHashCode(fts1));
-            Assert.ThrowsException<NotImplementedException>(() => comp.Equals(fts1, fts2));
+            Assert.ThrowsExactly<NotImplementedException>(() => comp.GetHashCode(fts1));
+            Assert.ThrowsExactly<NotImplementedException>(() => comp.Equals(fts1, fts2));
 
             var fsts1 = new FakeStructuralTypeSlim();
             var fsts2 = new FakeStructuralTypeSlim();
-            Assert.ThrowsException<NotSupportedException>(() => comp.GetHashCode(fsts1));
-            Assert.ThrowsException<NotSupportedException>(() => comp.Equals(fsts1, fsts2));
+            Assert.ThrowsExactly<NotSupportedException>(() => comp.GetHashCode(fsts1));
+            Assert.ThrowsExactly<NotSupportedException>(() => comp.Equals(fsts1, fsts2));
         }
 
         [TestMethod]

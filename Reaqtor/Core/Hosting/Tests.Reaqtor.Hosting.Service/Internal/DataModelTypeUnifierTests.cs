@@ -24,7 +24,7 @@ namespace Tests.Microsoft.Hosting.Shared.Serialization
         public void DataModelTypeUnifier_UnifyFails_ThrowsInvalidOperation()
         {
             var record = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type> { { "zoo", typeof(int) } }, valueEquality: true);
-            Assert.ThrowsException<InvalidOperationException>(() => Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record), typeof(IReactiveQbservable<Foo>)).ToArray());
+            Assert.ThrowsExactly<InvalidOperationException>(() => Unify(typeof(IAsyncReactiveQbservable<>).MakeGenericType(record), typeof(IReactiveQbservable<Foo>)).ToArray());
         }
 
         [TestMethod]

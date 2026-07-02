@@ -31,18 +31,18 @@ namespace Tests
             var objs2 = new object[] { anon2, new Tuple<string, int>(name, 21), arr2 };
             var objs3 = new object[] { new object() };
 
-            Assert.ThrowsException<ArgumentNullException>(() => a.AddPartition(null, objs1));
-            Assert.ThrowsException<ArgumentNullException>(() => a.AddPartition("foo", null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => a.AddPartition(null, objs1));
+            Assert.ThrowsExactly<ArgumentNullException>(() => a.AddPartition("foo", null));
 
             var p1 = a.AddPartition("Part1", objs1);
             var p2 = a.AddPartition("Part2", objs2);
             var p3 = a.AddPartition("Part3", objs3);
 
-            Assert.ThrowsException<ArgumentNullException>(() => a.RemovePartition(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => a.RemovePartition(null));
 
             a.RemovePartition("Part3");
 
-            Assert.ThrowsException<ArgumentNullException>(() => a.Analyze(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => a.Analyze(null));
 
             var res = a.Analyze(new HeapAnalysisOptions { ComputeSharedHeap = true, DegreeOfParallelism = 0 });
 

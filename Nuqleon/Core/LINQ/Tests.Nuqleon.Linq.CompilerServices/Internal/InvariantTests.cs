@@ -18,7 +18,7 @@ namespace Tests.System.Linq.CompilerServices
             Invariant.Assert(true, "Okay!");
 
 #if !DEBUG
-            Assert.ThrowsException<InvalidOperationException>(() => Invariant.Assert(false, "Oops!"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => Invariant.Assert(false, "Oops!"));
 #endif
         }
 

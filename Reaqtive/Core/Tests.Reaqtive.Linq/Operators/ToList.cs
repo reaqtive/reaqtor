@@ -19,7 +19,7 @@ namespace Test.Reaqtive.Operators
         [TestMethod]
         public void ToList_ArgumentChecking()
         {
-            Assert.ThrowsException<ArgumentNullException>(() => Subscribable.ToList<int>(null));
+            Assert.ThrowsExactly<ArgumentNullException>(() => Subscribable.ToList<int>(null));
         }
 
         [TestMethod]

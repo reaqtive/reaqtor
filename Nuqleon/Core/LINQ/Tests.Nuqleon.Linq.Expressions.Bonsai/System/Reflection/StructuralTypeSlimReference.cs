@@ -34,7 +34,7 @@ namespace Tests.System.Reflection
             var t = StructuralTypeSlimReference.Create(hasValueEqualitySemantics: true, StructuralTypeSlimKind.Record);
             t.Freeze();
             var p = t.GetProperty("Foo", propertyType: null, EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: true);
-            Assert.ThrowsException<InvalidOperationException>(() => t.AddProperty(p));
+            Assert.ThrowsExactly<InvalidOperationException>(() => t.AddProperty(p));
         }
     }
 }

@@ -47,10 +47,10 @@ namespace Tests.Reaqtor.QueryEngine
             var registry = CreateRegistry();
 
             // Entity does not exist
-            Assert.ThrowsException<ArgumentException>(() => registry.GetSubscription(new Uri(Keys[0])));
+            Assert.ThrowsExactly<ArgumentException>(() => registry.GetSubscription(new Uri(Keys[0])));
 
             // Entity is not initialized
-            Assert.ThrowsException<ArgumentException>(() => registry.GetSubscription(new Uri(Keys[5])));
+            Assert.ThrowsExactly<ArgumentException>(() => registry.GetSubscription(new Uri(Keys[5])));
 
             // Entity exists
             var sub = registry.GetSubscription(new Uri(Keys[4]));
@@ -63,10 +63,10 @@ namespace Tests.Reaqtor.QueryEngine
             var registry = CreateRegistry();
 
             // Entity does not exist
-            Assert.ThrowsException<ArgumentException>(() => registry.GetSubject<int, int>(new Uri(Keys[1])));
+            Assert.ThrowsExactly<ArgumentException>(() => registry.GetSubject<int, int>(new Uri(Keys[1])));
 
             // Entity is not initialized
-            Assert.ThrowsException<ArgumentException>(() => registry.GetSubject<int, int>(new Uri(Keys[7])));
+            Assert.ThrowsExactly<ArgumentException>(() => registry.GetSubject<int, int>(new Uri(Keys[7])));
 
             // Entity exists, casted to IMultiSubject<,>
             var sub = registry.GetSubject<int, int>(new Uri(Keys[0]));

@@ -95,7 +95,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 var eta = new ExpressionEntityTypeRecordizer();
 
-                Assert.ThrowsException<InvalidOperationException>(() => eta.Apply(e));
+                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(e));
             }
         }
 
@@ -345,7 +345,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             {
                 var eta = new ExpressionEntityTypeRecordizer();
 
-                Assert.ThrowsException<InvalidOperationException>(() => eta.Apply(Expression.Constant(o)));
+                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(Expression.Constant(o)));
             }
         }
 

@@ -33,7 +33,7 @@ namespace Tests
             trie.Add("qux", "@qux");
             trie.Add("foobar", "@foobar");
 
-            Assert.ThrowsException<InvalidOperationException>(() => trie.Add("foo", "@XXX"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => trie.Add("foo", "@XXX"));
 
             Assert.AreEqual(3, trie.Root.Children.Count);
             Assert.AreEqual(1, trie.Root.Children['b'].Children.Count);
@@ -258,7 +258,7 @@ namespace Tests
                     var i = 0;
 
                     var res = default(int);
-                    Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => trie.Eval(str, str.Length, i, ref i, out res));
+                    Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => trie.Eval(str, str.Length, i, ref i, out res));
                 }
             }
 
@@ -272,7 +272,7 @@ namespace Tests
                     var reader = new Reader(str);
 
                     var res = default(int);
-                    Assert.ThrowsException<global::Nuqleon.Json.Parser.ParseException>(() => trie.Eval(reader, out res));
+                    Assert.ThrowsExactly<global::Nuqleon.Json.Parser.ParseException>(() => trie.Eval(reader, out res));
                 }
             }
 #endif

@@ -49,14 +49,13 @@ namespace System.Reflection
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void Unify_AlreadyMapped()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var intSlim = typeToSlim.Visit(typeof(int));
             unifier.Unify(typeof(int), intSlim);
-            unifier.Unify(typeof(double), intSlim);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(double), intSlim));
         }
 
         [TestMethod]
@@ -94,7 +93,7 @@ namespace System.Reflection
         {
             var unifier = new TypeUnifier();
             var ts = new FakeType();
-            Assert.ThrowsException<NotSupportedException>(() => unifier.Unify(typeof(int), ts));
+            Assert.ThrowsExactly<NotSupportedException>(() => unifier.Unify(typeof(int), ts));
         }
 
         private sealed class FakeType : TypeSlim
@@ -126,21 +125,19 @@ namespace System.Reflection
         #region Fail
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifySimple_DifferentTypeName_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var doubleSlim = typeToSlim.Visit(typeof(double));
-            unifier.Unify(typeof(int), doubleSlim);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(int), doubleSlim));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifySimple_DifferentAssemblyName_Fail()
         {
             var unifier = new TypeUnifier();
-            unifier.Unify(typeof(int), TypeSlim.Simple(new AssemblySlim("Foo"), "System.Int32"));
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(int), TypeSlim.Simple(new AssemblySlim("Foo"), "System.Int32")));
         }
 
         #endregion
@@ -167,13 +164,12 @@ namespace System.Reflection
         #region Fail
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyArray_DifferentElementType_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var doubleArraySlim = typeToSlim.Visit(typeof(double[]));
-            unifier.Unify(typeof(int[]), doubleArraySlim);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(int[]), doubleArraySlim));
         }
 
         [TestMethod]
@@ -186,33 +182,30 @@ namespace System.Reflection
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyArray_DifferentRank_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var intArraySlim = typeToSlim.Visit(typeof(int[]));
-            unifier.Unify(typeof(int[,]), intArraySlim);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(int[,]), intArraySlim));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyArray_DifferentRankMultidimensionalSlim_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var intArraySlim = typeToSlim.Visit(typeof(int[,]));
-            unifier.Unify(typeof(int[]), intArraySlim);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(int[]), intArraySlim));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyArray_WithNonArrayClrType_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var intArraySlim = typeToSlim.Visit(typeof(int[]));
-            unifier.Unify(typeof(int), intArraySlim);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(int), intArraySlim));
         }
 
         #endregion
@@ -256,7 +249,6 @@ namespace System.Reflection
         #region Fail
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyStructural_DifferentPropertyTypes_Fail()
         {
             var unifier = new TypeUnifier();
@@ -282,11 +274,10 @@ namespace System.Reflection
             var structuralType2 = typeBuilder2.CreateType();
             var slimStructuralType = typeToSlim.Visit(structuralType2);
 
-            unifier.Unify(structuralType1, slimStructuralType);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(structuralType1, slimStructuralType));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyStructural_MissingProperty_Fail()
         {
             var unifier = new TypeUnifier();
@@ -312,7 +303,7 @@ namespace System.Reflection
             var structuralType2 = typeBuilder2.CreateType();
             var slimStructuralType = typeToSlim.Visit(structuralType2);
 
-            unifier.Unify(structuralType1, slimStructuralType);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(structuralType1, slimStructuralType));
         }
 
         #endregion
@@ -340,14 +331,13 @@ namespace System.Reflection
         #region Fail
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyGenericDefinition_WithNonGenericDefClrType_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var definition = typeof(List<>);
             var slimDefinition = typeToSlim.Visit(definition);
-            unifier.Unify(typeof(int), slimDefinition);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(int), slimDefinition));
         }
 
         #endregion
@@ -375,36 +365,33 @@ namespace System.Reflection
         #region Fail
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyGeneric_WithNonGenericClrType_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var generic = typeof(List<int>);
             var slimGeneric = typeToSlim.Visit(generic);
-            unifier.Unify(typeof(int), slimGeneric);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(int), slimGeneric));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyGeneric_WithGenericDefClrType_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var generic = typeof(List<int>);
             var slimGeneric = typeToSlim.Visit(generic);
-            unifier.Unify(typeof(List<>), slimGeneric);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(List<>), slimGeneric));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyGeneric_DifferentDefinition_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var generic = typeof(List<int>);
             var slimGeneric = typeToSlim.Visit(generic);
-            unifier.Unify(typeof(Nullable<int>), slimGeneric);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(Nullable<int>), slimGeneric));
         }
 
         [TestMethod]
@@ -419,24 +406,22 @@ namespace System.Reflection
 
 
         [TestMethod]
-        [ExpectedException(typeof(InvalidOperationException))]
         public void UnifyGeneric_DifferentArguments_Fail()
         {
             var unifier = new TypeUnifier();
             var typeToSlim = new TypeToTypeSlimConverter();
             var generic = typeof(List<int>);
             var slimGeneric = typeToSlim.Visit(generic);
-            unifier.Unify(typeof(List<double>), slimGeneric);
+            Assert.ThrowsExactly<InvalidOperationException>(() => unifier.Unify(typeof(List<double>), slimGeneric));
         }
 
         [TestMethod]
-        [ExpectedException(typeof(NotSupportedException))]
         public void UnifyGenericParameter_Fail()
         {
             var unifier = new TypeUnifier();
             var openGenericParameterType = typeof(List<>).GetGenericArguments()[0];
             var genericParameterTypeSlim = TypeSlim.GenericParameter("T");
-            unifier.Unify(openGenericParameterType, genericParameterTypeSlim);
+            Assert.ThrowsExactly<NotSupportedException>(() => unifier.Unify(openGenericParameterType, genericParameterTypeSlim));
         }
 
         #endregion

@@ -208,7 +208,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var burs = new BottomUpRewriter<NumTree, Num, NumTree, NumWildcards>();
 
-            Assert.ThrowsException<InvalidOperationException>(() => burs.Rules.Add((a, b, c) => new BinaryNumTree(NumKind.Add, a, b), (a, b, c) => a, 1));
+            Assert.ThrowsExactly<InvalidOperationException>(() => burs.Rules.Add((a, b, c) => new BinaryNumTree(NumKind.Add, a, b), (a, b, c) => a, 1));
         }
 
         private static BottomUpRewriter<NumTree, Num, NumTree, NumWildcards> GetNumOptimizer()

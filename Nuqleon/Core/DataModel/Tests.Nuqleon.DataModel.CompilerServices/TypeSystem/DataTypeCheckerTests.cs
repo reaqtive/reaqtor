@@ -184,13 +184,13 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
                     Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
                 }
 
-                Assert.ThrowsException<AggregateException>(() => DataType.Check(t));
-                Assert.ThrowsException<AggregateException>(() => DataType.Check(t, allowCycles: false));
-                Assert.ThrowsException<AggregateException>(() => DataType.Check(t, allowCycles: true));
+                Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t));
+                Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t, allowCycles: false));
+                Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t, allowCycles: true));
 
-                Assert.ThrowsException<NotSupportedException>(() => DataType.FromType(t));
-                Assert.ThrowsException<NotSupportedException>(() => DataType.FromType(t, allowCycles: false));
-                Assert.ThrowsException<NotSupportedException>(() => DataType.FromType(t, allowCycles: true));
+                Assert.ThrowsExactly<NotSupportedException>(() => DataType.FromType(t));
+                Assert.ThrowsExactly<NotSupportedException>(() => DataType.FromType(t, allowCycles: false));
+                Assert.ThrowsExactly<NotSupportedException>(() => DataType.FromType(t, allowCycles: true));
 
                 Assert.IsFalse(DataType.TryFromType(t, out _));
                 Assert.IsFalse(DataType.TryFromType(t, allowCycles: false, out _));
@@ -233,13 +233,13 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
                     Assert.AreNotEqual(0, err.Count, "Type check failed for: " + t.Name);
                 }
 
-                Assert.ThrowsException<AggregateException>(() => DataType.Check(t));
-                Assert.ThrowsException<AggregateException>(() => DataType.Check(t, allowCycles: false));
-                Assert.ThrowsException<AggregateException>(() => DataType.Check(t, allowCycles: true));
+                Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t));
+                Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t, allowCycles: false));
+                Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t, allowCycles: true));
 
-                Assert.ThrowsException<InvalidOperationException>(() => DataType.FromType(t));
-                Assert.ThrowsException<InvalidOperationException>(() => DataType.FromType(t, allowCycles: false));
-                Assert.ThrowsException<InvalidOperationException>(() => DataType.FromType(t, allowCycles: true));
+                Assert.ThrowsExactly<InvalidOperationException>(() => DataType.FromType(t));
+                Assert.ThrowsExactly<InvalidOperationException>(() => DataType.FromType(t, allowCycles: false));
+                Assert.ThrowsExactly<InvalidOperationException>(() => DataType.FromType(t, allowCycles: true));
 
                 Assert.IsFalse(DataType.TryFromType(t, out _));
                 Assert.IsFalse(DataType.TryFromType(t, allowCycles: false, out _));
@@ -295,11 +295,11 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
                 typeof(Tuple<Cycle3>),
             })
             {
-                Assert.ThrowsException<InvalidOperationException>(() => DataType.FromType(t));
-                Assert.ThrowsException<InvalidOperationException>(() => DataType.FromType(t, allowCycles: false));
+                Assert.ThrowsExactly<InvalidOperationException>(() => DataType.FromType(t));
+                Assert.ThrowsExactly<InvalidOperationException>(() => DataType.FromType(t, allowCycles: false));
 
-                Assert.ThrowsException<AggregateException>(() => DataType.Check(t));
-                Assert.ThrowsException<AggregateException>(() => DataType.Check(t, allowCycles: false));
+                Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t));
+                Assert.ThrowsExactly<AggregateException>(() => DataType.Check(t, allowCycles: false));
 
                 {
                     Assert.IsFalse(DataType.TryCheck(t, out var err));

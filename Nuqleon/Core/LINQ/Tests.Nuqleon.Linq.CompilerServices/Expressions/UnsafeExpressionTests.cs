@@ -453,8 +453,8 @@ namespace Tests.System.Linq.CompilerServices
             AssertExpr(f => f.MakeBinary(ExpressionType.AndAlso, b, c));
             AssertExpr(f => f.MakeBinary(ExpressionType.OrElse, b, c));
 
-            Assert.ThrowsException<ArgumentException>(() => ExpressionFactory.Instance.MakeBinary(ExpressionType.Lambda, x, y));
-            Assert.ThrowsException<ArgumentException>(() => ExpressionUnsafeFactory.Instance.MakeBinary(ExpressionType.Lambda, x, y));
+            Assert.ThrowsExactly<ArgumentException>(() => ExpressionFactory.Instance.MakeBinary(ExpressionType.Lambda, x, y));
+            Assert.ThrowsExactly<ArgumentException>(() => ExpressionUnsafeFactory.Instance.MakeBinary(ExpressionType.Lambda, x, y));
         }
 
         [TestMethod]
@@ -1793,8 +1793,8 @@ namespace Tests.System.Linq.CompilerServices
 
             AssertExpr(f => f.MakeUnary(ExpressionType.Throw, ex, TypeOf(typeof(Exception))));
 
-            Assert.ThrowsException<ArgumentException>(() => ExpressionFactory.Instance.MakeUnary(ExpressionType.Lambda, x, TypeOf(typeof(int))));
-            Assert.ThrowsException<ArgumentException>(() => ExpressionUnsafeFactory.Instance.MakeUnary(ExpressionType.Lambda, x, TypeOf(typeof(int))));
+            Assert.ThrowsExactly<ArgumentException>(() => ExpressionFactory.Instance.MakeUnary(ExpressionType.Lambda, x, TypeOf(typeof(int))));
+            Assert.ThrowsExactly<ArgumentException>(() => ExpressionUnsafeFactory.Instance.MakeUnary(ExpressionType.Lambda, x, TypeOf(typeof(int))));
         }
 
         [TestMethod]
