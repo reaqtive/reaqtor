@@ -314,12 +314,14 @@ namespace System.Memory
         /// </summary>
         partial void OnAllocating();
 
+#if ENABLE_LOGGING
         /// <summary>
         /// Handler for completion of allocate operations.
         /// </summary>
         /// <param name="obj">Object that was acquired due to the allocation.</param>
         /// <param name="isNew">Indicates that the object was obtained by performing an allocation.</param>
         partial void OnAllocated(T obj, bool isNew);
+#endif
 
         /// <summary>
         /// Handler for initiation of free operations.
@@ -327,11 +329,13 @@ namespace System.Memory
         /// <param name="obj">Object that is being freed.</param>
         partial void OnFreeing(T obj);
 
+#if ENABLE_LOGGING
         /// <summary>
         /// Handler for completion of free operations.
         /// </summary>
         /// <param name="wasReturned">Indicates whether the object was returned to the pool.</param>
         partial void OnFreed(bool wasReturned);
+#endif
 
         /// <summary>
         /// Validates that the object being freed is not null or unknown to the pool.
