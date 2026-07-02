@@ -12,9 +12,9 @@
 <#var ordinals = new string[] { "Zeroth", "First", "Second", "Third", "Fourth", "Fifth", "Sixth", "Seventh", "Eighth", "Ninth", "Tenth", "Eleventh", "Twelfth", "Thirteenth", "Fourteenth", "Fifteenth" };#>
 using System;
 
-using Reaqtor;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor;
 
 namespace Tests
 {
@@ -46,7 +46,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
         {
             var s = new MyReactiveSubjectFactory<int, int, <#=genArgs#>>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.Create(null, <#=args#>, new object()));
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.Create(null, <#=args#>, new object()));
         }
 
         [TestMethod]

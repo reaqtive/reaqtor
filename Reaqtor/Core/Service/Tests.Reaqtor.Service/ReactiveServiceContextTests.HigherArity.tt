@@ -21,10 +21,10 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
 using Reaqtor;
 using Reaqtor.TestingFramework;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.Service
 {
@@ -42,7 +42,7 @@ namespace Tests.Reaqtor.Service
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
 <#}#>
                 }
             );
@@ -58,7 +58,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQbserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQbserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
 <#}#>
                 }
             );
@@ -74,7 +74,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubjectFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubjectFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
 <#}#>
                 }
             );
@@ -107,7 +107,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => provider.CreateQubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => provider.CreateQubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
 <#}#>
                 }
             );
@@ -143,7 +143,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObservable<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
 <#}#>
                 }
             );
@@ -158,7 +158,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetObserver<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int>(null));
 <#}#>
                 }
             );
@@ -173,7 +173,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 2; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>, int, int>(null));
 <#}#>
                 }
             );
@@ -188,7 +188,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
 <#
 for (int i = 1; i<=highestSupportedArity; i++) {
 #>
-                    Assert.ThrowsException<ArgumentNullException>(() => ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("int", i).ToArray())#>>(null));
 <#}#>
                 }
             );
@@ -436,7 +436,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                         ys.Subscribe(ob(<#=observerArgs#>), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -481,7 +481,7 @@ for (int j = 1; j <= i; j++)
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -775,10 +775,10 @@ for (int j = 1; j <= i; j++)
                                             Expression.Call(
                                                 Expression.Parameter(typeof(TestServiceContext), "rx://builtin/this"),
                                                 "GetObservable",
-                                                new Type[] { <#=string.Join(", ", Enumerable.Repeat("typeof(int)", i).ToArray())#>, typeof(string) },
-                                                new Expression[] {
-                                                    Expression.New(typeof(Uri).GetConstructor(new[] { typeof(string) }), Expression.Constant(Constants.Observable.YS))
-                                                }
+                                                [<#=string.Join(", ", Enumerable.Repeat("typeof(int)", i).ToArray())#>, typeof(string)],
+                                                [
+                                                    Expression.New(typeof(Uri).GetConstructor([typeof(string)]), Expression.Constant(Constants.Observable.YS))
+                                                ]
                                             ),
                                             <#=string.Join(", ", Enumerable.Repeat("x", i).ToArray())#>
                                         ),
@@ -833,8 +833,8 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                     factory.Create(new Uri(Constants.Stream.FOO), <#=args#>, null);
                     ((IReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).Create(new Uri(Constants.Stream.QUX), <#=args#>, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, <#=args#>, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).Create(null, <#=args#>, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, <#=args#>, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubjectFactory<int, int, <#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).Create(null, <#=args#>, null));
 
                     var observer = ctx.GetObserver<int>(new Uri(Constants.Observer.OB));
                     stream.Subscribe(observer, new Uri(Constants.Subscription.SUB), null);
@@ -922,8 +922,8 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                     var sub1 = factory.Create(new Uri(Constants.Subscription.SUB1), <#=args#>, null);
                     var sub2 = ((IReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).Create(new Uri(Constants.Subscription.SUB2), <#=args#>, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() => factory.Create(null, <#=args#>, null));
-                    Assert.ThrowsException<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).Create(null, <#=args#>, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => factory.Create(null, <#=args#>, null));
+                    Assert.ThrowsExactly<ArgumentNullException>(() => ((IReactiveSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>)factory).Create(null, <#=args#>, null));
 
                     sub1.Dispose();
                     sub2.Dispose();
@@ -1004,7 +1004,7 @@ for (int j = 1; j <= i; ++j)
                         state: null
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
                             uri: null,
                             (<#=parameters#>) => obs(<#=parameters#>),
@@ -1012,7 +1012,7 @@ for (int j = 1; j <= i; ++j)
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObservable<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
                             new Uri(Constants.Observable.YS),
                             observable: null,
@@ -1085,7 +1085,7 @@ for (int j = 1; j <= i; ++j)
                     var obsExpr = (Expression<Func<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, IReactiveQbserver<int>>>)((<#=parameters#>) => obs(<#=parameters#>));
                     ctx.DefineObserver<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(new Uri(Constants.Observer.YS), obsExpr, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
                             uri: null,
                             obsExpr,
@@ -1093,7 +1093,7 @@ for (int j = 1; j <= i; ++j)
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineObserver<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int>(
                             new Uri(Constants.Observer.YS),
                             observer: null,
@@ -1147,7 +1147,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                     var factory = ctx.GetStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(new Uri(Constants.StreamFactory.SF));
                     ctx.DefineStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(new Uri(Constants.StreamFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(
                             uri: null,
                             factory,
@@ -1155,7 +1155,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineStreamFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>, int, int>(
                             new Uri(Constants.StreamFactory.SG),
                             streamFactory: null,
@@ -1191,7 +1191,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                     var factory = ctx.GetSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(new Uri(Constants.SubscriptionFactory.SF));
                     ctx.DefineSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(new Uri(Constants.SubscriptionFactory.SG), factory, null);
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
                             uri: null,
                             factory,
@@ -1199,7 +1199,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
                         )
                     );
 
-                    Assert.ThrowsException<ArgumentNullException>(() =>
+                    Assert.ThrowsExactly<ArgumentNullException>(() =>
                         ctx.DefineSubscriptionFactory<<#=string.Join(", ", Enumerable.Repeat("string", i).ToArray())#>>(
                             new Uri(Constants.SubscriptionFactory.SG),
                             subscriptionFactory: null,

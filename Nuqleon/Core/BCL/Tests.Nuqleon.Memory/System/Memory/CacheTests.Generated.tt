@@ -72,7 +72,7 @@ for (var j = 1; j <= i; ++j)
             var ref0 = cache.Create(s);
             ref0.Dispose();
             var unused = default(string[]);
-            Assert.ThrowsException<ObjectDisposedException>(() => unused = ref0.Value);
+            Assert.ThrowsExactly<ObjectDisposedException>(() => unused = ref0.Value);
         }
 
         private sealed class TestCache<#=i#> : Cache<string[], <#=string.Join(", ", Enumerable.Repeat("string", i))#>, string[]>

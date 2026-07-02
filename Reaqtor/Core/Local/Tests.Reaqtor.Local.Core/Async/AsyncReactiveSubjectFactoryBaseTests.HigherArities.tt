@@ -14,9 +14,9 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-using Reaqtor;
-
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+using Reaqtor;
 
 namespace Tests
 {
@@ -48,7 +48,7 @@ for (int i = 2; i<=highestSupportedArity; i++) {
         {
             var s = new MyAsyncReactiveSubjectFactory<int, int, <#=genArgs#>>();
 
-            Assert.ThrowsException<ArgumentNullException>(() => s.CreateAsync(null, <#=args#>, new object()).Wait());
+            Assert.ThrowsExactly<ArgumentNullException>(() => s.CreateAsync(null, <#=args#>, new object()).Wait());
         }
 
         [TestMethod]
