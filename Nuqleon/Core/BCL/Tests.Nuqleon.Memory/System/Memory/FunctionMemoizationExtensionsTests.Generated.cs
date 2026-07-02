@@ -7366,14 +7366,10 @@ namespace Tests
 
         private static void CollectAndCheckFinalizeCount(int count)
         {
-            // NB: This has shown to be flaky on Mono.
-            if (Type.GetType("Mono.Runtime") == null)
-            {
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-                Assert.AreEqual(count, Obj.FinalizeCount);
-            }
+            Assert.AreEqual(count, Obj.FinalizeCount);
         }
     }
 

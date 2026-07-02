@@ -370,10 +370,7 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(m.Name, p.GetName(m));
                 Assert.AreEqual(m.ReturnType, p.GetReturnType(m));
 
-                if (Type.GetType("Mono.Runtime") == null) // NB: Another quirk where this doesn't return instances that are deemed equal.
-                {
-                    Assert.AreEqual(m.ReturnParameter, p.GetReturnParameter(m));
-                }
+                Assert.AreEqual(m.ReturnParameter, p.GetReturnParameter(m));
 
                 Assert.AreEqual(m.GetBaseDefinition(), p.GetBaseDefinition(m));
 
@@ -497,10 +494,7 @@ namespace Tests.System.Reflection.Virtualization
 
                 CollectionAssert.AreEqual(prop.GetAccessors(), p.GetAccessors(prop).ToArray());
 
-                if (Type.GetType("Mono.Runtime") == null) // NB: Quirk on Mono with indexers.
-                {
-                    CollectionAssert.AreEqual(prop.GetIndexParameters(), p.GetIndexParameters(prop).ToArray());
-                }
+                CollectionAssert.AreEqual(prop.GetIndexParameters(), p.GetIndexParameters(prop).ToArray());
             }
         });
 
@@ -638,11 +632,8 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(e.GetRaiseMethod(), p.GetRaiseMethod(e));
                 Assert.AreEqual(e.GetRaiseMethod(nonPublic: true), p.GetRaiseMethod(e, nonPublic: true));
 
-                if (Type.GetType("Mono.Runtime") == null) // NB: NullReferenceException in `System.Reflection.RuntimeEventInfo.GetOtherMethods` on Mono.
-                {
-                    CollectionAssert.AreEqual(e.GetOtherMethods(), p.GetOtherMethods(e).ToArray());
-                    CollectionAssert.AreEqual(e.GetOtherMethods(nonPublic: true), p.GetOtherMethods(e, nonPublic: true).ToArray());
-                }
+                CollectionAssert.AreEqual(e.GetOtherMethods(), p.GetOtherMethods(e).ToArray());
+                CollectionAssert.AreEqual(e.GetOtherMethods(nonPublic: true), p.GetOtherMethods(e, nonPublic: true).ToArray());
             }
         });
 

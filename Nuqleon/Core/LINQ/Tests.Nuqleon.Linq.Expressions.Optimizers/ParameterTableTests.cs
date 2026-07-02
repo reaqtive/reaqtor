@@ -93,12 +93,6 @@ namespace Tests.System.Linq.Expressions.Optimizers
         [TestMethod]
         public void ParameterTable_Add_LambdaExpression_Index2()
         {
-            if (Type.GetType("Mono.Runtime") != null)
-            {
-                // NB: Quirk on Mono with indexer parameters.
-                return;
-            }
-
             var pt = new ParameterTable();
 
             var c = Expression.Parameter(typeof(int));

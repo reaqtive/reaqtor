@@ -165,20 +165,17 @@ namespace System.Memory
             }
 
 #if DETECT_LEAKS
-            if (s_leakTrackers != null)
-            {
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA2000 // Dispose objects before losing scope. (By design for tracker object. Gets manually disposed later.)
-                var tracker = new LeakTracker();
+            var tracker = new LeakTracker();
 #pragma warning restore CA2000
 #pragma warning restore IDE0079
-                s_leakTrackers.Add(inst, tracker);
+            s_leakTrackers.Add(inst, tracker);
 
 #if TRACE_LEAKS
-                var frame = new StackTrace(false);
-                tracker._trace = frame;
+            var frame = new StackTrace(false);
+            tracker._trace = frame;
 #endif
-            }
 #endif
 
 #if ENABLE_LOGGING
@@ -364,11 +361,6 @@ namespace System.Memory
         internal void ForgetTrackedObject(T old, T replacement = null)
         {
 #if DETECT_LEAKS
-            if (s_leakTrackers == null)
-            {
-                return;
-            }
-
             if (s_leakTrackers.TryGetValue(old, out LeakTracker tracker))
             {
                 tracker.Dispose();
@@ -449,12 +441,7 @@ namespace System.Memory
         /// tracker to become unreachable. When the leak tracker gets collected, its finalizer will run
         /// and log an error.
         /// </summary>
-        //
-        // NB: We're seeing sporadic failures on Mono where TryAdd fails with 'Key already in the list'
-        //     which seems related to https://github.com/mono/mono/issues/8700.
-        //
-        private static readonly ConditionalWeakTable<T, LeakTracker> s_leakTrackers =
-            Type.GetType("Mono.Runtime") == null ? new() : null;
+        private static readonly ConditionalWeakTable<T, LeakTracker> s_leakTrackers = [];
 
         /// <summary>
         /// Leak tracker used to detect orphaned pooled objects that weren't returned to their owning pool.

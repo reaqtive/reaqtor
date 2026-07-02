@@ -316,23 +316,7 @@ namespace Tests.System.Linq.CompilerServices
                 }
             }
 
-            if (Type.GetType("Mono.Runtime") == null)
-            {
-                Assert.AreEqual(24, added);
-            }
-            else
-            {
-                //
-                // NB: Delegate caching for arities > 16 does not work on Mono. We get fresh runtime-generated delegate
-                //     types every time we construct a new LambdaExpression of high arity.
-                //
-                //     We'll just check on upper and lower bounds for caching. In practice we've seen values of 45, but
-                //     it's flaky to rely on that exact number. (45 = 17 + 4 * 7 where the latter product illustrates
-                //     the lack of caching for higher arity delegates.)
-                //
-
-                Assert.IsTrue(added is >= N and < N * M);
-            }
+            Assert.AreEqual(24, added);
         }
 
         [TestMethod]
