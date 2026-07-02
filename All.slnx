@@ -228,7 +228,9 @@
     <Project Path="Reaqtor/Pearls/DelegatingBinder/Reaqtor.Pearls.DelegatingBinder.csproj" />
   </Folder>
   <Folder Name="/Reaqtor/Pearls/OperatorLocalStorage/" />
-  <Folder Name="/Reaqtor/Pearls/OperatorLocalStorage/app/" />
+  <Folder Name="/Reaqtor/Pearls/OperatorLocalStorage/app/">
+    <Project Path="Reaqtor/Pearls/OperatorLocalStorage/OperatorLocalStorage/Reaqtive.Storage.Playground.csproj" />
+  </Folder>
   <Folder Name="/Reaqtor/Pearls/OperatorLocalStorage/app/deps/">
     <Project Path="Reaqtor/Pearls/OperatorLocalStorage/Engine/Engine.csproj" />
     <Project Path="Reaqtor/Pearls/OperatorLocalStorage/Utilities/Reaqtive.Storage.Utils.csproj" />
@@ -236,6 +238,9 @@
   <Folder Name="/Reaqtor/Pearls/OperatorLocalStorage/src/">
     <Project Path="Reaqtor/Pearls/OperatorLocalStorage/Library/Reaqtive.Storage.csproj" />
     <Project Path="Reaqtor/Pearls/OperatorLocalStorage/Operators/Reaqtive.Storage.Operators.csproj" />
+  </Folder>
+  <Folder Name="/Reaqtor/Pearls/OperatorLocalStorage/tests/">
+    <Project Path="Reaqtor/Pearls/OperatorLocalStorage/Tests/Tests.Reaqtive.Storage.csproj" />
   </Folder>
   <Folder Name="/Reaqtor/Pearls/PartitionedSubject/">
     <Project Path="Reaqtor/Pearls/PartitionedSubject/Reaqtor.Pearls.PartitionedSubject.csproj" />

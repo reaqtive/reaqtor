@@ -17,7 +17,6 @@ intra-archive references and the retained `.sln` files remain internally consist
 | `Nuqleon/Core/BCL/Nuqleon.Runtime.Remoting.Tasks/` (+ tests) | Task-based async over **.NET Remoting** (`System.Runtime.Remoting`, `MarshalByRefObject`). No modern equivalent. |
 | `Nuqleon/Museum/` | Explicitly legacy/superseded libraries (e.g. `Nuqleon.Linq.Expressions.Serialization`, replaced by Bonsai serialization). Already a "museum"; not part of the modern surface. |
 | `Reaqtor/Pearls/OperatorFusion/` | Experimental pearl, net472-only (save-based `System.Reflection.Emit`). |
-| `Reaqtor/Pearls/OperatorLocalStorage/OperatorLocalStorage/` + `…/Tests/` | net472-only playground + test harness for the `Reaqtive.Storage` pearl. The `Reaqtive.Storage` library itself was migrated and survives. |
 | `Nuqleon/Pearls/BCL/ProjectJohnnie/Perf.Nuqleon.Memory.Diagnostics/` + `…/ProjectJohnnie/` | net472-only perf/playground harnesses (Windows ETW/diagnostics). The `Nuqleon.Memory.Diagnostics` library and its tests were migrated and survive. |
 | `Nuqleon/Pearls/LINQ/BinaryExpressionSerialization/` | Prototype binary expression serializer whose default object serializer is built on **`BinaryFormatter`**, which is removed at runtime on .NET 9+. Leaf pearl; its raison d'être cannot function on modern .NET. |
 

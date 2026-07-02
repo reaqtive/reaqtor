@@ -69,10 +69,16 @@
     <Project Path="../../Core/Shared/Reaqtor.Shared.Core/Reaqtor.Shared.Core.csproj" />
     <Project Path="../../Core/Shared/Reaqtor.Shared.Model/Reaqtor.Shared.Model.csproj" />
   </Folder>
+  <Folder Name="/app/">
+    <Project Path="OperatorLocalStorage/Reaqtive.Storage.Playground.csproj" />
+  </Folder>
   <Folder Name="/src/">
     <Project Path="Engine/Engine.csproj" />
     <Project Path="Library/Reaqtive.Storage.csproj" />
     <Project Path="Operators/Reaqtive.Storage.Operators.csproj" />
     <Project Path="Utilities/Reaqtive.Storage.Utils.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="Tests/Tests.Reaqtive.Storage.csproj" />
   </Folder>
 </Solution>

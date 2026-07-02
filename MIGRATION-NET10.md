@@ -21,8 +21,8 @@ test stack (MSTest)**.
 | `dotnet build All.slnx` (Debug **and** Release) | ✅ 0 warnings, 0 errors                                                                       |
 | Full test suite on Microsoft.Testing.Platform  | ✅ **8,583 passing**, 0 failing                                                               |
 | `dotnet pack` (Release, `CreatePackage=true`)  | ✅ **68** `net10.0` NuGet packages                                                            |
-| Surviving projects                             | **119** (118 `.csproj` + 1 `.vbproj`), all single-target `net10.0` (Rxcel `net10.0-windows`) |
-| Archived projects                              | **48** (moved to `archive/`, out of all solutions)                                           |
+| Surviving projects                             | **121** (120 `.csproj` + 1 `.vbproj`), all single-target `net10.0` (Rxcel `net10.0-windows`) |
+| Archived projects                              | **46** (moved to `archive/`, out of all solutions)                                           |
 
 The work is split into **15 focused commits** (`git log 013e65a..HEAD`), one per phase, so each step is
 reviewable on its own and the build stays green across the sequence.
@@ -67,7 +67,7 @@ errors here).
 
 ## Archived projects (`archive/`) — what and why
 
-48 projects were moved to `archive/` because they depend on .NET Framework technology that **does not
+46 projects live in `archive/` because they depend on .NET Framework technology that **does not
 exist or does not function on .NET 10**. They are reference-only: removed from all solutions, not
 built, not shipped; their project references are not maintained. See `archive/README.md`.
 
@@ -76,7 +76,7 @@ built, not shipped; their project references are not maintained. See `archive/RE
 | `Reaqtor/Samples/Remoting/**` (~31 projects)                                                               | Built on **.NET Remoting** (`MarshalByRefObject`, remoting channels) + AppDomain sandboxing — removed in .NET Core/5+.                                         |
 | `Nuqleon.Runtime.Remoting.Tasks` (+ tests)                                                                 | Task-based async over **.NET Remoting**. No modern equivalent.                                                                                                 |
 | `Nuqleon/Museum/**`                                                                                        | Explicitly legacy/superseded libraries (e.g. pre-Bonsai serialization).                                                                                        |
-| net472-only Pearls (OperatorFusion; ProjectJohnnie perf/playground; OperatorLocalStorage playground/tests) | Save-based `Reflection.Emit` / Windows-only diagnostics. The portable parts (e.g. `Reaqtive.Storage`, `Nuqleon.Memory.Diagnostics`) were migrated and survive. |
+| net472-only Pearls (OperatorFusion; ProjectJohnnie perf/playground) | Save-based `Reflection.Emit` / Windows-only diagnostics. The portable parts (e.g. `Reaqtive.Storage`, `Nuqleon.Memory.Diagnostics`) were migrated and survive. The OperatorLocalStorage playground and tests, initially archived for being net472-pinned, had no Framework-only dependencies and were migrated back to `net10.0`. |
 | `Nuqleon.Pearls.Linq.Expressions.Bonsai.Serialization.Binary` (BinaryExpressionSerialization)              | Its object serializer **is** `BinaryFormatter`, which is removed at runtime on .NET 9+ — the prototype cannot function on .NET 10.                             |
 
 ## Key decisions
