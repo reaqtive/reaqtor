@@ -126,7 +126,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             yield return Expression.MakeMemberAccess(Expression.Constant(new Bar()), typeof(Bar).GetProperty(nameof(Bar.Qux)));
 
             // Index
-            yield return Expression.MakeIndex(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), new[] { Expression.Constant(1) });
+            yield return Expression.MakeIndex(Expression.Default(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)]);
 
             // Invocation
             yield return Expression.Invoke(Expression.Parameter(typeof(Func<int>)));
@@ -147,12 +147,12 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
             yield return Expression.Block(Expression.Empty(), Expression.Empty());
             yield return Expression.Block(px);
             yield return Expression.Block(px, py);
-            yield return Expression.Block(new[] { px }, Expression.Empty());
-            yield return Expression.Block(new[] { px }, px);
-            yield return Expression.Block(new[] { px }, py);
-            yield return Expression.Block(new[] { px, py }, px, py);
-            yield return Expression.Block(new[] { px, py }, py, px);
-            yield return Expression.Block(typeof(void), new[] { px }, px);
+            yield return Expression.Block([px], Expression.Empty());
+            yield return Expression.Block([px], px);
+            yield return Expression.Block([px], py);
+            yield return Expression.Block([px, py], px, py);
+            yield return Expression.Block([px, py], py, px);
+            yield return Expression.Block(typeof(void), [px], px);
 
             // Try
             yield return Expression.TryCatch(px, Expression.Catch(typeof(Exception), py));
@@ -257,14 +257,14 @@ namespace Tests.System.Linq.Expressions.Bonsai.Hashing
 
             yield return new Expression[]
             {
-                Expression.Block(new[] { px }, px),
-                Expression.Block(new[] { py }, py),
+                Expression.Block([px], px),
+                Expression.Block([py], py),
             };
 
             yield return new Expression[]
             {
-                Expression.Block(new[] { px }, px),
-                Expression.Block(typeof(int), new[] { px }, px),
+                Expression.Block([px], px),
+                Expression.Block(typeof(int), [px], px),
             };
 
             yield return new Expression[]

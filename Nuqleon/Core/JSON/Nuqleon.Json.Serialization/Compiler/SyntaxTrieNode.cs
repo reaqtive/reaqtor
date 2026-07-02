@@ -187,7 +187,7 @@ namespace Nuqleon.Json.Serialization
 
                 next =
                     Expression.IfThenElse(
-                        Expression.Equal(Expression.MakeIndex(str, ReflectionCache.Chars, new[] { i }), Expression.Constant('\"')),
+                        Expression.Equal(Expression.MakeIndex(str, ReflectionCache.Chars, [i]), Expression.Constant('\"')),
                         Expression.Block(
                             Expression.Assign(res, Expression.Constant(id)),
                             Expression.Return(e, ExpressionUtils.ConstantTrue)

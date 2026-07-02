@@ -59,7 +59,7 @@ namespace Reaqtive.Operators
                 _cancelable = new SerialSubscription();
                 _id = 0UL;
 
-                return new[] { Params._source.Subscribe(this), _cancelable };
+                return [Params._source.Subscribe(this), _cancelable];
             }
 
             public override void SetContext(IOperatorContext context)

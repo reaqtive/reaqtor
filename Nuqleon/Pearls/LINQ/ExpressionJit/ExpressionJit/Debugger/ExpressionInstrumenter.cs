@@ -38,7 +38,7 @@ namespace ExpressionDebugger
                             if (expression.Type != typeof(void))
                             {
                                 var t = Expression.Parameter(expression.Type, "__t");
-                                return Expression.Block(expression.Type, new[] { t }, enter, Expression.Assign(t, expression), exit, t);
+                                return Expression.Block(expression.Type, [t], enter, Expression.Assign(t, expression), exit, t);
                             }
                             else
                             {

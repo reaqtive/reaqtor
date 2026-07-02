@@ -45,7 +45,7 @@ namespace Tests.System.Linq.CompilerServices
             var e = Expression.Parameter(typeof(int));
 
             var res = FreeVariableScanner.Scan(e);
-            Assert.IsTrue(res.SequenceEqual(new[] { e }));
+            Assert.IsTrue(res.SequenceEqual([e]));
 
             Assert.IsTrue(FreeVariableScanner.HasFreeVariables(e));
         }
@@ -88,7 +88,7 @@ namespace Tests.System.Linq.CompilerServices
         public void FreeVariableScanner_Block()
         {
             var p = Expression.Parameter(typeof(int));
-            var e = Expression.Block(new[] { p }, p);
+            var e = Expression.Block([p], p);
 
             var res = FreeVariableScanner.Scan(e);
             Assert.AreEqual(0, res.Count());
@@ -101,7 +101,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var p = Expression.Parameter(typeof(int));
             var q = Expression.Parameter(typeof(int));
-            var b = Expression.Block(new[] { p }, Expression.Block(new[] { q }, Expression.Add(p, q)));
+            var b = Expression.Block([p], Expression.Block([q], Expression.Add(p, q)));
             var e = b.Expressions[0];
 
             var res = FreeVariableScanner.Scan(e);

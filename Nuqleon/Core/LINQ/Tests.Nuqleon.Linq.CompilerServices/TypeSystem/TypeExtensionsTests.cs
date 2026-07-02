@@ -123,7 +123,7 @@ namespace Tests.System.Linq.CompilerServices
 
         private static Type GetRecordType()
         {
-            return RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("bar", typeof(int)) }, valueEquality: true);
+            return RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("bar", typeof(int))], valueEquality: true);
         }
 
         #endregion

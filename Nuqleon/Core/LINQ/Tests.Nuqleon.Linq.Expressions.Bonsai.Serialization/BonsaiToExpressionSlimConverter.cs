@@ -137,7 +137,7 @@ namespace Tests
                 Expression.Convert(p1, typeof(int)),
                 Expression.Default(typeof(int)),
                 //Expression.ElementInit(m1, p1, p2),
-                Expression.MakeIndex(p6, prop1, Array.Empty<Expression>()),
+                Expression.MakeIndex(p6, prop1, []),
                 Expression.Invoke(Expression.Lambda(p1, p1), p1),
                 Expression.MakeMemberAccess(p6, prop1),
                 //Expression.MemberBind(prop1, new MemberBinding[0]),
@@ -406,7 +406,7 @@ namespace Tests
 
             protected override MemberBindingSlim VisitMemberBinding(Json.Expression node)
             {
-                return base.VisitMemberBinding(Json.Expression.Array(new[] { Json.Expression.Number("0") }));
+                return base.VisitMemberBinding(Json.Expression.Array([Json.Expression.Number("0")]));
             }
         }
 
@@ -419,7 +419,7 @@ namespace Tests
 
             protected override MemberBindingSlim VisitMemberBinding(Json.Expression node)
             {
-                return base.VisitMemberBinding(Json.Expression.Array(new[] { Json.Expression.String("foo") }));
+                return base.VisitMemberBinding(Json.Expression.Array([Json.Expression.String("foo")]));
             }
         }
 
@@ -434,7 +434,7 @@ namespace Tests
             var prop1 = typeof(Tuple<int>).GetProperty("Item1");
 
             var exprs = new[] {
-                Expression.New(typeof(Tuple<int>).GetConstructors().Single(), new[] { p }, [prop1])
+                Expression.New(typeof(Tuple<int>).GetConstructors().Single(), [p], [prop1])
             };
 
             OneWayParseException(exprs, typeof(InvalidNewExpressionBonsaiDeserializer1).GetConstructors().Single());

@@ -187,7 +187,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                             Expression.Lambda(
                                 Expression.New(
                                     t.GetConstructors().Single(),
-                                    new[] { Expression.Constant(1) },
+                                    [Expression.Constant(1)],
                                     t.GetMember("i").Single()
                                 ),
                                 x
@@ -196,18 +196,17 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                         Expression.Lambda(
                             Expression.New(
                                 u.GetConstructors().Single(),
-                                new Expression[]
-                                {
+                                [
                                     y,
                                     Expression.Invoke(
                                         Expression.Lambda(Expression.MakeMemberAccess(y, t.GetMember("i").Single()), y),
                                         Expression.New(
                                             t.GetConstructors().Single(),
-                                            new[] { Expression.Constant(2) },
+                                            [Expression.Constant(2)],
                                             t.GetMember("i").Single()
                                         )
                                     )
-                                },
+                                ],
                                 u.GetMember("A").Single(),
                                 u.GetMember("b").Single()
                             ),
@@ -256,7 +255,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                             Expression.Lambda(
                                 Expression.New(
                                     t.GetConstructors().Single(),
-                                    new[] { Expression.Constant(1) },
+                                    [Expression.Constant(1)],
                                     t.GetMember("i").Single()
                                 ),
                                 x
@@ -265,18 +264,17 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                         Expression.Lambda(
                             Expression.New(
                                 u.GetConstructors().Single(),
-                                new Expression[]
-                                {
+                                [
                                     y,
                                     Expression.Invoke(
                                         Expression.Lambda(Expression.MakeMemberAccess(z, t.GetMember("i").Single()), z),
                                         Expression.New(
                                             t.GetConstructors().Single(),
-                                            new[] { Expression.Constant(2) },
+                                            [Expression.Constant(2)],
                                             t.GetMember("i").Single()
                                         )
                                     )
-                                },
+                                ],
                                 u.GetMember("A").Single(),
                                 u.GetMember("b").Single()
                             ),
@@ -317,7 +315,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                             Expression.Lambda(
                                 Expression.New(
                                     t.GetConstructors().Single(),
-                                    new[] { Expression.Constant(1) },
+                                    [Expression.Constant(1)],
                                     t.GetMember("i").Single()
                                 ),
                                 x
@@ -328,7 +326,7 @@ namespace Tests.System.Linq.CompilerServices.Optimizers
                                 Expression.Lambda(Expression.MakeMemberAccess(y, t.GetMember("i").Single()), y),
                                 Expression.New(
                                     t.GetConstructors().Single(),
-                                    new[] { Expression.Add(Expression.MakeMemberAccess(y, t.GetMember("i").Single()), Expression.Constant(1)) },
+                                    [Expression.Add(Expression.MakeMemberAccess(y, t.GetMember("i").Single()), Expression.Constant(1))],
                                     t.GetMember("i").Single()
                                 )
                             ),

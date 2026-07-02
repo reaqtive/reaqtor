@@ -173,14 +173,14 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
                 var pInt = Expression.Parameter(typeof(int));
                 var pFloat = Expression.Parameter(typeof(float));
                 var pLong = Expression.Parameter(typeof(long));
-                var expA = Expression.Block(new[] { pInt }, pInt);
-                var expB = Expression.Block(new[] { pFloat }, pFloat);
+                var expA = Expression.Block([pInt], pInt);
+                var expB = Expression.Block([pFloat], pFloat);
                 var expBslim = expB.ToExpressionSlim();
 
                 var res1 = subst.Apply(expA.ToExpressionSlim());
                 var res2 = subst.Apply(expBslim);
 
-                ReduceAndAssertEqual(res1, Expression.Block(new[] { pLong }, pLong));
+                ReduceAndAssertEqual(res1, Expression.Block([pLong], pLong));
                 Assert.AreSame(expBslim, res2);
             }
         }
@@ -317,14 +317,14 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var expA = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, string>)), typeof(Dictionary<int, string>).GetProperty("Item"), new[] { Expression.Constant(1) });
-            var expB = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<double, string>)), typeof(Dictionary<double, string>).GetProperty("Item"), new[] { Expression.Constant(1.0) });
+            var expA = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, string>)), typeof(Dictionary<int, string>).GetProperty("Item"), [Expression.Constant(1)]);
+            var expB = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<double, string>)), typeof(Dictionary<double, string>).GetProperty("Item"), [Expression.Constant(1.0)]);
             var expBslim = expB.ToExpressionSlim();
 
             var res1 = subst.Apply(expA.ToExpressionSlim());
             var res2 = subst.Apply(expBslim);
 
-            ReduceAndAssertEqual(res1, Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<long, string>)), typeof(Dictionary<long, string>).GetProperty("Item"), new[] { Expression.Constant(1L) }));
+            ReduceAndAssertEqual(res1, Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<long, string>)), typeof(Dictionary<long, string>).GetProperty("Item"), [Expression.Constant(1L)]));
             Assert.AreSame(expBslim, res2);
         }
 
@@ -333,7 +333,7 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp = Expression.MakeIndex(Expression.Parameter(typeof(TestBar)), typeof(TestBar).GetProperty("Item"), new[] { Expression.Constant(1) });
+            var exp = Expression.MakeIndex(Expression.Parameter(typeof(TestBar)), typeof(TestBar).GetProperty("Item"), [Expression.Constant(1)]);
 
             Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp.ToExpressionSlim()).ToExpression());
         }
@@ -961,11 +961,11 @@ namespace Tests.System.Linq.Expressions.Bonsai.CompilerServices
             Assert.ThrowsExactly<InvalidOperationException>(() => check1.Visit(query));
 
 
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("Name", typeof(string)),
                 new KeyValuePair<string, Type>("Age", typeof(int)),
-            });
+            ]);
 
             var subst1 = new TypeSubstitutionExpressionVisitor(new Dictionary<Type, Type>
             {

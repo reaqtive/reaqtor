@@ -416,7 +416,7 @@ namespace Test.Reaqtor
 
             public IEnumerable<ISubscription> Inputs
             {
-                get { IsInputsCalled = true; return new[] { new DummyInput() }; }
+                get { IsInputsCalled = true; return [new DummyInput()]; }
             }
 
             public void Subscribe() { }

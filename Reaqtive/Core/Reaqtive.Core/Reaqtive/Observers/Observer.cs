@@ -116,7 +116,7 @@ namespace Reaqtive
         /// <returns>Enumerable containing the subscriptions.</returns>
         protected virtual IEnumerable<ISubscription> OnSubscribe()
         {
-            return Array.Empty<ISubscription>();
+            return [];
         }
 
         /// <summary>

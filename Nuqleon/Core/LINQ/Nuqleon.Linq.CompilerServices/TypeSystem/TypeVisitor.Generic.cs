@@ -66,7 +66,7 @@ namespace System.Linq.CompilerServices
             if (types == null)
                 throw new ArgumentNullException(nameof(types));
 
-            return types.Select(Visit).ToArray();
+            return [.. types.Select(Visit)];
         }
 
         /// <summary>

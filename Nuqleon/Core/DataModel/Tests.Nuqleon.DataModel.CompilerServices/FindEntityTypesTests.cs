@@ -101,7 +101,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         {
             var e = (Expression<Action>)(() => FooIt<KnownFoo>());
 
-            FindEntitiesAndAssert(e, new[] { typeof(Qux) }, new[] { typeof(KnownFoo) });
+            FindEntitiesAndAssert(e, [typeof(Qux)], [typeof(KnownFoo)]);
         }
 
         [TestMethod]

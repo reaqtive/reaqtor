@@ -41,7 +41,7 @@ namespace Nuqleon.Json.Serialization
             if (field == null)
                 throw new ArgumentNullException(nameof(field));
 
-            return new[] { field.Name };
+            return [field.Name];
         }
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
@@ -57,7 +57,7 @@ namespace Nuqleon.Json.Serialization
             if (property == null)
                 throw new ArgumentNullException(nameof(property));
 
-            return new[] { property.Name };
+            return [property.Name];
         }
 
 #pragma warning restore CA1716

@@ -62,7 +62,7 @@ namespace Tests
 
             Assert.AreEqual(43, d[42]);
 
-            Assert.IsTrue(d.SequenceEqual(new[] { new KeyValuePair<int, int>(42, 43) }));
+            Assert.IsTrue(d.SequenceEqual([new KeyValuePair<int, int>(42, 43)]));
         }
 
         [TestMethod]
@@ -101,7 +101,7 @@ namespace Tests
 
             Assert.AreEqual(43, d[42]);
 
-            Assert.IsTrue(d.SequenceEqual(new[] { new KeyValuePair<int, int>(42, 43) }));
+            Assert.IsTrue(d.SequenceEqual([new KeyValuePair<int, int>(42, 43)]));
         }
 
         [TestMethod]
@@ -123,7 +123,7 @@ namespace Tests
 
             Assert.AreEqual(43, d[42]);
 
-            Assert.IsTrue(d.SequenceEqual(new[] { new KeyValuePair<int, int>(42, 43) }));
+            Assert.IsTrue(d.SequenceEqual([new KeyValuePair<int, int>(42, 43)]));
         }
 
         [TestMethod]

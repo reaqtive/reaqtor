@@ -45,7 +45,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                         )
                     ),
                     Expression.Block(
-                        new[] { x },
+                        [x],
                         x
                     ),
                     Expression.Lambda(
@@ -79,7 +79,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                         )
                     ),
                     Expression.Block(
-                        new[] { x },
+                        [x],
                         x
                     ),
                     Expression.Lambda(

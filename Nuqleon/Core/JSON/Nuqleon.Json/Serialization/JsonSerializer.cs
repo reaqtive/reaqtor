@@ -220,7 +220,7 @@ namespace Nuqleon.Json.Serialization
 
                 foreach (string key in keys)
                 {
-                    object value = index.GetValue(o, new[] { key });
+                    object value = index.GetValue(o, [key]);
                     members.Add(key, Serialize(value, refs));
                 }
             }

@@ -212,7 +212,7 @@ namespace Tests.System.Linq.Expressions
                 Expression.Loop(
                     Expression.Block(
                         typeof(int),
-                        new[] { counter },
+                        [counter],
                         Expression.AddAssign(counter, Expression.Constant(2)),
                         Expression.Condition(
                             Expression.GreaterThanOrEqual(
@@ -236,7 +236,7 @@ namespace Tests.System.Linq.Expressions
             var l =
                 Expression.Lambda<Func<int, int>>(
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         Expression.Assign(p, Expression.Constant(1))
                     ),
                     p
@@ -246,9 +246,9 @@ namespace Tests.System.Linq.Expressions
 
             var e =
                 Expression.Block(
-                    new[] { p },
+                    [p],
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         p
                     )
                 );

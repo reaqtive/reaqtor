@@ -38,7 +38,7 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<string, string>>)(s => s.ToUpper()),
                 (Expression<Func<string, bool>>)(s => string.IsNullOrEmpty(s)),
                 (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
-                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
+                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
                 (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
 #pragma warning restore IDE0004
             })
@@ -63,7 +63,7 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<string, string>>)(s => s.ToUpper()),
                 (Expression<Func<string, bool>>)(s => string.IsNullOrEmpty(s)),
                 (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
-                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
+                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
                 (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
 #pragma warning restore IDE0004
             })
@@ -96,7 +96,7 @@ namespace Tests.System.Linq.CompilerServices
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
                 (Expression<Func<Process>>)(() => Process.Start("notepad.exe")),
                 (Expression<Func<FileStream>>)(() => File.OpenRead("foo.txt")),
-                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
+                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
                 (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
 #pragma warning restore IDE0004
             })

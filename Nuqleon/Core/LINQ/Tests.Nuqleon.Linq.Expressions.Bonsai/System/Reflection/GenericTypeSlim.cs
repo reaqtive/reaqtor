@@ -49,7 +49,7 @@ namespace Tests.System.Reflection
 
             var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), arg1);
             var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), new[] { arg1 });
-            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>(new[] { arg1 }));
+            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1]));
 
             foreach (var gen in new[] { gen1, gen2, gen3 })
             {
@@ -65,7 +65,7 @@ namespace Tests.System.Reflection
 
             var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), arg1, arg2);
             var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), new[] { arg1, arg2 });
-            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>(new[] { arg1, arg2 }));
+            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1, arg2]));
 
             foreach (var gen in new[] { gen1, gen2, gen3 })
             {
@@ -82,7 +82,7 @@ namespace Tests.System.Reflection
 
             var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), arg1, arg2, arg3);
             var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), new[] { arg1, arg2, arg3 });
-            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>(new[] { arg1, arg2, arg3 }));
+            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1, arg2, arg3]));
 
             foreach (var gen in new[] { gen1, gen2, gen3 })
             {
@@ -100,7 +100,7 @@ namespace Tests.System.Reflection
 
             var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), arg1, arg2, arg3, arg4);
             var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), new[] { arg1, arg2, arg3, arg4 });
-            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>(new[] { arg1, arg2, arg3, arg4 }));
+            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1, arg2, arg3, arg4]));
 
             foreach (var gen in new[] { gen1, gen2, gen3 })
             {

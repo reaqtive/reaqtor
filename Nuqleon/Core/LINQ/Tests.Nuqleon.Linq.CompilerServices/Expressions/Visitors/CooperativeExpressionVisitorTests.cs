@@ -162,7 +162,7 @@ namespace Tests.System.Linq.CompilerServices
             var cv = new CooperativeExpressionVisitor();
 
             var p1 = Expression.Parameter(typeof(List<string>));
-            var i1 = Expression.Lambda(Expression.MakeIndex(p1, typeof(List<string>).GetProperty("Item"), new[] { Expression.Constant(42) }), p1);
+            var i1 = Expression.Lambda(Expression.MakeIndex(p1, typeof(List<string>).GetProperty("Item"), [Expression.Constant(42)]), p1);
             Assert.AreSame(i1, cv.Visit(i1));
         }
 
@@ -172,7 +172,7 @@ namespace Tests.System.Linq.CompilerServices
             var cv = new CooperativeExpressionVisitor();
 
             var p1 = Expression.Parameter(typeof(IndOp));
-            var i1 = Expression.Lambda(Expression.MakeIndex(p1, typeof(IndOp).GetProperty("Item"), new[] { Expression.Constant(42) }), p1);
+            var i1 = Expression.Lambda(Expression.MakeIndex(p1, typeof(IndOp).GetProperty("Item"), [Expression.Constant(42)]), p1);
 
             var res = cv.Visit(i1.Body);
             var ir = res as MethodCallExpression;
@@ -474,7 +474,7 @@ namespace Tests.System.Linq.CompilerServices
 
                     Assert.IsNotNull(ne);
 
-                    if (ne.Constructor.GetParameters().Select(p => p.ParameterType).SequenceEqual(new[] { typeof(int), typeof(string) }))
+                    if (ne.Constructor.GetParameters().Select(p => p.ParameterType).SequenceEqual([typeof(int), typeof(string)]))
                     {
                         result = Expression.New(typeof(NewOp).GetConstructor([typeof(string), typeof(int)]), visit(ne.Arguments[1]), visit(ne.Arguments[0]));
                     }

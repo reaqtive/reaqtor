@@ -30,7 +30,7 @@ namespace Tests.Reaqtor
             Qbserver_ReentrancyDuringInitialization_Impl(
                 observer => observer.OnNextAsync(42, CancellationToken.None),
                 observer => observer.OnNextTask,
-                observer => Assert.IsTrue(observer.OnNextLog.SequenceEqual(new[] { 42 }))
+                observer => Assert.IsTrue(observer.OnNextLog.SequenceEqual([42]))
             );
         }
 
@@ -130,7 +130,7 @@ namespace Tests.Reaqtor
             iv.OnCompletedTask.SetResult(null);
             observer.OnCompletedAsync(CancellationToken.None).Wait();
 
-            Assert.IsTrue(iv.OnNextLog.SequenceEqual(new[] { 42, 43, 44 }));
+            Assert.IsTrue(iv.OnNextLog.SequenceEqual([42, 43, 44]));
             Assert.IsTrue(iv.OnCompletedLog);
         }
 

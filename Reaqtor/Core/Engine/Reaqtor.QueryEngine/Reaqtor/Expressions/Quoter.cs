@@ -278,12 +278,12 @@ namespace Reaqtor.Expressions
                 else if (rewritten.NodeType == ExpressionType.MemberInit)
                 {
                     var initExpr = (MemberInitExpression)rewritten;
-                    quoted = initExpr.Update(initExpr.NewExpression, initExpr.Bindings.Concat(new[] { Expression.Bind(expressionProperty, quote) }));
+                    quoted = initExpr.Update(initExpr.NewExpression, initExpr.Bindings.Concat([Expression.Bind(expressionProperty, quote)]));
                 }
                 else
                 {
                     var temp = Expression.Parameter(rewritten.Type);
-                    quoted = Expression.Block(new[] { temp }, Expression.Assign(temp, rewritten), Expression.Assign(Expression.Property(temp, expressionProperty), quote), temp);
+                    quoted = Expression.Block([temp], Expression.Assign(temp, rewritten), Expression.Assign(Expression.Property(temp, expressionProperty), quote), temp);
                 }
 
                 return true;

@@ -76,11 +76,10 @@ namespace Rxcel
                                     Expression.MakeIndex(
                                         sheet,
                                         index,
-                                        new[]
-                                        {
+                                        [
                                             Expression.Constant(i),
                                             Expression.Constant(j)
-                                        }
+                                        ]
                                     ),
                                     value
                                 ),
@@ -93,7 +92,7 @@ namespace Rxcel
 
             var body =
                 Expression.Block(
-                    new[] { sheet },
+                    [sheet],
                     [
                         Expression.Assign(
                             sheet,

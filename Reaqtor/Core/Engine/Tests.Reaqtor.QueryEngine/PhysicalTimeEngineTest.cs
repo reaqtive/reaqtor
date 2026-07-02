@@ -274,7 +274,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new ISubscription[] { Params._source.Subscribe(this) };
+                    return [Params._source.Subscribe(this)];
                 }
 
                 public void OnCompleted()
@@ -338,7 +338,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new ISubscription[] { Params._source.Subscribe(this) };
+                    return [Params._source.Subscribe(this)];
                 }
 
                 public void OnCompleted()
@@ -394,7 +394,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new ISubscription[] { Params._source.Subscribe(this) };
+                    return [Params._source.Subscribe(this)];
                 }
 
                 public void OnCompleted()
@@ -467,7 +467,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new ISubscription[] { Params._source.Subscribe(this) };
+                    return [Params._source.Subscribe(this)];
                 }
 
                 public void OnCompleted()
@@ -534,7 +534,7 @@ namespace Tests.Reaqtor.QueryEngine
 
                 protected override IEnumerable<ISubscription> OnSubscribe()
                 {
-                    return new[] { Params._source.Subscribe(Output) };
+                    return [Params._source.Subscribe(Output)];
                 }
 
                 protected override void OnDispose()

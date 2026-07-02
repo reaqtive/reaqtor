@@ -54,15 +54,15 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsTrue(collection.TryGetKey(2, out key));
             Assert.AreEqual("bar", key);
 
-            Assert.IsTrue(collection.RemovedKeys.SequenceEqual(new[] { "foo" }));
-            collection.ClearRemovedKeys(new[] { "foo" });
+            Assert.IsTrue(collection.RemovedKeys.SequenceEqual(["foo"]));
+            collection.ClearRemovedKeys(["foo"]);
             Assert.AreEqual(0, collection.RemovedKeys.Count());
 
             collection.Add("foo", 1);
             collection.Add("qux", 3);
             collection.Add("baz", 4);
 
-            Assert.IsTrue(collection.Values.OrderBy(x => x).SequenceEqual(new[] { 1, 2, 3, 4 }));
+            Assert.IsTrue(collection.Values.OrderBy(x => x).SequenceEqual([1, 2, 3, 4]));
             Assert.IsTrue(collection.OrderBy(kv => kv.Value)
                 .SequenceEqual(new Dictionary<string, int> { { "foo", 1 }, { "bar", 2 }, { "qux", 3 }, { "baz", 4 } }.OrderBy(kv => kv.Value)));
 

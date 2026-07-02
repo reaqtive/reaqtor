@@ -488,21 +488,21 @@ namespace Tests.System.Linq.CompilerServices
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f1 = xs => xs.Where(x => x > 1).Select(x => x * 2);
             var d1 = f1.Compile(cache, outliningEnabled: true);
-            var r1 = d1(new[] { 1, 2, 3, 4 });
+            var r1 = d1([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { 4, 6, 8 }.SequenceEqual(r1));
             Assert.AreEqual(3, added);
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f2 = xs => xs.Where(x => x > 0).Select(x => x * 3);
             var d2 = f2.Compile(cache, outliningEnabled: true);
-            var r2 = d2(new[] { 1, 2, 3, 4 });
+            var r2 = d2([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { 3, 6, 9, 12 }.SequenceEqual(r2));
             Assert.AreEqual(3, added);
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f3 = xs => xs.OrderBy(x => x * -1).Where(x => x > 2).Select(x => x * -2);
             var d3 = f3.Compile(cache, outliningEnabled: true);
-            var r3 = d3(new[] { 1, 2, 3, 4 });
+            var r3 = d3([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { -8, -6 }.SequenceEqual(r3));
             Assert.AreEqual(4, added);
@@ -548,21 +548,21 @@ namespace Tests.System.Linq.CompilerServices
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f1 = xs => xs.Where(x => x > 1).Select(x => x * 2);
             var d1 = f1.Compile(cache, outliningEnabled: false);
-            var r1 = d1(new[] { 1, 2, 3, 4 });
+            var r1 = d1([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { 4, 6, 8 }.SequenceEqual(r1));
             Assert.AreEqual(1, added);
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f2 = xs => xs.Where(x => x > 0).Select(x => x * 3);
             var d2 = f2.Compile(cache, outliningEnabled: false);
-            var r2 = d2(new[] { 1, 2, 3, 4 });
+            var r2 = d2([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { 3, 6, 9, 12 }.SequenceEqual(r2));
             Assert.AreEqual(1, added);
 
             Expression<Func<IEnumerable<int>, IEnumerable<int>>> f3 = xs => xs.OrderBy(x => x * -1).Where(x => x > 2).Select(x => x * -2);
             var d3 = f3.Compile(cache, outliningEnabled: false);
-            var r3 = d3(new[] { 1, 2, 3, 4 });
+            var r3 = d3([1, 2, 3, 4]);
 
             Assert.IsTrue(new[] { -8, -6 }.SequenceEqual(r3));
             Assert.AreEqual(2, added);

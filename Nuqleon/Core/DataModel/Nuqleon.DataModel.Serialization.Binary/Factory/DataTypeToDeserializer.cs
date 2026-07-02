@@ -70,7 +70,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var body = Expression.Block(
                 // byte tc;
                 // T[] result;
-                new[] { tcParameter, resultParameter },
+                [tcParameter, resultParameter],
                 // tc = stream.ReadByte();
                 Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                 // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -85,7 +85,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                     // else {
                     Expression.Block(
                         // int length, i;
-                        new[] { lengthParameter, loopParameter },
+                        [lengthParameter, loopParameter],
                         // length = (int)stream.ReadUInt32Compact();
                         Expression.Assign(lengthParameter, Expression.ConvertChecked(Expression.Call(ReflectionConstants.ReadIntCompact, streamParameter), typeof(int))),
                         // result = new T[length];
@@ -128,7 +128,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var body = Expression.Block(
                 // byte tc;
                 // T[] result;
-                new[] { tcParameter, resultParameter },
+                [tcParameter, resultParameter],
                 // tc = stream.ReadByte();
                 Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                 // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -143,7 +143,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                     // else {
                     Expression.Block(
                         // int length, i;
-                        new[] { lengthParameter, loopParameter },
+                        [lengthParameter, loopParameter],
                         // length = (int)stream.ReadUInt32Compact();
                         Expression.Assign(lengthParameter, Expression.ConvertChecked(Expression.Call(ReflectionConstants.ReadIntCompact, streamParameter), typeof(int))),
                         // result = new List<T>(length);
@@ -286,7 +286,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var defaultBody = Expression.Block(
                 typeof(void),
                 // long skip;
-                new[] { skipParameter },
+                [skipParameter],
                 // skip = (long)stream.ReadUInt32Compact();
                 Expression.Assign(skipParameter, Expression.Convert(Expression.Call(ReflectionConstants.ReadIntCompact, streamParameter), typeof(long))),
                 // stream.Position += skip;
@@ -299,7 +299,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var body = Expression.Block(
                 // byte tc;
                 // T[] result;
-                new[] { tcParameter, resultParameter },
+                [tcParameter, resultParameter],
                 // tc = stream.ReadByte();
                 Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                 // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -328,7 +328,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                             Expression.LessThan(loopParameter, countParameter),
                             Expression.PreIncrementAssign(loopParameter),
                             Expression.Block(
-                                new[] { nameParameter },
+                                [nameParameter],
                                 Expression.Assign(nameParameter, Expression.Call(ReflectionConstants.ReadString, streamParameter)),
                                 Expression.Switch(nameParameter, defaultBody, switchCases)
                             )
@@ -393,7 +393,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var defaultBody = Expression.Block(
                 typeof(void),
                 // long skip;
-                new[] { skipParameter },
+                [skipParameter],
                 // skip = (long)stream.ReadUInt32Compact();
                 Expression.Assign(skipParameter, Expression.Convert(Expression.Call(ReflectionConstants.ReadIntCompact, streamParameter), typeof(long))),
                 // stream.Position += skip;
@@ -407,7 +407,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var typeCodeConstant = Expression.Constant(typeCode, typeof(byte));
             var body = Expression.Block(
                 // byte tc;
-                new[] { tcParameter },
+                [tcParameter],
                 // tc = stream.ReadByte();
                 Expression.Assign(tcParameter, Expression.Call(ReflectionConstants.ReadByte, streamParameter)),
                 // if (tc & typeCode != typeCode) throw new InvalidDataException("Unexpected type code.");
@@ -433,7 +433,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                             Expression.LessThan(loopParameter, countParameter),
                             Expression.PreIncrementAssign(loopParameter),
                             Expression.Block(
-                                new[] { nameParameter },
+                                [nameParameter],
                                 Expression.Assign(nameParameter, Expression.Call(ReflectionConstants.ReadString, streamParameter)),
                                 Expression.Switch(nameParameter, defaultBody, switchCases)
                             )
@@ -521,7 +521,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 return Expression.Lambda(
                     // {
                     Expression.Block(
-                        new[] { primitiveParameter, convertedResultParameter },
+                        [primitiveParameter, convertedResultParameter],
                         Expression.Assign(primitiveParameter, inner.Body),
                         Expression.Condition(
                             Expression.Equal(primitiveParameter, ReflectionConstants.NullObject),

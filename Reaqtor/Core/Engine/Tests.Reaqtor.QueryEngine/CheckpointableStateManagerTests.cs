@@ -28,12 +28,12 @@ namespace Tests.Reaqtor.QueryEngine
                 await e.UnloadAsync();
             });
 
-            Assert.IsTrue(res.SequenceEqual(new[]
-            {
+            Assert.IsTrue(res.SequenceEqual(
+            [
                 Actions.Recover,
                 Actions.Checkpoint,
                 Actions.Unload,
-            }));
+            ]));
         }
 
         [TestMethod]
@@ -49,15 +49,15 @@ namespace Tests.Reaqtor.QueryEngine
                 await e.UnloadAsync();
             });
 
-            Assert.IsTrue(res.SequenceEqual(new[]
-            {
+            Assert.IsTrue(res.SequenceEqual(
+            [
                 Actions.Recover,
                 Actions.Checkpoint,
                 Actions.Recover,
                 Actions.Checkpoint,
                 Actions.Checkpoint,
                 Actions.Unload,
-            }));
+            ]));
         }
 
         [TestMethod]
@@ -71,13 +71,13 @@ namespace Tests.Reaqtor.QueryEngine
                 await e.UnloadAsync();
             });
 
-            Assert.IsTrue(res.SequenceEqual(new[]
-            {
+            Assert.IsTrue(res.SequenceEqual(
+            [
                 Actions.Checkpoint,
                 Actions.Checkpoint,
                 Actions.Checkpoint,
                 Actions.Unload,
-            }));
+            ]));
         }
 
         [TestMethod]
@@ -91,11 +91,11 @@ namespace Tests.Reaqtor.QueryEngine
                 await e.UnloadAsync();
             });
 
-            Assert.IsTrue(res.SequenceEqual(new[]
-            {
+            Assert.IsTrue(res.SequenceEqual(
+            [
                 Actions.Checkpoint,
                 Actions.Unload,
-            }));
+            ]));
         }
 
         [TestMethod]
@@ -108,10 +108,10 @@ namespace Tests.Reaqtor.QueryEngine
                 await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => e.CheckpointAsync(new TestWriter()));
             });
 
-            Assert.IsTrue(res.SequenceEqual(new[]
-            {
+            Assert.IsTrue(res.SequenceEqual(
+            [
                 Actions.Unload,
-            }));
+            ]));
         }
 
         [TestMethod]
@@ -124,10 +124,10 @@ namespace Tests.Reaqtor.QueryEngine
                 await Assert.ThrowsExactlyAsync<InvalidOperationException>(() => e.RecoverAsync(new TestReader()));
             });
 
-            Assert.IsTrue(res.SequenceEqual(new[]
-            {
+            Assert.IsTrue(res.SequenceEqual(
+            [
                 Actions.Unload,
-            }));
+            ]));
         }
 
         [TestMethod]
@@ -580,14 +580,14 @@ namespace Tests.Reaqtor.QueryEngine
 
             s.CheckpointAsync(writer).Wait();
 
-            Assert.IsTrue(writer.Log.SequenceEqual(new[]
-            {
+            Assert.IsTrue(writer.Log.SequenceEqual(
+            [
                 "GetItemWriter(foo, bar)",
                 "DeleteItem(qux, baz)",
                 "Rollback()",
                 "CommitAsync()",
                 "Dispose()",
-            }));
+            ]));
         }
 
         private class WriterTestEngine : ICheckpointable
@@ -666,13 +666,13 @@ namespace Tests.Reaqtor.QueryEngine
 
             s.RecoverAsync(reader).Wait();
 
-            Assert.IsTrue(reader.Log.SequenceEqual(new[]
-            {
+            Assert.IsTrue(reader.Log.SequenceEqual(
+            [
                 "GetCategories()",
                 "TryGetItemKeys(bar)",
                 "TryGetItemReader(bar, foo)",
                 "Dispose()",
-            }));
+            ]));
         }
 
         private sealed class ReaderTestEngine : ICheckpointable

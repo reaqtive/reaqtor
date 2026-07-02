@@ -5,10 +5,9 @@
 
 using System;
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor.QueryEngine;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.Reaqtor.QueryEngine
 {

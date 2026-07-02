@@ -25,7 +25,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var tcParameter = Expression.Parameter(typeof(byte), "tc");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = typeCode;
                     Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                     // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -61,7 +61,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var tcParameter = Expression.Parameter(typeof(byte), "tc");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = typeCode;
                     Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                     // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -100,7 +100,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var typeCode = Protocol.TYPE_STRING;
             var body = Expression.Block(
                 // byte tc;
-                new[] { tcParameter },
+                [tcParameter],
                 // tc = typeCode;
                 Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                 // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -135,7 +135,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var tcParameter = Expression.Parameter(typeof(byte), "tc");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = typeCode;
                     Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                     // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -183,7 +183,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var nonNullableParameter = Expression.Parameter(typeof(DateTimeOffset), "nonNullable");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter, nonNullableParameter },
+                    [tcParameter, nonNullableParameter],
                     // tc = typeCode;
                     Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                     // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -198,7 +198,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                         Expression.NotEqual(valueParameter, s_nullObject.Value),
                         Expression.Block(
                             // DateTimeOffset nonNullable;
-                            new[] { nonNullableParameter },
+                            [nonNullableParameter],
                             // nonNullable = (DateTimeOffset)value;
                             Expression.Assign(nonNullableParameter, Expression.Convert(valueParameter, typeof(DateTimeOffset))),
                             // stream.WriteInt64(nonNullable.DateTime.ToBinary());
@@ -240,7 +240,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 var tcParameter = Expression.Parameter(typeof(byte), "tc");
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = typeCode;
                     Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                     // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -282,7 +282,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var typeCode = Protocol.TYPE_URI;
             var body = Expression.Block(
                 // byte tc;
-                new[] { tcParameter },
+                [tcParameter],
                 // tc = typeCode;
                 Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                 // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;

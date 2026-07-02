@@ -72,7 +72,7 @@ namespace Reaqtor.QueryEngine
 #pragma warning restore IDE0025
 #pragma warning restore IDE0079
 
-                protected override IEnumerable<Task> GetScheduledTasks() => _tasks.ToArray();
+                protected override IEnumerable<Task> GetScheduledTasks() => [.. _tasks];
 
                 protected override void QueueTask(Task task) => _tasks.Add(task);
 

@@ -259,7 +259,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var b =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     x
                 );
 
@@ -417,10 +417,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
                             Expression.MakeIndex(
                                 x,
                                 typeof(List<int>).GetProperty("Item"),
-                                new[]
-                                {
+                                [
                                     Expression.Constant(0)
-                                }
+                                ]
                             ),
                             Expression.Constant(1)
                         ),
@@ -490,7 +489,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 Expression.Invoke(
                     Expression.Lambda(
                         Expression.Block(
-                            new[] { y },
+                            [y],
                             x
                         ),
                         x
@@ -1302,10 +1301,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
                         Expression.MakeIndex(
                             PureNoThrowNoNull(typeof(List<int>)),
                             typeof(List<int>).GetProperty("Item"),
-                            new[]
-                            {
+                            [
                                 x
-                            }
+                            ]
                         ),
                         x
                     ),
@@ -1316,10 +1314,9 @@ namespace Tests.System.Linq.Expressions.Optimizers
                 Expression.MakeIndex(
                     PureNoThrowNoNull(typeof(List<int>)),
                     typeof(List<int>).GetProperty("Item"),
-                    new[]
-                    {
+                    [
                         F
-                    }
+                    ]
                 );
 
             AssertBetaReduce(e, r);

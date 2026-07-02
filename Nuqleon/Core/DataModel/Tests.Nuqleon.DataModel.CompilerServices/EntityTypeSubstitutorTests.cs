@@ -203,8 +203,8 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
                 Assert.ThrowsExactly<InvalidOperationException>(() => base.ConvertConstantStructuralTuple(tupl1, ttyp1, ttyp2));
 
-                var rcrt1 = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("a", typeof(int)) }, valueEquality: true);
-                var rcrt2 = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("a", typeof(int)), new KeyValuePair<string, Type>("b", typeof(int)) }, valueEquality: true);
+                var rcrt1 = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("a", typeof(int))], valueEquality: true);
+                var rcrt2 = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("a", typeof(int)), new KeyValuePair<string, Type>("b", typeof(int))], valueEquality: true);
                 var rtyp1 = (StructuralDataType)DataType.FromType(rcrt1);
                 var rtyp2 = (StructuralDataType)DataType.FromType(rcrt2);
                 var rcrd1 = Activator.CreateInstance(rcrt1);

@@ -343,7 +343,7 @@ namespace System
                 throw new ArgumentNullException(nameof(combine));
 
             var values = new T[count];
-            return Enumerable.Range(0, count).Select(i => new AnonymousProgress<T>(x => { lock (values) { values[i] = x; progress.Report(combine(values)); } })).ToArray();
+            return [.. Enumerable.Range(0, count).Select(i => new AnonymousProgress<T>(x => { lock (values) { values[i] = x; progress.Report(combine(values)); } }))];
         }
 
         #endregion

@@ -64,7 +64,7 @@ namespace System.Linq.CompilerServices.Optimizers
                             var newBody =
                                 DefaultQueryExpressionFactory.Instance.LambdaAbstraction(
                                     Expression.Lambda(Expression.Lambda(updated, selector1.Parameters[0])),
-                                    Array.Empty<QueryTree>()
+                                    []
                                 );
                             return
                                 op.QueryExpressionFactory.Select(
@@ -96,7 +96,7 @@ namespace System.Linq.CompilerServices.Optimizers
                                         select1.Source,
                                         DefaultQueryExpressionFactory.Instance.LambdaAbstraction(
                                             Expression.Lambda(Expression.Lambda(c, selector1.Parameters[0])),
-                                            Array.Empty<QueryTree>()
+                                            []
                                         )
                                     );
 
@@ -107,7 +107,7 @@ namespace System.Linq.CompilerServices.Optimizers
                                         child,
                                         DefaultQueryExpressionFactory.Instance.LambdaAbstraction(
                                             Expression.Lambda(Expression.Lambda(f, newParam)),
-                                            Array.Empty<QueryTree>()
+                                            []
                                         )
                                     );
                             }

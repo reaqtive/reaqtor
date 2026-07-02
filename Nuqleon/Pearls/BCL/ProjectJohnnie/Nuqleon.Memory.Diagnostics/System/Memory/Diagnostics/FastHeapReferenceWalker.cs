@@ -374,7 +374,7 @@ namespace System.Memory.Diagnostics
                 bodyExprs[0] = convert;
                 fieldWalker.Expressions.CopyTo(bodyExprs, 1);
 
-                var body = Expression.Block(typeof(void), new[] { converted }, bodyExprs);
+                var body = Expression.Block(typeof(void), [converted], bodyExprs);
 
                 //
                 // Finally, build a lambda expression representing the FastWalker delegate, compile it, and
@@ -581,7 +581,7 @@ namespace System.Memory.Diagnostics
 #if USE_LOCAL
                 new[] { arr, i, len, elem },
 #else
-                new[] { arr, i, len },
+                [arr, i, len],
 #endif
                 exprs
             );

@@ -248,7 +248,7 @@ namespace Reaqtor.QueryEngine
 
             public void Accept(ISubscriptionVisitor visitor) => visitor.Visit(this);
 
-            public IEnumerable<ISubscription> Inputs => Array.Empty<ISubscription>();
+            public IEnumerable<ISubscription> Inputs => [];
 
             public void Subscribe() { }
 
@@ -320,7 +320,7 @@ namespace Reaqtor.QueryEngine
         {
         }
 
-        public IEnumerable<ISubscription> Inputs => Array.Empty<ISubscription>();
+        public IEnumerable<ISubscription> Inputs => [];
 
         public virtual void Subscribe() { }
 

@@ -95,7 +95,7 @@ namespace System.Linq.Expressions.Jit
                 //
                 if (_methodTable != null)
                 {
-                    var topScope = new Scope(node: null, parent: null, variables: new[] { _methodTable });
+                    var topScope = new Scope(node: null, parent: null, variables: [_methodTable]);
                     _environment.Push(topScope);
                 }
             }

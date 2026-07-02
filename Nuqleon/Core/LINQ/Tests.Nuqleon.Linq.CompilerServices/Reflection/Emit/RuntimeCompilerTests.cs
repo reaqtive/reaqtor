@@ -63,7 +63,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var atb = rtc.GetNewAnonymousTypeBuilder();
 
-            AssertEx.ThrowsException<ArgumentException>(() => rtc.DefineAnonymousType(atb, new[] { new KeyValuePair<string, Type>("Bar", typeof(int)) }, "Baz"), ex => Assert.AreEqual("keys", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentException>(() => rtc.DefineAnonymousType(atb, [new KeyValuePair<string, Type>("Bar", typeof(int))], "Baz"), ex => Assert.AreEqual("keys", ex.ParamName));
         }
 
         [TestMethod]
@@ -75,11 +75,11 @@ namespace Tests.System.Linq.CompilerServices
 
                 var atb = rtc.GetNewAnonymousTypeBuilder();
 
-                rtc.DefineAnonymousType(atb, new[]
-                {
+                rtc.DefineAnonymousType(atb,
+                [
                     new KeyValuePair<string, Type>("Name", typeof(string)),
                     new KeyValuePair<string, Type>("Age", typeof(int)),
-                });
+                ]);
 
                 return atb.CreateType();
             });
@@ -94,11 +94,11 @@ namespace Tests.System.Linq.CompilerServices
 
                 var atb = rtc.GetNewAnonymousTypeBuilder();
 
-                rtc.DefineAnonymousType(atb, new[]
-                {
+                rtc.DefineAnonymousType(atb,
+                [
                     new StructuralFieldDeclaration("Name", typeof(string)),
                     new StructuralFieldDeclaration("Age", typeof(int)),
-                });
+                ]);
 
                 return atb.CreateType();
             });
@@ -109,11 +109,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             AnonymousType_CSharp_Impl(() =>
             {
-                return RuntimeCompiler.CreateAnonymousType(new[]
-                {
+                return RuntimeCompiler.CreateAnonymousType(
+                [
                     new StructuralFieldDeclaration("Name", typeof(string)),
                     new StructuralFieldDeclaration("Age", typeof(int)),
-                });
+                ]);
             });
         }
 
@@ -122,11 +122,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             AnonymousType_CSharp_Impl(() =>
             {
-                return RuntimeCompiler.CreateAnonymousType(new[]
-                {
+                return RuntimeCompiler.CreateAnonymousType(
+                [
                     new StructuralFieldDeclaration("Name", typeof(string)),
                     new StructuralFieldDeclaration("Age", typeof(int)),
-                });
+                ]);
             });
         }
 
@@ -135,11 +135,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             AnonymousType_CSharp_Impl(() =>
             {
-                return RuntimeCompiler.CreateAnonymousType(new[]
-                {
+                return RuntimeCompiler.CreateAnonymousType(
+                [
                     new StructuralFieldDeclaration("Name", typeof(string)),
                     new StructuralFieldDeclaration("Age", typeof(int)),
-                }, ["Name", "Age"]);
+                ], ["Name", "Age"]);
             });
         }
 
@@ -208,11 +208,11 @@ namespace Tests.System.Linq.CompilerServices
 
                 var atb = rtc.GetNewAnonymousTypeBuilder();
 
-                rtc.DefineAnonymousType(atb, new[]
-                {
+                rtc.DefineAnonymousType(atb,
+                [
                     new KeyValuePair<string, Type>("Name", typeof(string)),
                     new KeyValuePair<string, Type>("Age", typeof(int)),
-                }, ["Name"]);
+                ], ["Name"]);
 
                 return atb.CreateType();
             });
@@ -223,11 +223,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             AnonymousType_VisualBasic_Impl(() =>
             {
-                return RuntimeCompiler.CreateAnonymousType(new[]
-                {
+                return RuntimeCompiler.CreateAnonymousType(
+                [
                     new KeyValuePair<string, Type>("Name", typeof(string)),
                     new KeyValuePair<string, Type>("Age", typeof(int)),
-                }, ["Name"]);
+                ], ["Name"]);
             });
         }
 
@@ -338,16 +338,16 @@ namespace Tests.System.Linq.CompilerServices
             var atb1 = rtc.GetNewAnonymousTypeBuilder();
             var atb2 = rtc.GetNewAnonymousTypeBuilder();
 
-            rtc.DefineAnonymousType(atb1, new[]
-            {
+            rtc.DefineAnonymousType(atb1,
+            [
                 new KeyValuePair<string, Type>("Qux", typeof(int)),
-            });
+            ]);
 
-            rtc.DefineAnonymousType(atb2, new[]
-            {
+            rtc.DefineAnonymousType(atb2,
+            [
                 new KeyValuePair<string, Type>("Foo", atb1),
                 new KeyValuePair<string, Type>("Baz", typeof(int)),
-            }, ["Foo"]);
+            ], ["Foo"]);
 
             var foo = atb1.CreateType();
             var bar = atb2.CreateType();
@@ -371,17 +371,17 @@ namespace Tests.System.Linq.CompilerServices
             var atb1 = rtc.GetNewAnonymousTypeBuilder();
             var atb2 = rtc.GetNewAnonymousTypeBuilder();
 
-            rtc.DefineAnonymousType(atb1, new[]
-            {
+            rtc.DefineAnonymousType(atb1,
+            [
                 new KeyValuePair<string, Type>("Qux", typeof(int)),
                 new KeyValuePair<string, Type>("Bar", atb2),
-            }, []);
+            ], []);
 
-            rtc.DefineAnonymousType(atb2, new[]
-            {
+            rtc.DefineAnonymousType(atb2,
+            [
                 new KeyValuePair<string, Type>("Baz", typeof(int)),
                 new KeyValuePair<string, Type>("Foo", atb1),
-            }, []);
+            ], []);
 
             var foo = atb1.CreateType();
             var bar = atb2.CreateType();
@@ -450,7 +450,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var atb = rtc.GetNewClosureTypeBuilder();
 
-            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineClosureType(closureTypeBuilder: null, Array.Empty<KeyValuePair<string, Type>>()), ex => Assert.AreEqual("closureTypeBuilder", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineClosureType(closureTypeBuilder: null, []), ex => Assert.AreEqual("closureTypeBuilder", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => rtc.DefineClosureType(atb, fields: null), ex => Assert.AreEqual("fields", ex.ParamName));
         }
 
@@ -467,7 +467,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var ctb = rtc.GetNewClosureTypeBuilder();
 
-            rtc.DefineClosureType(ctb, Array.Empty<KeyValuePair<string, Type>>());
+            rtc.DefineClosureType(ctb, []);
 
             var clt = ctb.CreateType();
 
@@ -485,11 +485,11 @@ namespace Tests.System.Linq.CompilerServices
 
                 var ctb = rtc.GetNewClosureTypeBuilder();
 
-                rtc.DefineClosureType(ctb, new[]
-                {
+                rtc.DefineClosureType(ctb,
+                [
                     new KeyValuePair<string, Type>("bar", typeof(int)),
                     new KeyValuePair<string, Type>("foo", typeof(string)),
-                });
+                ]);
 
                 return ctb.CreateType();
             });
@@ -500,11 +500,11 @@ namespace Tests.System.Linq.CompilerServices
         {
             ClosureType_NonTrivial_Impl(() =>
             {
-                return RuntimeCompiler.CreateClosureType(new[]
-                {
+                return RuntimeCompiler.CreateClosureType(
+                [
                     new KeyValuePair<string, Type>("bar", typeof(int)),
                     new KeyValuePair<string, Type>("foo", typeof(string)),
-                });
+                ]);
             });
         }
 
@@ -579,11 +579,11 @@ namespace Tests.System.Linq.CompilerServices
 
                     var rtb = rtc.GetNewRecordTypeBuilder();
 
-                    rtc.DefineRecordType(rtb, new[]
-                    {
+                    rtc.DefineRecordType(rtb,
+                    [
                         new KeyValuePair<string, Type>("Name", typeof(string)),
                         new KeyValuePair<string, Type>("Age", typeof(int)),
-                    }, eq);
+                    ], eq);
 
                     return rtb.CreateType();
                 }, eq);
@@ -601,11 +601,11 @@ namespace Tests.System.Linq.CompilerServices
 
                     var rtb = rtc.GetNewRecordTypeBuilder();
 
-                    rtc.DefineRecordType(rtb, new[]
-                    {
+                    rtc.DefineRecordType(rtb,
+                    [
                         new StructuralFieldDeclaration("Name", typeof(string)),
                         new StructuralFieldDeclaration("Age", typeof(int)),
-                    }, eq);
+                    ], eq);
 
                     return rtb.CreateType();
                 }, eq);
@@ -619,11 +619,11 @@ namespace Tests.System.Linq.CompilerServices
             {
                 RecordType_Impl(() =>
                 {
-                    return RuntimeCompiler.CreateRecordType(new[]
-                    {
+                    return RuntimeCompiler.CreateRecordType(
+                    [
                         new KeyValuePair<string, Type>("Name", typeof(string)),
                         new KeyValuePair<string, Type>("Age", typeof(int)),
-                    }, eq);
+                    ], eq);
                 }, eq);
             }
         }
@@ -635,11 +635,11 @@ namespace Tests.System.Linq.CompilerServices
             {
                 RecordType_Impl(() =>
                 {
-                    return RuntimeCompiler.CreateRecordType(new[]
-                    {
+                    return RuntimeCompiler.CreateRecordType(
+                    [
                         new StructuralFieldDeclaration("Name", typeof(string)),
                         new StructuralFieldDeclaration("Age", typeof(int)),
-                    }, eq);
+                    ], eq);
                 }, eq);
             }
         }

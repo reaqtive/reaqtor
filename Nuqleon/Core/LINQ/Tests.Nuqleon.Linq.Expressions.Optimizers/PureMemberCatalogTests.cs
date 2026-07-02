@@ -401,7 +401,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
                     var arrays = Enumerable.Range(0, 16).Select(n => Repeat(elements).Take(n).OrderBy(_ => random.Next()).ToArray());
 
-                    var res = arrays.Select(a => castArray.Invoke(obj: null, new[] { a })).ToArray();
+                    var res = arrays.Select(a => castArray.Invoke(obj: null, [a])).ToArray();
 
                     return res;
                 }
@@ -412,13 +412,13 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
         private static IEnumerable<object[]> GetValues(params Type[] types)
         {
-            var res = (IEnumerable<IEnumerable<object>>)[Array.Empty<object>()];
+            var res = (IEnumerable<IEnumerable<object>>)[[]];
 
             foreach (var type in types)
             {
                 var values = GetValues(type);
 
-                res = res.SelectMany(prev => values.Select(next => prev.Concat(new[] { next })));
+                res = res.SelectMany(prev => values.Select(next => prev.Concat([next])));
             }
 
             return Sample(res).Select(values => values.ToArray());

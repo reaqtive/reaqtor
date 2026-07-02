@@ -84,7 +84,7 @@ namespace System.Linq.CompilerServices
                         }
                     }
                 default:
-                    return new TrueReadOnlyCollection<T>(enumerable.ToArray());
+                    return new TrueReadOnlyCollection<T>([.. enumerable]);
             }
         }
 
@@ -104,7 +104,7 @@ namespace System.Linq.CompilerServices
         /// <param name="source">Sequence to convert to a list.</param>
         /// <returns>The source sequence object if it implements IReadOnlyList&lt;T&gt;, otherwise a copy of the source sequence into a list.</returns>
         /// <remarks>Notice this method does not guarantee that a copy of the source sequence will be made; therefore, aliasing can occur and the ownership of the source sequence needs to be approved for transfer.</remarks>
-        internal static IReadOnlyList<T> ToIReadOnlyListUnsafe<T>(this IEnumerable<T> source) => source is IReadOnlyList<T> list ? list : new List<T>(source);
+        internal static IReadOnlyList<T> ToIReadOnlyListUnsafe<T>(this IEnumerable<T> source) => source is IReadOnlyList<T> list ? list : [.. source];
 
         /// <summary>
         /// Converts the specified sequence to a ReadOnlyCollection&lt;T&gt;.

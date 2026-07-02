@@ -122,7 +122,7 @@ namespace Reaqtor.Reliable
         /// <summary>
         /// The subscription inputs to the reliable subscription.
         /// </summary>
-        public virtual IEnumerable<ISubscription> Inputs => Array.Empty<ISubscription>();
+        public virtual IEnumerable<ISubscription> Inputs => [];
 
         public virtual void Subscribe() { }
 

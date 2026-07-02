@@ -46,7 +46,7 @@ namespace ExpressionJit
 
             {
                 Expression<Func<IEnumerable<int>, int, IEnumerable<int>>> f = (xs, a) => xs.Where(x => x > a).Select(x => x * x);
-                Test(f, d => string.Join(", ", d(new[] { -2, -1, 0, 1, 2, 3 }, 0)));
+                Test(f, d => string.Join(", ", d([-2, -1, 0, 1, 2, 3], 0)));
             }
 
             // Tiered recompilation

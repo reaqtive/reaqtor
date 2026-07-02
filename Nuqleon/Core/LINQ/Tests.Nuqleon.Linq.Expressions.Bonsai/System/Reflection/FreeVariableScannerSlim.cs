@@ -63,7 +63,7 @@ namespace Tests.System.Reflection
             var p1 = ExpressionSlim.Parameter(SlimType, "p1");
             var p2 = ExpressionSlim.Parameter(SlimType, "p2");
 
-            var slimExpr = ExpressionSlim.Block(new[] { p1 }, ExpressionSlim.Add(p1, p2));
+            var slimExpr = ExpressionSlim.Block([p1], ExpressionSlim.Add(p1, p2));
 
             var free = FreeVariableScannerSlim.Find(slimExpr);
             Assert.AreEqual(1, free.Count);

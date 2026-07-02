@@ -258,7 +258,7 @@ namespace System.Linq.Expressions
     public sealed class MemberAssignmentExpressionTree : MemberBindingExpressionTree
     {
         internal MemberAssignmentExpressionTree(MemberAssignment memberAssignment, ExpressionTree expression)
-            : base(new MemberAssignmentExpressionTreeNode(memberAssignment), new[] { expression })
+            : base(new MemberAssignmentExpressionTreeNode(memberAssignment), [expression])
         {
         }
 

@@ -390,17 +390,17 @@ namespace Tests.System.Linq.CompilerServices
             var atb1 = rtc.GetNewAnonymousTypeBuilder();
             var atb2 = rtc.GetNewAnonymousTypeBuilder();
 
-            rtc.DefineAnonymousType(atb1, new[]
-            {
+            rtc.DefineAnonymousType(atb1,
+            [
                 new KeyValuePair<string, Type>("Qux", typeof(int)),
                 new KeyValuePair<string, Type>("Bar", atb2),
-            }, []);
+            ], []);
 
-            rtc.DefineAnonymousType(atb2, new[]
-            {
+            rtc.DefineAnonymousType(atb2,
+            [
                 new KeyValuePair<string, Type>("Baz", typeof(int)),
                 new KeyValuePair<string, Type>("Foo", atb1),
-            }, []);
+            ], []);
 
             var foo = atb1.CreateType();
             var bar = atb2.CreateType();
@@ -561,7 +561,7 @@ namespace Tests.System.Linq.CompilerServices
             var arg0 = e.Arguments[0];
             var arg1 = e.Arguments[1];
 
-            var a = e.Update(new Expression[] { arg0, Expression.Constant(arg1.Evaluate<object>(), arg1.Type) });
+            var a = e.Update([arg0, Expression.Constant(arg1.Evaluate<object>(), arg1.Type)]);
 
             Assert.ThrowsExactly<InvalidOperationException>(() => _ = AnonymousTypeTupletizer.Tupletize(a, Expression.Constant(value: null)));
         }

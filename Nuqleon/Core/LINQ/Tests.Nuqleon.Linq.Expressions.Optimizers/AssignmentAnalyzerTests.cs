@@ -27,7 +27,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var b =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     Expression.Constant(0),
                     Expression.Assign(x, Expression.Constant(1)),
                     Expression.Constant(2)
@@ -51,7 +51,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var b =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     Expression.Constant(0),
                     Expression.Call(read, x),
                     Expression.Constant(2)
@@ -73,7 +73,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var b =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     Expression.RuntimeVariables(x)
                 );
 
@@ -93,7 +93,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var b =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     Expression.Quote(Expression.Lambda<Func<int>>(x))
                 );
 
@@ -113,7 +113,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
 
             var b =
                 Expression.Block(
-                    new[] { x },
+                    [x],
                     x
                 );
 

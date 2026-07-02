@@ -95,7 +95,7 @@ namespace Rxcel
                 }
                 else
                 {
-                    return new[] { e };
+                    return [e];
                 }
             }
 

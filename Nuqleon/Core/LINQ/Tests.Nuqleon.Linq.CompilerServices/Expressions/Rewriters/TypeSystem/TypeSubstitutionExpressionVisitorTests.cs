@@ -135,7 +135,7 @@ namespace Tests.System.Linq.CompilerServices
 
             var expA = Expression.Block(Expression.Constant(1));
             var expB = Expression.Block(Expression.Constant(1.0));
-            var expC = Expression.Block(new[] { p }, p);
+            var expC = Expression.Block([p], p);
 
             var res1 = subst.Apply(expA);
             var res2 = subst.Apply(expB);
@@ -143,7 +143,7 @@ namespace Tests.System.Linq.CompilerServices
 
             AssertEqual(res1, Expression.Block(Expression.Constant(1L)));
             Assert.AreSame(expB, res2);
-            AssertEqual(res3, Expression.Block(new[] { q }, q));
+            AssertEqual(res3, Expression.Block([q], q));
         }
 
         #endregion
@@ -242,11 +242,10 @@ namespace Tests.System.Linq.CompilerServices
                 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                 ExpressionType.Add,
                 typeof(ExpressionEqualityComparerTests),
-                new[]
-                {
+                [
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                }
+                ]
             );
 
             var expA = Expression.Dynamic(
@@ -326,13 +325,13 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var expA = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, string>)), typeof(Dictionary<int, string>).GetProperty("Item"), new[] { Expression.Constant(1) });
-            var expB = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<double, string>)), typeof(Dictionary<double, string>).GetProperty("Item"), new[] { Expression.Constant(1.0) });
+            var expA = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, string>)), typeof(Dictionary<int, string>).GetProperty("Item"), [Expression.Constant(1)]);
+            var expB = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<double, string>)), typeof(Dictionary<double, string>).GetProperty("Item"), [Expression.Constant(1.0)]);
 
             var res1 = subst.Apply(expA);
             var res2 = subst.Apply(expB);
 
-            AssertEqual(res1, Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<long, string>)), typeof(Dictionary<long, string>).GetProperty("Item"), new[] { Expression.Constant(1L) }));
+            AssertEqual(res1, Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<long, string>)), typeof(Dictionary<long, string>).GetProperty("Item"), [Expression.Constant(1L)]));
             Assert.AreSame(expB, res2);
         }
 
@@ -341,7 +340,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var subst = GetVisitorSimple();
 
-            var exp = Expression.MakeIndex(Expression.Parameter(typeof(Bar)), typeof(Bar).GetProperty("Item"), new[] { Expression.Constant(1) });
+            var exp = Expression.MakeIndex(Expression.Parameter(typeof(Bar)), typeof(Bar).GetProperty("Item"), [Expression.Constant(1)]);
 
             Assert.ThrowsExactly<InvalidOperationException>(() => subst.Apply(exp));
         }
@@ -946,11 +945,11 @@ namespace Tests.System.Linq.CompilerServices
             Assert.ThrowsExactly<InvalidOperationException>(() => check1.Visit(query));
 
 
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("Name", typeof(string)),
                 new KeyValuePair<string, Type>("Age", typeof(int)),
-            });
+            ]);
 
             var subst1 = new TypeSubstitutionExpressionVisitor(new Dictionary<Type, Type>
             {

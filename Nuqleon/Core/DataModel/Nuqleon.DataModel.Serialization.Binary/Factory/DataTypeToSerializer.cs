@@ -92,7 +92,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             var typeCode = Protocol.TYPE_ARRAY;
             var body = Expression.Block(
                 // byte tc;
-                new[] { tcParameter },
+                [tcParameter],
                 // tc = typeCode;
                 Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                 // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -108,7 +108,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                     // {
                     Expression.Block(
                         // int length, i;
-                        new[] { lengthParameter, loopParameter },
+                        [lengthParameter, loopParameter],
                         // length = value.Length;
                         Expression.Assign(lengthParameter, Expression.Property(valueParameter, s_count.Value)),
                         // stream.WriteUInt32Compact((uint)length);
@@ -252,7 +252,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             {
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = typeCode;
                     Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                     // stream.WriteByte(tc);
@@ -261,7 +261,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                         // int count, bufferLength;
                         // PooledMemoryStream memoryStream;
                         // byte[] buffer;
-                        new[] { countParameter, bufferLengthParameter, memoryStreamParameter, bufferParameter },
+                        [countParameter, bufferLengthParameter, memoryStreamParameter, bufferParameter],
                         serializeBody
                     )
                 );
@@ -270,7 +270,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             {
                 body = Expression.Block(
                     // byte tc;
-                    new[] { tcParameter },
+                    [tcParameter],
                     // tc = typeCode;
                     Expression.Assign(tcParameter, Expression.Constant(typeCode, typeof(byte))),
                     // if (value == null) tc |= Protocol.TYPE_FLAG_NULLVALUE;
@@ -288,7 +288,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                             // int count, bufferLength;
                             // PooledMemoryStream memoryStream;
                             // byte[] buffer;
-                            new[] { countParameter, bufferLengthParameter, memoryStreamParameter, bufferParameter },
+                            [countParameter, bufferLengthParameter, memoryStreamParameter, bufferParameter],
                             serializeBody
                         )
                     // }
@@ -404,7 +404,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 return Expression.Lambda(
                     // {
                     Expression.Block(
-                        new[] { inner.Parameters[1] },
+                        [inner.Parameters[1]],
                         Expression.Condition(
                             Expression.Equal(enumValueParameter, s_nullObject.Value),
                             Expression.Assign(inner.Parameters[1], Expression.Convert(s_nullObject.Value, underlyingType)),
@@ -420,7 +420,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             {
                 return Expression.Lambda(
                     Expression.Block(
-                        new[] { inner.Parameters[1] },
+                        [inner.Parameters[1]],
                         Expression.Assign(inner.Parameters[1], Expression.Convert(enumValueParameter, underlyingType)),
                         inner.Body
                     ),

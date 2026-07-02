@@ -61,12 +61,12 @@ namespace Nuqleon.DataModel.Serialization.Binary
                 Debug.Assert(elementType.Type == typeof(CycleDetector));
 
                 var body = Expression.Block(
-                    new[] { convertedParameter },
+                    [convertedParameter],
                     Expression.Assign(convertedParameter, Expression.Convert(valueParameter, type.UnderlyingType)),
                     Expression.IfThen(
                         Expression.NotEqual(convertedParameter, ReflectionConstants.NullObject),
                         Expression.Block(
-                            new[] { lengthParameter, loopParameter },
+                            [lengthParameter, loopParameter],
                             Expression.Assign(lengthParameter, Expression.Property(convertedParameter, ReflectionConstants.ListCount)),
                             // var i = 0; while (true) { if (i < length) { inner(value[i], hashSet); i++; } else { break; } }
                             ExpressionHelpers.For(
@@ -129,7 +129,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                     Expression.IfThenElse(
                         Expression.Call(hashSetParameter, ReflectionConstants.HashSetAdd, valueParameter),
                         Expression.TryFinally(
-                            Expression.Block(new[] { convertedParameter }, propertyChecks),
+                            Expression.Block([convertedParameter], propertyChecks),
                             Expression.Call(hashSetParameter, ReflectionConstants.HashSetRemove, valueParameter)
                         ),
                         Expression.Throw(Expression.Constant(new InvalidOperationException("Objects with cycles cannot be serialized."), typeof(InvalidOperationException)))

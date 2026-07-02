@@ -26,7 +26,7 @@ namespace Tests.System.Linq.Expressions
         {
             var s = typeof(string).ToTypeSlim();
             var i = typeof(int).ToTypeSlim();
-            var m = s.GetSimpleMethod("Substring", new ReadOnlyCollection<TypeSlim>(new[] { i, i }), s);
+            var m = s.GetSimpleMethod("Substring", new ReadOnlyCollection<TypeSlim>([i, i]), s);
 
             var a0 = ExpressionSlim.Default(i);
             var a1 = ExpressionSlim.Default(i);

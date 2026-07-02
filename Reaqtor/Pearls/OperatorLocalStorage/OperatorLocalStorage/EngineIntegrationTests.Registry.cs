@@ -32,9 +32,9 @@ namespace Playground
             // NB: This utility implements a very narrow case needed for integration tests. It's by no means meant to be reusable as-is.
             //
 
-            public new Dictionary<Uri, IReactiveObservableDefinition> Observables { get; } = new Dictionary<Uri, IReactiveObservableDefinition>();
-            public new Dictionary<Uri, IReactiveObserverDefinition> Observers { get; } = new Dictionary<Uri, IReactiveObserverDefinition>();
-            public new Dictionary<Uri, IReactiveStreamProcess> Streams { get; } = new Dictionary<Uri, IReactiveStreamProcess>();
+            public new Dictionary<Uri, IReactiveObservableDefinition> Observables { get; } = [];
+            public new Dictionary<Uri, IReactiveObserverDefinition> Observers { get; } = [];
+            public new Dictionary<Uri, IReactiveStreamProcess> Streams { get; } = [];
 
             protected override TResult Execute<TResult>(Expression expression)
             {

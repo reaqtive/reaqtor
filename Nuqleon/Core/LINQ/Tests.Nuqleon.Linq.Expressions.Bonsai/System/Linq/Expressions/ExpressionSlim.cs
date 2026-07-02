@@ -579,25 +579,25 @@ namespace Tests.System.Linq.Expressions
             Assert.AreSame(methodSlim, call.Method);
             Assert.AreEqual(ExpressionType.Call, call.NodeType);
             Assert.IsNull(call.Object);
-            Assert.IsTrue(call.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(call.Arguments.SequenceEqual([arg0, arg1]));
 
             call = ExpressionSlim.Call(methodSlim, arg0, arg1);
             Assert.AreSame(methodSlim, call.Method);
             Assert.AreEqual(ExpressionType.Call, call.NodeType);
             Assert.IsNull(call.Object);
-            Assert.IsTrue(call.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(call.Arguments.SequenceEqual([arg0, arg1]));
 
             call = ExpressionSlim.Call(inst, methodSlim, new[] { arg0, arg1 }.ToList());
             Assert.AreSame(methodSlim, call.Method);
             Assert.AreEqual(ExpressionType.Call, call.NodeType);
             Assert.AreSame(inst, call.Object);
-            Assert.IsTrue(call.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(call.Arguments.SequenceEqual([arg0, arg1]));
 
-            call = ExpressionSlim.Call(inst, methodSlim, new[] { arg0, arg1 });
+            call = ExpressionSlim.Call(inst, methodSlim, [arg0, arg1]);
             Assert.AreSame(methodSlim, call.Method);
             Assert.AreEqual(ExpressionType.Call, call.NodeType);
             Assert.AreSame(inst, call.Object);
-            Assert.IsTrue(call.Arguments.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(call.Arguments.SequenceEqual([arg0, arg1]));
         }
 
         [TestMethod]
@@ -811,21 +811,21 @@ namespace Tests.System.Linq.Expressions
             var arg0 = ExpressionSlim.Default(SlimType);
             var arg1 = ExpressionSlim.Default(SlimType);
 
-            var newArrExpr = ExpressionSlim.NewArrayBounds(SlimType, new[] { arg0, arg1 });
+            var newArrExpr = ExpressionSlim.NewArrayBounds(SlimType, [arg0, arg1]);
             Assert.AreEqual(SlimType, newArrExpr.ElementType);
-            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual([arg0, arg1]));
 
             newArrExpr = ExpressionSlim.NewArrayBounds(SlimType, new[] { arg0, arg1 }.ToList());
             Assert.AreEqual(SlimType, newArrExpr.ElementType);
-            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual([arg0, arg1]));
 
-            newArrExpr = ExpressionSlim.NewArrayInit(SlimType, new[] { arg0, arg1 });
+            newArrExpr = ExpressionSlim.NewArrayInit(SlimType, [arg0, arg1]);
             Assert.AreEqual(SlimType, newArrExpr.ElementType);
-            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual([arg0, arg1]));
 
             newArrExpr = ExpressionSlim.NewArrayInit(SlimType, new[] { arg0, arg1 }.ToList());
             Assert.AreEqual(SlimType, newArrExpr.ElementType);
-            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual(new[] { arg0, arg1 }));
+            Assert.IsTrue(newArrExpr.Expressions.SequenceEqual([arg0, arg1]));
         }
 
         [TestMethod]
@@ -1263,7 +1263,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var blk = ExpressionSlim.Block(a, b, c);
-                AssertElementsAreSame(new[] { a, b, c }, blk.Expressions);
+                AssertElementsAreSame([a, b, c], blk.Expressions);
                 Assert.AreEqual(0, blk.Variables.Count);
                 Assert.IsNull(blk.Type);
                 Assert.AreEqual(c, blk.Result);
@@ -1278,7 +1278,7 @@ namespace Tests.System.Linq.Expressions
 
                 blk = ExpressionSlim.Block(ps, ps);
                 AssertElementsAreSame(ps, blk.Variables);
-                AssertElementsAreSame(ps.Cast<ExpressionSlim>().ToArray(), blk.Expressions);
+                AssertElementsAreSame([.. ps.Cast<ExpressionSlim>()], blk.Expressions);
                 Assert.IsNull(blk.Type);
                 Assert.AreEqual(z, blk.Result);
             }
@@ -1292,7 +1292,7 @@ namespace Tests.System.Linq.Expressions
 
                 blk = ExpressionSlim.Block(ps, x, y, z);
                 AssertElementsAreSame(ps, blk.Variables);
-                AssertElementsAreSame(ps.Cast<ExpressionSlim>().ToArray(), blk.Expressions);
+                AssertElementsAreSame([.. ps.Cast<ExpressionSlim>()], blk.Expressions);
                 Assert.IsNull(blk.Type);
                 Assert.AreEqual(z, blk.Result);
             }
@@ -1307,7 +1307,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var blk = ExpressionSlim.Block(SlimType, a, b, c);
-                AssertElementsAreSame(new[] { a, b, c }, blk.Expressions);
+                AssertElementsAreSame([a, b, c], blk.Expressions);
                 Assert.AreEqual(0, blk.Variables.Count);
                 Assert.AreSame(SlimType, blk.Type);
                 Assert.AreEqual(c, blk.Result);
@@ -1322,7 +1322,7 @@ namespace Tests.System.Linq.Expressions
 
                 blk = ExpressionSlim.Block(SlimType, ps, ps);
                 AssertElementsAreSame(ps, blk.Variables);
-                AssertElementsAreSame(ps.Cast<ExpressionSlim>().ToArray(), blk.Expressions);
+                AssertElementsAreSame([.. ps.Cast<ExpressionSlim>()], blk.Expressions);
                 Assert.AreSame(SlimType, blk.Type);
                 Assert.AreEqual(z, blk.Result);
             }
@@ -1336,7 +1336,7 @@ namespace Tests.System.Linq.Expressions
 
                 blk = ExpressionSlim.Block(SlimType, ps, x, y, z);
                 AssertElementsAreSame(ps, blk.Variables);
-                AssertElementsAreSame(ps.Cast<ExpressionSlim>().ToArray(), blk.Expressions);
+                AssertElementsAreSame([.. ps.Cast<ExpressionSlim>()], blk.Expressions);
                 Assert.AreSame(SlimType, blk.Type);
                 Assert.AreEqual(z, blk.Result);
             }
@@ -1392,7 +1392,7 @@ namespace Tests.System.Linq.Expressions
             {
                 var sc = ExpressionSlim.SwitchCase(b, x, y);
                 Assert.AreSame(b, sc.Body);
-                AssertElementsAreSame(new[] { x, y }, sc.TestValues);
+                AssertElementsAreSame([x, y], sc.TestValues);
             }
 
             {
@@ -1411,7 +1411,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(v, c);
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.IsNull(s.Comparison);
                 Assert.IsNull(s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1420,7 +1420,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(v, d, c);
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.IsNull(s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1429,7 +1429,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(v, d, m, c);
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.AreSame(m, s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1438,7 +1438,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(t, v, d, m, c);
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.AreSame(m, s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1447,7 +1447,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(v, d, m, new List<SwitchCaseSlim> { c });
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.AreSame(m, s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1456,7 +1456,7 @@ namespace Tests.System.Linq.Expressions
 
             {
                 var s = ExpressionSlim.Switch(t, v, d, m, new List<SwitchCaseSlim> { c });
-                AssertElementsAreSame(new[] { c }, s.Cases);
+                AssertElementsAreSame([c], s.Cases);
                 Assert.AreSame(m, s.Comparison);
                 Assert.AreSame(d, s.DefaultBody);
                 Assert.AreSame(v, s.SwitchValue);
@@ -1553,7 +1553,7 @@ namespace Tests.System.Linq.Expressions
 
             try
             {
-                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), ExpressionSlim.Parameter(SlimType), ExpressionSlim.Parameter(SlimType), Array.Empty<CatchBlockSlim>());
+                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), ExpressionSlim.Parameter(SlimType), ExpressionSlim.Parameter(SlimType), []);
                 Assert.Fail("ExpressionSlim.MakeTry did not throw when both finally and fault handlers expressions were specified.");
             }
             catch (ArgumentException)
@@ -1562,7 +1562,7 @@ namespace Tests.System.Linq.Expressions
 
             try
             {
-                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), @finally: null, ExpressionSlim.Parameter(SlimType), new[] { ExpressionSlim.Catch(SlimType, ExpressionSlim.Parameter(SlimType)) });
+                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), @finally: null, ExpressionSlim.Parameter(SlimType), [ExpressionSlim.Catch(SlimType, ExpressionSlim.Parameter(SlimType))]);
                 Assert.Fail("ExpressionSlim.MakeTry did not throw when both catch blocks and fault handlers were specified.");
             }
             catch (ArgumentException)
@@ -1571,7 +1571,7 @@ namespace Tests.System.Linq.Expressions
 
             try
             {
-                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), @finally: null, fault: null, Array.Empty<CatchBlockSlim>());
+                ExpressionSlim.MakeTry(type: null, ExpressionSlim.Parameter(SlimType), @finally: null, fault: null, []);
                 Assert.Fail("ExpressionSlim.MakeTry did not have fault, finally or catch.");
             }
             catch (ArgumentException)
@@ -1582,7 +1582,7 @@ namespace Tests.System.Linq.Expressions
         [TestMethod]
         public void ExpressionSlim_IndexExpressionFactoryTests()
         {
-            var e = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<string, int>)), typeof(Dictionary<string, int>).GetProperty("Item"), new Expression[] { Expression.Constant("foo") });
+            var e = Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<string, int>)), typeof(Dictionary<string, int>).GetProperty("Item"), [Expression.Constant("foo")]);
             var ie = (IndexExpressionSlim)e.ToExpressionSlim();
 
             var i1 = ExpressionSlim.MakeIndex(ie.Object, ie.Indexer, ie.Arguments);

@@ -47,7 +47,7 @@ namespace Tests
             Assert.AreEqual(3, n);
 
 #if DEBUG
-            Assert.IsTrue(cd.Keys.OrderBy(x => x).SequenceEqual(new[] { "bar", "foo" }));
+            Assert.IsTrue(cd.Keys.OrderBy(x => x).SequenceEqual(["bar", "foo"]));
 #endif
         }
 

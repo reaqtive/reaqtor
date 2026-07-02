@@ -203,7 +203,7 @@ namespace Utilities
             {
                 var args = type.GetGenericArguments();
 
-                keyValueEntityType = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("key", args[0]), new KeyValuePair<string, Type>("value", args[1]) }, valueEquality: true);
+                keyValueEntityType = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("key", args[0]), new KeyValuePair<string, Type>("value", args[1])], valueEquality: true);
 
                 return true;
             }
@@ -272,7 +272,7 @@ namespace Utilities
 
             public IEnumerable<string> GetNames(FieldInfo field) => GetNames((MemberInfo)field);
 
-            private static IEnumerable<string> GetNames(MemberInfo member) => new[] { member.GetCustomAttribute<MappingAttribute>()?.Uri ?? member.Name };
+            private static IEnumerable<string> GetNames(MemberInfo member) => [member.GetCustomAttribute<MappingAttribute>()?.Uri ?? member.Name];
         }
 
         private sealed class ProjectingSerializer<TInput, TOutput> : ISerializer<TInput>

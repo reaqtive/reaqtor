@@ -2433,7 +2433,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -2468,7 +2468,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -2494,7 +2494,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -2531,7 +2531,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -2557,7 +2557,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -2596,7 +2596,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -2622,7 +2622,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -2663,7 +2663,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -2689,7 +2689,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -2732,7 +2732,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -2758,7 +2758,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6", "observer_parameter_7"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -2803,7 +2803,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -2829,7 +2829,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6", "observer_parameter_7", "observer_parameter_8"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -2876,7 +2876,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -2902,7 +2902,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6", "observer_parameter_7", "observer_parameter_8", "observer_parameter_9"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -2951,7 +2951,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -2977,7 +2977,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6", "observer_parameter_7", "observer_parameter_8", "observer_parameter_9", "observer_parameter_10"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -3028,7 +3028,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -3054,7 +3054,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6", "observer_parameter_7", "observer_parameter_8", "observer_parameter_9", "observer_parameter_10", "observer_parameter_11"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -3107,7 +3107,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -3133,7 +3133,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6", "observer_parameter_7", "observer_parameter_8", "observer_parameter_9", "observer_parameter_10", "observer_parameter_11", "observer_parameter_12"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -3188,7 +3188,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -3214,7 +3214,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6", "observer_parameter_7", "observer_parameter_8", "observer_parameter_9", "observer_parameter_10", "observer_parameter_11", "observer_parameter_12", "observer_parameter_13"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -3271,7 +3271,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -3297,7 +3297,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6", "observer_parameter_7", "observer_parameter_8", "observer_parameter_9", "observer_parameter_10", "observer_parameter_11", "observer_parameter_12", "observer_parameter_13", "observer_parameter_14"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -3356,7 +3356,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 
@@ -3382,7 +3382,7 @@ namespace Tests.Reaqtor.Service
                         ys.Subscribe(ob("observer_parameter_1", "observer_parameter_2", "observer_parameter_3", "observer_parameter_4", "observer_parameter_5", "observer_parameter_6", "observer_parameter_7", "observer_parameter_8", "observer_parameter_9", "observer_parameter_10", "observer_parameter_11", "observer_parameter_12", "observer_parameter_13", "observer_parameter_14", "observer_parameter_15"), new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -3443,7 +3443,7 @@ namespace Tests.Reaqtor.Service
                         ),
                         state: null
                     )
-                ).ToArray()
+                )]
             );
         }
 

@@ -101,7 +101,7 @@ namespace Reaqtor.QueryEngine.Mocks
                 _onDispose = onDispose;
             }
 
-            public IEnumerable<ISubscription> Inputs => Array.Empty<ISubscription>();
+            public IEnumerable<ISubscription> Inputs => [];
 
             protected IOperatorContext Context { get; private set; }
 

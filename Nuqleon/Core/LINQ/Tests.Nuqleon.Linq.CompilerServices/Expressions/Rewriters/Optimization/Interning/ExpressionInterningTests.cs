@@ -1019,12 +1019,12 @@ namespace Tests.System.Linq.CompilerServices
         public void Intern_Members_Indexed_Property()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), [Expression.Constant(0)]);
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
             CloneAndAssert(f1);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), [Expression.Constant("foo"), Expression.Constant(0)]);
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             CloneAndAssert(f2);
@@ -1156,11 +1156,11 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_AnonymousType_KeysReconstructed()
         {
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("foo", typeof(int)),
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, ["bar"]);
+            ], ["bar"]);
 
             Assert.IsNotNull(anon.GetProperty("bar"));
             Assert.IsNotNull(anon.GetProperty("foo"));
@@ -1197,10 +1197,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_RecordType_WithValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -1212,10 +1212,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_RecordType_WithoutValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: false);
+            ], valueEquality: false);
 
             var bar = rec.GetProperty("bar");
 
@@ -1227,10 +1227,10 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void Intern_RecordType_TypeReconstructed()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -1703,11 +1703,10 @@ namespace Tests.System.Linq.CompilerServices
                 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                 ExpressionType.Add,
                 typeof(ExpressionEqualityComparerTests),
-                new[]
-                {
+                [
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                }
+                ]
             );
 
             var e =

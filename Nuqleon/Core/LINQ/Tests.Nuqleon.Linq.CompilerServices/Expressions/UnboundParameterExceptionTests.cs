@@ -24,7 +24,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void UnboundParameterException_ArgumentChecking()
         {
-            AssertEx.ThrowsException<ArgumentNullException>(() => new UnboundParameterException("", expression: null, Array.Empty<ParameterExpression>()), ex => Assert.AreEqual("expression", ex.ParamName));
+            AssertEx.ThrowsException<ArgumentNullException>(() => new UnboundParameterException("", expression: null, []), ex => Assert.AreEqual("expression", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => new UnboundParameterException("", Expression.Constant(42), parameters: null), ex => Assert.AreEqual("parameters", ex.ParamName));
             AssertEx.ThrowsException<ArgumentNullException>(() => UnboundParameterException.ThrowIfOpen(expression: null, ""), ex => Assert.AreEqual("expression", ex.ParamName));
         }

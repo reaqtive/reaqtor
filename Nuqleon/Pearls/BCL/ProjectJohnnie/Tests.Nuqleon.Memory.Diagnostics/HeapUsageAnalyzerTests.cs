@@ -47,13 +47,13 @@ namespace Tests
             var res = a.Analyze(new HeapAnalysisOptions { ComputeSharedHeap = true, DegreeOfParallelism = 0 });
 
             var r1 = res.Reports[p1].Objects;
-            Assert.IsTrue(r1.SetEquals(new[] { objs1[0], objs1[1], objs1[2], anon1.bar, arr1[0], arr1[1] }));
+            Assert.IsTrue(r1.SetEquals([objs1[0], objs1[1], objs1[2], anon1.bar, arr1[0], arr1[1]]));
 
             var r2 = res.Reports[p2].Objects;
-            Assert.IsTrue(r2.SetEquals(new[] { objs2[0], objs2[1], objs2[2], arr2[0], arr2[1] }));
+            Assert.IsTrue(r2.SetEquals([objs2[0], objs2[1], objs2[2], arr2[0], arr2[1]]));
 
             var sh = res.Shared.Objects;
-            Assert.IsTrue(sh.SetEquals(new[] { name }));
+            Assert.IsTrue(sh.SetEquals([name]));
 
             var byGen1 = res.Reports[p1].SplitByGeneration();
             Assert.AreEqual(GC.MaxGeneration + 1, byGen1.Length);

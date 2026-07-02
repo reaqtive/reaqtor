@@ -31,7 +31,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
         public void DataTypeChecker_CheckTypes_Success()
         {
             var anon = new { x = 1, b = new bool[] { true }, c = new List<int[]>() };
-            var rec = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("bar", typeof(int)) }, valueEquality: true);
+            var rec = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("bar", typeof(int))], valueEquality: true);
 
             foreach (var t in new[]
             {

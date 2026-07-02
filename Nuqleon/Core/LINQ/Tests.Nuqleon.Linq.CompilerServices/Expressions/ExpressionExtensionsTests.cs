@@ -904,7 +904,7 @@ namespace Tests.System.Linq.CompilerServices
         [TestMethod]
         public void ToCSharpString_CompilerGenerated()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("bar", typeof(int)) }, valueEquality: true);
+            var rec = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("bar", typeof(int))], valueEquality: true);
 
             var exp = Expression.New(rec);
 

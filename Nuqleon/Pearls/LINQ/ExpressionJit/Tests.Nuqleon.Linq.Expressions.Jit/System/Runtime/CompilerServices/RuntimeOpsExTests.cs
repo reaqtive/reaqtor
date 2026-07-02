@@ -224,7 +224,7 @@ namespace Tests
             var h = GetEmptyHoistedLocals();
             var x = Expression.Parameter(typeof(int));
             var y = Expression.Parameter(typeof(Exception));
-            var e = Expression.Lambda<Action>(Expression.Block(new[] { x }, Expression.TryCatch(Expression.Empty(), Expression.Catch(y, Expression.Empty(), Expression.Constant(true)))));
+            var e = Expression.Lambda<Action>(Expression.Block([x], Expression.TryCatch(Expression.Empty(), Expression.Catch(y, Expression.Empty(), Expression.Constant(true)))));
             var c = new Empty();
             var q = RuntimeOpsEx.Quote(e, h, c);
             Assert.AreSame(e, q);
@@ -234,14 +234,14 @@ namespace Tests
         public void Quote_Hoisted_Block()
         {
             var x = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { x });
+            var variables = new ReadOnlyCollection<ParameterExpression>([x]);
             var definitions = new Dictionary<ParameterExpression, StorageKind>
             {
                 { x, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
             };
             var h = new HoistedLocals(parent: null, variables, definitions);
 
-            var e = Expression.Lambda<Func<int>>(Expression.Block(new[] { Expression.Parameter(typeof(int)) }, x));
+            var e = Expression.Lambda<Func<int>>(Expression.Block([Expression.Parameter(typeof(int))], x));
 
             Assert.AreEqual(typeof(Closure<StrongBox<int>>), h.Closure.ClosureType);
 
@@ -259,7 +259,7 @@ namespace Tests
         public void Quote_Hoisted_CatchBlock()
         {
             var x = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { x });
+            var variables = new ReadOnlyCollection<ParameterExpression>([x]);
             var definitions = new Dictionary<ParameterExpression, StorageKind>
             {
                 { x, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
@@ -284,7 +284,7 @@ namespace Tests
         public void Quote_Hoisted_Parent()
         {
             var x = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { x });
+            var variables = new ReadOnlyCollection<ParameterExpression>([x]);
             var definitions = new Dictionary<ParameterExpression, StorageKind>
             {
                 { x, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.
@@ -310,7 +310,7 @@ namespace Tests
         public void Quote_RuntimeVariables_Hoisted1()
         {
             var x = Expression.Parameter(typeof(int));
-            var variables = new ReadOnlyCollection<ParameterExpression>(new[] { x });
+            var variables = new ReadOnlyCollection<ParameterExpression>([x]);
             var definitions = new Dictionary<ParameterExpression, StorageKind>
             {
                 { x, StorageKind.Hoisted | StorageKind.Boxed } // NB: Using Boxed for LINQ ET compatibility.

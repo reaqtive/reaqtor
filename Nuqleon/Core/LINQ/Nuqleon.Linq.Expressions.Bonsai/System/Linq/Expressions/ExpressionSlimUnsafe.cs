@@ -565,12 +565,12 @@ namespace System.Linq.Expressions
 
         public static BlockExpressionSlim Block(IEnumerable<ExpressionSlim> expressions)
         {
-            return Block(Array.Empty<ParameterExpressionSlim>(), expressions);
+            return Block([], expressions);
         }
 
         public static BlockExpressionSlim Block(params ExpressionSlim[] expressions)
         {
-            return Block(Array.Empty<ParameterExpressionSlim>(), expressions);
+            return Block([], expressions);
         }
 
         public static BlockExpressionSlim Block(IEnumerable<ParameterExpressionSlim> variables, IEnumerable<ExpressionSlim> expressions)

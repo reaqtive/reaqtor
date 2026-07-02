@@ -43,7 +43,7 @@ namespace Reaqtive
         /// <returns>Sequence of operator inputs.</returns>
         protected override IEnumerable<ISubscription> OnSubscribe()
         {
-            return new[] { (ISubscription)Output };
+            return [(ISubscription)Output];
         }
 
         /// <summary>

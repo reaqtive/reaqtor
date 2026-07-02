@@ -164,7 +164,7 @@ namespace System.Linq.CompilerServices
 
                 if (variable != null)
                 {
-                    _environment.Push(new[] { variable });
+                    _environment.Push([variable]);
                 }
 
                 Visit(node.Filter);

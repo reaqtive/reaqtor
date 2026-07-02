@@ -52,11 +52,11 @@ namespace Reaqtive.Operators
                 _hasLatest = false;
                 _subscription = Params._sources.Subscribe(this);
 
-                return new ISubscription[]
-                {
+                return
+                [
                     _subscription,
                     _innerSubscription
-                };
+                ];
             }
 
             public override void SetContext(IOperatorContext context)

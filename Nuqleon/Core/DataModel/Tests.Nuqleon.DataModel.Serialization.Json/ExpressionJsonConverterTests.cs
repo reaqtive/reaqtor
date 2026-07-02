@@ -156,7 +156,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Json
 
                 stream.Position = 0;
 
-                return deserialize.Invoke(DataSerializer, new[] { stream });
+                return deserialize.Invoke(DataSerializer, [stream]);
             }
 
             private class DataModelInvertedTypeSpace : InvertedTypeSpace

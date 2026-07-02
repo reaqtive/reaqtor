@@ -49,7 +49,7 @@ namespace System.Memory
                 throw new ArgumentNullException(nameof(items));
 
             var list = items as IList<object>;
-            return CreateImpl(list ?? items.ToArray());
+            return CreateImpl(list ?? [.. items]);
         }
 
         private static IReadOnlyIndexed CreateImpl(IList<object> items)

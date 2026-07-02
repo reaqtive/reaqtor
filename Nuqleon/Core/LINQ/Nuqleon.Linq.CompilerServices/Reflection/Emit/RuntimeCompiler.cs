@@ -579,7 +579,7 @@ namespace System.Linq.CompilerServices
             var props = properties.AsArray();
             CheckAccess(props);
 
-            new RecordTypeGenerator(recordTypeBuilder, props.Select(p => new PropertyDeclaration { Name = p.Key, Type = p.Value, CustomAttributes = Array.Empty<CustomAttributeDeclaration>(), CanRead = true, CanWrite = true, IsKey = valueEquality }), valueEquality).Build();
+            new RecordTypeGenerator(recordTypeBuilder, props.Select(p => new PropertyDeclaration { Name = p.Key, Type = p.Value, CustomAttributes = [], CanRead = true, CanWrite = true, IsKey = valueEquality }), valueEquality).Build();
         }
 
         /// <summary>

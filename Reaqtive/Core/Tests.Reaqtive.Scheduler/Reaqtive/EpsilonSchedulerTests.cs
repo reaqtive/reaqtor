@@ -552,7 +552,7 @@ namespace Test.Reaqtive.Scheduler
             scheduler.Schedule(task1Due, task1);
             scheduler.Schedule(task2Due, task2); // NB: This is non-deterministic.
 
-            Assert.AreEqual(1, WaitHandle.WaitAny(new[] { worked1, worked2 }));
+            Assert.AreEqual(1, WaitHandle.WaitAny([worked1, worked2]));
             worked1.WaitOne();
 
             // REVIEW: We don't really test the order the tasks executed in.

@@ -20,8 +20,8 @@ namespace Nuqleon.Json.Expressions
         /// <summary>
         /// Singleton expression node objects for commonly used integer numeric values.
         /// </summary>
-        internal static readonly ConstantExpression[] Nums = new[]
-        {
+        internal static readonly ConstantExpression[] Nums =
+        [
             new NumberConstantExpression("0"),
             new NumberConstantExpression("1"),
             new NumberConstantExpression("2"),
@@ -32,7 +32,7 @@ namespace Nuqleon.Json.Expressions
             new NumberConstantExpression("7"),
             new NumberConstantExpression("8"),
             new NumberConstantExpression("9"),
-        };
+        ];
 
         /// <summary>
         /// The value of the Number.

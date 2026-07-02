@@ -374,7 +374,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(4);
             in2s.OnNext(10);
 
-            AssertResultSequence(out1, new int[] { 7, 13 });
+            AssertResultSequence(out1, [7, 13]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -410,7 +410,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(2);
             in2s.OnNext(5);
 
-            AssertResultSequence(out1, new int[] { 8 });
+            AssertResultSequence(out1, [8]);
 
             in1s.OnNext(10);
 
@@ -418,13 +418,13 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(6);
 
             Assert.IsTrue(out1.WaitForCount(2, Timeout));
-            AssertResultSequence(out1, new int[] { 8, 9 });
+            AssertResultSequence(out1, [8, 9]);
 
             in2s.OnNext(11);
 
             Assert.IsTrue(out1.WaitForCount(4, Timeout));
 
-            AssertResultSequence(out1, new int[] { 8, 9, 14, 21 });
+            AssertResultSequence(out1, [8, 9, 14, 21]);
 
             sub1.Dispose();
         }
@@ -465,7 +465,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -506,7 +506,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(49); // ignored
             in4s.OnNext(50);
 
-            AssertResultSequence(out1, new int[] { 48, 50 });
+            AssertResultSequence(out1, [48, 50]);
         }
 
         [TestMethod]
@@ -539,7 +539,7 @@ namespace Tests.Reaqtor.QueryEngine
             var in0 = GetObservable<int>("o0");
             var in0s = in0.Synchronize(qe1.Scheduler);
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -582,7 +582,7 @@ namespace Tests.Reaqtor.QueryEngine
             in0s.OnNext(43); // ignored
             in2s.OnNext(44);
 
-            AssertResultSequence(out1, new int[] { 42, 44 });
+            AssertResultSequence(out1, [42, 44]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -625,7 +625,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(46); // ignored
             in3s.OnNext(47);
 
-            AssertResultSequence(out1, new int[] { 45, 47 });
+            AssertResultSequence(out1, [45, 47]);
         }
 
         [TestMethod]
@@ -662,7 +662,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             inls.OnNext(1); // CL(l = 1, r = ?)
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -695,7 +695,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             inrs.OnNext(2); // CL(l = 1, r = Quoted{o2}) & SM(Persisted{o2.Sub(b1)})
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -750,7 +750,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(45); // -> 1 + 45, 2 + 45
             in3s.OnNext(47); // -> 1 + 47, 2 + 47
 
-            AssertResultSequenceSet(out1, new int[] { 43, 44, 45, 46, 47, 48, 49 }); // SelectMany concurrent merge allows for different orderings
+            AssertResultSequenceSet(out1, [43, 44, 45, 46, 47, 48, 49]); // SelectMany concurrent merge allows for different orderings
 
             // Checkpoint -------------------------------------------------------------
 
@@ -794,7 +794,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(49); // -> 1 + 49
             in3s.OnNext(50); // -> 1 + 50, 2 + 50
 
-            AssertResultSequenceSet(out1, new int[] { 50, 51, 52 }); // SelectMany concurrent merge allows for different orderings
+            AssertResultSequenceSet(out1, [50, 51, 52]); // SelectMany concurrent merge allows for different orderings
 
             in2s.OnCompleted();
             in3s.OnCompleted();
@@ -841,7 +841,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(3);
             in1s.OnNext(4);
 
-            AssertResultSequence(out1, new int[] { 6 });
+            AssertResultSequence(out1, [6]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -882,7 +882,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(5);
             in1s.OnNext(6);
 
-            AssertResultSequence(out1, new int[] { 15 });
+            AssertResultSequence(out1, [15]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -924,7 +924,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(8);
             in1s.OnNext(9);
 
-            AssertResultSequence(out1, new int[] { 24 });
+            AssertResultSequence(out1, [24]);
 
             in1s.OnNext(10);
 
@@ -958,7 +958,7 @@ namespace Tests.Reaqtor.QueryEngine
                 }
             }
 
-            return new GentleDictionary<string, IEnumerable<string>>(res, () => Array.Empty<string>());
+            return new GentleDictionary<string, IEnumerable<string>>(res, () => []);
         }
 
         private sealed class GentleDictionary<K, T>
@@ -1018,7 +1018,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in5s.OnNext(17); // 2 + 3 * 17
 
-            AssertResultSequence(out1, new int[] { 2 + 3 * 17 });
+            AssertResultSequence(out1, [2 + 3 * 17]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -1053,7 +1053,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in6s.OnNext(24); // 2 + 4 * 24
 
-            AssertResultSequence(out1, new int[] { 2 + 4 * 24 });
+            AssertResultSequence(out1, [2 + 4 * 24]);
         }
 
         [TestMethod]
@@ -1522,7 +1522,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             var out1 = GetMockObserver<int>("v1", validate: false);
 
-            AssertResultSequence(out1, new int[] { 42 });
+            AssertResultSequence(out1, [42]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -1636,7 +1636,7 @@ namespace Tests.Reaqtor.QueryEngine
             }
 
             Assert.IsTrue(LockManager.Wait(l, 1000));
-            Assert.IsTrue(mv2.Values.SequenceEqual(new[] { 1, 2, 3, 4 }));
+            Assert.IsTrue(mv2.Values.SequenceEqual([1, 2, 3, 4]));
         }
 
         private sealed class MySubscribable : SubscribableBase<int>
@@ -1796,7 +1796,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -1835,7 +1835,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(100);
             in4s.OnNext(101);
 
-            AssertResultSequence(out1, new int[] { 101 });
+            AssertResultSequence(out1, [101]);
 
             sub1.Dispose();
         }
@@ -1880,7 +1880,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -1919,7 +1919,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(100);
             in4s.OnNext(101);
 
-            AssertResultSequence(out1, new int[] { 101 });
+            AssertResultSequence(out1, [101]);
 
             sub1.Dispose();
         }
@@ -1964,7 +1964,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2010,7 +2010,7 @@ namespace Tests.Reaqtor.QueryEngine
             in4s.OnNext(100);
             in5s.OnNext(101);
 
-            AssertResultSequence(out1, new int[] { 101 });
+            AssertResultSequence(out1, [101]);
 
             sub1.Dispose();
         }
@@ -2136,7 +2136,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(2);
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 2 });
+            AssertResultSequence(out1, [2]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2170,7 +2170,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 3 });
+            AssertResultSequence(out1, [3]);
 
             sub1.Dispose();
         }
@@ -2203,7 +2203,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in1s.OnNext(2);
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2235,7 +2235,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 2 });
+            AssertResultSequence(out1, [2]);
 
             sub1.Dispose();
         }
@@ -2278,7 +2278,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(99);
             in1s.OnNext(3);
 
-            AssertResultSequence(out1, new int[] { 2 });
+            AssertResultSequence(out1, [2]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2311,7 +2311,7 @@ namespace Tests.Reaqtor.QueryEngine
             in1s.OnNext(4);
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 4 });
+            AssertResultSequence(out1, [4]);
 
             sub1.Dispose();
         }
@@ -2344,7 +2344,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in1s.OnNext(2);
 
-            AssertResultSequence(out1, Array.Empty<int>());
+            AssertResultSequence(out1, []);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2375,7 +2375,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             in2s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 2 });
+            AssertResultSequence(out1, [2]);
 
             sub1.Dispose();
         }
@@ -2454,7 +2454,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(5);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9 });
+            AssertResultSequence(out1, [8, 9]);
 
             sub1.Dispose();
         }
@@ -2495,7 +2495,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             s2s.OnNext(95);
 
-            AssertResultSequence(out1, new int[] { 95 });
+            AssertResultSequence(out1, [95]);
 
             s1s.OnNext(3);
 
@@ -2508,7 +2508,7 @@ namespace Tests.Reaqtor.QueryEngine
             s2s.OnNext(96);
             s3s.OnNext(97);
 
-            AssertResultSequence(out1, new int[] { 95, 96, 97 });
+            AssertResultSequence(out1, [95, 96, 97]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -2556,7 +2556,7 @@ namespace Tests.Reaqtor.QueryEngine
             in3s.OnNext(99);
             in4s.OnNext(100);
 
-            AssertResultSequence(out1, new int[] { 98, 99, 100 });
+            AssertResultSequence(out1, [98, 99, 100]);
 
             sub1.Dispose();
         }
@@ -2590,7 +2590,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(4);
             in2s.OnNext(10);
 
-            AssertResultSequence(out1, new int[] { 7, 13 });
+            AssertResultSequence(out1, [7, 13]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -3427,7 +3427,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Recover(qe3, newState);
 
-            Assert.IsTrue(mv1.Values.SequenceEqual(new[] { 42 }));
+            Assert.IsTrue(mv1.Values.SequenceEqual([42]));
         }
 
         #endregion
@@ -3506,7 +3506,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(5);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9 });
+            AssertResultSequence(out1, [8, 9]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -3528,7 +3528,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(7);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9, 10, 11 });
+            AssertResultSequence(out1, [8, 9, 10, 11]);
 
             sub1 = ctx3.GetSubscription(sub1uri);
             sub1.Dispose();
@@ -3612,7 +3612,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(5);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9 });
+            AssertResultSequence(out1, [8, 9]);
 
             // Checkpoint -------------------------------------------------------------
 
@@ -3634,7 +3634,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(7);
 
             res = out1.Values;
-            AssertResultSequence(out1, new int[] { 8, 9, 10, 11 });
+            AssertResultSequence(out1, [8, 9, 10, 11]);
 
             sub1 = ctx3.GetSubscription(sub1uri);
             sub1.Dispose();
@@ -3759,7 +3759,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsTrue(LockManager.Wait(l));
             var mv1 = GetObserver<int>("v1");
-            Assert.IsTrue(mv1.Values.SequenceEqual(new[] { 1, 1 }));
+            Assert.IsTrue(mv1.Values.SequenceEqual([1, 1]));
         }
 
         [TestMethod]
@@ -3814,7 +3814,7 @@ namespace Tests.Reaqtor.QueryEngine
             Assert.IsFalse(ctx.Subscriptions.ContainsKey(subId));
 
             var mv1 = GetObserver<int>("v1");
-            Assert.IsTrue(mv1.Values.SequenceEqual(new[] { 1 }));
+            Assert.IsTrue(mv1.Values.SequenceEqual([1]));
 
             Checkpoint(qe, store);
 

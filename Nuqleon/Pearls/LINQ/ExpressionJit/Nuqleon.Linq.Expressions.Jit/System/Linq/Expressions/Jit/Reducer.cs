@@ -205,7 +205,7 @@ namespace System.Linq.Expressions.Jit
                 //
                 var res =
                     Block(
-                        new[] { leftTemp },
+                        [leftTemp],
                         Assign(leftTemp, node.Left),
                         Condition(
                             leftNotNull,
@@ -251,7 +251,7 @@ namespace System.Linq.Expressions.Jit
                 //
                 var res =
                     Block(
-                        new[] { leftTemp },
+                        [leftTemp],
                         Assign(leftTemp, node.Left),
                         Condition(
                             leftNotNull,

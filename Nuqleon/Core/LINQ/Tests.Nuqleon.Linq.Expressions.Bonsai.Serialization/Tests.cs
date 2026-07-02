@@ -800,11 +800,11 @@ namespace Tests
                 Expression.Block(e1, e1, e1),
                 Expression.Block(e2),
                 Expression.Block(typeof(void), e2),
-                Expression.Block(new[] { v1 }, e1),
-                Expression.Block(new[] { v1 }, v1),
-                Expression.Block(new[] { v1, v3 }, e1, e2, e3),
-                Expression.Block(new[] { v1, v2, v3 }, e1, e2, e3),
-                Expression.Block(typeof(void), new[] { v1, v2, v3 }, e1, e2, e3),
+                Expression.Block([v1], e1),
+                Expression.Block([v1], v1),
+                Expression.Block([v1, v3], e1, e2, e3),
+                Expression.Block([v1, v2, v3], e1, e2, e3),
+                Expression.Block(typeof(void), [v1, v2, v3], e1, e2, e3),
             };
 
             foreach (var a in bs)
@@ -1566,9 +1566,9 @@ namespace Tests
 
             var switchCases2 = new[]
             {
-                Expression.SwitchCase(Expression.Default(typeof(string)), new[] { Expression.Constant(1), Expression.Constant(2), Expression.Constant(3) }),
+                Expression.SwitchCase(Expression.Default(typeof(string)), [Expression.Constant(1), Expression.Constant(2), Expression.Constant(3)]),
                 Expression.SwitchCase(Expression.Default(typeof(string)), Expression.Constant(4)),
-                Expression.SwitchCase(Expression.Default(typeof(string)), new[] { Expression.Constant(5), Expression.Constant(6), Expression.Constant(7) }),
+                Expression.SwitchCase(Expression.Default(typeof(string)), [Expression.Constant(5), Expression.Constant(6), Expression.Constant(7)]),
             };
 
             var bs = new[] {
@@ -1685,10 +1685,10 @@ namespace Tests
         public void Bonsai_Members_Indexed_Property()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), [Expression.Constant(0)]);
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), [Expression.Constant("foo"), Expression.Constant(0)]);
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             var e1 = ((Expression<Func<Instancy, int>>)Roundtrip(f1)).Compile();
@@ -1705,10 +1705,10 @@ namespace Tests
         public void Bonsai_V08_IndexedProperty_ThrowsNotSupported()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), [Expression.Constant(0)]);
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), [Expression.Constant("foo"), Expression.Constant(0)]);
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             Assert.ThrowsExactly<NotSupportedException>(() => Roundtrip(f1, V08));
@@ -1810,11 +1810,11 @@ namespace Tests
         [TestMethod]
         public void Bonsai_AnonymousType_KeysReconstructed()
         {
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("foo", typeof(int)),
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, ["bar"]);
+            ], ["bar"]);
 
             Assert.IsNotNull(anon.GetProperty("bar"));
             Assert.IsNotNull(anon.GetProperty("foo"));
@@ -1929,10 +1929,10 @@ namespace Tests
         [TestMethod]
         public void Bonsai_RecordType_WithValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -1948,10 +1948,10 @@ namespace Tests
         [TestMethod]
         public void Bonsai_RecordType_WithoutValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: false);
+            ], valueEquality: false);
 
             var bar = rec.GetProperty("bar");
 
@@ -1967,10 +1967,10 @@ namespace Tests
         [TestMethod]
         public void Bonsai_RecordType_TypeReconstructed()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -2000,10 +2000,10 @@ namespace Tests
         [TestMethod]
         public void Bonsai_V08_RecordType_ThrowsNotSupported()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -2717,7 +2717,7 @@ namespace Tests
             Assert.AreEqual(42, q.X);
             Assert.AreEqual("Hello", q.Baz);
             Assert.AreEqual(24, q.Bar.Zuz);
-            Assert.IsTrue(q.Foos.SequenceEqual(new[] { 1, 2, 3 }));
+            Assert.IsTrue(q.Foos.SequenceEqual([1, 2, 3]));
 
             var f08 = (Expression<Func<Qux>>)Roundtrip(e, V08);
 
@@ -2725,7 +2725,7 @@ namespace Tests
             Assert.AreEqual(42, q08.X);
             Assert.AreEqual("Hello", q08.Baz);
             Assert.AreEqual(24, q08.Bar.Zuz);
-            Assert.IsTrue(q08.Foos.SequenceEqual(new[] { 1, 2, 3 }));
+            Assert.IsTrue(q08.Foos.SequenceEqual([1, 2, 3]));
         }
 
         [TestMethod]
@@ -3081,7 +3081,7 @@ namespace Tests
             var loopPrev1Assign = Expression.Assign(prev1, fib);
 
             Expression<Action<long>> printFibExp = s => Console.WriteLine(s);
-            var loopPrint = Expression.Invoke(printFibExp, new[] { fib });
+            var loopPrint = Expression.Invoke(printFibExp, [fib]);
 
             var loop = Expression.Loop(
                 Expression.Block(
@@ -3100,14 +3100,13 @@ namespace Tests
             var end = Expression.Label(endTarget, fib);
 
             var block = Expression.Block(
-                new ParameterExpression[]
-                {
+                [
                     i,
                     fib,
                     prev1,
                     prev2
 
-                },
+                ],
                 [
                     baseCase,
                     assign,

@@ -845,10 +845,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
         public void TypeSlimDerivationVisitor_Members_Indexed_Property()
         {
             var p = Expression.Parameter(typeof(Instancy));
-            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), new[] { Expression.Constant(0) });
+            var idx1 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(int)]), [Expression.Constant(0)]);
             var f1 = Expression.Lambda<Func<Instancy, int>>(idx1, p);
 
-            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), new[] { Expression.Constant("foo"), Expression.Constant(0) });
+            var idx2 = Expression.MakeIndex(p, typeof(Instancy).GetProperty("Item", [typeof(string), typeof(int)]), [Expression.Constant("foo"), Expression.Constant(0)]);
             var f2 = Expression.Lambda<Func<Instancy, string>>(idx2, p);
 
             RoundtripAndAssert(f1.Body);
@@ -922,11 +922,11 @@ namespace Tests.System.Linq.Expressions.Bonsai
         [TestMethod]
         public void TypeSlimDerivationVisitor_AnonymousType_KeysReconstructed()
         {
-            var anon = RuntimeCompiler.CreateAnonymousType(new[]
-            {
+            var anon = RuntimeCompiler.CreateAnonymousType(
+            [
                 new KeyValuePair<string, Type>("foo", typeof(int)),
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, ["bar"]);
+            ], ["bar"]);
 
             Assert.IsNotNull(anon.GetProperty("bar"));
             Assert.IsNotNull(anon.GetProperty("foo"));
@@ -953,10 +953,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
         [TestMethod]
         public void TypeSlimDerivationVisitor_RecordType_WithValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -968,10 +968,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
         [TestMethod]
         public void TypeSlimDerivationVisitor_RecordType_WithoutValueEqualitySemantics()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: false);
+            ], valueEquality: false);
 
             var bar = rec.GetProperty("bar");
 
@@ -983,10 +983,10 @@ namespace Tests.System.Linq.Expressions.Bonsai
         [TestMethod]
         public void TypeSlimDerivationVisitor_RecordType_TypeReconstructed()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[]
-            {
+            var rec = RuntimeCompiler.CreateRecordType(
+            [
                 new KeyValuePair<string, Type>("bar", typeof(int))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var bar = rec.GetProperty("bar");
 
@@ -1165,7 +1165,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
                 var p = Expression.Variable(typeof(int));
                 var e =
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         p
                     );
                 RoundtripAndAssert(e);
@@ -1175,7 +1175,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
                 var p = Expression.Variable(typeof(int));
                 var e =
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         Expression.Constant("42"),
                         p
                     );
@@ -1186,7 +1186,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
                 var p = Expression.Variable(typeof(int));
                 var e =
                     Expression.Block(
-                        new[] { p },
+                        [p],
                         p,
                         Expression.Constant("42")
                     );

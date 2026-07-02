@@ -27,7 +27,6 @@ namespace Rxcel
         private readonly Sheet _sheet;
         private readonly BehaviorSubject<double?> _subject;
         private readonly SerialDisposable _subscription;
-        private string _formula;
         private LambdaExpression _expr;
 
         public Cell(Sheet sheet)
@@ -39,21 +38,21 @@ namespace Rxcel
 
         public string Value
         {
-            get => !string.IsNullOrEmpty(_formula) ? _formula : _subject.Value.ToString();
+            get => !string.IsNullOrEmpty(field) ? field : _subject.Value.ToString();
 
             set
             {
                 if (string.IsNullOrEmpty(value))
                 {
                     _expr = null;
-                    _formula = null;
+                    field = null;
                     _subscription.Disposable = Disposable.Empty;
                     _subject.OnNext(null);
                 }
                 else if (double.TryParse(value, out var v))
                 {
                     _expr = null;
-                    _formula = null;
+                    field = null;
                     _subscription.Disposable = Disposable.Empty;
                     _subject.OnNext(v);
                 }
@@ -94,7 +93,7 @@ namespace Rxcel
 
 #pragma warning restore CA1031
 
-                        _formula = value;
+                        field = value;
                     }
                     else
                     {

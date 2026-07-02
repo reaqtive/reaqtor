@@ -46,7 +46,7 @@ namespace Tests.Reaqtor.Shared.Core.System.Linq
             var data = new Dictionary<string, string> { { "foo", "bar" } };
             AssertExpression(
                 data,
-                qd => Assert.IsTrue(qd.Keys.SequenceEqual(new[] { "foo" })),
+                qd => Assert.IsTrue(qd.Keys.SequenceEqual(["foo"])),
                 qd => qd.Select(kv => kv.Key));
         }
 
@@ -56,7 +56,7 @@ namespace Tests.Reaqtor.Shared.Core.System.Linq
             var data = new Dictionary<string, string> { { "foo", "bar" } };
             AssertExpression(
                 data,
-                qd => Assert.IsTrue(qd.Values.SequenceEqual(new[] { "bar" })),
+                qd => Assert.IsTrue(qd.Values.SequenceEqual(["bar"])),
                 qd => qd.Select(kv => kv.Value));
         }
 
@@ -90,7 +90,7 @@ namespace Tests.Reaqtor.Shared.Core.System.Linq
             var data = new Dictionary<string, string> { { "foo", "bar" } };
             AssertExpression(
                 data,
-                qd => Assert.IsTrue(((IReadOnlyDictionary<string, string>)qd).Keys.SequenceEqual(new[] { "foo" })),
+                qd => Assert.IsTrue(((IReadOnlyDictionary<string, string>)qd).Keys.SequenceEqual(["foo"])),
                 qd => qd.Select(kv => kv.Key));
         }
 
@@ -100,7 +100,7 @@ namespace Tests.Reaqtor.Shared.Core.System.Linq
             var data = new Dictionary<string, string> { { "foo", "bar" } };
             AssertExpression(
                 data,
-                qd => Assert.IsTrue(((IReadOnlyDictionary<string, string>)qd).Values.SequenceEqual(new[] { "bar" })),
+                qd => Assert.IsTrue(((IReadOnlyDictionary<string, string>)qd).Values.SequenceEqual(["bar"])),
                 qd => qd.Select(kv => kv.Value));
         }
 

@@ -48,7 +48,7 @@ namespace Tests.System.Linq.CompilerServices
                 (Expression<Func<int, string>>)(x => new string('x', x)),
                 (Expression<Func<object, bool>>)(o => o is string),
                 (from x in new[] { 2, 3, 5 }.AsQueryable() where x > 0 let y = x * x where y > 0 select x + y).Expression,
-                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
+                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
             })
             {
                 Assert.AreSame(e, visitor.Visit(e));

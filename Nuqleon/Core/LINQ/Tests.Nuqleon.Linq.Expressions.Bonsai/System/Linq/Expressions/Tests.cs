@@ -50,7 +50,7 @@ namespace Tests.System.Linq.Expressions
             Assert.AreNotSame(i, i.Update(intExpr2, new ExpressionSlim[] { intExpr2 }.ToReadOnly()));
             Assert.AreNotSame(i, i.Update(intExpr1, new ExpressionSlim[] { intExpr3 }.ToReadOnly()));
 
-            var inv = ExpressionSlim.Invoke(intExpr1, new[] { intExpr2 });
+            var inv = ExpressionSlim.Invoke(intExpr1, [intExpr2]);
             Assert.AreNotSame(inv, inv.Update(intExpr2, new ExpressionSlim[] { intExpr2 }.ToReadOnly()));
             Assert.AreNotSame(inv, inv.Update(intExpr1, new ExpressionSlim[] { intExpr3 }.ToReadOnly()));
 
@@ -288,7 +288,7 @@ namespace Tests.System.Linq.Expressions
         [TestMethod]
         public void ExpressionSlim_ToString_Index()
         {
-            AssertToString(Expression.MakeIndex(Expression.New(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), new[] { Expression.Constant(0) }).ToExpressionSlim(), "Index(System.Collections.Generic.List`1<System.Int32>.Item[System.Int32], New(System.Collections.Generic.List`1<System.Int32>..ctor()), Constant(0, System.Int32))");
+            AssertToString(Expression.MakeIndex(Expression.New(typeof(List<int>)), typeof(List<int>).GetProperty("Item"), [Expression.Constant(0)]).ToExpressionSlim(), "Index(System.Collections.Generic.List`1<System.Int32>.Item[System.Int32], New(System.Collections.Generic.List`1<System.Int32>..ctor()), Constant(0, System.Int32))");
         }
 
         [TestMethod]
@@ -352,7 +352,7 @@ namespace Tests.System.Linq.Expressions
         public void ExpressionSlim_ToString_Block()
         {
             AssertToString(Expression.Block(Expression.Constant(42), Expression.Constant(1337)).ToExpressionSlim(), "Block(Constant(42, System.Int32); Constant(1337, System.Int32))");
-            AssertToString(Expression.Block(new[] { Expression.Parameter(typeof(string), "x"), Expression.Parameter(typeof(string), "y") }, Expression.Constant(42), Expression.Constant(1337)).ToExpressionSlim(), "Block(Parameter(System.String, x), Parameter(System.String, y); Constant(42, System.Int32); Constant(1337, System.Int32))");
+            AssertToString(Expression.Block([Expression.Parameter(typeof(string), "x"), Expression.Parameter(typeof(string), "y")], Expression.Constant(42), Expression.Constant(1337)).ToExpressionSlim(), "Block(Parameter(System.String, x), Parameter(System.String, y); Constant(42, System.Int32); Constant(1337, System.Int32))");
         }
 
         [TestMethod]

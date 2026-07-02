@@ -192,7 +192,7 @@ namespace Tests
         {
             var x = Expression.Parameter(typeof(int));
             var y = Expression.Parameter(typeof(int));
-            var b = Expression.Block(new[] { y }, Expression.Add(x, y));
+            var b = Expression.Block([y], Expression.Add(x, y));
             var e = Expression.Lambda<Func<int, int>>(b, x);
 
             var a = Analyzer.Analyze(e, methodTable: null);

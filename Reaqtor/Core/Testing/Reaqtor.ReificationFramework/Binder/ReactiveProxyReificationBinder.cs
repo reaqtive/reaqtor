@@ -108,7 +108,7 @@ namespace Reaqtor.ReificationFramework
             {
                 expression = Expression.Lambda<Action<IReactiveClientEnvironment>>(
                     Expression.Block(
-                        new[] { ctxParam },
+                        [ctxParam],
                         Expression.Assign(ctxParam, Expression.MakeMemberAccess(envParam, s_getContextProperty)),
                         optimized.Body
                     ),
@@ -181,7 +181,7 @@ namespace Reaqtor.ReificationFramework
                 {
                     return Expression.Block(
                         result.Type,
-                        result.Variables.Except(new[] { _ctxParam }),
+                        result.Variables.Except([_ctxParam]),
                         result.Expressions
                     );
                 }

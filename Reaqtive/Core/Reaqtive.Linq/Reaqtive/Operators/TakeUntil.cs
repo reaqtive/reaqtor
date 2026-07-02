@@ -57,7 +57,7 @@ namespace Reaqtive.Operators
                 _otherSubscription = Params._other.Subscribe(otherObserver);
                 otherObserver.Subscription = _otherSubscription;
 
-                return new[] { firstSubscription, _otherSubscription };
+                return [firstSubscription, _otherSubscription];
             }
 
             public void OnCompleted()

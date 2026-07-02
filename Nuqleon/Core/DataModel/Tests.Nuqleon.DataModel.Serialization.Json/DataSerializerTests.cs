@@ -567,15 +567,15 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
             _jsonSerializer.Serialize(expected, _stream);
             _stream.Position = 0;
 
-            var rec = RuntimeCompiler.CreateRecordType(new[] {
+            var rec = RuntimeCompiler.CreateRecordType([
                 new KeyValuePair<string, Type>("contoso://entities/person/name", typeof(string)),
                 new KeyValuePair<string, Type>("contoso://entities/person/age", typeof(int)),
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var name = rec.GetProperty("contoso://entities/person/name");
             var age = rec.GetProperty("contoso://entities/person/age");
 
-            var actual = _genericDeserialize.MakeGenericMethod(rec).Invoke(_jsonSerializer, new[] { _stream });
+            var actual = _genericDeserialize.MakeGenericMethod(rec).Invoke(_jsonSerializer, [_stream]);
 
             Assert.AreEqual(expected.Name, name.GetValue(actual));
             Assert.AreEqual(expected.Age, age.GetValue(actual));
@@ -1393,7 +1393,7 @@ namespace Nuqleon.DataModel.Serialization.JsonTest
 
                 stream.Position = 0;
 
-                return deserialize.Invoke(DataSerializer, new[] { stream });
+                return deserialize.Invoke(DataSerializer, [stream]);
             }
 
             private class DataModelInvertedTypeSpace : InvertedTypeSpace

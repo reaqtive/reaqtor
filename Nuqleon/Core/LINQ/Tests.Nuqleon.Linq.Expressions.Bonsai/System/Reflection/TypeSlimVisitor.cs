@@ -360,10 +360,10 @@ namespace Tests.System.Reflection
                 var ts = new TypeSlim[] { typeof(int).ToTypeSlim(), typeof(long).ToTypeSlim() }.ToReadOnly();
 
                 var res1 = base.Visit(ts);
-                Assert.IsTrue(res1.SequenceEqual(new[] { 32, 64 }));
+                Assert.IsTrue(res1.SequenceEqual([32, 64]));
 
                 var res2 = base.VisitAndConvert<int>(ts);
-                Assert.IsTrue(res2.SequenceEqual(new[] { 32, 64 }));
+                Assert.IsTrue(res2.SequenceEqual([32, 64]));
             }
 
             protected override int VisitSimple(SimpleTypeSlim type)

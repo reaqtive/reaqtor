@@ -30,7 +30,7 @@ namespace Tests
             var f =
                 Lambda<Func<DateTimeOffset>>(
                     Block(
-                        new[] { x },
+                        [x],
                         Assign(
                             x,
                             Constant(d)
@@ -63,7 +63,7 @@ namespace Tests
             var f =
                 Lambda<Func<long>>(
                     Block(
-                        new[] { x },
+                        [x],
                         Assign(
                             x,
                             Default(typeof(int?))
@@ -91,7 +91,7 @@ namespace Tests
             var f =
                 Lambda<Func<long>>(
                     Block(
-                        new[] { x },
+                        [x],
                         Assign(
                             x,
                             Constant(41, typeof(int?))
@@ -119,7 +119,7 @@ namespace Tests
             var f =
                 Lambda<Func<long?>>(
                     Block(
-                        new[] { x },
+                        [x],
                         Assign(
                             x,
                             Default(typeof(int?))
@@ -147,7 +147,7 @@ namespace Tests
             var f =
                 Lambda<Func<long?>>(
                     Block(
-                        new[] { x },
+                        [x],
                         Assign(
                             x,
                             Constant(41, typeof(int?))
@@ -177,7 +177,7 @@ namespace Tests
             var f =
                 Lambda<Func<string>>(
                     Block(
-                        new[] { x },
+                        [x],
                         Assign(
                             x,
                             Default(typeof(string))
@@ -207,7 +207,7 @@ namespace Tests
             var f =
                 Lambda<Func<string>>(
                     Block(
-                        new[] { x },
+                        [x],
                         Assign(
                             x,
                             Constant("bar", typeof(string))

@@ -246,11 +246,10 @@ namespace Tests.System.Linq.CompilerServices
                 Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                 ExpressionType.Add,
                 typeof(ExpressionEqualityComparerTests),
-                new[]
-                {
+                [
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                     Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                }
+                ]
             );
 
             var o = Expression.Dynamic(
@@ -433,9 +432,9 @@ namespace Tests.System.Linq.CompilerServices
             var p = Expression.Parameter(typeof(Exception));
             var q = Expression.Parameter(typeof(Exception));
 
-            var o = Expression.MakeTry(typeof(int), Expression.Constant(1), f.Body, fault: null, new[] { Expression.Catch(p, Expression.Constant(2)), Expression.Catch(p, Expression.Constant(3)) });
+            var o = Expression.MakeTry(typeof(int), Expression.Constant(1), f.Body, fault: null, [Expression.Catch(p, Expression.Constant(2)), Expression.Catch(p, Expression.Constant(3))]);
             var r = v.Visit(o);
-            var n = Expression.MakeTry(typeof(int), Expression.Constant(2), g.Body, fault: null, new[] { Expression.Catch(q, Expression.Constant(6)), Expression.Catch(q, Expression.Constant(4)) });
+            var n = Expression.MakeTry(typeof(int), Expression.Constant(2), g.Body, fault: null, [Expression.Catch(q, Expression.Constant(6)), Expression.Catch(q, Expression.Constant(4))]);
 
             var e = new ExpressionEqualityComparer();
             Assert.IsTrue(e.Equals(r, n));

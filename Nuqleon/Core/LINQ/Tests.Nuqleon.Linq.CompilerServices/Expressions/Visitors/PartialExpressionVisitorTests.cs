@@ -37,7 +37,7 @@ namespace Tests.System.Linq.CompilerServices
                 // Dynamic
                 new MyNode(),
                 Expression.Goto(Expression.Label()),
-                Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), new[] { Expression.Constant(1) }),
+                Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)]),
                 Expression.Invoke(Expression.Constant(new Action(() => {}))),
                 Expression.Label(Expression.Label()),
                 Expression.Lambda(Expression.Empty()),

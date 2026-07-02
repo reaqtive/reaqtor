@@ -251,14 +251,14 @@ namespace System.Linq.CompilerServices
                 var p = Expression.Parameter(typeof(Action), "callback");
                 var b = base.RewriteCore(expression.Body, p);
                 var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), typeof(Action)]);
-                return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { p }));
+                return Expression.Lambda(f, b, expression.Parameters.Concat([p]));
             }
             else
             {
                 var p = Expression.Parameter(typeof(Action<>).MakeGenericType(expression.Body.Type), "callback");
                 var b = base.RewriteCore(expression.Body, p);
                 var f = Expression.GetActionType([.. expression.Parameters.Select(x => x.Type), p.Type]);
-                return Expression.Lambda(f, b, expression.Parameters.Concat(new[] { p }));
+                return Expression.Lambda(f, b, expression.Parameters.Concat([p]));
             }
         }
 
@@ -563,9 +563,9 @@ namespace System.Linq.CompilerServices
         {
             Debug.Assert(method != null);
 
-            return new[] {
+            return [
                 method.ReturnType == typeof(void) ? typeof(Action) : typeof(Action<>).MakeGenericType(method.ReturnType)
-            };
+            ];
         }
 
         /// <summary>
@@ -580,7 +580,7 @@ namespace System.Linq.CompilerServices
         {
             Debug.Assert(method != null);
 
-            return Expression.Call(instance, method, arguments.Concat(new[] { continuation }));
+            return Expression.Call(instance, method, arguments.Concat([continuation]));
         }
 
         /// <summary>

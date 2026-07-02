@@ -438,7 +438,7 @@ namespace System.Memory.Diagnostics
                                     assign =
                                         Expression.Block(
                                             typeof(void),
-                                            new[] { boxedTarget },
+                                            [boxedTarget],
                                             Expression.Assign(
                                                 boxedTarget,
                                                 Expression.Convert(
@@ -495,7 +495,7 @@ namespace System.Memory.Diagnostics
                         }
                     }
 
-                    return Expression.Block(typeof(void), new[] { Expressions.s_objBefore, Expressions.s_objEdited }, exprs);
+                    return Expression.Block(typeof(void), [Expressions.s_objBefore, Expressions.s_objEdited], exprs);
                 });
 
                 //
@@ -518,7 +518,7 @@ namespace System.Memory.Diagnostics
                 bodyExprs[0] = convert;
                 fieldWalker.Expressions.CopyTo(bodyExprs, 1);
 
-                var body = Expression.Block(typeof(void), new[] { converted, Expressions.s_objBefore, Expressions.s_objEdited }, bodyExprs);
+                var body = Expression.Block(typeof(void), [converted, Expressions.s_objBefore, Expressions.s_objEdited], bodyExprs);
 
                 //
                 // Finally, build a lambda expression representing the Editor delegate, compile it, and
@@ -764,7 +764,7 @@ namespace System.Memory.Diagnostics
 #if USE_LOCAL
                 new[] { arr, i, len, elem, Expressions.s_objBefore, Expressions.s_objEdited },
 #else
-                new[] { arr, i, len, Expressions.s_objBefore, Expressions.s_objEdited },
+                [arr, i, len, Expressions.s_objBefore, Expressions.s_objEdited],
 #endif
                 exprs
             );

@@ -189,7 +189,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
                         Expression.IfThen(
                             needsCheckParameter,
                             Expression.Block(
-                                new[] { visitedParameter },
+                                [visitedParameter],
                                 Expression.Assign(visitedParameter, Expression.Call(s_hashSetPoolGetInstance.Value)),
                                 Expression.TryFinally(
                                     Expression.Invoke(checkCycle, valueParameter, Expression.Convert(visitedParameter, typeof(HashSet<object>))),
@@ -203,7 +203,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
                 return Expression.Lambda<Action<DataTypeBinarySerializer, bool, Stream, object>>(
                     Expression.Block(
-                        new[] { innerValueParameter },
+                        [innerValueParameter],
                         bodyExpressions
                     ),
                     serializerParameter,
@@ -216,7 +216,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
             return Expression.Parameter(typeof(object), "input").Let(input =>
                 Expression.Lambda<Action<Stream, object>>(
                     Expression.Block(
-                        new[] { expression.Parameters[1] },
+                        [expression.Parameters[1]],
                         Expression.Assign(expression.Parameters[1], Expression.Convert(input, type)),
                         expression.Body
                     ),

@@ -568,7 +568,7 @@ namespace System.Linq.Expressions
             return n + " " + JoinCurly(Visit(expression.Initializers));
         }
 
-        private IEnumerable<string> Visit(IEnumerable<ElementInit> elements) => elements.Select(Visit).ToArray();
+        private IEnumerable<string> Visit(IEnumerable<ElementInit> elements) => [.. elements.Select(Visit)];
 
         private string Visit(ElementInit element)
         {
@@ -629,7 +629,7 @@ namespace System.Linq.Expressions
             return n + " " + JoinCurly(Visit(expression.Bindings));
         }
 
-        private IEnumerable<string> Visit(IEnumerable<MemberBinding> bindings) => bindings.Select(Visit).ToArray();
+        private IEnumerable<string> Visit(IEnumerable<MemberBinding> bindings) => [.. bindings.Select(Visit)];
 
         private string Visit(MemberBinding binding)
         {

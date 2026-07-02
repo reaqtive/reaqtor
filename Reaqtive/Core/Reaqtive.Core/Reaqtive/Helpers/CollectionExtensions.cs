@@ -8,8 +8,6 @@
 // BD - June 2014 - Created this file.
 //
 
-using System.Linq;
-
 namespace System.Collections.Generic
 {
     /// <summary>

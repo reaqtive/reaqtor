@@ -104,7 +104,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             var c = Expression.Parameter(typeof(int));
             var p = typeof(string).GetProperties().Single(p => p.GetIndexParameters().Length == 1);
 
-            pt.Add(Expression.Lambda<Func<int, char>>(Expression.MakeIndex(Expression.Constant(""), p, new[] { c }), c));
+            pt.Add(Expression.Lambda<Func<int, char>>(Expression.MakeIndex(Expression.Constant(""), p, [c]), c));
 
             Assert.IsTrue(pt.Contains(p.GetIndexParameters()[0]));
         }

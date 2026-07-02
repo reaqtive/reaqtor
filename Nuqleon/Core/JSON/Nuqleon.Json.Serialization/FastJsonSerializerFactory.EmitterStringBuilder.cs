@@ -257,7 +257,7 @@ namespace Nuqleon.Json.Serialization
                         throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Creating a JSON serializer for type '{0}' is not supported. Only single-dimensional arrays are supported.", type));
                     }
 
-                    return (EmitStringAction<T>)s_createArrayEmitter.MakeGenericMethod(elem).Invoke(this, new[] { state });
+                    return (EmitStringAction<T>)s_createArrayEmitter.MakeGenericMethod(elem).Invoke(this, [state]);
                 }
                 else if (type.IsConstructedGenericType)
                 {
@@ -306,7 +306,7 @@ namespace Nuqleon.Json.Serialization
                             return EmitterAs<DateTimeOffset?, T>(s_emitNullableDateTimeOffset ??= Emitter.EmitNullableDateTimeOffset);
                         }
 
-                        var nonNullEmitter = s_createObjectEmitter.MakeGenericMethod(type).Invoke(this, new[] { state });
+                        var nonNullEmitter = s_createObjectEmitter.MakeGenericMethod(type).Invoke(this, [state]);
                         var nullableEmitter = s_nullOr.MakeGenericMethod(type).Invoke(obj: null, [nonNullEmitter]);
                         return (EmitStringAction<T>)nullableEmitter;
                     }
@@ -324,7 +324,7 @@ namespace Nuqleon.Json.Serialization
                         //
 
                         var elem = type.GetGenericArguments()[0];
-                        return (EmitStringAction<T>)s_createListEmitter.MakeGenericMethod(elem, type).Invoke(this, new[] { state });
+                        return (EmitStringAction<T>)s_createListEmitter.MakeGenericMethod(elem, type).Invoke(this, [state]);
                     }
                     else if (def == typeof(Dictionary<,>) || def == typeof(IDictionary<,>) || def == typeof(IReadOnlyDictionary<,>))
                     {
@@ -344,7 +344,7 @@ namespace Nuqleon.Json.Serialization
                         }
 
                         var valueType = args[1];
-                        return (EmitStringAction<T>)s_createAnyObjectEmitter.MakeGenericMethod(valueType, type).Invoke(this, new[] { state });
+                        return (EmitStringAction<T>)s_createAnyObjectEmitter.MakeGenericMethod(valueType, type).Invoke(this, [state]);
                     }
                     else
                     {
@@ -671,7 +671,7 @@ namespace Nuqleon.Json.Serialization
             /// <returns>An expression containing the logic to read and serialize the specified member.</returns>
             private Expression GetReadAndEmitAction<T>(Type elementType, MemberInfo member, ParameterExpression builder, ParameterExpression value, ParameterExpression context, BuilderContext builderContext)
             {
-                var emitter = s_create.MakeGenericMethod(elementType).Invoke(this, new[] { builderContext });
+                var emitter = s_create.MakeGenericMethod(elementType).Invoke(this, [builderContext]);
 
                 var memberValue = Expression.MakeMemberAccess(value, member);
                 var body = Expression.Invoke(Expression.Constant(emitter, typeof(EmitStringAction<>).MakeGenericType(elementType)), builder, memberValue, context);

@@ -88,7 +88,7 @@ namespace Reaqtive.Operators
                 _sourceSubscription = Params._source.Subscribe(new SourceObserver(this));
                 var samplerSubscription = Params._sampler.Subscribe(new SamplerObserver(this));
 
-                return new[] { _sourceSubscription, samplerSubscription };
+                return [_sourceSubscription, samplerSubscription];
             }
 
             private void OnSample()

@@ -412,7 +412,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         {
             Expression exp = Expression.Lambda(Expression.New(
                 (ConstructorInfo)ReflectionHelpers.InfoOf(() => new SimplePropertyTest(0)),
-                new Expression[] { Expression.Constant(42) },
+                [Expression.Constant(42)],
                 ReflectionHelpers.InfoOf((SimplePropertyTest test) => test.Foo)));
 
             AssertRecordizationFromExpression(exp, expr => ((LambdaExpression)expr).ReturnType);

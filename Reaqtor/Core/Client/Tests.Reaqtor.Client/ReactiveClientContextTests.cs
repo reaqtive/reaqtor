@@ -604,7 +604,7 @@ namespace Tests.Reaqtor.Client
                         ys.SubscribeAsync(ob, new Uri(Constants.Subscription.SUB), null).Wait();
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -630,7 +630,7 @@ namespace Tests.Reaqtor.Client
                         ),
                         null
                     )
-                ).ToArray()
+                )]
             );
         }
 

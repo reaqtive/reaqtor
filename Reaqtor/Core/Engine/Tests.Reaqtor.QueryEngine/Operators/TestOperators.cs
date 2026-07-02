@@ -142,7 +142,7 @@ namespace Reaqtor
 
             protected override IEnumerable<ISubscription> OnSubscribe()
             {
-                return new[] { Params._source.Subscribe(Output) };
+                return [Params._source.Subscribe(Output)];
             }
         }
 

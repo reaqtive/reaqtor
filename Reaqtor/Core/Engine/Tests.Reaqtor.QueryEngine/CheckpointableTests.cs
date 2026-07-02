@@ -45,10 +45,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Checkpoint, Tuple.Create(sw, CancellationToken.None, default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }
@@ -63,10 +63,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Checkpoint, Tuple.Create(sw, ct, default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }
@@ -81,10 +81,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Checkpoint, Tuple.Create(sw, CancellationToken.None, pr)),
-                    }));
+                    ]));
                 }
             );
         }
@@ -99,10 +99,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Recover, Tuple.Create(sr, CancellationToken.None, default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }
@@ -117,10 +117,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Recover, Tuple.Create(sr, ct, default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }
@@ -135,10 +135,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Recover, Tuple.Create(sr, CancellationToken.None, pr)),
-                    }));
+                    ]));
                 }
             );
         }
@@ -153,10 +153,10 @@ namespace Tests.Reaqtor.QueryEngine
                 },
                 (msgs, sr, sw, ct, pr) =>
                 {
-                    Assert.IsTrue(msgs.SequenceEqual(new[]
-                    {
+                    Assert.IsTrue(msgs.SequenceEqual(
+                    [
                         Tuple.Create<CheckpointableRequest, object>(CheckpointableRequest.Unload, Tuple.Create(default(IProgress<int>))),
-                    }));
+                    ]));
                 }
             );
         }

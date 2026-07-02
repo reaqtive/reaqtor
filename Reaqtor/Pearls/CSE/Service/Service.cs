@@ -259,7 +259,7 @@ namespace Pearls.Reaqtor.CSE
                             var obvType = typeof(IObserver<>).MakeGenericType(elemType);
 
                             var subType = typeof(Subject<>).MakeGenericType(elemType);
-                            var sub = Activator.CreateInstance(subType, new[] { id });
+                            var sub = Activator.CreateInstance(subType, [id]);
 
                             entry = new HotArtifact();
                             entry.RefCount++;

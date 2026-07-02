@@ -59,11 +59,11 @@ namespace Reaqtive.Operators
                 _l.Other = _r;
                 _r.Other = _l;
 
-                return new[]
-                {
+                return
+                [
                     _l.Subscription = Params._left.Subscribe(_l),
                     _r.Subscription = Params._right.Subscribe(_r)
-                };
+                ];
             }
 
             protected override void OnStart()

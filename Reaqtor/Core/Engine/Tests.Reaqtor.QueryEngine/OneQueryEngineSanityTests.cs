@@ -240,7 +240,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
             sub.Dispose();
 
@@ -267,7 +267,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
             sub = src.Subscribe(obv, uri, null);
 
@@ -286,7 +286,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1, 4, 5 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
         }
 
         [TestMethod]
@@ -324,7 +324,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
             await sub.DisposeAsync(CancellationToken.None);
 
@@ -351,7 +351,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
             sub = await src.SubscribeAsync(obv, uri, null, CancellationToken.None);
 
@@ -370,7 +370,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             Assert.IsFalse(v1.Completed);
             Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual(new[] { 0, 1, 4, 5 }, v1.Values);
+            AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
         }
 
         [TestMethod]
@@ -819,7 +819,7 @@ namespace Tests.Reaqtor.QueryEngine
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
-            AssertResultSequence(out1, new int[] { 97, 99 });
+            AssertResultSequence(out1, [97, 99]);
         }
 
         [TestMethod]
@@ -863,7 +863,7 @@ namespace Tests.Reaqtor.QueryEngine
                 in2s.OnNext(98); // ignored
                 in3s.OnNext(99);
 
-                AssertResultSequence(out1, new int[] { 97, 99 });
+                AssertResultSequence(out1, [97, 99]);
 
                 // Checkpoint -------------------------------------------------------------
 
@@ -2179,7 +2179,7 @@ namespace Tests.Reaqtor.QueryEngine
         public async Task Artifact_Creation()
         {
             var trueOrFalse = new object[] { true, false };
-            foreach (var choice in new DeterministicRandomizer(new[] { trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse }))
+            foreach (var choice in new DeterministicRandomizer([trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse]))
             {
                 var kvs = new InMemoryKeyValueStore();
                 var qe = CreateQueryEngine(kvs);
@@ -2250,7 +2250,7 @@ namespace Tests.Reaqtor.QueryEngine
         public async Task Artifact_Deletion()
         {
             var trueOrFalse = new object[] { true, false };
-            foreach (var choice in new DeterministicRandomizer(new[] { trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse }))
+            foreach (var choice in new DeterministicRandomizer([trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse]))
             {
                 var kvs = new InMemoryKeyValueStore();
                 var qe = CreateQueryEngine(kvs);

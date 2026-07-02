@@ -42,7 +42,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
             var ctxParam = Expression.Parameter(typeof(IReactive), "ctx");
             return Expression.Lambda<Action<QueryEngineEnvironment>>(
                 Expression.Block(
-                    new[] { ctxParam },
+                    [ctxParam],
                     Expression.Assign(ctxParam, contextExpr),
                     Expression.Invoke(
                         bound,
@@ -81,7 +81,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
             {
                 expression = Expression.Lambda<Action<QueryEngineEnvironment>>(
                     Expression.Block(
-                        new[] { metadataParam, engineParam },
+                        [metadataParam, engineParam],
                         Expression.Assign(metadataParam, Expression.MakeMemberAccess(envParam, s_metadataCtx)),
                         Expression.Assign(engineParam, Expression.MakeMemberAccess(envParam, s_engineCtx)),
                         optimized.Body
@@ -295,7 +295,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
                 {
                     return Expression.Block(
                         result.Type,
-                        result.Variables.Except(new[] { _metadataParam, _engineParam }),
+                        result.Variables.Except([_metadataParam, _engineParam]),
                         result.Expressions
                     );
                 }

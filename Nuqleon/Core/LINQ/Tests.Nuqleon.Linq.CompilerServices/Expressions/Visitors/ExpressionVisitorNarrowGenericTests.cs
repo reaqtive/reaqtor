@@ -43,11 +43,10 @@ namespace Tests.System.Linq.CompilerServices
                     Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                     ExpressionType.Add,
                     typeof(ExpressionEqualityComparerTests),
-                    new[]
-                    {
+                    [
                         Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                         Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                    }
+                    ]
                 );
 
                 Assert.ThrowsExactly<NotSupportedException>(() => VisitBlock(block));
@@ -55,7 +54,7 @@ namespace Tests.System.Linq.CompilerServices
                 Assert.ThrowsExactly<NotSupportedException>(() => VisitDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2))));
                 Assert.ThrowsExactly<NotSupportedException>(() => VisitExtension(new MyExt()));
                 Assert.ThrowsExactly<NotSupportedException>(() => VisitGoto(Expression.Return(Expression.Label(""))));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), new Expression[] { Expression.Constant(1) })));
+                Assert.ThrowsExactly<NotSupportedException>(() => VisitIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)])));
                 Assert.ThrowsExactly<NotSupportedException>(() => VisitLabel(Expression.Label(Expression.Label(""))));
                 Assert.ThrowsExactly<NotSupportedException>(() => VisitLoop(Expression.Loop(block)));
                 Assert.ThrowsExactly<NotSupportedException>(() => VisitRuntimeVariables(Expression.RuntimeVariables()));
@@ -104,18 +103,17 @@ namespace Tests.System.Linq.CompilerServices
                     Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
                     ExpressionType.Add,
                     typeof(ExpressionEqualityComparerTests),
-                    new[]
-                    {
+                    [
                         Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
                         Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                    }
+                    ]
                 );
 
                 Assert.ThrowsExactly<NotSupportedException>(() => MakeBlock(block, variables: null, expressions: null));
                 Assert.ThrowsExactly<NotSupportedException>(() => MakeDebugInfo(Expression.DebugInfo(Expression.SymbolDocument("foo.txt"), 1, 1, 1, 1)));
                 Assert.ThrowsExactly<NotSupportedException>(() => MakeDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2)), arguments: null));
                 Assert.ThrowsExactly<NotSupportedException>(() => MakeGoto(Expression.Return(Expression.Label("")), target: null, value: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), new Expression[] { Expression.Constant(1) }), @object: null, arguments: null));
+                Assert.ThrowsExactly<NotSupportedException>(() => MakeIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)]), @object: null, arguments: null));
                 Assert.ThrowsExactly<NotSupportedException>(() => MakeLabel(Expression.Label(Expression.Label("")), target: null, defaultValue: null));
                 Assert.ThrowsExactly<NotSupportedException>(() => MakeLoop(Expression.Loop(block), body: null, breakLabel: null, continueLabel: null));
                 Assert.ThrowsExactly<NotSupportedException>(() => MakeRuntimeVariables(Expression.RuntimeVariables(), variables: null));

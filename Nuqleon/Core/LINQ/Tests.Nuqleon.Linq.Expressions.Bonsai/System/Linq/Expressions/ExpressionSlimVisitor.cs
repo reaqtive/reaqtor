@@ -212,7 +212,7 @@ namespace System.Linq.Expressions
         {
             var visitor = new ExpressionSlimVisitor();
             var slimifier = new ExpressionToExpressionSlimConverter();
-            var expression = Expression.MakeIndex(Expression.Parameter(typeof(MyFoo)), typeof(MyFoo).GetProperty("Item"), new[] { Expression.Constant(0) });
+            var expression = Expression.MakeIndex(Expression.Parameter(typeof(MyFoo)), typeof(MyFoo).GetProperty("Item"), [Expression.Constant(0)]);
             var slim = slimifier.Visit(expression);
             Assert.AreSame(slim, visitor.Visit(slim));
         }
@@ -230,7 +230,7 @@ namespace System.Linq.Expressions
             var res = visitor.Visit(slim);
 
             var value = res.ToExpression().Evaluate<List<int>>();
-            Assert.IsTrue(value.SequenceEqual(new[] { 42 }));
+            Assert.IsTrue(value.SequenceEqual([42]));
         }
 
         [TestMethod]
@@ -326,7 +326,7 @@ namespace System.Linq.Expressions
             var nopVisitor = new ExpressionSlimVisitor();
 
             var p = Expression.Variable(typeof(int), "p");
-            var expr = Expression.Block(new[] { p }, Expression.Constant(41));
+            var expr = Expression.Block([p], Expression.Constant(41));
             var slim = slimifier.Visit(expr);
             Assert.AreEqual(slim, nopVisitor.Visit(slim));
 
@@ -584,7 +584,7 @@ namespace System.Linq.Expressions
                 Expression.Loop(
                     Expression.Block(
                         typeof(int),
-                        new[] { counter },
+                        [counter],
                         Expression.AddAssign(counter, Expression.Constant(2)),
                         Expression.Condition(
                             Expression.GreaterThanOrEqual(
@@ -813,7 +813,7 @@ namespace System.Linq.Expressions
                 Expression.Condition(Expression.Equal(Expression.Constant(1), Expression.Constant(1)), Expression.Constant(2), Expression.Constant(3)).ToExpressionSlim(),
                 Expression.Constant(1).ToExpressionSlim(),
                 Expression.Default(typeof(int)).ToExpressionSlim(),
-                Expression.MakeIndex(Expression.Parameter(typeof(MyFoo)), typeof(MyFoo).GetProperty("Item"), new[] { Expression.Constant(0) }).ToExpressionSlim(),
+                Expression.MakeIndex(Expression.Parameter(typeof(MyFoo)), typeof(MyFoo).GetProperty("Item"), [Expression.Constant(0)]).ToExpressionSlim(),
                 Expression.Invoke(Expression.Constant(new Func<int>(() => 42))).ToExpressionSlim(),
                 Expression.Lambda<Func<int>>(Expression.Constant(1)).ToExpressionSlim(),
                 Expression.Property(Expression.Constant("bar"), "Length").ToExpressionSlim(),
@@ -1046,7 +1046,7 @@ namespace System.Linq.Expressions
 
                 var res = VisitAndConvert<ExpressionSlim, Derived>(xs);
 
-                Assert.IsTrue(res.Select(x => (int)x.Value).SequenceEqual(new[] { 1, 2 }));
+                Assert.IsTrue(res.Select(x => (int)x.Value).SequenceEqual([1, 2]));
             }
 
             protected internal override Base VisitBinary(BinaryExpressionSlim node) => throw new NotImplementedException();

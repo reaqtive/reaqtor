@@ -183,7 +183,7 @@ namespace System.Linq.CompilerServices
             if (Levels == 1)
             {
                 foreach (var kv in _leaf)
-                    yield return new KeyValuePair<IEnumerable<TKey>, TValue>(new[] { kv.Key }, kv.Value);
+                    yield return new KeyValuePair<IEnumerable<TKey>, TValue>([kv.Key], kv.Value);
             }
             else
             {

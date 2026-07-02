@@ -33,7 +33,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             subject.Seal();
 
-            Assert.IsTrue(svc.DeletedStreams.SequenceEqual(new[] { id }));
+            Assert.IsTrue(svc.DeletedStreams.SequenceEqual([id]));
         }
 
         [TestMethod]
@@ -211,7 +211,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             sub.Dispose();
 
-            Assert.IsTrue(svc.DeletedStreams.SequenceEqual(new[] { id }));
+            Assert.IsTrue(svc.DeletedStreams.SequenceEqual([id]));
         }
 
         [TestMethod]
@@ -306,7 +306,7 @@ namespace Tests.Reaqtor.QueryEngine
 
             subs[2].Dispose();
 
-            Assert.IsTrue(svc.DeletedStreams.SequenceEqual(new[] { id }));
+            Assert.IsTrue(svc.DeletedStreams.SequenceEqual([id]));
 
             Assert.IsTrue(new[] { 42, 43 }.SequenceEqual(res[0]));
             Assert.IsTrue(new[] { 42 }.SequenceEqual(res[1]));

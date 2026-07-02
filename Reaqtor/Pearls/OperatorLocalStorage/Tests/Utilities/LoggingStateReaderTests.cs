@@ -126,7 +126,7 @@ namespace Tests
                 if (Throw)
                     throw new NotImplementedException();
 
-                return new[] { "A" };
+                return ["A"];
             }
 
             public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
@@ -134,7 +134,7 @@ namespace Tests
                 if (Throw)
                     throw new NotImplementedException();
 
-                keys = new[] { "B" };
+                keys = ["B"];
                 return true;
             }
 

@@ -143,7 +143,7 @@ namespace Tests.System.Linq.CompilerServices
             i = CompilerGeneratedNameEliminator.Prettify(i);
 
             var f = i.Evaluate<Func<IEnumerable<int>, IEnumerable<string>>>();
-            var g = f(new[] { 123, 234, 987, 876 });
+            var g = f([123, 234, 987, 876]);
             Assert.IsTrue(new[] { "1Foo", "2Foo", "9Foo", "8Foo" }.SequenceEqual(g));
 
             Assert.AreEqual(@"Invoke((@p0, @p1, @p2) => xs => xs.Select(x => new Tuple`2(x, (x + @p0))).Where(t => (t.Item2 > @p1)).Select(t => new Tuple`2(t, t.Item1.ToString())).Where(t => Not(t.Item2.EndsWith(@p2))).Select(t => (t.Item2.Substring(@p1, @p0) + @p2)), 1, 0, ""Foo"")", i.ToString());

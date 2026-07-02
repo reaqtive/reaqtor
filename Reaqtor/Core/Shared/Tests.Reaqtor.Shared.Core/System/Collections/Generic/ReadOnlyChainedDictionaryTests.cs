@@ -46,7 +46,7 @@ namespace Tests.Reaqtor.Shared.Core
         {
             var ch = GetChainedDictionary();
 
-            Assert.IsTrue(ch.Keys.OrderBy(x => x).SequenceEqual(new[] { "bar", "foo", "qux" }));
+            Assert.IsTrue(ch.Keys.OrderBy(x => x).SequenceEqual(["bar", "foo", "qux"]));
         }
 
         [TestMethod]
@@ -54,7 +54,7 @@ namespace Tests.Reaqtor.Shared.Core
         {
             var ch = GetChainedDictionary();
 
-            Assert.IsTrue(ch.Values.OrderBy(x => x).SequenceEqual(new[] { 42, 43, 44 }));
+            Assert.IsTrue(ch.Values.OrderBy(x => x).SequenceEqual([42, 43, 44]));
         }
 
         [TestMethod]
@@ -116,12 +116,12 @@ namespace Tests.Reaqtor.Shared.Core
 
         private static void AssertEnumeration(IEnumerable<KeyValuePair<string, int>> e)
         {
-            Assert.IsTrue(e.OrderBy(kv => kv.Key).SequenceEqual(new[]
-            {
+            Assert.IsTrue(e.OrderBy(kv => kv.Key).SequenceEqual(
+            [
                 new KeyValuePair<string, int>("bar", 42),
                 new KeyValuePair<string, int>("foo", 43),
                 new KeyValuePair<string, int>("qux", 44),
-            }));
+            ]));
         }
 
         private sealed class Enumerable : IEnumerable

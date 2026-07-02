@@ -507,7 +507,7 @@ namespace Reaqtor.QueryEngine
 
                     if (!_reader.TryGetItemKeys(category, out IEnumerable<string> entities))
                     {
-                        entities = Array.Empty<string>();
+                        entities = [];
                     }
 
                     var total = 0;

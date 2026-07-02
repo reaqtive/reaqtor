@@ -478,7 +478,7 @@ namespace Tests.System.Reflection.Virtualization
             foreach (var prop in new[]
             {
                 typeof(string).GetProperty(nameof(string.Length)),
-                typeof(string).GetProperties().Single(x => x.PropertyType == typeof(char) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual(new[] { typeof(int) })),
+                typeof(string).GetProperties().Single(x => x.PropertyType == typeof(char) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual([typeof(int)])),
                 typeof(Console).GetProperty(nameof(Console.ForegroundColor)),
             })
             {
@@ -509,14 +509,14 @@ namespace Tests.System.Reflection.Virtualization
         {
             {
                 var length = typeof(string).GetProperty(nameof(string.Length));
-                var index = typeof(string).GetProperties().Single(x => x.PropertyType == typeof(char) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual(new[] { typeof(int) }));
+                var index = typeof(string).GetProperties().Single(x => x.PropertyType == typeof(char) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual([typeof(int)]));
 
                 Assert.AreEqual(length.GetValue("bar"), p.GetValue(length, "bar"));
                 Assert.AreEqual(index.GetValue("bar", [1]), p.GetValue(index, "bar", [1]));
             }
 
             {
-                var item = typeof(List<int>).GetProperties().Single(x => x.PropertyType == typeof(int) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual(new[] { typeof(int) }));
+                var item = typeof(List<int>).GetProperties().Single(x => x.PropertyType == typeof(int) && x.GetIndexParameters().Select(y => y.ParameterType).SequenceEqual([typeof(int)]));
 
                 var xs = new List<int> { 1, 2, 3 };
 

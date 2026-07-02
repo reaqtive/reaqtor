@@ -1151,7 +1151,7 @@ namespace Tests.System.Linq.Expressions.Optimizers
             {
                 Debug.Assert(type.GetGenericTypeDefinition() == typeof(Nullable<>));
 
-                return s_values[type.GetNonNullableType()].Concat(new object[] { null });
+                return s_values[type.GetNonNullableType()].Concat([null]);
             }
 
             return s_values[type];

@@ -32,10 +32,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void Recordizer_Concurrency_Expressions()
         {
-            var recType = RuntimeCompiler.CreateRecordType(new[] {
+            var recType = RuntimeCompiler.CreateRecordType([
                 new KeyValuePair<string, Type>("a", typeof(int)),
                 new KeyValuePair<string, Type>("b", typeof(Qux))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var rec = Activator.CreateInstance(recType);
             recType.GetProperty("a").SetValue(rec, 42);

@@ -564,7 +564,7 @@ namespace System.Linq.Expressions.Bonsai
 
         private IEnumerable<string> Visit(IEnumerable<ElementInitSlim> elements)
         {
-            return elements.Select(Visit).ToArray();
+            return [.. elements.Select(Visit)];
         }
 
         private string Visit(ElementInitSlim element)
@@ -639,7 +639,7 @@ namespace System.Linq.Expressions.Bonsai
 
         private IEnumerable<string> Visit(IEnumerable<MemberBindingSlim> bindings)
         {
-            return bindings.Select(Visit).ToArray();
+            return [.. bindings.Select(Visit)];
         }
 
         private string Visit(MemberBindingSlim binding)
@@ -1208,7 +1208,7 @@ namespace System.Linq.Expressions.Bonsai
 
             var methodName = GetMethodName(method);
 
-            return lhs + "." + methodName + JoinParen(new[] { Visit(left), Visit(right) });
+            return lhs + "." + methodName + JoinParen([Visit(left), Visit(right)]);
         }
 
         private string PrintMethodCall(MethodInfoSlim method, ExpressionSlim @object, IArgumentProviderSlim arguments)

@@ -51,7 +51,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
             var res = _store.TryGetItemKeys(category, out var allKeys);
             if (res)
             {
-                keys = allKeys.Except(_store.GetRemovedItems(category)).ToArray();
+                keys = [.. allKeys.Except(_store.GetRemovedItems(category))];
                 return true;
             }
             else

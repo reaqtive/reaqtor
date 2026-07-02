@@ -197,7 +197,7 @@ namespace Reaqtive
                 Subscription.Dispose();
             }
 
-            public IEnumerable<ISubscription> Inputs => new[] { Subscription };
+            public IEnumerable<ISubscription> Inputs => [Subscription];
 
             public void Subscribe()
             {

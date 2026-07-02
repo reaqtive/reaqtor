@@ -392,7 +392,7 @@ namespace Tests.Reaqtor.Reliable
                         ys.Subscribe(ob, new Uri(Constants.Subscription.SUB), null);
                     }
                 },
-                Enumerable.Range(0, 3).Select(i =>
+                [.. Enumerable.Range(0, 3).Select(i =>
                     new CreateSubscription(
                         new Uri(Constants.Subscription.SUB),
                         Expression.Parameter(typeof(int), "x").Let(x =>
@@ -418,7 +418,7 @@ namespace Tests.Reaqtor.Reliable
                         ),
                         null
                     )
-                ).ToArray()
+                )]
             );
         }
 

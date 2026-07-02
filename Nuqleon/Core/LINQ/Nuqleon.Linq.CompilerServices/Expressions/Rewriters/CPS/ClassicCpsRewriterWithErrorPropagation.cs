@@ -605,7 +605,7 @@ namespace System.Linq.CompilerServices
             Debug.Assert(method != null);
             Debug.Assert(continuation != null);
 
-            return Expression.Call(instance, method, arguments.Concat(new[] { continuation.SuccessContinuation, continuation.ErrorContinuation }));
+            return Expression.Call(instance, method, arguments.Concat([continuation.SuccessContinuation, continuation.ErrorContinuation]));
         }
 
         /// <summary>

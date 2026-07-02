@@ -29,7 +29,7 @@ namespace Tests.System.Linq.CompilerServices
             map[42] = "Answer";
             Assert.AreEqual("Answer", map[42]);
 
-            Assert.IsTrue(map.TryGetValue(new[] { 42 }, out string answer));
+            Assert.IsTrue(map.TryGetValue([42], out string answer));
             Assert.AreEqual("Answer", answer);
 
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[[]] = "foo");
@@ -38,7 +38,7 @@ namespace Tests.System.Linq.CompilerServices
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[[]]);
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[42, 43]);
 
-            Assert.IsFalse(map.TryGetValue(new[] { 43 }, out _));
+            Assert.IsFalse(map.TryGetValue([43], out _));
             Assert.ThrowsExactly<KeyNotFoundException>(() => map[43]);
         }
 
@@ -53,10 +53,10 @@ namespace Tests.System.Linq.CompilerServices
             map[19, 24] = "Answer 2";
             Assert.AreEqual("Answer 2", map[19, 24]);
 
-            Assert.IsTrue(map.TryGetValue(new[] { 19, 23 }, out string answer1));
+            Assert.IsTrue(map.TryGetValue([19, 23], out string answer1));
             Assert.AreEqual("Answer 1", answer1);
 
-            Assert.IsTrue(map.TryGetValue(new[] { 19, 24 }, out string answer2));
+            Assert.IsTrue(map.TryGetValue([19, 24], out string answer2));
             Assert.AreEqual("Answer 2", answer2);
 
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[19] = "foo");
@@ -65,7 +65,7 @@ namespace Tests.System.Linq.CompilerServices
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[19]);
             Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => map[19, 21, 2]);
 
-            Assert.IsFalse(map.TryGetValue(new[] { 43 }, out _));
+            Assert.IsFalse(map.TryGetValue([43], out _));
             Assert.ThrowsExactly<KeyNotFoundException>(() => map[43]);
 
             Assert.IsTrue(map.TryGetValue(19, out NAryMapOrLeaf<int, string> partial));
@@ -89,8 +89,8 @@ namespace Tests.System.Linq.CompilerServices
             }
 
             Assert.AreEqual(2, entries.Count);
-            Assert.IsTrue(entries.Single(kv => kv.Key.SequenceEqual(new[] { 19, 23 })).Value == "Answer 1");
-            Assert.IsTrue(entries.Single(kv => kv.Key.SequenceEqual(new[] { 19, 24 })).Value == "Answer 2");
+            Assert.IsTrue(entries.Single(kv => kv.Key.SequenceEqual([19, 23])).Value == "Answer 1");
+            Assert.IsTrue(entries.Single(kv => kv.Key.SequenceEqual([19, 24])).Value == "Answer 2");
         }
     }
 }

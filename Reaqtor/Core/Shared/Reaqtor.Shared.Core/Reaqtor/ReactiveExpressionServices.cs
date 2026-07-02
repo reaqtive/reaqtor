@@ -391,13 +391,13 @@ namespace Reaqtor
                             methodParameterTypes = methodParameterTypes.Skip(1);
                         }
 
-                        args = args.Zip(
+                        args = [.. args.Zip(
                             methodParameterTypes,
                             (arg, type) =>
                                 (arg.Type != type) ?
                                 Expression.Convert(arg, type) :
                                 arg
-                            ).ToList();
+                            )];
 
                         if (obj == null && !args.Any())
                         {
@@ -460,14 +460,14 @@ namespace Reaqtor
 
             if (instance != null)
             {
-                argTypes = argTypes.Concat(new[] { instance.Type });
-                args = args.Concat(new[] { instance });
+                argTypes = argTypes.Concat([instance.Type]);
+                args = args.Concat([instance]);
             }
 
             argTypes = argTypes.Concat(arguments.Select(arg => arg.Type));
             args = args.Concat(arguments);
 
-            argTypes = argTypes.Concat(new[] { returnType });
+            argTypes = argTypes.Concat([returnType]);
 
             var functionType = Expression.GetDelegateType([.. argTypes]);
 

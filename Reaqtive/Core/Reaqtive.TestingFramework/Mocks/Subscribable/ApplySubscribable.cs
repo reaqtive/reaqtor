@@ -64,7 +64,7 @@ namespace Reaqtive.TestingFramework.Mocks
                 _parent.TheObserver.OnNext(value);
             }
 
-            public IEnumerable<ISubscription> Inputs => new[] { _source };
+            public IEnumerable<ISubscription> Inputs => [_source];
 
             public void Subscribe()
             {

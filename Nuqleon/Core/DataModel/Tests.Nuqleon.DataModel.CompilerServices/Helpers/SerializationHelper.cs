@@ -148,7 +148,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
                 ((MemoryStream)writer.BaseStream).Position = 0;
 
-                result = deserialize.Invoke(_dataSerializer, new[] { writer.BaseStream as MemoryStream });
+                result = deserialize.Invoke(_dataSerializer, [writer.BaseStream as MemoryStream]);
             }
             finally
             {

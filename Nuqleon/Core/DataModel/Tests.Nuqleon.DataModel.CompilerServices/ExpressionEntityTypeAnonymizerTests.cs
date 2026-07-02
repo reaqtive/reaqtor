@@ -97,10 +97,10 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void ExpressionEntityTypeAnonymizer_Constants_Simple()
         {
-            var recType = RuntimeCompiler.CreateRecordType(new[] {
+            var recType = RuntimeCompiler.CreateRecordType([
                 new KeyValuePair<string, Type>("a", typeof(int)),
                 new KeyValuePair<string, Type>("b", typeof(Qux))
-            }, valueEquality: true);
+            ], valueEquality: true);
 
             var rec = Activator.CreateInstance(recType);
             recType.GetProperty("a").SetValue(rec, 42);
@@ -177,11 +177,11 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
 
             var g = f.Compile();
 
-            var res = g(new[] {
+            var res = g([
                 new A { B = new B { Cs = [new C { D = 23 }] } },
                 new A { B = new B { Cs = [new C { D = -1 }] } },
                 new A { B = new B { Cs = [new C { D = 87 }] } },
-            });
+            ]);
 
             var eta = new ExpressionEntityTypeAnonymizer();
 

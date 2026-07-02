@@ -105,7 +105,7 @@ namespace System.Linq.CompilerServices
                             var c = (MemberExpression)exclusion.Body;
 
                             member = c.Member;
-                            holes = GetHolePositions(exclusion, new[] { c.Expression });
+                            holes = GetHolePositions(exclusion, [c.Expression]);
                         }
                         break;
                     default:

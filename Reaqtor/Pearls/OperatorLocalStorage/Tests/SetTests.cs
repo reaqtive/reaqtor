@@ -594,10 +594,10 @@ namespace Tests
             {
                 var edits = s.SaveSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                });
+                ]);
             }
 
             //
@@ -652,14 +652,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -694,14 +694,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -744,13 +744,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //
@@ -768,14 +768,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -809,13 +809,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //
@@ -833,10 +833,10 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -871,14 +871,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -896,13 +896,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -937,14 +937,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -962,10 +962,10 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //
@@ -1000,14 +1000,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1026,14 +1026,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"), // NB: Slot will be reused.
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1068,14 +1068,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1094,10 +1094,10 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"), // NB: Slot will be reused.
-                });
+                ]);
             }
 
             //
@@ -1132,14 +1132,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1157,13 +1157,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1181,14 +1181,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"), // NB: Slot gets reused from the free list.
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1223,14 +1223,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1248,10 +1248,10 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //
@@ -1269,10 +1269,10 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"), // NB: Slot gets reused from the free list.
-                });
+                ]);
             }
 
             //
@@ -1307,14 +1307,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1332,10 +1332,10 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
-                });
+                ]);
             }
 
             //
@@ -1369,14 +1369,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1394,13 +1394,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1434,14 +1434,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1461,12 +1461,12 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
-                });
+                ]);
             }
 
             //
@@ -1501,14 +1501,14 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1528,13 +1528,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"), // NB: These slots get reused.
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "2"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "3"),
-                });
+                ]);
             }
 
             //
@@ -1568,13 +1568,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //
@@ -1588,13 +1588,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.Delete, "state/index", "bar"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //
@@ -1624,13 +1624,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //
@@ -1653,13 +1653,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.Delete, "state/index", "bar"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //
@@ -1689,13 +1689,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: false);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.AddOrUpdate, "state/index", "bar"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.AddOrUpdate, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //
@@ -1718,13 +1718,13 @@ namespace Tests
             {
                 var edits = s.SaveAndReloadSpace(differential: true);
 
-                s.AssertEdits(edits, new[]
-                {
+                s.AssertEdits(edits,
+                [
                     (StateWriterOperationKind.Delete, "state/index", "bar"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "0"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "1"),
                     (StateWriterOperationKind.Delete, "state/item/bar/items", "2"),
-                });
+                ]);
             }
 
             //

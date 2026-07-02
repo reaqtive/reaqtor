@@ -210,7 +210,7 @@ in  t1
         [TestMethod]
         public void DataType_Structural_Record()
         {
-            var rec = RuntimeCompiler.CreateRecordType(new[] { new KeyValuePair<string, Type>("a", typeof(int)), new KeyValuePair<string, Type>("b", typeof(string)) }, valueEquality: true);
+            var rec = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("a", typeof(int)), new KeyValuePair<string, Type>("b", typeof(string))], valueEquality: true);
             var t = DataType.FromType(rec);
 
             Assert.AreEqual(DataTypeKinds.Structural, t.Kind);

@@ -114,7 +114,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 
                 var doc = new XDocument(
                     new XElement("Store",
-                        entries.ToArray()
+                        [.. entries]
                     )
                 );
 

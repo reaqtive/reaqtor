@@ -160,7 +160,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
                 TypeDateTimeOffset = DateTime.Now,
                 TypeTimeSpan = new TimeSpan(1, 2, 3, 4, 5),
                 TypeGuid = Guid.NewGuid(),
-                TypeIEnumerableBool = new[] { true, false, true },
+                TypeIEnumerableBool = [true, false, true],
                 TypeArrayBool = [false, true, false],
                 TypeEnumInt = EnumInt.EnumValue1,
                 TypeNullableEnumInt = EnumInt.EnumValue2,

@@ -61,7 +61,7 @@ namespace System.Linq.CompilerServices
         /// <summary>
         /// Gets the symbols defined in the symbol table, in order of definition.
         /// </summary>
-        public IEnumerable<TSymbol> Symbols => _ordered.Select(kv => kv.Key).ToArray();
+        public IEnumerable<TSymbol> Symbols => [.. _ordered.Select(kv => kv.Key)];
 
         /// <summary>
         /// Gets the value associated with the specified symbol.
