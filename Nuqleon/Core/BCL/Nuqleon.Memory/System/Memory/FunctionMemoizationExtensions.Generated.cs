@@ -2,7 +2,13 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-// #define USE_VALUETUPLE // REVIEW: Is the use of ValueTuple desirable? Cf. the implementation of GetHashCode for arity >= 8.
+// #define USE_VALUETUPLE // RESOLVED (2026-07, measured in Perf.Nuqleon.Memory): not desirable. The REVIEW hunch below was
+//                        // right on the money: ValueTuple.GetHashCode on a TRest-nested tuple (arity > 8) incorporates only
+//                        // the LAST 8 components, so memoized functions whose earlier arguments vary while later ones stay
+//                        // stable collapse the cache into a single hash bucket with O(n) lookups (measured 50-128x slower).
+//                        // With collision-free keys the two representations are equivalent (ValueTuple marginally faster);
+//                        // Tuplet hashes all components at every arity and has no such cliff. Keep Tuplet.
+//                        // (Original note: REVIEW: Is the use of ValueTuple desirable? Cf. the implementation of GetHashCode for arity >= 8.)
 
 using System.Collections.Generic;
 

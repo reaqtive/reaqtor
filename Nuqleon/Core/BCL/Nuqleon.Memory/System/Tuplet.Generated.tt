@@ -15,6 +15,16 @@ var ordinals = new[] { "first", "second", "third", "fourth", "fifth", "sixth", "
 using System.Collections;
 using System.Collections.Generic;
 
+//
+// NB: Unlike System.ValueTuple - whose GetHashCode incorporates only the LAST 8 components once
+//     the tuple nests through TRest (arity > 8) - Tuplet computes its hash over ALL components at
+//     every arity. That makes it collision-robust as a dictionary/memoization key regardless of
+//     which argument positions vary (ValueTuple keys collapse into a single hash bucket when only
+//     the leading components differ; measured 50-128x slower in Perf.Nuqleon.Memory). This
+//     property, not raw hashing speed, is why these types exist and why they should not be
+//     replaced with ValueTuple.
+//
+
 namespace System
 {
 <#
