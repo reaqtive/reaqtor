@@ -31,7 +31,7 @@ namespace Tests.Reaqtor.QueryEngine
                 Assert.IsTrue(collection.TryAdd(i, i * i));
             }
 
-            var rand = new Random();
+            var rand = Random.Shared;
             for (var i = 0; i < repeat; ++i)
             {
                 var cloned = default(ReadOnlyReactiveEntityCollection<int, int>);

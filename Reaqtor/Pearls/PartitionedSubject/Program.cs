@@ -110,7 +110,7 @@ namespace PartitionedSubject
 
             var c = new Dictionary<string, int>();
 
-            var rnd1 = new Random();
+            var rnd1 = Random.Shared;
 
             var sw = Stopwatch.StartNew();
 
@@ -145,7 +145,7 @@ namespace PartitionedSubject
 
             var c = new Dictionary<string, int>();
 
-            var rnd1 = new Random();
+            var rnd1 = Random.Shared;
 
             var sw = Stopwatch.StartNew();
 
@@ -182,7 +182,7 @@ namespace PartitionedSubject
 
             var pub = Task.Run(() =>
             {
-                var rnd2 = new Random();
+                var rnd2 = Random.Shared;
 
                 for (var n = 0; n < N; n++)
                 {

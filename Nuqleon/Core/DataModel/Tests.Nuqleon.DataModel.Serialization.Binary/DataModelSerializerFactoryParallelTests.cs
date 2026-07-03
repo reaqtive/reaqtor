@@ -155,7 +155,7 @@ namespace Tests.Nuqleon.DataModel.Serialization.Binary
             }
 
             // Each test in random order
-            var r = new Random();
+            var r = Random.Shared;
             Parallel.ForEach(
                 Enumerable.Repeat(tests, Repeat).SelectMany(t => t).OrderBy(_ => r.Next()),
                 t =>

@@ -23,7 +23,7 @@ namespace Tests
 
         public TestBase()
         {
-            var rnd = new Random();
+            var rnd = Random.Shared;
 
             _random = new ThreadLocal<Random>(() =>
             {
