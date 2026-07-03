@@ -10,12 +10,12 @@
 //   BD - 01/25/2019 - Leverage ReadOnlySpan<char> based parsing.
 //
 
-using Nuqleon.Json.Parser;
-
 using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
+
+using Nuqleon.Json.Parser;
 
 namespace Nuqleon.Json.Serialization
 {
