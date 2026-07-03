@@ -8,7 +8,6 @@
 // BD - December 2014 - Created this file.
 //
 
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -27,7 +26,7 @@ namespace System.Reflection
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable format // (Formatted as a table.)
 
-        private static readonly FrozenDictionary<TypeSlim, string> s_typeNames = new Dictionary<TypeSlim, string>()
+        private static readonly Dictionary<TypeSlim, string> s_typeNames = new()
         {
             { typeof(void   ).ToTypeSlim(), "void"    },
             { typeof(object ).ToTypeSlim(), "object"  },
@@ -45,7 +44,7 @@ namespace System.Reflection
             { typeof(bool   ).ToTypeSlim(), "bool"    },
             { typeof(char   ).ToTypeSlim(), "char"    },
             { typeof(string ).ToTypeSlim(), "string"  },
-        }.ToFrozenDictionary();
+        };
 
 #pragma warning restore format
 #pragma warning restore IDE0079

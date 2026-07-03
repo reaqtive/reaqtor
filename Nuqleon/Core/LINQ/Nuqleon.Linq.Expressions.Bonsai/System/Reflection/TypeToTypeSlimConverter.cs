@@ -12,7 +12,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1062 // Omitted null checks similar to expression tree visitors.
 
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
@@ -40,13 +39,13 @@ namespace System.Reflection
         private static readonly AssemblySlim s_mscorlibSlim = new(typeof(int).Assembly.FullName);
         private static readonly AssemblySlim s_systemSlim   = new(typeof(Uri).Assembly.FullName);
 
-        private static readonly FrozenDictionary<Assembly, AssemblySlim> s_coreAssemblies = new Dictionary<Assembly, AssemblySlim>()
+        private static readonly Dictionary<Assembly, AssemblySlim> s_coreAssemblies = new(2)
         {
             { typeof(int).Assembly, s_mscorlibSlim },
             { typeof(Uri).Assembly, s_systemSlim   },
-        }.ToFrozenDictionary();
+        };
 
-        private static readonly FrozenDictionary<Type, TypeSlim> s_primitiveTypes = new Dictionary<Type, TypeSlim>()
+        private static readonly Dictionary<Type, TypeSlim> s_primitiveTypes = new(12)
         {
             { typeof(object),         TypeSlim.Simple(s_mscorlibSlim, "System.Object")         },
             { typeof(int),            TypeSlim.Simple(s_mscorlibSlim, "System.Int32")          },
@@ -60,14 +59,14 @@ namespace System.Reflection
             { typeof(DateTime),       TypeSlim.Simple(s_mscorlibSlim, "System.DateTime")       },
             { typeof(DateTimeOffset), TypeSlim.Simple(s_mscorlibSlim, "System.DateTimeOffset") },
             { typeof(Uri),            TypeSlim.Simple(s_systemSlim,   "System.Uri")            },
-        }.ToFrozenDictionary();
+        };
 
         //
         // Not going beyond restricted arities for the ones below; higher arities were relocated
         // at some point from System.Core to mscorlib, so not taking the risk of hardcoding ambiguity.
         //
 
-        private static readonly FrozenDictionary<Type, TypeSlim> s_commonGenericTypes = new Dictionary<Type, TypeSlim>()
+        private static readonly Dictionary<Type, TypeSlim> s_commonGenericTypes = new(17)
         {
             { typeof(Func<>),         TypeSlim.GenericDefinition(s_mscorlibSlim, "System.Func`1")   },
             { typeof(Func<,>),        TypeSlim.GenericDefinition(s_mscorlibSlim, "System.Func`2")   },
@@ -88,7 +87,7 @@ namespace System.Reflection
             { typeof(Tuple<,,,,,>),   TypeSlim.GenericDefinition(s_mscorlibSlim, "System.Tuple`6")  },
             { typeof(Tuple<,,,,,,>),  TypeSlim.GenericDefinition(s_mscorlibSlim, "System.Tuple`7")  },
             { typeof(Tuple<,,,,,,,>), TypeSlim.GenericDefinition(s_mscorlibSlim, "System.Tuple`8")  },
-        }.ToFrozenDictionary();
+        };
 
         /*
          * </WARNING>

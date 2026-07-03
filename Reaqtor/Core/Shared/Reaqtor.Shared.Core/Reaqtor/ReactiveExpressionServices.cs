@@ -10,7 +10,6 @@
 
 using System;
 using System.Collections;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -341,9 +340,8 @@ namespace Reaqtor
                     return Expression.New(ctor, args, props);
                 }
 
-                private static readonly FrozenSet<Type> s_tuples =
-                new Type[]
-                {
+                private static readonly HashSet<Type> s_tuples =
+                [
                     typeof(Tuple<>),
                     typeof(Tuple<,>),
                     typeof(Tuple<,,>),
@@ -352,7 +350,7 @@ namespace Reaqtor
                     typeof(Tuple<,,,,,>),
                     typeof(Tuple<,,,,,,>),
                     typeof(Tuple<,,,,,,,>),
-                }.ToFrozenSet();
+                ];
             }
         }
 

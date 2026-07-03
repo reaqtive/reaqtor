@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -24,9 +23,8 @@ namespace Reaqtor.Expressions.Binding
         /// <summary>
         /// All empty generic types for Func.
         /// </summary>
-        protected static readonly FrozenSet<Type> FuncTypes =
-        new Type[]
-        {
+        protected static readonly HashSet<Type> FuncTypes =
+        [
             typeof(Func<>),
             typeof(Func<,>),
             typeof(Func<,,>),
@@ -43,7 +41,7 @@ namespace Reaqtor.Expressions.Binding
             typeof(Func<,,,,,,,,,,,,,>),
             typeof(Func<,,,,,,,,,,,,,,>),
             typeof(Func<,,,,,,,,,,,,,,,>),
-        }.ToFrozenSet();
+        ];
 
         /// <summary>
         /// Create an instance of ExpressionBinder type.

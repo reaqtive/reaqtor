@@ -9,7 +9,6 @@
 //
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 
 using Reaqtive.Serialization;
@@ -28,7 +27,7 @@ namespace Reaqtive.Storage
             /// <summary>
             /// Map of persisted entity kind discriminators to factories to instantiate persisted entities, used during recovery (see <see cref="Load"/>).
             /// </summary>
-            private static readonly FrozenDictionary<string, Func<PersistedObjectSpace, IPersistable>> s_factory = new Dictionary<string, Func<PersistedObjectSpace, IPersistable>>()
+            private static readonly Dictionary<string, Func<PersistedObjectSpace, IPersistable>> s_factory = new()
             {
                 { PersistableKind.Array.ToString(), p => new Array(p) },
                 { PersistableKind.LinkedList.ToString(), p => new LinkedList(p) },
@@ -40,7 +39,7 @@ namespace Reaqtive.Storage
                 { PersistableKind.SortedSet.ToString(), p => new SortedSet(p) },
                 { PersistableKind.Dictionary.ToString(), p => new UnsortedDictionary(p) },
                 { PersistableKind.SortedDictionary.ToString(), p => new SortedDictionary(p) },
-            }.ToFrozenDictionary();
+            };
 
             /// <summary>
             /// The parent persisted object space this registry belongs to.

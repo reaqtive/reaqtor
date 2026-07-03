@@ -8,7 +8,6 @@
 // BD - June 2013 - Created this file.
 //
 
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Globalization;
 
@@ -65,7 +64,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
 #pragma warning restore CA1822
 
-        private static readonly FrozenDictionary<Type, Func<Json.Expression, object>> s_deserializeObjectSlow = new Dictionary<Type, Func<Json.Expression, object>>()
+        private static readonly Dictionary<Type, Func<Json.Expression, object>> s_deserializeObjectSlow = new()
         {
 #if NO_INLINEPRIMITIVES
             { typeof(double), json => double.Parse((string)((Json.ConstantExpression)json).Value, CultureInfo.InvariantCulture) },
@@ -85,9 +84,9 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             { typeof(DateTime), json => DateTime.ParseExact((string)((Json.ConstantExpression)json).Value, @"o", CultureInfo.InvariantCulture, DateTimeStyles.RoundtripKind) },
             { typeof(TimeSpan), json => TimeSpan.ParseExact((string)((Json.ConstantExpression)json).Value, @"c", CultureInfo.InvariantCulture) },
             { typeof(Guid), json => Guid.ParseExact((string)((Json.ConstantExpression)json).Value, @"B") },
-        }.ToFrozenDictionary();
+        };
 
-        private static readonly FrozenDictionary<Type, Func<object, Json.Expression>> s_serializeObjectSlow = new Dictionary<Type, Func<object, Json.Expression>>()
+        private static readonly Dictionary<Type, Func<object, Json.Expression>> s_serializeObjectSlow = new()
         {
 #if NO_INLINEPRIMITIVES
             { typeof(double), obj => Json.Expression.Number(((double)obj).ToString("R")) },
@@ -107,7 +106,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             { typeof(DateTime), obj => Json.Expression.String(((DateTime)obj).ToString(@"o", CultureInfo.InvariantCulture)) },
             { typeof(TimeSpan), obj => Json.Expression.String(((TimeSpan)obj).ToString(@"c", CultureInfo.InvariantCulture)) },
             { typeof(Guid), obj => Json.Expression.String(((Guid)obj).ToString(@"B")) },
-        }.ToFrozenDictionary();
+        };
 
         private static object DeserializeObject(Json.Expression json, Type type)
         {

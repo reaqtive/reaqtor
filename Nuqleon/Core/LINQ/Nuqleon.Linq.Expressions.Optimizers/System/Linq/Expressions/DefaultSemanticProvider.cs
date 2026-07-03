@@ -8,7 +8,7 @@
 // BD - January 2017 - Created this file.
 //
 
-using System.Collections.Frozen;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace System.Linq.Expressions
@@ -21,32 +21,32 @@ namespace System.Linq.Expressions
         /// <summary>
         /// A set of objects that represent integers with a zero (0) value.
         /// </summary>
-        private static readonly FrozenSet<object> s_zeros = new object[] { (byte)0, (sbyte)0, (short)0, (ushort)0, 0, (uint)0, (long)0, (ulong)0 }.ToFrozenSet();
+        private static readonly HashSet<object> s_zeros = new([(byte)0, (sbyte)0, (short)0, (ushort)0, 0, (uint)0, (long)0, (ulong)0]);
 
         /// <summary>
         /// A set of objects that represent integers with a one (1) value.
         /// </summary>
-        private static readonly FrozenSet<object> s_ones = new object[] { (byte)1, (sbyte)1, (short)1, (ushort)1, 1, (uint)1, (long)1, (ulong)1 }.ToFrozenSet();
+        private static readonly HashSet<object> s_ones = new([(byte)1, (sbyte)1, (short)1, (ushort)1, 1, (uint)1, (long)1, (ulong)1]);
 
         /// <summary>
         /// A set of objects that represent integers with a value whose bits are all zero (0).
         /// </summary>
-        private static readonly FrozenSet<object> s_allBitsZeros = new object[] { false, (byte)0, (sbyte)0, (short)0, (ushort)0, 0, (uint)0, (long)0, (ulong)0 }.ToFrozenSet();
+        private static readonly HashSet<object> s_allBitsZeros = new([false, (byte)0, (sbyte)0, (short)0, (ushort)0, 0, (uint)0, (long)0, (ulong)0]);
 
         /// <summary>
         /// A set of objects that represent integers with a value whose bits are all one (1).
         /// </summary>
-        private static readonly FrozenSet<object> s_allBitsOnes = new object[] { true, (byte)0xFF, unchecked((sbyte)0xFF), unchecked((short)0XFFFF), unchecked((ushort)0xFFFF), unchecked((int)0xFFFFFFFF), 0xFFFFFFFF, unchecked((long)0xFFFFFFFFFFFFFFFF), 0xFFFFFFFFFFFFFFFF }.ToFrozenSet();
+        private static readonly HashSet<object> s_allBitsOnes = new([true, (byte)0xFF, unchecked((sbyte)0xFF), unchecked((short)0XFFFF), unchecked((ushort)0xFFFF), unchecked((int)0xFFFFFFFF), 0xFFFFFFFF, unchecked((long)0xFFFFFFFFFFFFFFFF), 0xFFFFFFFFFFFFFFFF]);
 
         /// <summary>
         /// A set of objects that represent integers with a minimum values.
         /// </summary>
-        private static readonly FrozenSet<object> s_minValues = new object[] { byte.MinValue, sbyte.MinValue, short.MinValue, ushort.MinValue, int.MinValue, uint.MinValue, long.MinValue, ulong.MinValue }.ToFrozenSet();
+        private static readonly HashSet<object> s_minValues = new([byte.MinValue, sbyte.MinValue, short.MinValue, ushort.MinValue, int.MinValue, uint.MinValue, long.MinValue, ulong.MinValue]);
 
         /// <summary>
         /// A set of objects that represent integers with a maximum values.
         /// </summary>
-        private static readonly FrozenSet<object> s_maxValues = new object[] { byte.MaxValue, sbyte.MaxValue, short.MaxValue, ushort.MaxValue, int.MaxValue, uint.MaxValue, long.MaxValue, ulong.MaxValue }.ToFrozenSet();
+        private static readonly HashSet<object> s_maxValues = new([byte.MaxValue, sbyte.MaxValue, short.MaxValue, ushort.MaxValue, int.MaxValue, uint.MaxValue, long.MaxValue, ulong.MaxValue]);
 
         /// <summary>
         /// Checks if the specified <paramref name="member"/> can never throw.

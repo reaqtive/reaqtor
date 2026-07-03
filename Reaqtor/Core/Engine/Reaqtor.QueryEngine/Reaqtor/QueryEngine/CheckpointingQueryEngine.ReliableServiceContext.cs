@@ -3,7 +3,6 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
@@ -33,13 +32,13 @@ namespace Reaqtor.QueryEngine
             {
 #pragma warning disable format // Formatted as tables.
 
-                private static readonly FrozenDictionary<Type, Type> s_subst = new Dictionary<Type, Type>()
+                private static readonly Dictionary<Type, Type> s_subst = new()
                 {
                     { typeof(IReliableMultiQubject<,>), typeof(IReliableMultiSubject<,>) },
                     { typeof(IReliableQbservable<>),    typeof(ISubscribable<>)          },
                     { typeof(IReliableQbserver<>),      typeof(IObserver<>)              },
                     { typeof(IReliableQubscription),    typeof(ISubscription)            },
-                }.ToFrozenDictionary();
+                };
 
 #pragma warning restore format
 
