@@ -112,7 +112,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
                 var descopingVars = descoping.Select(op => op.Variable);
                 var descopingAsgns = descoping.Select(op => Expression.Assign(op.Variable, op.Expression));
 
-                if (descoping.Any())
+                if (descoping.Count > 0)
                 {
                     return Expression.Block(
                         result.Type,
@@ -143,7 +143,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
                     blockExprs[i] = Expression.Assign(op.Variable, op.Expression);
                 }
 
-                if (descoping.Any())
+                if (descoping.Count > 0)
                 {
                     return Expression.Lambda<T>(
                         Expression.Block(

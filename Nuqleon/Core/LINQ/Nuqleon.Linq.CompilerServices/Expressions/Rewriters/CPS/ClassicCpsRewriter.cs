@@ -208,7 +208,7 @@ namespace System.Linq.CompilerServices
             {
                 var p = Expression.Parameter(typeof(Action), "callback");
                 var b = base.RewriteCore(expression, p);
-                return Expression.Lambda(typeof(Action<Action>), b, p);
+                return Expression.Lambda<Action<Action>>(b, p);
             }
             else
             {

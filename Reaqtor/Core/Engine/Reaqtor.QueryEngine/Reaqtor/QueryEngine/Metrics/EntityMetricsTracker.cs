@@ -120,7 +120,7 @@ namespace Reaqtor.QueryEngine.Metrics
             private const long EmptyMetric = long.MinValue;
 
             private static readonly Stopwatch s_timer = Stopwatch.StartNew();
-            private static readonly int s_metricCount = Enum.GetValues(typeof(EntityMetric)).Cast<int>().Max() + 1;
+            private static readonly int s_metricCount = Enum.GetValues<EntityMetric>().Cast<int>().Max() + 1;
             private static readonly long[] s_emptyMetrics = [.. Enumerable.Repeat(EmptyMetric, s_metricCount)];
 
             private readonly ConditionalWeakTable<IReactiveResource, long[]> _metrics = [];

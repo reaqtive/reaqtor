@@ -70,7 +70,7 @@ namespace Reaqtor.QueryEngine
 
             if (uri == null)
                 throw new ArgumentNullException(nameof(uri));
-            if (uri.ToCanonicalString().EndsWith("/", StringComparison.Ordinal))
+            if (uri.ToCanonicalString().EndsWith('/'))
                 throw new ArgumentException("Container URI must not end in '/'.", nameof(uri));
             if (metadataRegistry == null)
                 throw new ArgumentNullException(nameof(metadataRegistry));

@@ -272,10 +272,7 @@ namespace System.Linq.Expressions
                 MembersOnGenericTypes.Add(definingType, members);
             }
 
-            if (!members.Contains(definingMember))
-            {
-                members.Add(definingMember);
-            }
+            members.Add(definingMember);
         }
 
         /// <summary>

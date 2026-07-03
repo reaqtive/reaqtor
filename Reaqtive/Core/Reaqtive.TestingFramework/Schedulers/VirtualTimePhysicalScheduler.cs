@@ -103,9 +103,8 @@ namespace Reaqtive.TestingFramework
 
             item.IsPaused = false;
 
-            if (_notReady.Contains(item))
+            if (_notReady.Remove(item))
             {
-                _notReady.Remove(item);
                 _ready.Enqueue(item);
             }
         }
@@ -134,9 +133,8 @@ namespace Reaqtive.TestingFramework
 
             item.RecalculatePriority();
 
-            if (_notReady.Contains(item))
+            if (_notReady.Remove(item))
             {
-                _notReady.Remove(item);
                 _ready.Enqueue(item);
             }
             else if (_ready.Contains(item))

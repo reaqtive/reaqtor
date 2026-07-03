@@ -37,7 +37,7 @@ namespace Reaqtor
                 stream.Position = 0;
 
                 var bytes = new byte[stream.Length];
-                stream.Read(bytes, 0, bytes.Length);
+                stream.ReadExactly(bytes, 0, bytes.Length);
 
                 return Convert.ToBase64String(bytes);
             }

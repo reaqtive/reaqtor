@@ -63,7 +63,9 @@ namespace System.Reflection
         /// <param name="hashValue">The value of the computed hash code.</param>
         /// <param name="hashAlgorithm">The hash algorithm used for hashing files and for generating the strong name.</param>
         /// <returns>The loaded assembly.</returns>
+#pragma warning disable SYSLIB0056 // 'LoadFrom with a custom AssemblyHashAlgorithm is obsolete.' (Mirror image of the reflection API surface, including its obsolete members.)
         public override Assembly LoadFrom(string assemblyFile, byte[] hashValue, System.Configuration.Assemblies.AssemblyHashAlgorithm hashAlgorithm) => Assembly.LoadFrom(assemblyFile, hashValue, hashAlgorithm);
+#pragma warning restore SYSLIB0056
 
         /// <summary>
         /// Loads an assembly into the reflection-only context, given its display name.
@@ -917,7 +919,9 @@ namespace System.Reflection
         /// </summary>
         /// <param name="type">The type to check.</param>
         /// <returns>true if the specified <paramref name="type"/> is serializable; otherwise, false.</returns>
+#pragma warning disable SYSLIB0050 // 'Formatter-based serialization is obsolete.' (Mirror image of the reflection API surface, including its obsolete members.)
         public override bool IsSerializable(Type type) => type.IsSerializable;
+#pragma warning restore SYSLIB0050
 
         /// <summary>
         /// Gets the module in which the specified <paramref name="type"/> is defined.

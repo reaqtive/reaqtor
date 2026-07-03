@@ -27,6 +27,7 @@ namespace Reaqtor.Shebang.App
     // receive/send events (see IngressObservable<T> and EgressObserver<T>).
     //
 
+#pragma warning disable CA1515 // Consider making public types internal. (Deliberate: the sample notebooks reference the built Reaqtor.Shebang.App assembly and use this type.)
     public sealed class IngressEgressManager : IIngressEgressManager
     {
         private readonly Dictionary<string, object> _subjects = [];
@@ -131,4 +132,5 @@ namespace Reaqtor.Shebang.App
             }
         }
     }
+#pragma warning restore CA1515
 }

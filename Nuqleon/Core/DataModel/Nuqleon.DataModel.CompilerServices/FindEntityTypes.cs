@@ -86,10 +86,7 @@ namespace Nuqleon.DataModel.CompilerServices
                     dataType = new PrimitiveDataType(type, PrimitiveDataTypeKinds.EntityEnum);
                 }
 
-                if (!enumerations.ContainsKey(type))
-                {
-                    enumerations.Add(type, dataType);
-                }
+                enumerations.TryAdd(type, dataType);
             }
 
             entityInfo.Entities = entities;

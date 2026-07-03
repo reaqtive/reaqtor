@@ -34,14 +34,7 @@ namespace Utilities
                 store.Data.Add(Category, table);
             }
 
-            if (!table.ContainsKey(Key))
-            {
-                table.Add(Key, data);
-            }
-            else
-            {
-                table[Key] = data;
-            }
+            table[Key] = data;
         }
     }
 }

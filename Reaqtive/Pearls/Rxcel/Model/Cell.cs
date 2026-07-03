@@ -61,7 +61,7 @@ namespace Rxcel
                 {
                     var text = value.TrimStart();
 
-                    if (text.StartsWith("=", StringComparison.Ordinal))
+                    if (text.StartsWith('='))
                     {
                         text = text[1..];
 

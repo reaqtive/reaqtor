@@ -482,7 +482,7 @@ namespace Reaqtor.QueryEngine
             else
             {
                 var buffer = _buffer.Value;
-                stream.Read(buffer, 0, buffer.Length);
+                stream.ReadExactly(buffer, 0, buffer.Length);
 
                 var length = BitConverter.ToInt64(buffer, 0);
 
@@ -515,7 +515,7 @@ namespace Reaqtor.QueryEngine
             {
                 var buffer = new byte[size];
                 var arr = new T[1];
-                stream.Read(buffer, 0, size);
+                stream.ReadExactly(buffer, 0, size);
                 Buffer.BlockCopy(buffer, 0, arr, 0, size);
                 result = arr[0];
                 return true;
@@ -528,7 +528,7 @@ namespace Reaqtor.QueryEngine
                     if (len >= 0)
                     {
                         var buffer = new byte[len];
-                        stream.Read(buffer, 0, len);
+                        stream.ReadExactly(buffer, 0, len);
                         result = Encoding.UTF8.GetString(buffer, 0, len).To(default(T));
                     }
                     else

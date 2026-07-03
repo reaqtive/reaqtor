@@ -71,7 +71,9 @@ namespace System.Reflection
         /// <param name="provider">The reflection introspection provider.</param>
         /// <param name="field">The field to inspect.</param>
         /// <returns>true if the field has the NotSerialized attribute set; otherwise, false.</returns>
+#pragma warning disable SYSLIB0050 // 'Formatter-based serialization is obsolete.' (Mirror image of the reflection API surface, including its obsolete members.)
         public static bool IsNotSerialized(this IFieldInfoIntrospectionProvider provider, FieldInfo field) => (NotNull(provider).GetAttributes(field) & FieldAttributes.NotSerialized) > FieldAttributes.PrivateScope;
+#pragma warning restore SYSLIB0050
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1711 // Replace Impl suffix. (Mirror image of reflection APIs.)

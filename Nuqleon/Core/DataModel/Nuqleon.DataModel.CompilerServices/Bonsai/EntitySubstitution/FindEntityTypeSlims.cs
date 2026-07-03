@@ -101,10 +101,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
                     dataType = new PrimitiveDataType(nonNullable, PrimitiveDataTypeKinds.EntityEnum);
                 }
 
-                if (!enumerations.ContainsKey(type))
-                {
-                    enumerations.Add(type, dataType);
-                }
+                enumerations.TryAdd(type, dataType);
             }
 
             entityInfo.Entities = entities;

@@ -1,4 +1,4 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
@@ -12,8 +12,10 @@ using System.Reactive.Linq;
 
 namespace DelegatingBinder
 {
-    public static class Program
+    internal static class Program
     {
+        private static readonly string[] s_keyNames = ["Homer", "Bart", "Lisa"];
+
         public static void Main()
         {
             Demo();
@@ -47,7 +49,7 @@ namespace DelegatingBinder
 
 #pragma warning disable CA5394 // Do not use insecure randomness. (No security needed for this sample.)
             var r = new Random();
-            var keys = new[] { "Homer", "Bart", "Lisa" }.Take(I).SelectMany(n => Enumerable.Repeat(n, K)).OrderBy(_ => r.Next()).ToArray();
+            var keys = s_keyNames.Take(I).SelectMany(n => Enumerable.Repeat(n, K)).OrderBy(_ => r.Next()).ToArray();
             var events = new[] { new Person { Name = "Homer", Age = 38 }, new Person { Name = "Bart", Age = 10 }, new Person { Name = "Lisa", Age = 8 } }.Take(J).SelectMany(e => Enumerable.Repeat(e, N)).OrderBy(_ => r.Next()).ToArray();
 #pragma warning restore CA5394
 

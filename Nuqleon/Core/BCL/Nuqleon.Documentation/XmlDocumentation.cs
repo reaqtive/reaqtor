@@ -349,7 +349,7 @@ namespace System.Documentation
                     candidateDirectories = candidateDirectories.Concat(
                         from d in Directory.GetDirectories(referenceAssemblies)
                         let f = Path.GetFileName(d)
-                        where f.StartsWith("v", StringComparison.Ordinal)
+                        where f.StartsWith('v')
                         orderby f descending
                         select d
                     );

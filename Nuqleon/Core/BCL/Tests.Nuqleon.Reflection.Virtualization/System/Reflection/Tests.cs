@@ -89,7 +89,9 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(t.IsSecurityCritical, p.IsSecurityCritical(t));
                 Assert.AreEqual(t.IsSecuritySafeCritical, p.IsSecuritySafeCritical(t));
                 Assert.AreEqual(t.IsSecurityTransparent, p.IsSecurityTransparent(t));
+#pragma warning disable SYSLIB0050 // 'Formatter-based serialization is obsolete.' (Exercises the provider's mirror of the obsolete member.)
                 Assert.AreEqual(t.IsSerializable, p.IsSerializable(t));
+#pragma warning restore SYSLIB0050
 
                 Assert.AreEqual(t.ContainsGenericParameters, p.ContainsGenericParameters(t));
                 Assert.AreEqual(t.HasElementType, p.HasElementType(t));
@@ -553,7 +555,9 @@ namespace Tests.System.Reflection.Virtualization
                 Assert.AreEqual(f.IsFamilyOrAssembly, p.IsFamilyOrAssembly(f));
                 Assert.AreEqual(f.IsInitOnly, p.IsInitOnly(f));
                 Assert.AreEqual(f.IsLiteral, p.IsLiteral(f));
+#pragma warning disable SYSLIB0050 // 'Formatter-based serialization is obsolete.' (Exercises the provider's mirror of the obsolete member.)
                 Assert.AreEqual(f.IsNotSerialized, p.IsNotSerialized(f));
+#pragma warning restore SYSLIB0050
                 Assert.AreEqual(f.IsPinvokeImpl, p.IsPinvokeImpl(f));
                 Assert.AreEqual(f.IsPrivate, p.IsPrivate(f));
                 Assert.AreEqual(f.IsPublic, p.IsPublic(f));
