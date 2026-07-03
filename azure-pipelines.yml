@@ -117,8 +117,11 @@ stages:
       
     # Each matrix job publishes its own RawCoverage_* pipeline artifact (immutable, unlike
     # the retired PublishBuildArtifacts@1 which let all jobs append into one artifact).
+    # NB: download patterns match paths INSIDE each artifact (not artifact-name-prefixed),
+    # so filter by file type; the reportgenerator glob below narrows to the RawCoverage_*
+    # artifact folders that the download step lays out under $(Pipeline.Workspace).
     - download: current
-      patterns: 'RawCoverage_*/**'
+      patterns: '**/*.xml'
 
     - task: DotNetCoreCLI@2
       inputs:
