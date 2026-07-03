@@ -82,10 +82,7 @@ namespace System.Memory
                 get
                 {
                     var entry = _entry;
-                    if (entry == null)
-                    {
-                        throw new ObjectDisposedException("this");
-                    }
+                    ObjectDisposedException.ThrowIf(entry == null, this);
 
                     return entry.Value;
                 }
@@ -185,10 +182,7 @@ namespace System.Memory
                 get
                 {
                     var cached = _cached;
-                    if (cached == null)
-                    {
-                        throw new ObjectDisposedException("this");
-                    }
+                    ObjectDisposedException.ThrowIf(cached == null, this);
 
                     var deconstructed = Deconstructed.Create(cached.Value, _nonCached);
                     return _cache.Reconstruct(deconstructed);

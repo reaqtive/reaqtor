@@ -34,10 +34,8 @@ namespace System.IO
         public StreamSegment(Stream stream, long offset, long count)
         {
             ArgumentNullException.ThrowIfNull(stream);
-            if (offset < 0L)
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            if (count < 0L)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegative(offset);
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
             if (stream.Length - offset < count)
                 throw new ArgumentException("Specified offset and count fall outside the range of the stream.");
 
@@ -87,8 +85,7 @@ namespace System.IO
 
             set
             {
-                if (value < 0L)
-                    throw new ArgumentOutOfRangeException(nameof(value));
+                ArgumentOutOfRangeException.ThrowIfNegative(value);
 
                 _position = checked(_offset + value);
             }
@@ -104,10 +101,8 @@ namespace System.IO
         public override int Read(byte[] buffer, int offset, int count)
         {
             ArgumentNullException.ThrowIfNull(buffer);
-            if (offset < 0)
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegative(offset);
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
             if (buffer.Length - offset < count)
                 throw new ArgumentException("Specified offset and count fall outside the range of the buffer array.");
 
@@ -171,8 +166,7 @@ namespace System.IO
         /// <param name="value">The desired length of the current stream in bytes.</param>
         public override void SetLength(long value)
         {
-            if (value < 0L)
-                throw new ArgumentOutOfRangeException(nameof(value));
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
 
             if (value > _count)
                 throw new ArgumentOutOfRangeException(nameof(value), "Cannot extend the stream segment beyond its current length.");
@@ -189,10 +183,8 @@ namespace System.IO
         public override void Write(byte[] buffer, int offset, int count)
         {
             ArgumentNullException.ThrowIfNull(buffer);
-            if (offset < 0)
-                throw new ArgumentOutOfRangeException(nameof(offset));
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegative(offset);
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
             if (buffer.Length - offset < count)
                 throw new ArgumentException("Specified offset and count fall outside the range of the buffer array.");
 

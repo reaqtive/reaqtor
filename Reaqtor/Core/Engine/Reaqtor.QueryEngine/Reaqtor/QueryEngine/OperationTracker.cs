@@ -55,14 +55,11 @@ namespace Reaqtor.QueryEngine
             {
                 var count = Volatile.Read(ref _count);
 
-                if (count < 0)
-                {
-                    //
-                    // Either int.MinValue (Disposed) or another value < 0 (Disposing). Don't allow
-                    // new work to come in.
-                    //
-                    throw new ObjectDisposedException("this");
-                }
+                //
+                // Either int.MinValue (Disposed) or another value < 0 (Disposing). Don't allow
+                // new work to come in.
+                //
+                ObjectDisposedException.ThrowIf(count < 0, this);
 
                 if (Interlocked.CompareExchange(ref _count, count + 1, count) == count)
                 {

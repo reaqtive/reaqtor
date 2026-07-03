@@ -35,8 +35,7 @@ namespace System.Linq.CompilerServices
                 where TLeaf : Expression
         {
             ArgumentNullException.ThrowIfNull(convert);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, _ => true, cost);
         }
@@ -53,8 +52,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(convert);
             ArgumentNullException.ThrowIfNull(predicate);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, predicate, cost);
         }

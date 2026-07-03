@@ -47,10 +47,7 @@ namespace Reaqtive.Scheduler
         /// <param name="comparer">Compared used to compare elements in the queue.</param>
         public HeapBasedPriorityQueue(int capacity, IComparer<T> comparer)
         {
-            if (capacity < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(capacity));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
             _comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
             _items = new IndexedItem[capacity];

@@ -36,8 +36,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(pattern);
             ArgumentNullException.ThrowIfNull(goal);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             var invokeGoal = goal.Compile();
             AddCore(pattern, goal, ts => invokeGoal(), cost);
@@ -55,8 +54,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(pattern);
             ArgumentNullException.ThrowIfNull(goal);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             var invokeGoal = goal.Compile();
             AddCore(pattern, goal, ts => invokeGoal(ts[0]), cost);
@@ -75,8 +73,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(pattern);
             ArgumentNullException.ThrowIfNull(goal);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             var invokeGoal = goal.Compile();
             AddCore(pattern, goal, ts => invokeGoal(ts[0], ts[1]), cost);
@@ -96,8 +93,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(pattern);
             ArgumentNullException.ThrowIfNull(goal);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             var invokeGoal = goal.Compile();
             AddCore(pattern, goal, ts => invokeGoal(ts[0], ts[1], ts[2]), cost);
@@ -118,8 +114,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(pattern);
             ArgumentNullException.ThrowIfNull(goal);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             var invokeGoal = goal.Compile();
             AddCore(pattern, goal, ts => invokeGoal(ts[0], ts[1], ts[2], ts[3]), cost);

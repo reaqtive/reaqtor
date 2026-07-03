@@ -165,10 +165,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            if (count < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -232,10 +229,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            if (count < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -541,10 +535,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            if (dueTime < TimeSpan.FromTicks(0))
-            {
-                throw new ArgumentOutOfRangeException(nameof(dueTime));
-            }
+            ArgumentOutOfRangeException.ThrowIfLessThan(dueTime, TimeSpan.FromTicks(0));
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -632,10 +623,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(service);
 
-            if (period < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(period));
-            }
+            ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
             MethodInfo method = (MethodInfo)ReflectionHelpers.InfoOf(() => ClientDefinitions.TimerRelativePeriod(default, default));
             return service.Provider.CreateQbservable<long>(
@@ -673,10 +661,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(service);
 
-            if (period < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(period));
-            }
+            ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
             MethodInfo method = (MethodInfo)ReflectionHelpers.InfoOf(() => ClientDefinitions.TimerAbsolutePeriod(default, default));
             return service.Provider.CreateQbservable<long>(
@@ -960,10 +945,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            if (count < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -1027,10 +1009,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            if (count < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -1336,10 +1315,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(source);
 
-            if (dueTime < TimeSpan.FromTicks(0))
-            {
-                throw new ArgumentOutOfRangeException(nameof(dueTime));
-            }
+            ArgumentOutOfRangeException.ThrowIfLessThan(dueTime, TimeSpan.FromTicks(0));
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1427,10 +1403,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(service);
 
-            if (period < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(period));
-            }
+            ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
             MethodInfo method = (MethodInfo)ReflectionHelpers.InfoOf(() => AsyncClientDefinitions.TimerRelativePeriod(default, default));
             return service.Provider.CreateQbservable<long>(
@@ -1468,10 +1441,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             ArgumentNullException.ThrowIfNull(service);
 
-            if (period < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(period));
-            }
+            ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
             MethodInfo method = (MethodInfo)ReflectionHelpers.InfoOf(() => AsyncClientDefinitions.TimerAbsolutePeriod(default, default));
             return service.Provider.CreateQbservable<long>(

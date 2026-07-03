@@ -861,8 +861,7 @@ namespace Reaqtive
         public static ISubscribable<TSource> Retry<TSource>(this ISubscribable<TSource> source, int retryCount)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (retryCount < 0)
-                throw new ArgumentOutOfRangeException(nameof(retryCount));
+            ArgumentOutOfRangeException.ThrowIfNegative(retryCount);
 
             return new Retry<TSource>(source, retryCount);
         }
@@ -938,8 +937,7 @@ namespace Reaqtive
         public static ISubscribable<TSource> ElementAt<TSource>(this ISubscribable<TSource> source, int index)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
 
             return new ElementAt<TSource>(source, index, throwIfNotFound: true);
         }
@@ -958,8 +956,7 @@ namespace Reaqtive
         public static ISubscribable<TSource> ElementAtOrDefault<TSource>(this ISubscribable<TSource> source, int index)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
 
             return new ElementAt<TSource>(source, index, throwIfNotFound: false);
         }
@@ -1380,8 +1377,7 @@ namespace Reaqtive
         public static ISubscribable<TSource> Skip<TSource>(this ISubscribable<TSource> source, int count)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             return new Skip<TSource>(source, count);
         }
@@ -1434,8 +1430,7 @@ namespace Reaqtive
         public static ISubscribable<TSource> Take<TSource>(this ISubscribable<TSource> source, int count)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (count < 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegative(count);
 
             if (count == 0)
             {
@@ -1535,8 +1530,7 @@ namespace Reaqtive
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, TimeSpan duration)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
 
             return new BufferDuration<TSource>(source, duration);
         }
@@ -1552,10 +1546,8 @@ namespace Reaqtive
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, TimeSpan duration, TimeSpan shift)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
-            if (shift <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(shift));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(shift, TimeSpan.FromTicks(0));
 
             return new BufferDurationShift<TSource>(source, duration, shift);
         }
@@ -1570,8 +1562,7 @@ namespace Reaqtive
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, int count)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
             return new BufferCount<TSource>(source, count);
         }
@@ -1587,10 +1578,8 @@ namespace Reaqtive
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, int count, int skip)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            if (skip <= 0)
-                throw new ArgumentOutOfRangeException(nameof(skip));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(skip);
 
             return new BufferCountSkip<TSource>(source, count, skip);
         }
@@ -1607,10 +1596,8 @@ namespace Reaqtive
         public static ISubscribable<IList<TSource>> Buffer<TSource>(this ISubscribable<TSource> source, TimeSpan duration, int count)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
             return new BufferDurationCount<TSource>(source, duration, count);
         }
@@ -1644,8 +1631,7 @@ namespace Reaqtive
         public static ISubscribable<TSource> DelaySubscription<TSource>(this ISubscribable<TSource> source, TimeSpan dueTime)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (dueTime < TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(dueTime));
+            ArgumentOutOfRangeException.ThrowIfLessThan(dueTime, TimeSpan.FromTicks(0));
 
             return new DelaySubscription<TSource>(source, dueTime);
         }
@@ -1683,8 +1669,7 @@ namespace Reaqtive
         public static ISubscribable<TSource> Skip<TSource>(this ISubscribable<TSource> source, TimeSpan dueTime)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (dueTime < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(dueTime));
+            ArgumentOutOfRangeException.ThrowIfLessThan(dueTime, TimeSpan.Zero);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -1727,8 +1712,7 @@ namespace Reaqtive
         public static ISubscribable<TSource> Take<TSource>(this ISubscribable<TSource> source, TimeSpan dueTime)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (dueTime < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(dueTime));
+            ArgumentOutOfRangeException.ThrowIfLessThan(dueTime, TimeSpan.Zero);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -1771,8 +1755,7 @@ namespace Reaqtive
         public static ISubscribable<TSource> Throttle<TSource>(this ISubscribable<TSource> source, TimeSpan duration)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (duration < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(duration));
+            ArgumentOutOfRangeException.ThrowIfLessThan(duration, TimeSpan.Zero);
 
             //
             // WARNING: Don't unfold the composition blindly; recovery of existing state won't be compatible.
@@ -1803,8 +1786,7 @@ namespace Reaqtive
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the period is less than zero.</exception>
         public static ISubscribable<long> Timer(TimeSpan dueTime, TimeSpan period)
         {
-            if (period < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(period));
+            ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
             return new Timer(dueTime, period);
         }
@@ -1828,8 +1810,7 @@ namespace Reaqtive
         /// <exception cref="ArgumentOutOfRangeException">Thrown when the period is less than zero.</exception>
         public static ISubscribable<long> Timer(DateTimeOffset dueTime, TimeSpan period)
         {
-            if (period < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(period));
+            ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
             return new Timer(dueTime, period);
         }
@@ -1848,8 +1829,7 @@ namespace Reaqtive
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, TimeSpan duration)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
 
             return new WindowDuration<TSource>(source, duration);
         }
@@ -1865,10 +1845,8 @@ namespace Reaqtive
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, TimeSpan duration, TimeSpan shift)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
-            if (shift <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(shift));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(shift, TimeSpan.FromTicks(0));
 
             return new WindowDurationShift<TSource>(source, duration, shift);
         }
@@ -1883,8 +1861,7 @@ namespace Reaqtive
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, int count)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
             return new WindowCount<TSource>(source, count);
         }
@@ -1900,10 +1877,8 @@ namespace Reaqtive
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, int count, int skip)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
-            if (skip <= 0)
-                throw new ArgumentOutOfRangeException(nameof(skip));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(skip);
 
             return new WindowCountSkip<TSource>(source, count, skip);
         }
@@ -1920,10 +1895,8 @@ namespace Reaqtive
         public static ISubscribable<ISubscribable<TSource>> Window<TSource>(this ISubscribable<TSource> source, TimeSpan duration, int count)
         {
             ArgumentNullException.ThrowIfNull(source);
-            if (duration <= TimeSpan.FromTicks(0))
-                throw new ArgumentOutOfRangeException(nameof(duration));
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfLessThanOrEqual(duration, TimeSpan.FromTicks(0));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
 
             return new WindowDurationCount<TSource>(source, duration, count);
         }

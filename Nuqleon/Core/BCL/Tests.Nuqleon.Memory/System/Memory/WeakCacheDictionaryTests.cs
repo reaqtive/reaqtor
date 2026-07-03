@@ -9,7 +9,9 @@
 //
 
 using System;
+#if DEBUG
 using System.Linq;
+#endif
 using System.Memory;
 using System.Runtime.CompilerServices;
 using System.Threading;

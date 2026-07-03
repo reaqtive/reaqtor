@@ -318,8 +318,7 @@ namespace System
         public static IProgress<T>[] Split<T>(this IProgress<T> progress, int count, Func<T[], T> combine)
         {
             ArgumentNullException.ThrowIfNull(progress);
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count));
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(count);
             ArgumentNullException.ThrowIfNull(combine);
 
             var values = new T[count];
@@ -387,8 +386,7 @@ namespace System
         public static IProgress<T> Throttle<T>(this IProgress<T> progress, TimeSpan interval)
         {
             ArgumentNullException.ThrowIfNull(progress);
-            if (interval < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(interval));
+            ArgumentOutOfRangeException.ThrowIfLessThan(interval, TimeSpan.Zero);
 
             return ThrottleCore<T>(progress, interval, new StopwatchImpl(new Stopwatch()));
         }
@@ -404,8 +402,7 @@ namespace System
         public static IProgress<T> Throttle<T>(this IProgress<T> progress, TimeSpan interval, IStopwatch stopwatch)
         {
             ArgumentNullException.ThrowIfNull(progress);
-            if (interval < TimeSpan.Zero)
-                throw new ArgumentOutOfRangeException(nameof(interval));
+            ArgumentOutOfRangeException.ThrowIfLessThan(interval, TimeSpan.Zero);
             ArgumentNullException.ThrowIfNull(stopwatch);
 
             return ThrottleCore<T>(progress, interval, stopwatch);
@@ -444,8 +441,7 @@ namespace System
         public static Action ToPercentageIncrement(this IProgress<int> progress, int total)
         {
             ArgumentNullException.ThrowIfNull(progress);
-            if (total < 0)
-                throw new ArgumentOutOfRangeException(nameof(total));
+            ArgumentOutOfRangeException.ThrowIfNegative(total);
 
             if (total > 0)
             {

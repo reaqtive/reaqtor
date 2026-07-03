@@ -83,8 +83,7 @@ namespace System.Reflection
         /// <returns>A new structural type that's initially mutable.</returns>
         public static StructuralTypeSlimReference Create(bool hasValueEqualitySemantics, StructuralTypeSlimKind kind, int capacity)
         {
-            if (capacity < 0)
-                throw new ArgumentOutOfRangeException(nameof(capacity));
+            ArgumentOutOfRangeException.ThrowIfNegative(capacity);
 
             return kind switch
             {

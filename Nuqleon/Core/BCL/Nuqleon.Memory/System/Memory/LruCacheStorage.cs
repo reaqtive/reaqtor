@@ -43,10 +43,7 @@ namespace System.Memory
         /// <param name="comparer">The equality comparer used to compare cached objects.</param>
         public LruCacheStorage(int size, IEqualityComparer<T> comparer)
         {
-            if (size < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(size));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(size);
             ArgumentNullException.ThrowIfNull(comparer);
 
             _size = size;
@@ -246,10 +243,7 @@ namespace System.Memory
 
         private void CheckDisposed()
         {
-            if (Volatile.Read(ref _disposed) == 1)
-            {
-                throw new ObjectDisposedException("this");
-            }
+            ObjectDisposedException.ThrowIf(Volatile.Read(ref _disposed) == 1, this);
         }
     }
 }

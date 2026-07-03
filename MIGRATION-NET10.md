@@ -165,9 +165,18 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
      (Empirically re-verified: `Common/TestUtilities/AssertEx.cs` — linked into every test project
      but with *identical* symbols — merges cleanly under solution-scoped format and needs no
      exclusion; an earlier revision of this document was wrong to list it.)
-2. **`AnalysisLevel` stays at `7.0`** and the temporary `NoWarn` list (issue #143:
-   `IDE0079;IDE0090;CA1305;CA1822;CA1854`) is retained. Raising the level / removing the list surfaces a
-   separate CA wave.
+2. **`AnalysisLevel` is `latest` and the migration-era `NoWarn` lists are retired** (resolved,
+   issue #143). The `IDE0079;IDE0090;CA1305;CA1822;CA1854` list was fixed at its sites (47 IDE0090
+   via `dotnet format`, the rest by hand; public-API CA1822 hits carry a rationale `#pragma`). The
+   `CA2000;CA2213` disposal wave described above **no longer fires at all** at `latest` — the .NET 10
+   analyzers resolved the false-positive patterns, so the suppression came out with no code churn.
+   Raising the level also enabled the throw-helper rules: ~2,900 canonical null guards became
+   `ArgumentNullException.ThrowIfNull` (plus 103 sites across 23 T4 templates, regeneration-verified),
+   with `ThrowIfNegative`/`ThrowIfLessThan`/etc. and `ObjectDisposedException.ThrowIf` applied to
+   the AOORE/ODE guard shapes; sites whose `ObjectName` carries diagnostic identity (entity URIs,
+   reader/writer facets) keep their explicit throws under a rationale `#pragma`. `CA1859` (use
+   concrete types) is the one new rule deferred, as an IDE suggestion with rationale in
+   `.editorconfig`.
 3. **Some MSTest analyzer guidance is suppressed** (`MSTEST0017/0032/0036/0055` — expected/actual
    argument order, always-true assertions in equality-contract tests, deliberate base-member hiding
    in the QueryEngine test classes, and intentionally ignored return values). These affect failure

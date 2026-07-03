@@ -601,8 +601,7 @@ namespace System.Memory
             // NB: This method is used by s_memoizeWeakFuncMethods as a convenience to bind MemoizeWeak<TDelegate> calls.
             //
 
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
+            ArgumentNullException.ThrowIfNull(memoizer);
             ArgumentNullException.ThrowIfNull(function);
 
             return memoizer.MemoizeWeak<T, TResult>(function, options);

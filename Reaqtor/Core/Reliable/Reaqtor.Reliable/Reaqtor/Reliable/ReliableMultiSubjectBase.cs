@@ -61,20 +61,24 @@ namespace Reaqtor.Reliable
 
         public IReliableObserver<T> CreateObserver()
         {
+#pragma warning disable CA1513 // Use ObjectDisposedException throw helper. (Deliberate: the ObjectName carries the subject's URI, which ThrowIf(condition, this) would replace with the type name.)
             if (Interlocked.Read(ref _disposed) != 0)
             {
                 throw new ObjectDisposedException(Id.AbsoluteUri);
             }
+#pragma warning restore CA1513
 
             return new Observer(this);
         }
 
         public IReliableSubscription Subscribe(IReliableObserver<T> observer)
         {
+#pragma warning disable CA1513 // Use ObjectDisposedException throw helper. (Deliberate: the ObjectName carries the subject's URI, which ThrowIf(condition, this) would replace with the type name.)
             if (Interlocked.Read(ref _disposed) != 0)
             {
                 throw new ObjectDisposedException(Id.AbsoluteUri);
             }
+#pragma warning restore CA1513
 
             lock (_subscriptionsLock)
             {

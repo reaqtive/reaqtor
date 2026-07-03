@@ -80,8 +80,7 @@ namespace Nuqleon.Json.Interop.Newtonsoft
         /// <returns>true if the next token was read successfully; false if there are no more tokens to read.</returns>
         public override bool Read()
         {
-            if (_tokens == null)
-                throw new ObjectDisposedException("this");
+            ObjectDisposedException.ThrowIf(_tokens == null, this);
 
             if (!_tokens.TryPop(out Token token))
             {

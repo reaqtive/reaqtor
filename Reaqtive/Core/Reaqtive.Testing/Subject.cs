@@ -151,8 +151,7 @@ namespace Reaqtive.Subjects
 
         private void CheckDisposed()
         {
-            if (_disposed)
-                throw new ObjectDisposedException("this");
+            ObjectDisposedException.ThrowIf(_disposed, this);
         }
     }
 }

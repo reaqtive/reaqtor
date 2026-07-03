@@ -64,8 +64,7 @@ namespace System.Memory.Diagnostics
         /// </example>
         public static VectorElementAccess VectorElement(int index)
         {
-            if (index < 0)
-                throw new ArgumentOutOfRangeException(nameof(index));
+            ArgumentOutOfRangeException.ThrowIfNegative(index);
 
             return new VectorElementAccess(index);
         }

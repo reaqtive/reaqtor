@@ -50,8 +50,7 @@ namespace System.Linq.CompilerServices.Optimizers
         {
             ArgumentNullException.ThrowIfNull(optimizer);
 
-            if (maxIterations < 0)
-                throw new ArgumentOutOfRangeException(nameof(maxIterations));
+            ArgumentOutOfRangeException.ThrowIfNegative(maxIterations);
 
             return new FixedPointOptimizer(optimizer, maxIterations, throwOnCycle);
         }

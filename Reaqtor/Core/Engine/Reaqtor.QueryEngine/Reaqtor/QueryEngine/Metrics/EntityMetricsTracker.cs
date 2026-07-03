@@ -77,10 +77,7 @@ namespace Reaqtor.QueryEngine.Metrics
         internal static void SetMetric(this IReactiveResource entity, EntityMetric metric, TimeSpan elapsed)
         {
             ArgumentNullException.ThrowIfNull(entity);
-            if (elapsed < TimeSpan.Zero)
-            {
-                throw new ArgumentOutOfRangeException(nameof(elapsed));
-            }
+            ArgumentOutOfRangeException.ThrowIfLessThan(elapsed, TimeSpan.Zero);
 
             if (ShouldTrack)
             {

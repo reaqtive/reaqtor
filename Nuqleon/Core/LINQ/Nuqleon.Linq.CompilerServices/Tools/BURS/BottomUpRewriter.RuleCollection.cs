@@ -35,8 +35,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(pattern);
             ArgumentNullException.ThrowIfNull(goal);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             var getPattern = pattern.Compile();
             var invokeGoal = goal.Compile();
@@ -53,8 +52,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(pattern);
             ArgumentNullException.ThrowIfNull(goal);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             var getPattern = pattern.Compile();
             var invokeGoal = goal.Compile();
@@ -71,8 +69,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(pattern);
             ArgumentNullException.ThrowIfNull(goal);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             var getPattern = pattern.Compile();
             var invokeGoal = goal.Compile();
@@ -89,8 +86,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(pattern);
             ArgumentNullException.ThrowIfNull(goal);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             var getPattern = pattern.Compile();
             var invokeGoal = goal.Compile();

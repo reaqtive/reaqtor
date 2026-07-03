@@ -23,10 +23,7 @@ namespace System.Collections.Specialized
         /// <returns>A bit array of the desired size.</returns>
         public static IBitArray Create(int size)
         {
-            if (size < 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(size));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegative(size);
 
             return (size / 8) switch
             {

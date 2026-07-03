@@ -9,7 +9,9 @@
 //
 
 using System.Collections.Generic;
+#if DEBUG
 using System.Linq;
+#endif
 
 namespace Tests
 {

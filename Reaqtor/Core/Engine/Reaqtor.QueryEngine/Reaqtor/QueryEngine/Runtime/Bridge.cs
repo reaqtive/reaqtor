@@ -244,10 +244,12 @@ namespace Reaqtor.QueryEngine
 
         public IReliableSubscription Subscribe(IReliableObserver<T> observer)
         {
+#pragma warning disable CA1513 // Use ObjectDisposedException throw helper. (Deliberate: the ObjectName carries the bridge's URI, which ThrowIf(condition, this) would replace with the type name.)
             if (Volatile.Read(ref _disposed) != 0)
             {
                 throw new ObjectDisposedException(Id.ToCanonicalString());
             }
+#pragma warning restore CA1513
 
             var subscription = new Subscription(this, observer, _lowWatermark - 1);
 

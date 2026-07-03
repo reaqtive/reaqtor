@@ -142,6 +142,11 @@ dotnet_diagnostic.CA1805.severity = none
 # CA1508: 'expr' is always 'bool'. Remove or refactor the condition(s) to avoid dead code. Many false positives due to bugs in the analyzer.
 dotnet_diagnostic.CA1508.severity = none
 
+# CA1859: Use concrete types when possible for improved performance. ~150 sites, each a judgment
+# call about internal API shape (returning List<T> vs IEnumerable<T> etc.); deferred from the #143
+# analyzer-debt wave as churn without measured benefit - kept visible in the IDE as a suggestion.
+dotnet_diagnostic.CA1859.severity = suggestion
+
 # IDE warnings (with suppression of some nuisances)
 dotnet_analyzer_diagnostic.category-Style.severity = warning
 dotnet_diagnostic.IDE0001.severity = none # `Name can be simplified.` often reduces clarity.

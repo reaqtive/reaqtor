@@ -114,8 +114,7 @@ namespace System.Memory
         /// <exception cref="ArgumentOutOfRangeException">Thrown if <paramref name="size"/> is less than zero.</exception>
         protected ObjectPoolBase(int size)
         {
-            if (size < 1)
-                throw new ArgumentOutOfRangeException(nameof(size));
+            ArgumentOutOfRangeException.ThrowIfLessThan(size, 1);
 
             _items = new Element[size - 1];
 

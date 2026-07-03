@@ -20,7 +20,6 @@ using Reaqtive.Subjects;
 using Reaqtor;
 using Reaqtor.Expressions.Core;
 using Reaqtor.QueryEngine;
-using Reaqtor.QueryEngine.Events;
 using Reaqtor.QueryEngine.KeyValueStore.InMemory;
 using Reaqtor.QueryEngine.Mocks;
 using Reaqtor.Reliable;

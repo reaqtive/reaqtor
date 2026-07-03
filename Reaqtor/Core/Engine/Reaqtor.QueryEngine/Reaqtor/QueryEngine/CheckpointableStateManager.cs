@@ -646,8 +646,10 @@ namespace Reaqtor.QueryEngine
             /// <exception cref="ObjectDisposedException">The reader has been disposed.</exception>
             private void CheckAccess()
             {
+#pragma warning disable CA1513 // Use ObjectDisposedException throw helper. (Deliberate: the ObjectName distinguishes the reader facet, which ThrowIf(condition, this) would replace with the type name.)
                 if (Volatile.Read(ref _disposed) == 1)
                     throw new ObjectDisposedException("reader");
+#pragma warning restore CA1513
                 if (Volatile.Read(ref _unloaded) == 1)
                     throw new EngineUnloadedException();
             }
@@ -765,8 +767,10 @@ namespace Reaqtor.QueryEngine
             /// <exception cref="ObjectDisposedException">The writer has been disposed.</exception>
             private void CheckAccess()
             {
+#pragma warning disable CA1513 // Use ObjectDisposedException throw helper. (Deliberate: the ObjectName distinguishes the writer facet, which ThrowIf(condition, this) would replace with the type name.)
                 if (Volatile.Read(ref _disposed) == 1)
                     throw new ObjectDisposedException("writer");
+#pragma warning restore CA1513
                 if (Volatile.Read(ref _unloaded) == 1)
                     throw new EngineUnloadedException();
             }

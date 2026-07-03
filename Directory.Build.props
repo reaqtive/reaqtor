@@ -4,20 +4,14 @@
 
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
-    <AnalysisLevel>7.0</AnalysisLevel>
-    <!-- #143 in progress: NoWarn retirement staged below; AnalysisLevel raise is the final step. -->
-
     <!--
-    The .NET 10 SDK's code analyzers (with AnalysisMode=All + TreatWarningsAsErrors) flag a large,
-    codebase-wide wave of IDisposable diagnostics that the .NET 7/8 SDK this repo last built on did
-    not: CA2000 ("dispose before losing scope") and CA2213 ("disposable field never disposed"). These
-    are overwhelmingly false positives over the reactive/operator patterns here (back-pointers to an
-    owning operator/subject, fields disposed via DisposeCore/OnDispose hooks the analyzer doesn't model,
-    and ownership transferred to a returned wrapper). Suppressed wholesale as deferred analyzer churn,
-    consistent with the .NET 10 framework-migration scope (cf. issue #143). NB: the one *genuine* leak
-    this surfaced (SynchronizedFactory.Impl in MemoizationCacheFactoryExtensions never disposing its
-    cache/gate) was fixed in code, not merely suppressed. Revisit alongside #143. -->
-    <NoWarn>$(NoWarn);CA2000;CA2213</NoWarn>
+    Track the newest analyzers (issue #143). The migration-era NoWarn lists (IDE0079;IDE0090;
+    CA1305;CA1822;CA1854 and the CA2000;CA2213 disposal wave) are retired: the former were fixed
+    at their sites, and the disposal rules no longer fire at all on this codebase at the current
+    analysis level - the .NET 10 analyzers resolved the false-positive patterns that forced the
+    wholesale suppression during the migration (the one genuine leak they surfaced,
+    SynchronizedFactory.Impl in MemoizationCacheFactoryExtensions, was fixed in code back then). -->
+    <AnalysisLevel>latest</AnalysisLevel>
 
     <!--
     The Reaqtive/Reaqtor operators use a deliberate, long-standing convention of terse private
@@ -95,6 +89,12 @@
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' Or '$(IsPerfProject)' == 'true' Or '$(IsPlaygroundProject)' == 'true'">
     <AnalysisMode>Default</AnalysisMode>
     <IsPackable>false</IsPackable>
+    <!--
+      XML docs are generated (and discarded) so the compiler can run IDE0005 (remove unnecessary
+      usings) on build - see https://github.com/dotnet/roslyn/issues/41640; CS1591 (missing XML
+      comment) is suppressed since test/perf/playground members are deliberately undocumented. -->
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>$(NoWarn);CS1591</NoWarn>
   </PropertyGroup>
 
   <PropertyGroup>

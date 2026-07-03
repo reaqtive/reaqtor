@@ -35,8 +35,7 @@ namespace System.Linq.CompilerServices
             where TLeaf : TSource
         {
             ArgumentNullException.ThrowIfNull(convert);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression (only on .NET 5)
 #pragma warning disable IDE0150 // Prefer 'null' check over type check. (`is` patterns can't be captured in expression trees.)
@@ -57,8 +56,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(convert);
             ArgumentNullException.ThrowIfNull(predicate);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, predicate, cost);
         }

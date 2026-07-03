@@ -68,8 +68,7 @@ namespace Reaqtor.QueryEngine
             // TODO: remove trace source and make it an option
             // TODO: remove delegate cache and make it an option
 
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
             if (uri.ToCanonicalString().EndsWith('/'))
                 throw new ArgumentException("Container URI must not end in '/'.", nameof(uri));
             ArgumentNullException.ThrowIfNull(metadataRegistry);

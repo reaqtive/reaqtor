@@ -181,10 +181,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// </summary>
         protected void CheckDisposed()
         {
-            if (_disposed)
-            {
-                throw new ObjectDisposedException("InMemoryStateWriter instance already disposed.");
-            }
+            ObjectDisposedException.ThrowIf(_disposed, this);
         }
 
         /// <summary>

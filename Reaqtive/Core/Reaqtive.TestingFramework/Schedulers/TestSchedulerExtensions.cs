@@ -46,15 +46,9 @@ namespace Reaqtive.TestingFramework
 
             ArgumentNullException.ThrowIfNull(create);
 
-            if (created > subscribed)
-            {
-                throw new ArgumentOutOfRangeException(nameof(created));
-            }
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(created, subscribed);
 
-            if (subscribed > disposed)
-            {
-                throw new ArgumentOutOfRangeException(nameof(subscribed));
-            }
+            ArgumentOutOfRangeException.ThrowIfGreaterThan(subscribed, disposed);
 
             var source = default(ISubscribable<T>);
             var subscription = default(ISubscription);

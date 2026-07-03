@@ -35,8 +35,7 @@ namespace Reaqtive.Storage
         public IPersistedArray<T> CreateArray<T>(string id, int length)
         {
             ArgumentNullException.ThrowIfNull(id);
-            if (length < 0)
-                throw new ArgumentOutOfRangeException(nameof(length));
+            ArgumentOutOfRangeException.ThrowIfNegative(length);
 
             var array = new Array(this, length);
             _items.Add(id, array);

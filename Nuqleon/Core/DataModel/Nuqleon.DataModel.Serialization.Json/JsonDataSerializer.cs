@@ -143,10 +143,7 @@ namespace Nuqleon.DataModel.Serialization.Json
             //         breaking these with ambiguous matches during a call to GetMethod, we use a
             //         suffix in the method name.
 
-            if (writer == null)
-            {
-                throw new ArgumentNullException(nameof(writer));
-            }
+            ArgumentNullException.ThrowIfNull(writer);
 
             try
             {
@@ -173,10 +170,7 @@ namespace Nuqleon.DataModel.Serialization.Json
             //         breaking these with ambiguous matches during a call to GetMethod, we use a
             //         suffix in the method name.
 
-            if (writer == null)
-            {
-                throw new ArgumentNullException(nameof(writer));
-            }
+            ArgumentNullException.ThrowIfNull(writer);
 
             try
             {
@@ -210,10 +204,7 @@ namespace Nuqleon.DataModel.Serialization.Json
             //         breaking these with ambiguous matches during a call to GetMethod, we use a
             //         suffix in the method name.
 
-            if (reader == null)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
+            ArgumentNullException.ThrowIfNull(reader);
 
             try
             {
@@ -242,10 +233,7 @@ namespace Nuqleon.DataModel.Serialization.Json
             //         breaking these with ambiguous matches during a call to GetMethod, we use a
             //         suffix in the method name.
 
-            if (reader == null)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
+            ArgumentNullException.ThrowIfNull(reader);
 
             try
             {

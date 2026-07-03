@@ -49,10 +49,7 @@ namespace Reaqtive
         /// <param name="capacity">Initial capacity of the number of inner subscriptions the composite subscription can hold.</param>
         public CompositeSubscription(int capacity)
         {
-            if (capacity <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(capacity));
-            }
+            ArgumentOutOfRangeException.ThrowIfNegativeOrZero(capacity);
 
             _subscriptions = new List<ISubscription>(capacity);
         }

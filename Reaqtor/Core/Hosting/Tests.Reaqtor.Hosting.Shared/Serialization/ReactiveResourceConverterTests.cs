@@ -10,7 +10,6 @@ using System.Threading.Tasks;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.DataModel;
-using Nuqleon.DataModel.Serialization.Json;
 
 using Reaqtor;
 using Reaqtor.Hosting.Shared.Serialization;

@@ -103,8 +103,7 @@ namespace System.Linq.CompilerServices
         /// <returns>String representation of the current node.</returns>
         public virtual string ToString(int indent)
         {
-            if (indent < 0)
-                throw new ArgumentOutOfRangeException(nameof(indent));
+            ArgumentOutOfRangeException.ThrowIfNegative(indent);
 
             var n = Children.Count;
             var ind = new string(' ', indent * 2);

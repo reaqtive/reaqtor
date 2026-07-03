@@ -629,8 +629,7 @@ namespace Nuqleon.Json.Interop.Newtonsoft
 
         private void CheckDisposed()
         {
-            if (_tokens == null)
-                throw new ObjectDisposedException("this");
+            ObjectDisposedException.ThrowIf(_tokens == null, this);
         }
 
         private static string EnsureDecimalPlace(string text)

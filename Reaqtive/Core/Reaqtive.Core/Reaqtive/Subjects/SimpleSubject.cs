@@ -38,10 +38,7 @@ namespace Reaqtive
             {
                 old = _observer;
 
-                if (old == Sentinels<T>.Disposed)
-                {
-                    throw new ObjectDisposedException("this");
-                }
+                ObjectDisposedException.ThrowIf(old == Sentinels<T>.Disposed, this);
 
                 if (old == Sentinels<T>.Nop)
                 {

@@ -33,8 +33,7 @@ namespace System.Linq.CompilerServices
         public void Add(Expression<Func<TSource, TTarget>> convert, int cost)
         {
             ArgumentNullException.ThrowIfNull(convert);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, node => true, cost);
         }
@@ -49,8 +48,7 @@ namespace System.Linq.CompilerServices
         {
             ArgumentNullException.ThrowIfNull(convert);
             ArgumentNullException.ThrowIfNull(predicate);
-            if (cost < 0)
-                throw new ArgumentOutOfRangeException(nameof(cost));
+            ArgumentOutOfRangeException.ThrowIfNegative(cost);
 
             AddCore(convert, predicate, cost);
         }
