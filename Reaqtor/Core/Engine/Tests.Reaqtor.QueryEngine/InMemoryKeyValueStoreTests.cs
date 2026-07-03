@@ -43,8 +43,8 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var contents = table.ToList();
 
-                Assert.AreEqual(contents.Count, 1);
-                Assert.AreEqual(contents[0].Key, "A");
+                Assert.AreEqual(1, contents.Count);
+                Assert.AreEqual("A", contents[0].Key);
                 CollectionAssert.AreEquivalent(contents[0].Value, new byte[] { 2 });
 
                 table.Remove("A");
@@ -58,7 +58,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                Assert.AreEqual(table.Count(), 0);
+                Assert.AreEqual(0, table.Count());
             }
         }
 
@@ -198,8 +198,8 @@ namespace Tests.Reaqtor.QueryEngine
 
                 var contents = table.ToList();
 
-                Assert.AreEqual(contents.Count, 1);
-                Assert.AreEqual(contents[0].Key, "A");
+                Assert.AreEqual(1, contents.Count);
+                Assert.AreEqual("A", contents[0].Key);
                 CollectionAssert.AreEquivalent(contents[0].Value, new byte[] { 2 });
 
                 tx.CommitAsync().Wait();
@@ -233,7 +233,7 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var table = subtable.Enter(tx);
 
-                Assert.AreEqual(table.Count(), 0);
+                Assert.AreEqual(0, table.Count());
             }
         }
 

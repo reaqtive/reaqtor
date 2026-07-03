@@ -36,7 +36,7 @@ namespace Tests.Reaqtor.QueryEngine
         {
             using (new ReliableMultiSubjectProxy<int, int>(new Uri("test://subject")))
             {
-                Assert.IsTrue(true);
+                // constructing and disposing must not throw
             }
         }
 

@@ -269,7 +269,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "TKey");
+                Assert.AreEqual("TKey", e.ParamName);
             }
 
             try
@@ -279,7 +279,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "TKey");
+                Assert.AreEqual("TKey", e.ParamName);
             }
 
             try
@@ -289,7 +289,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "TKey");
+                Assert.AreEqual("TKey", e.ParamName);
             }
 
             try
@@ -299,7 +299,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "TKey");
+                Assert.AreEqual("TKey", e.ParamName);
             }
 
             try
@@ -309,7 +309,7 @@ namespace Tests.System.Collections.Specialized
             }
             catch (ArgumentException e)
             {
-                Assert.AreEqual(e.ParamName, "bitArray");
+                Assert.AreEqual("bitArray", e.ParamName);
             }
         }
 

@@ -43,11 +43,11 @@ namespace Tests.System.Linq.CompilerServices
         public void Intern_ArgumentChecks()
         {
             var ex = Assert.ThrowsExactly<ArgumentNullException>(() => Expression.Constant(1).Intern(cache: null));
-            Assert.AreEqual(ex.ParamName, "cache");
+            Assert.AreEqual("cache", ex.ParamName);
             var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ((Expression)null).Intern(new ExpressionInterningCache()));
-            Assert.AreEqual(ex2.ParamName, "expression");
+            Assert.AreEqual("expression", ex2.ParamName);
             var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionInterningCache().GetOrAdd(expression: null));
-            Assert.AreEqual(ex3.ParamName, "expression");
+            Assert.AreEqual("expression", ex3.ParamName);
         }
 
         #endregion
@@ -58,9 +58,9 @@ namespace Tests.System.Linq.CompilerServices
         public void Intern_CacheCount()
         {
             var cache = new ExpressionInterningCache();
-            Assert.AreEqual(cache.Count, 0);
+            Assert.AreEqual(0, cache.Count);
             Expression.Constant(1).Intern(cache);
-            Assert.AreEqual(cache.Count, 1);
+            Assert.AreEqual(1, cache.Count);
         }
 
         #endregion
@@ -1814,6 +1814,7 @@ namespace Tests.System.Linq.CompilerServices
             var xs = new[] { 2, 3, 5 }.AsQueryable();
 
 #pragma warning disable IDE0075 // Simplify conditional expression (in expression tree to test different types of expressions)
+#pragma warning disable MSTEST0055 // Return value should not be ignored. (These are where-clause predicates in expression-tree test data; nothing is discarded.)
             var ys = from x in xs
                      where x > 42 && !(-x < 17)
                      where x.ToString().StartsWith("a")
@@ -1839,6 +1840,7 @@ namespace Tests.System.Linq.CompilerServices
                      where new string('*', 31).Contains("**")
                      where new Foo { Bar = { Baz = { 37, 41 }, Qux = 43 } }.Bar.Baz.Sum() > 47
                      select ~(y * y);
+#pragma warning restore MSTEST0055
 #pragma warning restore IDE0075 // Simplify conditional expression
 
             var e1 = ys.Expression;

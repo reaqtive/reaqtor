@@ -236,7 +236,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             inp[2] = a87;
 
             var p = CompilerGeneratedNameEliminator.Prettify(h).ToCSharpString(allowCompilerGeneratedNames: true).Replace("<>a__RecordType", "rec").Replace("<>h__TransparentIdentifier", "__t");
-            Assert.IsTrue(true, p);
+            Assert.IsNotNull(p);
 
             var output = (IEnumerable<int>)h.Compile().DynamicInvoke([inp]);
 

@@ -239,7 +239,7 @@ namespace Tests.System.IO
             ss.Position = 6;
 
             ss.WriteByte(42);
-            Assert.AreEqual(bs[8], 42);
+            Assert.AreEqual(42, bs[8]);
             Assert.AreEqual(7, ss.Position);
         }
 

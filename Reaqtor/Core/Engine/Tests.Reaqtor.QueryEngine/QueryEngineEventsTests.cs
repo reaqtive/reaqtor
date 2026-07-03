@@ -26,19 +26,19 @@ namespace Tests.Reaqtor.QueryEngine
 #pragma warning restore IDE0060 // Remove unused parameter
 
         [ClassCleanup]
-        public static new void ClassCleanup()
+        public static void ClassTeardown()
         {
             PhysicalTimeEngineTest.ClassCleanup();
         }
 
         [TestInitialize]
-        public new void TestInitialize()
+        public void TestSetup()
         {
             base.Setup();
         }
 
         [TestCleanup]
-        public new void TestCleanup()
+        public void TestTeardown()
         {
             base.Cleanup();
         }
@@ -59,10 +59,10 @@ namespace Tests.Reaqtor.QueryEngine
 
             var stateStore = Checkpoint(qe1);
 
-            Assert.AreEqual(schedulerPausingCount, 1);
-            Assert.AreEqual(schedulerPausedCount, 1);
-            Assert.AreEqual(schedulerContinuingCount, 1);
-            Assert.AreEqual(schedulerContinuedCount, 1);
+            Assert.AreEqual(1, schedulerPausingCount);
+            Assert.AreEqual(1, schedulerPausedCount);
+            Assert.AreEqual(1, schedulerContinuingCount);
+            Assert.AreEqual(1, schedulerContinuedCount);
         }
 
         [TestMethod]
@@ -94,8 +94,8 @@ namespace Tests.Reaqtor.QueryEngine
             var sub = io.Subscribe(v1, new Uri("eg://foo"), null);
             sub.Dispose();
 
-            Assert.AreEqual(subscriptionCreatedCount, 1);
-            Assert.AreEqual(subscriptionDeletedCount, 1);
+            Assert.AreEqual(1, subscriptionCreatedCount);
+            Assert.AreEqual(1, subscriptionDeletedCount);
         }
 
         [TestMethod]

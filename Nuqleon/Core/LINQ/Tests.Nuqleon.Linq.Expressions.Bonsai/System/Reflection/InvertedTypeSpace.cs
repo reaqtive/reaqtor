@@ -24,21 +24,21 @@ namespace Tests.System.Linq.Expressions.Bonsai
         {
             var ts = new InvertedTypeSpace();
             var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetMember(memberSlim: null));
-            Assert.AreEqual(ex.ParamName, "memberSlim");
+            Assert.AreEqual("memberSlim", ex.ParamName);
             var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetConstructor(constructorSlim: null));
-            Assert.AreEqual(ex2.ParamName, "constructorSlim");
+            Assert.AreEqual("constructorSlim", ex2.ParamName);
             var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetField(fieldSlim: null));
-            Assert.AreEqual(ex3.ParamName, "fieldSlim");
+            Assert.AreEqual("fieldSlim", ex3.ParamName);
             var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetMethod(methodSlim: null));
-            Assert.AreEqual(ex4.ParamName, "methodSlim");
+            Assert.AreEqual("methodSlim", ex4.ParamName);
             var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetProperty(propertySlim: null));
-            Assert.AreEqual(ex5.ParamName, "propertySlim");
+            Assert.AreEqual("propertySlim", ex5.ParamName);
             var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.ConvertType(type: null));
-            Assert.AreEqual(ex6.ParamName, "type");
+            Assert.AreEqual("type", ex6.ParamName);
             var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.MapType(typeSlim: null, type: null));
-            Assert.AreEqual(ex7.ParamName, "typeSlim");
+            Assert.AreEqual("typeSlim", ex7.ParamName);
             var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.MapType(SlimType, type: null));
-            Assert.AreEqual(ex8.ParamName, "type");
+            Assert.AreEqual("type", ex8.ParamName);
         }
 
         [TestMethod]

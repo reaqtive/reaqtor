@@ -33,11 +33,11 @@ namespace System.Reflection
         {
             var converter = new TypeToTypeSlimConverter();
             var ex = Assert.ThrowsExactly<ArgumentNullException>(() => converter.Visit(type: null));
-            Assert.AreEqual(ex.ParamName, "type");
+            Assert.AreEqual("type", ex.ParamName);
             var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => converter.MapType(type: null, typeSlim: null));
-            Assert.AreEqual(ex2.ParamName, "type");
+            Assert.AreEqual("type", ex2.ParamName);
             var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => converter.MapType(typeof(int), typeSlim: null));
-            Assert.AreEqual(ex3.ParamName, "typeSlim");
+            Assert.AreEqual("typeSlim", ex3.ParamName);
         }
 
         [TestMethod]

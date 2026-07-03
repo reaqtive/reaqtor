@@ -31,8 +31,8 @@ namespace Tests.System.Linq.CompilerServices
             AssertNotEqual(i1, i4);
             AssertNotEqual(i2, i4);
 
-            Assert.AreNotEqual<object>(i1, null);
-            Assert.AreNotEqual<object>(i1, "foo");
+            Assert.AreNotEqual<object>(null, i1);
+            Assert.AreNotEqual<object>("foo", i1);
         }
 
         [TestMethod]

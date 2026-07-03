@@ -24,7 +24,6 @@ namespace Tests.Reaqtor.QueryEngine
             Utils.CompleteIfNotNull(null, CancellationToken.None);
 
             // nothing has thrown
-            Assert.IsTrue(true);
         }
 
         [TestMethod]

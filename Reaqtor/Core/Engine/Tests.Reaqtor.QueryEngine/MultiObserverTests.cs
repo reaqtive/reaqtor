@@ -34,7 +34,7 @@ namespace Tests.Reaqtor.QueryEngine
                 action(m);
             }
 
-            Assert.IsTrue(true); // just happy nothing bad happened
+            // just happy nothing bad happened
         }
 
         [TestMethod]
@@ -74,7 +74,7 @@ namespace Tests.Reaqtor.QueryEngine
                     Action : new Action<IObserver<int>>(o => o.OnCompleted()),
                     OnNext : new Action<int>(x => Assert.Fail()),
                     OnError : new Action<Exception>(ex => Assert.Fail()),
-                    OnCompleted : new Action(() => Assert.IsTrue(true))
+                    OnCompleted : new Action(() => { /* expected */ })
                 ),
             };
 

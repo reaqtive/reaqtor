@@ -35,19 +35,19 @@ namespace Tests.Reaqtor.QueryEngine
         }
 
         [ClassCleanup]
-        public static new void ClassCleanup()
+        public static void ClassTeardown()
         {
             PhysicalTimeEngineTest.ClassCleanup();
         }
 
         [TestInitialize]
-        public new void TestInitialize()
+        public void TestSetup()
         {
             base.Setup();
         }
 
         [TestCleanup]
-        public new void TestCleanup()
+        public void TestTeardown()
         {
             base.Cleanup();
         }

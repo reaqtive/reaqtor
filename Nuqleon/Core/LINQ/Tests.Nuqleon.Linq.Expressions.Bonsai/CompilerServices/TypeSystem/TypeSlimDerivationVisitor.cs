@@ -1204,12 +1204,12 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
             {
                 var e = new BlockExpressionSlim(variables: null, new[] { Expression.Constant(42).ToExpressionSlim() }.ToReadOnly(), typeof(string).ToTypeSlim());
-                Assert.AreSame(Derive(e).ToType(), typeof(string));
+                Assert.AreSame(typeof(string), Derive(e).ToType());
             }
 
             {
                 var e = new BlockExpressionSlim(variables: null, new[] { Expression.Constant(42).ToExpressionSlim() }.ToReadOnly(), type: null);
-                Assert.AreSame(Derive(e).ToType(), typeof(int));
+                Assert.AreSame(typeof(int), Derive(e).ToType());
             }
         }
 
@@ -1241,7 +1241,7 @@ namespace Tests.System.Linq.Expressions.Bonsai
 
             {
                 var e = new TryExpressionSlim(type: null, Expression.Constant(42).ToExpressionSlim(), Expression.Constant("42").ToExpressionSlim(), Expression.Constant("42").ToExpressionSlim(), Array.Empty<CatchBlockSlim>().ToReadOnly());
-                Assert.AreSame(Derive(e).ToType(), typeof(int));
+                Assert.AreSame(typeof(int), Derive(e).ToType());
             }
         }
 

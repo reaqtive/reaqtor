@@ -25,7 +25,7 @@ namespace Tests.Reaqtor.QueryEngine
         internal static readonly Uri TestableObserverUri = new("b:/TestableObserver");
 
         [TestInitialize]
-        public new void TestInitialize()
+        public void TestSetup()
         {
             base.TestInitialize();
             Scheduler = new TestScheduler();
@@ -34,7 +34,7 @@ namespace Tests.Reaqtor.QueryEngine
         }
 
         [TestCleanup]
-        public new void TestCleanup()
+        public void TestTeardown()
         {
             TestableEntityFactory.Scheduler = null;
             Scheduler.Dispose();

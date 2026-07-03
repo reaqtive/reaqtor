@@ -46,13 +46,13 @@ namespace Tests.Reaqtor.QueryEngine
 #pragma warning restore IDE0060 // Remove unused parameter
 
         [ClassCleanup]
-        public static new void ClassCleanup() => PhysicalTimeEngineTest.ClassCleanup();
+        public static void ClassTeardown() => PhysicalTimeEngineTest.ClassCleanup();
 
         [TestInitialize]
-        public new void TestInitialize() => base.Setup();
+        public void TestSetup() => base.Setup();
 
         [TestCleanup]
-        public new void TestCleanup() => base.Cleanup();
+        public void TestTeardown() => base.Cleanup();
 
         [TestMethod]
         public void InvalidParametersForCheckpointing()
@@ -97,7 +97,7 @@ namespace Tests.Reaqtor.QueryEngine
                 var observable = reactive.GetObservable<int>(sourceUri);
 
                 // Create observer
-                reactive.DefineObserver<object, int>(observerUri, (v) => Observer.Create<int>((value) => Assert.AreEqual(value, 1)).AsQbserver(), null);
+                reactive.DefineObserver<object, int>(observerUri, (v) => Observer.Create<int>((value) => Assert.AreEqual(1, value)).AsQbserver(), null);
 
                 // Create observable
                 reactive.DefineObservable<int, int>(observableUri, (value) => Observable.Return(value).AsQbservable(), null);
@@ -1223,7 +1223,7 @@ namespace Tests.Reaqtor.QueryEngine
                 // Create entities.
                 var source = reactive.CreateStream<int>(sourceUri);
                 var observable = reactive.GetObservable<int>(sourceUri);
-                reactive.DefineObserver<object, int>(observerUri, (v) => Observer.Create<int>((value) => Assert.AreEqual(value, 1)).AsQbserver(), null);
+                reactive.DefineObserver<object, int>(observerUri, (v) => Observer.Create<int>((value) => Assert.AreEqual(1, value)).AsQbserver(), null);
                 reactive.DefineObservable<int, int>(observableUri, (value) => Observable.Return(value).AsQbservable(), null);
                 observable.Subscribe(reactive.GetObserver<string, int>(MockObserverUri)("result"), subscriptionUri, null);
 
@@ -3809,7 +3809,7 @@ namespace Tests.Reaqtor.QueryEngine
             //
             // The second callback will occur when the parent subscription is
             // started and cannot find the bridge instance.
-            Assert.AreEqual(failedCount, 2);
+            Assert.AreEqual(2, failedCount);
 
             Assert.IsFalse(ctx.Subscriptions.ContainsKey(subId));
 

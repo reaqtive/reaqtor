@@ -60,9 +60,7 @@ namespace Tests.System.Linq.CompilerServices
         {
             var f = (Expression<Func<int, int>>)(x => x + 1);
 
-            UnboundParameterException.ThrowIfOpen(f, "Oops");
-
-            Assert.IsTrue(true);
+            UnboundParameterException.ThrowIfOpen(f, "Oops"); // does not throw
         }
     }
 }

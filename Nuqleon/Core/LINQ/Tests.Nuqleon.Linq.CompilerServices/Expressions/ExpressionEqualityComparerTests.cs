@@ -70,8 +70,7 @@ namespace Tests.System.Linq.CompilerServices
             {
                 try
                 {
-                    var res = (int)getHashCode.Invoke(eq, [null]);
-                    Assert.IsTrue(true);
+                    _ = (int)getHashCode.Invoke(eq, [null]); // does not throw
                 }
                 catch (TargetInvocationException ex)
                 {

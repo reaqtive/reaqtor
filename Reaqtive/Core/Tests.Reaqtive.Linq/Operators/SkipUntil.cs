@@ -62,8 +62,8 @@ namespace Test.Reaqtive.Operators
             var res = Scheduler.Start(() =>
                 xs.SkipUntil(ys).Apply(Scheduler, checkpoints));
 
-            Assert.AreEqual(xs.Subscriptions[0].Unsubscribe, 500);
-            Assert.AreEqual(ys.Subscriptions[0].Unsubscribe, 330);
+            Assert.AreEqual(500, xs.Subscriptions[0].Unsubscribe);
+            Assert.AreEqual(330, ys.Subscriptions[0].Unsubscribe);
 
             res.Messages.AssertEqual(
                 OnNext(350, 4),
@@ -87,7 +87,7 @@ namespace Test.Reaqtive.Operators
             Assert.IsTrue(otherObserverHasSignaled);
             Assert.IsFalse(firstSubscriptionIsDisposed);
             Assert.IsTrue(takeIsDisposed);
-            Assert.AreEqual(remainingItemsToTake, 0);
+            Assert.AreEqual(0, remainingItemsToTake);
         }
 
         private static void ReadOperatorHeader(IOperatorStateReader reader)

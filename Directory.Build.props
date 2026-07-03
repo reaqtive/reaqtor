@@ -20,20 +20,6 @@
     reserved word"); suppress it to keep that intentional convention. -->
     <NoWarn>$(NoWarn);CS8981</NoWarn>
 
-    <!--
-    MSTest 4.2 analyzer guidance that fires across long-standing tests; deferred to a test-code
-    modernization follow-up rather than churning hundreds of test files in the .NET 10 migration:
-    - MSTEST0017: expected/actual arguments appear swapped (affects failure-message readability,
-      not test outcomes).
-    - MSTEST0032: "assertion condition is always true" - misfires on deliberate equality-contract
-      tests such as Assert.IsTrue(x.Equals(x)) for reflexivity.
-    - MSTEST0036: flags derived test classes hiding base members (ClassCleanup/TestInitialize/
-      TestCleanup with 'new'); the QueryEngine tests use this pattern deliberately to chain into
-      shared base-class setup, and the attributed derived members are the ones MSTest invokes.
-    - MSTEST0055: "return value should not be ignored" - tests intentionally invoke members like
-      Contains/StartsWith to exercise code paths where the assertion happens elsewhere. -->
-    <NoWarn>$(NoWarn);MSTEST0017;MSTEST0032;MSTEST0036;MSTEST0055</NoWarn>
-
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 
     <PublishRepositoryUrl>true</PublishRepositoryUrl>

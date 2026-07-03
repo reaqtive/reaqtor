@@ -26,21 +26,21 @@ namespace Tests.System.Reflection
         {
             var ts = new TypeSpace();
             var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetMember(member: null));
-            Assert.AreEqual(ex.ParamName, "member");
+            Assert.AreEqual("member", ex.ParamName);
             var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetConstructor(constructor: null));
-            Assert.AreEqual(ex2.ParamName, "constructor");
+            Assert.AreEqual("constructor", ex2.ParamName);
             var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetField(field: null));
-            Assert.AreEqual(ex3.ParamName, "field");
+            Assert.AreEqual("field", ex3.ParamName);
             var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetMethod(method: null));
-            Assert.AreEqual(ex4.ParamName, "method");
+            Assert.AreEqual("method", ex4.ParamName);
             var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.GetProperty(property: null));
-            Assert.AreEqual(ex5.ParamName, "property");
+            Assert.AreEqual("property", ex5.ParamName);
             var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.ConvertType(type: null));
-            Assert.AreEqual(ex6.ParamName, "type");
+            Assert.AreEqual("type", ex6.ParamName);
             var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.MapType(type: null, typeSlim: null));
-            Assert.AreEqual(ex7.ParamName, "type");
+            Assert.AreEqual("type", ex7.ParamName);
             var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => ts.MapType(typeof(int), typeSlim: null));
-            Assert.AreEqual(ex8.ParamName, "typeSlim");
+            Assert.AreEqual("typeSlim", ex8.ParamName);
         }
 
         [TestMethod]

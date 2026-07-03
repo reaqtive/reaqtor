@@ -177,11 +177,14 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
    reader/writer facets) keep their explicit throws under a rationale `#pragma`. `CA1859` (use
    concrete types) is the one new rule deferred, as an IDE suggestion with rationale in
    `.editorconfig`.
-3. **Some MSTest analyzer guidance is suppressed** (`MSTEST0017/0032/0036/0055` — expected/actual
-   argument order, always-true assertions in equality-contract tests, deliberate base-member hiding
-   in the QueryEngine test classes, and intentionally ignored return values). These affect failure
-   messages or style, not test outcomes; adopting them is test-code modernisation. The MSTest
-   **v3→v4** upgrade itself has been done (see key decisions above).
+3. **MSTest analyzer guidance is adopted** (resolved; formerly `MSTEST0017/0032/0036/0055` in
+   `NoWarn`). MSTEST0017: 104 swapped expected/actual argument pairs fixed. MSTEST0032: the
+   always-true `Assert.IsTrue(true)` markers ("did not throw" / "reached here") removed or replaced
+   with real assertions. MSTEST0036: the QueryEngine test classes' lifecycle members renamed
+   (`ClassTeardown`/`TestSetup`/`TestTeardown`) — MSTest invokes by attribute, so the base-member
+   hiding (`new`) was never needed. MSTEST0055: one rationale suppression over expression-tree test
+   data whose where-clause predicates the analyzer misreads as discarded calls. The MSTest **v3→v4**
+   upgrade itself was done during the migration (see key decisions above).
 4. **`CS8981` is suppressed.** The operators use a deliberate, long-standing convention of terse private
    nested type names (`_` for the primary operator/observer, `i` for a secondary inner observer); C# 14
    flags all-lowercase type names as possibly-future-reserved.

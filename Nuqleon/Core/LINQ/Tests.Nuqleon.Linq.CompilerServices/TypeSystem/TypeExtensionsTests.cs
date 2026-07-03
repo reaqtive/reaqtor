@@ -182,11 +182,11 @@ namespace Tests.System.Linq.CompilerServices
         public void FindGenericType_ArgumentChecks()
         {
             var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.FindGenericType(type: null, typeof(IEnumerable<>)));
-            Assert.AreEqual(ex.ParamName, "type");
+            Assert.AreEqual("type", ex.ParamName);
             var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeExtensions.FindGenericType(typeof(string), definition: null));
-            Assert.AreEqual(ex2.ParamName, "definition");
+            Assert.AreEqual("definition", ex2.ParamName);
             var ex3 = Assert.ThrowsExactly<ArgumentException>(() => TypeExtensions.FindGenericType(typeof(string), typeof(int)));
-            Assert.AreEqual(ex3.ParamName, "definition");
+            Assert.AreEqual("definition", ex3.ParamName);
         }
 
         [TestMethod]
@@ -432,14 +432,14 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(TypeExtensions.TryUnifyExact(t1, t2, out IDictionary<Type, Type> r1));
 
             Assert.AreEqual(2, r1.Count);
-            Assert.AreSame(r1[typeof(T)], typeof(string));
-            Assert.AreSame(r1[typeof(R)], typeof(bool));
+            Assert.AreSame(typeof(string), r1[typeof(T)]);
+            Assert.AreSame(typeof(bool), r1[typeof(R)]);
 
             Assert.IsTrue(TypeExtensions.TryUnifyExact(t1, t2, EqualityComparer<Type>.Default, out IDictionary<Type, Type> r2));
 
             Assert.AreEqual(2, r2.Count);
-            Assert.AreSame(r2[typeof(T)], typeof(string));
-            Assert.AreSame(r2[typeof(R)], typeof(bool));
+            Assert.AreSame(typeof(string), r2[typeof(T)]);
+            Assert.AreSame(typeof(bool), r2[typeof(R)]);
         }
 
         [TestMethod]
@@ -916,14 +916,14 @@ namespace Tests.System.Linq.CompilerServices
             Assert.IsTrue(TypeExtensions.TryUnifyWith(t1, t2, out IDictionary<Type, Type> res));
 
             Assert.AreEqual(2, res.Count);
-            Assert.AreSame(res[typeof(T)], typeof(string));
-            Assert.AreSame(res[typeof(R)], typeof(bool));
+            Assert.AreSame(typeof(string), res[typeof(T)]);
+            Assert.AreSame(typeof(bool), res[typeof(R)]);
 
             Assert.IsTrue(TypeExtensions.TryUnifyWith(t1, t2, EqualityComparer<Type>.Default, out IDictionary<Type, Type> r2));
 
             Assert.AreEqual(2, r2.Count);
-            Assert.AreSame(r2[typeof(T)], typeof(string));
-            Assert.AreSame(r2[typeof(R)], typeof(bool));
+            Assert.AreSame(typeof(string), r2[typeof(T)]);
+            Assert.AreSame(typeof(bool), r2[typeof(R)]);
         }
 
         [TestMethod]

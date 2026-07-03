@@ -228,10 +228,7 @@ namespace Tests.System.Reflection
         {
             var comp = new TypeSlimEqualityComparator();
 
-            _ = comp.GetHashCode(null);
-
-            // did not throw
-            Assert.IsTrue(true);
+            _ = comp.GetHashCode(null); // does not throw
         }
 
         [Ignore] // See NB comment below; the implementation detail changed in .NET Core 3.1 and above.

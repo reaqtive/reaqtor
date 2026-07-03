@@ -33,7 +33,7 @@ namespace Test.Reaqtor
         {
             using (new MultiSubjectProxy(new Uri("test://subject")))
             {
-                Assert.IsTrue(true);
+                // constructing and disposing must not throw
             }
         }
 
@@ -114,7 +114,7 @@ namespace Test.Reaqtor
         {
             using (new MultiSubjectProxy<int, int>(new Uri("test://subject")))
             {
-                Assert.IsTrue(true);
+                // constructing and disposing must not throw
             }
         }
 

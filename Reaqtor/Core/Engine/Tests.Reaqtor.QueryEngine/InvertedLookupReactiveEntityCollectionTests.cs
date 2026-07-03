@@ -115,7 +115,7 @@ namespace Tests.Reaqtor.QueryEngine
                     Task.Run(() => Assert.IsTrue(collection.TryGetKey(42, out key))),
                     Task.Run(() => Assert.IsFalse(collection.TryGetValue("bar", out value))),
                 ]);
-                Assert.AreEqual(key, "foo");
+                Assert.AreEqual("foo", key);
             }
         }
 
