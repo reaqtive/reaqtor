@@ -168,19 +168,12 @@ dotnet_diagnostic.IDE0130.severity = none # Namespace does not match folder stru
 dotnet_diagnostic.IDE0200.severity = silent # Lambda expression can be removed. Compact, but borders on the obscure.
 dotnet_diagnostic.IDE0270.severity = silent # Use null coallesce. As per https://github.com/dotnet/roslyn/issues/68313 we consider it a false positive when it's for throwing an exception.
 
-# IDE0074 is the "Use compound assignment" rule. With .NET SDK 7, it has started suggesting its use
-# for properties, e.g. for this:
-# if (o.Prop == null) { o.Prop = val; }
-# it suggests this:
-# o.Prop ??= val;
-# We've already been using ??= for field initialization. I'm not so sure we want it for
-# ensuring properties are set, because it currently appears to generate code that JIT
-# compiles to something less efficient. The IL defines two unnecessary extra local variables,
-# and at least for the initial JIT, this results in code with a longer preamble. It's
-# possible that with tiered JIT the difference would eventually go away, but since this is
-# more than just a syntax change, we shouldn't adopt this without a before/after benchmark
-# to find out whether the IL differences have a measurable performance impact.
-dotnet_diagnostic.IDE0074.severity = suggestion
+# IDE0074 ("use coalesce compound assignment", o.Prop ??= val) previously sat at `suggestion`
+# pending a benchmark: the concern was that the compound form on properties emits extra IL locals
+# and a longer JIT preamble than `if (o.Prop == null) { o.Prop = val; }`. Measured on .NET 10
+# (2026-07, BenchmarkDotNet DisassemblyDiagnoser): both forms JIT to byte-identical machine code
+# in both the already-set and assignment paths, so the concern is obsolete. The rule now inherits
+# the category-Style `warning` baseline; the codebase already conformed (zero sites at promotion).
 
 ###############################
 # VB Coding Conventions       #
