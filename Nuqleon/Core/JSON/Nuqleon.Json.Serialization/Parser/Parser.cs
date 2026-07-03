@@ -12,9 +12,7 @@
 
 using Nuqleon.Json.Parser;
 
-#if USE_SPAN
 using System;
-#endif
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;
@@ -475,13 +473,9 @@ namespace Nuqleon.Json.Serialization
         /// <param name="str">The string to lex a JSON Number literal from.</param>
         /// <param name="len">The length of the string.</param>
         /// <param name="i">The index in the string to start lexing from. This value gets updated to the first index position after the Number literal, if found.</param>
-        /// <param name="res">A string containing the lexed number.</param>
+        /// <param name="res">A span of characters containing the lexed number.</param>
         /// <returns>true if a Number literal was found; otherwise, false.</returns>
-#if USE_SPAN
         private static bool TryLexNumber(string str, int len, ref int i, out ReadOnlySpan<char> res)
-#else
-        private static bool TryLexNumber(string str, int len, ref int i, out string res)
-#endif
         {
             res = null;
 
@@ -580,11 +574,7 @@ namespace Nuqleon.Json.Serialization
                                 } while (c is >= '0' and <= '9');
                             }
 
-#if USE_SPAN
                             res = str.AsSpan(b, i - b);
-#else
-                            res = str[b..i];
-#endif
                             return true;
                         }
                 }

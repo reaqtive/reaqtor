@@ -179,8 +179,10 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
 5. **Inline dead framework branches: swept (#159).** With every live project single-targeting
    net10.0, all `#if` conditions over TFM symbols became statically decidable; a three-valued
    evaluator removed the dead branches and unwrapped the live ones (~217 constructs across 88
-   files, pure deletions). Constructs involving real feature flags (`USE_SLIM`, `DEBUG`,
-   `USE_SPAN`, …) are untouched.
+   files, pure deletions). Constructs involving real feature flags (`USE_SLIM`, `DEBUG`, …) are
+   untouched. (`USE_SPAN` was later found to be a TFM flag in disguise — its `net6.0`-conditioned
+   define never fired after the retarget, silently disabling the span paths in
+   `Nuqleon.Json.Serialization` — so the span code was made unconditional and the flag removed.)
 6. **CI coverage on MTP is translated but unverified end-to-end.** The `dotnet test` arguments were
    converted to MTP equivalents (`--coverage` + `codecoverage.runsettings`, `--hangdump-timeout`, the
    reportgenerator glob), but the Azure Pipelines run itself could not be exercised locally — worth a

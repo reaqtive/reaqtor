@@ -6,10 +6,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
-    <DefineConstants>USE_SPAN</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\Nuqleon.Json\Nuqleon.Json.csproj" />
     <ProjectReference Include="..\..\BCL\Nuqleon.Memory\Nuqleon.Memory.csproj" />
