@@ -99,10 +99,8 @@ stages:
       displayName: Publish artifacts
       artifact: BuildPackages
 
-    - task: PublishBuildArtifacts@1
-      inputs:
-        pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-        artifactName: Logs
+    - publish: $(Build.ArtifactStagingDirectory)/Logs
+      artifact: Logs_Build_and_Pack
       displayName: Publish Build Logs
       condition: always()
 
@@ -117,8 +115,10 @@ stages:
     - checkout: self
       fetchDepth: 1
       
+    # Each matrix job publishes its own RawCoverage_* pipeline artifact (immutable, unlike
+    # the retired PublishBuildArtifacts@1 which let all jobs append into one artifact).
     - download: current
-      artifact: RawCoverage
+      patterns: 'RawCoverage_*/**'
 
     - task: DotNetCoreCLI@2
       inputs:
@@ -131,20 +131,19 @@ stages:
         dotnet tool update -g dotnet-reportgenerator-globaltool
         export PATH=$PATH:$HOME/.dotnet/tools
         . ~/.bashrc
-        reportgenerator -reports:$(Pipeline.Workspace)/RawCoverage/**/*.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.SourcesDirectory)/coverlet/reports -reporttypes:"Cobertura;lcov"
+        reportgenerator -reports:$(Pipeline.Workspace)/RawCoverage_*/**/*.xml -sourcedirs:$(Build.SourcesDirectory) -targetdir:$(Build.SourcesDirectory)/coverage/reports -reporttypes:"Cobertura;lcov"
       displayName: Consolidate Reports from Jobs
 
-    - task: PublishCodeCoverageResults@1
+    - task: PublishCodeCoverageResults@2
       displayName: Publish code coverage
       inputs:
-        codeCoverageTool: Cobertura
         pathToSources: $(Build.SourcesDirectory)
-        summaryFileLocation: $(Build.SourcesDirectory)/coverlet/reports/Cobertura.xml
+        summaryFileLocation: $(Build.SourcesDirectory)/coverage/reports/Cobertura.xml
 
     - script: |
         bash <(curl -s https://codecov.io/bash)
       displayName: 'Upload to codecov.io'
-      workingDirectory: $(Build.SourcesDirectory)/coverlet/reports
+      workingDirectory: $(Build.SourcesDirectory)/coverage/reports
       env:
         CODECOV_TOKEN: $(CODECOV_TOKEN)
       condition: ne(variables['build.reason'], 'PullRequest')

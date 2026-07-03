@@ -186,7 +186,10 @@ also absorbing a large, separate code-style/analyzer churn. All are documented i
 6. **CI coverage on MTP is translated but unverified end-to-end.** The `dotnet test` arguments were
    converted to MTP equivalents (`--coverage` + `codecoverage.runsettings`, `--hangdump-timeout`, the
    reportgenerator glob), but the Azure Pipelines run itself could not be exercised locally — worth a
-   check on the first CI build.
+   check on the first CI build. (Also unverified for the same reason: the later move from the retired
+   `PublishBuildArtifacts@1`/`PublishCodeCoverageResults@1` tasks to per-job pipeline artifacts
+   (`RawCoverage_*`, `Logs_*`) with a pattern download in the coverage stage, and the
+   `coverlet/reports` → `coverage/reports` path rename.)
 
 ## How it was verified
 

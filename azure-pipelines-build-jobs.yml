@@ -47,20 +47,15 @@
               displayName: Consolidate Coverage Runs
               condition: succeededOrFailed()
 
-            - task: PublishBuildArtifacts@1
-              inputs:
-                pathToPublish: $(Build.ArtifactStagingDirectory)/coverage
-                artifactName: RawCoverage
-                parallel: true
-                parallelCount: 8
+            # Pipeline artifacts (unlike the retired PublishBuildArtifacts@1) are immutable and
+            # unique per job, so each matrix job publishes under its own name; the coverage
+            # stage downloads them by the RawCoverage_* pattern.
+            - publish: $(Build.ArtifactStagingDirectory)/coverage
+              artifact: RawCoverage_${{ pool.name }}_${{ project }}_${{ configuration }}
               displayName: Publish Raw Coverage Output
               condition: succeededOrFailed()
 
-            - task: PublishBuildArtifacts@1
-              inputs:
-                pathToPublish: $(Build.ArtifactStagingDirectory)/Logs
-                artifactName: Logs
-                parallel: true
-                parallelCount: 8
+            - publish: $(Build.ArtifactStagingDirectory)/Logs
+              artifact: Logs_${{ pool.name }}_${{ project }}_${{ configuration }}
               displayName: Publish Build Logs
               condition: always()
