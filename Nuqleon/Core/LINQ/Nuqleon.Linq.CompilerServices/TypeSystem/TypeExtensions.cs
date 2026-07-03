@@ -8,6 +8,7 @@
 // BD - April 2013 - Created this file.
 //
 
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -24,14 +25,15 @@ namespace System
     /// </summary>
     public static class TypeExtensions
     {
-        private static readonly HashSet<Type> s_knownWildcards =
-        [
+        private static readonly FrozenSet<Type> s_knownWildcards =
+        new Type[]
+        {
             typeof(T),
             typeof(T1),
             typeof(T2),
             typeof(T3),
             typeof(R),
-        ];
+        }.ToFrozenSet();
 
         #region Anonymous and closure types
 
@@ -658,7 +660,7 @@ namespace System
         {
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable format // (Formatted as a table.)
-            private static readonly Dictionary<Type, string> s_typeNames = new()
+            private static readonly FrozenDictionary<Type, string> s_typeNames = new Dictionary<Type, string>()
             {
                 { typeof(void),    "void"    },
                 { typeof(object),  "object"  },
@@ -676,7 +678,7 @@ namespace System
                 { typeof(bool),    "bool"    },
                 { typeof(char),    "char"    },
                 { typeof(string),  "string"  },
-            };
+            }.ToFrozenDictionary();
 #pragma warning restore format
 #pragma warning restore IDE0079
 

@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -401,7 +402,7 @@ namespace Reaqtor.QueryEngine
 
 #pragma warning disable format // Formatted as tables.
 
-        private static readonly Dictionary<Type, Type> s_unquoteTypeMap = new()
+        private static readonly FrozenDictionary<Type, Type> s_unquoteTypeMap = new Dictionary<Type, Type>()
         {
             { typeof(IReactiveQubjectFactory<,>),    typeof(IReliableSubjectFactory<,>) },
             { typeof(IReactiveSubjectFactory<,>),    typeof(IReliableSubjectFactory<,>) },
@@ -419,7 +420,7 @@ namespace Reaqtor.QueryEngine
             //{ typeof(IReactiveQubscriptionFactory<>), typeof(ISubscriptionFactory<>)    },
             { typeof(IReactiveQubscription),         typeof(ISubscription)              },
             { typeof(IReactiveSubscription),         typeof(ISubscription)              },
-        };
+        }.ToFrozenDictionary();
 
 #pragma warning restore format
 

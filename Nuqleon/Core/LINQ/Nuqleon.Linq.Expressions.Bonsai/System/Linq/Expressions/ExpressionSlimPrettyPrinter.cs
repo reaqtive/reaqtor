@@ -5,7 +5,7 @@
 // BD - June 2017 - Created this file.
 //
 
-using System.Collections.Generic;
+using System.Collections.Frozen;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Text;
@@ -33,8 +33,8 @@ namespace System.Linq.Expressions
         /// </summary>
         public static readonly StringBuilderPool StringBuilderPool = StringBuilderPool.Create(Environment.ProcessorCount, 1024, 8 * 1024);
 
-        private static readonly Dictionary<int, string> s_expressionTypeToString = Enum.GetValues<ExpressionType>().ToDictionary(e => (int)e, e => e.ToString());
-        private static readonly Dictionary<int, string> s_gotoExpressionKindToString = Enum.GetValues<GotoExpressionKind>().ToDictionary(e => (int)e, e => e.ToString());
+        private static readonly FrozenDictionary<int, string> s_expressionTypeToString = Enum.GetValues<ExpressionType>().ToFrozenDictionary(e => (int)e, e => e.ToString());
+        private static readonly FrozenDictionary<int, string> s_gotoExpressionKindToString = Enum.GetValues<GotoExpressionKind>().ToFrozenDictionary(e => (int)e, e => e.ToString());
 
         private readonly StringBuilder _sb;
 

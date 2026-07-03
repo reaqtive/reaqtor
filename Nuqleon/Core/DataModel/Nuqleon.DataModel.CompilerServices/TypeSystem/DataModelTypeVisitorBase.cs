@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
@@ -27,8 +28,9 @@ namespace Nuqleon.DataModel.TypeSystem
         // WARNING: Known subtypes of this type implement IClearable. Adding state here is a breaking change and requires implementing IClearable with
         //          a virtual Clear method for subtypes to override.
 
-        private static readonly HashSet<Type> s_primitiveTypes =
-        [
+        private static readonly FrozenSet<Type> s_primitiveTypes =
+        new Type[]
+        {
             typeof(Unit),
             typeof(sbyte),
             typeof(byte),
@@ -49,12 +51,13 @@ namespace Nuqleon.DataModel.TypeSystem
             typeof(TimeSpan),
             typeof(Guid),
             typeof(Uri),
-        ];
+        }.ToFrozenSet();
 
         protected static readonly Type s_tupleMax = typeof(Tuple<,,,,,,,>);
 
-        private static readonly HashSet<Type> s_tuples =
-        [
+        private static readonly FrozenSet<Type> s_tuples =
+        new Type[]
+        {
             typeof(Tuple<>),
             typeof(Tuple<,>),
             typeof(Tuple<,,>),
@@ -63,7 +66,7 @@ namespace Nuqleon.DataModel.TypeSystem
             typeof(Tuple<,,,,,>),
             typeof(Tuple<,,,,,,>),
             s_tupleMax,
-        ];
+        }.ToFrozenSet();
 
         public override TType Visit(Type type)
         {

@@ -6,6 +6,7 @@
 
 #pragma warning disable
 
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
@@ -523,7 +524,7 @@ namespace System.Linq.Expressions.Tests
             return field.DeclaringType.ToIL() + "::" + field.Name;
         }
 
-        private static readonly Dictionary<TypeInfo, string> s_primitives = new Dictionary<Type, string>
+        private static readonly FrozenDictionary<TypeInfo, string> s_primitives = new Dictionary<Type, string>
         {
             { typeof(object), "object" },
             { typeof(void), "void" },
@@ -543,6 +544,6 @@ namespace System.Linq.Expressions.Tests
             { typeof(uint), "uint32" },
             { typeof(ulong), "uint64" },
             //{ typeof(TypedReference), "typedref" },
-        }.ToDictionary(kv => kv.Key.GetTypeInfo(), kv => kv.Value);
+        }.ToFrozenDictionary(kv => kv.Key.GetTypeInfo(), kv => kv.Value);
     }
 }

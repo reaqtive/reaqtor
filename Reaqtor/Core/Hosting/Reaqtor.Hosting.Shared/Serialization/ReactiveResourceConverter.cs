@@ -3,7 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
-using System.Collections.Generic;
+using System.Collections.Frozen;
 using System.Diagnostics;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
@@ -180,8 +180,9 @@ namespace Reaqtor.Hosting.Shared.Serialization
 
         private abstract class DefinedResource : Resource, IAsyncReactiveDefinedResource
         {
-            private static readonly HashSet<Type> s_funcTypes =
-            [
+            private static readonly FrozenSet<Type> s_funcTypes =
+            new Type[]
+            {
                 typeof(Func<,>),
                 typeof(Func<,,>),
                 typeof(Func<,,,>),
@@ -198,7 +199,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 typeof(Func<,,,,,,,,,,,,,,>),
                 typeof(Func<,,,,,,,,,,,,,,,>),
                 typeof(Func<,,,,,,,,,,,,,,,,>),
-            ];
+            }.ToFrozenSet();
 
             private bool? _isParameterized;
 
@@ -279,8 +280,9 @@ namespace Reaqtor.Hosting.Shared.Serialization
 
         private sealed class StreamFactory : DefinedResource, IAsyncReactiveStreamFactoryDefinition
         {
-            private static readonly HashSet<Type> s_factoryTypes =
-            [
+            private static readonly FrozenSet<Type> s_factoryTypes =
+            new Type[]
+            {
                 typeof(IAsyncReactiveQubjectFactory<,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,,>),
@@ -296,7 +298,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 typeof(IAsyncReactiveQubjectFactory<,,,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubjectFactory<,,,,,,,,,,,,,,,,>),
-            ];
+            }.ToFrozenSet();
 
             private bool? _isParameterized;
 
@@ -349,8 +351,9 @@ namespace Reaqtor.Hosting.Shared.Serialization
 
         private sealed class SubscriptionFactory : DefinedResource, IAsyncReactiveSubscriptionFactoryDefinition
         {
-            private static readonly HashSet<Type> s_factoryTypes =
-            [
+            private static readonly FrozenSet<Type> s_factoryTypes =
+            new Type[]
+            {
                 typeof(IAsyncReactiveQubscriptionFactory<>),
                 typeof(IAsyncReactiveQubscriptionFactory<,>),
                 typeof(IAsyncReactiveQubscriptionFactory<,,>),
@@ -366,7 +369,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
                 typeof(IAsyncReactiveQubscriptionFactory<,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubscriptionFactory<,,,,,,,,,,,,,>),
                 typeof(IAsyncReactiveQubscriptionFactory<,,,,,,,,,,,,,,>),
-            ];
+            }.ToFrozenSet();
 
             private bool? _isParameterized;
 

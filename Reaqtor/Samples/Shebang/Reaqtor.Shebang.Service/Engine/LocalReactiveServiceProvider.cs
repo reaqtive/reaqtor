@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
@@ -88,13 +89,13 @@ namespace Reaqtor.Shebang.Service
             return _provider.UndefineSubscriptionFactoryAsync(subscriptionFactoryUri, token);
         }
 
-        private static readonly Dictionary<Type, Type> s_map = new()
+        private static readonly FrozenDictionary<Type, Type> s_map = new Dictionary<Type, Type>()
         {
             { typeof(IReactiveClientProxy), typeof(IReactiveClient) },
             { typeof(IReactiveDefinitionProxy), typeof(IReactiveDefinition) },
             { typeof(IReactiveMetadataProxy), typeof(IReactiveMetadata) },
             { typeof(IReactiveProxy), typeof(IReactive) },
-        };
+        }.ToFrozenDictionary();
 
 
         private static Expression Rewrite(Expression expression)

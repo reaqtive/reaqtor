@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -25,7 +26,7 @@ namespace Reaqtor
     /// </summary>
     public class AsyncToSyncRewriter
     {
-        private static readonly IDictionary<Type, Type> s_builtInReactiveInterfacesTypeMap = new Dictionary<Type, Type>
+        private static readonly FrozenDictionary<Type, Type> s_builtInReactiveInterfacesTypeMap = new Dictionary<Type, Type>
         {
             { typeof(IAsyncReactiveObservable<>),           typeof(IReactiveObservable<>)           },
             { typeof(IAsyncReactiveGroupedObservable<,>),   typeof(IReactiveGroupedObservable<,>)   },
@@ -49,7 +50,7 @@ namespace Reaqtor
             { typeof(IAsyncReactiveQubscription),           typeof(IReactiveQubscription)           },
             { typeof(IAsyncReactiveQubscriptionFactory<>),  typeof(IReactiveQubscriptionFactory<>)  },
             { typeof(IAsyncReactiveQubscriptionFactory<,>), typeof(IReactiveQubscriptionFactory<,>) },
-        };
+        }.ToFrozenDictionary();
 
         private readonly TypeSubst _typeSubst;
 
@@ -80,35 +81,35 @@ namespace Reaqtor
         private sealed class TypeSubst : TypeSubstitutionExpressionVisitor
         {
 #pragma warning disable format
-            private static readonly Dictionary<Type, HashSet<string>> s_droppable = new()
+            private static readonly FrozenDictionary<Type, FrozenSet<string>> s_droppable = new Dictionary<Type, FrozenSet<string>>()
             {
-                { typeof(IReactiveObserver<>),             new HashSet<string> { "OnNext", "OnError", "OnCompleted" } },
-                { typeof(IReactiveObservable<>),           new HashSet<string> { "Subscribe" } },
-                { typeof(IReactiveQbservable<>),           new HashSet<string> { "Subscribe" } },
-                { typeof(IReactiveSubjectFactory<,>),      new HashSet<string> { "Create" } },
-                { typeof(IReactiveQubjectFactory<,>),      new HashSet<string> { "Create" } },
-                { typeof(IReactiveSubjectFactory<,,>),     new HashSet<string> { "Create" } },
-                { typeof(IReactiveQubjectFactory<,,>),     new HashSet<string> { "Create" } },
-                { typeof(IReactiveSubscriptionFactory<>),  new HashSet<string> { "Create" } },
-                { typeof(IReactiveQubscriptionFactory<>),  new HashSet<string> { "Create" } },
-                { typeof(IReactiveSubscriptionFactory<,>), new HashSet<string> { "Create" } },
-                { typeof(IReactiveQubscriptionFactory<,>), new HashSet<string> { "Create" } },
-            };
+                { typeof(IReactiveObserver<>),             new[] { "OnNext", "OnError", "OnCompleted" }.ToFrozenSet() },
+                { typeof(IReactiveObservable<>),           new[] { "Subscribe" }.ToFrozenSet() },
+                { typeof(IReactiveQbservable<>),           new[] { "Subscribe" }.ToFrozenSet() },
+                { typeof(IReactiveSubjectFactory<,>),      new[] { "Create" }.ToFrozenSet() },
+                { typeof(IReactiveQubjectFactory<,>),      new[] { "Create" }.ToFrozenSet() },
+                { typeof(IReactiveSubjectFactory<,,>),     new[] { "Create" }.ToFrozenSet() },
+                { typeof(IReactiveQubjectFactory<,,>),     new[] { "Create" }.ToFrozenSet() },
+                { typeof(IReactiveSubscriptionFactory<>),  new[] { "Create" }.ToFrozenSet() },
+                { typeof(IReactiveQubscriptionFactory<>),  new[] { "Create" }.ToFrozenSet() },
+                { typeof(IReactiveSubscriptionFactory<,>), new[] { "Create" }.ToFrozenSet() },
+                { typeof(IReactiveQubscriptionFactory<,>), new[] { "Create" }.ToFrozenSet() },
+            }.ToFrozenDictionary();
 
-            private static readonly Dictionary<Type, HashSet<string>> s_resolvable = new()
+            private static readonly FrozenDictionary<Type, FrozenSet<string>> s_resolvable = new Dictionary<Type, FrozenSet<string>>()
             {
-                { typeof(IAsyncReactiveObserver<>),             new HashSet<string> { "OnNextAsync", "OnErrorAsync", "OnCompletedAsync" } },
-                { typeof(IAsyncReactiveObservable<>),           new HashSet<string> { "SubscribeAsync" } },
-                { typeof(IAsyncReactiveQbservable<>),           new HashSet<string> { "SubscribeAsync" } },
-                { typeof(IAsyncReactiveSubjectFactory<,>),      new HashSet<string> { "CreateAsync" } },
-                { typeof(IAsyncReactiveQubjectFactory<,>),      new HashSet<string> { "CreateAsync" } },
-                { typeof(IAsyncReactiveSubjectFactory<,,>),     new HashSet<string> { "CreateAsync" } },
-                { typeof(IAsyncReactiveQubjectFactory<,,>),     new HashSet<string> { "CreateAsync" } },
-                { typeof(IAsyncReactiveSubscriptionFactory<>),  new HashSet<string> { "CreateAsync" } },
-                { typeof(IAsyncReactiveQubscriptionFactory<>),  new HashSet<string> { "CreateAsync" } },
-                { typeof(IAsyncReactiveSubscriptionFactory<,>), new HashSet<string> { "CreateAsync" } },
-                { typeof(IAsyncReactiveQubscriptionFactory<,>), new HashSet<string> { "CreateAsync" } },
-            };
+                { typeof(IAsyncReactiveObserver<>),             new[] { "OnNextAsync", "OnErrorAsync", "OnCompletedAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveObservable<>),           new[] { "SubscribeAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveQbservable<>),           new[] { "SubscribeAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveSubjectFactory<,>),      new[] { "CreateAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveQubjectFactory<,>),      new[] { "CreateAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveSubjectFactory<,,>),     new[] { "CreateAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveQubjectFactory<,,>),     new[] { "CreateAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveSubscriptionFactory<>),  new[] { "CreateAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveQubscriptionFactory<>),  new[] { "CreateAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveSubscriptionFactory<,>), new[] { "CreateAsync" }.ToFrozenSet() },
+                { typeof(IAsyncReactiveQubscriptionFactory<,>), new[] { "CreateAsync" }.ToFrozenSet() },
+            }.ToFrozenDictionary();
 #pragma warning restore format
 
             public TypeSubst(IDictionary<Type, Type> map)

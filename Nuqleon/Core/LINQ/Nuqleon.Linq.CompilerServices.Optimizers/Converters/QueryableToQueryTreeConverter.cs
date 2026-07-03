@@ -8,6 +8,7 @@
 // PS - February 2015 - Created this file.
 //
 
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
@@ -48,14 +49,14 @@ namespace System.Linq.CompilerServices.Optimizers
         {
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable format // (Formatted as a table.)
-            private static readonly Dictionary<MethodInfo, OperatorType> operatorMap = new()
+            private static readonly FrozenDictionary<MethodInfo, OperatorType> operatorMap = new Dictionary<MethodInfo, OperatorType>()
             {
                 { s_first,          OperatorType.First          },
                 { s_firstPredicate, OperatorType.FirstPredicate },
                 { s_select,         OperatorType.Select         },
                 { s_take,           OperatorType.Take           },
                 { s_where,          OperatorType.Where          },
-            };
+            }.ToFrozenDictionary();
 #pragma warning restore format
 #pragma warning restore IDE0079
 

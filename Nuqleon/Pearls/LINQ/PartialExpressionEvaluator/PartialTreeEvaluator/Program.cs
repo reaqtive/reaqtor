@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.CompilerServices;
@@ -53,13 +54,14 @@ namespace Playground
 
     internal class MyEvaluator : PartialExpressionEvaluatorBase
     {
-        private static readonly HashSet<Type> s_types =
-        [
+        private static readonly FrozenSet<Type> s_types =
+        new Type[]
+        {
             typeof(int),
             typeof(string),
             typeof(Bar),
             //typeof(Func<int, int>),
-        ];
+        }.ToFrozenSet();
 
         protected override bool CanEvaluate(ConstantExpression node)
         {

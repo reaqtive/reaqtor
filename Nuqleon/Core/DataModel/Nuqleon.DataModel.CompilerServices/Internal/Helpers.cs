@@ -9,6 +9,7 @@
 //
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -20,7 +21,7 @@ namespace Nuqleon.DataModel.CompilerServices
     internal static class Helpers
     {
         private static readonly TypeSlim ListType = typeof(List<>).ToTypeSlim();
-        private static readonly HashSet<TypeSlim> TupleTypes = new(TypeSlimEqualityComparer.Default)
+        private static readonly FrozenSet<TypeSlim> TupleTypes = new HashSet<TypeSlim>(TypeSlimEqualityComparer.Default)
         {
             typeof(Tuple<>).ToTypeSlim(),
             typeof(Tuple<,>).ToTypeSlim(),
@@ -30,7 +31,7 @@ namespace Nuqleon.DataModel.CompilerServices
             typeof(Tuple<,,,,,>).ToTypeSlim(),
             typeof(Tuple<,,,,,,>).ToTypeSlim(),
             typeof(Tuple<,,,,,,,>).ToTypeSlim(),
-        };
+        }.ToFrozenSet(TypeSlimEqualityComparer.Default);
 
         public static Type GetMemberType(MemberInfo member)
         {

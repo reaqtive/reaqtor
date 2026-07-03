@@ -3,6 +3,7 @@
 // See the LICENSE file in the project root for more information.
 
 using System;
+using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
@@ -46,8 +47,9 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// Hash set of other binary serializable types.
         /// </summary>
-        private static readonly HashSet<Type> s_otherBinaryTypes =
-        [
+        private static readonly FrozenSet<Type> s_otherBinaryTypes =
+        new Type[]
+        {
             typeof(string),
             typeof(decimal),
             typeof(Guid),
@@ -56,7 +58,7 @@ namespace Reaqtor.QueryEngine
             typeof(DateTime),
             typeof(DateTimeOffset),
             typeof(Dictionary<string, object>),
-        ];
+        }.ToFrozenSet();
 
         //
         // NB: Note for StyleCop fanatics on the team. DO NOT FORMAT MY TABLES. I don't care for the "right style";
@@ -68,7 +70,7 @@ namespace Reaqtor.QueryEngine
         /// <summary>
         /// Early-bound serializers.
         /// </summary>
-        private static readonly Dictionary<Type, Action<Serializer, object, Stream>> s_serializers = new()
+        private static readonly FrozenDictionary<Type, Action<Serializer, object, Stream>> s_serializers = new Dictionary<Type, Action<Serializer, object, Stream>>()
         {
             { typeof(sbyte),          (serializer, value, stream) => serializer.SerializeCore(         (sbyte)value, stream) },
             { typeof(byte),           (serializer, value, stream) => serializer.SerializeCore(          (byte)value, stream) },
@@ -89,12 +91,12 @@ namespace Reaqtor.QueryEngine
             { typeof(TimeSpan),       (serializer, value, stream) => serializer.SerializeCore(      (TimeSpan)value, stream) },
             { typeof(Guid),           (serializer, value, stream) => serializer.SerializeCore(          (Guid)value, stream) },
             { typeof(Uri),            (serializer, value, stream) => serializer.SerializeCore(           (Uri)value, stream) },
-        };
+        }.ToFrozenDictionary();
 
         /// <summary>
         /// Early-bound data serializers.
         /// </summary>
-        private static readonly Dictionary<Type, Func<JsonDataSerializer, Action<object, JsonWriter>>> s_dataSerializers = new()
+        private static readonly FrozenDictionary<Type, Func<JsonDataSerializer, Action<object, JsonWriter>>> s_dataSerializers = new Dictionary<Type, Func<JsonDataSerializer, Action<object, JsonWriter>>>()
         {
             { typeof(sbyte),          serializer => (value, writer) => serializer.SerializeTo(         (sbyte)value, writer) },
             { typeof(byte),           serializer => (value, writer) => serializer.SerializeTo(          (byte)value, writer) },
@@ -115,12 +117,12 @@ namespace Reaqtor.QueryEngine
             { typeof(TimeSpan),       serializer => (value, writer) => serializer.SerializeTo(      (TimeSpan)value, writer) },
             { typeof(Guid),           serializer => (value, writer) => serializer.SerializeTo(          (Guid)value, writer) },
             { typeof(Uri),            serializer => (value, writer) => serializer.SerializeTo(           (Uri)value, writer) },
-        };
+        }.ToFrozenDictionary();
 
         /// <summary>
         /// Early-bound deserializers.
         /// </summary>
-        private static readonly Dictionary<Type, Func<Serializer, Stream, object>> s_deserializers = new()
+        private static readonly FrozenDictionary<Type, Func<Serializer, Stream, object>> s_deserializers = new Dictionary<Type, Func<Serializer, Stream, object>>()
         {
             { typeof(sbyte),          (serializer, stream) => serializer.DeserializeCore<         sbyte>(stream) },
             { typeof(byte),           (serializer, stream) => serializer.DeserializeCore<          byte>(stream) },
@@ -141,12 +143,12 @@ namespace Reaqtor.QueryEngine
             { typeof(TimeSpan),       (serializer, stream) => serializer.DeserializeCore<      TimeSpan>(stream) },
             { typeof(Guid),           (serializer, stream) => serializer.DeserializeCore<          Guid>(stream) },
             { typeof(Uri),            (serializer, stream) => serializer.DeserializeCore<           Uri>(stream) },
-        };
+        }.ToFrozenDictionary();
 
         /// <summary>
         /// Early-bound data deserializers.
         /// </summary>
-        private static readonly Dictionary<Type, Func<JsonDataSerializer, Func<JsonReader, object>>> s_dataDeserializers = new()
+        private static readonly FrozenDictionary<Type, Func<JsonDataSerializer, Func<JsonReader, object>>> s_dataDeserializers = new Dictionary<Type, Func<JsonDataSerializer, Func<JsonReader, object>>>()
         {
             { typeof(sbyte),          serializer => reader => serializer.DeserializeFrom<         sbyte>(reader) },
             { typeof(byte),           serializer => reader => serializer.DeserializeFrom<          byte>(reader) },
@@ -167,7 +169,7 @@ namespace Reaqtor.QueryEngine
             { typeof(TimeSpan),       serializer => reader => serializer.DeserializeFrom<      TimeSpan>(reader) },
             { typeof(Guid),           serializer => reader => serializer.DeserializeFrom<          Guid>(reader) },
             { typeof(Uri),            serializer => reader => serializer.DeserializeFrom<           Uri>(reader) },
-        };
+        }.ToFrozenDictionary();
 
 #pragma warning restore format
 
