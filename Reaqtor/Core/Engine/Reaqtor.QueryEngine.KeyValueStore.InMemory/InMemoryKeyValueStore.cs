@@ -56,8 +56,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <returns>A new key/value store loaded from the stream.</returns>
         public static InMemoryKeyValueStore Load(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             var doc = XDocument.Load(stream);
             return Load(doc);
@@ -93,8 +92,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <param name="stream">The stream to save to.</param>
         public void Save(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             var doc = Save();
             doc.Save(stream);

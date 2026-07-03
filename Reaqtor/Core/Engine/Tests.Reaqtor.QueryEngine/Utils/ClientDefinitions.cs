@@ -90,10 +90,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/empty")]
         public static IReactiveQbservable<T> Empty<T>(this IReactive service)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             return service.GetObservable<T>(new Uri("rx://observable/empty"));
         }
@@ -101,10 +98,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/never")]
         public static IReactiveQbservable<T> Never<T>(this IReactive service)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             return service.GetObservable<T>(new Uri("rx://observable/never"));
         }
@@ -112,10 +106,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observers/nop")]
         public static IReactiveQbserver<T> Nop<T>(this IReactive service)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             Expression<Func<IReactiveQbserver<T>>> e = () => NopObserver<T>.Instance.AsQbserver();
             return service.Provider.CreateQbserver<T>(e.Body);
@@ -124,10 +115,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/return")]
         public static IReactiveQbservable<T> Return<T>(this IReactive service, T value)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             return service.GetObservable<T, T>(new Uri("rx://observable/return"))(value);
         }
@@ -140,15 +128,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/filter")]
         public static IReactiveQbservable<T> Where<T>(this IReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -162,15 +144,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/filter/index")]
         public static IReactiveQbservable<T> Where<T>(this IReactiveQbservable<T> source, Expression<Func<T, int, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -187,10 +163,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/take")]
         public static IReactiveQbservable<T> Take<T>(this IReactiveQbservable<T> source, int count)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (count < 0)
             {
@@ -209,15 +182,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/take/while")]
         public static IReactiveQbservable<T> TakeWhile<T>(this IReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -231,15 +198,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/take/while/index")]
         public static IReactiveQbservable<T> TakeWhile<T>(this IReactiveQbservable<T> source, Expression<Func<T, int, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -253,15 +214,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/take/until")]
         public static IReactiveQbservable<TSource> TakeUntil<TSource, TOther>(this IReactiveQbservable<TSource> source, IReactiveQbservable<TOther> other)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (other == null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
+            ArgumentNullException.ThrowIfNull(other);
 
             return source.Provider.CreateQbservable<TSource>(
                 Expression.Call(
@@ -275,10 +230,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/skip")]
         public static IReactiveQbservable<T> Skip<T>(this IReactiveQbservable<T> source, int count)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (count < 0)
             {
@@ -297,15 +249,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/skip/until")]
         public static IReactiveQbservable<TSource> SkipUntil<TSource, TOther>(this IReactiveQbservable<TSource> source, IReactiveQbservable<TOther> triggeringSource)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (triggeringSource == null)
-            {
-                throw new ArgumentNullException(nameof(triggeringSource));
-            }
+            ArgumentNullException.ThrowIfNull(triggeringSource);
 
             return source.Provider.CreateQbservable<TSource>(
                 Expression.Call(
@@ -320,10 +266,7 @@ namespace Tests.Reaqtor.QueryEngine
         public static IReactiveQbservable<TSource> TakeUntil<TSource>(
             this IReactiveQbservable<TSource> source, DateTimeOffset endTime)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return source.Provider.CreateQbservable<TSource>(
                 Expression.Call(
@@ -338,15 +281,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/distinctuntilchanged")]
         public static IReactiveQbservable<T> DistinctUntilChanged<T, TKey>(this IReactiveQbservable<T> source, Expression<Func<T, TKey>> keySelector)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (keySelector == null)
-            {
-                throw new ArgumentNullException(nameof(keySelector));
-            }
+            ArgumentNullException.ThrowIfNull(keySelector);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -362,10 +299,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/firstasync")]
         public static IReactiveQbservable<T> FirstAsync<T>(this IReactiveQbservable<T> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -377,15 +311,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/firstasync/filter")]
         public static IReactiveQbservable<T> FirstAsync<T>(this IReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -398,10 +326,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/firstordefaultasync")]
         public static IReactiveQbservable<T> FirstOrDefaultAsync<T>(this IReactiveQbservable<T> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -413,15 +338,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/firstordefaultasync/filter")]
         public static IReactiveQbservable<T> FirstOrDefaultAsync<T>(this IReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -439,15 +358,9 @@ namespace Tests.Reaqtor.QueryEngine
             this IReactiveQbservable<TSource> source,
             Expression<Func<TSource, IReactiveQbservable<TThrottleResult>>> throttleSelector)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (throttleSelector == null)
-            {
-                throw new ArgumentNullException(nameof(throttleSelector));
-            }
+            ArgumentNullException.ThrowIfNull(throttleSelector);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -466,10 +379,7 @@ namespace Tests.Reaqtor.QueryEngine
         public static IReactiveQbservable<TSource> Retry<TSource>(
             this IReactiveQbservable<TSource> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -483,10 +393,7 @@ namespace Tests.Reaqtor.QueryEngine
             this IReactiveQbservable<TSource> source,
             int retryCount)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (retryCount < 0)
             {
@@ -506,15 +413,9 @@ namespace Tests.Reaqtor.QueryEngine
             this IReactiveQbservable<TSource> source,
             params TSource[] values)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (values == null)
-            {
-                throw new ArgumentNullException(nameof(values));
-            }
+            ArgumentNullException.ThrowIfNull(values);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -533,15 +434,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/do")]
         public static IReactiveQbservable<T> Do<T>(this IReactiveQbservable<T> source, IReactiveQbserver<T> observer)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (observer == null)
-            {
-                throw new ArgumentNullException(nameof(observer));
-            }
+            ArgumentNullException.ThrowIfNull(observer);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -557,15 +452,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/select")]
         public static IReactiveQbservable<R> Select<T, R>(this IReactiveQbservable<T> source, Expression<Func<T, R>> selector)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return
                 source.Provider.CreateQbservable<R>(
@@ -580,20 +469,11 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/selectmany")]
         public static IReactiveQbservable<R> SelectMany<T, C, R>(this IReactiveQbservable<T> source, Expression<Func<T, IReactiveObservable<C>>> collectionSelector, Expression<Func<T, C, R>> resultSelector)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (collectionSelector == null)
-            {
-                throw new ArgumentNullException(nameof(collectionSelector));
-            }
+            ArgumentNullException.ThrowIfNull(collectionSelector);
 
-            if (resultSelector == null)
-            {
-                throw new ArgumentNullException(nameof(resultSelector));
-            }
+            ArgumentNullException.ThrowIfNull(resultSelector);
 
             return
                 source.Provider.CreateQbservable<R>(
@@ -609,10 +489,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/switch")]
         public static IReactiveQbservable<TInputValue> Switch<TInputValue>(this IReactiveQbservable<IReactiveQbservable<TInputValue>> sources)
         {
-            if (sources == null)
-            {
-                throw new ArgumentNullException(nameof(sources));
-            }
+            ArgumentNullException.ThrowIfNull(sources);
 
             return
                 sources.Provider.CreateQbservable<TInputValue>(
@@ -626,20 +503,11 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/combineLatest")]
         public static IReactiveQbservable<R> CombineLatest<T1, T2, R>(this IReactiveQbservable<T1> left, IReactiveQbservable<T2> right, Expression<Func<T1, T2, R>> selector)
         {
-            if (left == null)
-            {
-                throw new ArgumentNullException(nameof(left));
-            }
+            ArgumentNullException.ThrowIfNull(left);
 
-            if (right == null)
-            {
-                throw new ArgumentNullException(nameof(right));
-            }
+            ArgumentNullException.ThrowIfNull(right);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return
                 left.Provider.CreateQbservable<R>(
@@ -658,10 +526,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/delaySubscription/absoluteTime")]
         public static IReactiveQbservable<TSource> DelaySubscription<TSource>(this IReactiveQbservable<TSource> source, DateTimeOffset dueTime)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -674,10 +539,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/delaySubscription/relativeTime")]
         public static IReactiveQbservable<TSource> DelaySubscription<TSource>(this IReactiveQbservable<TSource> source, TimeSpan dueTime)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (dueTime < TimeSpan.FromTicks(0))
             {
@@ -750,10 +612,7 @@ namespace Tests.Reaqtor.QueryEngine
         /// <returns>Observable timer.</returns>
         private static IReactiveQbservable<long> Timer_(IReactive service, TimeSpan dueTime)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             MethodInfo method = (MethodInfo)ReflectionHelpers.InfoOf(() => ClientDefinitions.TimerRelative(default));
             return service.Provider.CreateQbservable<long>(
@@ -771,10 +630,7 @@ namespace Tests.Reaqtor.QueryEngine
         /// <returns>Observable timer.</returns>
         private static IReactiveQbservable<long> Timer_(IReactive service, TimeSpan dueTime, TimeSpan period)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             if (period < TimeSpan.Zero)
             {
@@ -797,10 +653,7 @@ namespace Tests.Reaqtor.QueryEngine
         /// <returns>Observable timer.</returns>
         private static IReactiveQbservable<long> Timer_(IReactive service, DateTimeOffset dueTime)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             MethodInfo method = (MethodInfo)ReflectionHelpers.InfoOf(() => ClientDefinitions.TimerAbsolute(default));
             return service.Provider.CreateQbservable<long>(
@@ -818,10 +671,7 @@ namespace Tests.Reaqtor.QueryEngine
         /// <returns>Observable timer.</returns>
         private static IReactiveQbservable<long> Timer_(IReactive service, DateTimeOffset dueTime, TimeSpan period)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             if (period < TimeSpan.Zero)
             {
@@ -867,10 +717,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://operators/window/count")]
         public static IReactiveQbservable<IReactiveQbservable<T>> Window<T>(this IReactiveQbservable<T> source, int count)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<IReactiveQbservable<T>>(
@@ -887,10 +734,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://operators/sum")]
         public static IReactiveQbservable<int> Sum(this IReactiveQbservable<int> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<int>(
@@ -906,15 +750,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://await/subscribe")]
         public static IReactiveQbservable<TSource> AwaitSubscribe<TSource>(this IReactiveQbservable<TSource> source, string lockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (lockName == null)
-            {
-                throw new ArgumentNullException(nameof(lockName));
-            }
+            ArgumentNullException.ThrowIfNull(lockName);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -927,15 +765,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://block/subscribe")]
         public static IReactiveQbservable<TSource> BlockSubscribe<TSource>(this IReactiveQbservable<TSource> source, string lockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (lockName == null)
-            {
-                throw new ArgumentNullException(nameof(lockName));
-            }
+            ArgumentNullException.ThrowIfNull(lockName);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -958,10 +790,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://await/do")]
         public static IReactiveQbservable<TSource> AwaitDo<TSource>(this IReactiveQbservable<TSource> source, string onNextLockName, string onErrorLockName, string onCompletedLockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -986,10 +815,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://block/do")]
         public static IReactiveQbservable<TSource> BlockDo<TSource>(this IReactiveQbservable<TSource> source, string onNextLockName, string onErrorLockName, string onCompletedLockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1004,15 +830,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://await/dispose")]
         public static IReactiveQbservable<TSource> AwaitDispose<TSource>(this IReactiveQbservable<TSource> source, string lockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (lockName == null)
-            {
-                throw new ArgumentNullException(nameof(lockName));
-            }
+            ArgumentNullException.ThrowIfNull(lockName);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1065,10 +885,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/empty")]
         public static IAsyncReactiveQbservable<T> Empty<T>(this IReactiveProxy service)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             return service.GetObservable<T>(new Uri("rx://observable/empty"));
         }
@@ -1076,10 +893,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/never")]
         public static IAsyncReactiveQbservable<T> Never<T>(this IReactiveProxy service)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             return service.GetObservable<T>(new Uri("rx://observable/never"));
         }
@@ -1087,10 +901,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observers/nop")]
         public static IAsyncReactiveQbserver<T> Nop<T>(this IReactiveProxy service)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             Expression<Func<IAsyncReactiveQbserver<T>>> e = () => NopObserver<T>.Instance.AsQbserver().To<IReactiveQbserver<T>, IAsyncReactiveQbserver<T>>();
             return service.Provider.CreateQbserver<T>(e.Body);
@@ -1099,10 +910,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/return")]
         public static IAsyncReactiveQbservable<T> Return<T>(this IReactiveProxy service, T value)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             return service.GetObservable<T, T>(new Uri("rx://observable/return"))(value);
         }
@@ -1115,15 +923,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/filter")]
         public static IAsyncReactiveQbservable<T> Where<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -1137,15 +939,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/filter/index")]
         public static IAsyncReactiveQbservable<T> Where<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, int, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -1162,10 +958,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/take")]
         public static IAsyncReactiveQbservable<T> Take<T>(this IAsyncReactiveQbservable<T> source, int count)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (count < 0)
             {
@@ -1184,15 +977,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/take/while")]
         public static IAsyncReactiveQbservable<T> TakeWhile<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -1206,15 +993,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/take/while/index")]
         public static IAsyncReactiveQbservable<T> TakeWhile<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, int, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -1228,15 +1009,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/take/until")]
         public static IAsyncReactiveQbservable<TSource> TakeUntil<TSource, TOther>(this IAsyncReactiveQbservable<TSource> source, IAsyncReactiveQbservable<TOther> other)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (other == null)
-            {
-                throw new ArgumentNullException(nameof(other));
-            }
+            ArgumentNullException.ThrowIfNull(other);
 
             return source.Provider.CreateQbservable<TSource>(
                 Expression.Call(
@@ -1250,10 +1025,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/skip")]
         public static IAsyncReactiveQbservable<T> Skip<T>(this IAsyncReactiveQbservable<T> source, int count)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (count < 0)
             {
@@ -1272,15 +1044,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/skip/until")]
         public static IAsyncReactiveQbservable<TSource> SkipUntil<TSource, TOther>(this IAsyncReactiveQbservable<TSource> source, IAsyncReactiveQbservable<TOther> triggeringSource)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (triggeringSource == null)
-            {
-                throw new ArgumentNullException(nameof(triggeringSource));
-            }
+            ArgumentNullException.ThrowIfNull(triggeringSource);
 
             return source.Provider.CreateQbservable<TSource>(
                 Expression.Call(
@@ -1295,10 +1061,7 @@ namespace Tests.Reaqtor.QueryEngine
         public static IAsyncReactiveQbservable<TSource> TakeUntil<TSource>(
             this IAsyncReactiveQbservable<TSource> source, DateTimeOffset endTime)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return source.Provider.CreateQbservable<TSource>(
                 Expression.Call(
@@ -1313,15 +1076,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/distinctuntilchanged")]
         public static IAsyncReactiveQbservable<T> DistinctUntilChanged<T, TKey>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, TKey>> keySelector)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (keySelector == null)
-            {
-                throw new ArgumentNullException(nameof(keySelector));
-            }
+            ArgumentNullException.ThrowIfNull(keySelector);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -1337,10 +1094,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/firstasync")]
         public static IAsyncReactiveQbservable<T> FirstAsync<T>(this IAsyncReactiveQbservable<T> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -1352,15 +1106,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/firstasync/filter")]
         public static IAsyncReactiveQbservable<T> FirstAsync<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -1373,10 +1121,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/firstordefaultasync")]
         public static IAsyncReactiveQbservable<T> FirstOrDefaultAsync<T>(this IAsyncReactiveQbservable<T> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -1388,15 +1133,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/firstordefaultasync/filter")]
         public static IAsyncReactiveQbservable<T> FirstOrDefaultAsync<T>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (predicate == null)
-            {
-                throw new ArgumentNullException(nameof(predicate));
-            }
+            ArgumentNullException.ThrowIfNull(predicate);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -1414,15 +1153,9 @@ namespace Tests.Reaqtor.QueryEngine
             this IAsyncReactiveQbservable<TSource> source,
             Expression<Func<TSource, IAsyncReactiveQbservable<TThrottleResult>>> throttleSelector)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (throttleSelector == null)
-            {
-                throw new ArgumentNullException(nameof(throttleSelector));
-            }
+            ArgumentNullException.ThrowIfNull(throttleSelector);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1441,10 +1174,7 @@ namespace Tests.Reaqtor.QueryEngine
         public static IAsyncReactiveQbservable<TSource> Retry<TSource>(
             this IAsyncReactiveQbservable<TSource> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1458,10 +1188,7 @@ namespace Tests.Reaqtor.QueryEngine
             this IAsyncReactiveQbservable<TSource> source,
             int retryCount)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (retryCount < 0)
             {
@@ -1481,15 +1208,9 @@ namespace Tests.Reaqtor.QueryEngine
             this IAsyncReactiveQbservable<TSource> source,
             params TSource[] values)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (values == null)
-            {
-                throw new ArgumentNullException(nameof(values));
-            }
+            ArgumentNullException.ThrowIfNull(values);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1508,15 +1229,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/do")]
         public static IAsyncReactiveQbservable<T> Do<T>(this IAsyncReactiveQbservable<T> source, IAsyncReactiveQbserver<T> observer)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (observer == null)
-            {
-                throw new ArgumentNullException(nameof(observer));
-            }
+            ArgumentNullException.ThrowIfNull(observer);
 
             return
                 source.Provider.CreateQbservable<T>(
@@ -1532,15 +1247,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/select")]
         public static IAsyncReactiveQbservable<R> Select<T, R>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, R>> selector)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return
                 source.Provider.CreateQbservable<R>(
@@ -1555,20 +1264,11 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/selectmany")]
         public static IAsyncReactiveQbservable<R> SelectMany<T, C, R>(this IAsyncReactiveQbservable<T> source, Expression<Func<T, IAsyncReactiveObservable<C>>> collectionSelector, Expression<Func<T, C, R>> resultSelector)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (collectionSelector == null)
-            {
-                throw new ArgumentNullException(nameof(collectionSelector));
-            }
+            ArgumentNullException.ThrowIfNull(collectionSelector);
 
-            if (resultSelector == null)
-            {
-                throw new ArgumentNullException(nameof(resultSelector));
-            }
+            ArgumentNullException.ThrowIfNull(resultSelector);
 
             return
                 source.Provider.CreateQbservable<R>(
@@ -1584,10 +1284,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/switch")]
         public static IAsyncReactiveQbservable<TInputValue> Switch<TInputValue>(this IAsyncReactiveQbservable<IAsyncReactiveQbservable<TInputValue>> sources)
         {
-            if (sources == null)
-            {
-                throw new ArgumentNullException(nameof(sources));
-            }
+            ArgumentNullException.ThrowIfNull(sources);
 
             return
                 sources.Provider.CreateQbservable<TInputValue>(
@@ -1601,20 +1298,11 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/combineLatest")]
         public static IAsyncReactiveQbservable<R> CombineLatest<T1, T2, R>(this IAsyncReactiveQbservable<T1> left, IAsyncReactiveQbservable<T2> right, Expression<Func<T1, T2, R>> selector)
         {
-            if (left == null)
-            {
-                throw new ArgumentNullException(nameof(left));
-            }
+            ArgumentNullException.ThrowIfNull(left);
 
-            if (right == null)
-            {
-                throw new ArgumentNullException(nameof(right));
-            }
+            ArgumentNullException.ThrowIfNull(right);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return
                 left.Provider.CreateQbservable<R>(
@@ -1633,10 +1321,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/delaySubscription/absoluteTime")]
         public static IAsyncReactiveQbservable<TSource> DelaySubscription<TSource>(this IAsyncReactiveQbservable<TSource> source, DateTimeOffset dueTime)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1649,10 +1334,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/delaySubscription/relativeTime")]
         public static IAsyncReactiveQbservable<TSource> DelaySubscription<TSource>(this IAsyncReactiveQbservable<TSource> source, TimeSpan dueTime)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             if (dueTime < TimeSpan.FromTicks(0))
             {
@@ -1725,10 +1407,7 @@ namespace Tests.Reaqtor.QueryEngine
         /// <returns>Observable timer.</returns>
         private static IAsyncReactiveQbservable<long> Timer_(IReactiveProxy service, TimeSpan dueTime)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             MethodInfo method = (MethodInfo)ReflectionHelpers.InfoOf(() => AsyncClientDefinitions.TimerRelative(default));
             return service.Provider.CreateQbservable<long>(
@@ -1746,10 +1425,7 @@ namespace Tests.Reaqtor.QueryEngine
         /// <returns>Observable timer.</returns>
         private static IAsyncReactiveQbservable<long> Timer_(IReactiveProxy service, TimeSpan dueTime, TimeSpan period)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             if (period < TimeSpan.Zero)
             {
@@ -1772,10 +1448,7 @@ namespace Tests.Reaqtor.QueryEngine
         /// <returns>Observable timer.</returns>
         private static IAsyncReactiveQbservable<long> Timer_(IReactiveProxy service, DateTimeOffset dueTime)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             MethodInfo method = (MethodInfo)ReflectionHelpers.InfoOf(() => AsyncClientDefinitions.TimerAbsolute(default));
             return service.Provider.CreateQbservable<long>(
@@ -1793,10 +1466,7 @@ namespace Tests.Reaqtor.QueryEngine
         /// <returns>Observable timer.</returns>
         private static IAsyncReactiveQbservable<long> Timer_(IReactiveProxy service, DateTimeOffset dueTime, TimeSpan period)
         {
-            if (service == null)
-            {
-                throw new ArgumentNullException(nameof(service));
-            }
+            ArgumentNullException.ThrowIfNull(service);
 
             if (period < TimeSpan.Zero)
             {
@@ -1842,10 +1512,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://operators/window/count")]
         public static IAsyncReactiveQbservable<IAsyncReactiveQbservable<T>> Window<T>(this IAsyncReactiveQbservable<T> source, int count)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<IAsyncReactiveQbservable<T>>(
@@ -1862,10 +1529,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://operators/sum")]
         public static IAsyncReactiveQbservable<int> Sum(this IAsyncReactiveQbservable<int> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<int>(
@@ -1881,15 +1545,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://await/subscribe")]
         public static IAsyncReactiveQbservable<TSource> AwaitSubscribe<TSource>(this IAsyncReactiveQbservable<TSource> source, string lockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (lockName == null)
-            {
-                throw new ArgumentNullException(nameof(lockName));
-            }
+            ArgumentNullException.ThrowIfNull(lockName);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1902,15 +1560,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://block/subscribe")]
         public static IAsyncReactiveQbservable<TSource> BlockSubscribe<TSource>(this IAsyncReactiveQbservable<TSource> source, string lockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (lockName == null)
-            {
-                throw new ArgumentNullException(nameof(lockName));
-            }
+            ArgumentNullException.ThrowIfNull(lockName);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1933,10 +1585,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://await/do")]
         public static IAsyncReactiveQbservable<TSource> AwaitDo<TSource>(this IAsyncReactiveQbservable<TSource> source, string onNextLockName, string onErrorLockName, string onCompletedLockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1961,10 +1610,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://block/do")]
         public static IAsyncReactiveQbservable<TSource> BlockDo<TSource>(this IAsyncReactiveQbservable<TSource> source, string onNextLockName, string onErrorLockName, string onCompletedLockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return
                 source.Provider.CreateQbservable<TSource>(
@@ -1979,15 +1625,9 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("test://await/dispose")]
         public static IAsyncReactiveQbservable<TSource> AwaitDispose<TSource>(this IAsyncReactiveQbservable<TSource> source, string lockName)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
-            if (lockName == null)
-            {
-                throw new ArgumentNullException(nameof(lockName));
-            }
+            ArgumentNullException.ThrowIfNull(lockName);
 
             return
                 source.Provider.CreateQbservable<TSource>(

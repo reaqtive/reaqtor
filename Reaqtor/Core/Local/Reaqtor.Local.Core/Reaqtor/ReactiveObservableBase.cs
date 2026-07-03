@@ -29,10 +29,8 @@ namespace Reaqtor
         /// <returns>Subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
         public IReactiveSubscription Subscribe(IReactiveObserver<T> observer, Uri subscriptionUri, object state = null)
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(observer);
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return SubscribeCore(observer, subscriptionUri, state);
         }

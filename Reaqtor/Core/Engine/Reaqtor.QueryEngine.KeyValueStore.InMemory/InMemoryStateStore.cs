@@ -39,8 +39,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <returns>Store instance loaded from the stream.</returns>
         public static InMemoryStateStore Load(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             var doc = XDocument.Load(stream);
             return Load(doc);
@@ -53,8 +52,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <returns>Store instance loaded from the file.</returns>
         public static InMemoryStateStore Load(string file)
         {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
+            ArgumentNullException.ThrowIfNull(file);
 
             var doc = XDocument.Load(file);
             return Load(doc);
@@ -93,8 +91,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <param name="file">File to save the store to.</param>
         public void Save(string file)
         {
-            if (file == null)
-                throw new ArgumentNullException(nameof(file));
+            ArgumentNullException.ThrowIfNull(file);
 
             var doc = Save();
             doc.Save(file);
@@ -106,8 +103,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <param name="file">Stream to save the store to.</param>
         public void Save(Stream stream)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             var doc = Save();
             doc.Save(stream);
@@ -266,8 +262,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
         /// <param name="update">The store containing the updated values</param>
         public void Update(InMemoryStateStore update)
         {
-            if (update == null)
-                throw new ArgumentNullException(nameof(update));
+            ArgumentNullException.ThrowIfNull(update);
 
             foreach (var category in update._removedItems.Keys)
             {

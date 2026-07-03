@@ -110,10 +110,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<TDelegate> Memoize<TDelegate>(this IMemoizer memoizer, TDelegate function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             //
             // NB: In principle, memoizing a constant could return the original object.
@@ -247,10 +245,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<TDelegate> MemoizeWeak<TDelegate>(this IWeakMemoizer weakMemoizer, TDelegate function, MemoizationOptions options = MemoizationOptions.None, IMemoizer memoizer = null)
         {
-            if (weakMemoizer == null)
-                throw new ArgumentNullException(nameof(weakMemoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(weakMemoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             //
             // NB: In principle, memoizing a constant could return the original object.
@@ -607,8 +603,7 @@ namespace System.Memory
 
             if (memoizer == null)
                 throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(function);
 
             return memoizer.MemoizeWeak<T, TResult>(function, options);
         }

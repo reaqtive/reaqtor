@@ -18,8 +18,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Double> Average(this ISubscribable<Int32> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageInt32(source);
         }
@@ -152,8 +151,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Double> Average(this ISubscribable<Int64> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageInt64(source);
         }
@@ -286,8 +284,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Single> Average(this ISubscribable<Single> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageSingle(source);
         }
@@ -420,8 +417,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Double> Average(this ISubscribable<Double> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageDouble(source);
         }
@@ -554,8 +550,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Decimal> Average(this ISubscribable<Decimal> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageDecimal(source);
         }
@@ -688,8 +683,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Double?> Average(this ISubscribable<Int32?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableInt32(source);
         }
@@ -826,8 +820,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Double?> Average(this ISubscribable<Int64?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableInt64(source);
         }
@@ -964,8 +957,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Single?> Average(this ISubscribable<Single?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableSingle(source);
         }
@@ -1102,8 +1094,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Double?> Average(this ISubscribable<Double?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableDouble(source);
         }
@@ -1240,8 +1231,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Decimal?> Average(this ISubscribable<Decimal?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new AverageNullableDecimal(source);
         }

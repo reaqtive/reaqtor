@@ -91,10 +91,7 @@ namespace System.Reflection
         /// <returns>The slim representation of the member.</returns>
         public MemberInfoSlim GetMember(MemberInfo member)
         {
-            if (member == null)
-            {
-                throw new ArgumentNullException(nameof(member));
-            }
+            ArgumentNullException.ThrowIfNull(member);
 
             var memberType = member.GetMemberType();
 
@@ -116,10 +113,7 @@ namespace System.Reflection
         /// <returns>The slim representation of the constructor.</returns>
         public ConstructorInfoSlim GetConstructor(ConstructorInfo constructor)
         {
-            if (constructor == null)
-            {
-                throw new ArgumentNullException(nameof(constructor));
-            }
+            ArgumentNullException.ThrowIfNull(constructor);
 
             if (_constructors.TryGetValue(constructor, out ConstructorInfoSlim res))
             {
@@ -155,10 +149,7 @@ namespace System.Reflection
         /// <returns>The slim representation of the method.</returns>
         public MethodInfoSlim GetMethod(MethodInfo method)
         {
-            if (method == null)
-            {
-                throw new ArgumentNullException(nameof(method));
-            }
+            ArgumentNullException.ThrowIfNull(method);
 
             if (_methods.TryGetValue(method, out MethodInfoSlim res))
             {
@@ -277,10 +268,7 @@ namespace System.Reflection
         /// <returns>The slim representation of the method.</returns>
         protected virtual MethodInfoSlim GetGenericMethodCore(MethodInfo originalMethod, GenericDefinitionMethodInfoSlim methodDefinitionSlim, ReadOnlyCollection<TypeSlim> genericParameterTypeSlims)
         {
-            if (methodDefinitionSlim == null)
-            {
-                throw new ArgumentNullException(nameof(methodDefinitionSlim));
-            }
+            ArgumentNullException.ThrowIfNull(methodDefinitionSlim);
 
             return methodDefinitionSlim.DeclaringType.GetGenericMethod(methodDefinitionSlim, genericParameterTypeSlims);
         }
@@ -292,10 +280,7 @@ namespace System.Reflection
         /// <returns>The slim representation of the property.</returns>
         public PropertyInfoSlim GetProperty(PropertyInfo property)
         {
-            if (property == null)
-            {
-                throw new ArgumentNullException(nameof(property));
-            }
+            ArgumentNullException.ThrowIfNull(property);
 
             if (_properties.TryGetValue(property, out PropertyInfoSlim res))
             {
@@ -332,10 +317,7 @@ namespace System.Reflection
         /// <returns>The slim representation of the field.</returns>
         public FieldInfoSlim GetField(FieldInfo field)
         {
-            if (field == null)
-            {
-                throw new ArgumentNullException(nameof(field));
-            }
+            ArgumentNullException.ThrowIfNull(field);
 
             if (_fields.TryGetValue(field, out FieldInfoSlim res))
             {

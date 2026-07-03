@@ -25,8 +25,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result after the visit.</returns>
         public virtual TResult Visit(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (type.IsArray)
             {
@@ -63,8 +62,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Sequence consisting of the result of visiting each type in the original sequence.</returns>
         protected virtual IEnumerable<TResult> Visit(IEnumerable<Type> types)
         {
-            if (types == null)
-                throw new ArgumentNullException(nameof(types));
+            ArgumentNullException.ThrowIfNull(types);
 
             return [.. types.Select(Visit)];
         }
@@ -76,8 +74,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Array consisting of the result of visiting each type in the original sequence.</returns>
         protected virtual TResult[] Visit(Type[] types)
         {
-            if (types == null)
-                throw new ArgumentNullException(nameof(types));
+            ArgumentNullException.ThrowIfNull(types);
 
             var n = types.Length;
 
@@ -103,8 +100,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result after the visit.</returns>
         protected virtual TResult VisitArray(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (type.IsSZArray())
             {
@@ -123,8 +119,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result after the visit.</returns>
         protected virtual TResult VisitArrayVector(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             var elemOld = type.GetElementType();
             var elemNew = Visit(elemOld);
@@ -147,8 +142,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result after the visit.</returns>
         protected virtual TResult VisitArrayMultidimensional(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             var rank = type.GetArrayRank();
 
@@ -175,8 +169,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result after the visit.</returns>
         protected virtual TResult VisitGeneric(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (type.IsGenericTypeDefinition)
             {
@@ -202,8 +195,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result after the visit.</returns>
         protected virtual TResult VisitGenericClosed(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             var oldGenDef = type.GetGenericTypeDefinition();
             var newGenDef = Visit(oldGenDef);
@@ -237,8 +229,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result after the visit.</returns>
         protected virtual TResult VisitByRef(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             var elemOld = type.GetElementType();
             var elemNew = Visit(elemOld);
@@ -261,8 +252,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result after the visit.</returns>
         protected virtual TResult VisitPointer(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             var elemOld = type.GetElementType();
             var elemNew = Visit(elemOld);

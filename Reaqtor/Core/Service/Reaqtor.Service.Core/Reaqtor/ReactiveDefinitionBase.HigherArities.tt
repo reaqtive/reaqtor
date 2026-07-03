@@ -41,10 +41,8 @@ generating the code for:
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -90,10 +88,8 @@ for (int j = 1; j <= i; j++)
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<<#=typeArgs#>, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<<#=typeArgs#>, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -133,10 +129,8 @@ generating the code for:
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TResult>(uri, observable, state);
         }
@@ -180,10 +174,8 @@ for (int j = 1; j <= i; j++)
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<<#=typeArgs#>, TResult>(uri, observable, state);
         }
@@ -222,10 +214,8 @@ generating the code for:
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TResult>(uri, observer, state);
         }
@@ -269,10 +259,8 @@ for (int j = 1; j <= i; j++)
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<<#=typeArgs#>, TResult>(uri, observer, state);
         }
@@ -310,10 +298,8 @@ generating the code for:
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2>(uri, subscriptionFactory, state);
         }
@@ -355,10 +341,8 @@ for (int j = 1; j <= i; j++)
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<<#=typeArgs#>>(Uri uri, IReactiveQubscriptionFactory<<#=typeArgs#>> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<<#=typeArgs#>>(uri, subscriptionFactory, state);
         }

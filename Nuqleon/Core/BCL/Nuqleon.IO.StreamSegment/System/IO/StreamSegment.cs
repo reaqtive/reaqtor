@@ -33,8 +33,7 @@ namespace System.IO
         /// <param name="count">Number of bytes in the segment, starting from the specified offset.</param>
         public StreamSegment(Stream stream, long offset, long count)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
             if (offset < 0L)
                 throw new ArgumentOutOfRangeException(nameof(offset));
             if (count < 0L)
@@ -104,8 +103,7 @@ namespace System.IO
         /// <returns>The total number of bytes read into the buffer. This can be less than the number of bytes requested if that many bytes are not currently available, or zero (0) if the end of the stream has been reached.</returns>
         public override int Read(byte[] buffer, int offset, int count)
         {
-            if (buffer == null)
-                throw new ArgumentNullException(nameof(buffer));
+            ArgumentNullException.ThrowIfNull(buffer);
             if (offset < 0)
                 throw new ArgumentOutOfRangeException(nameof(offset));
             if (count < 0)
@@ -190,8 +188,7 @@ namespace System.IO
         /// <param name="count">The number of bytes to be written to the current stream.</param>
         public override void Write(byte[] buffer, int offset, int count)
         {
-            if (buffer == null)
-                throw new ArgumentNullException(nameof(buffer));
+            ArgumentNullException.ThrowIfNull(buffer);
             if (offset < 0)
                 throw new ArgumentOutOfRangeException(nameof(offset));
             if (count < 0)

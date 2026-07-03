@@ -32,10 +32,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <param name="metric">The metric.</param>
         internal static void BeginMetric(this IReactiveResource entity, EntityMetric metric)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (ShouldTrack)
             {
@@ -50,10 +47,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <param name="metric">The metric.</param>
         internal static void EndMetric(this IReactiveResource entity, EntityMetric metric)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             if (ShouldTrack)
             {
@@ -69,10 +63,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <returns>A measurement object that should be disposed to end the measurement.</returns>
         internal static MetricMeasurement Measure(this IReactiveResource entity, EntityMetric metric)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             return new MetricMeasurement(entity, metric);
         }
@@ -85,10 +76,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <param name="elapsed">The time span.</param>
         internal static void SetMetric(this IReactiveResource entity, EntityMetric metric, TimeSpan elapsed)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
             if (elapsed < TimeSpan.Zero)
             {
                 throw new ArgumentOutOfRangeException(nameof(elapsed));
@@ -107,10 +95,7 @@ namespace Reaqtor.QueryEngine.Metrics
         /// <returns>The set of metrics that have been collected for that entity.</returns>
         public static IReadOnlyDictionary<EntityMetric, TimeSpan> GetMetrics(this IReactiveResource entity)
         {
-            if (entity == null)
-            {
-                throw new ArgumentNullException(nameof(entity));
-            }
+            ArgumentNullException.ThrowIfNull(entity);
 
             return Impl.Instance.GetMetrics(entity);
         }

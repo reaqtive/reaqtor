@@ -27,10 +27,8 @@ namespace Reaqtor.Reliable.Expressions
 
         public IReliableQubscription Subscribe(IReliableQbserver<TOutput> observer, Uri subscriptionUri, object state = null)
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(observer);
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return SubscribeCore(observer, subscriptionUri, state);
         }

@@ -53,8 +53,7 @@ namespace System.Linq.CompilerServices
         /// <param name="arguments">The constructor arguments for the custom attribute type.</param>
         public CustomAttributeDeclaration(Type type, ReadOnlyCollection<object> arguments)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
             if (!typeof(Attribute).IsAssignableFrom(type))
                 throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Provided type must derive from '{0}'. Provided type '{1}' does not.", typeof(Attribute).FullName, type.FullName));
 

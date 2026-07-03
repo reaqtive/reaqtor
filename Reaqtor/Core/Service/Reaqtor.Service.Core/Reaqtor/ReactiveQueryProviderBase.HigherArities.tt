@@ -40,8 +40,7 @@ generating the code for:
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, IReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TResult>(Expression<Func<TArg1, TArg2, IReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, IReactiveQbservable<TResult>>((arg1, arg2) =>
             {
@@ -85,8 +84,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<<#=typeArgs#>, IReactiveQbservable<TResult>> CreateQbservable<<#=typeArgs#>, TResult>(Expression<Func<<#=typeArgs#>, IReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<<#=typeArgs#>, IReactiveQbservable<TResult>>((<#=inputs#>) =>
             {
@@ -119,8 +117,7 @@ generating the code for:
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, IReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TResult>(Expression<Func<TArg1, TArg2, IReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, IReactiveQbserver<TResult>>((arg1, arg2) =>
             {
@@ -164,8 +161,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<<#=typeArgs#>, IReactiveQbserver<TResult>> CreateQbserver<<#=typeArgs#>, TResult>(Expression<Func<<#=typeArgs#>, IReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = (Func<<#=typeArgs#>, IReactiveQbserver<TResult>>)((<#=inputs#>) =>
             {
@@ -199,8 +195,7 @@ generating the code for:
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> CreateQubjectFactory<TArg1, TArg2, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -243,8 +238,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> CreateQubjectFactory<<#=typeArgs#>, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -274,8 +268,7 @@ generating the code for:
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IReactiveQubscriptionFactory<TArg1, TArg2> CreateQubscriptionFactory<TArg1, TArg2>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -316,8 +309,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IReactiveQubscriptionFactory<<#=typeArgs#>> CreateQubscriptionFactory<<#=typeArgs#>>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -340,7 +332,7 @@ generating the code for:
 
         internal IReactiveQubject<TInput, TOutput> CreateStream<TArg1, TArg2, TInput, TOutput>(IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> factory, TArg1 arg1, TArg2 arg2, Uri streamUri, object state)
         {
-            return CreateStream<TInput, TOutput>(factory, new Expression[] { Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2)) }, streamUri, state);
+            return CreateStream<TInput, TOutput>(factory, [Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2))], streamUri, state);
         }
 
 */#>
@@ -363,7 +355,7 @@ for (int i = 2; i <= highestSupportedArity; i++) {
 #>
         internal IReactiveQubject<TInput, TOutput> CreateStream<<#=typeArgs#>, TInput, TOutput>(IReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> factory, <#=parameters#>, Uri streamUri, object state)
         {
-            return CreateStream<TInput, TOutput>(factory, new Expression[] { <#=constants#> }, streamUri, state);
+            return CreateStream<TInput, TOutput>(factory, [<#=constants#>], streamUri, state);
         }
 
 <#}#>
@@ -377,7 +369,7 @@ generating the code for:
 
         internal IReactiveQubscription CreateSubscription<TArg1, TArg2>(IReactiveQubscriptionFactory<TArg1, TArg2> factory, TArg1 arg1, TArg2 arg2, Uri subscriptionUri, object state)
         {
-            return CreateSubscription(factory, new Expression[] { Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2)) }, subscriptionUri, state);
+            return CreateSubscription(factory, [Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2))], subscriptionUri, state);
         }
 
 */#>
@@ -400,7 +392,7 @@ for (int i = 2; i <= highestSupportedArity; i++) {
 #>
         internal IReactiveQubscription CreateSubscription<<#=typeArgs#>>(IReactiveQubscriptionFactory<<#=typeArgs#>> factory, <#=parameters#>, Uri subscriptionUri, object state)
         {
-            return CreateSubscription(factory, new Expression[] { <#=constants#> }, subscriptionUri, state);
+            return CreateSubscription(factory, [<#=constants#>], subscriptionUri, state);
         }
 
 <#}#>

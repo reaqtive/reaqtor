@@ -89,8 +89,7 @@ namespace System.Reflection
         /// <returns>The member represented by the slim member.</returns>
         public MemberInfo GetMember(MemberInfoSlim memberSlim)
         {
-            if (memberSlim == null)
-                throw new ArgumentNullException(nameof(memberSlim));
+            ArgumentNullException.ThrowIfNull(memberSlim);
 
             return memberSlim.MemberType switch
             {
@@ -109,8 +108,7 @@ namespace System.Reflection
         /// <returns>The constructor represented by the slim constructor.</returns>
         public ConstructorInfo GetConstructor(ConstructorInfoSlim constructorSlim)
         {
-            if (constructorSlim == null)
-                throw new ArgumentNullException(nameof(constructorSlim));
+            ArgumentNullException.ThrowIfNull(constructorSlim);
 
             if (_constructors.TryGetValue(constructorSlim, out ConstructorInfo res))
             {
@@ -149,8 +147,7 @@ namespace System.Reflection
         /// <returns>The method represented by the slim method.</returns>
         public MethodInfo GetMethod(MethodInfoSlim methodSlim)
         {
-            if (methodSlim == null)
-                throw new ArgumentNullException(nameof(methodSlim));
+            ArgumentNullException.ThrowIfNull(methodSlim);
 
             if (_methods.TryGetValue(methodSlim, out MethodInfo res))
             {
@@ -449,8 +446,7 @@ namespace System.Reflection
         /// <returns>The property represented by the slim property.</returns>
         public PropertyInfo GetProperty(PropertyInfoSlim propertySlim)
         {
-            if (propertySlim == null)
-                throw new ArgumentNullException(nameof(propertySlim));
+            ArgumentNullException.ThrowIfNull(propertySlim);
 
             if (_properties.TryGetValue(propertySlim, out PropertyInfo res))
             {
@@ -559,8 +555,7 @@ namespace System.Reflection
         /// <returns>The field represented by the slim field.</returns>
         public FieldInfo GetField(FieldInfoSlim fieldSlim)
         {
-            if (fieldSlim == null)
-                throw new ArgumentNullException(nameof(fieldSlim));
+            ArgumentNullException.ThrowIfNull(fieldSlim);
 
             if (_fields.TryGetValue(fieldSlim, out FieldInfo res))
             {

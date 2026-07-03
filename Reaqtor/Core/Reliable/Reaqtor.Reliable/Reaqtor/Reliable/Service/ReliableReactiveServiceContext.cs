@@ -25,8 +25,7 @@ namespace Reaqtor.Reliable.Service
 
         protected ReliableReactiveServiceContext(IReactiveExpressionServices expressionServices, ReliableReactiveClient client)
         {
-            if (expressionServices == null)
-                throw new ArgumentNullException(nameof(expressionServices));
+            ArgumentNullException.ThrowIfNull(expressionServices);
 
             Client = client ?? throw new ArgumentNullException(nameof(client));
 

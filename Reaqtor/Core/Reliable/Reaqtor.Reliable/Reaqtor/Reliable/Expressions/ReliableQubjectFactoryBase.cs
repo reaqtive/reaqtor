@@ -15,16 +15,14 @@ namespace Reaqtor.Reliable.Expressions
 
         public IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, object state = null)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, state);
         }
 
         IReliableReactiveMultiSubject<TInput, TOutput> IReliableReactiveSubjectFactory<TInput, TOutput>.Create(Uri streamUri, object state)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, state);
         }
@@ -42,16 +40,14 @@ namespace Reaqtor.Reliable.Expressions
 
         public IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, TArg argument, object state = null)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, argument, state);
         }
 
         IReliableReactiveMultiSubject<TInput, TOutput> IReliableReactiveSubjectFactory<TInput, TOutput, TArg>.Create(Uri streamUri, TArg argument, object state)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, argument, state);
         }

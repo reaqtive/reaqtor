@@ -91,10 +91,7 @@ namespace Reaqtor.QueryEngine
 
         public void ClearRemovedKeys(IEnumerable<TKey> keys)
         {
-            if (keys == null)
-            {
-                throw new ArgumentNullException(nameof(keys));
-            }
+            ArgumentNullException.ThrowIfNull(keys);
 
             // Lock technically required, however, the lock is only for issues
             // arising from concurrency between cloning and removal. Generally,

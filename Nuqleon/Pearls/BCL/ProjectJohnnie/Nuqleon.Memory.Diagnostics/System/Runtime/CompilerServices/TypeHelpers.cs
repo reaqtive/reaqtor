@@ -51,8 +51,7 @@ namespace System.Runtime.CompilerServices
         /// </remarks>
         public static int SizeOf(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (type.IsValueType)
             {

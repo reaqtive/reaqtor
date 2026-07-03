@@ -232,8 +232,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
         public Json.Expression AddMember(MemberInfoSlim member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             if (!_members.TryGetValue(member, out int index))
             {
@@ -471,8 +470,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
         public TypeSlim GetType(Json.Expression expression, params TypeSlim[] genericArguments)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression.NodeType != Json.ExpressionType.Number)
                 throw new BonsaiParseException("Expected a JSON number for the type table index of the type to look up.", expression);
@@ -490,8 +488,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
         public MemberInfoSlim GetMember(Json.Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression.NodeType != Json.ExpressionType.Number)
                 throw new BonsaiParseException("Expected a JSON number for the member table index of the member to look up.", expression);
@@ -509,8 +506,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
         public TypeDef GetType(TypeRef typeRef)
         {
-            if (typeRef == null)
-                throw new ArgumentNullException(nameof(typeRef));
+            ArgumentNullException.ThrowIfNull(typeRef);
 
             if (typeRef.Index < 0)
             {

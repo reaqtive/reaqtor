@@ -32,8 +32,7 @@ namespace System.Linq.CompilerServices
         /// <param name="cost">Cost to apply the rule.</param>
         public void Add(Expression<Func<Expression, TTarget>> convert, int cost)
         {
-            if (convert == null)
-                throw new ArgumentNullException(nameof(convert));
+            ArgumentNullException.ThrowIfNull(convert);
             if (cost < 0)
                 throw new ArgumentOutOfRangeException(nameof(cost));
 
@@ -48,10 +47,8 @@ namespace System.Linq.CompilerServices
         /// <param name="cost">Cost to apply the rule.</param>
         public void Add(Expression<Func<Expression, TTarget>> convert, Expression<Func<Expression, bool>> predicate, int cost)
         {
-            if (convert == null)
-                throw new ArgumentNullException(nameof(convert));
-            if (predicate == null)
-                throw new ArgumentNullException(nameof(predicate));
+            ArgumentNullException.ThrowIfNull(convert);
+            ArgumentNullException.ThrowIfNull(predicate);
             if (cost < 0)
                 throw new ArgumentOutOfRangeException(nameof(cost));
 

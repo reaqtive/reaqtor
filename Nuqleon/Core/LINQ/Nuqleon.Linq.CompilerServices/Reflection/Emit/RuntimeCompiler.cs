@@ -99,8 +99,7 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Type CreateAnonymousType(IEnumerable<KeyValuePair<string, Type>> properties)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -138,8 +137,7 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Type CreateAnonymousType(IEnumerable<StructuralFieldDeclaration> properties)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -178,8 +176,7 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Type CreateAnonymousType(IEnumerable<KeyValuePair<string, Type>> properties, params string[] keys)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -218,8 +215,7 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Type CreateAnonymousType(IEnumerable<StructuralFieldDeclaration> properties, params string[] keys)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -237,8 +233,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Closure type with the specified public assignable fields.</returns>
         public static Type CreateClosureType(IEnumerable<KeyValuePair<string, Type>> fields)
         {
-            if (fields == null)
-                throw new ArgumentNullException(nameof(fields));
+            ArgumentNullException.ThrowIfNull(fields);
 
             var flds = fields.AsArray();
             CheckAccess(flds);
@@ -257,8 +252,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Record type with the specified public assignable properties.</returns>
         public static Type CreateRecordType(IEnumerable<KeyValuePair<string, Type>> properties, bool valueEquality)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -277,8 +271,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Record type with the specified public assignable properties.</returns>
         public static Type CreateRecordType(IEnumerable<StructuralFieldDeclaration> properties, bool valueEquality)
         {
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -341,10 +334,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public void DefineAnonymousType(TypeBuilder anonymousTypeBuilder, IEnumerable<KeyValuePair<string, Type>> properties)
         {
-            if (anonymousTypeBuilder == null)
-                throw new ArgumentNullException(nameof(anonymousTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(anonymousTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -387,10 +378,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public void DefineAnonymousType(TypeBuilder anonymousTypeBuilder, IEnumerable<StructuralFieldDeclaration> properties)
         {
-            if (anonymousTypeBuilder == null)
-                throw new ArgumentNullException(nameof(anonymousTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(anonymousTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -432,10 +421,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public void DefineAnonymousType(TypeBuilder anonymousTypeBuilder, IEnumerable<KeyValuePair<string, Type>> properties, params string[] keys)
         {
-            if (anonymousTypeBuilder == null)
-                throw new ArgumentNullException(nameof(anonymousTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(anonymousTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -479,10 +466,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public void DefineAnonymousType(TypeBuilder anonymousTypeBuilder, IEnumerable<StructuralFieldDeclaration> properties, params string[] keys)
         {
-            if (anonymousTypeBuilder == null)
-                throw new ArgumentNullException(nameof(anonymousTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(anonymousTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -537,10 +522,8 @@ namespace System.Linq.CompilerServices
         /// <remarks>A call to CreateType on the TypeBuilder is required by the caller to perform the final construction step of the type. This manual step allows the TypeBuilder to be used for further customization or to declare recursive types.</remarks>
         public void DefineClosureType(TypeBuilder closureTypeBuilder, IEnumerable<KeyValuePair<string, Type>> fields)
         {
-            if (closureTypeBuilder == null)
-                throw new ArgumentNullException(nameof(closureTypeBuilder));
-            if (fields == null)
-                throw new ArgumentNullException(nameof(fields));
+            ArgumentNullException.ThrowIfNull(closureTypeBuilder);
+            ArgumentNullException.ThrowIfNull(fields);
 
             var flds = fields.AsArray();
             CheckAccess(flds);
@@ -571,10 +554,8 @@ namespace System.Linq.CompilerServices
         /// <remarks>A call to CreateType on the TypeBuilder is required by the caller to perform the final construction step of the type. This manual step allows the TypeBuilder to be used for further customization or to declare recursive types.</remarks>
         public void DefineRecordType(TypeBuilder recordTypeBuilder, IEnumerable<KeyValuePair<string, Type>> properties, bool valueEquality)
         {
-            if (recordTypeBuilder == null)
-                throw new ArgumentNullException(nameof(recordTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(recordTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);
@@ -592,10 +573,8 @@ namespace System.Linq.CompilerServices
         /// <remarks>A call to CreateType on the TypeBuilder is required by the caller to perform the final construction step of the type. This manual step allows the TypeBuilder to be used for further customization or to declare recursive types.</remarks>
         public void DefineRecordType(TypeBuilder recordTypeBuilder, IEnumerable<StructuralFieldDeclaration> properties, bool valueEquality)
         {
-            if (recordTypeBuilder == null)
-                throw new ArgumentNullException(nameof(recordTypeBuilder));
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(recordTypeBuilder);
+            ArgumentNullException.ThrowIfNull(properties);
 
             var props = properties.AsArray();
             CheckAccess(props);

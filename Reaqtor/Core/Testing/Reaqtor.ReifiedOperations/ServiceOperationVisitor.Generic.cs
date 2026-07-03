@@ -19,10 +19,7 @@ namespace Reaqtor.TestingFramework
 
         public virtual TResult Visit(ServiceOperation operation)
         {
-            if (operation == null)
-            {
-                throw new ArgumentNullException(nameof(operation));
-            }
+            ArgumentNullException.ThrowIfNull(operation);
 
             return operation.Kind switch
             {

@@ -38,8 +38,7 @@ namespace System.Linq.CompilerServices
         /// <returns>true if the type is supported; otherwise, false.</returns>
         protected override bool Check(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (_entries.Contains(type))
             {

@@ -25,8 +25,7 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<TResult>> Memoize<TResult>(this Func<TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(function);
 
             if ((options & MemoizationOptions.CacheException) > MemoizationOptions.None)
             {
@@ -48,10 +47,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<TResult>> Memoize<TResult>(this IMemoizer memoizer, Func<TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var res = memoizer.Memoize<object, TResult>(_ => function(), options, comparer: null);
             var del = res.Delegate;
@@ -68,10 +65,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<TResult>> MemoizeWeak<TResult>(this IWeakMemoizer memoizer, Func<TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var res = memoizer.MemoizeWeak<object, TResult>(_ => function(), options);
             var del = res.Delegate;
@@ -89,10 +84,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T, TResult>> Memoize<T, TResult>(this IMemoizer memoizer, Func<T, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             return memoizer.Memoize<T, TResult>(function, options, comparer: null);
         }

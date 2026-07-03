@@ -50,8 +50,7 @@ for (var j = 1; j <= i; j++)
 for (var j = 1; j <= i; j++)
 {
 #>
-            if (element<#=j#> == null)
-                throw new ArgumentNullException(nameof(element<#=j#>));
+            ArgumentNullException.ThrowIfNull(element<#=j#>);
 <#
 }
 #>

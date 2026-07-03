@@ -42,8 +42,7 @@ generating the code for:
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TResult>(Expression<Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>>((arg1, arg2) =>
             {
@@ -87,8 +86,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<<#=typeArgs#>, IAsyncReactiveQbservable<TResult>> CreateQbservable<<#=typeArgs#>, TResult>(Expression<Func<<#=typeArgs#>, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<<#=typeArgs#>, IAsyncReactiveQbservable<TResult>>((<#=inputs#>) =>
             {
@@ -121,8 +119,7 @@ generating the code for:
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TResult>(Expression<Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>>((arg1, arg2) =>
             {
@@ -166,8 +163,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<<#=typeArgs#>, IAsyncReactiveQbserver<TResult>> CreateQbserver<<#=typeArgs#>, TResult>(Expression<Func<<#=typeArgs#>, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<<#=typeArgs#>, IAsyncReactiveQbserver<TResult>>((<#=inputs#>) =>
             {
@@ -201,8 +197,7 @@ generating the code for:
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> CreateQubjectFactory<TArg1, TArg2, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -245,8 +240,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> CreateQubjectFactory<<#=typeArgs#>, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -276,8 +270,7 @@ generating the code for:
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2> CreateQubscriptionFactory<TArg1, TArg2>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -318,8 +311,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<<#=typeArgs#>> CreateQubscriptionFactory<<#=typeArgs#>>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -342,7 +334,7 @@ generating the code for:
 
         internal Task<IAsyncReactiveQubject<TInput, TOutput>> CreateStreamAsync<TArg1, TArg2, TInput, TOutput>(IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> factory, TArg1 arg1, TArg2 arg2, Uri streamUri, object state, CancellationToken token)
         {
-            return CreateStreamAsync<TInput, TOutput>(factory, new Expression[] { Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2)) }, streamUri, state, token);
+            return CreateStreamAsync<TInput, TOutput>(factory, [Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2))], streamUri, state, token);
         }
 
 */#>
@@ -365,7 +357,7 @@ for (int i = 2; i <= highestSupportedArity; i++) {
 #>
         internal Task<IAsyncReactiveQubject<TInput, TOutput>> CreateStreamAsync<<#=typeArgs#>, TInput, TOutput>(IAsyncReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> factory, <#=parameters#>, Uri streamUri, object state, CancellationToken token)
         {
-            return CreateStreamAsync<TInput, TOutput>(factory, new Expression[] { <#=constants#> }, streamUri, state, token);
+            return CreateStreamAsync<TInput, TOutput>(factory, [<#=constants#>], streamUri, state, token);
         }
 
 <#}#>
@@ -379,7 +371,7 @@ generating the code for:
 
         internal Task<IAsyncReactiveQubscription> CreateSubscriptionAsync<TArg1, TArg2>(IAsyncReactiveQubscriptionFactory<TArg1, TArg2> factory, TArg1 arg1, TArg2 arg2, Uri subscriptionUri, object state, CancellationToken token)
         {
-            return CreateSubscriptionAsync(factory, new Expression[] { Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2)) }, subscriptionUri, state, token);
+            return CreateSubscriptionAsync(factory, [Expression.Constant(arg1, typeof(TArg1)), Expression.Constant(arg2, typeof(TArg2))], subscriptionUri, state, token);
         }
 
 */#>
@@ -402,7 +394,7 @@ for (int i = 2; i <= highestSupportedArity; i++) {
 #>
         internal Task<IAsyncReactiveQubscription> CreateSubscriptionAsync<<#=typeArgs#>>(IAsyncReactiveQubscriptionFactory<<#=typeArgs#>> factory, <#=parameters#>, Uri subscriptionUri, object state, CancellationToken token)
         {
-            return CreateSubscriptionAsync(factory, new Expression[] { <#=constants#> }, subscriptionUri, state, token);
+            return CreateSubscriptionAsync(factory, [<#=constants#>], subscriptionUri, state, token);
         }
 
 <#}#>

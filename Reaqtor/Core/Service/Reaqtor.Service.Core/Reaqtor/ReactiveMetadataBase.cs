@@ -171,16 +171,14 @@ namespace Reaqtor
 
             public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
             {
-                if (expression == null)
-                    throw new ArgumentNullException(nameof(expression));
+                ArgumentNullException.ThrowIfNull(expression);
 
                 return new Queryable<TElement>(this, expression);
             }
 
             public IQueryable CreateQuery(Expression expression)
             {
-                if (expression == null)
-                    throw new ArgumentNullException(nameof(expression));
+                ArgumentNullException.ThrowIfNull(expression);
 
                 var type = expression.Type.FindGenericType(typeof(IQueryable<>));
                 if (type == null)
@@ -195,8 +193,7 @@ namespace Reaqtor
 
             public TResult Execute<TResult>(Expression expression)
             {
-                if (expression == null)
-                    throw new ArgumentNullException(nameof(expression));
+                ArgumentNullException.ThrowIfNull(expression);
 
                 if (!typeof(TResult).IsAssignableFrom(expression.Type))
                     throw new InvalidOperationException("Specified expression is not assignable to " + typeof(TResult) + ".");
@@ -207,8 +204,7 @@ namespace Reaqtor
 
             public object Execute(Expression expression)
             {
-                if (expression == null)
-                    throw new ArgumentNullException(nameof(expression));
+                ArgumentNullException.ThrowIfNull(expression);
 
                 var genericExecuteMethod = ((MethodInfo)ReflectionHelpers.InfoOf((ReactiveMetadataBase rmpb) => rmpb.Execute<object>(null))).GetGenericMethodDefinition();
                 var executeMethod = genericExecuteMethod.MakeGenericMethod(expression.Type);

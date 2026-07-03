@@ -58,8 +58,7 @@ namespace System.Reflection
         /// <returns>CLR type represented by the slim type.</returns>
         public override Type Visit(TypeSlim type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (_typeMap.TryGetValue(type, out Type res))
             {
@@ -287,10 +286,8 @@ namespace System.Reflection
         /// <param name="type">The CLR type.</param>
         public void MapType(TypeSlim typeSlim, Type type)
         {
-            if (typeSlim == null)
-                throw new ArgumentNullException(nameof(typeSlim));
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(typeSlim);
+            ArgumentNullException.ThrowIfNull(type);
 
             if (_typeMap.TryGetValue(typeSlim, out Type res))
             {

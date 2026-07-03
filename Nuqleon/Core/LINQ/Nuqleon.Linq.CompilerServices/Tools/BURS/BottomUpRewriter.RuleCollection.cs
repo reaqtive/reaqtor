@@ -33,10 +33,8 @@ namespace System.Linq.CompilerServices
         /// <param name="cost">Cost to apply the rule.</param>
         public void Add(Expression<Func<TSource>> pattern, Expression<Func<TTarget>> goal, int cost)
         {
-            if (pattern == null)
-                throw new ArgumentNullException(nameof(pattern));
-            if (goal == null)
-                throw new ArgumentNullException(nameof(goal));
+            ArgumentNullException.ThrowIfNull(pattern);
+            ArgumentNullException.ThrowIfNull(goal);
             if (cost < 0)
                 throw new ArgumentOutOfRangeException(nameof(cost));
 
@@ -53,10 +51,8 @@ namespace System.Linq.CompilerServices
         /// <param name="cost">Cost to apply the rule.</param>
         public void Add(Expression<Func<TSource, TSource>> pattern, Expression<Func<TTarget, TTarget>> goal, int cost)
         {
-            if (pattern == null)
-                throw new ArgumentNullException(nameof(pattern));
-            if (goal == null)
-                throw new ArgumentNullException(nameof(goal));
+            ArgumentNullException.ThrowIfNull(pattern);
+            ArgumentNullException.ThrowIfNull(goal);
             if (cost < 0)
                 throw new ArgumentOutOfRangeException(nameof(cost));
 
@@ -73,10 +69,8 @@ namespace System.Linq.CompilerServices
         /// <param name="cost">Cost to apply the rule.</param>
         public void Add(Expression<Func<TSource, TSource, TSource>> pattern, Expression<Func<TTarget, TTarget, TTarget>> goal, int cost)
         {
-            if (pattern == null)
-                throw new ArgumentNullException(nameof(pattern));
-            if (goal == null)
-                throw new ArgumentNullException(nameof(goal));
+            ArgumentNullException.ThrowIfNull(pattern);
+            ArgumentNullException.ThrowIfNull(goal);
             if (cost < 0)
                 throw new ArgumentOutOfRangeException(nameof(cost));
 
@@ -93,10 +87,8 @@ namespace System.Linq.CompilerServices
         /// <param name="cost">Cost to apply the rule.</param>
         public void Add(Expression<Func<TSource, TSource, TSource, TSource>> pattern, Expression<Func<TTarget, TTarget, TTarget, TTarget>> goal, int cost)
         {
-            if (pattern == null)
-                throw new ArgumentNullException(nameof(pattern));
-            if (goal == null)
-                throw new ArgumentNullException(nameof(goal));
+            ArgumentNullException.ThrowIfNull(pattern);
+            ArgumentNullException.ThrowIfNull(goal);
             if (cost < 0)
                 throw new ArgumentOutOfRangeException(nameof(cost));
 

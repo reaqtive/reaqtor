@@ -73,8 +73,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression MakeArray(ArrayDataType type, LambdaExpression elementType)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             var valueParameter = Expression.Parameter(type.UnderlyingType, "value");
             var streamParameter = Expression.Parameter(typeof(Stream), "stream");
@@ -148,8 +147,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression MakeQuotation(QuotationDataType type, LambdaExpression functionType)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             Debug.Assert(functionType == null);
             return MakeExpressionCore(type.UnderlyingType);
@@ -157,8 +155,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression VisitStructural(StructuralDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (!_visited.Add(type.UnderlyingType))
             {
@@ -188,11 +185,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression MakeStructural(StructuralDataType type, ReadOnlyCollection<Tuple<DataProperty, LambdaExpression>> properties)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             switch (type.StructuralKind)
             {
@@ -305,8 +300,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression VisitExpression(ExpressionDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return MakeExpressionCore(type.UnderlyingType);
         }
@@ -315,8 +309,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression VisitPrimitive(PrimitiveDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return type.PrimitiveKind switch
             {

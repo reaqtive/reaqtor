@@ -65,8 +65,7 @@ namespace System.Memory
             /// <returns>An empty memoization cache instance.</returns>
             public IMemoizationCache<T, R> Create<T, R>(Func<T, R> function, MemoizationOptions options) where T : class
             {
-                if (function == null)
-                    throw new ArgumentNullException(nameof(function));
+                ArgumentNullException.ThrowIfNull(function);
 
                 var cacheError = (options & MemoizationOptions.CacheException) > MemoizationOptions.None;
                 return new Cache<T, R>(function, _ranker, _maxCapacity, _descending, _ageThreshold, cacheError, _stopwatchFactory);

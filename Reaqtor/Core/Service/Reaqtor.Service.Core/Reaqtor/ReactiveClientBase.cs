@@ -44,8 +44,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput> GetStreamFactory<TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TInput, TOutput>(uri);
         }
@@ -73,8 +72,7 @@ namespace Reaqtor
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArgs> GetStreamFactory<TArgs, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArgs, TInput, TOutput>(uri);
         }
@@ -106,8 +104,7 @@ namespace Reaqtor
         /// <returns>Subject object that can be used to receive and publish data.</returns>
         public IReactiveQubject<TInput, TOutput> GetStream<TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamCore<TInput, TOutput>(uri);
         }
@@ -137,8 +134,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public IReactiveQbservable<T> GetObservable<T>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<T>(uri);
         }
@@ -164,8 +160,7 @@ namespace Reaqtor
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArgs, IReactiveQbservable<TResult>> GetObservable<TArgs, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArgs, TResult>(uri);
         }
@@ -195,8 +190,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public IReactiveQbserver<T> GetObserver<T>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<T>(uri);
         }
@@ -222,8 +216,7 @@ namespace Reaqtor
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArgs, IReactiveQbserver<TResult>> GetObserver<TArgs, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArgs, TResult>(uri);
         }
@@ -252,8 +245,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory GetSubscriptionFactory(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore(uri);
         }
@@ -277,8 +269,7 @@ namespace Reaqtor
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IReactiveQubscriptionFactory<TArgs> GetSubscriptionFactory<TArgs>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArgs>(uri);
         }
@@ -306,8 +297,7 @@ namespace Reaqtor
         /// <returns>Subscription object that can be used to dispose the subscription.</returns>
         public IReactiveQubscription GetSubscription(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionCore(uri);
         }

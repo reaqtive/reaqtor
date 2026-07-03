@@ -28,8 +28,7 @@ namespace System.Linq.Expressions
         /// <returns>Delegate that can be used to evaluate the expression tree.</returns>
         public static TDelegate Compile<TDelegate>(this Expression<TDelegate> expression, CompilationOptions options)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             expression = OptimizeIfEnabled(expression, options);
 
@@ -54,8 +53,7 @@ namespace System.Linq.Expressions
         /// <returns>Delegate that can be used to evaluate the expression tree.</returns>
         public static Delegate Compile(this LambdaExpression expression, CompilationOptions options)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             expression = OptimizeIfEnabled(expression, options);
 

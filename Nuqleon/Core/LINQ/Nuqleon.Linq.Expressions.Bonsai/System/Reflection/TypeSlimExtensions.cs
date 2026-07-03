@@ -58,8 +58,7 @@ namespace System.Reflection
         /// <returns>Lightweight representation of the specified type.</returns>
         public static TypeSlim ToTypeSlim(this Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return new TypeToTypeSlimConverter().Visit(type);
         }
@@ -73,8 +72,7 @@ namespace System.Reflection
         /// <returns>Type represented by the slim type.</returns>
         public static Type ToType(this TypeSlim type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return new TypeSlimToTypeConverter(DefaultReflectionProvider.Instance).Visit(type);
         }
@@ -87,10 +85,8 @@ namespace System.Reflection
         /// <returns>Type represented by the slim type.</returns>
         public static Type ToType(this TypeSlim type, IReflectionProvider provider)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(provider);
 
             // CONSIDER: Should we accept more granular reflection provider interfaces such
             //           as IReflectionLoadingProvider and IReflectionCreationProvider?
@@ -110,10 +106,8 @@ namespace System.Reflection
         /// <returns>The slim constructor info.</returns>
         public static ConstructorInfoSlim GetConstructor(this TypeSlim type, ReadOnlyCollection<TypeSlim> parameterTypes)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (parameterTypes == null)
-                throw new ArgumentNullException(nameof(parameterTypes));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(parameterTypes);
 
             return new ConstructorInfoSlim(type, parameterTypes);
         }
@@ -129,14 +123,11 @@ namespace System.Reflection
         /// <returns>The slim property info.</returns>
         public static PropertyInfoSlim GetProperty(this TypeSlim type, string name, TypeSlim propertyType, ReadOnlyCollection<TypeSlim> indexParameterTypes, bool canWrite)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(name);
             if (name.Length == 0)
                 throw new ArgumentException("Property name can not be empty.", nameof(name));
-            if (indexParameterTypes == null)
-                throw new ArgumentNullException(nameof(indexParameterTypes));
+            ArgumentNullException.ThrowIfNull(indexParameterTypes);
 
             return PropertyInfoSlim.Make(type, name, propertyType, indexParameterTypes, canWrite);
         }
@@ -150,10 +141,8 @@ namespace System.Reflection
         /// <returns>The slim field info.</returns>
         public static FieldInfoSlim GetField(this TypeSlim type, string name, TypeSlim fieldType)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(name);
             if (name.Length == 0)
                 throw new ArgumentException("Field name can not be empty.", nameof(name));
 
@@ -170,14 +159,11 @@ namespace System.Reflection
         /// <returns>The slim simple method info.</returns>
         public static SimpleMethodInfoSlim GetSimpleMethod(this TypeSlim type, string name, ReadOnlyCollection<TypeSlim> parameterTypes, TypeSlim returnType)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(name);
             if (name.Length == 0)
                 throw new ArgumentException("Method name can not be empty.", nameof(name));
-            if (parameterTypes == null)
-                throw new ArgumentNullException(nameof(parameterTypes));
+            ArgumentNullException.ThrowIfNull(parameterTypes);
 
             return new SimpleMethodInfoSlim(type, name, parameterTypes, returnType);
         }
@@ -193,16 +179,12 @@ namespace System.Reflection
         /// <returns>The slim generic definition method info.</returns>
         public static GenericDefinitionMethodInfoSlim GetGenericDefinitionMethod(this TypeSlim type, string name, ReadOnlyCollection<TypeSlim> genericParameterTypes, ReadOnlyCollection<TypeSlim> parameterTypes, TypeSlim returnType)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (name == null)
-                throw new ArgumentNullException(nameof(name));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(name);
             if (name.Length == 0)
                 throw new ArgumentException("Method name can not be empty.", nameof(name));
-            if (parameterTypes == null)
-                throw new ArgumentNullException(nameof(parameterTypes));
-            if (genericParameterTypes == null)
-                throw new ArgumentNullException(nameof(genericParameterTypes));
+            ArgumentNullException.ThrowIfNull(parameterTypes);
+            ArgumentNullException.ThrowIfNull(genericParameterTypes);
             if (genericParameterTypes.Count < 1)
                 throw new ArgumentOutOfRangeException(nameof(genericParameterTypes));
 
@@ -218,12 +200,9 @@ namespace System.Reflection
         /// <returns>The slim closed generic method info.</returns>
         public static GenericMethodInfoSlim GetGenericMethod(this TypeSlim type, GenericDefinitionMethodInfoSlim methodDefinition, ReadOnlyCollection<TypeSlim> arguments)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (methodDefinition == null)
-                throw new ArgumentNullException(nameof(methodDefinition));
-            if (arguments == null)
-                throw new ArgumentNullException(nameof(arguments));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(methodDefinition);
+            ArgumentNullException.ThrowIfNull(arguments);
 
             return new GenericMethodInfoSlim(type, methodDefinition, arguments);
         }

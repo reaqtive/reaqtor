@@ -30,10 +30,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -63,10 +61,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -98,10 +94,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -135,10 +129,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -174,10 +166,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -215,10 +205,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -258,10 +246,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -303,10 +289,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -350,10 +334,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -399,10 +381,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -450,10 +430,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -503,10 +481,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -558,10 +534,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -615,10 +589,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineStreamFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TInput, TOutput>(Uri uri, IReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> streamFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             DefineStreamFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TInput, TOutput>(uri, streamFactory, state);
         }
@@ -663,10 +635,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TResult>(uri, observable, state);
         }
@@ -694,10 +664,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TResult>(uri, observable, state);
         }
@@ -727,10 +695,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TResult>(uri, observable, state);
         }
@@ -762,10 +728,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(uri, observable, state);
         }
@@ -799,10 +763,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(uri, observable, state);
         }
@@ -838,10 +800,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(uri, observable, state);
         }
@@ -879,10 +839,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(uri, observable, state);
         }
@@ -922,10 +880,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(uri, observable, state);
         }
@@ -967,10 +923,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(uri, observable, state);
         }
@@ -1014,10 +968,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(uri, observable, state);
         }
@@ -1063,10 +1015,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(uri, observable, state);
         }
@@ -1114,10 +1064,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(uri, observable, state);
         }
@@ -1167,10 +1115,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(uri, observable, state);
         }
@@ -1222,10 +1168,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IReactiveQbservable<TResult>>> observable, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             DefineObservableCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(uri, observable, state);
         }
@@ -1269,10 +1213,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TResult>(uri, observer, state);
         }
@@ -1300,10 +1242,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TResult>(uri, observer, state);
         }
@@ -1333,10 +1273,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TResult>(uri, observer, state);
         }
@@ -1368,10 +1306,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(uri, observer, state);
         }
@@ -1405,10 +1341,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(uri, observer, state);
         }
@@ -1444,10 +1378,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(uri, observer, state);
         }
@@ -1485,10 +1417,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(uri, observer, state);
         }
@@ -1528,10 +1458,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(uri, observer, state);
         }
@@ -1573,10 +1501,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(uri, observer, state);
         }
@@ -1620,10 +1546,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(uri, observer, state);
         }
@@ -1669,10 +1593,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(uri, observer, state);
         }
@@ -1720,10 +1642,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(uri, observer, state);
         }
@@ -1773,10 +1693,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(uri, observer, state);
         }
@@ -1828,10 +1746,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineObserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(Uri uri, Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IReactiveQbserver<TResult>>> observer, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             DefineObserverCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(uri, observer, state);
         }
@@ -1874,10 +1790,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2>(uri, subscriptionFactory, state);
         }
@@ -1903,10 +1817,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3>(uri, subscriptionFactory, state);
         }
@@ -1934,10 +1846,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4>(uri, subscriptionFactory, state);
         }
@@ -1967,10 +1877,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5>(uri, subscriptionFactory, state);
         }
@@ -2002,10 +1910,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(uri, subscriptionFactory, state);
         }
@@ -2039,10 +1945,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(uri, subscriptionFactory, state);
         }
@@ -2078,10 +1982,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(uri, subscriptionFactory, state);
         }
@@ -2119,10 +2021,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(uri, subscriptionFactory, state);
         }
@@ -2162,10 +2062,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(uri, subscriptionFactory, state);
         }
@@ -2207,10 +2105,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(uri, subscriptionFactory, state);
         }
@@ -2254,10 +2150,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(uri, subscriptionFactory, state);
         }
@@ -2303,10 +2197,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(uri, subscriptionFactory, state);
         }
@@ -2354,10 +2246,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(uri, subscriptionFactory, state);
         }
@@ -2407,10 +2297,8 @@ namespace Reaqtor
         /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
         public void DefineSubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(Uri uri, IReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> subscriptionFactory, object state = null)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             DefineSubscriptionFactoryCore<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(uri, subscriptionFactory, state);
         }

@@ -60,8 +60,7 @@ namespace System.Linq.Expressions
         /// <param name="expression">The expression to obtain the member to add from.</param>
         public void Add(LambdaExpression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             CheckReadOnly();
 
@@ -96,8 +95,7 @@ namespace System.Linq.Expressions
         /// <param name="table">The member table whose entries to copy.</param>
         public void Add(MemberTable table)
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
+            ArgumentNullException.ThrowIfNull(table);
 
             CheckReadOnly();
 
@@ -123,8 +121,7 @@ namespace System.Linq.Expressions
         /// <param name="member">The member to add to the table.</param>
         public void Add(MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             CheckReadOnly();
 
@@ -153,8 +150,7 @@ namespace System.Linq.Expressions
         /// <param name="method">The method to add to the table.</param>
         public void Add(MethodInfo method)
         {
-            if (method == null)
-                throw new ArgumentNullException(nameof(method));
+            ArgumentNullException.ThrowIfNull(method);
 
             CheckReadOnly();
 
@@ -181,8 +177,7 @@ namespace System.Linq.Expressions
         /// <param name="property">The property to add to the table.</param>
         public void Add(PropertyInfo property)
         {
-            if (property == null)
-                throw new ArgumentNullException(nameof(property));
+            ArgumentNullException.ThrowIfNull(property);
 
             CheckReadOnly();
 
@@ -209,8 +204,7 @@ namespace System.Linq.Expressions
         /// <param name="field">The field to add to the table.</param>
         public void Add(FieldInfo field)
         {
-            if (field == null)
-                throw new ArgumentNullException(nameof(field));
+            ArgumentNullException.ThrowIfNull(field);
 
             CheckReadOnly();
 
@@ -229,8 +223,7 @@ namespace System.Linq.Expressions
         /// <param name="constructor">The constructor to add to the table.</param>
         public void Add(ConstructorInfo constructor)
         {
-            if (constructor == null)
-                throw new ArgumentNullException(nameof(constructor));
+            ArgumentNullException.ThrowIfNull(constructor);
 
             CheckReadOnly();
 
@@ -331,8 +324,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified <paramref name="member"/> is present in the table; otherwise, <c>false</c>.</returns>
         public bool Contains(MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             if (Members.Contains(member))
             {

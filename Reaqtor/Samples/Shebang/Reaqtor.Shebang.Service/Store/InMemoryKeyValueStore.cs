@@ -174,10 +174,8 @@ namespace Reaqtor.Shebang.Service
             {
                 get
                 {
-                    if (tableName == null)
-                        throw new ArgumentNullException(nameof(tableName));
-                    if (key == null)
-                        throw new ArgumentNullException(nameof(key));
+                    ArgumentNullException.ThrowIfNull(tableName);
+                    ArgumentNullException.ThrowIfNull(key);
 
                     lock (_edits)
                     {
@@ -214,12 +212,9 @@ namespace Reaqtor.Shebang.Service
 
             public void Add(string tableName, string key, byte[] value)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
+                ArgumentNullException.ThrowIfNull(value);
 
                 lock (_edits)
                 {
@@ -288,10 +283,8 @@ namespace Reaqtor.Shebang.Service
 
             public bool Contains(string tableName, string key)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
 
                 lock (_edits)
                 {
@@ -319,8 +312,7 @@ namespace Reaqtor.Shebang.Service
 
             public IEnumerator<KeyValuePair<string, byte[]>> GetEnumerator(string tableName)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
+                ArgumentNullException.ThrowIfNull(tableName);
 
                 return Core();
 
@@ -367,10 +359,8 @@ namespace Reaqtor.Shebang.Service
 
             public void Remove(string tableName, string key)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
 
                 UpdateCore(tableName, key, null);
             }
@@ -379,12 +369,9 @@ namespace Reaqtor.Shebang.Service
 
             public void Update(string tableName, string key, byte[] value)
             {
-                if (tableName == null)
-                    throw new ArgumentNullException(nameof(tableName));
-                if (key == null)
-                    throw new ArgumentNullException(nameof(key));
-                if (value == null)
-                    throw new ArgumentNullException(nameof(value));
+                ArgumentNullException.ThrowIfNull(tableName);
+                ArgumentNullException.ThrowIfNull(key);
+                ArgumentNullException.ThrowIfNull(value);
 
                 UpdateCore(tableName, key, value);
             }

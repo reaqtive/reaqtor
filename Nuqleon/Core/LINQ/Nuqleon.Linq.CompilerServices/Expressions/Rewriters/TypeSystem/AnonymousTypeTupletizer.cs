@@ -35,10 +35,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Expression Tupletize(Expression expression, Expression unitValue)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (unitValue == null)
-                throw new ArgumentNullException(nameof(unitValue));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(unitValue);
 
             return TupletizeImpl(expression, unitValue, excludeVisibleTypes: false);
         }
@@ -57,10 +55,8 @@ namespace System.Linq.CompilerServices
         /// </remarks>
         public static Expression Tupletize(Expression expression, Expression unitValue, bool excludeVisibleTypes)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (unitValue == null)
-                throw new ArgumentNullException(nameof(unitValue));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(unitValue);
 
             return TupletizeImpl(expression, unitValue, excludeVisibleTypes);
         }

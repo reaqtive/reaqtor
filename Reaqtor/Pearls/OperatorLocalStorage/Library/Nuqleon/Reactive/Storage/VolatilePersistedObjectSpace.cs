@@ -137,8 +137,7 @@ namespace Reaqtive.Storage
         /// <exception cref="KeyNotFoundException">A persisted object with identifier <paramref name="id"/> could not be found.</exception>
         public void Delete(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             lock (_registry)
             {
@@ -273,8 +272,7 @@ namespace Reaqtive.Storage
         private T Get<T>(string id)
             where T : IPersisted
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             lock (_registry)
             {
@@ -294,8 +292,7 @@ namespace Reaqtive.Storage
         private T Create<T>(string id, Func<T> factory)
             where T : IPersisted
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             var value = factory();
 
@@ -426,8 +423,7 @@ namespace Reaqtive.Storage
 
             public ILinkedListNode<T> AddAfter(ILinkedListNode<T> node, T value)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 
@@ -438,10 +434,8 @@ namespace Reaqtive.Storage
 
             public void AddAfter(ILinkedListNode<T> node, ILinkedListNode<T> newNode)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
-                if (newNode == null)
-                    throw new ArgumentNullException(nameof(newNode));
+                ArgumentNullException.ThrowIfNull(node);
+                ArgumentNullException.ThrowIfNull(newNode);
 
                 var nodeWrapper = AsWrapper(node);
                 var newNodeWrapper = AsWrapper(newNode);
@@ -451,8 +445,7 @@ namespace Reaqtive.Storage
 
             public ILinkedListNode<T> AddBefore(ILinkedListNode<T> node, T value)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 
@@ -463,10 +456,8 @@ namespace Reaqtive.Storage
 
             public void AddBefore(ILinkedListNode<T> node, ILinkedListNode<T> newNode)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
-                if (newNode == null)
-                    throw new ArgumentNullException(nameof(newNode));
+                ArgumentNullException.ThrowIfNull(node);
+                ArgumentNullException.ThrowIfNull(newNode);
 
                 var nodeWrapper = AsWrapper(node);
                 var newNodeWrapper = AsWrapper(newNode);
@@ -478,8 +469,7 @@ namespace Reaqtive.Storage
 
             public void AddFirst(ILinkedListNode<T> node)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 
@@ -490,8 +480,7 @@ namespace Reaqtive.Storage
 
             public void AddLast(ILinkedListNode<T> node)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 
@@ -508,8 +497,7 @@ namespace Reaqtive.Storage
 
             public void Remove(ILinkedListNode<T> node)
             {
-                if (node == null)
-                    throw new ArgumentNullException(nameof(node));
+                ArgumentNullException.ThrowIfNull(node);
 
                 var nodeWrapper = AsWrapper(node);
 

@@ -37,10 +37,7 @@ namespace Reaqtive
         /// <param name="subscriptions">Inner subscriptions.</param>
         public CompositeSubscription(IEnumerable<ISubscription> subscriptions)
         {
-            if (subscriptions == null)
-            {
-                throw new ArgumentNullException(nameof(subscriptions));
-            }
+            ArgumentNullException.ThrowIfNull(subscriptions);
 
             _subscriptions = [.. subscriptions];
             _activeSubscriptionsCount = _subscriptions.Count;
@@ -77,10 +74,7 @@ namespace Reaqtive
         /// <param name="subscription">Subscription to add.</param>
         public void Add(ISubscription subscription)
         {
-            if (subscription == null)
-            {
-                throw new ArgumentNullException(nameof(subscription));
-            }
+            ArgumentNullException.ThrowIfNull(subscription);
 
             bool shouldDispose = false;
 
@@ -107,10 +101,7 @@ namespace Reaqtive
         /// <param name="subscription">Subscription to remove.</param>
         public void Remove(ISubscription subscription)
         {
-            if (subscription == null)
-            {
-                throw new ArgumentNullException(nameof(subscription));
-            }
+            ArgumentNullException.ThrowIfNull(subscription);
 
             bool subscriptionFound = false;
 

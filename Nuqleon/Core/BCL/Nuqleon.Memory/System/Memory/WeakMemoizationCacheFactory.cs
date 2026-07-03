@@ -55,8 +55,7 @@ namespace System.Memory
         /// <returns>Memoization cache factory for memoization caches that use a ranking-based cache eviction strategy.</returns>
         public static IWeakMemoizationCacheFactory CreateEvictedByLowest<TMetric>(Func<IMemoizationCacheEntryMetrics, TMetric> ranker, int maxCapacity, double ageThreshold = 0.9, IStopwatchFactory stopwatchFactory = null)
         {
-            if (ranker == null)
-                throw new ArgumentNullException(nameof(ranker));
+            ArgumentNullException.ThrowIfNull(ranker);
             if (maxCapacity < 1)
                 throw new ArgumentOutOfRangeException(nameof(maxCapacity), "A cache should have at a capacity of at least one.");
             if (ageThreshold is <= 0 or > 1)
@@ -77,8 +76,7 @@ namespace System.Memory
         /// <returns>Memoization cache factory for memoization caches that use a ranking-based cache eviction strategy.</returns>
         public static IWeakMemoizationCacheFactory CreateEvictedByHighest<TMetric>(Func<IMemoizationCacheEntryMetrics, TMetric> ranker, int maxCapacity, double ageThreshold = 0.9, IStopwatchFactory stopwatchFactory = null)
         {
-            if (ranker == null)
-                throw new ArgumentNullException(nameof(ranker));
+            ArgumentNullException.ThrowIfNull(ranker);
             if (maxCapacity < 1)
                 throw new ArgumentOutOfRangeException(nameof(maxCapacity), "A cache should have at a capacity of at least one.");
             if (ageThreshold is <= 0 or > 1)

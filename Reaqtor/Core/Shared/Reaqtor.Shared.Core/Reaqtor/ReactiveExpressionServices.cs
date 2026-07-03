@@ -54,10 +54,8 @@ namespace Reaqtor
         /// <param name="expression">Expression representation of the object.</param>
         public virtual void RegisterObject(object value, Expression expression)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(value);
+            ArgumentNullException.ThrowIfNull(expression);
 
             lock (_registeredObjects)
             {
@@ -76,8 +74,7 @@ namespace Reaqtor
         /// <returns>true if an association was found; otherwise, false.</returns>
         public virtual bool TryGetObject(object value, out Expression expression)
         {
-            if (value == null)
-                throw new ArgumentNullException(nameof(value));
+            ArgumentNullException.ThrowIfNull(value);
 
             lock (_registeredObjects)
             {
@@ -92,8 +89,7 @@ namespace Reaqtor
         /// <returns>Normalized expression.</returns>
         public virtual Expression Normalize(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var inlinedExpressions = new ExpressionInliner(this).Inline(expression);
 
@@ -122,8 +118,7 @@ namespace Reaqtor
         /// <returns>Expression with unsupported constructs rewritten into funclets.</returns>
         protected virtual Expression Funcletize(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return _closureEliminator.Apply(expression);
         }
@@ -136,10 +131,8 @@ namespace Reaqtor
         /// <returns>Expression representing the named resource.</returns>
         public virtual Expression GetNamedExpression(Type type, Uri uri)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(uri);
 
             return Expression.Parameter(type, uri.ToCanonicalString());
         }
@@ -152,8 +145,7 @@ namespace Reaqtor
         /// <returns>true if the expression represents a named resource; otherwise, false.</returns>
         public virtual bool TryGetName(Expression expression, out Uri uri)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression is ParameterExpression parameter)
             {

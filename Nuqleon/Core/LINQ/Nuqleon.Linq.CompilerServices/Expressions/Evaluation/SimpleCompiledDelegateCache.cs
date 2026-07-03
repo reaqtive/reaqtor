@@ -44,8 +44,7 @@ namespace System.Linq.Expressions
         /// <returns>Compiled delegate to execute the lambda expression.</returns>
         public Delegate GetOrAdd(LambdaExpression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             //
             // PERF: On .NET Framework, this causes multiple calls to GetHashCode, which is expensive for our comparer. However,

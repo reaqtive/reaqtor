@@ -34,8 +34,7 @@ namespace Nuqleon.Json.Parser
         /// <remarks>See RFC 4627 for more information. This parses the production specified in section 2: <code>JSON-text = object / array</code>.</remarks>
         public static Expression Parse(string input)
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             return Parse(input, ensureTopLevelObjectOrArray: true);
         }
@@ -49,8 +48,7 @@ namespace Nuqleon.Json.Parser
         /// <remarks>See RFC 4627 for more information. This parses the production specified in section 2: <code>JSON-text = object / array</code>.</remarks>
         public static Expression Parse(string input, bool ensureTopLevelObjectOrArray)
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             //
             // Tokenize the input, ignoring whitespace between tokens.

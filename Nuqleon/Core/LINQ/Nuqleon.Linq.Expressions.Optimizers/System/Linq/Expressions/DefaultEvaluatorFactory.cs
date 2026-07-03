@@ -30,8 +30,7 @@ namespace System.Linq.Expressions
         /// <returns>An evaluator delegate for the specified <paramref name="member"/>.</returns>
         public virtual Delegate GetEvaluator(MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             return member.MemberType switch
             {
@@ -51,8 +50,7 @@ namespace System.Linq.Expressions
         /// <returns>An evaluator delegate for the specified <paramref name="method"/>.</returns>
         public virtual Delegate GetEvaluator(MethodInfo method)
         {
-            if (method == null)
-                throw new ArgumentNullException(nameof(method));
+            ArgumentNullException.ThrowIfNull(method);
 
             ParameterExpression[] pars;
             Expression body;
@@ -115,8 +113,7 @@ namespace System.Linq.Expressions
         /// <returns>An evaluator delegate for the specified <paramref name="property"/>.</returns>
         public virtual Delegate GetEvaluator(PropertyInfo property)
         {
-            if (property == null)
-                throw new ArgumentNullException(nameof(property));
+            ArgumentNullException.ThrowIfNull(property);
 
             ParameterExpression[] pars;
             Expression body;
@@ -178,8 +175,7 @@ namespace System.Linq.Expressions
         /// <returns>An evaluator delegate for the specified <paramref name="field"/>.</returns>
         public virtual Delegate GetEvaluator(FieldInfo field)
         {
-            if (field == null)
-                throw new ArgumentNullException(nameof(field));
+            ArgumentNullException.ThrowIfNull(field);
 
             ParameterExpression[] pars;
             Expression body;
@@ -207,8 +203,7 @@ namespace System.Linq.Expressions
         /// <returns>An evaluator delegate for the specified <paramref name="constructor"/>.</returns>
         public virtual Delegate GetEvaluator(ConstructorInfo constructor)
         {
-            if (constructor == null)
-                throw new ArgumentNullException(nameof(constructor));
+            ArgumentNullException.ThrowIfNull(constructor);
 
             var parameters = constructor.GetParameters();
 
@@ -240,8 +235,7 @@ namespace System.Linq.Expressions
         /// <returns>An evaluator delegate to create an instance of the specified <paramref name="type"/>.</returns>
         public virtual Delegate GetEvaluator(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return GetEvaluator(Expression.New(type));
         }
@@ -254,8 +248,7 @@ namespace System.Linq.Expressions
         /// <returns>An evaluation delegate.</returns>
         public virtual Delegate GetEvaluator(Expression body, params ParameterExpression[] parameters)
         {
-            if (body == null)
-                throw new ArgumentNullException(nameof(body));
+            ArgumentNullException.ThrowIfNull(body);
 
             var evalBody = body;
 
@@ -286,8 +279,7 @@ namespace System.Linq.Expressions
         /// <returns>A delegate that returns an <see cref="object"/> with the result of evaluating the expression.</returns>
         public virtual Func<object> GetEvaluator(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return (Func<object>)GetEvaluator(Utils.ConvertTo(expression, typeof(object)), s_noParams);
         }
@@ -300,8 +292,7 @@ namespace System.Linq.Expressions
         /// <returns>An evaluator delegate to evaluate the specified parameterized unary expression.</returns>
         public virtual Func<object, object> GetEvaluator(UnaryExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             Debug.Assert(node.Method == null);
             Debug.Assert(node.Operand != null);
@@ -325,8 +316,7 @@ namespace System.Linq.Expressions
         /// <returns>An evaluator delegate to evaluate the specified parameterized binary expression.</returns>
         public virtual Func<object, object, object> GetEvaluator(BinaryExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             Debug.Assert(node.Method == null);
             Debug.Assert(node.Conversion == null);

@@ -92,8 +92,7 @@ namespace System.Memory.Diagnostics
         /// </param>
         public void Walk(object obj, Func<object, bool> fence)
         {
-            if (fence == null)
-                throw new ArgumentNullException(nameof(fence));
+            ArgumentNullException.ThrowIfNull(fence);
 
             if (obj == null)
                 return;

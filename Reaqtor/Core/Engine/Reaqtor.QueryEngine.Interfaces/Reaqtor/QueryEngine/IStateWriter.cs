@@ -74,8 +74,7 @@ namespace Reaqtor.QueryEngine
         /// <remarks>Prior to calling this method, all item writer streams should be disposed.</remarks>
         public static Task CommitAsync(this IStateWriter writer)
         {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             return writer.CommitAsync(CancellationToken.None, progress: null);
         }
@@ -89,8 +88,7 @@ namespace Reaqtor.QueryEngine
         /// <remarks>Prior to calling this method, all item writer streams should be disposed.</remarks>
         public static Task CommitAsync(this IStateWriter writer, CancellationToken token)
         {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             return writer.CommitAsync(token, progress: null);
         }
@@ -104,8 +102,7 @@ namespace Reaqtor.QueryEngine
         /// <remarks>Prior to calling this method, all item writer streams should be disposed.</remarks>
         public static Task CommitAsync(this IStateWriter writer, IProgress<int> progress)
         {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             return writer.CommitAsync(CancellationToken.None, progress);
         }

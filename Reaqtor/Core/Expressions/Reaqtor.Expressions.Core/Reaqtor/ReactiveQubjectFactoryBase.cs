@@ -34,8 +34,7 @@ namespace Reaqtor
         /// <returns>A subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubject<TInput, TOutput> Create(Uri streamUri, object state = null)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, state);
         }
@@ -48,8 +47,7 @@ namespace Reaqtor
         /// <returns>A subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubject<TInput, TOutput> IReactiveSubjectFactory<TInput, TOutput>.Create(Uri streamUri, object state)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, state);
         }
@@ -96,8 +94,7 @@ namespace Reaqtor
         /// <returns>A subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubject<TInput, TOutput> Create(Uri streamUri, TArgs argument, object state = null)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, argument, state);
         }
@@ -111,8 +108,7 @@ namespace Reaqtor
         /// <returns>A subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubject<TInput, TOutput> IReactiveSubjectFactory<TInput, TOutput, TArgs>.Create(Uri streamUri, TArgs argument, object state)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateCore(streamUri, argument, state);
         }

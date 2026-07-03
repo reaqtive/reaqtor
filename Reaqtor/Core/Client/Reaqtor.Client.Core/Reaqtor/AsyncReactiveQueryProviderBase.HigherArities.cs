@@ -30,8 +30,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TResult>(Expression<Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>>((arg1, arg2) =>
             {
@@ -54,8 +53,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TResult>(Expression<Func<TArg1, TArg2, TArg3, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3) =>
             {
@@ -79,8 +77,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4) =>
             {
@@ -105,8 +102,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5) =>
             {
@@ -132,8 +128,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6) =>
             {
@@ -160,8 +155,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7) =>
             {
@@ -189,8 +183,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) =>
             {
@@ -219,8 +212,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9) =>
             {
@@ -250,8 +242,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10) =>
             {
@@ -282,8 +273,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11) =>
             {
@@ -315,8 +305,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12) =>
             {
@@ -349,8 +338,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13) =>
             {
@@ -384,8 +372,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14) =>
             {
@@ -420,8 +407,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IAsyncReactiveQbservable<TResult>> CreateQbservable<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IAsyncReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IAsyncReactiveQbservable<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15) =>
             {
@@ -447,8 +433,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TResult>(Expression<Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>>((arg1, arg2) =>
             {
@@ -471,8 +456,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TResult>(Expression<Func<TArg1, TArg2, TArg3, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3) =>
             {
@@ -496,8 +480,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4) =>
             {
@@ -522,8 +505,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5) =>
             {
@@ -549,8 +531,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6) =>
             {
@@ -577,8 +558,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7) =>
             {
@@ -606,8 +586,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8) =>
             {
@@ -636,8 +615,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9) =>
             {
@@ -667,8 +645,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10) =>
             {
@@ -699,8 +676,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11) =>
             {
@@ -732,8 +708,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12) =>
             {
@@ -766,8 +741,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13) =>
             {
@@ -801,8 +775,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14) =>
             {
@@ -837,8 +810,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IAsyncReactiveQbserver<TResult>> CreateQbserver<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TResult>(Expression<Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IAsyncReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, IAsyncReactiveQbserver<TResult>>((arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15) =>
             {
@@ -865,8 +837,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> CreateQubjectFactory<TArg1, TArg2, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -888,8 +859,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3> CreateQubjectFactory<TArg1, TArg2, TArg3, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -912,8 +882,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -937,8 +906,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -963,8 +931,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -990,8 +957,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1018,8 +984,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1047,8 +1012,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1077,8 +1041,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1108,8 +1071,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1140,8 +1102,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1173,8 +1134,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1207,8 +1167,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1242,8 +1201,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> CreateQubjectFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1266,8 +1224,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2> CreateQubscriptionFactory<TArg1, TArg2>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1287,8 +1244,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3> CreateQubscriptionFactory<TArg1, TArg2, TArg3>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1309,8 +1265,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1332,8 +1287,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1356,8 +1310,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1381,8 +1334,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1407,8 +1359,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1434,8 +1385,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1462,8 +1412,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1491,8 +1440,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1521,8 +1469,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1552,8 +1499,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1584,8 +1530,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {
@@ -1617,8 +1562,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> CreateQubscriptionFactory<TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out var uri))
             {

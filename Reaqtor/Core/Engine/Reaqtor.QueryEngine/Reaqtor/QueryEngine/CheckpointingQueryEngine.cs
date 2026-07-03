@@ -72,8 +72,7 @@ namespace Reaqtor.QueryEngine
                 throw new ArgumentNullException(nameof(uri));
             if (uri.ToCanonicalString().EndsWith('/'))
                 throw new ArgumentException("Container URI must not end in '/'.", nameof(uri));
-            if (metadataRegistry == null)
-                throw new ArgumentNullException(nameof(metadataRegistry));
+            ArgumentNullException.ThrowIfNull(metadataRegistry);
 
             Uri = uri;
             _serviceResolver = serviceResolver ?? throw new ArgumentNullException(nameof(serviceResolver));
@@ -240,8 +239,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public async Task CheckpointAsync(IStateWriter writer, CancellationToken token = default, IProgress<int> progress = null)
         {
-            if (writer == null)
-                throw new ArgumentNullException(nameof(writer));
+            ArgumentNullException.ThrowIfNull(writer);
 
             using var _ = _tracker.Enter();
 
@@ -259,8 +257,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public async Task RecoverAsync(IStateReader reader, CancellationToken token = default, IProgress<int> progress = null)
         {
-            if (reader == null)
-                throw new ArgumentNullException(nameof(reader));
+            ArgumentNullException.ThrowIfNull(reader);
 
             using var _ = _tracker.Enter();
 

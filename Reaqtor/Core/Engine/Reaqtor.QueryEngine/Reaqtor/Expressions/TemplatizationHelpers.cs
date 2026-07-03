@@ -69,10 +69,7 @@ namespace Reaqtor.Expressions
         /// </exception>
         public static Expression SubstituteTemplateId(this Expression expression, string replacement)
         {
-            if (replacement == null)
-            {
-                throw new ArgumentNullException(nameof(replacement));
-            }
+            ArgumentNullException.ThrowIfNull(replacement);
 
             if (expression.IsTemplatized(out var parameter, out _))
             {

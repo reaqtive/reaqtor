@@ -33,8 +33,7 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidOperationException">A persisted object with identifier <paramref name="id"/> already exists.</exception>
         public IPersistedLinkedList<T> CreateLinkedList<T>(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             var list = new LinkedList(this);
             _items.Add(id, list);
@@ -52,8 +51,7 @@ namespace Reaqtive.Storage
         /// <exception cref="InvalidCastException">A persisted object with identifier <paramref name="id"/> was found but is incompatible with the requested persisted linked list type.</exception>
         public IPersistedLinkedList<T> GetLinkedList<T>(string id)
         {
-            if (id == null)
-                throw new ArgumentNullException(nameof(id));
+            ArgumentNullException.ThrowIfNull(id);
 
             return CreateLinkedListCore<T>(id, (LinkedList)_items[id]);
         }
@@ -714,8 +712,7 @@ namespace Reaqtive.Storage
                 /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current linked list.</exception>
                 public ILinkedListNode<T> AddAfter(ILinkedListNode<T> node, T value)
                 {
-                    if (node == null)
-                        throw new ArgumentNullException(nameof(node));
+                    ArgumentNullException.ThrowIfNull(node);
 
                     //
                     // First unwrap the node. If this fails, there's no point in proceeding.
@@ -747,10 +744,8 @@ namespace Reaqtive.Storage
                 /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current linked list,  or <paramref name="newNode"/> belongs to another linked list.</exception>
                 public void AddAfter(ILinkedListNode<T> node, ILinkedListNode<T> newNode)
                 {
-                    if (node == null)
-                        throw new ArgumentNullException(nameof(node));
-                    if (newNode == null)
-                        throw new ArgumentNullException(nameof(newNode));
+                    ArgumentNullException.ThrowIfNull(node);
+                    ArgumentNullException.ThrowIfNull(newNode);
 
                     //
                     // First unwrap the nodes. If this fails, there's no point in proceeding.
@@ -784,8 +779,7 @@ namespace Reaqtive.Storage
                 /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current linked list.</exception>
                 public ILinkedListNode<T> AddBefore(ILinkedListNode<T> node, T value)
                 {
-                    if (node == null)
-                        throw new ArgumentNullException(nameof(node));
+                    ArgumentNullException.ThrowIfNull(node);
 
                     //
                     // First unwrap the node. If this fails, there's no point in proceeding.
@@ -817,10 +811,8 @@ namespace Reaqtive.Storage
                 /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current linked list,  or <paramref name="newNode"/> belongs to another linked list.</exception>
                 public void AddBefore(ILinkedListNode<T> node, ILinkedListNode<T> newNode)
                 {
-                    if (node == null)
-                        throw new ArgumentNullException(nameof(node));
-                    if (newNode == null)
-                        throw new ArgumentNullException(nameof(newNode));
+                    ArgumentNullException.ThrowIfNull(node);
+                    ArgumentNullException.ThrowIfNull(newNode);
 
                     //
                     // First unwrap the nodes. If this fails, there's no point in proceeding.
@@ -872,8 +864,7 @@ namespace Reaqtive.Storage
                 /// <exception cref="InvalidOperationException"><paramref name="node"/> belongs to another linked list.</exception>
                 public void AddFirst(ILinkedListNode<T> node)
                 {
-                    if (node == null)
-                        throw new ArgumentNullException(nameof(node));
+                    ArgumentNullException.ThrowIfNull(node);
 
                     //
                     // First unwrap the node. If this fails, there's no point in proceeding.
@@ -924,8 +915,7 @@ namespace Reaqtive.Storage
                 /// <exception cref="InvalidOperationException"><paramref name="node"/> belongs to another linked list.</exception>
                 public void AddLast(ILinkedListNode<T> node)
                 {
-                    if (node == null)
-                        throw new ArgumentNullException(nameof(node));
+                    ArgumentNullException.ThrowIfNull(node);
 
                     //
                     // First unwrap the node. If this fails, there's no point in proceeding.
@@ -1041,8 +1031,7 @@ namespace Reaqtive.Storage
                 /// <exception cref="InvalidOperationException"><paramref name="node"/> is not in the current list.</exception>
                 public void Remove(ILinkedListNode<T> node)
                 {
-                    if (node == null)
-                        throw new ArgumentNullException(nameof(node));
+                    ArgumentNullException.ThrowIfNull(node);
 
                     //
                     // First unwrap the node. If this fails, there's no point in proceeding.

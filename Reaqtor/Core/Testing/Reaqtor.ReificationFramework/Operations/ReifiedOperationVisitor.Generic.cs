@@ -33,10 +33,7 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The result of visiting the operation.</returns>
         public virtual TResult Visit(ReifiedOperation operation)
         {
-            if (operation == null)
-            {
-                throw new ArgumentNullException(nameof(operation));
-            }
+            ArgumentNullException.ThrowIfNull(operation);
 
             return operation.Kind switch
             {

@@ -53,8 +53,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>Instance of the expression data type.</returns>
         public override object CreateInstance(params object[] arguments)
         {
-            if (arguments == null)
-                throw new ArgumentNullException(nameof(arguments));
+            ArgumentNullException.ThrowIfNull(arguments);
 
             var expr = arguments.Single();
             CheckType(expr);

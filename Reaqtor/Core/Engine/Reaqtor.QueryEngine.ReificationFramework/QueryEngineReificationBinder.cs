@@ -28,8 +28,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
 
         public Expression<Action<QueryEngineEnvironment>> Bind(ServiceOperation operation)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
 
             var reactiveProxyBinder = new ReactiveServiceOperationBinder();
             var bound = reactiveProxyBinder.Visit(operation);
@@ -55,8 +54,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
 
         public Expression<Action<QueryEngineEnvironment>> Bind(QueryEngineOperation operation)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
 
             return operation.Kind switch
             {
@@ -69,8 +67,7 @@ namespace Reaqtor.QueryEngine.ReificationFramework
 
         public Expression<Action<QueryEngineEnvironment>> Optimize(Expression<Action<QueryEngineEnvironment>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var envParam = expression.Parameters[0];
             var metadataParam = Expression.Parameter(typeof(IReactive), "mctx");

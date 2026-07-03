@@ -28,10 +28,8 @@ namespace System.Linq.Expressions
         /// <returns>Compiled delegate for the specified lambda expression.</returns>
         public static Delegate Compile(this LambdaExpression expression, ICompiledDelegateCache cache)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
 
             return CompileImpl(expression, cache, outliningEnabled: true, hoister: null);
         }
@@ -47,10 +45,8 @@ namespace System.Linq.Expressions
         /// <returns>Compiled delegate for the specified lambda expression.</returns>
         public static Delegate Compile(this LambdaExpression expression, ICompiledDelegateCache cache, bool outliningEnabled)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
 
             return CompileImpl(expression, cache, outliningEnabled, hoister: null);
         }
@@ -67,12 +63,9 @@ namespace System.Linq.Expressions
         /// <returns>Compiled delegate for the specified lambda expression.</returns>
         public static Delegate Compile(this LambdaExpression expression, ICompiledDelegateCache cache, bool outliningEnabled, IConstantHoister hoister)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
-            if (hoister == null)
-                throw new ArgumentNullException(nameof(hoister));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
+            ArgumentNullException.ThrowIfNull(hoister);
 
             return CompileImpl(expression, cache, outliningEnabled, hoister);
         }
@@ -88,10 +81,8 @@ namespace System.Linq.Expressions
         /// <returns>Compiled delegate for the specified lambda expression.</returns>
         public static T Compile<T>(this Expression<T> expression, ICompiledDelegateCache cache)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
 
             return (T)(object)CompileImpl(expression, cache, outliningEnabled: true, hoister: null);
         }
@@ -108,10 +99,8 @@ namespace System.Linq.Expressions
         /// <returns>Compiled delegate for the specified lambda expression.</returns>
         public static T Compile<T>(this Expression<T> expression, ICompiledDelegateCache cache, bool outliningEnabled)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
 
             return (T)(object)CompileImpl(expression, cache, outliningEnabled, hoister: null);
         }
@@ -129,12 +118,9 @@ namespace System.Linq.Expressions
         /// <returns>Compiled delegate for the specified lambda expression.</returns>
         public static T Compile<T>(this Expression<T> expression, ICompiledDelegateCache cache, bool outliningEnabled, IConstantHoister hoister)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
-            if (hoister == null)
-                throw new ArgumentNullException(nameof(hoister));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
+            ArgumentNullException.ThrowIfNull(hoister);
 
             return (T)(object)CompileImpl(expression, cache, outliningEnabled, hoister);
         }

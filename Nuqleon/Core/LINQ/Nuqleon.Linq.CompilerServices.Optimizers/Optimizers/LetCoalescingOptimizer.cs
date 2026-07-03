@@ -223,8 +223,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
                 public MemberChainAndNewExpressionLeafVisitor(NewExpression root)
                 {
-                    if (root == null)
-                        throw new ArgumentNullException(nameof(root));
+                    ArgumentNullException.ThrowIfNull(root);
 
                     if (root.Members == null)
                         throw new ArgumentException("Argument must be an anonymous type initializer.", nameof(root));
@@ -456,8 +455,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
                 public AnonymousTypeFlattener(NewExpression expression)
                 {
-                    if (expression == null)
-                        throw new ArgumentNullException(nameof(expression));
+                    ArgumentNullException.ThrowIfNull(expression);
 
                     if (expression.Members == null)
                         throw new ArgumentException("Argument must be an anonymous type initializer.", nameof(expression));

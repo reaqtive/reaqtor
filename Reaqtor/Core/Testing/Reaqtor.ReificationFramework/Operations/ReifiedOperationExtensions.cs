@@ -26,8 +26,7 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The query engine operations as reified operations.</returns>
         public static IEnumerable<ReifiedOperation> AsReified(this IEnumerable<QueryEngineOperation> operations)
         {
-            if (operations == null)
-                throw new ArgumentNullException(nameof(operations));
+            ArgumentNullException.ThrowIfNull(operations);
 
             return operations.Select<QueryEngineOperation, ReifiedOperation>(o => o);
         }
@@ -39,8 +38,7 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The service operations as reified operations.</returns>
         public static IEnumerable<ReifiedOperation> AsReified(this IEnumerable<ServiceOperation> operations)
         {
-            if (operations == null)
-                throw new ArgumentNullException(nameof(operations));
+            ArgumentNullException.ThrowIfNull(operations);
 
             return operations.Select<ServiceOperation, ReifiedOperation>(o => o);
         }
@@ -78,10 +76,8 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The wrapped operation.</returns>
         public static ReifiedOperation Async(this ReifiedOperation operation, Action<Task> onStart, CancellationToken token)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (onStart == null)
-                throw new ArgumentNullException(nameof(onStart));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(onStart);
 
             return new Async(operation, onStart, token);
         }
@@ -97,10 +93,8 @@ namespace Reaqtor.ReificationFramework
         /// </returns>
         public static Expression<Action<TEnvironment>> Bind<TEnvironment>(this ReifiedOperation operation, IReificationBinder<TEnvironment> binder)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (binder == null)
-                throw new ArgumentNullException(nameof(binder));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(binder);
 
             var flattener = new ReifiedOperationFlattener();
             var opBinder = new ReifiedOperationBinder<TEnvironment>(binder);
@@ -117,10 +111,8 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The wrapped operation.</returns>
         public static ReifiedOperation Catch(this ReifiedOperation operation, Action<Exception> handler)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (handler == null)
-                throw new ArgumentNullException(nameof(handler));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(handler);
 
             return new Catch<Exception>(operation, handler);
         }
@@ -135,10 +127,8 @@ namespace Reaqtor.ReificationFramework
         public static ReifiedOperation Catch<T>(this ReifiedOperation operation, Action<T> handler)
             where T : Exception
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (handler == null)
-                throw new ArgumentNullException(nameof(handler));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(handler);
 
             return new Catch<T>(operation, handler);
         }
@@ -150,8 +140,7 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The wrapped operation.</returns>
         public static ReifiedOperation Chain(this IEnumerable<ReifiedOperation> operations)
         {
-            if (operations == null)
-                throw new ArgumentNullException(nameof(operations));
+            ArgumentNullException.ThrowIfNull(operations);
 
             return new Chain(operations.First(), operations.Skip(1));
         }
@@ -164,10 +153,8 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The wrapped operation.</returns>
         public static ReifiedOperation Chain(this ReifiedOperation first, params ReifiedOperation[] rest)
         {
-            if (first == null)
-                throw new ArgumentNullException(nameof(first));
-            if (rest == null)
-                throw new ArgumentNullException(nameof(rest));
+            ArgumentNullException.ThrowIfNull(first);
+            ArgumentNullException.ThrowIfNull(rest);
 
             return new Chain(first, rest);
         }
@@ -185,12 +172,9 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The wrapped operation.</returns>
         public static ReifiedOperation Instrument(this ReifiedOperation operation, Action onEnter, Action onExit)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (onEnter == null)
-                throw new ArgumentNullException(nameof(onEnter));
-            if (onExit == null)
-                throw new ArgumentNullException(nameof(onExit));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(onEnter);
+            ArgumentNullException.ThrowIfNull(onExit);
 
             return new Instrument(operation, onEnter, onExit);
         }
@@ -202,8 +186,7 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The wrapped operation.</returns>
         public static ReifiedOperation LiftWildcards(this ReifiedOperation operation)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
 
             return LiftWildcards(operation, WildcardGenerator.Instance);
         }
@@ -216,10 +199,8 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The wrapped operation.</returns>
         public static ReifiedOperation LiftWildcards(this ReifiedOperation operation, IWildcardGenerator generator)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (generator == null)
-                throw new ArgumentNullException(nameof(generator));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(generator);
 
             return new LiftWildcards(operation, generator);
         }
@@ -233,12 +214,9 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The mapped operation.</returns>
         public static ServiceOperation Map(this ServiceOperation operation, Uri original, Uri replacement)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (original == null)
-                throw new ArgumentNullException(nameof(original));
-            if (replacement == null)
-                throw new ArgumentNullException(nameof(replacement));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(original);
+            ArgumentNullException.ThrowIfNull(replacement);
 
             var rewriter = new ServiceOperationUriRewriter(u => u == original ? replacement : u);
             return rewriter.Visit(operation);
@@ -252,10 +230,8 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The mapped operation.</returns>
         public static ServiceOperation MapWildcard(this ServiceOperation operation, Uri uri)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(uri);
 
             var rewriter = new ServiceOperationUriRewriter(u => u.IsWildcard() ? uri : u);
             return rewriter.Visit(operation);
@@ -269,8 +245,7 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The wrapped operation.</returns>
         public static ReifiedOperation Repeat(this ReifiedOperation operation, long count)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
             if (count <= 0)
                 throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 0.");
 
@@ -285,8 +260,7 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The wrapped operation.</returns>
         public static ReifiedOperation RepeatUntil(this ReifiedOperation operation, CancellationToken token)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
 
             return new RepeatUntil(operation, token);
         }
@@ -300,12 +274,9 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The service operation with the expression rewritten.</returns>
         public static ServiceOperation Rewrite(this ServiceOperation operation, Expression original, Expression replacement)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
-            if (original == null)
-                throw new ArgumentNullException(nameof(original));
-            if (replacement == null)
-                throw new ArgumentNullException(nameof(replacement));
+            ArgumentNullException.ThrowIfNull(operation);
+            ArgumentNullException.ThrowIfNull(original);
+            ArgumentNullException.ThrowIfNull(replacement);
 
             var rewriter = new ServiceOperationExpressionRewriter(
                 new Dictionary<Expression, Expression>(Comparer.Instance) { { original, replacement } });

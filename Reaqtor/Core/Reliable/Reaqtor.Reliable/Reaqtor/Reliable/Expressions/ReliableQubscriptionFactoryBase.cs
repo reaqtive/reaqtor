@@ -15,16 +15,14 @@ namespace Reaqtor.Reliable.Expressions
 
         public IReliableQubscription Create(Uri subscriptionUri, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, state);
         }
 
         IReliableReactiveSubscription IReliableReactiveSubscriptionFactory.Create(Uri subscriptionUri, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, state);
         }
@@ -42,16 +40,14 @@ namespace Reaqtor.Reliable.Expressions
 
         public IReliableQubscription Create(Uri subscriptionUri, TArg argument, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, argument, state);
         }
 
         IReliableReactiveSubscription IReliableReactiveSubscriptionFactory<TArg>.Create(Uri subscriptionUri, TArg argument, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, argument, state);
         }

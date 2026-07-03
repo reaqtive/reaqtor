@@ -45,10 +45,8 @@ generating the code for:
         /// <returns>Task to await the completion of the stream factory definition.</returns>
         public Task DefineStreamFactoryAsync<TArg1, TArg2, TInput, TOutput>(Uri uri, IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> streamFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             return DefineStreamFactoryAsyncCore<TArg1, TArg2, TInput, TOutput>(uri, streamFactory, state, token);
         }
@@ -98,10 +96,8 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task to await the completion of the stream factory definition.</returns>
         public Task DefineStreamFactoryAsync<<#=typeArgs#>, TInput, TOutput>(Uri uri, IAsyncReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> streamFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (streamFactory == null)
-                throw new ArgumentNullException(nameof(streamFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(streamFactory);
 
             return DefineStreamFactoryAsyncCore<<#=typeArgs#>, TInput, TOutput>(uri, streamFactory, state, token);
         }
@@ -145,10 +141,8 @@ generating the code for:
         /// <returns>Task to await the completion of the observable definition.</returns>
         public Task DefineObservableAsync<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             return DefineObservableAsyncCore<TArg1, TArg2, TResult>(uri, observable, state, token);
         }
@@ -196,10 +190,8 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task to await the completion of the observable definition.</returns>
         public Task DefineObservableAsync<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQbservable<TResult>>> observable, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observable == null)
-                throw new ArgumentNullException(nameof(observable));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observable);
 
             return DefineObservableAsyncCore<<#=typeArgs#>, TResult>(uri, observable, state, token);
         }
@@ -242,10 +234,8 @@ generating the code for:
         /// <returns>Task to await the completion of the observer definition.</returns>
         public Task DefineObserverAsync<TArg1, TArg2, TResult>(Uri uri, Expression<Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>>> observer, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             return DefineObserverAsyncCore<TArg1, TArg2, TResult>(uri, observer, state, token);
         }
@@ -293,10 +283,8 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task to await the completion of the observer definition.</returns>
         public Task DefineObserverAsync<<#=typeArgs#>, TResult>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQbserver<TResult>>> observer, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(observer);
 
             return DefineObserverAsyncCore<<#=typeArgs#>, TResult>(uri, observer, state, token);
         }
@@ -338,10 +326,8 @@ generating the code for:
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<TArg1, TArg2>(Uri uri, IAsyncReactiveQubscriptionFactory<TArg1, TArg2> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsyncCore<TArg1, TArg2>(uri, subscriptionFactory, state, token);
         }
@@ -387,10 +373,8 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<<#=typeArgs#>>(Uri uri, IAsyncReactiveQubscriptionFactory<<#=typeArgs#>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsyncCore<<#=typeArgs#>>(uri, subscriptionFactory, state, token);
         }

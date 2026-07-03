@@ -47,8 +47,7 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>Instance of the structural data type.</returns>
         public override object CreateInstance(params object[] arguments)
         {
-            if (arguments == null)
-                throw new ArgumentNullException(nameof(arguments));
+            ArgumentNullException.ThrowIfNull(arguments);
 
             // CONSIDER: We could use subclasses here.
             switch (StructuralKind)

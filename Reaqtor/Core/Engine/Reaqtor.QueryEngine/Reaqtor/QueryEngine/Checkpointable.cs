@@ -21,8 +21,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public static Task CheckpointAsync(this ICheckpointable @this, IStateWriter writer)
         {
-            if (@this == null)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this, nameof(@this));
 
             return @this.CheckpointAsync(writer, CancellationToken.None, progress: null);
         }
@@ -36,8 +35,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public static Task CheckpointAsync(this ICheckpointable @this, IStateWriter writer, CancellationToken token)
         {
-            if (@this == null)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this, nameof(@this));
 
             return @this.CheckpointAsync(writer, token, progress: null);
         }
@@ -51,8 +49,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public static Task CheckpointAsync(this ICheckpointable @this, IStateWriter writer, IProgress<int> progress)
         {
-            if (@this == null)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this, nameof(@this));
 
             return @this.CheckpointAsync(writer, CancellationToken.None, progress);
         }
@@ -65,8 +62,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public static Task RecoverAsync(this ICheckpointable @this, IStateReader reader)
         {
-            if (@this == null)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this, nameof(@this));
 
             return @this.RecoverAsync(reader, CancellationToken.None, progress: null);
         }
@@ -80,8 +76,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public static Task RecoverAsync(this ICheckpointable @this, IStateReader reader, CancellationToken token)
         {
-            if (@this == null)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this, nameof(@this));
 
             return @this.RecoverAsync(reader, token, progress: null);
         }
@@ -95,8 +90,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public static Task RecoverAsync(this ICheckpointable @this, IStateReader reader, IProgress<int> progress)
         {
-            if (@this == null)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this, nameof(@this));
 
             return @this.RecoverAsync(reader, CancellationToken.None, progress);
         }
@@ -108,8 +102,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Task to observe the eventual completion of the operation.</returns>
         public static Task UnloadAsync(this ICheckpointable @this)
         {
-            if (@this == null)
-                throw new ArgumentNullException(nameof(@this));
+            ArgumentNullException.ThrowIfNull(@this, nameof(@this));
 
             return @this.UnloadAsync(progress: null);
         }

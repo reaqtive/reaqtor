@@ -41,8 +41,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Sequence of free variables in the given expression. The resulting expressions are distinct and returned in no particular order.</returns>
         public static IEnumerable<ParameterExpression> Scan(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             using var scanner = s_freeVariableScanners.New();
 
@@ -58,8 +57,7 @@ namespace System.Linq.CompilerServices
         /// <returns>true if one or more free variables have been found; otherwise, false.</returns>
         public static bool HasFreeVariables(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             using var finder = s_freeVariableFinders.New();
 

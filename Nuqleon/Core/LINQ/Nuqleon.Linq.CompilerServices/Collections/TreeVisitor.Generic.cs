@@ -32,8 +32,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of visiting the tree nodes. This collection will be equal to the original collection if none of the tree nodes changed.</returns>
         protected IReadOnlyList<ITree<T>> Visit(IReadOnlyList<ITree<T>> nodes)
         {
-            if (nodes == null)
-                throw new ArgumentNullException(nameof(nodes));
+            ArgumentNullException.ThrowIfNull(nodes);
 
             var res = default(List<ITree<T>>);
 

@@ -74,8 +74,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public virtual void ScheduleAbsolute(TAbsolute dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             lock (_gate)
             {
@@ -92,8 +91,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public void ScheduleRelative(TRelative dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             lock (_gate)
             {
@@ -109,8 +107,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public void Schedule(ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             ScheduleAbsolute(Physical.Clock, task);
         }
@@ -122,8 +119,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public void Schedule(TimeSpan dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             ScheduleRelative(Physical.ToRelative(dueTime), task);
         }
@@ -135,8 +131,7 @@ namespace Reaqtive.TestingFramework
         /// <param name="task">The task to execute.</param>
         public void Schedule(DateTimeOffset dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             ScheduleRelative(Physical.ToRelative(dueTime - Now), task);
         }
@@ -237,8 +232,7 @@ namespace Reaqtive.TestingFramework
         /// <returns>true if the exception was handled; otherwise, false.</returns>
         public bool TryCatch(Exception exception, IWorkItem task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             var handler = UnhandledException;
             if (handler != null)

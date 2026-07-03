@@ -59,8 +59,7 @@ namespace Reaqtor
         /// <remarks>If observer calls are not awaited in a sequential manner, the processing order of events in the subject is undefined.</remarks>
         public Task OnErrorAsync(Exception error, CancellationToken token = default)
         {
-            if (error == null)
-                throw new ArgumentNullException(nameof(error));
+            ArgumentNullException.ThrowIfNull(error);
 
             return OnErrorAsyncCore(error, token);
         }
@@ -119,10 +118,8 @@ namespace Reaqtor
         /// <returns>Task returning a subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
         public Task<IAsyncReactiveSubscription> SubscribeAsync(IAsyncReactiveObserver<TOutput> observer, Uri subscriptionUri, object state = null, CancellationToken token = default)
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(observer);
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return SubscribeAsyncCore(observer, subscriptionUri, state, token);
         }

@@ -22,10 +22,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, TResult>> Memoize<T1, T2, TResult>(this IMemoizer memoizer, Func<T1, T2, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2), TResult>(a => function(a.Item1, a.Item2), options, comparer: null);
@@ -51,10 +49,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, TResult>> Memoize<T1, T2, T3, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3), TResult>(a => function(a.Item1, a.Item2, a.Item3), options, comparer: null);
@@ -81,10 +77,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, TResult>> Memoize<T1, T2, T3, T4, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4), options, comparer: null);
@@ -112,10 +106,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, TResult>> Memoize<T1, T2, T3, T4, T5, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5), options, comparer: null);
@@ -144,10 +136,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, TResult>> Memoize<T1, T2, T3, T4, T5, T6, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6), options, comparer: null);
@@ -177,10 +167,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7), options, comparer: null);
@@ -211,10 +199,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7, T8), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7, a.Item8), options, comparer: null);
@@ -246,10 +232,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7, T8, T9), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7, a.Item8, a.Item9), options, comparer: null);
@@ -282,10 +266,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7, a.Item8, a.Item9, a.Item10), options, comparer: null);
@@ -319,10 +301,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7, a.Item8, a.Item9, a.Item10, a.Item11), options, comparer: null);
@@ -357,10 +337,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7, a.Item8, a.Item9, a.Item10, a.Item11, a.Item12), options, comparer: null);
@@ -396,10 +374,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7, a.Item8, a.Item9, a.Item10, a.Item11, a.Item12, a.Item13), options, comparer: null);
@@ -436,10 +412,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7, a.Item8, a.Item9, a.Item10, a.Item11, a.Item12, a.Item13, a.Item14), options, comparer: null);
@@ -477,10 +451,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7, a.Item8, a.Item9, a.Item10, a.Item11, a.Item12, a.Item13, a.Item14, a.Item15), options, comparer: null);
@@ -519,10 +491,8 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16), TResult>(a => function(a.Item1, a.Item2, a.Item3, a.Item4, a.Item5, a.Item6, a.Item7, a.Item8, a.Item9, a.Item10, a.Item11, a.Item12, a.Item13, a.Item14, a.Item15, a.Item16), options, comparer: null);
@@ -549,14 +519,10 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, TResult>> Memoize<T1, T2, TResult>(this IMemoizer memoizer, Func<T1, T2, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2);
@@ -587,16 +553,11 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, TResult>> Memoize<T1, T2, T3, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3);
@@ -629,18 +590,12 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, TResult>> Memoize<T1, T2, T3, T4, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4);
@@ -675,20 +630,13 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, TResult>> Memoize<T1, T2, T3, T4, T5, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5);
@@ -725,22 +673,14 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, TResult>> Memoize<T1, T2, T3, T4, T5, T6, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6);
@@ -779,24 +719,15 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7);
@@ -837,26 +768,16 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
-            if (comparer8 == null)
-                throw new ArgumentNullException(nameof(comparer8));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
+            ArgumentNullException.ThrowIfNull(comparer8);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7, comparer8);
@@ -899,28 +820,17 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
-            if (comparer8 == null)
-                throw new ArgumentNullException(nameof(comparer8));
-            if (comparer9 == null)
-                throw new ArgumentNullException(nameof(comparer9));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
+            ArgumentNullException.ThrowIfNull(comparer8);
+            ArgumentNullException.ThrowIfNull(comparer9);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7, comparer8, comparer9);
@@ -965,30 +875,18 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
-            if (comparer8 == null)
-                throw new ArgumentNullException(nameof(comparer8));
-            if (comparer9 == null)
-                throw new ArgumentNullException(nameof(comparer9));
-            if (comparer10 == null)
-                throw new ArgumentNullException(nameof(comparer10));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
+            ArgumentNullException.ThrowIfNull(comparer8);
+            ArgumentNullException.ThrowIfNull(comparer9);
+            ArgumentNullException.ThrowIfNull(comparer10);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7, comparer8, comparer9, comparer10);
@@ -1035,32 +933,19 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
-            if (comparer8 == null)
-                throw new ArgumentNullException(nameof(comparer8));
-            if (comparer9 == null)
-                throw new ArgumentNullException(nameof(comparer9));
-            if (comparer10 == null)
-                throw new ArgumentNullException(nameof(comparer10));
-            if (comparer11 == null)
-                throw new ArgumentNullException(nameof(comparer11));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
+            ArgumentNullException.ThrowIfNull(comparer8);
+            ArgumentNullException.ThrowIfNull(comparer9);
+            ArgumentNullException.ThrowIfNull(comparer10);
+            ArgumentNullException.ThrowIfNull(comparer11);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7, comparer8, comparer9, comparer10, comparer11);
@@ -1109,34 +994,20 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
-            if (comparer8 == null)
-                throw new ArgumentNullException(nameof(comparer8));
-            if (comparer9 == null)
-                throw new ArgumentNullException(nameof(comparer9));
-            if (comparer10 == null)
-                throw new ArgumentNullException(nameof(comparer10));
-            if (comparer11 == null)
-                throw new ArgumentNullException(nameof(comparer11));
-            if (comparer12 == null)
-                throw new ArgumentNullException(nameof(comparer12));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
+            ArgumentNullException.ThrowIfNull(comparer8);
+            ArgumentNullException.ThrowIfNull(comparer9);
+            ArgumentNullException.ThrowIfNull(comparer10);
+            ArgumentNullException.ThrowIfNull(comparer11);
+            ArgumentNullException.ThrowIfNull(comparer12);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7, comparer8, comparer9, comparer10, comparer11, comparer12);
@@ -1187,36 +1058,21 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12, IEqualityComparer<T13> comparer13)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
-            if (comparer8 == null)
-                throw new ArgumentNullException(nameof(comparer8));
-            if (comparer9 == null)
-                throw new ArgumentNullException(nameof(comparer9));
-            if (comparer10 == null)
-                throw new ArgumentNullException(nameof(comparer10));
-            if (comparer11 == null)
-                throw new ArgumentNullException(nameof(comparer11));
-            if (comparer12 == null)
-                throw new ArgumentNullException(nameof(comparer12));
-            if (comparer13 == null)
-                throw new ArgumentNullException(nameof(comparer13));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
+            ArgumentNullException.ThrowIfNull(comparer8);
+            ArgumentNullException.ThrowIfNull(comparer9);
+            ArgumentNullException.ThrowIfNull(comparer10);
+            ArgumentNullException.ThrowIfNull(comparer11);
+            ArgumentNullException.ThrowIfNull(comparer12);
+            ArgumentNullException.ThrowIfNull(comparer13);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7, comparer8, comparer9, comparer10, comparer11, comparer12, comparer13);
@@ -1269,38 +1125,22 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12, IEqualityComparer<T13> comparer13, IEqualityComparer<T14> comparer14)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
-            if (comparer8 == null)
-                throw new ArgumentNullException(nameof(comparer8));
-            if (comparer9 == null)
-                throw new ArgumentNullException(nameof(comparer9));
-            if (comparer10 == null)
-                throw new ArgumentNullException(nameof(comparer10));
-            if (comparer11 == null)
-                throw new ArgumentNullException(nameof(comparer11));
-            if (comparer12 == null)
-                throw new ArgumentNullException(nameof(comparer12));
-            if (comparer13 == null)
-                throw new ArgumentNullException(nameof(comparer13));
-            if (comparer14 == null)
-                throw new ArgumentNullException(nameof(comparer14));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
+            ArgumentNullException.ThrowIfNull(comparer8);
+            ArgumentNullException.ThrowIfNull(comparer9);
+            ArgumentNullException.ThrowIfNull(comparer10);
+            ArgumentNullException.ThrowIfNull(comparer11);
+            ArgumentNullException.ThrowIfNull(comparer12);
+            ArgumentNullException.ThrowIfNull(comparer13);
+            ArgumentNullException.ThrowIfNull(comparer14);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7, comparer8, comparer9, comparer10, comparer11, comparer12, comparer13, comparer14);
@@ -1355,40 +1195,23 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12, IEqualityComparer<T13> comparer13, IEqualityComparer<T14> comparer14, IEqualityComparer<T15> comparer15)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
-            if (comparer8 == null)
-                throw new ArgumentNullException(nameof(comparer8));
-            if (comparer9 == null)
-                throw new ArgumentNullException(nameof(comparer9));
-            if (comparer10 == null)
-                throw new ArgumentNullException(nameof(comparer10));
-            if (comparer11 == null)
-                throw new ArgumentNullException(nameof(comparer11));
-            if (comparer12 == null)
-                throw new ArgumentNullException(nameof(comparer12));
-            if (comparer13 == null)
-                throw new ArgumentNullException(nameof(comparer13));
-            if (comparer14 == null)
-                throw new ArgumentNullException(nameof(comparer14));
-            if (comparer15 == null)
-                throw new ArgumentNullException(nameof(comparer15));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
+            ArgumentNullException.ThrowIfNull(comparer8);
+            ArgumentNullException.ThrowIfNull(comparer9);
+            ArgumentNullException.ThrowIfNull(comparer10);
+            ArgumentNullException.ThrowIfNull(comparer11);
+            ArgumentNullException.ThrowIfNull(comparer12);
+            ArgumentNullException.ThrowIfNull(comparer13);
+            ArgumentNullException.ThrowIfNull(comparer14);
+            ArgumentNullException.ThrowIfNull(comparer15);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7, comparer8, comparer9, comparer10, comparer11, comparer12, comparer13, comparer14, comparer15);
@@ -1445,42 +1268,24 @@ namespace System.Memory
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>> Memoize<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult>(this IMemoizer memoizer, Func<T1, T2, T3, T4, T5, T6, T7, T8, T9, T10, T11, T12, T13, T14, T15, T16, TResult> function, MemoizationOptions options, IEqualityComparer<T1> comparer1, IEqualityComparer<T2> comparer2, IEqualityComparer<T3> comparer3, IEqualityComparer<T4> comparer4, IEqualityComparer<T5> comparer5, IEqualityComparer<T6> comparer6, IEqualityComparer<T7> comparer7, IEqualityComparer<T8> comparer8, IEqualityComparer<T9> comparer9, IEqualityComparer<T10> comparer10, IEqualityComparer<T11> comparer11, IEqualityComparer<T12> comparer12, IEqualityComparer<T13> comparer13, IEqualityComparer<T14> comparer14, IEqualityComparer<T15> comparer15, IEqualityComparer<T16> comparer16)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
-            if (comparer1 == null)
-                throw new ArgumentNullException(nameof(comparer1));
-            if (comparer2 == null)
-                throw new ArgumentNullException(nameof(comparer2));
-            if (comparer3 == null)
-                throw new ArgumentNullException(nameof(comparer3));
-            if (comparer4 == null)
-                throw new ArgumentNullException(nameof(comparer4));
-            if (comparer5 == null)
-                throw new ArgumentNullException(nameof(comparer5));
-            if (comparer6 == null)
-                throw new ArgumentNullException(nameof(comparer6));
-            if (comparer7 == null)
-                throw new ArgumentNullException(nameof(comparer7));
-            if (comparer8 == null)
-                throw new ArgumentNullException(nameof(comparer8));
-            if (comparer9 == null)
-                throw new ArgumentNullException(nameof(comparer9));
-            if (comparer10 == null)
-                throw new ArgumentNullException(nameof(comparer10));
-            if (comparer11 == null)
-                throw new ArgumentNullException(nameof(comparer11));
-            if (comparer12 == null)
-                throw new ArgumentNullException(nameof(comparer12));
-            if (comparer13 == null)
-                throw new ArgumentNullException(nameof(comparer13));
-            if (comparer14 == null)
-                throw new ArgumentNullException(nameof(comparer14));
-            if (comparer15 == null)
-                throw new ArgumentNullException(nameof(comparer15));
-            if (comparer16 == null)
-                throw new ArgumentNullException(nameof(comparer16));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
+            ArgumentNullException.ThrowIfNull(comparer1);
+            ArgumentNullException.ThrowIfNull(comparer2);
+            ArgumentNullException.ThrowIfNull(comparer3);
+            ArgumentNullException.ThrowIfNull(comparer4);
+            ArgumentNullException.ThrowIfNull(comparer5);
+            ArgumentNullException.ThrowIfNull(comparer6);
+            ArgumentNullException.ThrowIfNull(comparer7);
+            ArgumentNullException.ThrowIfNull(comparer8);
+            ArgumentNullException.ThrowIfNull(comparer9);
+            ArgumentNullException.ThrowIfNull(comparer10);
+            ArgumentNullException.ThrowIfNull(comparer11);
+            ArgumentNullException.ThrowIfNull(comparer12);
+            ArgumentNullException.ThrowIfNull(comparer13);
+            ArgumentNullException.ThrowIfNull(comparer14);
+            ArgumentNullException.ThrowIfNull(comparer15);
+            ArgumentNullException.ThrowIfNull(comparer16);
 
 #if USE_VALUETUPLE
             var comparer = EqualityComparerExtensions.CombineWithValueTuple(comparer1, comparer2, comparer3, comparer4, comparer5, comparer6, comparer7, comparer8, comparer9, comparer10, comparer11, comparer12, comparer13, comparer14, comparer15, comparer16);
@@ -1555,10 +1360,8 @@ namespace System.Memory
             where T1 : class
             where T2 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -1637,10 +1440,8 @@ namespace System.Memory
             where T2 : class
             where T3 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -1725,10 +1526,8 @@ namespace System.Memory
             where T3 : class
             where T4 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -1819,10 +1618,8 @@ namespace System.Memory
             where T4 : class
             where T5 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -1919,10 +1716,8 @@ namespace System.Memory
             where T5 : class
             where T6 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -2025,10 +1820,8 @@ namespace System.Memory
             where T6 : class
             where T7 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -2137,10 +1930,8 @@ namespace System.Memory
             where T7 : class
             where T8 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -2255,10 +2046,8 @@ namespace System.Memory
             where T8 : class
             where T9 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -2379,10 +2168,8 @@ namespace System.Memory
             where T9 : class
             where T10 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -2509,10 +2296,8 @@ namespace System.Memory
             where T10 : class
             where T11 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -2645,10 +2430,8 @@ namespace System.Memory
             where T11 : class
             where T12 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -2787,10 +2570,8 @@ namespace System.Memory
             where T12 : class
             where T13 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -2935,10 +2716,8 @@ namespace System.Memory
             where T13 : class
             where T14 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -3089,10 +2868,8 @@ namespace System.Memory
             where T14 : class
             where T15 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.
@@ -3249,10 +3026,8 @@ namespace System.Memory
             where T15 : class
             where T16 : class
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
                     // Note the closure over t1 does not keep the cache entry alive due to CWT's guarantees.

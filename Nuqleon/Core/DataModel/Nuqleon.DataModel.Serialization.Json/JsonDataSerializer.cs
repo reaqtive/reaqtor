@@ -89,10 +89,7 @@ namespace Nuqleon.DataModel.Serialization.Json
             : base(includePrivate, converters)
 #pragma warning restore 618
         {
-            if (expressionSerializer == null)
-            {
-                throw new ArgumentNullException(nameof(expressionSerializer));
-            }
+            ArgumentNullException.ThrowIfNull(expressionSerializer);
 
             var expressionConverter = new ExpressionJsonConverter(expressionSerializer);
             Serializer.Converters.Add(expressionConverter);
@@ -118,14 +115,8 @@ namespace Nuqleon.DataModel.Serialization.Json
             : base(includePrivate, converters)
 #pragma warning restore 618
         {
-            if (serializeExpression == null)
-            {
-                throw new ArgumentNullException(nameof(serializeExpression));
-            }
-            if (deserializeExpression == null)
-            {
-                throw new ArgumentNullException(nameof(deserializeExpression));
-            }
+            ArgumentNullException.ThrowIfNull(serializeExpression);
+            ArgumentNullException.ThrowIfNull(deserializeExpression);
 
             var expressionConverter = new ExpressionJsonConverter(serializeExpression, deserializeExpression);
             Serializer.Converters.Add(expressionConverter);

@@ -13,8 +13,7 @@ namespace Reaqtor.Shebang.Linq
         [KnownResource("rx://observable/cast")]
         public static IAsyncReactiveQbservable<TResult> Cast<TResult>(this IAsyncReactiveQbservable<object> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TResult)), source.Expression));
         }
@@ -22,8 +21,7 @@ namespace Reaqtor.Shebang.Linq
         [KnownResource("rx://observable/oftype")]
         public static IAsyncReactiveQbservable<TResult> OfType<TResult>(this IAsyncReactiveQbservable<object> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TResult)), source.Expression));
         }

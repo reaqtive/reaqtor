@@ -63,8 +63,7 @@ namespace System.Linq.CompilerServices.Optimizers
 
             protected override bool TryGetOperatorType(MethodInfo method, out OperatorType operatorType)
             {
-                if (method == null)
-                    throw new ArgumentNullException(nameof(method));
+                ArgumentNullException.ThrowIfNull(method);
 
                 if (!method.IsGenericMethod)
                 {

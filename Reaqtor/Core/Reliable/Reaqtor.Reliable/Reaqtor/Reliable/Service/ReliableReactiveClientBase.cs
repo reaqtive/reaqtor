@@ -30,8 +30,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubjectFactory<TInput, TOutput> GetStreamFactory<TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TInput, TOutput>(uri);
         }
@@ -44,8 +43,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubjectFactory<TInput, TOutput, TArgs> GetStreamFactory<TArgs, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArgs, TInput, TOutput>(uri);
         }
@@ -62,8 +60,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableMultiQubject<TInput, TOutput> GetStream<TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamCore<TInput, TOutput>(uri);
         }
@@ -80,8 +77,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQbservable<T> GetObservable<T>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<T>(uri);
         }
@@ -94,8 +90,7 @@ namespace Reaqtor.Reliable.Service
 
         public Func<TArgs, IReliableQbservable<TResult>> GetObservable<TArgs, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArgs, TResult>(uri);
         }
@@ -112,8 +107,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQbserver<T> GetObserver<T>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<T>(uri);
         }
@@ -126,8 +120,7 @@ namespace Reaqtor.Reliable.Service
 
         public Func<TArgs, IReliableQbserver<TResult>> GetObserver<TArgs, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArgs, TResult>(uri);
         }
@@ -144,8 +137,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubscriptionFactory GetSubscriptionFactory(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore(uri);
         }
@@ -158,8 +150,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubscriptionFactory<TArgs> GetSubscriptionFactory<TArgs>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArgs>(uri);
         }
@@ -176,8 +167,7 @@ namespace Reaqtor.Reliable.Service
 
         public IReliableQubscription GetSubscription(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionCore(uri);
         }

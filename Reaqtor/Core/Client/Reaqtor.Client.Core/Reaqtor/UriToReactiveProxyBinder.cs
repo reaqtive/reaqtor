@@ -56,10 +56,8 @@ namespace Reaqtor
         /// <returns>Rewritten expression with the subscription creation call bound to the IReactiveProxy context.</returns>
         public Expression BindSubscription(Expression expr, Uri subscriptionUri, object state, CancellationToken token)
         {
-            if (expr == null)
-                throw new ArgumentNullException(nameof(expr));
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(expr);
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             //
             // TODO: Structure tupletization better in a layered manner end-to-end.
@@ -224,10 +222,8 @@ namespace Reaqtor
         /// <returns>Rewritten expression with the observable definition call bound to the IReactiveProxy context.</returns>
         public Expression BindObservable(Expression expr, Uri observableUri, object state, CancellationToken token)
         {
-            if (expr == null)
-                throw new ArgumentNullException(nameof(expr));
-            if (observableUri == null)
-                throw new ArgumentNullException(nameof(observableUri));
+            ArgumentNullException.ThrowIfNull(expr);
+            ArgumentNullException.ThrowIfNull(observableUri);
 
             Type type = expr.Type;
             if (!type.IsGenericType)
@@ -291,10 +287,8 @@ namespace Reaqtor
         /// <returns>Rewritten expression with the observer definition call bound to the IReactiveProxy context.</returns>
         public Expression BindObserver(Expression expr, Uri observerUri, object state, CancellationToken token)
         {
-            if (expr == null)
-                throw new ArgumentNullException(nameof(expr));
-            if (observerUri == null)
-                throw new ArgumentNullException(nameof(observerUri));
+            ArgumentNullException.ThrowIfNull(expr);
+            ArgumentNullException.ThrowIfNull(observerUri);
 
             Type type = expr.Type;
             if (!type.IsGenericType)

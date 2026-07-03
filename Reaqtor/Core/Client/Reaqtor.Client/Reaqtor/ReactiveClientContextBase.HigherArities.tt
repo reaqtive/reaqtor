@@ -438,10 +438,8 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task to await the completion of the subscription factory definition.</returns>
         public Task DefineSubscriptionFactoryAsync<<#=typeArgs#>>(Uri uri, Expression<Func<<#=typeArgs#>, IAsyncReactiveQubscription>> subscriptionFactory, object state = null, CancellationToken token = default)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
-            if (subscriptionFactory == null)
-                throw new ArgumentNullException(nameof(subscriptionFactory));
+            ArgumentNullException.ThrowIfNull(uri);
+            ArgumentNullException.ThrowIfNull(subscriptionFactory);
 
             return DefineSubscriptionFactoryAsync<<#=typeArgs#>>(uri, ((AsyncReactiveQueryProviderBase)Provider).CreateQubscriptionFactory<<#=typeArgs#>>(subscriptionFactory), state, token);
         }

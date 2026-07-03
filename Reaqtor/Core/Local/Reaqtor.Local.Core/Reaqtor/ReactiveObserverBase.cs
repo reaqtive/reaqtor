@@ -45,8 +45,7 @@ namespace Reaqtor
         /// <param name="error">Error to report on the observer.</param>
         public void OnError(Exception error)
         {
-            if (error == null)
-                throw new ArgumentNullException(nameof(error));
+            ArgumentNullException.ThrowIfNull(error);
 
             OnErrorCore(error);
         }

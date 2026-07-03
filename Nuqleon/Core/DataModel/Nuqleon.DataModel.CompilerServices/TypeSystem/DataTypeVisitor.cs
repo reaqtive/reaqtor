@@ -232,10 +232,8 @@ namespace Nuqleon.DataModel.TypeSystem
         /// <returns>Result of visiting the nodes.</returns>
         public static ReadOnlyCollection<T> Visit<T>(ReadOnlyCollection<T> nodes, Func<T, T> elementVisitor)
         {
-            if (nodes == null)
-                throw new ArgumentNullException(nameof(nodes));
-            if (elementVisitor == null)
-                throw new ArgumentNullException(nameof(elementVisitor));
+            ArgumentNullException.ThrowIfNull(nodes);
+            ArgumentNullException.ThrowIfNull(elementVisitor);
 
             var res = default(T[]);
 

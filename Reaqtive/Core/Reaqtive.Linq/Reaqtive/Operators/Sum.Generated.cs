@@ -17,8 +17,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Int32> Sum(this ISubscribable<Int32> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumInt32(source);
         }
@@ -135,8 +134,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Int64> Sum(this ISubscribable<Int64> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumInt64(source);
         }
@@ -253,8 +251,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Single> Sum(this ISubscribable<Single> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumSingle(source);
         }
@@ -360,8 +357,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Double> Sum(this ISubscribable<Double> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumDouble(source);
         }
@@ -467,8 +463,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Decimal> Sum(this ISubscribable<Decimal> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumDecimal(source);
         }
@@ -585,8 +580,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Int32?> Sum(this ISubscribable<Int32?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableInt32(source);
         }
@@ -706,8 +700,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Int64?> Sum(this ISubscribable<Int64?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableInt64(source);
         }
@@ -827,8 +820,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Single?> Sum(this ISubscribable<Single?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableSingle(source);
         }
@@ -937,8 +929,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Double?> Sum(this ISubscribable<Double?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableDouble(source);
         }
@@ -1047,8 +1038,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<Decimal?> Sum(this ISubscribable<Decimal?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SumNullableDecimal(source);
         }

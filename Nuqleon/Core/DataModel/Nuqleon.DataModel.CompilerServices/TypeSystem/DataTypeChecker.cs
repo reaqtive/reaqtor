@@ -95,10 +95,7 @@ namespace Nuqleon.DataModel.TypeSystem
 
             public override bool Visit(Type type)
             {
-                if (type == null)
-                {
-                    throw new ArgumentNullException(nameof(type));
-                }
+                ArgumentNullException.ThrowIfNull(type);
 
                 foreach (var previousRecord in _stack)
                 {

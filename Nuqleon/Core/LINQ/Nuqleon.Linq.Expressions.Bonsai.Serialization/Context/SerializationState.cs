@@ -79,8 +79,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
 
         public Json.Expression AddLabelTarget(LabelTarget labelTarget)
         {
-            if (labelTarget == null)
-                throw new ArgumentNullException(nameof(labelTarget));
+            ArgumentNullException.ThrowIfNull(labelTarget);
 
             if (!_labelTargets.TryGetValue(labelTarget, out int index))
             {

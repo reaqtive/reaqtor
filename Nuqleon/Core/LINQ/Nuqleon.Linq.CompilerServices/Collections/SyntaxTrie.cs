@@ -42,8 +42,7 @@ namespace System.Linq.CompilerServices
         /// <param name="identifier">Identifier to add.</param>
         public void Add(string identifier)
         {
-            if (identifier == null)
-                throw new ArgumentNullException(nameof(identifier));
+            ArgumentNullException.ThrowIfNull(identifier);
 
             var next = this;
 
@@ -68,8 +67,7 @@ namespace System.Linq.CompilerServices
         /// <returns>true if the specified identifier exists; otherwise, false.</returns>
         public bool Contains(string identifier)
         {
-            if (identifier == null)
-                throw new ArgumentNullException(nameof(identifier));
+            ArgumentNullException.ThrowIfNull(identifier);
 
             var next = this;
 
@@ -95,8 +93,7 @@ namespace System.Linq.CompilerServices
         /// <returns>true if the specified identifier was found and removed; otherwise, false.</returns>
         public bool Remove(string identifier)
         {
-            if (identifier == null)
-                throw new ArgumentNullException(nameof(identifier));
+            ArgumentNullException.ThrowIfNull(identifier);
 
             var next = this;
 

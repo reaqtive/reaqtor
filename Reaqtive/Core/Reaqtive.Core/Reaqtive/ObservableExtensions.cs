@@ -25,8 +25,7 @@ namespace Reaqtive
         /// <returns>Subscribable sequence producing the same notifications as the specified observable sequence.</returns>
         public static ISubscribable<TSource> ToSubscribable<TSource>(this IObservable<TSource> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             if (source is ISubscribable<TSource> subscribable)
             {

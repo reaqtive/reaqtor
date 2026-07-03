@@ -181,8 +181,7 @@ namespace Reaqtive.Storage
                 /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
                 public void ExceptWith(IEnumerable<T> other)
                 {
-                    if (other == null)
-                        throw new ArgumentNullException(nameof(other));
+                    ArgumentNullException.ThrowIfNull(other);
 
                     //
                     // Special case: {} \ X = {}
@@ -242,8 +241,7 @@ namespace Reaqtive.Storage
                 /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
                 public void IntersectWith(IEnumerable<T> other)
                 {
-                    if (other == null)
-                        throw new ArgumentNullException(nameof(other));
+                    ArgumentNullException.ThrowIfNull(other);
 
                     //
                     // Special case: {} /\ X = {}
@@ -372,8 +370,7 @@ namespace Reaqtive.Storage
                 /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
                 public void SymmetricExceptWith(IEnumerable<T> other)
                 {
-                    if (other == null)
-                        throw new ArgumentNullException(nameof(other));
+                    ArgumentNullException.ThrowIfNull(other);
 
                     //
                     // Special case: {} ^ X = {} \/ X = X
@@ -418,8 +415,7 @@ namespace Reaqtive.Storage
                 /// <exception cref="ArgumentNullException"><paramref name="other"/> is <c>null</c>.</exception>
                 public void UnionWith(IEnumerable<T> other)
                 {
-                    if (other == null)
-                        throw new ArgumentNullException(nameof(other));
+                    ArgumentNullException.ThrowIfNull(other);
 
                     //
                     // Special case: X \/ X = X

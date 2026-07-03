@@ -32,8 +32,7 @@ namespace System.Memory
         /// <returns>Bundle value with the specified items.</returns>
         public static IReadOnlyIndexed Create(params object[] items)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             return CreateImpl(items);
         }
@@ -45,8 +44,7 @@ namespace System.Memory
         /// <returns>Bundle value with the specified items.</returns>
         public static IReadOnlyIndexed Create(IEnumerable<object> items)
         {
-            if (items == null)
-                throw new ArgumentNullException(nameof(items));
+            ArgumentNullException.ThrowIfNull(items);
 
             var list = items as IList<object>;
             return CreateImpl(list ?? [.. items]);

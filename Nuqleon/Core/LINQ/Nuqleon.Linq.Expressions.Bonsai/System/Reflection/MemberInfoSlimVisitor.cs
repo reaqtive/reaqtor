@@ -26,8 +26,7 @@ namespace System.Reflection
         /// <returns>Result of the visit.</returns>
         public MemberInfoSlim Visit(MemberInfoSlim member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             return member.MemberType switch
             {

@@ -76,10 +76,7 @@ for (var j = 1; j <= i; ++j)
 for (var j = 1; j <= i; ++j)
 {
 #>
-            if (innerCache<#=j#> == null)
-            {
-                throw new ArgumentNullException(nameof(innerCache<#=j#>));
-            }
+            ArgumentNullException.ThrowIfNull(innerCache<#=j#>);
 <#
 if (j < i)
 {

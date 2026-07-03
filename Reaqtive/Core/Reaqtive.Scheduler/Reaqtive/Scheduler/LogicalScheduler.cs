@@ -140,8 +140,7 @@ namespace Reaqtive.Scheduler
         /// <param name="task">The task to schedule.</param>
         public void Schedule(ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             Schedule(CreateWorkItem(task, TimeSpan.Zero));
         }
@@ -153,8 +152,7 @@ namespace Reaqtive.Scheduler
         /// <param name="task">The task to schedule.</param>
         public void Schedule(TimeSpan dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             Schedule(CreateWorkItem(task, dueTime));
         }
@@ -166,8 +164,7 @@ namespace Reaqtive.Scheduler
         /// <param name="task">The task to schedule.</param>
         public void Schedule(DateTimeOffset dueTime, ISchedulerTask task)
         {
-            if (task == null)
-                throw new ArgumentNullException(nameof(task));
+            ArgumentNullException.ThrowIfNull(task);
 
             Schedule(CreateWorkItem(task, dueTime.ToUniversalTime()));
         }

@@ -48,8 +48,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Rewritten expression in CPS style.</returns>
         protected Expression RewriteCore(Expression expression, TContinuationState initialState, bool inline)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Impl(this, initialState).Visit(expression);
             if (inline)
@@ -124,8 +123,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Asynchronous method to rewrite the call site for the specified method.</returns>
         protected virtual MethodInfo FindAsyncMethod(MethodInfo method)
         {
-            if (method == null)
-                throw new ArgumentNullException(nameof(method));
+            ArgumentNullException.ThrowIfNull(method);
 
             var ops = method.GetParameters().Select(p => p.ParameterType);
             var nps = ops.Concat(GetContinuationParameters(method)).ToArray();
@@ -164,8 +162,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Name of the asynchronous method to search for.</returns>
         protected virtual string GetAsyncMethodName(MethodInfo method)
         {
-            if (method == null)
-                throw new ArgumentNullException(nameof(method));
+            ArgumentNullException.ThrowIfNull(method);
 
             return method.Name;
         }
@@ -177,8 +174,7 @@ namespace System.Linq.CompilerServices
         /// <param name="asynchronousMethod">Asynchronous method; null if not found.</param>
         protected virtual void CheckAsyncMethod(MethodInfo synchronousMethod, MethodInfo asynchronousMethod)
         {
-            if (synchronousMethod == null)
-                throw new ArgumentNullException(nameof(synchronousMethod));
+            ArgumentNullException.ThrowIfNull(synchronousMethod);
 
             if (asynchronousMethod == null)
                 throw new InvalidOperationException("Asynchronous counterpart method for '" + synchronousMethod.Name + "' not found.");

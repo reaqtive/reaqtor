@@ -17,8 +17,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Int32> Min(this ISubscribable<Int32> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinInt32(source);
         }
@@ -147,8 +146,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Int64> Min(this ISubscribable<Int64> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinInt64(source);
         }
@@ -277,8 +275,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Single> Min(this ISubscribable<Single> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinSingle(source);
         }
@@ -413,8 +410,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Double> Min(this ISubscribable<Double> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinDouble(source);
         }
@@ -549,8 +545,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Decimal> Min(this ISubscribable<Decimal> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinDecimal(source);
         }
@@ -679,8 +674,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Int32?> Min(this ISubscribable<Int32?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableInt32(source);
         }
@@ -790,8 +784,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Int64?> Min(this ISubscribable<Int64?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableInt64(source);
         }
@@ -901,8 +894,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Single?> Min(this ISubscribable<Single?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableSingle(source);
         }
@@ -1018,8 +1010,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Double?> Min(this ISubscribable<Double?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableDouble(source);
         }
@@ -1135,8 +1126,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the smallest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Decimal?> Min(this ISubscribable<Decimal?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MinNullableDecimal(source);
         }
@@ -1246,8 +1236,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Int32> Max(this ISubscribable<Int32> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxInt32(source);
         }
@@ -1376,8 +1365,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Int64> Max(this ISubscribable<Int64> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxInt64(source);
         }
@@ -1506,8 +1494,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Single> Max(this ISubscribable<Single> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxSingle(source);
         }
@@ -1642,8 +1629,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Double> Max(this ISubscribable<Double> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxDouble(source);
         }
@@ -1778,8 +1764,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, an error of type <see cref="System.InvalidOperationException"/> is propagated.</returns>
         public static ISubscribable<Decimal> Max(this ISubscribable<Decimal> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxDecimal(source);
         }
@@ -1908,8 +1893,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Int32?> Max(this ISubscribable<Int32?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableInt32(source);
         }
@@ -2019,8 +2003,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Int64?> Max(this ISubscribable<Int64?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableInt64(source);
         }
@@ -2130,8 +2113,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Single?> Max(this ISubscribable<Single?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableSingle(source);
         }
@@ -2247,8 +2229,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Double?> Max(this ISubscribable<Double?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableDouble(source);
         }
@@ -2364,8 +2345,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the largest value found in the source sequence. If the source sequence is empty, a <c>null</c> value is returned.</returns>
         public static ISubscribable<Decimal?> Max(this ISubscribable<Decimal?> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new MaxNullableDecimal(source);
         }

@@ -50,8 +50,7 @@ generating the code for:
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, state);
         }
@@ -66,8 +65,7 @@ generating the code for:
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArg1, TArg2>.Create(Uri subscriptionUri, TArg1 arg1, TArg2 arg2, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, arg1, arg2, state);
         }
@@ -151,8 +149,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, <#=parameters#>, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, <#=arguments#>, state);
         }
@@ -171,8 +168,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<<#=typeArgs#>>.Create(Uri subscriptionUri, <#=parameters#>, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, <#=arguments#>, state);
         }

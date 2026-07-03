@@ -64,8 +64,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the <#=what#> value found in the source sequence.<#=emptyRemark#></returns>
         public static ISubscribable<<#=tn#>> <#=op#>(this ISubscribable<<#=tn#>> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new <#=op#><#=cn#>(source);
         }

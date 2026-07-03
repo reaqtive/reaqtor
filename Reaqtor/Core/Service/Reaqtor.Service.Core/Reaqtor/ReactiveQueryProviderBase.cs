@@ -208,8 +208,7 @@ namespace Reaqtor
         /// <returns>Observable represented by the given expression.</returns>
         public IReactiveQbservable<T> CreateQbservable<T>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -228,8 +227,7 @@ namespace Reaqtor
         /// <returns>Parameterized observable represented by the given expression.</returns>
         public Func<TArgs, IReactiveQbservable<TResult>> CreateQbservable<TArgs, TResult>(Expression<Func<TArgs, IReactiveQbservable<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArgs, IReactiveQbservable<TResult>>(arg =>
             {
@@ -253,8 +251,7 @@ namespace Reaqtor
         /// <returns>Observer represented by the given expression.</returns>
         public IReactiveQbserver<T> CreateQbserver<T>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -273,8 +270,7 @@ namespace Reaqtor
         /// <returns>Parameterized observer represented by the given expression.</returns>
         public Func<TArgs, IReactiveQbserver<TResult>> CreateQbserver<TArgs, TResult>(Expression<Func<TArgs, IReactiveQbserver<TResult>>> expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = new Func<TArgs, IReactiveQbserver<TResult>>(arg =>
             {
@@ -299,8 +295,7 @@ namespace Reaqtor
         /// <returns>Subject factory represented by the given expression.</returns>
         public IReactiveQubjectFactory<TInput, TOutput> CreateQubjectFactory<TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -320,8 +315,7 @@ namespace Reaqtor
         /// <returns>Parameterized subject factory represented by the given expression.</returns>
         public IReactiveQubjectFactory<TInput, TOutput, TArgs> CreateQubjectFactory<TArgs, TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -344,8 +338,7 @@ namespace Reaqtor
         /// <returns>Subject represented by the given expression.</returns>
         public IReactiveQubject<TInput, TOutput> CreateQubject<TInput, TOutput>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -366,8 +359,7 @@ namespace Reaqtor
         /// <returns>Subscription represented by the given expression.</returns>
         public IReactiveQubscription CreateQubscription(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -388,8 +380,7 @@ namespace Reaqtor
         /// <returns>Subscription factory represented by the given expression.</returns>
         public IReactiveQubscriptionFactory CreateQubscriptionFactory(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {
@@ -407,8 +398,7 @@ namespace Reaqtor
         /// <returns>Parameterized subscription factory represented by the given expression.</returns>
         public IReactiveQubscriptionFactory<TArgs> CreateQubscriptionFactory<TArgs>(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (ExpressionServices.TryGetName(expression, out Uri uri))
             {

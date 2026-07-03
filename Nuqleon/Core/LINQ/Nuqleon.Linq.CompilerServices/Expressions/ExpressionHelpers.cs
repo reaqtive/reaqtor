@@ -24,8 +24,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Lambda expression after unquoting. An exception occurs if the specified expression was not a (quoted) LambdaExpression.</returns>
         public static LambdaExpression Unquote(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return (LambdaExpression)StripQuotesImpl(expression);
         }
@@ -37,8 +36,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression after unquoting.</returns>
         public static Expression StripQuotes(this Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return StripQuotesImpl(expression);
         }

@@ -134,8 +134,7 @@ namespace Reaqtor.QueryEngine.Mocks
 
         public override void SetContext(IOperatorContext context)
         {
-            if (context == null)
-                throw new ArgumentNullException(nameof(context));
+            ArgumentNullException.ThrowIfNull(context);
 
             InstanceId = context.InstanceId;
 

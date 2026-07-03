@@ -35,8 +35,7 @@ namespace Reaqtive
         /// <param name="context">Operator context to set on the operators in the subscription.</param>
         public static void Initialize(ISubscription subscription, IOperatorContext context)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             InitializeCore(subscription, context);
         }
@@ -79,8 +78,7 @@ namespace Reaqtive
         /// <param name="subscription">The subscription to initialize.</param>
         public static void Subscribe(ISubscription subscription)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             SubscribeCore(subscription);
         }
@@ -103,8 +101,7 @@ namespace Reaqtive
         /// <param name="context">Operator context to set on the operators in the subscription.</param>
         public static void SetContext(ISubscription subscription, IOperatorContext context)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             SetContextCore(subscription, context);
         }
@@ -134,8 +131,7 @@ namespace Reaqtive
         /// <param name="subscription">The subscription to start.</param>
         public static void Start(ISubscription subscription)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             StartCore(subscription);
         }

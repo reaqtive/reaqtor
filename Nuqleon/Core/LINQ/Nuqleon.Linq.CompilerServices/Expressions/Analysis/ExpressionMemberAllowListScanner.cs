@@ -49,8 +49,7 @@ namespace System.Linq.CompilerServices
         /// <returns>true if the member is supported; otherwise, false.</returns>
         protected override bool Check(MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             foreach (var m in GetMemberAndInterfaceImplementations(member))
             {
@@ -292,8 +291,7 @@ namespace System.Linq.CompilerServices
         /// <param name="includeBase">Indicates whether to include base types, i.e. base classes and interfaces.</param>
         public void Add(Type type, bool includeBase)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             AddImpl(type, includeBase);
         }
@@ -304,8 +302,7 @@ namespace System.Linq.CompilerServices
         /// <param name="type">Type to add to the list of allowed types.</param>
         public void Add(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             AddImpl(type);
         }
@@ -368,8 +365,7 @@ namespace System.Linq.CompilerServices
         /// <param name="member">Member to add to the list of allowed members.</param>
         public void Add(MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             _parent.AddMember(member);
         }

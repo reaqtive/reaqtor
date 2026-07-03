@@ -50,8 +50,7 @@ namespace System.Memory.Diagnostics
         /// <param name="visitor">The visitor to dispatch to.</param>
         public void Accept(IObjectVisitor<TEdge> visitor)
         {
-            if (visitor == null)
-                throw new ArgumentNullException(nameof(visitor));
+            ArgumentNullException.ThrowIfNull(visitor);
 
             visitor.Visit(Object, Edge);
         }

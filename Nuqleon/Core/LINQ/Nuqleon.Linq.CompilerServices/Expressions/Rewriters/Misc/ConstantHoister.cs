@@ -149,8 +149,7 @@ namespace System.Linq.CompilerServices
         /// </example>
         public static ConstantHoister Create(bool useDefaultForNull, params LambdaExpression[] exclusions)
         {
-            if (exclusions == null)
-                throw new ArgumentNullException(nameof(exclusions));
+            ArgumentNullException.ThrowIfNull(exclusions);
 
             return new ConstantHoister(useDefaultForNull, exclusions);
         }
@@ -163,8 +162,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression bound by an environment consisting of the hoisted constants.</returns>
         public static ExpressionWithEnvironment Hoist(Expression expression, bool useDefaultForNull)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return (useDefaultForNull ? s_defaultWithDefaultNull : s_default).Hoist(expression);
         }
@@ -176,8 +174,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression bound by an environment consisting of the hoisted constants.</returns>
         public ExpressionWithEnvironment Hoist(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var impl = new Impl(this);
             var res = impl.Visit(expression);

@@ -46,10 +46,8 @@ for (var i = 1; i <= n; i++)
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> Memoize<<#=genArgs#>, TResult>(this IMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options = MemoizationOptions.None)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
 #if USE_VALUETUPLE
             var res = memoizer.Memoize<(<#=genArgs#>), TResult>(a => function(<#=args#>), options, comparer: null);
@@ -100,16 +98,13 @@ for (var i = 1; i <= n; i++)
         /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
         public static IMemoizedDelegate<Func<<#=genArgs#>, TResult>> Memoize<<#=genArgs#>, TResult>(this IMemoizer memoizer, Func<<#=genArgs#>, TResult> function, MemoizationOptions options, <#=comparerPars#>)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 <#
 for (var i = 1; i <= n; i++)
 {
 #>
-            if (comparer<#=i#> == null)
-                throw new ArgumentNullException(nameof(comparer<#=i#>));
+            ArgumentNullException.ThrowIfNull(comparer<#=i#>);
 <#
 }
 #>
@@ -261,10 +256,8 @@ for (var i = 1; i <= n; i++)
 }
 #>
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(memoizer);
+            ArgumentNullException.ThrowIfNull(function);
 
             var mem =
 <#

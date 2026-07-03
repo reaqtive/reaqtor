@@ -53,8 +53,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Target tree after applying the rewrite rules in the table.</returns>
         public TTarget Rewrite(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var visitor = new ExpressionTreeConversionWithDeBruijn();
             var expressionTree = visitor.Visit(expression);

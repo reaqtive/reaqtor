@@ -43,8 +43,7 @@ namespace Reaqtor.Hosting.Shared.Tools
         /// <returns>The reactive entity type.</returns>
         public static ReactiveEntityType FromTypeSlim(TypeSlim typeSlim)
         {
-            if (typeSlim == null)
-                throw new ArgumentNullException(nameof(typeSlim));
+            ArgumentNullException.ThrowIfNull(typeSlim);
 
             if (typeSlim is GenericTypeSlim genericTypeSlim)
             {
@@ -101,8 +100,7 @@ namespace Reaqtor.Hosting.Shared.Tools
         /// <returns>The reactive entity type.</returns>
         public static ReactiveEntityType FromType(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (type.IsGenericType)
             {

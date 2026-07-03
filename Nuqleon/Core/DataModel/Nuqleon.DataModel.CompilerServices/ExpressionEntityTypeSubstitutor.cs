@@ -53,8 +53,7 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <returns>An expression with entity types replaced.</returns>
         public virtual Expression Apply(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var entityInfo = FindEntityTypes.Apply(expression);
 

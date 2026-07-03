@@ -63,8 +63,7 @@ generating the code for:
         /// <returns>Task returning a subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         public Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsync(Uri streamUri, TArg1 arg1, TArg2 arg2, object state = null, CancellationToken token = default)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateAsyncCore(streamUri, arg1, arg2, state, token);
         }
@@ -80,8 +79,7 @@ generating the code for:
         /// <returns>Task returning a subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         Task<IAsyncReactiveSubject<TInput, TOutput>> IAsyncReactiveSubjectFactory<TInput, TOutput, TArg1, TArg2>.CreateAsync(Uri streamUri, TArg1 arg1, TArg2 arg2, object state, CancellationToken token)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateAsyncCore(streamUri, arg1, arg2, state, token).ContinueWith(t => (IAsyncReactiveSubject<TInput, TOutput>)t.Result, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         }
@@ -160,8 +158,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task returning a subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         public Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsync(Uri streamUri, <#=parameters#>, object state = null, CancellationToken token = default)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateAsyncCore(streamUri, <#=arguments#>, state, token);
         }
@@ -181,8 +178,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Task returning a subject object that can be used to send and receive data on the stream, or an exception if the creation request was unsuccessful.</returns>
         Task<IAsyncReactiveSubject<TInput, TOutput>> IAsyncReactiveSubjectFactory<TInput, TOutput, <#=typeArgs#>>.CreateAsync(Uri streamUri, <#=parameters#>, object state, CancellationToken token)
         {
-            if (streamUri == null)
-                throw new ArgumentNullException(nameof(streamUri));
+            ArgumentNullException.ThrowIfNull(streamUri);
 
             return CreateAsyncCore(streamUri, <#=arguments#>, state, token).ContinueWith(t => (IAsyncReactiveSubject<TInput, TOutput>)t.Result, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         }

@@ -36,8 +36,7 @@ namespace System.Linq.CompilerServices
         /// <param name="children">Child nodes.</param>
         public Tree(T value, IEnumerable<ITree<T>> children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             Value = value;
             Children = children.ToReadOnly();
@@ -50,8 +49,7 @@ namespace System.Linq.CompilerServices
         /// <param name="children">Child nodes.</param>
         public Tree(T value, params ITree<T>[] children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             Value = value;
             Children = children.ToReadOnly();
@@ -121,8 +119,7 @@ namespace System.Linq.CompilerServices
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public ITree<T> Update(IEnumerable<ITree<T>> children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return UpdateImpl(children);
         }
@@ -134,8 +131,7 @@ namespace System.Linq.CompilerServices
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         public ITree<T> Update(params ITree<T>[] children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return UpdateImpl(children);
         }
@@ -147,8 +143,7 @@ namespace System.Linq.CompilerServices
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         ITree ITree.Update(IEnumerable<ITree> children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return UpdateImpl(children.Cast<ITree<T>>());
         }
@@ -160,8 +155,7 @@ namespace System.Linq.CompilerServices
         /// <returns>New immutable tree based on the current node, but with the specified child nodes.</returns>
         protected virtual ITree<T> UpdateCore(IEnumerable<ITree<T>> children)
         {
-            if (children == null)
-                throw new ArgumentNullException(nameof(children));
+            ArgumentNullException.ThrowIfNull(children);
 
             return new Tree<T>(Value, children);
         }
@@ -183,8 +177,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of the visit.</returns>
         public ITree<T> Accept(ITreeVisitor<T> visitor)
         {
-            if (visitor == null)
-                throw new ArgumentNullException(nameof(visitor));
+            ArgumentNullException.ThrowIfNull(visitor);
 
             return visitor.Visit(this);
         }
@@ -196,8 +189,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of the visit.</returns>
         ITree ITree.Accept(ITreeVisitor visitor)
         {
-            if (visitor == null)
-                throw new ArgumentNullException(nameof(visitor));
+            ArgumentNullException.ThrowIfNull(visitor);
 
             return visitor.Visit(this);
         }

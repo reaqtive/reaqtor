@@ -64,8 +64,7 @@ namespace Reaqtor
         /// <returns>Task to await the acknowledgement of the creation of the subscription, or an exception.</returns>
         protected override Task CreateSubscriptionAsyncCore(IAsyncReactiveQubscription subscription, object state, CancellationToken token)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             if (!TryGetUriFromKnownResource(subscription, out Uri uri))
             {
@@ -83,8 +82,7 @@ namespace Reaqtor
         /// <returns>Task to await the acknowledgement of the deletion of the subscription, or an exception.</returns>
         protected override Task DeleteSubscriptionAsyncCore(IAsyncReactiveQubscription subscription, CancellationToken token)
         {
-            if (subscription == null)
-                throw new ArgumentNullException(nameof(subscription));
+            ArgumentNullException.ThrowIfNull(subscription);
 
             if (!TryGetUriFromKnownResource(subscription, out Uri uri))
             {
@@ -109,8 +107,7 @@ namespace Reaqtor
         /// <returns>Task to await the acknowledgement of the creation of the stream, or an exception.</returns>
         protected override Task CreateStreamAsyncCore<TInput, TOutput>(IAsyncReactiveQubject<TInput, TOutput> stream, object state, CancellationToken token)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             if (!TryGetUriFromKnownResource(stream, out Uri uri))
             {
@@ -130,8 +127,7 @@ namespace Reaqtor
         /// <returns>Task to await the acknowledgement of the deletion of the stream, or an exception.</returns>
         protected override Task DeleteStreamAsyncCore<TInput, TOutput>(IAsyncReactiveQubject<TInput, TOutput> stream, CancellationToken token)
         {
-            if (stream == null)
-                throw new ArgumentNullException(nameof(stream));
+            ArgumentNullException.ThrowIfNull(stream);
 
             if (!TryGetUriFromKnownResource(stream, out Uri uri))
             {

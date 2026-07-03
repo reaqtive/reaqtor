@@ -46,10 +46,7 @@ namespace System.Linq.Expressions.Tests
 
         public ILReader(IILProvider ilProvider, ITokenResolver tokenResolver)
         {
-            if (ilProvider == null)
-            {
-                throw new ArgumentNullException(nameof(ilProvider));
-            }
+            ArgumentNullException.ThrowIfNull(ilProvider);
 
             Resolver = tokenResolver;
             ILProvider = ilProvider;

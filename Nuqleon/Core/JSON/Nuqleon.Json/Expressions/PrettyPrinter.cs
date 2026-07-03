@@ -49,8 +49,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Pretty printing string representation of the object node.</returns>
         public override string VisitObject(ObjectExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             // PERF: This is currently only used for debugging purposes, but we can improve this a lot.
 
@@ -72,8 +71,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Pretty printing string representation of the array node.</returns>
         public override string VisitArray(ArrayExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             // PERF: This is currently only used for debugging purposes, but we can improve this a lot.
 
@@ -95,8 +93,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Pretty printing string representation of the constant node.</returns>
         public override string VisitConstant(ConstantExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             return node.ToString();
         }

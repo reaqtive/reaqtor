@@ -19,8 +19,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override Expression VisitStructural(StructuralDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (_visited.TryGetValue(type.UnderlyingType, out var cycleHelper))
             {
@@ -45,8 +44,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
         {
             if (elementType != null)
             {
-                if (type == null)
-                    throw new ArgumentNullException(nameof(type));
+                ArgumentNullException.ThrowIfNull(type);
 
                 var hashSetParameter = Expression.Parameter(typeof(HashSet<object>), "hashSet");
                 var valueParameter = Expression.Parameter(typeof(object), "value");
@@ -93,11 +91,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override Expression MakeStructural(StructuralDataType type, ReadOnlyCollection<Tuple<DataProperty, Expression>> properties)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
-            if (properties == null)
-                throw new ArgumentNullException(nameof(properties));
+            ArgumentNullException.ThrowIfNull(properties);
 
             var hashSetParameter = Expression.Parameter(typeof(HashSet<object>), "hashSet");
             var valueParameter = Expression.Parameter(typeof(object), "value");
@@ -156,8 +152,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override Expression VisitCustom(DataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             throw new NotSupportedException(string.Format(CultureInfo.InvariantCulture, "Custom data type {0} is not supported.", type.UnderlyingType.FullName));
         }

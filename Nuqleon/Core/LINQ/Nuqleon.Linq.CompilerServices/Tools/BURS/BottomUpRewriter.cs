@@ -59,8 +59,7 @@ namespace System.Linq.CompilerServices
         /// <param name="sourceNodeComparer">Equality comparer used to compare source tree nodes during construction of the rule table and during tree matching.</param>
         public BottomUpRewriter(IEqualityComparer<TSourceNodeType> sourceNodeComparer)
         {
-            if (sourceNodeComparer == null)
-                throw new ArgumentNullException(nameof(sourceNodeComparer));
+            ArgumentNullException.ThrowIfNull(sourceNodeComparer);
 
             _wildcardFactory = new TWildcardFactory();
 
@@ -212,8 +211,7 @@ namespace System.Linq.CompilerServices
         /// <param name="leaf">Leaf rule that has been added.</param>
         protected virtual void OnLeafAdded(Leaf<TSource, TTarget> leaf)
         {
-            if (leaf == null)
-                throw new ArgumentNullException(nameof(leaf));
+            ArgumentNullException.ThrowIfNull(leaf);
 
             var state = -(Leaves.Count + 1);
             _leafTests[leaf.InvokePredicate] = state;
@@ -226,8 +224,7 @@ namespace System.Linq.CompilerServices
         /// <param name="rule">Rewrite rule that has been added.</param>
         protected virtual void OnRuleAdded(Rule<TSource, TTarget> rule)
         {
-            if (rule == null)
-                throw new ArgumentNullException(nameof(rule));
+            ArgumentNullException.ThrowIfNull(rule);
 
             var wildcards = (from hole in rule.Pattern.Parameters
                              select _wildcardFactory.CreateWildcard(hole))
@@ -257,8 +254,7 @@ namespace System.Linq.CompilerServices
         /// <param name="fallback">Fallback rule that has been added.</param>
         protected virtual void OnFallbackAdded(Fallback<TSource, TTarget> fallback)
         {
-            if (fallback == null)
-                throw new ArgumentNullException(nameof(fallback));
+            ArgumentNullException.ThrowIfNull(fallback);
 
             var state = int.MaxValue - Fallbacks.Count + 1;
             _fallbackTests[fallback.InvokePredicate] = state;

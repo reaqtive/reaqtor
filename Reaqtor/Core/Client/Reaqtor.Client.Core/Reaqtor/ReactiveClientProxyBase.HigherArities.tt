@@ -40,8 +40,7 @@ generating the code for:
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<TArg1, TArg2, IAsyncReactiveQbservable<TResult>> GetObservable<TArg1, TArg2, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<TArg1, TArg2, TResult>(uri);
         }
@@ -86,8 +85,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Observable object that can be used to write queries against, or to receive data by subscribing to it using an observer.</returns>
         public Func<<#=typeArgs#>, IAsyncReactiveQbservable<TResult>> GetObservable<<#=typeArgs#>, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObservableCore<<#=typeArgs#>, TResult>(uri);
         }
@@ -130,8 +128,7 @@ generating the code for:
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<TArg1, TArg2, IAsyncReactiveQbserver<TResult>> GetObserver<TArg1, TArg2, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<TArg1, TArg2, TResult>(uri);
         }
@@ -176,8 +173,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Observer object that can be used to send data.</returns>
         public Func<<#=typeArgs#>, IAsyncReactiveQbserver<TResult>> GetObserver<<#=typeArgs#>, TResult>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetObserverCore<<#=typeArgs#>, TResult>(uri);
         }
@@ -221,8 +217,7 @@ generating the code for:
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, TArg1, TArg2> GetStreamFactory<TArg1, TArg2, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<TArg1, TArg2, TInput, TOutput>(uri);
         }
@@ -269,8 +264,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Stream factory that can be used to create streams, represented as subjects.</returns>
         public IAsyncReactiveQubjectFactory<TInput, TOutput, <#=typeArgs#>> GetStreamFactory<<#=typeArgs#>, TInput, TOutput>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetStreamFactoryCore<<#=typeArgs#>, TInput, TOutput>(uri);
         }
@@ -313,8 +307,7 @@ generating the code for:
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IAsyncReactiveQubscriptionFactory<TArg1, TArg2> GetSubscriptionFactory<TArg1, TArg2>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<TArg1, TArg2>(uri);
         }
@@ -357,8 +350,7 @@ for (int j = 1; j <= i; j++)
         /// <returns>Subscription factory that can be used to create subscriptions.</returns>
         public IAsyncReactiveQubscriptionFactory<<#=typeArgs#>> GetSubscriptionFactory<<#=typeArgs#>>(Uri uri)
         {
-            if (uri == null)
-                throw new ArgumentNullException(nameof(uri));
+            ArgumentNullException.ThrowIfNull(uri);
 
             return GetSubscriptionFactoryCore<<#=typeArgs#>>(uri);
         }

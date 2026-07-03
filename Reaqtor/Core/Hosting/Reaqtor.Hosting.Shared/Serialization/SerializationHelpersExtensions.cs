@@ -23,8 +23,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// <remarks>The use of a generic type parameter allows for "typed nulls".</remarks>
         public static string Serialize<T>(this SerializationHelpers serializationHelpers, T value)
         {
-            if (serializationHelpers == null)
-                throw new ArgumentNullException(nameof(serializationHelpers));
+            ArgumentNullException.ThrowIfNull(serializationHelpers);
 
             var stream = new MemoryStream();
 
@@ -65,8 +64,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// if a JsonException was thrown during deserialization of <c>json</c></exception>
         public static T Deserialize<T>(this SerializationHelpers serializationHelpers, string json)
         {
-            if (serializationHelpers == null)
-                throw new ArgumentNullException(nameof(serializationHelpers));
+            ArgumentNullException.ThrowIfNull(serializationHelpers);
 
             var stream = new MemoryStream();
 
@@ -100,10 +98,8 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// </returns>
         public static T Deserialize<T>(this SerializationHelpers serializationHelpers, byte[] bytes)
         {
-            if (serializationHelpers == null)
-                throw new ArgumentNullException(nameof(serializationHelpers));
-            if (bytes == null)
-                throw new ArgumentNullException(nameof(bytes));
+            ArgumentNullException.ThrowIfNull(serializationHelpers);
+            ArgumentNullException.ThrowIfNull(bytes);
 
             using var stream = new MemoryStream(bytes) { Position = 0 };
 
@@ -121,8 +117,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// <remarks>The use of a generic type parameter allows for "typed nulls".</remarks>
         public static byte[] ToBytes<T>(this SerializationHelpers serializationHelpers, T value)
         {
-            if (serializationHelpers == null)
-                throw new ArgumentNullException(nameof(serializationHelpers));
+            ArgumentNullException.ThrowIfNull(serializationHelpers);
 
             using var stream = new MemoryStream();
 

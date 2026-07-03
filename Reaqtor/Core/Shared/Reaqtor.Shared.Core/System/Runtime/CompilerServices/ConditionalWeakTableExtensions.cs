@@ -21,8 +21,7 @@ namespace System.Runtime.CompilerServices
             where TKey : class
             where TValue : class
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
+            ArgumentNullException.ThrowIfNull(table);
 
             return table.TryGetValue(key, out _);
         }

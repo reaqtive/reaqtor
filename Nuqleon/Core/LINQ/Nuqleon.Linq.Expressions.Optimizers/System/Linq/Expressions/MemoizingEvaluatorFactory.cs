@@ -33,8 +33,7 @@ namespace System.Linq.Expressions
         /// <param name="memoizer">The memoizer to use for caching <see cref="GetEvaluator(MemberInfo)"/> calls.</param>
         public MemoizingEvaluatorFactory(IMemoizer memoizer)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
+            ArgumentNullException.ThrowIfNull(memoizer);
 
             _getEvaluator = memoizer.Memoize<MemberInfo, Delegate>(base.GetEvaluator);
         }
@@ -47,8 +46,7 @@ namespace System.Linq.Expressions
         /// <param name="memoizer">The memoizer to use for caching <see cref="GetEvaluator(MemberInfo)"/> calls.</param>
         public MemoizingEvaluatorFactory(IWeakMemoizer memoizer)
         {
-            if (memoizer == null)
-                throw new ArgumentNullException(nameof(memoizer));
+            ArgumentNullException.ThrowIfNull(memoizer);
 
             _getEvaluator = memoizer.MemoizeWeak<MemberInfo, Delegate>(base.GetEvaluator);
         }

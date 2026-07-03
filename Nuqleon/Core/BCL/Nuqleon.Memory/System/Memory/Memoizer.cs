@@ -24,8 +24,7 @@ namespace System.Memory
         /// <returns>Function memoizer to speed up function invocations by caching their result.</returns>
         public static IMemoizer Create(IMemoizationCacheFactory factory)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             return new Impl(factory);
         }
@@ -37,8 +36,7 @@ namespace System.Memory
         /// <returns>Function memoizer to speed up function invocations by caching their result as long as the memoized function arguments are alive.</returns>
         public static IWeakMemoizer CreateWeak(IWeakMemoizationCacheFactory factory)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             return new WeakImpl(factory);
         }
@@ -60,8 +58,7 @@ namespace System.Memory
             /// <returns>A memoized delegate containing the memoized function and providing access to the memoization cache.</returns>
             public IMemoizedDelegate<Func<T, TResult>> Memoize<T, TResult>(Func<T, TResult> function, MemoizationOptions options = MemoizationOptions.None, IEqualityComparer<T> comparer = null)
             {
-                if (function == null)
-                    throw new ArgumentNullException(nameof(function));
+                ArgumentNullException.ThrowIfNull(function);
 
                 var cache = _factory.Create(function, options, comparer);
                 return new MemoizedDelegate<Func<T, TResult>>(cache.GetOrAdd, cache);
@@ -85,8 +82,7 @@ namespace System.Memory
             public IMemoizedDelegate<Func<T, TResult>> MemoizeWeak<T, TResult>(Func<T, TResult> function, MemoizationOptions options = MemoizationOptions.None)
                 where T : class
             {
-                if (function == null)
-                    throw new ArgumentNullException(nameof(function));
+                ArgumentNullException.ThrowIfNull(function);
 
                 var cache = _factory.Create(function, options);
                 return new MemoizedDelegate<Func<T, TResult>>(cache.GetOrAdd, cache);

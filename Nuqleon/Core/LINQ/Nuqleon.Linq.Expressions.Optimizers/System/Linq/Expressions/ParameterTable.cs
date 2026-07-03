@@ -47,8 +47,7 @@ namespace System.Linq.Expressions
         /// <param name="expression">The expression to obtain the parameter to add from.</param>
         public void Add(LambdaExpression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression.Parameters.Count == 0)
                 throw new ArgumentException("The lambda expression should have at least one parameter.", nameof(expression));
@@ -70,8 +69,7 @@ namespace System.Linq.Expressions
         /// <param name="table">The parameter table whose entries to copy.</param>
         public void Add(ParameterTable table)
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
+            ArgumentNullException.ThrowIfNull(table);
 
             CheckReadOnly();
 
@@ -87,8 +85,7 @@ namespace System.Linq.Expressions
         /// <param name="parameter">The parameter to add to the table.</param>
         public void Add(ParameterInfo parameter)
         {
-            if (parameter == null)
-                throw new ArgumentNullException(nameof(parameter));
+            ArgumentNullException.ThrowIfNull(parameter);
 
             CheckReadOnly();
 
@@ -123,8 +120,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified <paramref name="parameter"/> is present in the table; otherwise, <c>false</c>.</returns>
         public bool Contains(ParameterInfo parameter)
         {
-            if (parameter == null)
-                throw new ArgumentNullException(nameof(parameter));
+            ArgumentNullException.ThrowIfNull(parameter);
 
             return Parameters.Contains(parameter);
         }

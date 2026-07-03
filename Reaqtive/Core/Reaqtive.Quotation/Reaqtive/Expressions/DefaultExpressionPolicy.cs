@@ -79,10 +79,7 @@ namespace Reaqtive.Expressions
 
             public Delegate GetOrAdd(LambdaExpression expression)
             {
-                if (expression == null)
-                {
-                    throw new ArgumentNullException(nameof(expression));
-                }
+                ArgumentNullException.ThrowIfNull(expression);
 
                 return expression.Compile();
             }

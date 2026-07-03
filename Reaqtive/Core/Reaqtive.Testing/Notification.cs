@@ -136,8 +136,7 @@ namespace Reaqtive
             /// <param name="observer">Observer to invoke the notification on.</param>
             public override void Accept(IObserver<T> observer)
             {
-                if (observer == null)
-                    throw new ArgumentNullException(nameof(observer));
+                ArgumentNullException.ThrowIfNull(observer);
 
                 observer.OnNext(Value);
             }
@@ -208,8 +207,7 @@ namespace Reaqtive
             /// <param name="observer">Observer to invoke the notification on.</param>
             public override void Accept(IObserver<T> observer)
             {
-                if (observer == null)
-                    throw new ArgumentNullException(nameof(observer));
+                ArgumentNullException.ThrowIfNull(observer);
 
                 observer.OnError(Exception);
             }
@@ -277,8 +275,7 @@ namespace Reaqtive
             /// <param name="observer">Observer to invoke the notification on.</param>
             public override void Accept(IObserver<T> observer)
             {
-                if (observer == null)
-                    throw new ArgumentNullException(nameof(observer));
+                ArgumentNullException.ThrowIfNull(observer);
 
                 observer.OnCompleted();
             }
@@ -375,8 +372,7 @@ namespace Reaqtive
         /// <exception cref="ArgumentNullException"><paramref name="error"/> is null.</exception>
         public static Notification<T> CreateOnError<T>(Exception error)
         {
-            if (error == null)
-                throw new ArgumentNullException(nameof(error));
+            ArgumentNullException.ThrowIfNull(error);
 
             return new Notification<T>.OnErrorNotification(error);
         }

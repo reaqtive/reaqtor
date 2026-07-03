@@ -611,10 +611,7 @@ namespace Reaqtor.QueryEngine
 
             public IReliableObserver<T> GetObserver<T>(Uri observerUri)
             {
-                if (observerUri == null)
-                {
-                    throw new ArgumentNullException(nameof(observerUri));
-                }
+                ArgumentNullException.ThrowIfNull(observerUri);
 
                 return (IReliableObserver<T>)GetObserver(observerUri);
             }

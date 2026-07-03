@@ -34,10 +34,7 @@ namespace Reaqtive
         /// <param name="version">Version of the state.</param>
         public void LoadState(IOperatorStateReader reader, Version version)
         {
-            if (reader == null)
-            {
-                throw new ArgumentNullException(nameof(reader));
-            }
+            ArgumentNullException.ThrowIfNull(reader);
 
             _disposedFromState = reader.Read<bool>();
 
@@ -78,10 +75,7 @@ namespace Reaqtive
         /// <param name="version">Version of the state being saved.</param>
         public void SaveState(IOperatorStateWriter writer, Version version)
         {
-            if (writer == null)
-            {
-                throw new ArgumentNullException(nameof(writer));
-            }
+            ArgumentNullException.ThrowIfNull(writer);
 
             writer.Write(IsDisposed);
 

@@ -46,8 +46,7 @@ namespace System.Documentation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="parameter"/> is null.</exception>
         public static XElement GetXmlDoc(this ParameterInfo parameter)
         {
-            if (parameter == null)
-                throw new ArgumentNullException(nameof(parameter));
+            ArgumentNullException.ThrowIfNull(parameter);
 
             var res = default(XElement);
 
@@ -70,8 +69,7 @@ namespace System.Documentation
         /// <exception cref="ArgumentNullException">Thrown if <paramref name="member"/> is null.</exception>
         public static XElement GetXmlDoc(this MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             var res = default(XElement);
 
@@ -120,8 +118,7 @@ namespace System.Documentation
         /// <returns>Name of the member for use in XML documentation files.</returns>
         public static string GetXmlDocName(this MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             if (member is Type t)
             {

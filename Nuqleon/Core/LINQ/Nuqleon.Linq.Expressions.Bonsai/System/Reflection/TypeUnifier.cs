@@ -60,10 +60,8 @@ namespace System.Reflection
         /// <returns>true if the unification was successful, false or exception thrown if safe is true or false, respectively.</returns>
         public bool Unify(Type typeRich, TypeSlim typeSlim)
         {
-            if (typeRich == null)
-                throw new ArgumentNullException(nameof(typeRich));
-            if (typeSlim == null)
-                throw new ArgumentNullException(nameof(typeSlim));
+            ArgumentNullException.ThrowIfNull(typeRich);
+            ArgumentNullException.ThrowIfNull(typeSlim);
 
             if (_entries.TryGetValue(typeSlim, out Type mappedType))
             {

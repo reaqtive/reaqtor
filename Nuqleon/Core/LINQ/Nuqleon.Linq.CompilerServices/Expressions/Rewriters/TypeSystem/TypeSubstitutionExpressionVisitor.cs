@@ -83,8 +83,7 @@ namespace System.Linq.CompilerServices
         public TypeSubstitutionExpressionVisitor(IDictionary<Type, Type> typeMap)
 #endif
         {
-            if (typeMap == null)
-                throw new ArgumentNullException(nameof(typeMap));
+            ArgumentNullException.ThrowIfNull(typeMap);
 
             _subst = new TypeSubstitutor(typeMap);
         }
@@ -100,8 +99,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Expression with nodes with source types replaced by nodes with the corresponding target types.</returns>
         public virtual Expression Apply(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return Visit(expression);
         }
@@ -399,12 +397,9 @@ namespace System.Linq.CompilerServices
         /// <returns>New constructor to use.</returns>
         protected virtual ConstructorInfo ResolveConstructor(ConstructorInfo originalConstructor, Type declaringType, Type[] parameters)
         {
-            if (originalConstructor == null)
-                throw new ArgumentNullException(nameof(originalConstructor));
-            if (declaringType == null)
-                throw new ArgumentNullException(nameof(declaringType));
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            ArgumentNullException.ThrowIfNull(originalConstructor);
+            ArgumentNullException.ThrowIfNull(declaringType);
+            ArgumentNullException.ThrowIfNull(parameters);
 
 #if USE_SLIM
             var newConstructor = new ConstructorInfo(declaringType, parameters.ToReadOnly());
@@ -446,14 +441,10 @@ namespace System.Linq.CompilerServices
         /// <returns>New property to use.</returns>
         protected virtual MemberInfo ResolveProperty(PropertyInfo originalProperty, Type declaringType, Type propertyType, Type[] indexerParameters)
         {
-            if (originalProperty == null)
-                throw new ArgumentNullException(nameof(originalProperty));
-            if (declaringType == null)
-                throw new ArgumentNullException(nameof(declaringType));
-            if (propertyType == null)
-                throw new ArgumentNullException(nameof(propertyType));
-            if (indexerParameters == null)
-                throw new ArgumentNullException(nameof(indexerParameters));
+            ArgumentNullException.ThrowIfNull(originalProperty);
+            ArgumentNullException.ThrowIfNull(declaringType);
+            ArgumentNullException.ThrowIfNull(propertyType);
+            ArgumentNullException.ThrowIfNull(indexerParameters);
 
 #if USE_SLIM
             var newProperty = declaringType.GetProperty(originalProperty.Name, propertyType, indexerParameters.ToReadOnly(), originalProperty.CanWrite);
@@ -495,12 +486,9 @@ namespace System.Linq.CompilerServices
         /// <returns>New field to use.</returns>
         protected virtual MemberInfo ResolveField(FieldInfo originalField, Type declaringType, Type fieldType)
         {
-            if (originalField == null)
-                throw new ArgumentNullException(nameof(originalField));
-            if (declaringType == null)
-                throw new ArgumentNullException(nameof(declaringType));
-            if (fieldType == null)
-                throw new ArgumentNullException(nameof(fieldType));
+            ArgumentNullException.ThrowIfNull(originalField);
+            ArgumentNullException.ThrowIfNull(declaringType);
+            ArgumentNullException.ThrowIfNull(fieldType);
 
 #if USE_SLIM
             var newField = new FieldInfo(declaringType, originalField.Name, fieldType);
@@ -543,16 +531,11 @@ namespace System.Linq.CompilerServices
         /// <returns>New method to use.</returns>
         protected virtual MethodInfo ResolveMethod(MethodInfo originalMethod, Type declaringType, Type[] genericArguments, Type[] parameters, Type returnType)
         {
-            if (originalMethod == null)
-                throw new ArgumentNullException(nameof(originalMethod));
-            if (declaringType == null)
-                throw new ArgumentNullException(nameof(declaringType));
-            if (genericArguments == null)
-                throw new ArgumentNullException(nameof(genericArguments));
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
-            if (returnType == null)
-                throw new ArgumentNullException(nameof(returnType));
+            ArgumentNullException.ThrowIfNull(originalMethod);
+            ArgumentNullException.ThrowIfNull(declaringType);
+            ArgumentNullException.ThrowIfNull(genericArguments);
+            ArgumentNullException.ThrowIfNull(parameters);
+            ArgumentNullException.ThrowIfNull(returnType);
 
 #if USE_SLIM
             var newMethod = default(MethodInfo);

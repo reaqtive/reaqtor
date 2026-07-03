@@ -81,10 +81,7 @@ namespace Reaqtor.QueryEngine
 
         public void Start(TEntity instance, params object[] args)
         {
-            if (instance == null)
-            {
-                throw new ArgumentNullException(nameof(instance));
-            }
+            ArgumentNullException.ThrowIfNull(instance);
 
             if (StartImpl(instance, args))
             {

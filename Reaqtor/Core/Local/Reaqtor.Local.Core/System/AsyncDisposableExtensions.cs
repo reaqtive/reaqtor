@@ -26,8 +26,7 @@ namespace System
         /// <returns>Task representing the eventual completion of the disposal request.</returns>
         public static ValueTask DisposeAsync(this IAsyncDisposable disposable, CancellationToken token)
         {
-            if (disposable == null)
-                throw new ArgumentNullException(nameof(disposable));
+            ArgumentNullException.ThrowIfNull(disposable);
 
             _ = token; // NB: By design for compat.
 
@@ -41,8 +40,7 @@ namespace System
         /// <returns>Wrapper around the specified disposable, exposing the standard IDisposable interface.</returns>
         public static IDisposable AsDisposable(this IAsyncDisposable disposable)
         {
-            if (disposable == null)
-                throw new ArgumentNullException(nameof(disposable));
+            ArgumentNullException.ThrowIfNull(disposable);
 
             return new Disposable(disposable);
         }

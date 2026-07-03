@@ -30,8 +30,7 @@ namespace System.Reflection
         /// <param name="typeComparer">The slim type equality comparer.</param>
         public MemberInfoSlimEqualityComparer(IEqualityComparer<TypeSlim> typeComparer)
         {
-            if (typeComparer == null)
-                throw new ArgumentNullException(nameof(typeComparer));
+            ArgumentNullException.ThrowIfNull(typeComparer);
 
             _comparatorFactory = () => new MemberInfoSlimEqualityComparator(typeComparer);
         }

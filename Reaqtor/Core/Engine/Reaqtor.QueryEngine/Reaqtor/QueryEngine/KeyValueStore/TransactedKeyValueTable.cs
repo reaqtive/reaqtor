@@ -23,8 +23,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>True if found, false otherwise.</returns>
         public static bool TryGet<TKey, TValue>(this ITransactedKeyValueTable<TKey, TValue> table, TKey key, out TValue value)
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
+            ArgumentNullException.ThrowIfNull(table);
 
             if (table.Contains(key))
             {
@@ -46,8 +45,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>True if found, false otherwise.</returns>
         public static bool TryRemove<TKey, TValue>(this ITransactedKeyValueTable<TKey, TValue> table, TKey key)
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
+            ArgumentNullException.ThrowIfNull(table);
 
             if (table.Contains(key))
             {
@@ -66,8 +64,7 @@ namespace Reaqtor.QueryEngine
         /// <param name="table">The key value table.</param>
         public static void Clear<TKey, TValue>(this ITransactedKeyValueTable<TKey, TValue> table)
         {
-            if (table == null)
-                throw new ArgumentNullException(nameof(table));
+            ArgumentNullException.ThrowIfNull(table);
 
             var lst = table.ToList();
 

@@ -109,8 +109,7 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
         /// <returns>An expression with entity types replaced.</returns>
         public override Expression Apply(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = base.Apply(expression);
             return res;
@@ -377,12 +376,9 @@ namespace Nuqleon.DataModel.CompilerServices.Bonsai
         /// <returns>New property to use.</returns>
         protected override MemberInfo ResolveProperty(PropertyInfo originalProperty, Type declaringType, Type propertyType, Type[] indexerParameters)
         {
-            if (originalProperty == null)
-                throw new ArgumentNullException(nameof(originalProperty));
-            if (declaringType == null)
-                throw new ArgumentNullException(nameof(declaringType));
-            if (propertyType == null)
-                throw new ArgumentNullException(nameof(propertyType));
+            ArgumentNullException.ThrowIfNull(originalProperty);
+            ArgumentNullException.ThrowIfNull(declaringType);
+            ArgumentNullException.ThrowIfNull(propertyType);
 
             if (declaringType is StructuralTypeSlim structuralDeclaringType)
             {

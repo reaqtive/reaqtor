@@ -29,8 +29,7 @@ namespace System
         /// <returns>Result of applying the specified function to the specified object.</returns>
         public static TResult Let<TArg, TResult>(this TArg @object, Func<TArg, TResult> function)
         {
-            if (function == null)
-                throw new ArgumentNullException(nameof(function));
+            ArgumentNullException.ThrowIfNull(function);
 
             return function(@object);
         }

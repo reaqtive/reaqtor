@@ -80,8 +80,7 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <returns>An expression with entity types replaced.</returns>
         public override Expression Apply(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var res = base.Apply(expression);
             res = new UnassignedExpressionReducer().Visit(res);
@@ -316,12 +315,9 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <returns>New property to use.</returns>
         protected override MemberInfo ResolveProperty(PropertyInfo originalProperty, Type declaringType, Type propertyType, Type[] indexerParameters)
         {
-            if (originalProperty == null)
-                throw new ArgumentNullException(nameof(originalProperty));
-            if (declaringType == null)
-                throw new ArgumentNullException(nameof(declaringType));
-            if (propertyType == null)
-                throw new ArgumentNullException(nameof(propertyType));
+            ArgumentNullException.ThrowIfNull(originalProperty);
+            ArgumentNullException.ThrowIfNull(declaringType);
+            ArgumentNullException.ThrowIfNull(propertyType);
 
             var mapping = originalProperty.GetCustomAttribute<MappingAttribute>(inherit: false);
             if (mapping != null)
@@ -346,12 +342,9 @@ namespace Nuqleon.DataModel.CompilerServices
         /// <returns>New field to use.</returns>
         protected override MemberInfo ResolveField(FieldInfo originalField, Type declaringType, Type fieldType)
         {
-            if (originalField == null)
-                throw new ArgumentNullException(nameof(originalField));
-            if (declaringType == null)
-                throw new ArgumentNullException(nameof(declaringType));
-            if (fieldType == null)
-                throw new ArgumentNullException(nameof(fieldType));
+            ArgumentNullException.ThrowIfNull(originalField);
+            ArgumentNullException.ThrowIfNull(declaringType);
+            ArgumentNullException.ThrowIfNull(fieldType);
 
             var mapping = originalField.GetCustomAttribute<MappingAttribute>(inherit: false);
             if (mapping != null)

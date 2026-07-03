@@ -25,8 +25,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Optimized expression with delegate invocations inlined as method call expressions.</returns>
         public static Expression Apply(Expression expression, bool inlineNonPublicMethods)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var visitor = inlineNonPublicMethods ? Impl.InlineNonPublicMethods : Impl.NoInlineNonPublicMethods;
 

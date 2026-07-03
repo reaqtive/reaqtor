@@ -51,8 +51,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the sum of all values in the source sequence.</returns>
         public static ISubscribable<<#=tn#>> Sum(this ISubscribable<<#=tn#>> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new Sum<#=cn#>(source);
         }

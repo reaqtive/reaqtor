@@ -61,11 +61,9 @@ namespace Reaqtor.Reactive.Expressions
         /// <param name="policy">Policy used to evaluate the expression.</param>
         public Quoted(T value, Expression expression, IExpressionEvaluationPolicy policy)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
-            if (policy == null)
-                throw new ArgumentNullException(nameof(policy));
+            ArgumentNullException.ThrowIfNull(policy);
 
             if (!typeof(T).IsAssignableFrom(expression.Type))
                 throw new ArgumentException("The specified expression does not have a type compatible with the specified value.", nameof(expression));

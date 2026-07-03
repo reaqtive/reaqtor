@@ -21,8 +21,7 @@ namespace Reaqtor.ReificationFramework
         /// <returns>The set of reified operations.</returns>
         protected ServiceOperation[] Run(Func<ReificationClientContext, Task> operation)
         {
-            if (operation == null)
-                throw new ArgumentNullException(nameof(operation));
+            ArgumentNullException.ThrowIfNull(operation);
 
             var expressionServices = GetExpressionServices();
             var serviceProvider = new ReificationServiceProvider();

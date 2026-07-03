@@ -75,10 +75,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// <remarks>The use of a generic type parameter allows for "typed nulls".</remarks>
         public void Serialize<T>(T value, Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             CreateDataSerializer().Serialize<T>(value, stream);
         }
@@ -102,10 +99,7 @@ namespace Reaqtor.Hosting.Shared.Serialization
         /// if a JsonException was thrown during deserialization of <c>json</c></exception>
         public T Deserialize<T>(Stream stream)
         {
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             return CreateDataSerializer().Deserialize<T>(stream);
         }

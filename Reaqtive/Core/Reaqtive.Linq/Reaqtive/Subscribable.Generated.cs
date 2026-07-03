@@ -21,20 +21,11 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, Func<TSource1, TSource2, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TResult>(source1, source2, selector);
         }
@@ -53,25 +44,13 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, Func<TSource1, TSource2, TSource3, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TResult>(source1, source2, source3, selector);
         }
@@ -91,30 +70,15 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, Func<TSource1, TSource2, TSource3, TSource4, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TResult>(source1, source2, source3, source4, selector);
         }
@@ -135,35 +99,17 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TResult>(source1, source2, source3, source4, source5, selector);
         }
@@ -185,40 +131,19 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TResult>(source1, source2, source3, source4, source5, source6, selector);
         }
@@ -241,45 +166,21 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TResult>(source1, source2, source3, source4, source5, source6, source7, selector);
         }
@@ -303,50 +204,23 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, ISubscribable<TSource8> source8, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (source8 == null)
-            {
-                throw new ArgumentNullException(nameof(source8));
-            }
+            ArgumentNullException.ThrowIfNull(source8);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TResult>(source1, source2, source3, source4, source5, source6, source7, source8, selector);
         }
@@ -371,55 +245,25 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, ISubscribable<TSource8> source8, ISubscribable<TSource9> source9, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (source8 == null)
-            {
-                throw new ArgumentNullException(nameof(source8));
-            }
+            ArgumentNullException.ThrowIfNull(source8);
 
-            if (source9 == null)
-            {
-                throw new ArgumentNullException(nameof(source9));
-            }
+            ArgumentNullException.ThrowIfNull(source9);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TResult>(source1, source2, source3, source4, source5, source6, source7, source8, source9, selector);
         }
@@ -445,60 +289,27 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, ISubscribable<TSource8> source8, ISubscribable<TSource9> source9, ISubscribable<TSource10> source10, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (source8 == null)
-            {
-                throw new ArgumentNullException(nameof(source8));
-            }
+            ArgumentNullException.ThrowIfNull(source8);
 
-            if (source9 == null)
-            {
-                throw new ArgumentNullException(nameof(source9));
-            }
+            ArgumentNullException.ThrowIfNull(source9);
 
-            if (source10 == null)
-            {
-                throw new ArgumentNullException(nameof(source10));
-            }
+            ArgumentNullException.ThrowIfNull(source10);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TResult>(source1, source2, source3, source4, source5, source6, source7, source8, source9, source10, selector);
         }
@@ -525,65 +336,29 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, ISubscribable<TSource8> source8, ISubscribable<TSource9> source9, ISubscribable<TSource10> source10, ISubscribable<TSource11> source11, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (source8 == null)
-            {
-                throw new ArgumentNullException(nameof(source8));
-            }
+            ArgumentNullException.ThrowIfNull(source8);
 
-            if (source9 == null)
-            {
-                throw new ArgumentNullException(nameof(source9));
-            }
+            ArgumentNullException.ThrowIfNull(source9);
 
-            if (source10 == null)
-            {
-                throw new ArgumentNullException(nameof(source10));
-            }
+            ArgumentNullException.ThrowIfNull(source10);
 
-            if (source11 == null)
-            {
-                throw new ArgumentNullException(nameof(source11));
-            }
+            ArgumentNullException.ThrowIfNull(source11);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TResult>(source1, source2, source3, source4, source5, source6, source7, source8, source9, source10, source11, selector);
         }
@@ -611,70 +386,31 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, ISubscribable<TSource8> source8, ISubscribable<TSource9> source9, ISubscribable<TSource10> source10, ISubscribable<TSource11> source11, ISubscribable<TSource12> source12, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (source8 == null)
-            {
-                throw new ArgumentNullException(nameof(source8));
-            }
+            ArgumentNullException.ThrowIfNull(source8);
 
-            if (source9 == null)
-            {
-                throw new ArgumentNullException(nameof(source9));
-            }
+            ArgumentNullException.ThrowIfNull(source9);
 
-            if (source10 == null)
-            {
-                throw new ArgumentNullException(nameof(source10));
-            }
+            ArgumentNullException.ThrowIfNull(source10);
 
-            if (source11 == null)
-            {
-                throw new ArgumentNullException(nameof(source11));
-            }
+            ArgumentNullException.ThrowIfNull(source11);
 
-            if (source12 == null)
-            {
-                throw new ArgumentNullException(nameof(source12));
-            }
+            ArgumentNullException.ThrowIfNull(source12);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TResult>(source1, source2, source3, source4, source5, source6, source7, source8, source9, source10, source11, source12, selector);
         }
@@ -703,75 +439,33 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, ISubscribable<TSource8> source8, ISubscribable<TSource9> source9, ISubscribable<TSource10> source10, ISubscribable<TSource11> source11, ISubscribable<TSource12> source12, ISubscribable<TSource13> source13, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (source8 == null)
-            {
-                throw new ArgumentNullException(nameof(source8));
-            }
+            ArgumentNullException.ThrowIfNull(source8);
 
-            if (source9 == null)
-            {
-                throw new ArgumentNullException(nameof(source9));
-            }
+            ArgumentNullException.ThrowIfNull(source9);
 
-            if (source10 == null)
-            {
-                throw new ArgumentNullException(nameof(source10));
-            }
+            ArgumentNullException.ThrowIfNull(source10);
 
-            if (source11 == null)
-            {
-                throw new ArgumentNullException(nameof(source11));
-            }
+            ArgumentNullException.ThrowIfNull(source11);
 
-            if (source12 == null)
-            {
-                throw new ArgumentNullException(nameof(source12));
-            }
+            ArgumentNullException.ThrowIfNull(source12);
 
-            if (source13 == null)
-            {
-                throw new ArgumentNullException(nameof(source13));
-            }
+            ArgumentNullException.ThrowIfNull(source13);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TResult>(source1, source2, source3, source4, source5, source6, source7, source8, source9, source10, source11, source12, source13, selector);
         }
@@ -801,80 +495,35 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TSource14, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, ISubscribable<TSource8> source8, ISubscribable<TSource9> source9, ISubscribable<TSource10> source10, ISubscribable<TSource11> source11, ISubscribable<TSource12> source12, ISubscribable<TSource13> source13, ISubscribable<TSource14> source14, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TSource14, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (source8 == null)
-            {
-                throw new ArgumentNullException(nameof(source8));
-            }
+            ArgumentNullException.ThrowIfNull(source8);
 
-            if (source9 == null)
-            {
-                throw new ArgumentNullException(nameof(source9));
-            }
+            ArgumentNullException.ThrowIfNull(source9);
 
-            if (source10 == null)
-            {
-                throw new ArgumentNullException(nameof(source10));
-            }
+            ArgumentNullException.ThrowIfNull(source10);
 
-            if (source11 == null)
-            {
-                throw new ArgumentNullException(nameof(source11));
-            }
+            ArgumentNullException.ThrowIfNull(source11);
 
-            if (source12 == null)
-            {
-                throw new ArgumentNullException(nameof(source12));
-            }
+            ArgumentNullException.ThrowIfNull(source12);
 
-            if (source13 == null)
-            {
-                throw new ArgumentNullException(nameof(source13));
-            }
+            ArgumentNullException.ThrowIfNull(source13);
 
-            if (source14 == null)
-            {
-                throw new ArgumentNullException(nameof(source14));
-            }
+            ArgumentNullException.ThrowIfNull(source14);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TSource14, TResult>(source1, source2, source3, source4, source5, source6, source7, source8, source9, source10, source11, source12, source13, source14, selector);
         }
@@ -905,85 +554,37 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TSource14, TSource15, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, ISubscribable<TSource8> source8, ISubscribable<TSource9> source9, ISubscribable<TSource10> source10, ISubscribable<TSource11> source11, ISubscribable<TSource12> source12, ISubscribable<TSource13> source13, ISubscribable<TSource14> source14, ISubscribable<TSource15> source15, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TSource14, TSource15, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (source8 == null)
-            {
-                throw new ArgumentNullException(nameof(source8));
-            }
+            ArgumentNullException.ThrowIfNull(source8);
 
-            if (source9 == null)
-            {
-                throw new ArgumentNullException(nameof(source9));
-            }
+            ArgumentNullException.ThrowIfNull(source9);
 
-            if (source10 == null)
-            {
-                throw new ArgumentNullException(nameof(source10));
-            }
+            ArgumentNullException.ThrowIfNull(source10);
 
-            if (source11 == null)
-            {
-                throw new ArgumentNullException(nameof(source11));
-            }
+            ArgumentNullException.ThrowIfNull(source11);
 
-            if (source12 == null)
-            {
-                throw new ArgumentNullException(nameof(source12));
-            }
+            ArgumentNullException.ThrowIfNull(source12);
 
-            if (source13 == null)
-            {
-                throw new ArgumentNullException(nameof(source13));
-            }
+            ArgumentNullException.ThrowIfNull(source13);
 
-            if (source14 == null)
-            {
-                throw new ArgumentNullException(nameof(source14));
-            }
+            ArgumentNullException.ThrowIfNull(source14);
 
-            if (source15 == null)
-            {
-                throw new ArgumentNullException(nameof(source15));
-            }
+            ArgumentNullException.ThrowIfNull(source15);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TSource14, TSource15, TResult>(source1, source2, source3, source4, source5, source6, source7, source8, source9, source10, source11, source12, source13, source14, source15, selector);
         }
@@ -1015,90 +616,39 @@ namespace Reaqtive
         /// <returns>Observable sequence containing elements obtained from applying the selector function to the latest value of each input sequence whenever any input sequence receives an element.</returns>
         public static ISubscribable<TResult> CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TSource14, TSource15, TSource16, TResult>(this ISubscribable<TSource1> source1, ISubscribable<TSource2> source2, ISubscribable<TSource3> source3, ISubscribable<TSource4> source4, ISubscribable<TSource5> source5, ISubscribable<TSource6> source6, ISubscribable<TSource7> source7, ISubscribable<TSource8> source8, ISubscribable<TSource9> source9, ISubscribable<TSource10> source10, ISubscribable<TSource11> source11, ISubscribable<TSource12> source12, ISubscribable<TSource13> source13, ISubscribable<TSource14> source14, ISubscribable<TSource15> source15, ISubscribable<TSource16> source16, Func<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TSource14, TSource15, TSource16, TResult> selector)
         {
-            if (source1 == null)
-            {
-                throw new ArgumentNullException(nameof(source1));
-            }
+            ArgumentNullException.ThrowIfNull(source1);
 
-            if (source2 == null)
-            {
-                throw new ArgumentNullException(nameof(source2));
-            }
+            ArgumentNullException.ThrowIfNull(source2);
 
-            if (source3 == null)
-            {
-                throw new ArgumentNullException(nameof(source3));
-            }
+            ArgumentNullException.ThrowIfNull(source3);
 
-            if (source4 == null)
-            {
-                throw new ArgumentNullException(nameof(source4));
-            }
+            ArgumentNullException.ThrowIfNull(source4);
 
-            if (source5 == null)
-            {
-                throw new ArgumentNullException(nameof(source5));
-            }
+            ArgumentNullException.ThrowIfNull(source5);
 
-            if (source6 == null)
-            {
-                throw new ArgumentNullException(nameof(source6));
-            }
+            ArgumentNullException.ThrowIfNull(source6);
 
-            if (source7 == null)
-            {
-                throw new ArgumentNullException(nameof(source7));
-            }
+            ArgumentNullException.ThrowIfNull(source7);
 
-            if (source8 == null)
-            {
-                throw new ArgumentNullException(nameof(source8));
-            }
+            ArgumentNullException.ThrowIfNull(source8);
 
-            if (source9 == null)
-            {
-                throw new ArgumentNullException(nameof(source9));
-            }
+            ArgumentNullException.ThrowIfNull(source9);
 
-            if (source10 == null)
-            {
-                throw new ArgumentNullException(nameof(source10));
-            }
+            ArgumentNullException.ThrowIfNull(source10);
 
-            if (source11 == null)
-            {
-                throw new ArgumentNullException(nameof(source11));
-            }
+            ArgumentNullException.ThrowIfNull(source11);
 
-            if (source12 == null)
-            {
-                throw new ArgumentNullException(nameof(source12));
-            }
+            ArgumentNullException.ThrowIfNull(source12);
 
-            if (source13 == null)
-            {
-                throw new ArgumentNullException(nameof(source13));
-            }
+            ArgumentNullException.ThrowIfNull(source13);
 
-            if (source14 == null)
-            {
-                throw new ArgumentNullException(nameof(source14));
-            }
+            ArgumentNullException.ThrowIfNull(source14);
 
-            if (source15 == null)
-            {
-                throw new ArgumentNullException(nameof(source15));
-            }
+            ArgumentNullException.ThrowIfNull(source15);
 
-            if (source16 == null)
-            {
-                throw new ArgumentNullException(nameof(source16));
-            }
+            ArgumentNullException.ThrowIfNull(source16);
 
-            if (selector == null)
-            {
-                throw new ArgumentNullException(nameof(selector));
-            }
+            ArgumentNullException.ThrowIfNull(selector);
 
             return new CombineLatest<TSource1, TSource2, TSource3, TSource4, TSource5, TSource6, TSource7, TSource8, TSource9, TSource10, TSource11, TSource12, TSource13, TSource14, TSource15, TSource16, TResult>(source1, source2, source3, source4, source5, source6, source7, source8, source9, source10, source11, source12, source13, source14, source15, source16, selector);
         }

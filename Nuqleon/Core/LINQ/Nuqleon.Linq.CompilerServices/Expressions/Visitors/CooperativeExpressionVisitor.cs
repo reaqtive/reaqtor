@@ -57,8 +57,7 @@ namespace System.Linq.CompilerServices
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         protected override Expression VisitBinary(BinaryExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             if (node.Method != null)
             {
@@ -76,8 +75,7 @@ namespace System.Linq.CompilerServices
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         protected override Expression VisitIndex(IndexExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             if (TryDispatchToRewriter(node, node.Indexer, out Expression result))
                 return result;
@@ -92,8 +90,7 @@ namespace System.Linq.CompilerServices
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         protected override Expression VisitMember(MemberExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             if (TryDispatchToRewriter(node, node.Member, out Expression result))
                 return result;
@@ -108,8 +105,7 @@ namespace System.Linq.CompilerServices
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         protected override Expression VisitMethodCall(MethodCallExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             if (TryDispatchToRewriter(node, node.Method, out Expression result))
                 return result;
@@ -124,8 +120,7 @@ namespace System.Linq.CompilerServices
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         protected override Expression VisitNew(NewExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             if (node.Constructor != null)
             {
@@ -144,8 +139,7 @@ namespace System.Linq.CompilerServices
         /// <returns>The modified expression, if it or any subexpression was modified; otherwise, returns the original expression.</returns>
         protected override Expression VisitUnary(UnaryExpression node)
         {
-            if (node == null)
-                throw new ArgumentNullException(nameof(node));
+            ArgumentNullException.ThrowIfNull(node);
 
             if (node.Method != null)
             {

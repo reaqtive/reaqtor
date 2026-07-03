@@ -78,8 +78,7 @@ namespace System.Memory.Diagnostics
         /// <param name="builder">The string builder to append to.</param>
         public void ToString(StringBuilder builder)
         {
-            if (builder == null)
-                throw new ArgumentNullException(nameof(builder));
+            ArgumentNullException.ThrowIfNull(builder);
 
             ToStringInstanceCountPerType(builder);
             ToStringElementCountPerArrayType(builder);

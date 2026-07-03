@@ -22,8 +22,7 @@ namespace System.Time
         /// <returns>New stopwach instance.</returns>
         public static IStopwatch StartNew(this IStopwatchFactory factory)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             var sw = factory.Create();
             sw.Start();

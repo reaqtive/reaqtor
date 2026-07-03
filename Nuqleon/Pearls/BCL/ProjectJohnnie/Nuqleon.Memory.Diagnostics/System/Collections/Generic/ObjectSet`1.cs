@@ -115,8 +115,7 @@ namespace System.Collections.Generic
         public ObjectSet(IEnumerable<T> collection)
             : this()
         {
-            if (collection == null)
-                throw new ArgumentNullException(nameof(collection));
+            ArgumentNullException.ThrowIfNull(collection);
 
             if (collection is ObjectSet<T> otherAsObjectSet)
             {
@@ -370,8 +369,7 @@ namespace System.Collections.Generic
         /// <param name="other">The collection of items to add to the current set.</param>
         public void UnionWith(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             foreach (T item in other)
             {
@@ -385,8 +383,7 @@ namespace System.Collections.Generic
         /// <param name="other">The collection of items to compute the intersection with.</param>
         public void IntersectWith(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             // intersection of anything with empty set is empty set, so return if count is 0
             if (Count == 0)
@@ -426,8 +423,7 @@ namespace System.Collections.Generic
         /// <param name="other">The collection of items to remove from the current set.</param>
         public void ExceptWith(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             // this is already the empty set; return
             if (Count == 0)
@@ -455,8 +451,7 @@ namespace System.Collections.Generic
         /// <param name="other">The collection of items to compare with the current set.</param>
         public void SymmetricExceptWith(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             // if set is empty, then symmetric difference is other
             if (Count == 0)
@@ -489,8 +484,7 @@ namespace System.Collections.Generic
         /// <returns><c>true</c> if this set is a subset of the specified collection; otherwise, <c>false</c>.</returns>
         public bool IsSubsetOf(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             // The empty set is a subset of any set
             if (Count == 0)
@@ -528,8 +522,7 @@ namespace System.Collections.Generic
         /// <returns><c>true</c> if this set is a proper subset of the specified collection; otherwise, <c>false</c>.</returns>
         public bool IsProperSubsetOf(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             // no set is a proper subset of itself.
             if (other == this)
@@ -576,8 +569,7 @@ namespace System.Collections.Generic
         /// <returns><c>true</c> if this set is a superset of the specified collection; otherwise, <c>false</c>.</returns>
         public bool IsSupersetOf(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             // a set is always a superset of itself
             if (other == this)
@@ -610,8 +602,7 @@ namespace System.Collections.Generic
         /// <returns><c>true</c> if this set is a proper superset of the specified collection; otherwise, <c>false</c>.</returns>
         public bool IsProperSupersetOf(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             // the empty set isn't a proper superset of any set.
             if (Count == 0)
@@ -658,8 +649,7 @@ namespace System.Collections.Generic
         /// <returns><c>true</c> if the current set and the specified collection have at least one common element; otherwise, <c>false</c>.</returns>
         public bool Overlaps(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             if (Count == 0)
             {
@@ -690,8 +680,7 @@ namespace System.Collections.Generic
         /// <returns><c>true</c> if the current set and the specified collection have the same elements; otherwise, <c>false</c>.</returns>
         public bool SetEquals(IEnumerable<T> other)
         {
-            if (other == null)
-                throw new ArgumentNullException(nameof(other));
+            ArgumentNullException.ThrowIfNull(other);
 
             // a set is equal to itself
             if (other == this)
@@ -746,8 +735,7 @@ namespace System.Collections.Generic
         /// <param name="count">The number of items to copy.</param>
         public void CopyTo(T[] array, int arrayIndex, int count)
         {
-            if (array == null)
-                throw new ArgumentNullException(nameof(array));
+            ArgumentNullException.ThrowIfNull(array);
 
             // check array index valid index into array
             if (arrayIndex < 0)

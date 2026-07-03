@@ -16,8 +16,7 @@ namespace System.Diagnostics
         /// <returns>An <see cref="IStopwatch"/> wrapper around the specified stopwatch instance.</returns>
         public static IStopwatch ToStopwatch(this Stopwatch stopwatch)
         {
-            if (stopwatch == null)
-                throw new ArgumentNullException(nameof(stopwatch));
+            ArgumentNullException.ThrowIfNull(stopwatch);
 
             return new StopwatchImpl(stopwatch);
         }

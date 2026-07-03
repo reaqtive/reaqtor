@@ -23,8 +23,7 @@ namespace System.Memory
         /// <returns>A memoization cache factory that wraps the specified <paramref name="factory"/> and adds thread-local isolation to it.</returns>
         public static IWeakMemoizationCacheFactory WithThreadLocal(this IWeakMemoizationCacheFactory factory)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             return new ThreadLocalFactory(factory);
         }
@@ -38,8 +37,7 @@ namespace System.Memory
         /// <returns>A memoization cache factory that wraps the specified <paramref name="factory"/> and adds thread-local isolation to it.</returns>
         public static IWeakMemoizationCacheFactory WithThreadLocal(this IWeakMemoizationCacheFactory factory, bool exposeThreadLocalView)
         {
-            if (factory == null)
-                throw new ArgumentNullException(nameof(factory));
+            ArgumentNullException.ThrowIfNull(factory);
 
             return new ThreadLocalFactory(factory, exposeThreadLocalView);
         }
@@ -66,8 +64,7 @@ namespace System.Memory
 
             public IMemoizationCache<T, R> Create<T, R>(Func<T, R> function, MemoizationOptions options) where T : class
             {
-                if (function == null)
-                    throw new ArgumentNullException(nameof(function));
+                ArgumentNullException.ThrowIfNull(function);
 
                 if (_exposeGlobalView)
                 {

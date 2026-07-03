@@ -59,8 +59,7 @@ namespace Nuqleon.Json.Expressions
         /// <param name="builder">The string builder to append to.</param>
         public void ToString(StringBuilder builder)
         {
-            if (builder == null)
-                throw new ArgumentNullException(nameof(builder));
+            ArgumentNullException.ThrowIfNull(builder);
 
             ToStringCore(builder);
         }
@@ -79,8 +78,7 @@ namespace Nuqleon.Json.Expressions
         /// <remarks>See RFC 4627 for more information. This parses the production specified in section 2: <code>JSON-text = object / array</code>.</remarks>
         public static Expression Parse(string input)
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             return JsonParser.Parse(input, ensureTopLevelObjectOrArray: true);
         }
@@ -94,8 +92,7 @@ namespace Nuqleon.Json.Expressions
         /// <remarks>See RFC 4627 for more information. This parses the production specified in section 2: <code>JSON-text = object / array</code>.</remarks>
         public static Expression Parse(string input, bool ensureTopLevelObjectOrArray)
         {
-            if (input == null)
-                throw new ArgumentNullException(nameof(input));
+            ArgumentNullException.ThrowIfNull(input);
 
             return JsonParser.Parse(input, ensureTopLevelObjectOrArray);
         }
@@ -108,8 +105,7 @@ namespace Nuqleon.Json.Expressions
         /// <remarks>The order of the members is not defined.</remarks>
         public static ObjectExpression Object(IDictionary<string, Expression> members)
         {
-            if (members == null)
-                throw new ArgumentNullException(nameof(members));
+            ArgumentNullException.ThrowIfNull(members);
 
             // PERF: Consider an optimization for the case of an empty dictionary.
 
@@ -123,8 +119,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Array expression tree node for the given elements.</returns>
         public static ArrayExpression Array(IEnumerable<Expression> values)
         {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+            ArgumentNullException.ThrowIfNull(values);
 
             return MakeArrayCore([.. values]);
         }
@@ -136,8 +131,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Array expression tree node for the given elements.</returns>
         public static ArrayExpression Array(IList<Expression> values)
         {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+            ArgumentNullException.ThrowIfNull(values);
 
             return MakeArrayCore(values);
         }
@@ -149,8 +143,7 @@ namespace Nuqleon.Json.Expressions
         /// <returns>Array expression tree node for the given elements.</returns>
         public static ArrayExpression Array(params Expression[] values)
         {
-            if (values == null)
-                throw new ArgumentNullException(nameof(values));
+            ArgumentNullException.ThrowIfNull(values);
 
             return MakeArrayCore(values);
         }

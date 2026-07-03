@@ -178,10 +178,7 @@ namespace System.Collections.Specialized
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int index)
         {
-            if (array == null)
-            {
-                throw new ArgumentNullException(nameof(array));
-            }
+            ArgumentNullException.ThrowIfNull(array);
 
             if (index < 0 || index > array.Length)
             {

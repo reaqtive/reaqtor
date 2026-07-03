@@ -49,8 +49,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Optimized tree.</returns>
         public TTree Optimize(TTree tree)
         {
-            if (tree == null)
-                throw new ArgumentNullException(nameof(tree));
+            ArgumentNullException.ThrowIfNull(tree);
 
             var res = tree;
 

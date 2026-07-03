@@ -113,7 +113,7 @@ namespace Reaqtive.Subjects
         /// <returns>A disposable object used to unsubscribe the observer from the subject.</returns>
         public IDisposable Subscribe(IObserver<T> observer)
         {
-            if (observer is null) { throw new ArgumentNullException(nameof(observer)); }
+            ArgumentNullException.ThrowIfNull(observer);
 
             lock (_lock)
             {

@@ -72,15 +72,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
         /// <returns>Deserialized object.</returns>
         public object Deserialize(Type type, Stream stream)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             var function = _deserializers.GetValue(type, GetDeserializerCoreMethod);
             if (function is Func<Stream, object> simpleFunction)
@@ -109,15 +103,9 @@ namespace Nuqleon.DataModel.Serialization.Binary
         /// <param name="value">Object to be serialized.</param>
         public void Serialize(Type type, Stream stream, object value)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
-            if (stream == null)
-            {
-                throw new ArgumentNullException(nameof(stream));
-            }
+            ArgumentNullException.ThrowIfNull(stream);
 
             var action = _serializers.GetValue(type, GetSerializerCoreMethod);
             if (action is Action<Stream, object> simpleAction)

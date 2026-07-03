@@ -45,11 +45,9 @@ namespace System.Linq.CompilerServices
                 }
                 else if (!Object.ReferenceEquals(mappedType, definingType))
                 {
-                    if (definingType == null)
-                        throw new ArgumentNullException(nameof(definingType));
+                    ArgumentNullException.ThrowIfNull(definingType);
 
-                    if (bindingType == null)
-                        throw new ArgumentNullException(nameof(bindingType));
+                    ArgumentNullException.ThrowIfNull(bindingType);
 
                     throw new InvalidOperationException(
                         string.Format(

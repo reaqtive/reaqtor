@@ -17,8 +17,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
 
         public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
         {
-            if (dictionary == null)
-                throw new ArgumentNullException(nameof(dictionary));
+            ArgumentNullException.ThrowIfNull(dictionary);
 
             return new ContainsOperationResult<TKey, TValue>(dictionary.ContainsKey(Key));
         }

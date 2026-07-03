@@ -44,10 +44,8 @@ namespace System.Linq.Expressions
         public static TExpression Intern<TExpression>(this TExpression expression, IExpressionInterningCache cache)
             where TExpression : Expression
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (cache == null)
-                throw new ArgumentNullException(nameof(cache));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(cache);
 
             return (TExpression)cache.GetOrAdd(expression);
         }

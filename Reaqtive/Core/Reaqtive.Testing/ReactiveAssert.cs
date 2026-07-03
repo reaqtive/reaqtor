@@ -47,10 +47,8 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
         public static void AreElementsEqual<T>(IEnumerable<T> expected, IEnumerable<T> actual)
         {
-            if (expected == null)
-                throw new ArgumentNullException(nameof(expected));
-            if (actual == null)
-                throw new ArgumentNullException(nameof(actual));
+            ArgumentNullException.ThrowIfNull(expected);
+            ArgumentNullException.ThrowIfNull(actual);
 
             if (!expected.SequenceEqual(actual))
                 Assert.Fail(Message(actual, expected));
@@ -66,10 +64,8 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
         public static void AreElementsEqual<T>(IEnumerable<T> expected, IEnumerable<T> actual, string message)
         {
-            if (expected == null)
-                throw new ArgumentNullException(nameof(expected));
-            if (actual == null)
-                throw new ArgumentNullException(nameof(actual));
+            ArgumentNullException.ThrowIfNull(expected);
+            ArgumentNullException.ThrowIfNull(actual);
 
             if (!expected.SequenceEqual(actual))
                 Assert.Fail(message);
@@ -84,10 +80,8 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
         public static void AreElementsEqual<T>(IObservable<T> expected, IObservable<T> actual)
         {
-            if (expected == null)
-                throw new ArgumentNullException(nameof(expected));
-            if (actual == null)
-                throw new ArgumentNullException(nameof(actual));
+            ArgumentNullException.ThrowIfNull(expected);
+            ArgumentNullException.ThrowIfNull(actual);
 
             AreElementsEqual(expected.Materialize().ToEnumerable(), actual.Materialize().ToEnumerable());
         }
@@ -102,10 +96,8 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
         public static void AreElementsEqual<T>(IObservable<T> expected, IObservable<T> actual, string message)
         {
-            if (expected == null)
-                throw new ArgumentNullException(nameof(expected));
-            if (actual == null)
-                throw new ArgumentNullException(nameof(actual));
+            ArgumentNullException.ThrowIfNull(expected);
+            ArgumentNullException.ThrowIfNull(actual);
 
             AreElementsEqual(expected.Materialize().ToEnumerable(), actual.Materialize().ToEnumerable(), message);
         }
@@ -118,8 +110,7 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
         public static void Throws<TException>(Action action) where TException : Exception
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
 
             var failed = false;
             try
@@ -150,8 +141,7 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
         public static void Throws<TException>(Action action, string message) where TException : Exception
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
 
             var failed = false;
             try
@@ -182,8 +172,7 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
         public static void Throws<TException>(TException exception, Action action) where TException : Exception
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
 
             var failed = false;
             try
@@ -216,8 +205,7 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
         public static void Throws<TException>(TException exception, Action action, string message) where TException : Exception
         {
-            if (action == null)
-                throw new ArgumentNullException(nameof(action));
+            ArgumentNullException.ThrowIfNull(action);
 
             var failed = false;
             try
@@ -249,10 +237,8 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
         public static void AssertEqual<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
         {
-            if (actual == null)
-                throw new ArgumentNullException(nameof(actual));
-            if (expected == null)
-                throw new ArgumentNullException(nameof(expected));
+            ArgumentNullException.ThrowIfNull(actual);
+            ArgumentNullException.ThrowIfNull(expected);
 
             AreElementsEqual(expected, actual);
         }
@@ -266,10 +252,8 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
         public static void AssertEqual<T>(this IEnumerable<T> actual, params T[] expected)
         {
-            if (actual == null)
-                throw new ArgumentNullException(nameof(actual));
-            if (expected == null)
-                throw new ArgumentNullException(nameof(expected));
+            ArgumentNullException.ThrowIfNull(actual);
+            ArgumentNullException.ThrowIfNull(expected);
 
             AreElementsEqual(expected, actual);
         }
@@ -283,10 +267,8 @@ namespace Reaqtive.Testing
         /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
         public static void AssertEqual<T>(this IObservable<T> actual, IObservable<T> expected)
         {
-            if (actual == null)
-                throw new ArgumentNullException(nameof(actual));
-            if (expected == null)
-                throw new ArgumentNullException(nameof(expected));
+            ArgumentNullException.ThrowIfNull(actual);
+            ArgumentNullException.ThrowIfNull(expected);
 
             AreElementsEqual(expected, actual);
         }

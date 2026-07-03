@@ -50,10 +50,8 @@ namespace System.Linq.CompilerServices
 
         private static string CreateMessage(string message, Expression expression, IEnumerable<ParameterExpression> parameters)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
-            if (parameters == null)
-                throw new ArgumentNullException(nameof(parameters));
+            ArgumentNullException.ThrowIfNull(expression);
+            ArgumentNullException.ThrowIfNull(parameters);
 
             var parametersString = string.Join("', '", parameters.Select(p => p.Name));
             var expressionString = expression.ToCSharpString();
@@ -67,8 +65,7 @@ namespace System.Linq.CompilerServices
         /// <param name="message">Exception message to use for signaling unbound parameters.</param>
         public static void ThrowIfOpen(Expression expression, string message)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             var variables = FreeVariableScanner.Scan(expression);
 

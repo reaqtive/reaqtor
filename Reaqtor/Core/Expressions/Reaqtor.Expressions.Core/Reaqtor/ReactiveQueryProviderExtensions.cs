@@ -32,10 +32,8 @@ namespace Reaqtor
         /// <returns>Newly created observable. To define the observable on a service, use <c>IReactiveDefinition.DefineObservable</c>.</returns>
         public static IReactiveQbservable<T> CreateQbservable<T>(this IReactiveQueryProvider provider, Expression<Func<IReactiveQbserver<T>, Uri, object, CancellationToken, Task<IReactiveQubscription>>> subscribe)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
-            if (subscribe == null)
-                throw new ArgumentNullException(nameof(subscribe));
+            ArgumentNullException.ThrowIfNull(provider);
+            ArgumentNullException.ThrowIfNull(subscribe);
 
             return provider.CreateQbservable<T>(
                 Expression.Call(
@@ -60,10 +58,8 @@ namespace Reaqtor
         /// <returns>Newly created stream factory. To define the factory on a service, use <c>IReactiveDefinition.DefineStreamFactory</c>.</returns>
         public static IReactiveQubjectFactory<TInput, TOutput> CreateQubjectFactory<TInput, TOutput>(this IReactiveQueryProvider provider, Expression<Func<Uri, object, CancellationToken, Task<IReactiveQubject<TInput, TOutput>>>> create)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
-            if (create == null)
-                throw new ArgumentNullException(nameof(create));
+            ArgumentNullException.ThrowIfNull(provider);
+            ArgumentNullException.ThrowIfNull(create);
 
             return provider.CreateQubjectFactory<TInput, TOutput>(
                 Expression.Call(
@@ -85,10 +81,8 @@ namespace Reaqtor
         /// <returns>Newly created parameterized stream factory. To define the factory on a service, use <c>IReactiveDefinition.DefineStreamFactory</c>.</returns>
         public static IReactiveQubjectFactory<TInput, TOutput, TArgs> CreateQubjectFactory<TArgs, TInput, TOutput>(this IReactiveQueryProvider provider, Expression<Func<Uri, TArgs, object, CancellationToken, Task<IReactiveQubject<TInput, TOutput>>>> create)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
-            if (create == null)
-                throw new ArgumentNullException(nameof(create));
+            ArgumentNullException.ThrowIfNull(provider);
+            ArgumentNullException.ThrowIfNull(create);
 
             return provider.CreateQubjectFactory<TArgs, TInput, TOutput>(
                 Expression.Call(

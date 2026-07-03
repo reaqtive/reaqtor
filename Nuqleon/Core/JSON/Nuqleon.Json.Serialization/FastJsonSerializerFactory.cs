@@ -39,10 +39,7 @@ namespace Nuqleon.Json.Serialization
         /// <returns>A fast JSON serializer specified for objects of the specified type <typeparamref name="T"/>.</returns>
         public static IFastJsonSerializer<T> CreateSerializer<T>(INameProvider provider, FastJsonSerializerSettings settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            ArgumentNullException.ThrowIfNull(settings);
 
             provider ??= DefaultNameProvider.Instance;
 
@@ -99,10 +96,7 @@ namespace Nuqleon.Json.Serialization
         /// <returns>A fast JSON deserializer specified for objects of the specified type <typeparamref name="T"/>.</returns>
         public static IFastJsonDeserializer<T> CreateDeserializer<T>(INameResolver resolver, FastJsonSerializerSettings settings)
         {
-            if (settings == null)
-            {
-                throw new ArgumentNullException(nameof(settings));
-            }
+            ArgumentNullException.ThrowIfNull(settings);
 
             resolver ??= DefaultNameResolver.Instance;
 

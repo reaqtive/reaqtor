@@ -44,8 +44,7 @@ namespace System.Reflection
         /// <returns>Result of the visit.</returns>
         public virtual TypeSlim Visit(TypeSlim type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (_types.TryGetValue(type, out TypeSlim res))
             {
@@ -212,8 +211,7 @@ namespace System.Reflection
         /// <returns>Result of visiting the types.</returns>
         public ReadOnlyCollection<TypeSlim> Visit(ReadOnlyCollection<TypeSlim> types)
         {
-            if (types == null)
-                throw new ArgumentNullException(nameof(types));
+            ArgumentNullException.ThrowIfNull(types);
 
             var res = default(TypeSlim[]);
 

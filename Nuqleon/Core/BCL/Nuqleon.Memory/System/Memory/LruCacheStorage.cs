@@ -47,10 +47,7 @@ namespace System.Memory
             {
                 throw new ArgumentOutOfRangeException(nameof(size));
             }
-            if (comparer == null)
-            {
-                throw new ArgumentNullException(nameof(comparer));
-            }
+            ArgumentNullException.ThrowIfNull(comparer);
 
             _size = size;
             _cache = new ConcurrentDictionary<T, Entry>(comparer);
@@ -73,10 +70,7 @@ namespace System.Memory
         {
             CheckDisposed();
 
-            if (value == null)
-            {
-                throw new ArgumentNullException(nameof(value));
-            }
+            ArgumentNullException.ThrowIfNull(value);
 
             var entry = default(Entry);
 
@@ -121,10 +115,7 @@ namespace System.Memory
         {
             CheckDisposed();
 
-            if (entry == null)
-            {
-                throw new ArgumentNullException(nameof(entry));
-            }
+            ArgumentNullException.ThrowIfNull(entry);
             if (entry.Value == null)
             {
                 throw new ArgumentException("Value contained in the entry cannot be null.", nameof(entry));

@@ -14,8 +14,7 @@ namespace Reaqtor.Reliable.Service
         public ReliableReactiveClient(IReliableReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
             : base(expressionServices)
         {
-            if (provider == null)
-                throw new ArgumentNullException(nameof(provider));
+            ArgumentNullException.ThrowIfNull(provider);
 
             Provider = new ReliableQueryProvider(provider, expressionServices);
 

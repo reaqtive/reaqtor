@@ -331,8 +331,7 @@ namespace System.Linq.CompilerServices
         /// <returns>Result of applying the visitor function to the node.</returns>
         protected static TResult VisitIfNotNull<T, TResult>(T node, Func<T, TResult> nodeVisitor)
         {
-            if (nodeVisitor == null)
-                throw new ArgumentNullException(nameof(nodeVisitor));
+            ArgumentNullException.ThrowIfNull(nodeVisitor);
 
             if (node != null)
             {

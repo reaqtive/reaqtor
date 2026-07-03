@@ -192,8 +192,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression VisitStructural(StructuralDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (!_visited.Add(type.UnderlyingType))
             {
@@ -457,8 +456,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression VisitExpression(ExpressionDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return MakeExpressionCore(type.UnderlyingType);
         }
@@ -470,8 +468,7 @@ namespace Nuqleon.DataModel.Serialization.Binary
 
         protected override LambdaExpression VisitPrimitive(PrimitiveDataType type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             return type.PrimitiveKind switch
             {

@@ -31,8 +31,7 @@ namespace Reaqtive
         /// <remarks>This constructor overload clones the <paramref name="subscriptions"/> collection.</remarks>
         public StaticCompositeSubscription(IEnumerable<ISubscription> subscriptions)
         {
-            if (subscriptions == null)
-                throw new ArgumentNullException(nameof(subscriptions));
+            ArgumentNullException.ThrowIfNull(subscriptions);
 
             _subscriptions = [.. subscriptions];
         }
@@ -44,10 +43,8 @@ namespace Reaqtive
         /// <param name="subscription2">The second inner subscription.</param>
         public static ICompositeSubscription Create(ISubscription subscription1, ISubscription subscription2)
         {
-            if (subscription1 == null)
-                throw new ArgumentNullException(nameof(subscription1));
-            if (subscription2 == null)
-                throw new ArgumentNullException(nameof(subscription2));
+            ArgumentNullException.ThrowIfNull(subscription1);
+            ArgumentNullException.ThrowIfNull(subscription2);
 
             return new Binary(subscription1, subscription2);
         }

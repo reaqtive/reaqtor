@@ -58,8 +58,7 @@ namespace Reaqtive
         /// <returns>Observable sequence containing a single element with the average of all values in the source sequence.<#=emptyRemark#></returns>
         public static ISubscribable<<#=to#>> Average(this ISubscribable<<#=tn#>> source)
         {
-            if (source == null)
-                throw new ArgumentNullException(nameof(source));
+            ArgumentNullException.ThrowIfNull(source);
 
             return new Average<#=cn#>(source);
         }

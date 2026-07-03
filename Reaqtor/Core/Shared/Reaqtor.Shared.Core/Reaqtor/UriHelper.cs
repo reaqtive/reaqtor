@@ -24,10 +24,7 @@ namespace Reaqtor
         /// <returns>Canonical string representation of the given URI.</returns>
         public static string ToCanonicalString(this Uri uri)
         {
-            if (uri == null)
-            {
-                throw new ArgumentNullException(nameof(uri));
-            }
+            ArgumentNullException.ThrowIfNull(uri);
 
             return uri.AbsoluteUri;
         }

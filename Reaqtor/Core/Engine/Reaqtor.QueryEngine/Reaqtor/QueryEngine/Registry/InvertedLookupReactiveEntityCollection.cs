@@ -28,8 +28,7 @@ namespace Reaqtor.QueryEngine
 
         public InvertedLookupReactiveEntityCollection(IEqualityComparer<TKey> keyComparer, IEqualityComparer<TValue> valueComparer)
         {
-            if (valueComparer == null)
-                throw new ArgumentNullException(nameof(valueComparer));
+            ArgumentNullException.ThrowIfNull(valueComparer);
 
             _collection = new ReactiveEntityCollection<TKey, TValue>(keyComparer);
             _invertedCollection = new ConcurrentDictionary<TValue, TKey>(valueComparer);
@@ -37,8 +36,7 @@ namespace Reaqtor.QueryEngine
 
         public InvertedLookupReactiveEntityCollection(IReactiveEntityCollection<TKey, TValue> collection, IEqualityComparer<TValue> valueComparer)
         {
-            if (valueComparer == null)
-                throw new ArgumentNullException(nameof(valueComparer));
+            ArgumentNullException.ThrowIfNull(valueComparer);
 
             _collection = collection ?? throw new ArgumentNullException(nameof(collection));
             _invertedCollection = new ConcurrentDictionary<TValue, TKey>(valueComparer);

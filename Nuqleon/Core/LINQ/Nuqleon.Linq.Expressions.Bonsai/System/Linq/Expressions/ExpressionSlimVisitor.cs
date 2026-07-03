@@ -409,8 +409,7 @@ namespace System.Linq.Expressions
         /// <returns>Result of visiting the nodes.</returns>
         public ReadOnlyCollection<ExpressionSlim> Visit(ReadOnlyCollection<ExpressionSlim> nodes)
         {
-            if (nodes == null)
-                throw new ArgumentNullException(nameof(nodes));
+            ArgumentNullException.ThrowIfNull(nodes);
 
             var res = default(ExpressionSlim[]);
 
@@ -457,8 +456,7 @@ namespace System.Linq.Expressions
         public ReadOnlyCollection<T> VisitAndConvert<T>(ReadOnlyCollection<T> nodes)
             where T : ExpressionSlim
         {
-            if (nodes == null)
-                throw new ArgumentNullException(nameof(nodes));
+            ArgumentNullException.ThrowIfNull(nodes);
 
             var res = default(T[]);
 
@@ -526,10 +524,8 @@ namespace System.Linq.Expressions
         /// <returns>Result of visiting the nodes.</returns>
         public static ReadOnlyCollection<T> Visit<T>(ReadOnlyCollection<T> nodes, Func<T, T> elementVisitor)
         {
-            if (nodes == null)
-                throw new ArgumentNullException(nameof(nodes));
-            if (elementVisitor == null)
-                throw new ArgumentNullException(nameof(elementVisitor));
+            ArgumentNullException.ThrowIfNull(nodes);
+            ArgumentNullException.ThrowIfNull(elementVisitor);
 
             var res = default(T[]);
 
@@ -576,8 +572,7 @@ namespace System.Linq.Expressions
         /// <returns>Result of applying the visitor function to the node.</returns>
         protected static T VisitIfNotNull<T>(T node, Func<T, T> nodeVisitor)
         {
-            if (nodeVisitor == null)
-                throw new ArgumentNullException(nameof(nodeVisitor));
+            ArgumentNullException.ThrowIfNull(nodeVisitor);
 
             if (node != null)
             {

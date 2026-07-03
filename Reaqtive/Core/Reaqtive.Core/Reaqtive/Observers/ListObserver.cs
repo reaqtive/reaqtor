@@ -30,8 +30,7 @@ namespace Reaqtive
 
         public IObserver<TSource> Remove(IObserver<TSource> observer)
         {
-            if (observer == null)
-                throw new ArgumentNullException(nameof(observer));
+            ArgumentNullException.ThrowIfNull(observer);
 
             var index = -1;
 

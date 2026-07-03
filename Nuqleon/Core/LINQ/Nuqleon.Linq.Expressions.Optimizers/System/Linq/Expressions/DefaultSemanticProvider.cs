@@ -55,8 +55,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified member can never throw an exception; otherwise, <c>false</c>.</returns>
         public virtual bool NeverThrows(MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             return member.MemberType == MemberTypes.Field;
         }
@@ -69,8 +68,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified expression represents an unconditional throw; otherwise, <c>false</c>.</returns>
         public virtual bool AlwaysThrows(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             switch (expression.NodeType)
             {
@@ -95,8 +93,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified <paramref name="expression"/> can never throw an exception; otherwise, <c>false</c>.</returns>
         public virtual bool NeverThrows(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             // Nodes that are guaranteed to never throw. Note that some
             // rely on runtime infrastructure which we assume to be free
@@ -120,8 +117,7 @@ namespace System.Linq.Expressions
         /// <returns>The constant value represented by the specified <paramref name="expression"/>.</returns>
         public virtual object GetConstantValue(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return expression.NodeType switch
             {
@@ -145,8 +141,7 @@ namespace System.Linq.Expressions
         /// </remarks>
         public virtual bool HasConstantValue(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             //
             // REVIEW: when is this safe to do?
@@ -167,8 +162,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified expression represents a null reference; otherwise, <c>false</c>.</returns>
         public virtual bool IsAlwaysNull(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             return HasConstantValue(expression) && GetConstantValue(expression) == null;
         }
@@ -184,8 +178,7 @@ namespace System.Linq.Expressions
         /// </remarks>
         public virtual bool IsNeverNull(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             // Nodes whose outcome is guaranteed to be non-null.
 
@@ -226,8 +219,7 @@ namespace System.Linq.Expressions
         /// </remarks>
         public virtual bool IsPure(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             // NB: Omitting Quote because it can result in the evaluation of extension node
             //     reduction at runtime.
@@ -256,8 +248,7 @@ namespace System.Linq.Expressions
         /// </remarks>
         public virtual bool IsPure(MemberInfo member)
         {
-            if (member == null)
-                throw new ArgumentNullException(nameof(member));
+            ArgumentNullException.ThrowIfNull(member);
 
             return false;
         }
@@ -269,8 +260,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified expression represents an identity function; otherwise, <c>false</c>.</returns>
         public virtual bool IsIdentityFunction(Expression expression)
         {
-            if (expression == null)
-                throw new ArgumentNullException(nameof(expression));
+            ArgumentNullException.ThrowIfNull(expression);
 
             if (expression is LambdaExpression lambda)
             {
@@ -361,8 +351,7 @@ namespace System.Linq.Expressions
         /// <returns><c>true</c> if the specified type is immutable; otherwise, <c>false</c>.</returns>
         public virtual bool IsImmutable(Type type)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
+            ArgumentNullException.ThrowIfNull(type);
 
             if (type == typeof(void))
             {

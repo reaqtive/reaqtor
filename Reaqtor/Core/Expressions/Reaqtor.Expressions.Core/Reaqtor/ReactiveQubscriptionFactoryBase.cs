@@ -32,8 +32,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, state);
         }
@@ -46,8 +45,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory.Create(Uri subscriptionUri, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, state);
         }
@@ -92,8 +90,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         public IReactiveQubscription Create(Uri subscriptionUri, TArgs argument, object state = null)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, argument, state);
         }
@@ -107,8 +104,7 @@ namespace Reaqtor
         /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
         IReactiveSubscription IReactiveSubscriptionFactory<TArgs>.Create(Uri subscriptionUri, TArgs argument, object state)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateCore(subscriptionUri, argument, state);
         }

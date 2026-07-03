@@ -40,8 +40,7 @@ namespace System.Linq.CompilerServices
         /// <param name="symbolComparer">Equality comparer to compare symbols. A symbol table can only contain distinct symbols.</param>
         public SymbolTable(SymbolTable<TSymbol, TValue> parent, IEqualityComparer<TSymbol> symbolComparer)
         {
-            if (symbolComparer == null)
-                throw new ArgumentNullException(nameof(symbolComparer));
+            ArgumentNullException.ThrowIfNull(symbolComparer);
 
             Parent = parent;
             _table = new Dictionary<TSymbol, Indexed<TValue>>(symbolComparer);

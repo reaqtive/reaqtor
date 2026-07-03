@@ -54,10 +54,8 @@ namespace System.Linq.CompilerServices
         /// <param name="rewriter">The expression rewriter.</param>
         public void Add(Type type, Func<Expression, Expression> rewriter)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (rewriter == null)
-                throw new ArgumentNullException(nameof(rewriter));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(rewriter);
 
             _typeRewriters.Add(new TypedRewriter(type, rewriter));
         }
@@ -71,10 +69,8 @@ namespace System.Linq.CompilerServices
         /// <param name="rewriter">The expression rewriter.</param>
         public void AddDefinition(Type type, Func<Expression, Expression> rewriter)
         {
-            if (type == null)
-                throw new ArgumentNullException(nameof(type));
-            if (rewriter == null)
-                throw new ArgumentNullException(nameof(rewriter));
+            ArgumentNullException.ThrowIfNull(type);
+            ArgumentNullException.ThrowIfNull(rewriter);
             if (!type.IsGenericTypeDefinition)
                 throw new ArgumentException("Expected a generic type definition.", nameof(type));
 

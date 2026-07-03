@@ -633,10 +633,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Serialization factory.</returns>
         protected override Func<object, JsonExpression> GetConstantSerializer(Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
             var serialize = default(Action<object, JsonWriter>);
 
@@ -692,10 +689,7 @@ namespace Reaqtor.QueryEngine
         /// <returns>Deserialization function.</returns>
         protected override Func<JsonExpression, object> GetConstantDeserializer(Type type)
         {
-            if (type == null)
-            {
-                throw new ArgumentNullException(nameof(type));
-            }
+            ArgumentNullException.ThrowIfNull(type);
 
             var deserialize = default(Func<JsonReader, object>);
 

@@ -52,8 +52,7 @@ namespace Reaqtive.Storage
         /// <exception cref="ArgumentException"><paramref name="alphabet"/> contains less than 2 characters, or <paramref name="alphabet"/> contains the reserved character <c>-</c>, or <paramref name="alphabet"/> contains one or more duplicate characters.</exception>
         public IntegerKey(params char[] alphabet)
         {
-            if (alphabet == null)
-                throw new ArgumentNullException(nameof(alphabet));
+            ArgumentNullException.ThrowIfNull(alphabet);
             if (alphabet.Length <= 1)
                 throw new ArgumentException("The alphabet should consist of at least two characters.", nameof(alphabet));
 
@@ -167,8 +166,7 @@ namespace Reaqtive.Storage
         /// <returns>The integer value of <paramref name="s"/> using the alphabet.</returns>
         public long Parse(string s)
         {
-            if (s == null)
-                throw new ArgumentNullException(nameof(s));
+            ArgumentNullException.ThrowIfNull(s);
             if (s.Length == 0)
                 throw new ArgumentException("Input cannot be empty.", nameof(s));
 

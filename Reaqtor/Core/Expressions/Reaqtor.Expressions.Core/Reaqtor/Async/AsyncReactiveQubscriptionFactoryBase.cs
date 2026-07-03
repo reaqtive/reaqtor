@@ -35,8 +35,7 @@ namespace Reaqtor
         /// <returns>Task returning a subscription object, or an exception if the creation request was unsuccessful.</returns>
         public Task<IAsyncReactiveQubscription> CreateAsync(Uri subscriptionUri, object state = null, CancellationToken token = default)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateAsyncCore(subscriptionUri, state, token);
         }
@@ -50,8 +49,7 @@ namespace Reaqtor
         /// <returns>Task returning a subscription object, or an exception if the creation request was unsuccessful.</returns>
         Task<IAsyncReactiveSubscription> IAsyncReactiveSubscriptionFactory.CreateAsync(Uri subscriptionUri, object state, CancellationToken token)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateAsyncCore(subscriptionUri, state, token).ContinueWith(t => (IAsyncReactiveSubscription)t.Result, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         }
@@ -98,8 +96,7 @@ namespace Reaqtor
         /// <returns>Task returning a subscription object, or an exception if the creation request was unsuccessful.</returns>
         public Task<IAsyncReactiveQubscription> CreateAsync(Uri subscriptionUri, TArgs argument, object state = null, CancellationToken token = default)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateAsyncCore(subscriptionUri, argument, state, token);
         }
@@ -114,8 +111,7 @@ namespace Reaqtor
         /// <returns>Task returning a subscription object, or an exception if the creation request was unsuccessful.</returns>
         Task<IAsyncReactiveSubscription> IAsyncReactiveSubscriptionFactory<TArgs>.CreateAsync(Uri subscriptionUri, TArgs argument, object state, CancellationToken token)
         {
-            if (subscriptionUri == null)
-                throw new ArgumentNullException(nameof(subscriptionUri));
+            ArgumentNullException.ThrowIfNull(subscriptionUri);
 
             return CreateAsyncCore(subscriptionUri, argument, state, token).ContinueWith(t => (IAsyncReactiveSubscription)t.Result, token, TaskContinuationOptions.OnlyOnRanToCompletion, TaskScheduler.Default);
         }

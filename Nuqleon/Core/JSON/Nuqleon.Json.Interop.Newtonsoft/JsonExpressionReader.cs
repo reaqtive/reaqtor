@@ -35,8 +35,7 @@ namespace Nuqleon.Json.Interop.Newtonsoft
         /// <param name="json">The JSON expression to read.</param>
         public JsonExpressionReader(Expression json)
         {
-            if (json == null)
-                throw new ArgumentNullException(nameof(json));
+            ArgumentNullException.ThrowIfNull(json);
 
             _tokens = new TokenStack();
             _tokens.Push(new Token { Expression = json });
@@ -49,8 +48,7 @@ namespace Nuqleon.Json.Interop.Newtonsoft
         /// <param name="pool">Resource pool to use for reuse of commonly allocated data structures.</param>
         public JsonExpressionReader(Expression json, JsonInteropResourcePool pool)
         {
-            if (json == null)
-                throw new ArgumentNullException(nameof(json));
+            ArgumentNullException.ThrowIfNull(json);
 
             _pool = pool ?? throw new ArgumentNullException(nameof(pool));
             _tokens = _pool.Pool.Allocate();

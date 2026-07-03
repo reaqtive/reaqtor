@@ -144,10 +144,7 @@ namespace Tests.Reaqtor.QueryEngine
         [KnownResource("rx://observable/subscribeonscheduler")]
         public static IReactiveQbservable<T> SubscribeOnScheduler<T>(this IReactiveQbservable<T> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return source.Provider.CreateQbservable<T>(
                 Expression.Call(
@@ -167,10 +164,7 @@ namespace Tests.Reaqtor.QueryEngine
 
         public static ISubscribable<TSource> SubscribeOnInternalScheduler<TSource>(this ISubscribable<TSource> source)
         {
-            if (source == null)
-            {
-                throw new ArgumentNullException(nameof(source));
-            }
+            ArgumentNullException.ThrowIfNull(source);
 
             return new SubscribableOnScheduler<TSource>(source);
         }
