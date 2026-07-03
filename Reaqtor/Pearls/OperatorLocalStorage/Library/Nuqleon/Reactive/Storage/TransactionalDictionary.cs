@@ -36,7 +36,7 @@ namespace Reaqtive.Storage
         /// <summary>
         /// Object used to synchronize access to the <see cref="_store"/> and <see cref="_deltas"/> fields.
         /// </summary>
-        private readonly object _gate;
+        private readonly Lock _gate;
 
         /// <summary>
         /// The in-memory representation of the key/value store. The entries in this dictionary reflect those that are currently known to be persisted in the underlying
@@ -69,7 +69,7 @@ namespace Reaqtive.Storage
         /// </summary>
         public TransactionalDictionary()
         {
-            _gate = new object();
+            _gate = new Lock();
             _store = [];
             _deltas = new StateChangedManager<Dictionary<TKey, Maybe<TValue>>>();
         }
@@ -399,7 +399,7 @@ namespace Reaqtive.Storage
         /// </remarks>
         private bool ContainsKeyCore(TKey key)
         {
-            Debug.Assert(Monitor.IsEntered(_gate));
+            Debug.Assert(_gate.IsHeldByCurrentThread);
 
             //
             // First check all the edit pages in reverse chronological order. If any entry is found, its HasValue flag indicates whether
@@ -429,7 +429,7 @@ namespace Reaqtive.Storage
         /// <returns>An enumerable sequence representing a snapshot of the key/value pair entries in the dictionary.</returns>
         private IEnumerable<KeyValuePair<TKey, TValue>> GetEnumerableCore()
         {
-            Debug.Assert(Monitor.IsEntered(_gate));
+            Debug.Assert(_gate.IsHeldByCurrentThread);
 
             //
             // Set used to keep track of the entries that have already been processed and for which the absence or presence of a value has been
@@ -499,7 +499,7 @@ namespace Reaqtive.Storage
         /// </remarks>
         private bool TryGetValueCore(TKey key, out TValue value)
         {
-            Debug.Assert(Monitor.IsEntered(_gate));
+            Debug.Assert(_gate.IsHeldByCurrentThread);
 
             //
             // See remarks in ContainsKeyCore for the strategy employed here. The only difference is the logic to read the value if an
@@ -528,7 +528,7 @@ namespace Reaqtive.Storage
         /// </remarks>
         private void Edit(TKey key, Maybe<TValue> edit)
         {
-            Debug.Assert(Monitor.IsEntered(_gate));
+            Debug.Assert(_gate.IsHeldByCurrentThread);
 
             //
             // Use the State property on the state manager keeping the edit pages, causing the latest (most recent) writeable edit page

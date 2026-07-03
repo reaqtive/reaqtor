@@ -17,7 +17,7 @@ namespace Reaqtive
     {
         private const int MinimumCapacityToShrinkList = 64;
 
-        private readonly object _syncLock = new();
+        private readonly Lock _syncLock = new();
         private List<ISubscription> _subscriptions;
         private bool _disposed;
         private int _activeSubscriptionsCount;
@@ -218,7 +218,7 @@ namespace Reaqtive
         /// </summary>
         private void ShrinkSubscriptionList()
         {
-            Debug.Assert(Monitor.IsEntered(_syncLock));
+            Debug.Assert(_syncLock.IsHeldByCurrentThread);
 
             var newSubscriptionList = new List<ISubscription>(_subscriptions.Capacity / 2);
 

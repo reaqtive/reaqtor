@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 
 using Reaqtive.Scheduler;
 
@@ -152,7 +153,7 @@ namespace Reaqtive.Operators
         protected abstract class SyncOneSink<TParams> : OneSink<TParams>
             where TParams : Buffer<TSource>
         {
-            protected readonly object _gate = new();
+            protected readonly Lock _gate = new();
 
             protected SyncOneSink(TParams parent, IObserver<IList<TSource>> observer)
                 : base(parent, observer)
@@ -347,7 +348,7 @@ namespace Reaqtive.Operators
         protected abstract class SyncManySink<TParams> : ManySink<TParams>
             where TParams : Buffer<TSource>
         {
-            protected readonly object _gate = new();
+            protected readonly Lock _gate = new();
 
             protected SyncManySink(TParams parent, IObserver<IList<TSource>> observer)
                 : base(parent, observer)

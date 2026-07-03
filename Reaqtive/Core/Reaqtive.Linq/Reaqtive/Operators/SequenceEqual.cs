@@ -5,6 +5,7 @@
 using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.Threading;
 
 namespace Reaqtive.Operators
 {
@@ -31,7 +32,7 @@ namespace Reaqtive.Operators
             private const string MAXQUEUESIZESETTING = "rx://operators/sequenceEqual/settings/maxQueueSize";
             private int _maxQueueSize;
 
-            private readonly object _gate = new();
+            private readonly Lock _gate = new();
             private O _l;
             private O _r;
 

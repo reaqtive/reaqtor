@@ -20,7 +20,7 @@ namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
     public class InMemoryKeyValueStore : IKeyValueStore
     {
         private ImmutableSortedDictionary<string, Sequenced<byte[]>> _dictionary = ImmutableSortedDictionary.Create<string, Sequenced<byte[]>>();
-        private readonly object _lock = new();
+        private readonly Lock _lock = new();
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1003 // Non-default EventArgs parameter.
