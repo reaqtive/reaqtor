@@ -10,6 +10,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <InternalsVisibleTo Include="Nuqleon.Linq.Expressions.Bonsai" />
+    <InternalsVisibleTo Include="Nuqleon.Linq.Expressions.Bonsai.Serialization" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Update="Expressions\ExpressionFactory.tt">
       <Generator>TextTemplatingFileGenerator</Generator>
       <LastGenOutput>ExpressionFactory.generated.cs</LastGenOutput>

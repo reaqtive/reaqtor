@@ -84,6 +84,17 @@
     <GeneratePackageOnBuild Condition=" '$(CreatePackage)' == 'true' ">true</GeneratePackageOnBuild>
   </PropertyGroup>
 
+  <!--
+    Every shipping assembly is CLS-compliant. Synthesized here (WriteCodeFragment) instead of
+    75 per-project Properties\AssemblyInfo.cs files, each of which carried only this attribute.
+  -->
+  <ItemGroup Condition="'$(IsTestProject)' == 'false' And '$(IsPerfProject)' == 'false' And '$(IsPlaygroundProject)' == 'false'">
+    <AssemblyAttribute Include="System.CLSCompliantAttribute">
+      <_Parameter1>true</_Parameter1>
+      <_Parameter1_TypeName>System.Boolean</_Parameter1_TypeName>
+    </AssemblyAttribute>
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(IsTestProject)' == 'true' Or '$(IsPerfProject)' == 'true' Or '$(IsPlaygroundProject)' == 'true'">
     <AnalysisMode>Default</AnalysisMode>
     <IsPackable>false</IsPackable>
