@@ -38,7 +38,7 @@ using Reaqtor.Reliable;
 namespace Tests.Reaqtor.QueryEngine
 {
     [TestClass]
-    public class CheckpointingTests : PhysicalTimeEngineTest
+    public partial class CheckpointingTests : PhysicalTimeEngineTest
     {
 #pragma warning disable IDE0060 // Remove unused parameter (MSTest)
         [ClassInitialize]
@@ -4430,7 +4430,7 @@ namespace Tests.Reaqtor.QueryEngine
             var store = Checkpoint(qe);
             RemoveQueryEngine(qe);
 
-            var summaryRegex = new Regex("Recovery summary for");
+            var summaryRegex = RecoverySummaryRegex();
             var summaries = 0;
             var onWrite = new Action<string>(trace =>
             {
@@ -4451,7 +4451,7 @@ namespace Tests.Reaqtor.QueryEngine
             Recover(qe, store);
 
             {
-                var blobLogPattern = new Regex(@"blobs_.*\.log", RegexOptions.Compiled);
+                var blobLogPattern = BlobLogFileRegex();
                 var blobLog = Directory.EnumerateFiles(qePath).SingleOrDefault(f => blobLogPattern.IsMatch(f));
                 Assert.IsNotNull(blobLog);
 
@@ -4926,6 +4926,12 @@ namespace Tests.Reaqtor.QueryEngine
         }
 
         #endregion
+
+        [GeneratedRegex("Recovery summary for")]
+        private static partial Regex RecoverySummaryRegex();
+
+        [GeneratedRegex(@"blobs_.*\.log")]
+        private static partial Regex BlobLogFileRegex();
 
         #region Helper methods
 
