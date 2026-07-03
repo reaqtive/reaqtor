@@ -15,6 +15,7 @@
 
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reactive.Disposables;
@@ -38,7 +39,7 @@ namespace Rxcel
 
         public string Value
         {
-            get => !string.IsNullOrEmpty(field) ? field : _subject.Value.ToString();
+            get => !string.IsNullOrEmpty(field) ? field : _subject.Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
 
             set
             {
@@ -114,7 +115,8 @@ namespace Rxcel
 
         public override string ToString()
         {
-            return _subject.Value.ToString();
+            // CurrentCulture: user-facing spreadsheet text, matching the culture used to parse input.
+            return _subject.Value?.ToString(CultureInfo.CurrentCulture) ?? string.Empty;
         }
 
         private void CreateSubscription(LambdaExpression f)

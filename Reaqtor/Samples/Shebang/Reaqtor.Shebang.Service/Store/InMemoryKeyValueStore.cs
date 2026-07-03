@@ -1,10 +1,11 @@
-﻿// Licensed to the .NET Foundation under one or more agreements.
+// Licensed to the .NET Foundation under one or more agreements.
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
@@ -106,30 +107,30 @@ namespace Reaqtor.Shebang.Service
                     {
                         var tableSize = table.Key.Length * 2;
 
-                        sb.AppendLine($"Table '{table.Key}':");
+                        sb.AppendLine(CultureInfo.InvariantCulture, $"Table '{table.Key}':");
                         sb.AppendLine();
 
                         foreach (var row in table.Value)
                         {
                             var rowSize = row.Value.Length + row.Key.Length * 2;
 
-                            sb.AppendLine($"  Key '{row.Key}':");
-                            sb.AppendLine($"    Bytes = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
-                            sb.AppendLine($"    ASCII = {new string([.. row.Value.Select(b => (char)b)])}");
-                            sb.AppendLine($"    Size  = {rowSize}");
+                            sb.AppendLine(CultureInfo.InvariantCulture, $"  Key '{row.Key}':");
+                            sb.AppendLine(CultureInfo.InvariantCulture, $"    Bytes = {BitConverter.ToString(row.Value).Replace('-', ' ')}");
+                            sb.AppendLine(CultureInfo.InvariantCulture, $"    ASCII = {new string([.. row.Value.Select(b => (char)b)])}");
+                            sb.AppendLine(CultureInfo.InvariantCulture, $"    Size  = {rowSize}");
                             sb.AppendLine();
 
                             tableSize += rowSize;
                         }
 
                         sb.AppendLine();
-                        sb.AppendLine($"  Size  = {tableSize}");
+                        sb.AppendLine(CultureInfo.InvariantCulture, $"  Size  = {tableSize}");
                         sb.AppendLine();
 
                         totalSize += tableSize;
                     }
 
-                    sb.AppendLine($"Total size = {totalSize}");
+                    sb.AppendLine(CultureInfo.InvariantCulture, $"Total size = {totalSize}");
                 }
 
                 return sb.ToString();

@@ -5,10 +5,7 @@
     <EnableNETAnalyzers>true</EnableNETAnalyzers>
     <CodeAnalysisTreatWarningsAsErrors>true</CodeAnalysisTreatWarningsAsErrors>
     <AnalysisLevel>7.0</AnalysisLevel>
-    <!--
-    Apparently setting AnalysisLevel isn't quite enough to avoid the new warnings we get in .NET SDK 8.0.
-    This NoWarn line should be removed when we do https://github.com/reaqtive/reaqtor/issues/143 -->
-    <NoWarn>$(NoWarn);IDE0079;IDE0090;CA1305;CA1822;CA1854</NoWarn>
+    <!-- #143 in progress: NoWarn retirement staged below; AnalysisLevel raise is the final step. -->
 
     <!--
     The .NET 10 SDK's code analyzers (with AnalysisMode=All + TreatWarningsAsErrors) flag a large,

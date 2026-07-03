@@ -81,7 +81,7 @@ namespace Tests
         {
             var w = new FastHeapReferenceWalker();
 
-            var xs = new object[] { new object(), "bar", 42 };
+            var xs = new object[] { new(), "bar", 42 };
 
             var set = new HashSet<object>(ReferenceEqualityComparer<object>.Instance);
 

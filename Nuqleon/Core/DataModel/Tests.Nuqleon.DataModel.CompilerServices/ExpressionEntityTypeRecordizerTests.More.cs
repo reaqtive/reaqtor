@@ -318,7 +318,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void Recordize_WithConstantArrayType_Success()
         {
-            var obj = new SimplePropertyTest[] { new SimplePropertyTest(1) };
+            var obj = new SimplePropertyTest[] { new(1) };
 
             static Type getRecord(Expression expr) => expr.Evaluate().GetType().GetElementType();
             AssertRecordizationFromConstant(obj, getRecord);
@@ -327,7 +327,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void Recordize_WithConstantEnumerableType_Success()
         {
-            var obj = new List<SimplePropertyTest> { new SimplePropertyTest(1) };
+            var obj = new List<SimplePropertyTest> { new(1) };
 
             static Type getRecord(Expression expr) => expr.Evaluate().GetType().GetGenericArguments()[0];
             AssertRecordizationFromConstant(obj, getRecord);
@@ -368,7 +368,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
         [TestMethod]
         public void Recordize_MemberMemberBindingWithNewList_Success()
         {
-            var exp = (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new SimplePropertyTest(1) } } });
+            var exp = (Expression<Func<MemberMemberListPropertyTest>>)(() => new MemberMemberListPropertyTest { Container = { List = new List<SimplePropertyTest> { new(1) } } });
 
             static Type getRecord(Expression expr) => (expr as LambdaExpression).ReturnType;
             AssertRecordizationFromExpression(exp, getRecord);
@@ -380,7 +380,7 @@ namespace Tests.Nuqleon.DataModel.CompilerServices
             var exp = (Expression<Func<List<SimplePropertyTest>, MemberMemberListPropertyTest>>)(list => new MemberMemberListPropertyTest { Container = { List = list } });
 
             static Type getRecord(Expression expr) => (expr as LambdaExpression).ReturnType;
-            AssertRecordizationFromExpression(exp, getRecord, new List<SimplePropertyTest> { new SimplePropertyTest(1) });
+            AssertRecordizationFromExpression(exp, getRecord, new List<SimplePropertyTest> { new(1) });
         }
 
         [TestMethod]

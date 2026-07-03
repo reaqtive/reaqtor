@@ -34,7 +34,7 @@ namespace Tests.System.Linq.Expressions
             var boolExpr1 = ExpressionSlim.Parameter(boolSlim);
             var boolExpr2 = ExpressionSlim.Parameter(boolSlim);
             var prop = SlimType.GetProperty("Foo", propertyType: null, EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: true);
-            var elementInits = new ElementInitSlim[] { new ElementInitSlim(addMethod: null, arguments: null) }.ToReadOnly();
+            var elementInits = new ElementInitSlim[] { new(addMethod: null, arguments: null) }.ToReadOnly();
             var method = SlimType.GetSimpleMethod("Foo", EmptyReadOnlyCollection<TypeSlim>.Instance, returnType: null);
 
             var b = ExpressionSlim.Add(intExpr1, intExpr2);

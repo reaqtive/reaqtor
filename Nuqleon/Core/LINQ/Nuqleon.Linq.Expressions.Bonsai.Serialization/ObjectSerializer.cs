@@ -20,6 +20,8 @@ namespace System.Linq.Expressions.Bonsai.Serialization
     /// </summary>
     public class ObjectSerializer
     {
+#pragma warning disable CA1822 // Mark members as static. (Deliberate: shipped public API; an ObjectSerializer instance is handed around as a pluggable strategy, and making these static would be a breaking change.)
+
         /// <summary>
         /// Gets a serializer for the given type.
         /// </summary>
@@ -59,6 +61,8 @@ namespace System.Linq.Expressions.Bonsai.Serialization
         {
             return obj => DeserializeObject((Json.Expression)obj, type);
         }
+
+#pragma warning restore CA1822
 
         private static readonly Dictionary<Type, Func<Json.Expression, object>> s_deserializeObjectSlow = new()
         {
@@ -104,7 +108,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             { typeof(Guid), obj => Json.Expression.String(((Guid)obj).ToString(@"B")) },
         };
 
-        private object DeserializeObject(Json.Expression json, Type type)
+        private static object DeserializeObject(Json.Expression json, Type type)
         {
             switch (json.NodeType)
             {
@@ -162,7 +166,7 @@ namespace System.Linq.Expressions.Bonsai.Serialization
             throw new NotImplementedException();
         }
 
-        private Json.Expression SerializeObject(object obj, Type type)
+        private static Json.Expression SerializeObject(object obj, Type type)
         {
             if (obj is null)
             {

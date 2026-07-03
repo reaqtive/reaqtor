@@ -59,12 +59,12 @@ namespace Reaqtor.QueryEngine.Mocks
         {
             lock (_observers)
             {
-                if (!_observers.ContainsKey(id))
+                if (!_observers.TryGetValue(id, out var observer))
                 {
                     return null;
                 }
 
-                return (MockObserver<T>)_observers[id];
+                return (MockObserver<T>)observer;
             }
         }
     }
