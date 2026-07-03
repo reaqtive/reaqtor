@@ -2,6 +2,9 @@
   <Folder Name="/Nuqleon/" />
   <Folder Name="/Nuqleon/Core/" />
   <Folder Name="/Nuqleon/Core/BCL/" />
+  <Folder Name="/Nuqleon/Core/BCL/perf/">
+    <Project Path="Nuqleon/Core/BCL/Perf.Nuqleon.Memory/Perf.Nuqleon.Memory.csproj" />
+  </Folder>
   <Folder Name="/Nuqleon/Core/BCL/src/">
     <Project Path="Nuqleon/Core/BCL/Nuqleon.Collections.Specialized/Nuqleon.Collections.Specialized.csproj" />
     <Project Path="Nuqleon/Core/BCL/Nuqleon.Documentation/Nuqleon.Documentation.csproj" />
