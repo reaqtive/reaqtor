@@ -18,8 +18,6 @@ namespace Reaqtive.Testing
     /// </summary>
     /// <typeparam name="T">Type of the value.</typeparam>
     [DebuggerDisplay("{Value}@{Time}")]
-#if !NO_SERIALIZABLE
-#endif
     public readonly struct Recorded<T> : IEquatable<Recorded<T>>
     {
         /// <summary>
