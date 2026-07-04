@@ -8,9 +8,6 @@
 //   BD - 07/02/2014 - Set up test project.
 //
 
-#if DEBUG
-#endif
-
 namespace Tests;
 
 internal static class TestHelpers

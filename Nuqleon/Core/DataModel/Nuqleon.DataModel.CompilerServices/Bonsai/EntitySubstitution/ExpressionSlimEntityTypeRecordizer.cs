@@ -8,8 +8,6 @@
 // ER, BD - November 2013 - Created this file.
 //
 
-#if DEBUG
-#endif
 using System.Linq.CompilerServices;
 using System.Reflection;
 

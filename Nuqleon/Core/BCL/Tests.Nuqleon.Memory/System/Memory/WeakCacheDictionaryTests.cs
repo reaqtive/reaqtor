@@ -8,8 +8,6 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-#if DEBUG
-#endif
 using System.Memory;
 using System.Runtime.CompilerServices;
 
