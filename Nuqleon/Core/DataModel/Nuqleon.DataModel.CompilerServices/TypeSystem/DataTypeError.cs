@@ -8,9 +8,7 @@
 // BD - July 2013 - Created this file.
 //
 
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
 
 namespace Nuqleon.DataModel.TypeSystem;

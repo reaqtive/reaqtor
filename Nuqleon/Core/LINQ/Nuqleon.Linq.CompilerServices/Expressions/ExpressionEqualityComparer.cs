@@ -8,7 +8,6 @@
 // BD - April 2013 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 #if USE_SLIM

@@ -8,15 +8,10 @@
 // BD - April 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 #if USE_SLIM
 using System.Linq.CompilerServices.Bonsai;

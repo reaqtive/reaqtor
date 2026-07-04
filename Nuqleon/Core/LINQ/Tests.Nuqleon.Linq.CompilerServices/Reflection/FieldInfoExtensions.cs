@@ -11,8 +11,6 @@
 using System.Linq.CompilerServices;
 using System.Reflection;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Tests.System.Linq.CompilerServices;
 
 [TestClass]

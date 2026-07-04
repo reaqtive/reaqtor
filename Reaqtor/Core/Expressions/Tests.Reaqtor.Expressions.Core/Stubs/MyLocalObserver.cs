@@ -8,8 +8,6 @@
 // BD - August 2014 - Created this file.
 //
 
-using System;
-
 using Reaqtor;
 
 namespace Tests.Reaqtor.Expressions.Core;

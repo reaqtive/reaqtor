@@ -8,11 +8,6 @@
 // BD - May 2014 - Created this file.
 //
 
-using System;
-
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Nuqleon.DataModel.Serialization.Json;
 
 namespace Tests.Nuqleon.DataModel.Serialization.Json;

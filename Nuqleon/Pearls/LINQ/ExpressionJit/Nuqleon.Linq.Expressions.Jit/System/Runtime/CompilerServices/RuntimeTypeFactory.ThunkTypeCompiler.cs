@@ -8,14 +8,12 @@
 // BD - May 2017 - Initial prototype of JIT.
 //
 
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 using System.Reflection.Emit;
-using System.Threading;
 
 namespace System.Runtime.CompilerServices;
 

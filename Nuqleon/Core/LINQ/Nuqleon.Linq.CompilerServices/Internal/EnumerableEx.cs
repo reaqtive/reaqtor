@@ -8,8 +8,6 @@
 // BD - July 2013 - Created this file.
 //
 
-using System.Collections.Generic;
-
 namespace System.Linq;
 
 internal static class EnumerableEx

@@ -8,13 +8,8 @@
 //   BD - 07/20/2014 - Added tests.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Documentation;
-using System.Linq;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests;
 

@@ -39,7 +39,6 @@
 // O(n) lookups under ValueTuple keys. That, not raw speed, is the reason to keep Tuplet.
 //
 
-using System;
 using System.Memory;
 
 using BenchmarkDotNet.Attributes;

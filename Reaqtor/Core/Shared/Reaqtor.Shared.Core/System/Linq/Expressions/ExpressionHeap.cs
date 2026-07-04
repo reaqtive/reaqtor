@@ -8,7 +8,6 @@
 // ER - October 2014 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq.CompilerServices;
 using System.Memory;

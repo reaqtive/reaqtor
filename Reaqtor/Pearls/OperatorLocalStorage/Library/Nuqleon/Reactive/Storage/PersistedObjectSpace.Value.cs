@@ -8,10 +8,7 @@
 // BD - January 2018
 //
 
-using System;
-using System.Collections.Generic; // NB: Used for XML doc comments.
 using System.Diagnostics;
-using System.IO;
 
 using Reaqtive.Serialization;
 

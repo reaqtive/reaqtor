@@ -9,13 +9,11 @@
 // ER - July 2013 - Small tweaks.
 //
 
-using System.Collections.Generic;
 using System.Globalization;
 using System.Reflection;
 using System.Reflection.Emit;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 
 
 namespace System.Linq.CompilerServices;

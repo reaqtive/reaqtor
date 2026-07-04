@@ -8,8 +8,6 @@
 // BD - January 2018
 //
 
-using System.Collections.Generic;
-
 namespace Reaqtive.Storage;
 
 /// <summary>

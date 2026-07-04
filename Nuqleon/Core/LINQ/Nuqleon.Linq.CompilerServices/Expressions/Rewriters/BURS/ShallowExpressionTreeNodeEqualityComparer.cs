@@ -8,7 +8,6 @@
 // BD - May 2013 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 #pragma warning disable CA1065 // Do not raise exceptions in unexpected locations. (Defensive default arms over a closed set of node types; unreachable in practice.)

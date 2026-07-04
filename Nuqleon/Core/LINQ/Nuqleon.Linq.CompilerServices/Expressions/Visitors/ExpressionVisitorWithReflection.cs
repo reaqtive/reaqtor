@@ -12,7 +12,6 @@
 #pragma warning disable CA1062 // No null checks in visitor methods.
 #pragma warning disable CA1716 // Conflicts with reserved language keywords. (Mirrors .NET APIs.)
 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Reflection;
 

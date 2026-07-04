@@ -6,9 +6,6 @@
 // NB: This file contains a port of Rx code that should eventually get removed.
 //
 
-using System;
-using System.Threading;
-
 namespace Reaqtive.Disposables;
 
 /// <summary>

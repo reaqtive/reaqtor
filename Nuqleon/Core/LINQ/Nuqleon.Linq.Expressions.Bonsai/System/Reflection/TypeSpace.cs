@@ -12,7 +12,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1062 // Omitted null checks. (Protected methods are supposed to be called with non-null arguments.)
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq.CompilerServices;

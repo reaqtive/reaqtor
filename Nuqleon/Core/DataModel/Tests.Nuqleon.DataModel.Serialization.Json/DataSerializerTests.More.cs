@@ -8,11 +8,7 @@
 // BD - May 2014 - Created this file.
 //
 
-using System;
-using System.IO;
 using System.Linq.Expressions;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Newtonsoft.Json;
 

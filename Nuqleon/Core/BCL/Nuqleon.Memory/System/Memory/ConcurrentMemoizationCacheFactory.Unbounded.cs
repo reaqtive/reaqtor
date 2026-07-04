@@ -8,8 +8,6 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-using System.Collections.Generic;
-
 namespace System.Memory;
 
 public partial class ConcurrentMemoizationCacheFactory

@@ -8,10 +8,7 @@
 // BD - January 2017 - Created this file.
 //
 
-using System;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Reflection.Virtualization;
 

@@ -8,10 +8,7 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-using System;
 using System.Memory;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests;
 

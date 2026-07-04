@@ -8,8 +8,6 @@
 // BD - January 2018
 //
 
-using System;
-
 namespace Reaqtive;
 
 internal static class Invariant

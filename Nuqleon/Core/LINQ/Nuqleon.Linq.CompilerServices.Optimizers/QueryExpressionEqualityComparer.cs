@@ -8,8 +8,6 @@
 // PS - February 2015 - Created this file.
 //
 
-using System.Collections.Generic;
-
 namespace System.Linq.CompilerServices.Optimizers;
 
 /// <summary>

@@ -10,7 +10,6 @@ using Reaqtor;
 using Reaqtor.TestingFramework;
 #endif
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Reaqtive.Operators;
 

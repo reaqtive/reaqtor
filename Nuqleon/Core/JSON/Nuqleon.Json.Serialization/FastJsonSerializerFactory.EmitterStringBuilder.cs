@@ -9,11 +9,8 @@
 //   BD - 05/08/2016 - Added support for serialization to text writers.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Memory;
 using System.Reflection;

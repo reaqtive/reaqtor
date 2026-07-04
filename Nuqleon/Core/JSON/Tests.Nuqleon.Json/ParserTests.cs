@@ -8,11 +8,8 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
 using System.Reflection;
 using System.Xml.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Expressions;
 using Nuqleon.Json.Parser;

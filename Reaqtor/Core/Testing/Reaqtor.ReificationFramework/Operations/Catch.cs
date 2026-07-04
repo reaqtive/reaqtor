@@ -4,8 +4,6 @@
 
 #pragma warning disable CA1716 // Identifiers should not match keywords. (Catch is the name of the operator.)
 
-using System;
-
 namespace Reaqtor.ReificationFramework;
 
 /// <summary>

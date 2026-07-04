@@ -8,7 +8,6 @@
 // BD - August 2014 - Created this file.
 //
 
-using System;
 using System.Linq.Expressions;
 
 using Reaqtor;

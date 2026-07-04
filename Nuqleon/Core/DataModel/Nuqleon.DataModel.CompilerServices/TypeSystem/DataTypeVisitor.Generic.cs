@@ -12,7 +12,6 @@
 #pragma warning disable CA1062 // Omitted null checks similar to expression tree visitors.
 #pragma warning disable CA1716 // Reserved language keyword 'property'.
 
-using System;
 using System.Collections.ObjectModel;
 
 namespace Nuqleon.DataModel.TypeSystem;

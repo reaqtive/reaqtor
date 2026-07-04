@@ -11,7 +11,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1716 // Reserved language keyword 'Select'. (Nature of LINQ methods.)
 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 
 namespace System.Linq.CompilerServices.Optimizers;

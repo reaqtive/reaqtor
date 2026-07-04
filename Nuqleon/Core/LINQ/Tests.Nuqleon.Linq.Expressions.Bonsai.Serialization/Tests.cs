@@ -8,11 +8,8 @@
 // BD, ER - July 2013 - Created this file.
 //
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.Design;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Bonsai.Serialization;
@@ -21,9 +18,6 @@ using System.Numerics;
 using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
-using System.Threading;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Json = Nuqleon.Json.Expressions;
 

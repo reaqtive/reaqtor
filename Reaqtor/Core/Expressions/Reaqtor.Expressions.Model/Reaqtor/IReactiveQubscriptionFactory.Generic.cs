@@ -8,8 +8,6 @@
 // BD - February 2016 - Created this file.
 //
 
-using System;
-
 namespace Reaqtor;
 
 /// <summary>

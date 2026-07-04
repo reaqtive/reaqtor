@@ -8,8 +8,6 @@
 //   BD - 08/03/2015 - Added this type to make dictionaries with null entries easier to build.
 //
 
-using System.Collections.Generic;
-
 namespace System;
 
 internal class MaybeEqualityComparer<K> : IEqualityComparer<Maybe<K>>

@@ -8,10 +8,6 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Reaqtor;
 
 /// <summary>

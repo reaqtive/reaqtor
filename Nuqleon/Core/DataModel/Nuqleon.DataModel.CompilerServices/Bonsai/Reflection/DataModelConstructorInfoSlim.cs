@@ -8,7 +8,6 @@
 // ER - November 2013 - Created this file.
 //
 
-using System;
 using System.Collections.ObjectModel;
 using System.Reflection;
 

@@ -8,8 +8,6 @@
 //   PS - 10/17/2014 - Created this type.
 //
 
-using System.Linq;
-
 namespace System.Collections.Specialized;
 
 internal static class EnumDictionary<TKey>

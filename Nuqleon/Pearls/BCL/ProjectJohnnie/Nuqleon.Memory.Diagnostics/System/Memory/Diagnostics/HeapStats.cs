@@ -8,8 +8,6 @@
 //   BD - 08/07/2017 - Created this type.
 //
 
-using System.Collections.Generic;
-using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 

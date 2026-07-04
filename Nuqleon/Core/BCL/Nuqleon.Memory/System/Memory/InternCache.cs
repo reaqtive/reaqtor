@@ -8,8 +8,6 @@
 //   BD - 08/04/2015 - Adding intern caches.
 //
 
-using System.Collections.Generic;
-
 namespace System.Memory;
 
 /// <summary>

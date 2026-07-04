@@ -8,10 +8,8 @@
 // BD - April 2013 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Reflection;

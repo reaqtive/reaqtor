@@ -8,7 +8,6 @@
 // PS - February 2015 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.Expressions;
 

@@ -8,11 +8,6 @@
 // BD - May 2014 - Created this file.
 //
 
-using System.Collections.Generic;
-using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Nuqleon.Json.Parser;
 
 namespace Tests.Nuqleon.Json;

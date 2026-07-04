@@ -8,17 +8,11 @@
 // BD, ER - January 2014 - Created this file.
 //
 
-using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Numerics;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.VisualBasic;
 

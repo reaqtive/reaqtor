@@ -8,13 +8,8 @@
 // BD - June 2014 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Linq;
 using System.Linq.CompilerServices;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using CollectionExtensions = System.Linq.CompilerServices.CollectionExtensions;
 

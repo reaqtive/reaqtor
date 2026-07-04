@@ -8,9 +8,7 @@
 // BD - January 2011 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Text;
 
 namespace System.Linq.CompilerServices;

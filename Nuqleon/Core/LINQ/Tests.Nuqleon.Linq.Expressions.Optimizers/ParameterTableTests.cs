@@ -8,12 +8,8 @@
 // BD - January 2017 - Created this file.
 //
 
-using System;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.Expressions.Optimizers;
 

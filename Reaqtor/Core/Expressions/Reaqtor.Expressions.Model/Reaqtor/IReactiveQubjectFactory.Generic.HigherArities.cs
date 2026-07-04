@@ -9,8 +9,6 @@
 // Auto-generated file, changes to source may be lost
 //
 
-using System;
-
 namespace Reaqtor;
 
 /// <summary>

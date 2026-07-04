@@ -8,7 +8,6 @@
 // BD - May 2017 - Initial prototype of JIT.
 //
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 
 namespace System.Linq.Expressions.Jit;

@@ -8,11 +8,7 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
-using System.IO;
 using System.Linq.CompilerServices;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using SampleTrees.Arithmetic;
 using SampleTrees.Numerical;

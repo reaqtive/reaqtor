@@ -8,8 +8,6 @@
 // BD - August 2014 - Created this file.
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Tests.Reaqtor.Expressions.Core;
 
 [TestClass]

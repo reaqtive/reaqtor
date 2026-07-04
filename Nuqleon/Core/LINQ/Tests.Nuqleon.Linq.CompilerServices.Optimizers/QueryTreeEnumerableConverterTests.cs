@@ -8,15 +8,10 @@
 // PS - February 2015 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.Optimizers;
 using System.Linq.Expressions;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Linq.CompilerServices.Optimizers;
 

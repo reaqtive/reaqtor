@@ -9,10 +9,6 @@
 //   BD - 05/08/2016 - Added support for deserialization from text readers.
 //
 
-using System;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Nuqleon.Json.Serialization;
 
 namespace Tests;

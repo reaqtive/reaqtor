@@ -8,8 +8,6 @@
 // BD - December 2014 - Created this file.
 //
 
-using System.Threading;
-
 namespace Nuqleon.DataModel.Serialization.Binary;
 
 /// <summary>

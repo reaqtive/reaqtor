@@ -8,8 +8,6 @@
 // ER - September 2013 - Created this file.
 //
 
-using System;
-
 namespace Nuqleon.DataModel.TypeSystem;
 
 /// <summary>

@@ -8,7 +8,6 @@
 // BD - December 2016 - Created this file.
 //
 
-using System;
 using System.Diagnostics;
 using System.Memory;
 

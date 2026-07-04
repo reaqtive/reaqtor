@@ -5,8 +5,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1064 // Exceptions should be public. (Scoped to the query engine; should not escape.)
 
-using System;
-
 namespace Reaqtor.QueryEngine;
 
 internal class InvariantException : Exception

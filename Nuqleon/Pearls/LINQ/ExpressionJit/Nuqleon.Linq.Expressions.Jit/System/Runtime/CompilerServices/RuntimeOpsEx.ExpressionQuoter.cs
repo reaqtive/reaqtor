@@ -11,7 +11,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1711 // Remove Ex suffix. (Infrastructure only.)
 
-using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Jit;
 

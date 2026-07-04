@@ -8,9 +8,6 @@
 // BD - July 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
-
 namespace Nuqleon.DataModel.TypeSystem;
 
 internal sealed class StructuralDataTypeReference : StructuralDataType

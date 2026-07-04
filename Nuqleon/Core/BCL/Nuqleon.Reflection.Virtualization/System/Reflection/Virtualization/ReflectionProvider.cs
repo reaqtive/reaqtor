@@ -11,9 +11,7 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1716 // Conflict with reserved language keywords. (By design; mirror image of reflection APIs.)
 
-using System.Collections.Generic;
 using System.Globalization;
-using System.IO;
 using System.Runtime.InteropServices;
 using System.Security;
 

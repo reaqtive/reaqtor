@@ -6,8 +6,6 @@
 #pragma warning disable CA1034 // Do not nest types. (By design for collection of constants.)
 #pragma warning disable CA1720 // Identifier 'String' contains a type name.
 
-using System;
-
 namespace Reaqtor.ReificationFramework;
 
 /// <summary>

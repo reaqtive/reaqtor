@@ -8,11 +8,8 @@
 // BD - July 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Dynamic;
 using System.Globalization;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;

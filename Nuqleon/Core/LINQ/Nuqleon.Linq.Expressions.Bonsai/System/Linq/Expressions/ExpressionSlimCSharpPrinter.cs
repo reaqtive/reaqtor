@@ -8,8 +8,6 @@
 // BD - January 2014 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Globalization;

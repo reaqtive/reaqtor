@@ -2,7 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
 #if GLITCHING
 using System.Linq.Expressions;
 using System.Reflection;
@@ -17,7 +16,6 @@ using Reaqtor;
 using Reaqtor.TestingFramework;
 #endif
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Test.Reaqtive.Operators;
 

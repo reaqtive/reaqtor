@@ -8,12 +8,7 @@
 // BD - January 2018
 //
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.ReifiedOperations;
 

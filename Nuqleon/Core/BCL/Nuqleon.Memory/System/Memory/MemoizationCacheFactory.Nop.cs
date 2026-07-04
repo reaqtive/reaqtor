@@ -8,8 +8,6 @@
 //   BD - 08/09/2015 - Adding nop memoization support.
 //
 
-using System.Collections.Generic;
-
 namespace System.Memory;
 
 public partial class MemoizationCacheFactory

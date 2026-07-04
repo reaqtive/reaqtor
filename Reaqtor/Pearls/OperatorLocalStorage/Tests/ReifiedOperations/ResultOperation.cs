@@ -8,7 +8,6 @@
 // BD - January 2018
 //
 
-using System;
 using System.Linq.Expressions;
 
 namespace Tests.ReifiedOperations;

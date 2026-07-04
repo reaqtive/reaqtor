@@ -8,8 +8,6 @@
 // BD - January 2011 - Created this file.
 //
 
-using System.Collections.Generic;
-
 namespace System.Linq.CompilerServices;
 
 internal sealed class EqualityComparerByType<TSource> : IEqualityComparer<TSource>

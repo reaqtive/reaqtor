@@ -9,10 +9,6 @@
 // Auto-generated file, changes to source may be lost
 //
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 namespace Reaqtor;
 
 /// <summary>

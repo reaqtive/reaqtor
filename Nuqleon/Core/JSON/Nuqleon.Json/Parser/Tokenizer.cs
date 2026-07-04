@@ -8,8 +8,6 @@
 // BD - November 2009 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;

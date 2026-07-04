@@ -8,7 +8,6 @@
 //   BD - 08/07/2017 - Created this type.
 //
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 using System.Linq.Expressions;

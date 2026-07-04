@@ -8,7 +8,6 @@
 // BD - January 2017 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace System.Linq.Expressions;

@@ -8,7 +8,6 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-using System.Collections.Generic;
 using System.Text;
 
 namespace System.Memory;

@@ -8,16 +8,10 @@
 // EK - June 2013
 //
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Bonsai.Serialization;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Newtonsoft.Json;
 

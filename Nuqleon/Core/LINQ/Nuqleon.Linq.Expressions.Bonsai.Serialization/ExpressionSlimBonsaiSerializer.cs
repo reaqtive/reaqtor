@@ -9,7 +9,6 @@
 // ER - July 2013 - Small tweaks.
 //
 
-using System.Collections.Generic;
 using System.Reflection;
 
 using Json = Nuqleon.Json.Expressions;

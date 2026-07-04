@@ -5,7 +5,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1062 // Omitting null checks for these. Will be non-null when moving to #nullable enable.
 
-using System;
 using System.Globalization;
 
 namespace Reaqtive;

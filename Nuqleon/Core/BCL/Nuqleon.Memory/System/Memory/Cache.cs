@@ -11,8 +11,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1724 // The type name Cache conflicts in whole or in part with the namespace name 'System.Net.Cache'.
 
-using System.Threading;
-
 namespace System.Memory;
 
 /// <summary>

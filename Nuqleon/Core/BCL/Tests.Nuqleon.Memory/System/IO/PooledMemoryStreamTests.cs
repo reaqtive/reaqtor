@@ -8,12 +8,6 @@
 //   BD - 07/15/2014 - Wrote these tests.
 //
 
-using System;
-using System.IO;
-using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Tests;
 
 [TestClass]

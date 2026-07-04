@@ -8,11 +8,8 @@
 // ER - February 2015 - Created this file.
 //
 
-using System;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Bonsai.Serialization;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Serialization;
 

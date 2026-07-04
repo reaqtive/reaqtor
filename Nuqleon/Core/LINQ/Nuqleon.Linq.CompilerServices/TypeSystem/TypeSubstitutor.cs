@@ -8,8 +8,6 @@
 // BD - June 2013 - Created this file.
 //
 
-using System.Collections.Generic;
-
 #if USE_SLIM
 namespace System.Linq.CompilerServices.Bonsai
 #else

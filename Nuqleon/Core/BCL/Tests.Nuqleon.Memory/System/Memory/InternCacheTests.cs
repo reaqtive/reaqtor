@@ -8,12 +8,8 @@
 //   BD - 08/04/2015 - Adding intern caches.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Memory;
 using System.Runtime.CompilerServices;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests;
 

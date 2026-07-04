@@ -8,7 +8,6 @@
 // ER, BD - July 2013 - Created this file.
 //
 
-using System;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Bonsai.Serialization;
 

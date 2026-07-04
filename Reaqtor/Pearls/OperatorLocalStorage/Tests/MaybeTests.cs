@@ -8,8 +8,6 @@
 // BD - January 2018
 //
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtive.Storage;
 
 namespace Tests;

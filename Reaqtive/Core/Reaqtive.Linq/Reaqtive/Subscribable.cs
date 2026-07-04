@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-
 using Reaqtive.Operators;
 
 namespace Reaqtive;
@@ -1774,7 +1771,7 @@ public static partial class Subscribable
     /// <returns>Observable sequence producing a single element at the specified relative due time.</returns>
     public static ISubscribable<long> Timer(TimeSpan dueTime)
     {
-        return new Timer(dueTime, period: null);
+        return new Operators.Timer(dueTime, period: null);
     }
 
     /// <summary>
@@ -1788,7 +1785,7 @@ public static partial class Subscribable
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
-        return new Timer(dueTime, period);
+        return new Operators.Timer(dueTime, period);
     }
 
     /// <summary>
@@ -1798,7 +1795,7 @@ public static partial class Subscribable
     /// <returns>Observable sequence producing a single element at the specified absolute due time.</returns>
     public static ISubscribable<long> Timer(DateTimeOffset dueTime)
     {
-        return new Timer(dueTime, period: null);
+        return new Operators.Timer(dueTime, period: null);
     }
 
     /// <summary>
@@ -1812,7 +1809,7 @@ public static partial class Subscribable
     {
         ArgumentOutOfRangeException.ThrowIfLessThan(period, TimeSpan.Zero);
 
-        return new Timer(dueTime, period);
+        return new Operators.Timer(dueTime, period);
     }
 
     #endregion

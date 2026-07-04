@@ -8,8 +8,6 @@
 // BD - June 2013 - Created this file.
 //
 
-using System;
-
 namespace Nuqleon.DataModel;
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression

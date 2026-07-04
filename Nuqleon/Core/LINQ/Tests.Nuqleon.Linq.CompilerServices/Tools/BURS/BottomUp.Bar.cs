@@ -8,7 +8,6 @@
 // BD - May 2013 - Created this file.
 //
 
-using System;
 using System.Linq.CompilerServices;
 
 namespace Tests.System.Linq.CompilerServices.Tools.BURS;

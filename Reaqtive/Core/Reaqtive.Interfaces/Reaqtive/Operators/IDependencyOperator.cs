@@ -2,9 +2,6 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-using System;
-using System.Collections.Generic;
-
 namespace Reaqtive;
 
 // TODO: does this belong in Reaqtive which has very little notion of URI-based artifacts (except for persistable subscriptions)?

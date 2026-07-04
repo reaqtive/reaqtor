@@ -9,13 +9,11 @@
 // ER - July 2013 - Small tweaks.
 //
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions.Bonsai;
 using System.Reflection;
-using System.Threading;
 
 namespace System.Linq.Expressions;
 

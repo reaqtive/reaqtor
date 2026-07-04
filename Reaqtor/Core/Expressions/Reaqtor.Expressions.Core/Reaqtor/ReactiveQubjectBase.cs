@@ -11,7 +11,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1033 // Explicit implementation of ElementType. (Alternative properties are provided.)
 
-using System;
 using System.Linq.Expressions;
 
 namespace Reaqtor;

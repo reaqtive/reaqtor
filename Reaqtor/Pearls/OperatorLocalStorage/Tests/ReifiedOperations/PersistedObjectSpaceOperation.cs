@@ -8,8 +8,6 @@
 // BD - January 2018
 //
 
-using System;
-
 using Reaqtive.Storage;
 
 namespace Tests.ReifiedOperations;

@@ -8,7 +8,6 @@
 // BD - November 2009, June 2014 - Created this file.
 //
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 

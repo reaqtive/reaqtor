@@ -6,13 +6,8 @@
 // NB: This file contains a port of Rx code that should eventually get removed.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Text;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtive.Linq;
 

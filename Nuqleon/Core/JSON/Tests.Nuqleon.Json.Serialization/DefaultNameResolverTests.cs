@@ -8,11 +8,7 @@
 //   BD - 04/05/2016 - Created fast JSON deserializer functionality.
 //
 
-using System;
-using System.Linq;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Serialization;
 

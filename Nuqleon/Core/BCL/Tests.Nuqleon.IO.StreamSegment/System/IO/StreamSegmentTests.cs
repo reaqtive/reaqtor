@@ -8,12 +8,6 @@
 // BD - January 2017 - Created this file.
 //
 
-using System;
-using System.IO;
-using System.Linq;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Tests.System.IO;
 
 [TestClass]

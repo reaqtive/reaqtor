@@ -6,10 +6,6 @@
 // NB: This file contains a port of Rx code that should eventually get removed.
 //
 
-using System;
-using System.Collections.Generic;
-using System.Threading;
-
 using Reaqtive.Disposables;
 
 namespace Reaqtive.Subjects;

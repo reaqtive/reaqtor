@@ -11,7 +11,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1062 // Not checking arguments for null by design; unsafe factories bypass argument validation in general.
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.CompilerServices;
 using System.Reflection;

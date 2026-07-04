@@ -8,9 +8,7 @@
 //   PS - 10/17/2014 - Created this type.
 //
 
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 
 namespace System.Collections.Specialized;
 

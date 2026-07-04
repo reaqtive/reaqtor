@@ -8,16 +8,10 @@
 // ER - October 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
-using System.Threading;
-using System.Threading.Tasks;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor;
 

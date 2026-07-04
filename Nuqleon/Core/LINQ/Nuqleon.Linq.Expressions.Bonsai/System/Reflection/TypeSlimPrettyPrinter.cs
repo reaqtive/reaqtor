@@ -9,10 +9,8 @@
 // ER - July 2013 - Small tweaks.
 //
 
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
 
 namespace System.Reflection;
 

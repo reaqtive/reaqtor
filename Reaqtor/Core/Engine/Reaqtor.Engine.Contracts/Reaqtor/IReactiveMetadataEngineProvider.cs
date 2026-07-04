@@ -8,8 +8,6 @@
 // BD - June 2013 - Created this file.
 //
 
-using System.Linq;
-
 namespace Reaqtor;
 
 /// <summary>

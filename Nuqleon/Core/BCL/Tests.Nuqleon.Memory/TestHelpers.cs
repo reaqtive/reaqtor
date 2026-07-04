@@ -8,9 +8,7 @@
 //   BD - 07/02/2014 - Set up test project.
 //
 
-using System.Collections.Generic;
 #if DEBUG
-using System.Linq;
 #endif
 
 namespace Tests;

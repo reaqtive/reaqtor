@@ -8,10 +8,6 @@
 // BD - August 2014 - Created this file.
 //
 
-using System;
-using System.Threading;
-using System.Threading.Tasks;
-
 using Reaqtor;
 
 namespace Tests.Reaqtor.Expressions.Core;

@@ -11,8 +11,6 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1032 // Implement standard exception constructors. (Only meant to be instantiated by this library.)
 
-using System;
-
 namespace Nuqleon.Json.Parser;
 
 /// <summary>

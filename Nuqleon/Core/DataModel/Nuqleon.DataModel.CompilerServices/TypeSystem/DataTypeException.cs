@@ -8,7 +8,6 @@
 // BD - July 2013 - Created this file.
 //
 
-using System;
 using System.Globalization;
 
 namespace Nuqleon.DataModel.TypeSystem;

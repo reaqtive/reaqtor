@@ -8,11 +8,6 @@
 // BD - July 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Nuqleon.DataModel.TypeSystem;
 
 namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem;

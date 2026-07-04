@@ -8,7 +8,6 @@
 //   BD - 07/02/2014 - Created this type.
 //
 
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace System.Memory;

@@ -8,10 +8,7 @@
 //   PS - 10/17/2014 - Wrote these tests.
 //
 
-using System;
 using System.Collections.Specialized;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Tests.System.Collections.Specialized;
 

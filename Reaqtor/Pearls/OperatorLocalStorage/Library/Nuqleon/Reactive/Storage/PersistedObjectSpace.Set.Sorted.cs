@@ -8,9 +8,6 @@
 // BD - January 2018
 //
 
-using System;
-using System.Collections.Generic;
-
 namespace Reaqtive.Storage;
 
 public sealed partial class PersistedObjectSpace

@@ -8,8 +8,6 @@
 // BD - January 2017 - Created this file.
 //
 
-using System.Collections.Generic;
-
 namespace System.Linq.Expressions;
 
 // CONSIDER: Rework the FreeVariableScanner to use this visitor underneath and provide direct access to

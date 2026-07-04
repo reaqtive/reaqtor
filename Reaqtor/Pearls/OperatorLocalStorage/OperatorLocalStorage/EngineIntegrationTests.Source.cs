@@ -8,8 +8,6 @@
 // BD - February 2018
 //
 
-using System;
-
 using Reaqtive;
 
 namespace Playground;

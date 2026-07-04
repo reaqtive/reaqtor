@@ -1,0 +1,14 @@
+<Project>
+
+  <!--
+    The archive/ tree is reference-only (.NET Framework code, excluded from every live solution) and is
+    deliberately NOT subject to the .NET 10 modernizations applied to the live tree. Inherit the repo
+    defaults, then opt out of implicit usings so the archived sources compile unchanged.
+  -->
+  <Import Project="../Directory.Build.props" />
+
+  <PropertyGroup>
+    <ImplicitUsings>disable</ImplicitUsings>
+  </PropertyGroup>
+
+</Project>

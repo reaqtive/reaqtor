@@ -10,8 +10,6 @@
 
 using System.Linq.CompilerServices;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Tests.System.Linq.CompilerServices;
 
 [TestClass]

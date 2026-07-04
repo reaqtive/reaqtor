@@ -8,11 +8,8 @@
 //   BD - 04/16/2016 - Created fast JSON serializer functionality.
 //
 
-using System;
 using System.Globalization;
 using System.Text;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Serialization;
 

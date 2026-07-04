@@ -8,10 +8,8 @@
 // BD - December 2016 - Created this file.
 //
 
-using System;
 using System.Globalization;
 using System.Numerics;
-using System.Threading;
 
 using Newtonsoft.Json;
 

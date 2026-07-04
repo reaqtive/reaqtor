@@ -17,9 +17,6 @@
 // arity-2 primitives, making inlining/instruction-count differences directly inspectable.
 //
 
-using System;
-using System.Collections.Generic;
-
 using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Configs;
 

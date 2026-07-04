@@ -8,12 +8,10 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Runtime.CompilerServices;
 using System.Text;
-using System.Threading;
 
 #if DEBUG
 using System.Diagnostics;

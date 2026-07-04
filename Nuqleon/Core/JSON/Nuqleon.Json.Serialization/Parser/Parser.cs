@@ -10,7 +10,6 @@
 //   BD - 01/25/2019 - Leverage ReadOnlySpan<char> based parsing.
 //
 
-using System;
 using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.CompilerServices;

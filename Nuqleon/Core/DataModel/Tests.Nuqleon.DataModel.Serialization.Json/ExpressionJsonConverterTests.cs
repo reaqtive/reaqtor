@@ -8,14 +8,9 @@
 // BD - May 2014 - Created this file.
 //
 
-using System;
-using System.IO;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Linq.Expressions.Bonsai.Serialization;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.DataModel;
 using Nuqleon.DataModel.Serialization.Json;

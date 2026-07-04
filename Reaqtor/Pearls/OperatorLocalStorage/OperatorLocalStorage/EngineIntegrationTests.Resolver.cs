@@ -8,8 +8,6 @@
 // BD - February 2018
 //
 
-using System;
-
 using Reaqtor;
 using Reaqtor.QueryEngine;
 using Reaqtor.Reliable.Expressions;

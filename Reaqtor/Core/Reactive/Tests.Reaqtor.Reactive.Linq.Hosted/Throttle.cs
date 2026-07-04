@@ -4,8 +4,6 @@
 
 using System.Linq.Expressions;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtive;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;

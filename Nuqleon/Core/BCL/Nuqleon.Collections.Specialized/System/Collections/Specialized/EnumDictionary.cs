@@ -10,8 +10,6 @@
 
 #pragma warning disable CA1711 // Rename type so it doesn't end with Dictionary. (Preserved for compat.)
 
-using System.Collections.Generic;
-
 namespace System.Collections.Specialized;
 
 /// <summary>

@@ -8,8 +8,6 @@
 //   BD - 04/05/2016 - Created fast JSON deserializer functionality.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 
 namespace Nuqleon.Json.Serialization;

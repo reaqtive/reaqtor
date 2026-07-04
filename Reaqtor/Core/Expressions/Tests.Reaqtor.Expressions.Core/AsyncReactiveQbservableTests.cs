@@ -8,11 +8,6 @@
 // BD - August 2014 - Created this file.
 //
 
-using System;
-using System.Threading;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Reaqtor;
 
 namespace Tests.Reaqtor.Expressions.Core;

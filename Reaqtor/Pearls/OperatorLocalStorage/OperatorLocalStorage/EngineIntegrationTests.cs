@@ -10,15 +10,10 @@
 
 #define USE_OLS // flag to control using operator local storage operator variants
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.CompilerServices.TypeSystem;
 using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Reactive.Threading.Tasks;
-using System.Threading;
-using System.Threading.Tasks;
 
 using Engine;
 

@@ -8,9 +8,7 @@
 // BD - December 2014 - Created this file.
 //
 
-using System;
 using System.Diagnostics;
-using System.IO;
 using System.Text;
 
 namespace Nuqleon.DataModel.Serialization.Binary;

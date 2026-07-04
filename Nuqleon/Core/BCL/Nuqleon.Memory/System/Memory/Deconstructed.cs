@@ -8,8 +8,6 @@
 //   ER - 12/11/2014 - Generated the code in this file.
 //
 
-using System.Collections.Generic;
-
 namespace System.Memory;
 
 /// <summary>

@@ -8,14 +8,10 @@
 // ER, BD - July 2013 - Created this file.
 //
 
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
-
-using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.DataModel;
 using Nuqleon.DataModel.CompilerServices.Bonsai;

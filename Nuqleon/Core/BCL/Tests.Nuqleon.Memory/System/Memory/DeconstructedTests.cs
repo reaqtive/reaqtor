@@ -10,8 +10,6 @@
 
 using System.Memory;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 namespace Tests.System.Memory;
 
 [TestClass]

@@ -11,8 +11,6 @@
 using System.Linq.Expressions;
 using System.Reflection;
 
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-
 using Tests.System.Linq.Expressions.Bonsai;
 
 namespace Tests.System.Reflection;
