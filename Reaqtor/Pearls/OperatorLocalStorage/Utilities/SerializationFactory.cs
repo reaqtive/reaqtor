@@ -22,285 +22,284 @@ using Nuqleon.Json.Serialization;
 
 using Reaqtive.Serialization;
 
-namespace Utilities
+namespace Utilities;
+
+/// <summary>
+/// Implementation of <see cref="ISerializationFactory"/> using the fast JSON serializer.
+/// </summary>
+public sealed class SerializationFactory : ISerializationFactory
 {
     /// <summary>
-    /// Implementation of <see cref="ISerializationFactory"/> using the fast JSON serializer.
+    /// Cache of serializers by type.
     /// </summary>
-    public sealed class SerializationFactory : ISerializationFactory
+    private readonly ConditionalWeakTable<Type, object> _serializers = [];
+
+    /// <summary>
+    /// Cache of deserializers by type.
+    /// </summary>
+    private readonly ConditionalWeakTable<Type, object> _deserializers = [];
+
+    /// <summary>
+    /// The reflection object for <see cref="GetSerializer{T}"/>.
+    /// </summary>
+    private static readonly MethodInfo s_GetSerializer = typeof(SerializationFactory).GetMethod(nameof(GetSerializer));
+
+    /// <summary>
+    /// The reflection object for <see cref="GetDeserializer{T}"/>.
+    /// </summary>
+    private static readonly MethodInfo s_GetDeserializer = typeof(SerializationFactory).GetMethod(nameof(GetDeserializer));
+
+    /// <summary>
+    /// Gets a serializer for objects of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the objects to serialize.</typeparam>
+    /// <returns>A serializer for objects of type <typeparamref name="T"/>.</returns>
+    public ISerializer<T> GetSerializer<T>()
     {
-        /// <summary>
-        /// Cache of serializers by type.
-        /// </summary>
-        private readonly ConditionalWeakTable<Type, object> _serializers = [];
-
-        /// <summary>
-        /// Cache of deserializers by type.
-        /// </summary>
-        private readonly ConditionalWeakTable<Type, object> _deserializers = [];
-
-        /// <summary>
-        /// The reflection object for <see cref="GetSerializer{T}"/>.
-        /// </summary>
-        private static readonly MethodInfo s_GetSerializer = typeof(SerializationFactory).GetMethod(nameof(GetSerializer));
-
-        /// <summary>
-        /// The reflection object for <see cref="GetDeserializer{T}"/>.
-        /// </summary>
-        private static readonly MethodInfo s_GetDeserializer = typeof(SerializationFactory).GetMethod(nameof(GetDeserializer));
-
-        /// <summary>
-        /// Gets a serializer for objects of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the objects to serialize.</typeparam>
-        /// <returns>A serializer for objects of type <typeparamref name="T"/>.</returns>
-        public ISerializer<T> GetSerializer<T>()
+        if (_serializers.TryGetValue(typeof(T), out var res))
         {
-            if (_serializers.TryGetValue(typeof(T), out var res))
+            return (ISerializer<T>)res;
+        }
+
+        return GetSerializerSlow<T>();
+    }
+
+    /// <summary>
+    /// Gets a serializer for objects of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the objects to serialize.</typeparam>
+    /// <returns>A serializer for objects of type <typeparamref name="T"/>.</returns>
+    /// <remarks>This method is called from <see cref="GetSerializer{T}"/> to avoid allocating a delegate.</remarks>
+    private ISerializer<T> GetSerializerSlow<T>()
+    {
+        return (ISerializer<T>)_serializers.GetValue(typeof(T), type => GetSerializerCore<T>());
+    }
+
+    /// <summary>
+    /// Creates a serializer for objects of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the objects to serialize.</typeparam>
+    /// <returns>A serializer for objects of type <typeparamref name="T"/>.</returns>
+    private ISerializer<T> GetSerializerCore<T>()
+    {
+        if (TryGetKeyValuePairEntity(typeof(T), out var keyValueEntityType))
+        {
+            var projectingSerializerType = typeof(ProjectingSerializer<,>).MakeGenericType(typeof(T), keyValueEntityType);
+
+            object entitySerializer;
+
+            try
             {
-                return (ISerializer<T>)res;
+                entitySerializer = s_GetSerializer.MakeGenericMethod(keyValueEntityType).Invoke(this, []);
+            }
+            catch (TargetInvocationException tie)
+            {
+                throw tie.InnerException;
             }
 
-            return GetSerializerSlow<T>();
-        }
+            var selectorType = typeof(Func<,>).MakeGenericType(typeof(T), keyValueEntityType);
 
-        /// <summary>
-        /// Gets a serializer for objects of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the objects to serialize.</typeparam>
-        /// <returns>A serializer for objects of type <typeparamref name="T"/>.</returns>
-        /// <remarks>This method is called from <see cref="GetSerializer{T}"/> to avoid allocating a delegate.</remarks>
-        private ISerializer<T> GetSerializerSlow<T>()
-        {
-            return (ISerializer<T>)_serializers.GetValue(typeof(T), type => GetSerializerCore<T>());
-        }
+            var parameter = Expression.Parameter(typeof(T));
 
-        /// <summary>
-        /// Creates a serializer for objects of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the objects to serialize.</typeparam>
-        /// <returns>A serializer for objects of type <typeparamref name="T"/>.</returns>
-        private ISerializer<T> GetSerializerCore<T>()
-        {
-            if (TryGetKeyValuePairEntity(typeof(T), out var keyValueEntityType))
-            {
-                var projectingSerializerType = typeof(ProjectingSerializer<,>).MakeGenericType(typeof(T), keyValueEntityType);
-
-                object entitySerializer;
-
-                try
-                {
-                    entitySerializer = s_GetSerializer.MakeGenericMethod(keyValueEntityType).Invoke(this, []);
-                }
-                catch (TargetInvocationException tie)
-                {
-                    throw tie.InnerException;
-                }
-
-                var selectorType = typeof(Func<,>).MakeGenericType(typeof(T), keyValueEntityType);
-
-                var parameter = Expression.Parameter(typeof(T));
-
-                var selectorExpression =
-                    Expression.Lambda(
-                        selectorType,
-                        Expression.MemberInit(
-                            Expression.New(keyValueEntityType),
-                            Expression.Bind(
-                                keyValueEntityType.GetProperty("key"),
-                                Expression.Property(parameter, "Key")
-                            ),
-                            Expression.Bind(
-                                keyValueEntityType.GetProperty("value"),
-                                Expression.Property(parameter, "Value")
-                            )
+            var selectorExpression =
+                Expression.Lambda(
+                    selectorType,
+                    Expression.MemberInit(
+                        Expression.New(keyValueEntityType),
+                        Expression.Bind(
+                            keyValueEntityType.GetProperty("key"),
+                            Expression.Property(parameter, "Key")
                         ),
-                        parameter
-                    );
+                        Expression.Bind(
+                            keyValueEntityType.GetProperty("value"),
+                            Expression.Property(parameter, "Value")
+                        )
+                    ),
+                    parameter
+                );
 
-                var selector = selectorExpression.Compile();
+            var selector = selectorExpression.Compile();
 
-                return (ISerializer<T>)Activator.CreateInstance(projectingSerializerType, [selector, entitySerializer]);
-            }
-
-            return new Serializer<T>();
+            return (ISerializer<T>)Activator.CreateInstance(projectingSerializerType, [selector, entitySerializer]);
         }
 
-        /// <summary>
-        /// Gets a deserializer for objects of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
-        /// <returns>A deserializer for objects of type <typeparamref name="T"/>.</returns>
-        public IDeserializer<T> GetDeserializer<T>()
+        return new Serializer<T>();
+    }
+
+    /// <summary>
+    /// Gets a deserializer for objects of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
+    /// <returns>A deserializer for objects of type <typeparamref name="T"/>.</returns>
+    public IDeserializer<T> GetDeserializer<T>()
+    {
+        if (_deserializers.TryGetValue(typeof(T), out var res))
         {
-            if (_deserializers.TryGetValue(typeof(T), out var res))
+            return (IDeserializer<T>)res;
+        }
+
+        return GetDeserializerSlow<T>();
+    }
+
+    /// <summary>
+    /// Gets a deserializer for objects of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
+    /// <returns>A deserializer for objects of type <typeparamref name="T"/>.</returns>
+    /// <remarks>This method is called from <see cref="GetDeserializer{T}"/> to avoid allocating a delegate.</remarks>
+    private IDeserializer<T> GetDeserializerSlow<T>()
+    {
+        return (IDeserializer<T>)_deserializers.GetValue(typeof(T), type => GetDeserializerCore<T>());
+    }
+
+    /// <summary>
+    /// Creates a deserializer for objects of type <typeparamref name="T"/>.
+    /// </summary>
+    /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
+    /// <returns>A deserializer for objects of type <typeparamref name="T"/>.</returns>
+    private IDeserializer<T> GetDeserializerCore<T>()
+    {
+        if (TryGetKeyValuePairEntity(typeof(T), out var keyValueEntityType))
+        {
+            var projectingDeserializerType = typeof(ProjectingDeserializer<,>).MakeGenericType(typeof(T), keyValueEntityType);
+
+            object entityDeserializer;
+
+            try
             {
-                return (IDeserializer<T>)res;
+                entityDeserializer = s_GetDeserializer.MakeGenericMethod(keyValueEntityType).Invoke(this, []);
             }
-
-            return GetDeserializerSlow<T>();
-        }
-
-        /// <summary>
-        /// Gets a deserializer for objects of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
-        /// <returns>A deserializer for objects of type <typeparamref name="T"/>.</returns>
-        /// <remarks>This method is called from <see cref="GetDeserializer{T}"/> to avoid allocating a delegate.</remarks>
-        private IDeserializer<T> GetDeserializerSlow<T>()
-        {
-            return (IDeserializer<T>)_deserializers.GetValue(typeof(T), type => GetDeserializerCore<T>());
-        }
-
-        /// <summary>
-        /// Creates a deserializer for objects of type <typeparamref name="T"/>.
-        /// </summary>
-        /// <typeparam name="T">The type of the objects to deserialize.</typeparam>
-        /// <returns>A deserializer for objects of type <typeparamref name="T"/>.</returns>
-        private IDeserializer<T> GetDeserializerCore<T>()
-        {
-            if (TryGetKeyValuePairEntity(typeof(T), out var keyValueEntityType))
+            catch (TargetInvocationException tie)
             {
-                var projectingDeserializerType = typeof(ProjectingDeserializer<,>).MakeGenericType(typeof(T), keyValueEntityType);
-
-                object entityDeserializer;
-
-                try
-                {
-                    entityDeserializer = s_GetDeserializer.MakeGenericMethod(keyValueEntityType).Invoke(this, []);
-                }
-                catch (TargetInvocationException tie)
-                {
-                    throw tie.InnerException;
-                }
-
-                var selectorType = typeof(Func<,>).MakeGenericType(keyValueEntityType, typeof(T));
-
-                var parameter = Expression.Parameter(keyValueEntityType);
-
-                var selectorExpression =
-                    Expression.Lambda(
-                        selectorType,
-                        Expression.New(
-                            typeof(T).GetConstructors()[0],
-                            Expression.Property(parameter, "key"),
-                            Expression.Property(parameter, "value")
-                        ),
-                        parameter
-                    );
-
-                var selector = selectorExpression.Compile();
-
-                return (IDeserializer<T>)Activator.CreateInstance(projectingDeserializerType, [selector, entityDeserializer]);
+                throw tie.InnerException;
             }
 
-            return new Deserializer<T>();
+            var selectorType = typeof(Func<,>).MakeGenericType(keyValueEntityType, typeof(T));
+
+            var parameter = Expression.Parameter(keyValueEntityType);
+
+            var selectorExpression =
+                Expression.Lambda(
+                    selectorType,
+                    Expression.New(
+                        typeof(T).GetConstructors()[0],
+                        Expression.Property(parameter, "key"),
+                        Expression.Property(parameter, "value")
+                    ),
+                    parameter
+                );
+
+            var selector = selectorExpression.Compile();
+
+            return (IDeserializer<T>)Activator.CreateInstance(projectingDeserializerType, [selector, entityDeserializer]);
         }
 
-        private static bool TryGetKeyValuePairEntity(Type type, out Type keyValueEntityType)
+        return new Deserializer<T>();
+    }
+
+    private static bool TryGetKeyValuePairEntity(Type type, out Type keyValueEntityType)
+    {
+        if (type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
         {
-            if (type.IsConstructedGenericType && type.GetGenericTypeDefinition() == typeof(KeyValuePair<,>))
-            {
-                var args = type.GetGenericArguments();
+            var args = type.GetGenericArguments();
 
-                keyValueEntityType = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("key", args[0]), new KeyValuePair<string, Type>("value", args[1])], valueEquality: true);
+            keyValueEntityType = RuntimeCompiler.CreateRecordType([new KeyValuePair<string, Type>("key", args[0]), new KeyValuePair<string, Type>("value", args[1])], valueEquality: true);
 
-                return true;
-            }
-
-            keyValueEntityType = null;
-            return false;
+            return true;
         }
 
-        private sealed class Serializer<T> : ISerializer<T>
+        keyValueEntityType = null;
+        return false;
+    }
+
+    private sealed class Serializer<T> : ISerializer<T>
+    {
+        private readonly IFastJsonSerializer<T> _serializer;
+
+        public Serializer()
         {
-            private readonly IFastJsonSerializer<T> _serializer;
-
-            public Serializer()
-            {
-                _serializer = FastJsonSerializerFactory.CreateSerializer<T>(NameProvider.Instance, FastJsonConcurrencyMode.ThreadSafe);
-            }
-
-            public void Serialize(T value, Stream stream)
-            {
-                var json = _serializer.Serialize(value);
-
-                using var sw = new StreamWriter(stream);
-
-                sw.Write(json);
-            }
+            _serializer = FastJsonSerializerFactory.CreateSerializer<T>(NameProvider.Instance, FastJsonConcurrencyMode.ThreadSafe);
         }
 
-        private sealed class Deserializer<T> : IDeserializer<T>
+        public void Serialize(T value, Stream stream)
         {
-            private readonly IFastJsonDeserializer<T> _deserializer;
+            var json = _serializer.Serialize(value);
 
-            public Deserializer()
+            using var sw = new StreamWriter(stream);
+
+            sw.Write(json);
+        }
+    }
+
+    private sealed class Deserializer<T> : IDeserializer<T>
+    {
+        private readonly IFastJsonDeserializer<T> _deserializer;
+
+        public Deserializer()
+        {
+            _deserializer = FastJsonSerializerFactory.CreateDeserializer<T>(NameResolver.Instance, FastJsonConcurrencyMode.ThreadSafe);
+        }
+
+        public T Deserialize(Stream stream)
+        {
+            var json = default(string);
+
+            using (var sr = new StreamReader(stream))
             {
-                _deserializer = FastJsonSerializerFactory.CreateDeserializer<T>(NameResolver.Instance, FastJsonConcurrencyMode.ThreadSafe);
+                json = sr.ReadToEnd();
             }
 
-            public T Deserialize(Stream stream)
-            {
-                var json = default(string);
-
-                using (var sr = new StreamReader(stream))
-                {
-                    json = sr.ReadToEnd();
-                }
-
-                return _deserializer.Deserialize(json);
-            }
+            return _deserializer.Deserialize(json);
         }
+    }
 
-        private sealed class NameProvider : INameProvider
+    private sealed class NameProvider : INameProvider
+    {
+        public static readonly NameProvider Instance = new();
+
+        public string GetName(PropertyInfo property) => GetName((MemberInfo)property);
+
+        public string GetName(FieldInfo field) => GetName((MemberInfo)field);
+
+        private static string GetName(MemberInfo member) => member.GetCustomAttribute<MappingAttribute>()?.Uri ?? member.Name;
+    }
+
+    private sealed class NameResolver : INameResolver
+    {
+        public static readonly NameResolver Instance = new();
+
+        public IEnumerable<string> GetNames(PropertyInfo property) => GetNames((MemberInfo)property);
+
+        public IEnumerable<string> GetNames(FieldInfo field) => GetNames((MemberInfo)field);
+
+        private static IEnumerable<string> GetNames(MemberInfo member) => [member.GetCustomAttribute<MappingAttribute>()?.Uri ?? member.Name];
+    }
+
+    private sealed class ProjectingSerializer<TInput, TOutput> : ISerializer<TInput>
+    {
+        private readonly Func<TInput, TOutput> _selector;
+        private readonly ISerializer<TOutput> _serializer;
+
+        public ProjectingSerializer(Func<TInput, TOutput> selector, ISerializer<TOutput> serializer)
         {
-            public static readonly NameProvider Instance = new();
-
-            public string GetName(PropertyInfo property) => GetName((MemberInfo)property);
-
-            public string GetName(FieldInfo field) => GetName((MemberInfo)field);
-
-            private static string GetName(MemberInfo member) => member.GetCustomAttribute<MappingAttribute>()?.Uri ?? member.Name;
+            _selector = selector;
+            _serializer = serializer;
         }
 
-        private sealed class NameResolver : INameResolver
+        public void Serialize(TInput value, Stream stream) => _serializer.Serialize(_selector(value), stream);
+    }
+
+    private sealed class ProjectingDeserializer<TInput, TOutput> : IDeserializer<TInput>
+    {
+        private readonly Func<TOutput, TInput> _selector;
+        private readonly IDeserializer<TOutput> _deserializer;
+
+        public ProjectingDeserializer(Func<TOutput, TInput> selector, IDeserializer<TOutput> deserializer)
         {
-            public static readonly NameResolver Instance = new();
-
-            public IEnumerable<string> GetNames(PropertyInfo property) => GetNames((MemberInfo)property);
-
-            public IEnumerable<string> GetNames(FieldInfo field) => GetNames((MemberInfo)field);
-
-            private static IEnumerable<string> GetNames(MemberInfo member) => [member.GetCustomAttribute<MappingAttribute>()?.Uri ?? member.Name];
+            _selector = selector;
+            _deserializer = deserializer;
         }
 
-        private sealed class ProjectingSerializer<TInput, TOutput> : ISerializer<TInput>
-        {
-            private readonly Func<TInput, TOutput> _selector;
-            private readonly ISerializer<TOutput> _serializer;
-
-            public ProjectingSerializer(Func<TInput, TOutput> selector, ISerializer<TOutput> serializer)
-            {
-                _selector = selector;
-                _serializer = serializer;
-            }
-
-            public void Serialize(TInput value, Stream stream) => _serializer.Serialize(_selector(value), stream);
-        }
-
-        private sealed class ProjectingDeserializer<TInput, TOutput> : IDeserializer<TInput>
-        {
-            private readonly Func<TOutput, TInput> _selector;
-            private readonly IDeserializer<TOutput> _deserializer;
-
-            public ProjectingDeserializer(Func<TOutput, TInput> selector, IDeserializer<TOutput> deserializer)
-            {
-                _selector = selector;
-                _deserializer = deserializer;
-            }
-
-            public TInput Deserialize(Stream stream) => _selector(_deserializer.Deserialize(stream));
-        }
+        public TInput Deserialize(Stream stream) => _selector(_deserializer.Deserialize(stream));
     }
 }

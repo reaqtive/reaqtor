@@ -10,93 +10,92 @@ using Reaqtive;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class TakeUntil : OperatorTestBase
 {
-    [TestClass]
-    public partial class TakeUntil : OperatorTestBase
+    [TestInitialize]
+    public void Initialize()
     {
-        [TestInitialize]
-        public void Initialize()
+        base.TestInitialize();
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        base.TestCleanup();
+    }
+
+    [TestMethod]
+    public void TakeUntil_ArgumentChecking()
+    {
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.TakeUntil<int, int>(null, DummySubscribable<int>.Instance));
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.TakeUntil<int, int>(DummySubscribable<int>.Instance, null));
+
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.TakeUntil(default(ISubscribable<int>), DateTimeOffset.Now));
+    }
+
+    [TestMethod]
+    public void TakeUntil_Preempt_BeforeFirstProduced_RemainSilentAndProperDisposed()
+    {
+        Run(client =>
         {
-            base.TestInitialize();
-        }
+            bool sourceNotDisposed = false;
 
-        [TestCleanup]
-        public void Cleanup()
+            var l = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnError<int>(215, new Exception()), // should not come
+                OnCompleted<int>(240)
+            );
+
+            var r = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2), //!
+                OnCompleted<int>(220)
+            );
+
+            var res = client.Start(() =>
+                l.Do(_ => sourceNotDisposed = true).TakeUntil(r)
+            );
+
+            res.Messages.AssertEqual(
+                OnCompleted<int>(210)
+            );
+
+            Assert.IsFalse(sourceNotDisposed);
+        });
+    }
+
+    [TestMethod]
+    public void TakeUntil_NoPreempt_AfterLastProduced_ProperDisposedSignal()
+    {
+        Run(client =>
         {
-            base.TestCleanup();
-        }
+            bool signalNotDisposed = false;
 
-        [TestMethod]
-        public void TakeUntil_ArgumentChecking()
-        {
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.TakeUntil<int, int>(null, DummySubscribable<int>.Instance));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.TakeUntil<int, int>(DummySubscribable<int>.Instance, null));
+            var l = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(230, 2),
+                OnCompleted<int>(240)
+            );
 
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.TakeUntil(default(ISubscribable<int>), DateTimeOffset.Now));
-        }
+            var r = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(250, 2),
+                OnCompleted<int>(260)
+            );
 
-        [TestMethod]
-        public void TakeUntil_Preempt_BeforeFirstProduced_RemainSilentAndProperDisposed()
-        {
-            Run(client =>
-            {
-                bool sourceNotDisposed = false;
+            var res = client.Start(() =>
+                l.TakeUntil(r.Do(_ => signalNotDisposed = true))
+            );
 
-                var l = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnError<int>(215, new Exception()), // should not come
-                    OnCompleted<int>(240)
-                );
+            res.Messages.AssertEqual(
+                OnNext(230, 2),
+                OnCompleted<int>(240)
+            );
 
-                var r = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2), //!
-                    OnCompleted<int>(220)
-                );
-
-                var res = client.Start(() =>
-                    l.Do(_ => sourceNotDisposed = true).TakeUntil(r)
-                );
-
-                res.Messages.AssertEqual(
-                    OnCompleted<int>(210)
-                );
-
-                Assert.IsFalse(sourceNotDisposed);
-            });
-        }
-
-        [TestMethod]
-        public void TakeUntil_NoPreempt_AfterLastProduced_ProperDisposedSignal()
-        {
-            Run(client =>
-            {
-                bool signalNotDisposed = false;
-
-                var l = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(230, 2),
-                    OnCompleted<int>(240)
-                );
-
-                var r = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(250, 2),
-                    OnCompleted<int>(260)
-                );
-
-                var res = client.Start(() =>
-                    l.TakeUntil(r.Do(_ => signalNotDisposed = true))
-                );
-
-                res.Messages.AssertEqual(
-                    OnNext(230, 2),
-                    OnCompleted<int>(240)
-                );
-
-                Assert.IsFalse(signalNotDisposed);
-            });
-        }
+            Assert.IsFalse(signalNotDisposed);
+        });
     }
 }

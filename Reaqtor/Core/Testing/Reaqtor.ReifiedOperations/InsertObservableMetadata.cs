@@ -11,18 +11,17 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
-{
-    public class InsertObservableMetadata : InsertMetadataOperation
-    {
-        public InsertObservableMetadata(Uri observableUri)
-            : this(observableUri, null, null)
-        {
-        }
+namespace Reaqtor.TestingFramework;
 
-        public InsertObservableMetadata(Uri observableUri, Expression expression, object state)
-            : base(ServiceOperationKind.InsertObservableMetadata, observableUri, expression, state)
-        {
-        }
+public class InsertObservableMetadata : InsertMetadataOperation
+{
+    public InsertObservableMetadata(Uri observableUri)
+        : this(observableUri, null, null)
+    {
+    }
+
+    public InsertObservableMetadata(Uri observableUri, Expression expression, object state)
+        : base(ServiceOperationKind.InsertObservableMetadata, observableUri, expression, state)
+    {
     }
 }

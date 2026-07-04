@@ -6,15 +6,14 @@ using System;
 
 using Reaqtor.Reliable.Client;
 
-namespace Reaqtor.Reliable.Expressions
-{
-    public interface IReliableQubjectFactory<TInput, TOutput> : IReliableReactiveSubjectFactory<TInput, TOutput>, IReliableReactiveExpressible
-    {
-        new IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, object state = null);
-    }
+namespace Reaqtor.Reliable.Expressions;
 
-    public interface IReliableQubjectFactory<TInput, TOutput, TArgs> : IReliableReactiveSubjectFactory<TInput, TOutput, TArgs>, IReliableReactiveExpressible
-    {
-        new IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, TArgs argument, object state = null);
-    }
+public interface IReliableQubjectFactory<TInput, TOutput> : IReliableReactiveSubjectFactory<TInput, TOutput>, IReliableReactiveExpressible
+{
+    new IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, object state = null);
+}
+
+public interface IReliableQubjectFactory<TInput, TOutput, TArgs> : IReliableReactiveSubjectFactory<TInput, TOutput, TArgs>, IReliableReactiveExpressible
+{
+    new IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, TArgs argument, object state = null);
 }

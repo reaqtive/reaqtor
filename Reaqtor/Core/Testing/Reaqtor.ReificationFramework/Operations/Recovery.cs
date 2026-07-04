@@ -2,19 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace Reaqtor.ReificationFramework
+namespace Reaqtor.ReificationFramework;
+
+/// <summary>
+/// Operation to perform a recovery.
+/// </summary>
+public class Recovery : QueryEngineOperation
 {
     /// <summary>
-    /// Operation to perform a recovery.
+    /// Creates a recovery operation.
     /// </summary>
-    public class Recovery : QueryEngineOperation
+    public Recovery(/* TODO: query engine URI? */)
+        : base(QueryEngineOperationKind.Recovery, targetObjectUri: null, state: null)
     {
-        /// <summary>
-        /// Creates a recovery operation.
-        /// </summary>
-        public Recovery(/* TODO: query engine URI? */)
-            : base(QueryEngineOperationKind.Recovery, targetObjectUri: null, state: null)
-        {
-        }
     }
 }

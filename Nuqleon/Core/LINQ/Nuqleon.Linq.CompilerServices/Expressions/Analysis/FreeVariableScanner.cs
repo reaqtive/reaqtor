@@ -12,196 +12,195 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Memory;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Finds free variables, represented as ParameterExpression nodes, in an expression tree.
+/// </summary>
+public static class FreeVariableScanner
 {
     /// <summary>
-    /// Finds free variables, represented as ParameterExpression nodes, in an expression tree.
+    /// Singleton instance of an empty array of parameter expressions.
     /// </summary>
-    public static class FreeVariableScanner
+    private static readonly ParameterExpression[] s_empty = [];
+
+    /// <summary>
+    /// Object pool of free variable scanners.
+    /// </summary>
+    private static readonly ObjectPool<Scanner> s_freeVariableScanners = new(() => new Scanner(), Environment.ProcessorCount);
+
+    /// <summary>
+    /// Object pool of free variable finders.
+    /// </summary>
+    private static readonly ObjectPool<Finder> s_freeVariableFinders = new(() => new Finder(), Environment.ProcessorCount);
+
+    /// <summary>
+    /// Scans the given expression for free variables.
+    /// </summary>
+    /// <param name="expression">Expression to scan.</param>
+    /// <returns>Sequence of free variables in the given expression. The resulting expressions are distinct and returned in no particular order.</returns>
+    public static IEnumerable<ParameterExpression> Scan(Expression expression)
     {
-        /// <summary>
-        /// Singleton instance of an empty array of parameter expressions.
-        /// </summary>
-        private static readonly ParameterExpression[] s_empty = [];
+        ArgumentNullException.ThrowIfNull(expression);
 
-        /// <summary>
-        /// Object pool of free variable scanners.
-        /// </summary>
-        private static readonly ObjectPool<Scanner> s_freeVariableScanners = new(() => new Scanner(), Environment.ProcessorCount);
+        using var scanner = s_freeVariableScanners.New();
 
-        /// <summary>
-        /// Object pool of free variable finders.
-        /// </summary>
-        private static readonly ObjectPool<Finder> s_freeVariableFinders = new(() => new Finder(), Environment.ProcessorCount);
+        var impl = scanner.Object;
+        impl.Visit(expression);
+        return (IEnumerable<ParameterExpression>)impl.Free ?? s_empty;
+    }
 
-        /// <summary>
-        /// Scans the given expression for free variables.
-        /// </summary>
-        /// <param name="expression">Expression to scan.</param>
-        /// <returns>Sequence of free variables in the given expression. The resulting expressions are distinct and returned in no particular order.</returns>
-        public static IEnumerable<ParameterExpression> Scan(Expression expression)
+    /// <summary>
+    /// Checks whether the given expression has free variables.
+    /// </summary>
+    /// <param name="expression">Expression to scan.</param>
+    /// <returns>true if one or more free variables have been found; otherwise, false.</returns>
+    public static bool HasFreeVariables(Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        using var finder = s_freeVariableFinders.New();
+
+        var impl = finder.Object;
+        impl.Visit(expression);
+        return impl.HasFreeVariable;
+    }
+
+    private sealed class Scanner : ImplBase
+    {
+        // WARNING: This type implements IClearable. If state is added here, make sure to reset it in the Clear method.
+
+        public HashSet<ParameterExpression> Free;
+
+        protected override void AddFreeVariable(ParameterExpression node)
         {
-            ArgumentNullException.ThrowIfNull(expression);
+            Free ??= [];
 
-            using var scanner = s_freeVariableScanners.New();
-
-            var impl = scanner.Object;
-            impl.Visit(expression);
-            return (IEnumerable<ParameterExpression>)impl.Free ?? s_empty;
+            Free.Add(node);
         }
 
-        /// <summary>
-        /// Checks whether the given expression has free variables.
-        /// </summary>
-        /// <param name="expression">Expression to scan.</param>
-        /// <returns>true if one or more free variables have been found; otherwise, false.</returns>
-        public static bool HasFreeVariables(Expression expression)
+        protected override void ClearCore()
         {
-            ArgumentNullException.ThrowIfNull(expression);
+            // NB: The lifetime of the hash set goes beyond the scanner, so we shouldn't Clear it here;
+            //     instead, just null out the reference so another use of the scanner can lazily allocate
+            //     a new hash set when it encounters a free variable.
 
-            using var finder = s_freeVariableFinders.New();
-
-            var impl = finder.Object;
-            impl.Visit(expression);
-            return impl.HasFreeVariable;
+            Free = null;
         }
+    }
 
-        private sealed class Scanner : ImplBase
+    private sealed class Finder : ImplBase
+    {
+        // WARNING: This type implements IClearable. If state is added here, make sure to reset it in the Clear method.
+
+        public bool HasFreeVariable;
+
+        public override Expression Visit(Expression node)
         {
-            // WARNING: This type implements IClearable. If state is added here, make sure to reset it in the Clear method.
-
-            public HashSet<ParameterExpression> Free;
-
-            protected override void AddFreeVariable(ParameterExpression node)
+            if (HasFreeVariable)
             {
-                Free ??= [];
-
-                Free.Add(node);
-            }
-
-            protected override void ClearCore()
-            {
-                // NB: The lifetime of the hash set goes beyond the scanner, so we shouldn't Clear it here;
-                //     instead, just null out the reference so another use of the scanner can lazily allocate
-                //     a new hash set when it encounters a free variable.
-
-                Free = null;
-            }
-        }
-
-        private sealed class Finder : ImplBase
-        {
-            // WARNING: This type implements IClearable. If state is added here, make sure to reset it in the Clear method.
-
-            public bool HasFreeVariable;
-
-            public override Expression Visit(Expression node)
-            {
-                if (HasFreeVariable)
-                {
-                    return node;
-                }
-
-                return base.Visit(node);
-            }
-
-            protected override void AddFreeVariable(ParameterExpression node) => HasFreeVariable = true;
-
-            protected override void ClearCore() => HasFreeVariable = false;
-        }
-
-        private abstract class ImplBase : ExpressionVisitor, IClearable
-        {
-            // WARNING: This type implements IClearable. If state is added here, make sure to reset it in the Clear method.
-
-            protected readonly Stack<IList<ParameterExpression>> _environment = new();
-
-            protected override Expression VisitLambda<T>(Expression<T> node)
-            {
-                var parameters = node.Parameters;
-
-                var hasScope = parameters.Count > 0;
-                if (hasScope)
-                {
-                    _environment.Push(parameters);
-                }
-
-                Visit(node.Body);
-
-                if (hasScope)
-                {
-                    _environment.Pop();
-                }
-
                 return node;
             }
 
-            protected override Expression VisitBlock(BlockExpression node)
+            return base.Visit(node);
+        }
+
+        protected override void AddFreeVariable(ParameterExpression node) => HasFreeVariable = true;
+
+        protected override void ClearCore() => HasFreeVariable = false;
+    }
+
+    private abstract class ImplBase : ExpressionVisitor, IClearable
+    {
+        // WARNING: This type implements IClearable. If state is added here, make sure to reset it in the Clear method.
+
+        protected readonly Stack<IList<ParameterExpression>> _environment = new();
+
+        protected override Expression VisitLambda<T>(Expression<T> node)
+        {
+            var parameters = node.Parameters;
+
+            var hasScope = parameters.Count > 0;
+            if (hasScope)
             {
-                var variables = node.Variables;
-
-                var hasScope = variables.Count > 0;
-                if (hasScope)
-                {
-                    _environment.Push(variables);
-                }
-
-                Visit(node.Expressions);
-
-                if (hasScope)
-                {
-                    _environment.Pop();
-                }
-
-                return node;
+                _environment.Push(parameters);
             }
 
-            protected override CatchBlock VisitCatchBlock(CatchBlock node)
+            Visit(node.Body);
+
+            if (hasScope)
             {
-                var variable = node.Variable;
-
-                if (variable != null)
-                {
-                    _environment.Push([variable]);
-                }
-
-                Visit(node.Filter);
-                Visit(node.Body);
-
-                if (variable != null)
-                {
-                    _environment.Pop();
-                }
-
-                return node;
+                _environment.Pop();
             }
 
-            protected override Expression VisitParameter(ParameterExpression node)
+            return node;
+        }
+
+        protected override Expression VisitBlock(BlockExpression node)
+        {
+            var variables = node.Variables;
+
+            var hasScope = variables.Count > 0;
+            if (hasScope)
             {
-                foreach (var frame in _environment)
+                _environment.Push(variables);
+            }
+
+            Visit(node.Expressions);
+
+            if (hasScope)
+            {
+                _environment.Pop();
+            }
+
+            return node;
+        }
+
+        protected override CatchBlock VisitCatchBlock(CatchBlock node)
+        {
+            var variable = node.Variable;
+
+            if (variable != null)
+            {
+                _environment.Push([variable]);
+            }
+
+            Visit(node.Filter);
+            Visit(node.Body);
+
+            if (variable != null)
+            {
+                _environment.Pop();
+            }
+
+            return node;
+        }
+
+        protected override Expression VisitParameter(ParameterExpression node)
+        {
+            foreach (var frame in _environment)
+            {
+                for (int i = 0, n = frame.Count; i < n; i++)
                 {
-                    for (int i = 0, n = frame.Count; i < n; i++)
+                    if (frame[i] == node)
                     {
-                        if (frame[i] == node)
-                        {
-                            return node;
-                        }
+                        return node;
                     }
                 }
-
-                AddFreeVariable(node);
-                return node;
             }
 
-            protected abstract void AddFreeVariable(ParameterExpression node);
-
-            public void Clear()
-            {
-                _environment.Clear();
-                ClearCore();
-            }
-
-            protected abstract void ClearCore();
+            AddFreeVariable(node);
+            return node;
         }
+
+        protected abstract void AddFreeVariable(ParameterExpression node);
+
+        public void Clear()
+        {
+            _environment.Clear();
+            ClearCore();
+        }
+
+        protected abstract void ClearCore();
     }
 }

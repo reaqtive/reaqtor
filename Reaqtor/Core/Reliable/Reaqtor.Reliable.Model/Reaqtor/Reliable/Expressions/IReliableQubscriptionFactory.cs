@@ -6,15 +6,14 @@ using System;
 
 using Reaqtor.Reliable.Client;
 
-namespace Reaqtor.Reliable.Expressions
-{
-    public interface IReliableQubscriptionFactory : IReliableReactiveSubscriptionFactory, IReliableReactiveExpressible
-    {
-        new IReliableQubscription Create(Uri subscriptionUri, object state = null);
-    }
+namespace Reaqtor.Reliable.Expressions;
 
-    public interface IReliableQubscriptionFactory<TArgs> : IReliableReactiveSubscriptionFactory<TArgs>, IReliableReactiveExpressible
-    {
-        new IReliableQubscription Create(Uri subscriptionUri, TArgs argument, object state = null);
-    }
+public interface IReliableQubscriptionFactory : IReliableReactiveSubscriptionFactory, IReliableReactiveExpressible
+{
+    new IReliableQubscription Create(Uri subscriptionUri, object state = null);
+}
+
+public interface IReliableQubscriptionFactory<TArgs> : IReliableReactiveSubscriptionFactory<TArgs>, IReliableReactiveExpressible
+{
+    new IReliableQubscription Create(Uri subscriptionUri, TArgs argument, object state = null);
 }

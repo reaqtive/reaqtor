@@ -4,12 +4,11 @@
 
 using Reaqtor.QueryEngine;
 
-namespace Reaqtor.Shebang.Service
-{
-    public interface IQueryEngineStateStore : IKeyValueStore
-    {
-        IStateReader GetReader();
+namespace Reaqtor.Shebang.Service;
 
-        IStateWriter GetWriter();
-    }
+public interface IQueryEngineStateStore : IKeyValueStore
+{
+    IStateReader GetReader();
+
+    IStateWriter GetWriter();
 }

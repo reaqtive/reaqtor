@@ -11,22 +11,21 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1032 // Add other exception constructors. (This exception is only instantiated by the library.)
 
-namespace System.Collections.Specialized
+namespace System.Collections.Specialized;
+
+/// <summary>
+/// The exception representing a failure to determine the size needed for an EnumDictionary.
+/// </summary>
+public sealed class EnumSizeResolutionException : Exception
 {
     /// <summary>
-    /// The exception representing a failure to determine the size needed for an EnumDictionary.
+    /// Gets or sets the error code.
     /// </summary>
-    public sealed class EnumSizeResolutionException : Exception
-    {
-        /// <summary>
-        /// Gets or sets the error code.
-        /// </summary>
-        public EnumSizeResolutionError ErrorCode { get; }
+    public EnumSizeResolutionError ErrorCode { get; }
 
-        internal EnumSizeResolutionException(EnumSizeResolutionError errorCode)
-            : base()
-        {
-            ErrorCode = errorCode;
-        }
+    internal EnumSizeResolutionException(EnumSizeResolutionError errorCode)
+        : base()
+    {
+        ErrorCode = errorCode;
     }
 }

@@ -12,52 +12,51 @@ using System;
 using System.Linq;
 using System.Linq.Expressions;
 
-namespace Nuqleon.DataModel.TypeSystem
+namespace Nuqleon.DataModel.TypeSystem;
+
+/// <summary>
+/// Represents an expression data type, i.e. a code-as-data representation.
+/// </summary>
+public class ExpressionDataType : DataType
 {
-    /// <summary>
-    /// Represents an expression data type, i.e. a code-as-data representation.
-    /// </summary>
-    public class ExpressionDataType : DataType
+    internal ExpressionDataType(Type type)
+        : base(type)
     {
-        internal ExpressionDataType(Type type)
-            : base(type)
-        {
-            Type = type;
-        }
+        Type = type;
+    }
 
-        /// <summary>
-        /// Gets the kind of the data type.
-        /// </summary>
-        public override DataTypeKinds Kind => DataTypeKinds.Expression;
+    /// <summary>
+    /// Gets the kind of the data type.
+    /// </summary>
+    public override DataTypeKinds Kind => DataTypeKinds.Expression;
 
-        /// <summary>
-        /// Gets the underlying type used to represent the expression.
-        /// </summary>
-        public Type Type { get; }
+    /// <summary>
+    /// Gets the underlying type used to represent the expression.
+    /// </summary>
+    public Type Type { get; }
 
-        /// <summary>
-        /// Gets a strongly typed expression over a value to conforms to the data type.
-        /// </summary>
-        /// <param name="value">Object to get a strongly typed expression for.</param>
-        /// <returns>Strongly typed expression over the given value.</returns>
-        public Expression GetExpression(object value)
-        {
-            CheckType(value);
-            return (Expression)value;
-        }
+    /// <summary>
+    /// Gets a strongly typed expression over a value to conforms to the data type.
+    /// </summary>
+    /// <param name="value">Object to get a strongly typed expression for.</param>
+    /// <returns>Strongly typed expression over the given value.</returns>
+    public Expression GetExpression(object value)
+    {
+        CheckType(value);
+        return (Expression)value;
+    }
 
-        /// <summary>
-        /// Creates a new instance of the expression data type.
-        /// </summary>
-        /// <param name="arguments">Only one parameter can be specified, containing the expression object.</param>
-        /// <returns>Instance of the expression data type.</returns>
-        public override object CreateInstance(params object[] arguments)
-        {
-            ArgumentNullException.ThrowIfNull(arguments);
+    /// <summary>
+    /// Creates a new instance of the expression data type.
+    /// </summary>
+    /// <param name="arguments">Only one parameter can be specified, containing the expression object.</param>
+    /// <returns>Instance of the expression data type.</returns>
+    public override object CreateInstance(params object[] arguments)
+    {
+        ArgumentNullException.ThrowIfNull(arguments);
 
-            var expr = arguments.Single();
-            CheckType(expr);
-            return expr;
-        }
+        var expr = arguments.Single();
+        CheckType(expr);
+        return expr;
     }
 }

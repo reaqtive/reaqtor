@@ -10,28 +10,27 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class ObserverOnNext : ObserverOperation
 {
-    public class ObserverOnNext : ObserverOperation
+    public ObserverOnNext(Uri observerUri, object value)
+        : base(ServiceOperationKind.ObserverOnNext, observerUri)
     {
-        public ObserverOnNext(Uri observerUri, object value)
-            : base(ServiceOperationKind.ObserverOnNext, observerUri)
-        {
-            Value = value;
-        }
-
-        public object Value { get; }
-
-        public override string ToString() => base.ToString() + " - " + Value;
+        Value = value;
     }
 
-    public class ObserverOnNext<T> : ObserverOnNext
-    {
-        public ObserverOnNext(Uri observerUri, T value)
-            : base(observerUri, value)
-        {
-        }
+    public object Value { get; }
 
-        public new T Value => (T)base.Value;
+    public override string ToString() => base.ToString() + " - " + Value;
+}
+
+public class ObserverOnNext<T> : ObserverOnNext
+{
+    public ObserverOnNext(Uri observerUri, T value)
+        : base(observerUri, value)
+    {
     }
+
+    public new T Value => (T)base.Value;
 }

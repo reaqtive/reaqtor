@@ -11,27 +11,26 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal sealed class KnownQubscriptionFactory : QubscriptionFactory, IKnownResource
 {
-    internal sealed class KnownQubscriptionFactory : QubscriptionFactory, IKnownResource
+    public KnownQubscriptionFactory(Expression expression, Uri subscriptionFactoryUri, IAsyncReactiveQueryProvider provider)
+        : base(expression, provider)
     {
-        public KnownQubscriptionFactory(Expression expression, Uri subscriptionFactoryUri, IAsyncReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = subscriptionFactoryUri;
-        }
-
-        public Uri Uri { get; }
+        Uri = subscriptionFactoryUri;
     }
 
-    internal sealed class KnownQubscriptionFactory<TArg> : QubscriptionFactory<TArg>, IKnownResource
-    {
-        public KnownQubscriptionFactory(Expression expression, Uri subscriptionFactoryUri, IAsyncReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = subscriptionFactoryUri;
-        }
+    public Uri Uri { get; }
+}
 
-        public Uri Uri { get; }
+internal sealed class KnownQubscriptionFactory<TArg> : QubscriptionFactory<TArg>, IKnownResource
+{
+    public KnownQubscriptionFactory(Expression expression, Uri subscriptionFactoryUri, IAsyncReactiveQueryProvider provider)
+        : base(expression, provider)
+    {
+        Uri = subscriptionFactoryUri;
     }
+
+    public Uri Uri { get; }
 }

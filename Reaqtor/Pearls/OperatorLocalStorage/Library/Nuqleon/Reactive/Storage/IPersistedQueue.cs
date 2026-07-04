@@ -12,13 +12,12 @@
 
 using System.Collections.Generic;
 
-namespace Reaqtive.Storage
+namespace Reaqtive.Storage;
+
+/// <summary>
+/// Interface representing a persisted queue.
+/// </summary>
+/// <typeparam name="T">The type of the elements in the persisted queue.</typeparam>
+public interface IPersistedQueue<T> : IQueue<T>, IPersisted
 {
-    /// <summary>
-    /// Interface representing a persisted queue.
-    /// </summary>
-    /// <typeparam name="T">The type of the elements in the persisted queue.</typeparam>
-    public interface IPersistedQueue<T> : IQueue<T>, IPersisted
-    {
-    }
 }

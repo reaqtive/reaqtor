@@ -13,37 +13,36 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal class QubjectFactory<TInput, TOutput> : AsyncReactiveQubjectFactoryBase<TInput, TOutput>
 {
-    internal class QubjectFactory<TInput, TOutput> : AsyncReactiveQubjectFactoryBase<TInput, TOutput>
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, streamUri, state, token);
-        }
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArgs> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArgs>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
+internal class QubjectFactory<TInput, TOutput, TArgs> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArgs>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
+    }
 
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArgs argument, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, argument, streamUri, state, token);
-        }
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArgs argument, object state, CancellationToken token)
+    {
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, argument, streamUri, state, token);
     }
 }

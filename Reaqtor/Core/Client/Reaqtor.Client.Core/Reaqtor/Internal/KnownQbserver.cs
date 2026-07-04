@@ -11,16 +11,15 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
-{
-    internal sealed class KnownQbserver<T> : Qbserver<T>, IKnownResource
-    {
-        public KnownQbserver(Expression expression, Uri observerUri, IAsyncReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = observerUri;
-        }
+namespace Reaqtor;
 
-        public Uri Uri { get; }
+internal sealed class KnownQbserver<T> : Qbserver<T>, IKnownResource
+{
+    public KnownQbserver(Expression expression, Uri observerUri, IAsyncReactiveQueryProvider provider)
+        : base(expression, provider)
+    {
+        Uri = observerUri;
     }
+
+    public Uri Uri { get; }
 }

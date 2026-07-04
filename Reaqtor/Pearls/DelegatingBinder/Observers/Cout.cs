@@ -7,23 +7,22 @@ using System.Reactive;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal sealed class Cout<T> : ObserverBase<T>
 {
-    internal sealed class Cout<T> : ObserverBase<T>
+    protected override void OnCompletedCore()
     {
-        protected override void OnCompletedCore()
-        {
-            Console.WriteLine("OnCompleted");
-        }
+        Console.WriteLine("OnCompleted");
+    }
 
-        protected override void OnErrorCore(Exception error)
-        {
-            Console.WriteLine("OnError({0})", error);
-        }
+    protected override void OnErrorCore(Exception error)
+    {
+        Console.WriteLine("OnError({0})", error);
+    }
 
-        protected override void OnNextCore(T value)
-        {
-            Console.WriteLine("OnNext({0})", value);
-        }
+    protected override void OnNextCore(T value)
+    {
+        Console.WriteLine("OnNext({0})", value);
     }
 }

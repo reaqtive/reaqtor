@@ -16,43 +16,42 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class ExpressionVisitorWithReflectionTests
 {
-    [TestClass]
-    public class ExpressionVisitorWithReflectionTests
+    [TestMethod]
+    public void ExpressionVisitorWithReflection_Checks()
     {
-        [TestMethod]
-        public void ExpressionVisitorWithReflection_Checks()
+        new MyVisitor().Do();
+    }
+
+    private sealed class MyVisitor : ExpressionVisitorWithReflection
+    {
+        public void Do()
         {
-            new MyVisitor().Do();
+            Assert.ThrowsExactly<ArgumentException>(() => base.MakeNewArray(ExpressionType.Add, typeof(int), expressions: null));
+            Assert.ThrowsExactly<ArgumentException>(() => base.MakeTypeBinary(ExpressionType.Add, expression: null, typeof(int)));
         }
+    }
 
-        private sealed class MyVisitor : ExpressionVisitorWithReflection
+    [TestMethod]
+    public void ExpressionVisitorWithReflection_Invariant()
+    {
+        var visitor = new ExpressionVisitorWithReflection();
+
+        foreach (var e in new Expression[]
         {
-            public void Do()
-            {
-                Assert.ThrowsExactly<ArgumentException>(() => base.MakeNewArray(ExpressionType.Add, typeof(int), expressions: null));
-                Assert.ThrowsExactly<ArgumentException>(() => base.MakeTypeBinary(ExpressionType.Add, expression: null, typeof(int)));
-            }
-        }
-
-        [TestMethod]
-        public void ExpressionVisitorWithReflection_Invariant()
+            (Expression<Func<int, int>>)(x => Math.Abs(x)),
+            (Expression<Func<string, int>>)(s => s.Length),
+            (Expression<Func<int, string>>)(x => new string('x', x)),
+            (Expression<Func<object, bool>>)(o => o is string),
+            (from x in new[] { 2, 3, 5 }.AsQueryable() where x > 0 let y = x * x where y > 0 select x + y).Expression,
+            Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
+        })
         {
-            var visitor = new ExpressionVisitorWithReflection();
-
-            foreach (var e in new Expression[]
-            {
-                (Expression<Func<int, int>>)(x => Math.Abs(x)),
-                (Expression<Func<string, int>>)(s => s.Length),
-                (Expression<Func<int, string>>)(x => new string('x', x)),
-                (Expression<Func<object, bool>>)(o => o is string),
-                (from x in new[] { 2, 3, 5 }.AsQueryable() where x > 0 let y = x * x where y > 0 select x + y).Expression,
-                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
-            })
-            {
-                Assert.AreSame(e, visitor.Visit(e));
-            }
+            Assert.AreSame(e, visitor.Visit(e));
         }
     }
 }

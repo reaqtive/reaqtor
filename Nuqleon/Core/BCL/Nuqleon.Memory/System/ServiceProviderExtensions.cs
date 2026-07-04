@@ -8,14 +8,13 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-namespace System
+namespace System;
+
+internal static class ServiceProviderExtensions
 {
-    internal static class ServiceProviderExtensions
-    {
-        internal static T GetService<T>(this IServiceProvider provider) => (T)provider.GetService(typeof(T));
+    internal static T GetService<T>(this IServiceProvider provider) => (T)provider.GetService(typeof(T));
 
-        internal static object GetService(this object obj, Type serviceType) => obj is IServiceProvider sp ? sp.GetService(serviceType) : null;
+    internal static object GetService(this object obj, Type serviceType) => obj is IServiceProvider sp ? sp.GetService(serviceType) : null;
 
-        internal static T GetService<T>(this object obj) => (T)GetService(obj, typeof(T));
-    }
+    internal static T GetService<T>(this object obj) => (T)GetService(obj, typeof(T));
 }

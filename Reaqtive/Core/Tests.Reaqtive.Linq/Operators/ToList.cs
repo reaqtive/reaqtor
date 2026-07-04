@@ -11,48 +11,47 @@ using Reaqtive;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class ToList : OperatorTestBase
 {
-    [TestClass]
-    public partial class ToList : OperatorTestBase
+    [TestMethod]
+    public void ToList_ArgumentChecking()
     {
-        [TestMethod]
-        public void ToList_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => Subscribable.ToList<int>(null));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => Subscribable.ToList<int>(null));
+    }
 
-        [TestMethod]
-        public void ToList_Settings_MaxListSize()
+    [TestMethod]
+    public void ToList_Settings_MaxListSize()
+    {
+        Run(client =>
         {
-            Run(client =>
+            var ctx = client.CreateContext(settings: new Dictionary<string, object>
             {
-                var ctx = client.CreateContext(settings: new Dictionary<string, object>
-                {
-                    { "rx://operators/toList/settings/maxListSize", 5 },
-                });
-
-                var xs = client.CreateHotObservable<int>(
-                    OnNext(210, 1),
-                    OnNext(220, 2),
-                    OnNext(230, 3),
-                    OnNext(240, 4),
-                    OnNext(250, 5),
-                    OnNext(260, 6)
-                );
-
-                var res = client.Start(ctx, () =>
-                    xs.ToList(),
-                    100, 200, 1000);
-
-                res.Messages.AssertEqual(
-                    OnError<IList<int>>(260, ex => ex is InvalidOperationException)
-                );
-
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 260)
-                );
+                { "rx://operators/toList/settings/maxListSize", 5 },
             });
-        }
+
+            var xs = client.CreateHotObservable<int>(
+                OnNext(210, 1),
+                OnNext(220, 2),
+                OnNext(230, 3),
+                OnNext(240, 4),
+                OnNext(250, 5),
+                OnNext(260, 6)
+            );
+
+            var res = client.Start(ctx, () =>
+                xs.ToList(),
+                100, 200, 1000);
+
+            res.Messages.AssertEqual(
+                OnError<IList<int>>(260, ex => ex is InvalidOperationException)
+            );
+
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 260)
+            );
+        });
     }
 }

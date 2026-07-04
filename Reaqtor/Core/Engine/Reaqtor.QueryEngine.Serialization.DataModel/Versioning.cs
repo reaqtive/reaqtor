@@ -4,26 +4,25 @@
 
 using System;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Exposed version numbers of serializers.
+/// </summary>
+public static class SerializerVersioning
 {
     /// <summary>
-    /// Exposed version numbers of serializers.
+    /// Version 1.0 of serializer.
     /// </summary>
-    public static class SerializerVersioning
-    {
-        /// <summary>
-        /// Version 1.0 of serializer.
-        /// </summary>
-        public static readonly Version v1 = new(1, 0, 0, 0);
+    public static readonly Version v1 = new(1, 0, 0, 0);
 
-        /// <summary>
-        /// Version 2.0 of serializer.
-        /// </summary>
-        public static readonly Version v2 = new(2, 0, 0, 0);
+    /// <summary>
+    /// Version 2.0 of serializer.
+    /// </summary>
+    public static readonly Version v2 = new(2, 0, 0, 0);
 
-        /// <summary>
-        /// Version 3.0 of serializer.
-        /// </summary>
-        public static readonly Version v3 = new(3, 0, 0, 0);
-    }
+    /// <summary>
+    /// Version 3.0 of serializer.
+    /// </summary>
+    public static readonly Version v3 = new(3, 0, 0, 0);
 }

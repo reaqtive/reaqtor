@@ -13,17 +13,16 @@ using System.Collections.Generic;
 using System.Linq;
 #endif
 
-namespace Tests
+namespace Tests;
+
+internal static class TestHelpers
 {
-    internal static class TestHelpers
+    public static IEnumerable<T> Trim<T>(this IEnumerable<T> xs)
     {
-        public static IEnumerable<T> Trim<T>(this IEnumerable<T> xs)
-        {
-            return xs
+        return xs
 #if DEBUG
-                .Take(1) // can be used to speed up tests during development
+            .Take(1) // can be used to speed up tests during development
 #endif
-                ;
-        }
+            ;
     }
 }

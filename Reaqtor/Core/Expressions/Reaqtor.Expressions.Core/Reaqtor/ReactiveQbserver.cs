@@ -5,24 +5,23 @@
 using System;
 using System.Diagnostics.CodeAnalysis;
 
-namespace Reaqtor.Expressions.Core
+namespace Reaqtor.Expressions.Core;
+
+/// <summary>
+/// Signatures of the available observers to be used in global definitions (DefineObserver).
+/// This class does not contain implementations. Expressions using the observers have to be
+/// rebound to a perticular implementation (Rx or Subscribable) before they can be executed.
+/// </summary>
+[ExcludeFromCodeCoverage]
+public static class ReactiveQbserver
 {
     /// <summary>
-    /// Signatures of the available observers to be used in global definitions (DefineObserver).
-    /// This class does not contain implementations. Expressions using the observers have to be
-    /// rebound to a perticular implementation (Rx or Subscribable) before they can be executed.
+    /// Returns the nop observer.
     /// </summary>
-    [ExcludeFromCodeCoverage]
-    public static class ReactiveQbserver
+    /// <typeparam name="T">Type of the elements processed by the observer.</typeparam>
+    /// <returns>An instance of the nop observer.</returns>
+    public static IReactiveQbserver<T> Nop<T>()
     {
-        /// <summary>
-        /// Returns the nop observer.
-        /// </summary>
-        /// <typeparam name="T">Type of the elements processed by the observer.</typeparam>
-        /// <returns>An instance of the nop observer.</returns>
-        public static IReactiveQbserver<T> Nop<T>()
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

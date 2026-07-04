@@ -8,22 +8,21 @@
 // BD - June 2013 - Created this file.
 //
 
-namespace Reaqtor
-{
-    /// <summary>
-    /// Interface for a subject represented by an expression tree.
-    /// </summary>
-    /// <typeparam name="T">Type of the data received and produced by the subject.</typeparam>
-    public interface IAsyncReactiveQubject<T> : IAsyncReactiveQubject<T, T>
-    {
-    }
+namespace Reaqtor;
 
-    /// <summary>
-    /// Interface for a subject represented by an expression tree.
-    /// </summary>
-    /// <typeparam name="TInput">Type of the data received by the subject.</typeparam>
-    /// <typeparam name="TOutput">Type of the data produced by the subject.</typeparam>
-    public interface IAsyncReactiveQubject<in TInput, out TOutput> : IAsyncReactiveSubject<TInput, TOutput>, IAsyncReactiveQbserver<TInput>, IAsyncReactiveQbservable<TOutput>, IAsyncReactiveQubject
-    {
-    }
+/// <summary>
+/// Interface for a subject represented by an expression tree.
+/// </summary>
+/// <typeparam name="T">Type of the data received and produced by the subject.</typeparam>
+public interface IAsyncReactiveQubject<T> : IAsyncReactiveQubject<T, T>
+{
+}
+
+/// <summary>
+/// Interface for a subject represented by an expression tree.
+/// </summary>
+/// <typeparam name="TInput">Type of the data received by the subject.</typeparam>
+/// <typeparam name="TOutput">Type of the data produced by the subject.</typeparam>
+public interface IAsyncReactiveQubject<in TInput, out TOutput> : IAsyncReactiveSubject<TInput, TOutput>, IAsyncReactiveQbserver<TInput>, IAsyncReactiveQbservable<TOutput>, IAsyncReactiveQubject
+{
 }

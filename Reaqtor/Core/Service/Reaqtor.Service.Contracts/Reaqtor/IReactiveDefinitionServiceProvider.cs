@@ -10,12 +10,11 @@
 
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for definitions operations of a reactive processing service.
+/// </summary>
+public interface IReactiveDefinitionServiceProvider : IReactiveDefinitionServiceProvider<Expression>
 {
-    /// <summary>
-    /// Interface for definitions operations of a reactive processing service.
-    /// </summary>
-    public interface IReactiveDefinitionServiceProvider : IReactiveDefinitionServiceProvider<Expression>
-    {
-    }
 }

@@ -4,10 +4,9 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class IgnoreElements : OperatorTestBase
 {
-    [TestClass]
-    public partial class IgnoreElements : OperatorTestBase
-    {
-    }
 }

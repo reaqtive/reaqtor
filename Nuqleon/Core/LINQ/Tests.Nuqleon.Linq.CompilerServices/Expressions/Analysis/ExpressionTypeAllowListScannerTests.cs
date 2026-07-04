@@ -17,108 +17,107 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class ExpressionTypeAllowListScannerTests
 {
-    [TestClass]
-    public class ExpressionTypeAllowListScannerTests
+    [TestMethod]
+    public void ExpressionTypeAllowListScanner_Errors()
     {
-        [TestMethod]
-        public void ExpressionTypeAllowListScanner_Errors()
+        var ws = new ExpressionTypeAllowListScanner();
+
+        Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable)ws.Types).GetEnumerator());
+        Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable<Type>)ws.Types).GetEnumerator());
+
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ws.Types.Add(type: null));
+        Assert.AreEqual("type", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ws.Types.Add(type: null, includeBase: false));
+        Assert.AreEqual("type", ex2.ParamName);
+    }
+
+    [TestMethod]
+    public void ExpressionTypeAllowListScanner_Simple()
+    {
+        var ws = new ExpressionTypeAllowListScanner
         {
-            var ws = new ExpressionTypeAllowListScanner();
+            Types =
+            {
+                typeof(string),
+                typeof(Func<string, string>),
+                typeof(int),
+            }
+        };
 
-            Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable)ws.Types).GetEnumerator());
-            Assert.ThrowsExactly<NotSupportedException>(() => ((IEnumerable<Type>)ws.Types).GetEnumerator());
-
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ws.Types.Add(type: null));
-            Assert.AreEqual("type", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => ws.Types.Add(type: null, includeBase: false));
-            Assert.AreEqual("type", ex2.ParamName);
+        foreach (var e in new Expression[] {
+            (Expression<Func<string, string>>)(s => s.Substring(0, 1).ToUpper()),
+        })
+        {
+            Assert.AreSame(e, ws.Visit(e));
         }
 
-        [TestMethod]
-        public void ExpressionTypeAllowListScanner_Simple()
+        foreach (var e in new Expression[] {
+            (Expression<Func<string, char>>)(s => s[0]),
+        })
         {
-            var ws = new ExpressionTypeAllowListScanner
-            {
-                Types =
-                {
-                    typeof(string),
-                    typeof(Func<string, string>),
-                    typeof(int),
-                }
-            };
-
-            foreach (var e in new Expression[] {
-                (Expression<Func<string, string>>)(s => s.Substring(0, 1).ToUpper()),
-            })
-            {
-                Assert.AreSame(e, ws.Visit(e));
-            }
-
-            foreach (var e in new Expression[] {
-                (Expression<Func<string, char>>)(s => s[0]),
-            })
-            {
-                Assert.ThrowsExactly<NotSupportedException>(() => ws.Visit(e));
-            }
+            Assert.ThrowsExactly<NotSupportedException>(() => ws.Visit(e));
         }
+    }
 
-        [TestMethod]
-        public void ExpressionTypeAllowListScanner_Generic1()
+    [TestMethod]
+    public void ExpressionTypeAllowListScanner_Generic1()
+    {
+        var ws = new ExpressionTypeAllowListScanner
         {
-            var ws = new ExpressionTypeAllowListScanner
+            Types =
             {
-                Types =
-                {
-                    typeof(List<int>),
-                    typeof(HashSet<>),
-                    typeof(Func<>),
-                }
-            };
+                typeof(List<int>),
+                typeof(HashSet<>),
+                typeof(Func<>),
+            }
+        };
 
-            foreach (var e in new Expression[] {
+        foreach (var e in new Expression[] {
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<List<int>>>)(() => new List<int>()),
-                (Expression<Func<HashSet<int>>>)(() => new HashSet<int>()),
-                (Expression<Func<HashSet<string>>>)(() => new HashSet<string>()),
+            (Expression<Func<List<int>>>)(() => new List<int>()),
+            (Expression<Func<HashSet<int>>>)(() => new HashSet<int>()),
+            (Expression<Func<HashSet<string>>>)(() => new HashSet<string>()),
 #pragma warning restore IDE0004
-            })
-            {
-                Assert.AreSame(e, ws.Visit(e));
-            }
-
-            foreach (var e in new Expression[] {
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<List<string>>>)(() => new List<string>()),
-#pragma warning restore IDE0004
-            })
-            {
-                Assert.ThrowsExactly<NotSupportedException>(() => ws.Visit(e));
-            }
+        })
+        {
+            Assert.AreSame(e, ws.Visit(e));
         }
 
-        [TestMethod]
-        public void ExpressionTypeAllowListScanner_Generic2()
+        foreach (var e in new Expression[] {
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
+            (Expression<Func<List<string>>>)(() => new List<string>()),
+#pragma warning restore IDE0004
+        })
         {
-            var ws = new ExpressionTypeAllowListScanner
-            {
-                Types =
-                {
-                    typeof(IEnumerable<>),
-                    typeof(int),
-                    typeof(bool),
-                    typeof(string),
-                    typeof(Func<,>),
-                }
-            };
+            Assert.ThrowsExactly<NotSupportedException>(() => ws.Visit(e));
+        }
+    }
 
-            foreach (var e in new Expression[] {
-                (Expression<Func<IEnumerable<int>, IEnumerable<string>>>)(xs => from x in xs where x > 0 select x.ToString()),
-            })
+    [TestMethod]
+    public void ExpressionTypeAllowListScanner_Generic2()
+    {
+        var ws = new ExpressionTypeAllowListScanner
+        {
+            Types =
             {
-                Assert.AreSame(e, ws.Visit(e));
+                typeof(IEnumerable<>),
+                typeof(int),
+                typeof(bool),
+                typeof(string),
+                typeof(Func<,>),
             }
+        };
+
+        foreach (var e in new Expression[] {
+            (Expression<Func<IEnumerable<int>, IEnumerable<string>>>)(xs => from x in xs where x > 0 select x.ToString()),
+        })
+        {
+            Assert.AreSame(e, ws.Visit(e));
         }
     }
 }

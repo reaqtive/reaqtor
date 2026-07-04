@@ -10,60 +10,59 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reaqtive;
 using Reaqtive.Scheduler;
 
-namespace Test.Reaqtive
+namespace Test.Reaqtive;
+
+[TestClass]
+public class OperatorContextTests
 {
-    [TestClass]
-    public class OperatorContextTests
+    [TestMethod]
+    public void OperatorContext_ArgumentChecking()
     {
-        [TestMethod]
-        public void OperatorContext_ArgumentChecking()
-        {
-            var ur = new Uri("bing://foo/bar");
+        var ur = new Uri("bing://foo/bar");
 
-            using var ph = PhysicalScheduler.Create();
-            using var sh = new LogicalScheduler(ph);
+        using var ph = PhysicalScheduler.Create();
+        using var sh = new LogicalScheduler(ph);
 
-            var tc = new TraceSource("foo");
-            var ee = new Environment();
+        var tc = new TraceSource("foo");
+        var ee = new Environment();
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            Assert.ThrowsExactly<ArgumentNullException>(() => new OperatorContext(default(Uri), sh, tc, ee));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new OperatorContext(ur, default(IScheduler), tc, ee));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new OperatorContext(default(Uri), sh, tc, ee));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new OperatorContext(ur, default(IScheduler), tc, ee));
 #pragma warning restore IDE0034 // Simplify 'default' expression
+    }
+
+    [TestMethod]
+    public void OperatorContext_Simple()
+    {
+        var ur = new Uri("bing://foo/bar");
+
+        using var ph = PhysicalScheduler.Create();
+        using var sh = new LogicalScheduler(ph);
+
+        var tc = new TraceSource("foo");
+        var ee = new Environment();
+
+        var ctx = new OperatorContext(ur, sh, tc, ee);
+
+        Assert.AreSame(ur, ctx.InstanceId);
+        Assert.AreSame(sh, ctx.Scheduler);
+        Assert.AreSame(tc, ctx.TraceSource);
+        Assert.AreSame(ee, ctx.ExecutionEnvironment);
+
+        Assert.IsFalse(ctx.TryGetElement<string>("foo", out var s) && s == null);
+    }
+
+    private sealed class Environment : IExecutionEnvironment
+    {
+        public IMultiSubject<TInput, TOutput> GetSubject<TInput, TOutput>(Uri uri)
+        {
+            throw new NotImplementedException();
         }
 
-        [TestMethod]
-        public void OperatorContext_Simple()
+        public ISubscription GetSubscription(Uri uri)
         {
-            var ur = new Uri("bing://foo/bar");
-
-            using var ph = PhysicalScheduler.Create();
-            using var sh = new LogicalScheduler(ph);
-
-            var tc = new TraceSource("foo");
-            var ee = new Environment();
-
-            var ctx = new OperatorContext(ur, sh, tc, ee);
-
-            Assert.AreSame(ur, ctx.InstanceId);
-            Assert.AreSame(sh, ctx.Scheduler);
-            Assert.AreSame(tc, ctx.TraceSource);
-            Assert.AreSame(ee, ctx.ExecutionEnvironment);
-
-            Assert.IsFalse(ctx.TryGetElement<string>("foo", out var s) && s == null);
-        }
-
-        private sealed class Environment : IExecutionEnvironment
-        {
-            public IMultiSubject<TInput, TOutput> GetSubject<TInput, TOutput>(Uri uri)
-            {
-                throw new NotImplementedException();
-            }
-
-            public ISubscription GetSubscription(Uri uri)
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
         }
     }
 }

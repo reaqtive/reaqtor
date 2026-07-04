@@ -9,155 +9,154 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.Reaqtor.Shared.Core.Reaqtor
+namespace Tests.Reaqtor.Shared.Core.Reaqtor;
+
+[TestClass]
+public class StructuralTypeSubstitutionExpressionVisitorTests
 {
-    [TestClass]
-    public class StructuralTypeSubstitutionExpressionVisitorTests
+    [TestMethod]
+    public void StructuralTypeSubstitutionExpressionVisitor_IntToLongMappingMissing_ThrowsInvalidOperation()
     {
-        [TestMethod]
-        public void StructuralTypeSubstitutionExpressionVisitor_IntToLongMappingMissing_ThrowsInvalidOperation()
+        var type1 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
         {
-            var type1 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            }, valueEquality: true);
+            { "Foo", typeof(int) }
+        }, valueEquality: true);
 
-            var type2 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(long) }
-            }, valueEquality: true);
-
-            var expr = Expression.Constant(Activator.CreateInstance(type1));
-
-            var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
-
-            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
-        }
-
-        [TestMethod]
-        public void StructuralTypeSubstitutionExpressionVisitor_Record_MissingProperty_ThrowsInvalidOperation()
+        var type2 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
         {
-            var type1 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            }, valueEquality: true);
+            { "Foo", typeof(long) }
+        }, valueEquality: true);
 
-            var type2 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
-            {
-                { "Bar", typeof(long) }
-            }, valueEquality: true);
+        var expr = Expression.Constant(Activator.CreateInstance(type1));
 
-            var expr = Expression.Constant(Activator.CreateInstance(type1));
+        var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
 
-            var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
+        Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
+    }
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
-        }
-
-        [TestMethod]
-        public void StructuralTypeSubstitutionExpressionVisitor_Anonymous_MissingProperty_ThrowsInvalidOperation()
+    [TestMethod]
+    public void StructuralTypeSubstitutionExpressionVisitor_Record_MissingProperty_ThrowsInvalidOperation()
+    {
+        var type1 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
         {
-            var type1 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            });
+            { "Foo", typeof(int) }
+        }, valueEquality: true);
 
-            var type2 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
-            {
-                { "Bar", typeof(int) }
-            });
-
-            var expr = Expression.Constant(Activator.CreateInstance(type1, 0));
-
-            var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
-
-            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
-        }
-
-        [TestMethod]
-        public void StructuralTypeSubstitutionExpressionVisitor_RecordToAnonymous_ThrowsInvalidOperation()
+        var type2 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
         {
-            var type1 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            }, valueEquality: true);
+            { "Bar", typeof(long) }
+        }, valueEquality: true);
 
-            var type2 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            });
+        var expr = Expression.Constant(Activator.CreateInstance(type1));
 
-            var expr = Expression.Constant(Activator.CreateInstance(type1));
+        var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
 
-            var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
+        Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
+    }
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
-        }
-
-        [TestMethod]
-        public void StructuralTypeSubstitutionExpressionVisitor_Record_Success()
+    [TestMethod]
+    public void StructuralTypeSubstitutionExpressionVisitor_Anonymous_MissingProperty_ThrowsInvalidOperation()
+    {
+        var type1 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
         {
-            var type1 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            }, valueEquality: true);
+            { "Foo", typeof(int) }
+        });
 
-            var type2 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            }, valueEquality: true);
-
-            var expr = Expression.Constant(Activator.CreateInstance(type1));
-
-            var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
-
-            var result = visitor.Visit(expr);
-
-            Assert.AreEqual(type2, result.Type);
-        }
-
-        [TestMethod]
-        public void StructuralTypeSubstitutionExpressionVisitor_Anonymous_Success()
+        var type2 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
         {
-            var type1 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            });
+            { "Bar", typeof(int) }
+        });
 
-            var type2 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            });
+        var expr = Expression.Constant(Activator.CreateInstance(type1, 0));
 
-            var expr = Expression.Constant(Activator.CreateInstance(type1, 0));
+        var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
 
-            var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
+        Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
+    }
 
-            var result = visitor.Visit(expr);
-
-            Assert.AreEqual(type2, result.Type);
-        }
-
-        [TestMethod]
-        public void StructuralTypeSubstitutionExpressionVisitor_NullValue_Success()
+    [TestMethod]
+    public void StructuralTypeSubstitutionExpressionVisitor_RecordToAnonymous_ThrowsInvalidOperation()
+    {
+        var type1 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
         {
-            var type1 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            });
+            { "Foo", typeof(int) }
+        }, valueEquality: true);
 
-            var type2 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
-            {
-                { "Foo", typeof(int) }
-            });
+        var type2 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
+        {
+            { "Foo", typeof(int) }
+        });
 
-            var expr = Expression.Constant(null, type1);
+        var expr = Expression.Constant(Activator.CreateInstance(type1));
 
-            var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
+        var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
 
-            var result = visitor.Visit(expr);
+        Assert.ThrowsExactly<InvalidOperationException>(() => visitor.Visit(expr));
+    }
 
-            Assert.AreEqual(type2, result.Type);
-        }
+    [TestMethod]
+    public void StructuralTypeSubstitutionExpressionVisitor_Record_Success()
+    {
+        var type1 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
+        {
+            { "Foo", typeof(int) }
+        }, valueEquality: true);
+
+        var type2 = RuntimeCompiler.CreateRecordType(new Dictionary<string, Type>
+        {
+            { "Foo", typeof(int) }
+        }, valueEquality: true);
+
+        var expr = Expression.Constant(Activator.CreateInstance(type1));
+
+        var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
+
+        var result = visitor.Visit(expr);
+
+        Assert.AreEqual(type2, result.Type);
+    }
+
+    [TestMethod]
+    public void StructuralTypeSubstitutionExpressionVisitor_Anonymous_Success()
+    {
+        var type1 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
+        {
+            { "Foo", typeof(int) }
+        });
+
+        var type2 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
+        {
+            { "Foo", typeof(int) }
+        });
+
+        var expr = Expression.Constant(Activator.CreateInstance(type1, 0));
+
+        var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
+
+        var result = visitor.Visit(expr);
+
+        Assert.AreEqual(type2, result.Type);
+    }
+
+    [TestMethod]
+    public void StructuralTypeSubstitutionExpressionVisitor_NullValue_Success()
+    {
+        var type1 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
+        {
+            { "Foo", typeof(int) }
+        });
+
+        var type2 = RuntimeCompiler.CreateAnonymousType(new Dictionary<string, Type>
+        {
+            { "Foo", typeof(int) }
+        });
+
+        var expr = Expression.Constant(null, type1);
+
+        var visitor = new StructuralTypeSubstitutionExpressionVisitor(new Dictionary<Type, Type> { { type1, type2 } });
+
+        var result = visitor.Visit(expr);
+
+        Assert.AreEqual(type2, result.Type);
     }
 }

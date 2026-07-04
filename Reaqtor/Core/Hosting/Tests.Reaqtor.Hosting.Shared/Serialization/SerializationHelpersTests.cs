@@ -8,19 +8,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor.Hosting.Shared.Serialization;
 
-namespace Tests.Microsoft.Hosting.Shared.Serialization
+namespace Tests.Microsoft.Hosting.Shared.Serialization;
+
+[TestClass]
+public class SerializationHelpersTests
 {
-    [TestClass]
-    public class SerializationHelpersTests
+    [TestMethod]
+    public void SerializationHelpers_ArgumentChecks()
     {
-        [TestMethod]
-        public void SerializationHelpers_ArgumentChecks()
-        {
-            var serializationHelpers = new SerializationHelpers();
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => serializationHelpers.Serialize(default(object), null));
-            Assert.AreEqual("stream", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => serializationHelpers.Deserialize<object>(null));
-            Assert.AreEqual("stream", ex2.ParamName);
-        }
+        var serializationHelpers = new SerializationHelpers();
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => serializationHelpers.Serialize(default(object), null));
+        Assert.AreEqual("stream", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => serializationHelpers.Deserialize<object>(null));
+        Assert.AreEqual("stream", ex2.ParamName);
     }
 }

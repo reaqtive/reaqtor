@@ -10,33 +10,32 @@
 
 using System.Reflection;
 
-namespace System.Linq.CompilerServices.Reflection
+namespace System.Linq.CompilerServices.Reflection;
+
+internal static class PropertyInfoExtensions
 {
-    internal static class PropertyInfoExtensions
+    internal static bool IsStatic(this PropertyInfo property) => GetPropertyAccessor(property).IsStatic;
+
+    internal static bool IsPublic(this PropertyInfo property) => GetPropertyAccessor(property).IsPublic;
+
+    internal static MethodInfo GetPropertyAccessor(PropertyInfo property) => property.GetGetMethod() ?? property.GetSetMethod();
+
+    internal static string ToCSharpString(this PropertyInfo property)
     {
-        internal static bool IsStatic(this PropertyInfo property) => GetPropertyAccessor(property).IsStatic;
+        // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
 
-        internal static bool IsPublic(this PropertyInfo property) => GetPropertyAccessor(property).IsPublic;
+        var hasGet = property.GetGetMethod() != null;
+        var hasSet = property.GetSetMethod() != null;
 
-        internal static MethodInfo GetPropertyAccessor(PropertyInfo property) => property.GetGetMethod() ?? property.GetSetMethod();
+        var accessors = " { ";
+        if (hasGet)
+            accessors += "get; ";
+        if (hasSet)
+            accessors += "set; ";
+        accessors += "}";
 
-        internal static string ToCSharpString(this PropertyInfo property)
-        {
-            // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
+        var dot = IsStatic(property) ? "::" : ".";
 
-            var hasGet = property.GetGetMethod() != null;
-            var hasSet = property.GetSetMethod() != null;
-
-            var accessors = " { ";
-            if (hasGet)
-                accessors += "get; ";
-            if (hasSet)
-                accessors += "set; ";
-            accessors += "}";
-
-            var dot = IsStatic(property) ? "::" : ".";
-
-            return property.PropertyType.ToCSharpString() + " " + property.DeclaringType.ToCSharpString() + dot + property.Name + accessors;
-        }
+        return property.PropertyType.ToCSharpString() + " " + property.DeclaringType.ToCSharpString() + dot + property.Name + accessors;
     }
 }

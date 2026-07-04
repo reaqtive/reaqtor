@@ -15,30 +15,29 @@ using System.Threading.Tasks;
 
 using Reaqtor;
 
-namespace Tests.Reaqtor.Expressions.Core
+namespace Tests.Reaqtor.Expressions.Core;
+
+public sealed class MyAsyncReactiveQbserver<T> : AsyncReactiveQbserverBase<T>
 {
-    public sealed class MyAsyncReactiveQbserver<T> : AsyncReactiveQbserverBase<T>
+    private readonly Expression _expression;
+
+    public MyAsyncReactiveQbserver(IAsyncReactiveQueryProvider provider)
+        : base(provider)
     {
-        private readonly Expression _expression;
-
-        public MyAsyncReactiveQbserver(IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            _expression = Expression.Constant(this);
-        }
-
-        public MyAsyncReactiveQbserver(IAsyncReactiveQueryProvider provider, Expression expression)
-            : base(provider)
-        {
-            _expression = expression;
-        }
-
-        public override Expression Expression => _expression;
-
-        protected override Task OnNextAsyncCore(T value, CancellationToken token) => throw new NotImplementedException();
-
-        protected override Task OnErrorAsyncCore(Exception error, CancellationToken token) => throw new NotImplementedException();
-
-        protected override Task OnCompletedAsyncCore(CancellationToken token) => throw new NotImplementedException();
+        _expression = Expression.Constant(this);
     }
+
+    public MyAsyncReactiveQbserver(IAsyncReactiveQueryProvider provider, Expression expression)
+        : base(provider)
+    {
+        _expression = expression;
+    }
+
+    public override Expression Expression => _expression;
+
+    protected override Task OnNextAsyncCore(T value, CancellationToken token) => throw new NotImplementedException();
+
+    protected override Task OnErrorAsyncCore(Exception error, CancellationToken token) => throw new NotImplementedException();
+
+    protected override Task OnCompletedAsyncCore(CancellationToken token) => throw new NotImplementedException();
 }

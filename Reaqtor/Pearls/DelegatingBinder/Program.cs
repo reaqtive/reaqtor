@@ -10,96 +10,95 @@ using System.Reactive.Linq;
 
 #pragma warning disable CA1303 // Do not pass literals as localized parameters. (No localization in sample code.)
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal static class Program
 {
-    internal static class Program
+    private static readonly string[] s_keyNames = ["Homer", "Bart", "Lisa"];
+
+    public static void Main()
     {
-        private static readonly string[] s_keyNames = ["Homer", "Bart", "Lisa"];
+        Demo();
+        Perf();
+    }
 
-        public static void Main()
-        {
-            Demo();
-            Perf();
-        }
+    private static void Demo()
+    {
+        var service = new Service();
+        var client = new Client(service);
 
-        private static void Demo()
-        {
-            var service = new Service();
-            var client = new Client(service);
+        client.GetSubjectFactory<Person>("subject/partitioned").Create("people");
 
-            client.GetSubjectFactory<Person>("subject/partitioned").Create("people");
+        var sub = client.GetObservable<Person>("people").Where(x => x.Name == "Bart").Select(x => x.ToString()).Subscribe("sub", client.GetObserver<string>("cout"));
 
-            var sub = client.GetObservable<Person>("people").Where(x => x.Name == "Bart").Select(x => x.ToString()).Subscribe("sub", client.GetObserver<string>("cout"));
+        var xs = client.GetObserver<Person>("people");
+        xs.OnNext(new Person { Name = "Homer", Age = 38 });
+        xs.OnNext(new Person { Name = "Bart", Age = 10 });
+        xs.OnNext(new Person { Name = "Lisa", Age = 8 });
 
-            var xs = client.GetObserver<Person>("people");
-            xs.OnNext(new Person { Name = "Homer", Age = 38 });
-            xs.OnNext(new Person { Name = "Bart", Age = 10 });
-            xs.OnNext(new Person { Name = "Lisa", Age = 8 });
+        sub.Dispose();
+    }
 
-            sub.Dispose();
-        }
+    private static void Perf()
+    {
+        var I = 2;     // number of interesting keys
+        var K = 10000; // number of subscriptions per interesting key (I)
 
-        private static void Perf()
-        {
-            var I = 2;     // number of interesting keys
-            var K = 10000; // number of subscriptions per interesting key (I)
-
-            var J = 3;     // number of keys with events
-            var N = 10000; // number of events sent per key (J)
+        var J = 3;     // number of keys with events
+        var N = 10000; // number of events sent per key (J)
 
 #pragma warning disable CA5394 // Do not use insecure randomness. (No security needed for this sample.)
-            var r = Random.Shared;
-            var keys = s_keyNames.Take(I).SelectMany(n => Enumerable.Repeat(n, K)).OrderBy(_ => r.Next()).ToArray();
-            var events = new[] { new Person { Name = "Homer", Age = 38 }, new Person { Name = "Bart", Age = 10 }, new Person { Name = "Lisa", Age = 8 } }.Take(J).SelectMany(e => Enumerable.Repeat(e, N)).OrderBy(_ => r.Next()).ToArray();
+        var r = Random.Shared;
+        var keys = s_keyNames.Take(I).SelectMany(n => Enumerable.Repeat(n, K)).OrderBy(_ => r.Next()).ToArray();
+        var events = new[] { new Person { Name = "Homer", Age = 38 }, new Person { Name = "Bart", Age = 10 }, new Person { Name = "Lisa", Age = 8 } }.Take(J).SelectMany(e => Enumerable.Repeat(e, N)).OrderBy(_ => r.Next()).ToArray();
 #pragma warning restore CA5394
 
-            Perf("subject", keys, events);
-            Perf("subject/partitioned", keys, events);
-        }
-
-        private static void Perf(string streamFactory, IEnumerable<string> keys, IEnumerable<Person> events)
-        {
-            var service = new Service();
-            var client = new Client(service);
-
-            client.GetSubjectFactory<Person>(streamFactory).Create("people");
-
-            var people = client.GetObservable<Person>("people");
-            var nop = client.GetObserver<string>("nop");
-
-            Console.Write("Subscribing... ");
-
-            var sw = Stopwatch.StartNew();
-
-            var i = 0;
-            foreach (var key in keys)
-            {
-                people.Where(x => x.Name == key).Select(x => x.ToString()).Subscribe("sub" + i, nop); // NOTE: This path is not optimized (cf. compiled delegate caching in IRP)
-                i++;
-            }
-
-            Console.WriteLine("Done. " + sw.Elapsed);
-
-            var xs = client.GetObserver<Person>("people");
-
-            Console.Write("Publishing... ");
-
-            sw.Restart();
-
-            foreach (var person in events)
-            {
-                xs.OnNext(person);
-            }
-
-            Console.WriteLine("Done. " + sw.Elapsed);
-        }
+        Perf("subject", keys, events);
+        Perf("subject/partitioned", keys, events);
     }
 
-    internal class Person
+    private static void Perf(string streamFactory, IEnumerable<string> keys, IEnumerable<Person> events)
     {
-        public string Name { get; set; }
-        public int Age { get; set; }
+        var service = new Service();
+        var client = new Client(service);
 
-        public override string ToString() => Name + " is " + Age;
+        client.GetSubjectFactory<Person>(streamFactory).Create("people");
+
+        var people = client.GetObservable<Person>("people");
+        var nop = client.GetObserver<string>("nop");
+
+        Console.Write("Subscribing... ");
+
+        var sw = Stopwatch.StartNew();
+
+        var i = 0;
+        foreach (var key in keys)
+        {
+            people.Where(x => x.Name == key).Select(x => x.ToString()).Subscribe("sub" + i, nop); // NOTE: This path is not optimized (cf. compiled delegate caching in IRP)
+            i++;
+        }
+
+        Console.WriteLine("Done. " + sw.Elapsed);
+
+        var xs = client.GetObserver<Person>("people");
+
+        Console.Write("Publishing... ");
+
+        sw.Restart();
+
+        foreach (var person in events)
+        {
+            xs.OnNext(person);
+        }
+
+        Console.WriteLine("Done. " + sw.Elapsed);
     }
+}
+
+internal class Person
+{
+    public string Name { get; set; }
+    public int Age { get; set; }
+
+    public override string ToString() => Name + " is " + Age;
 }

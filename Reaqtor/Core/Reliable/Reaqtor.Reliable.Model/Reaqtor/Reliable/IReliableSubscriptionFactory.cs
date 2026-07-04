@@ -2,15 +2,14 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace Reaqtor.Reliable
-{
-    public interface IReliableSubscriptionFactory
-    {
-        IReliableSubscription Create();
-    }
+namespace Reaqtor.Reliable;
 
-    public interface IReliableSubscriptionFactory<TArgs>
-    {
-        IReliableSubscription Create(TArgs argument);
-    }
+public interface IReliableSubscriptionFactory
+{
+    IReliableSubscription Create();
+}
+
+public interface IReliableSubscriptionFactory<TArgs>
+{
+    IReliableSubscription Create(TArgs argument);
 }

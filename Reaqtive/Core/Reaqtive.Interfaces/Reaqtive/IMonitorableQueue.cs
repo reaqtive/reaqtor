@@ -8,27 +8,26 @@ using System;
 #pragma warning disable CA1003 // Non-default events.
 #pragma warning disable CA1711 // Name ends with Queue.
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// A queue with events for enqueue and dequeue operations for monitoring.
+/// </summary>
+/// <typeparam name="T">The type of items in the queue.</typeparam>
+public interface IMonitorableQueue<out T>
 {
     /// <summary>
-    /// A queue with events for enqueue and dequeue operations for monitoring.
+    /// Event raised before dequeueing. The argument is the enqueued item.
     /// </summary>
-    /// <typeparam name="T">The type of items in the queue.</typeparam>
-    public interface IMonitorableQueue<out T>
-    {
-        /// <summary>
-        /// Event raised before dequeueing. The argument is the enqueued item.
-        /// </summary>
-        event Action<T> Enqueueing;
+    event Action<T> Enqueueing;
 
-        /// <summary>
-        /// Event raised before dequeueing. The argument is the dequeued item.
-        /// </summary>
-        event Action<T> Dequeued;
+    /// <summary>
+    /// Event raised before dequeueing. The argument is the dequeued item.
+    /// </summary>
+    event Action<T> Dequeued;
 
-        /// <summary>
-        /// The size of the queue.
-        /// </summary>
-        int QueueSize { get; }
-    }
+    /// <summary>
+    /// The size of the queue.
+    /// </summary>
+    int QueueSize { get; }
 }

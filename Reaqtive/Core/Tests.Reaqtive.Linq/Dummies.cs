@@ -6,78 +6,77 @@ using System;
 
 using Reaqtive;
 
-namespace Test.Reaqtive
+namespace Test.Reaqtive;
+
+internal static class DummyFunc<T>
 {
-    internal static class DummyFunc<T>
+    public static readonly Func<T> Instance = () => { throw new NotImplementedException(); };
+}
+
+internal static class DummyFunc<T, U>
+{
+    public static readonly Func<T, U> Instance = t => { throw new NotImplementedException(); };
+}
+
+internal static class DummyFunc<T, U, V>
+{
+    public static readonly Func<T, U, V> Instance = (t, u) => { throw new NotImplementedException(); };
+}
+
+internal static class DummyAction
+{
+    public static readonly Action Instance = () => { throw new NotImplementedException(); };
+}
+
+internal static class DummyAction<T>
+{
+    public static readonly Action<T> Instance = t => { throw new NotImplementedException(); };
+}
+
+internal static class DummyAction<T, U>
+{
+    public static readonly Action<T, U> Instance = (t, u) => { throw new NotImplementedException(); };
+}
+
+internal sealed class DummyObserver<T> : IObserver<T>
+{
+    public static readonly DummyObserver<T> Instance = new();
+
+    private DummyObserver()
     {
-        public static readonly Func<T> Instance = () => { throw new NotImplementedException(); };
     }
 
-    internal static class DummyFunc<T, U>
+    public void OnCompleted()
     {
-        public static readonly Func<T, U> Instance = t => { throw new NotImplementedException(); };
+        throw new NotImplementedException();
     }
 
-    internal static class DummyFunc<T, U, V>
+    public void OnError(Exception error)
     {
-        public static readonly Func<T, U, V> Instance = (t, u) => { throw new NotImplementedException(); };
+        throw new NotImplementedException();
     }
 
-    internal static class DummyAction
+    public void OnNext(T value)
     {
-        public static readonly Action Instance = () => { throw new NotImplementedException(); };
+        throw new NotImplementedException();
+    }
+}
+
+internal sealed class DummySubscribable<T> : ISubscribable<T>
+{
+    public static readonly DummySubscribable<T> Instance = new();
+
+    private DummySubscribable()
+    {
     }
 
-    internal static class DummyAction<T>
+    public ISubscription Subscribe(IObserver<T> observer)
     {
-        public static readonly Action<T> Instance = t => { throw new NotImplementedException(); };
+        throw new NotImplementedException();
     }
 
-    internal static class DummyAction<T, U>
+    IDisposable IObservable<T>.Subscribe(IObserver<T> observer)
     {
-        public static readonly Action<T, U> Instance = (t, u) => { throw new NotImplementedException(); };
-    }
-
-    internal sealed class DummyObserver<T> : IObserver<T>
-    {
-        public static readonly DummyObserver<T> Instance = new();
-
-        private DummyObserver()
-        {
-        }
-
-        public void OnCompleted()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnError(Exception error)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void OnNext(T value)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-    internal sealed class DummySubscribable<T> : ISubscribable<T>
-    {
-        public static readonly DummySubscribable<T> Instance = new();
-
-        private DummySubscribable()
-        {
-        }
-
-        public ISubscription Subscribe(IObserver<T> observer)
-        {
-            throw new NotImplementedException();
-        }
-
-        IDisposable IObservable<T>.Subscribe(IObserver<T> observer)
-        {
-            throw new NotImplementedException();
-        }
+        throw new NotImplementedException();
     }
 }

@@ -4,21 +4,20 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
-{
-    [TestClass]
-    public partial class MinMax : OperatorTestBase
-    {
-        [TestInitialize]
-        public void Initialize()
-        {
-            base.TestInitialize();
-        }
+namespace Test.Reaqtive.Operators;
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            base.TestCleanup();
-        }
+[TestClass]
+public partial class MinMax : OperatorTestBase
+{
+    [TestInitialize]
+    public void Initialize()
+    {
+        base.TestInitialize();
+    }
+
+    [TestCleanup]
+    public void Cleanup()
+    {
+        base.TestCleanup();
     }
 }

@@ -10,51 +10,50 @@
 
 using Reaqtive.Storage;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal interface IPersistedListOperationFactory<T> : IListOperationFactory<T>, IPersistedOperationFactory<IPersistedList<T>>
 {
-    internal interface IPersistedListOperationFactory<T> : IListOperationFactory<T>, IPersistedOperationFactory<IPersistedList<T>>
+}
+
+internal static class PersistedListOperation
+{
+    public static IPersistedListOperationFactory<T> WithType<T>() => new PersistedListOperationFactory<T>();
+
+    private sealed class PersistedListOperationFactory<T> : IPersistedListOperationFactory<T>
     {
-    }
+        public AddCollectionOperation<T> Add(T value) => ListOperation.Add(value);
 
-    internal static class PersistedListOperation
-    {
-        public static IPersistedListOperationFactory<T> WithType<T>() => new PersistedListOperationFactory<T>();
+        public ClearCollectionOperation<T> Clear() => ListOperation.Clear<T>();
 
-        private sealed class PersistedListOperationFactory<T> : IPersistedListOperationFactory<T>
-        {
-            public AddCollectionOperation<T> Add(T value) => ListOperation.Add(value);
+        public ContainsCollectionOperation<T> Contains(T value) => ListOperation.Contains(value);
 
-            public ClearCollectionOperation<T> Clear() => ListOperation.Clear<T>();
+        public CopyToCollectionOperation<T> CopyTo(T[] array, int index) => ListOperation.CopyTo(array, index);
 
-            public ContainsCollectionOperation<T> Contains(T value) => ListOperation.Contains(value);
+        public CountReadOnlyCollectionOperation<T> Count() => ListOperation.Count<T>();
 
-            public CopyToCollectionOperation<T> CopyTo(T[] array, int index) => ListOperation.CopyTo(array, index);
+        public EnumerateEnumerableOperation<T> Enumerate() => ListOperation.Enumerate<T>();
 
-            public CountReadOnlyCollectionOperation<T> Count() => ListOperation.Count<T>();
+        public GetReadOnlyListOperation<T> Get(int index) => ListOperation.Get<T>(index);
 
-            public EnumerateEnumerableOperation<T> Enumerate() => ListOperation.Enumerate<T>();
+        public GetIdPersistedOperation<IPersistedList<T>> GetId() => GetId<IPersistedList<T>>();
 
-            public GetReadOnlyListOperation<T> Get(int index) => ListOperation.Get<T>(index);
+        public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
 
-            public GetIdPersistedOperation<IPersistedList<T>> GetId() => GetId<IPersistedList<T>>();
+        public IndexOfListOperation<T> IndexOf(T value) => ListOperation.IndexOf(value);
 
-            public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
+        public InsertListOperation<T> Insert(int index, T value) => ListOperation.Insert(index, value);
 
-            public IndexOfListOperation<T> IndexOf(T value) => ListOperation.IndexOf(value);
+        public IsReadOnlyCollectionOperation<T> IsReadOnly() => ListOperation.IsReadOnly<T>();
 
-            public InsertListOperation<T> Insert(int index, T value) => ListOperation.Insert(index, value);
+        public RemoveCollectionOperation<T> Remove(T value) => ListOperation.Remove(value);
 
-            public IsReadOnlyCollectionOperation<T> IsReadOnly() => ListOperation.IsReadOnly<T>();
+        public RemoveAtListOperation<T> RemoveAt(int index) => ListOperation.RemoveAt<T>(index);
 
-            public RemoveCollectionOperation<T> Remove(T value) => ListOperation.Remove(value);
+        public SetListOperation<T> Set(int index, T value) => ListOperation.Set(index, value);
 
-            public RemoveAtListOperation<T> RemoveAt(int index) => ListOperation.RemoveAt<T>(index);
+        public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
 
-            public SetListOperation<T> Set(int index, T value) => ListOperation.Set(index, value);
-
-            public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
-
-            public ThisResultOperation<IPersistedList<T>> This() => This<IPersistedList<T>>();
-        }
+        public ThisResultOperation<IPersistedList<T>> This() => This<IPersistedList<T>>();
     }
 }

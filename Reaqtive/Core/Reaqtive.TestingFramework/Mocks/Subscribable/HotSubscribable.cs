@@ -7,25 +7,24 @@ using System.Collections.Generic;
 
 using Reaqtive.Testing;
 
-namespace Reaqtive.TestingFramework.Mocks
+namespace Reaqtive.TestingFramework.Mocks;
+
+internal class HotSubscribable<T> : MockSubscribable<T>
 {
-    internal class HotSubscribable<T> : MockSubscribable<T>
+    public HotSubscribable(TestScheduler scheduler, params Recorded<Notification<T>>[] actions)
+        : base(scheduler)
     {
-        public HotSubscribable(TestScheduler scheduler, params Recorded<Notification<T>>[] actions)
-            : base(scheduler)
+        ObserverMessages = actions ?? throw new ArgumentNullException(nameof(actions));
+
+        foreach (Recorded<Notification<T>> action in actions)
         {
-            ObserverMessages = actions ?? throw new ArgumentNullException(nameof(actions));
-
-            foreach (Recorded<Notification<T>> action in actions)
-            {
-                var notification = action.Value;
-                scheduler.ScheduleAbsolute(
-                    default(object),
-                    action.Time,
-                    (scheduler1, state1) => notification.Accept(TheObserver));
-            }
+            var notification = action.Value;
+            scheduler.ScheduleAbsolute(
+                default(object),
+                action.Time,
+                (scheduler1, state1) => notification.Accept(TheObserver));
         }
-
-        public override IList<Recorded<Notification<T>>> ObserverMessages { get; }
     }
+
+    public override IList<Recorded<Notification<T>>> ObserverMessages { get; }
 }

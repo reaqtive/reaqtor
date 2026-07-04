@@ -6,155 +6,154 @@ using System;
 using System.Diagnostics;
 using System.Threading;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+/// <summary>
+/// In-memory Checkpoint storage provider.
+/// Keeps the latest full checkpoint in memory and at most one ongoing checkpoint.
+/// </summary>
+public class InMemoryStorageProvider : ICheckpointStorageProvider
 {
+    private volatile CheckpointInfo _latestFullCheckpoint;
+    private volatile CheckpointInfo _currentCheckpoint;
+    private readonly Lock _lock = new();
+
     /// <summary>
-    /// In-memory Checkpoint storage provider.
-    /// Keeps the latest full checkpoint in memory and at most one ongoing checkpoint.
+    /// Start a new (full) checkpoint with the provided identifier.
+    /// <remarks> A new checkpoint cannot be started while another is ongoing.</remarks>
     /// </summary>
-    public class InMemoryStorageProvider : ICheckpointStorageProvider
+    /// <param name="id">Identifier for the checkpoint.</param>
+    /// <returns>A writer which is used to store the state.</returns>
+    public IStateWriter StartNewCheckpoint(string id)
     {
-        private volatile CheckpointInfo _latestFullCheckpoint;
-        private volatile CheckpointInfo _currentCheckpoint;
-        private readonly Lock _lock = new();
+        return CreateCheckpoint(id, CheckpointKind.Full);
+    }
 
-        /// <summary>
-        /// Start a new (full) checkpoint with the provided identifier.
-        /// <remarks> A new checkpoint cannot be started while another is ongoing.</remarks>
-        /// </summary>
-        /// <param name="id">Identifier for the checkpoint.</param>
-        /// <returns>A writer which is used to store the state.</returns>
-        public IStateWriter StartNewCheckpoint(string id)
+    /// <summary>
+    /// Update the checkpoint with the provided identifier.
+    /// This coresponds to a differential checkpoint.
+    /// <remarks> A new checkpoint cannot be started while another is ongoing.</remarks>
+    /// </summary>
+    /// <param name="id">Identifier for the checkpoint</param>
+    /// <returns>A writer which is used to store the state.</returns>
+    public IStateWriter UpdateCheckpoint(string id)
+    {
+        return CreateCheckpoint(id, CheckpointKind.Differential);
+    }
+
+    /// <summary>
+    /// Read the state contained in the latest full checkpoint.
+    /// In case of success, the identifier of the checkpoint as well as a reader
+    /// are provided.
+    /// </summary>
+    /// <param name="id">Identifier for the checkpoint</param>
+    /// <param name="reader">A reader which is used to extract the state.</param>
+    /// <returns><b>true</b> if a full checkpoint is available, <b>false</b> otherwise.</returns>
+    public bool TryReadCheckpoint(out string id, out IStateReader reader)
+    {
+        CheckpointInfo latest = _latestFullCheckpoint;
+
+        if (latest == null)
         {
-            return CreateCheckpoint(id, CheckpointKind.Full);
+            reader = default;
+            id = default;
+            return false;
         }
 
-        /// <summary>
-        /// Update the checkpoint with the provided identifier.
-        /// This coresponds to a differential checkpoint.
-        /// <remarks> A new checkpoint cannot be started while another is ongoing.</remarks>
-        /// </summary>
-        /// <param name="id">Identifier for the checkpoint</param>
-        /// <returns>A writer which is used to store the state.</returns>
-        public IStateWriter UpdateCheckpoint(string id)
-        {
-            return CreateCheckpoint(id, CheckpointKind.Differential);
-        }
+        reader = new InMemoryStateReader(latest.Store);
 
-        /// <summary>
-        /// Read the state contained in the latest full checkpoint.
-        /// In case of success, the identifier of the checkpoint as well as a reader
-        /// are provided.
-        /// </summary>
-        /// <param name="id">Identifier for the checkpoint</param>
-        /// <param name="reader">A reader which is used to extract the state.</param>
-        /// <returns><b>true</b> if a full checkpoint is available, <b>false</b> otherwise.</returns>
-        public bool TryReadCheckpoint(out string id, out IStateReader reader)
-        {
-            CheckpointInfo latest = _latestFullCheckpoint;
+        id = _latestFullCheckpoint.Id;
 
-            if (latest == null)
+        return true;
+    }
+
+    /// <summary>
+    /// Method called when a checkpoint writer is committing.
+    /// </summary>
+    /// <param name="checkpointInfo">The checkpoint information</param>
+    private void OnCommit(CheckpointInfo checkpointInfo)
+    {
+        lock (_lock)
+        {
+            Debug.Assert(checkpointInfo.Id == _currentCheckpoint.Id
+                && checkpointInfo.Store == _currentCheckpoint.Store,
+                "Multiple checkpointing occurring concurrently.");
+
+            _currentCheckpoint = null;
+
+            if (checkpointInfo.Kind == CheckpointKind.Differential)
             {
-                reader = default;
-                id = default;
-                return false;
+                Debug.Assert(_latestFullCheckpoint != null,
+                    "At least one full checkpoint must exist before creating differential checkpoint.");
+
+                _latestFullCheckpoint.Store.Update(checkpointInfo.Store);
+                _latestFullCheckpoint.LatestUpdate = DateTime.UtcNow;
             }
-
-            reader = new InMemoryStateReader(latest.Store);
-
-            id = _latestFullCheckpoint.Id;
-
-            return true;
-        }
-
-        /// <summary>
-        /// Method called when a checkpoint writer is committing.
-        /// </summary>
-        /// <param name="checkpointInfo">The checkpoint information</param>
-        private void OnCommit(CheckpointInfo checkpointInfo)
-        {
-            lock (_lock)
+            else
             {
-                Debug.Assert(checkpointInfo.Id == _currentCheckpoint.Id
-                    && checkpointInfo.Store == _currentCheckpoint.Store,
-                    "Multiple checkpointing occurring concurrently.");
-
-                _currentCheckpoint = null;
-
-                if (checkpointInfo.Kind == CheckpointKind.Differential)
-                {
-                    Debug.Assert(_latestFullCheckpoint != null,
-                        "At least one full checkpoint must exist before creating differential checkpoint.");
-
-                    _latestFullCheckpoint.Store.Update(checkpointInfo.Store);
-                    _latestFullCheckpoint.LatestUpdate = DateTime.UtcNow;
-                }
-                else
-                {
-                    _latestFullCheckpoint = checkpointInfo;
-                    _latestFullCheckpoint.LatestUpdate = DateTime.UtcNow;
-                }
+                _latestFullCheckpoint = checkpointInfo;
+                _latestFullCheckpoint.LatestUpdate = DateTime.UtcNow;
             }
         }
+    }
 
-        /// <summary>
-        /// Method called when a checkpoint writer is rolling back.
-        /// </summary>
-        /// <param name="checkpointInfo">The checkpoint information</param>
-        private void OnRollback(CheckpointInfo checkpointInfo)
+    /// <summary>
+    /// Method called when a checkpoint writer is rolling back.
+    /// </summary>
+    /// <param name="checkpointInfo">The checkpoint information</param>
+    private void OnRollback(CheckpointInfo checkpointInfo)
+    {
+        lock (_lock)
         {
-            lock (_lock)
-            {
-                Debug.Assert(checkpointInfo.Id == _currentCheckpoint.Id
-                    && checkpointInfo.Store == _currentCheckpoint.Store,
-                    "Multiple checkpointing occurring concurrently.");
+            Debug.Assert(checkpointInfo.Id == _currentCheckpoint.Id
+                && checkpointInfo.Store == _currentCheckpoint.Store,
+                "Multiple checkpointing occurring concurrently.");
 
-                _currentCheckpoint.Store.Clear();
-                _currentCheckpoint = null;
-            }
+            _currentCheckpoint.Store.Clear();
+            _currentCheckpoint = null;
         }
+    }
 
-        /// <summary>
-        /// Create a new checkpoint (full or differential).
-        /// </summary>
-        /// <param name="id">The checkpoint id.</param>
-        /// <param name="kind">The checkpoint kind.</param>
-        /// <returns>A writer used for storing the state.</returns>
-        private IStateWriter CreateCheckpoint(string id, CheckpointKind kind)
+    /// <summary>
+    /// Create a new checkpoint (full or differential).
+    /// </summary>
+    /// <param name="id">The checkpoint id.</param>
+    /// <param name="kind">The checkpoint kind.</param>
+    /// <returns>A writer used for storing the state.</returns>
+    private IStateWriter CreateCheckpoint(string id, CheckpointKind kind)
+    {
+        lock (_lock)
         {
-            lock (_lock)
+            if (_currentCheckpoint != null)
             {
-                if (_currentCheckpoint != null)
-                {
-                    throw new InvalidOperationException("There is already a checkpoint being generated.");
-                }
-
-                _currentCheckpoint = new CheckpointInfo(new InMemoryStateStore(id), kind)
-                {
-                    Creation = DateTime.UtcNow
-                };
-
-                return new InMemoryStateWriter(_currentCheckpoint.Store, kind, () => OnCommit(_currentCheckpoint), () => OnRollback(_currentCheckpoint));
-            }
-        }
-
-        private sealed class CheckpointInfo
-        {
-            public CheckpointInfo(InMemoryStateStore store, CheckpointKind kind)
-            {
-                Store = store;
-                Kind = kind;
+                throw new InvalidOperationException("There is already a checkpoint being generated.");
             }
 
-            public DateTime Creation { get; set; }
+            _currentCheckpoint = new CheckpointInfo(new InMemoryStateStore(id), kind)
+            {
+                Creation = DateTime.UtcNow
+            };
 
-            public DateTime LatestUpdate { get; set; }
-
-            public InMemoryStateStore Store { get; }
-
-            public string Id => Store.Id;
-
-            public CheckpointKind Kind { get; }
+            return new InMemoryStateWriter(_currentCheckpoint.Store, kind, () => OnCommit(_currentCheckpoint), () => OnRollback(_currentCheckpoint));
         }
+    }
+
+    private sealed class CheckpointInfo
+    {
+        public CheckpointInfo(InMemoryStateStore store, CheckpointKind kind)
+        {
+            Store = store;
+            Kind = kind;
+        }
+
+        public DateTime Creation { get; set; }
+
+        public DateTime LatestUpdate { get; set; }
+
+        public InMemoryStateStore Store { get; }
+
+        public string Id => Store.Id;
+
+        public CheckpointKind Kind { get; }
     }
 }

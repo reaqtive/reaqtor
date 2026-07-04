@@ -9,23 +9,22 @@
 // ER - July 2013 - Small tweaks.
 //
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal abstract class DeclaredMemberDef : MemberDef
 {
-    internal abstract class DeclaredMemberDef : MemberDef
+    #region Constructors
+
+    public DeclaredMemberDef(TypeRef declaringType)
     {
-        #region Constructors
-
-        public DeclaredMemberDef(TypeRef declaringType)
-        {
-            DeclaringType = declaringType;
-        }
-
-        #endregion
-
-        #region Properties
-
-        public TypeRef DeclaringType { get; }
-
-        #endregion
+        DeclaringType = declaringType;
     }
+
+    #endregion
+
+    #region Properties
+
+    public TypeRef DeclaringType { get; }
+
+    #endregion
 }

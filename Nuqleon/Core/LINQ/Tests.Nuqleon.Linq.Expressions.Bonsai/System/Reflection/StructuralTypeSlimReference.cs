@@ -16,26 +16,25 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.System.Linq.Expressions.Bonsai;
 
-namespace Tests.System.Reflection
-{
-    [TestClass]
-    public class StructuralTypeSlimReferenceTests : TestBase
-    {
-        [TestMethod]
-        public void StructuralTypeSlimReference_AddProperty_NullArgument()
-        {
-            var t = StructuralTypeSlimReference.Create(hasValueEqualitySemantics: true, StructuralTypeSlimKind.Record);
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => t.AddProperty(property: null));
-            Assert.AreEqual("property", ex.ParamName);
-        }
+namespace Tests.System.Reflection;
 
-        [TestMethod]
-        public void StructuralTypeSlimReference_AddPropertyAfterFreeze_Fail()
-        {
-            var t = StructuralTypeSlimReference.Create(hasValueEqualitySemantics: true, StructuralTypeSlimKind.Record);
-            t.Freeze();
-            var p = t.GetProperty("Foo", propertyType: null, EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: true);
-            Assert.ThrowsExactly<InvalidOperationException>(() => t.AddProperty(p));
-        }
+[TestClass]
+public class StructuralTypeSlimReferenceTests : TestBase
+{
+    [TestMethod]
+    public void StructuralTypeSlimReference_AddProperty_NullArgument()
+    {
+        var t = StructuralTypeSlimReference.Create(hasValueEqualitySemantics: true, StructuralTypeSlimKind.Record);
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => t.AddProperty(property: null));
+        Assert.AreEqual("property", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void StructuralTypeSlimReference_AddPropertyAfterFreeze_Fail()
+    {
+        var t = StructuralTypeSlimReference.Create(hasValueEqualitySemantics: true, StructuralTypeSlimKind.Record);
+        t.Freeze();
+        var p = t.GetProperty("Foo", propertyType: null, EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: true);
+        Assert.ThrowsExactly<InvalidOperationException>(() => t.AddProperty(p));
     }
 }

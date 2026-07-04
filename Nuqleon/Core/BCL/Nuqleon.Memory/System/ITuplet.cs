@@ -8,17 +8,16 @@
 //   BD - 07/29/2015 - Created this type.
 //
 
-namespace System
+namespace System;
+
+/// <summary>
+/// Interface for tuplets, used to recursively call some functionality on nested tuples without knowing the closed generic type.
+/// </summary>
+internal interface ITuplet
 {
     /// <summary>
-    /// Interface for tuplets, used to recursively call some functionality on nested tuples without knowing the closed generic type.
+    /// Gets the string representation of the tuplet, including the trailing closing parenthesis.
     /// </summary>
-    internal interface ITuplet
-    {
-        /// <summary>
-        /// Gets the string representation of the tuplet, including the trailing closing parenthesis.
-        /// </summary>
-        /// <returns>String representation of the tuplet.</returns>
-        string ToStringEnd();
-    }
+    /// <returns>String representation of the tuplet.</returns>
+    string ToStringEnd();
 }

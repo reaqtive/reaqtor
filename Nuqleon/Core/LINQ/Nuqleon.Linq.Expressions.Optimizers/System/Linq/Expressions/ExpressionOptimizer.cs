@@ -11,105 +11,104 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1062 // Omitted null checks similar to expression tree visitors.
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+/// <summary>
+/// Optimizer for expression trees.
+/// </summary>
+public partial class ExpressionOptimizer : LvalExpressionVisitor
 {
     /// <summary>
-    /// Optimizer for expression trees.
+    /// Creates a new expression optimizer instance using the specified semantic <paramref name="semanticProvider"/>
+    /// and the specified evaluator <paramref name="evaluatorFactory"/>.
     /// </summary>
-    public partial class ExpressionOptimizer : LvalExpressionVisitor
+    /// <param name="semanticProvider">The semantic provider to use when performing various checks against expressions and reflection objects.</param>
+    /// <param name="evaluatorFactory">The evaluator factory to use when evaluating a member or an expression at compile time.</param>
+    public ExpressionOptimizer(ISemanticProvider semanticProvider, IEvaluatorFactory evaluatorFactory)
     {
-        /// <summary>
-        /// Creates a new expression optimizer instance using the specified semantic <paramref name="semanticProvider"/>
-        /// and the specified evaluator <paramref name="evaluatorFactory"/>.
-        /// </summary>
-        /// <param name="semanticProvider">The semantic provider to use when performing various checks against expressions and reflection objects.</param>
-        /// <param name="evaluatorFactory">The evaluator factory to use when evaluating a member or an expression at compile time.</param>
-        public ExpressionOptimizer(ISemanticProvider semanticProvider, IEvaluatorFactory evaluatorFactory)
+        SemanticProvider = semanticProvider;
+        EvaluatorFactory = evaluatorFactory;
+    }
+
+    /// <summary>
+    /// Gets the semantic provider to use when performing various checks against expressions and reflection objects.
+    /// </summary>
+    public ISemanticProvider SemanticProvider { get; }
+
+    /// <summary>
+    /// Gets the evaluator factory to use when evaluating a member or an expression at compile time.
+    /// </summary>
+    public IEvaluatorFactory EvaluatorFactory { get; }
+
+    /// <summary>
+    /// Visits and expression tree and returns the optimized result.
+    /// </summary>
+    /// <param name="node">The expression tree to visit.</param>
+    /// <returns>An optimized rewritten expression, or the original expression if nothing was optimized.</returns>
+    public override Expression Visit(Expression node)
+    {
+        if (node != null && ShouldOptimize(node))
         {
-            SemanticProvider = semanticProvider;
-            EvaluatorFactory = evaluatorFactory;
-        }
+            var exp = VisitPreOptimize(node);
 
-        /// <summary>
-        /// Gets the semantic provider to use when performing various checks against expressions and reflection objects.
-        /// </summary>
-        public ISemanticProvider SemanticProvider { get; }
+            AssertTypes(node, exp);
 
-        /// <summary>
-        /// Gets the evaluator factory to use when evaluating a member or an expression at compile time.
-        /// </summary>
-        public IEvaluatorFactory EvaluatorFactory { get; }
+            var opt = base.Visit(exp);
 
-        /// <summary>
-        /// Visits and expression tree and returns the optimized result.
-        /// </summary>
-        /// <param name="node">The expression tree to visit.</param>
-        /// <returns>An optimized rewritten expression, or the original expression if nothing was optimized.</returns>
-        public override Expression Visit(Expression node)
-        {
-            if (node != null && ShouldOptimize(node))
+            AssertTypes(opt, exp);
+
+            if (node != opt)
             {
-                var exp = VisitPreOptimize(node);
+                var res = VisitPostOptimize(node, opt);
 
-                AssertTypes(node, exp);
+                AssertTypes(res, opt);
 
-                var opt = base.Visit(exp);
-
-                AssertTypes(opt, exp);
-
-                if (node != opt)
-                {
-                    var res = VisitPostOptimize(node, opt);
-
-                    AssertTypes(res, opt);
-
-                    return res;
-                }
-                else
-                {
-                    return node;
-                }
+                return res;
             }
-
-            return node;
+            else
+            {
+                return node;
+            }
         }
 
-        /// <summary>
-        /// Checks if the specified expression should be optimized.
-        /// </summary>
-        /// <param name="node">The expression to check.</param>
-        /// <returns>true if the expression should be optimized; otherwise, false.</returns>
-        /// <remarks>
-        /// This method supports the suppression of optimizations to various nodes where optimization
-        /// may be undesirable. An example is a node of type <see cref="ExpressionType.Quote"/>.
-        /// </remarks>
-        protected virtual bool ShouldOptimize(Expression node) => true;
+        return node;
+    }
 
-        /// <summary>
-        /// Visits the specified expression prior to applying optimizations.
-        /// </summary>
-        /// <param name="node">The expression to visit prior to applying optimizations.</param>
-        /// <returns>The result of visiting the specified expression prior to optimization.</returns>
-        /// <remarks>
-        /// This method supports plugging in pre-optimization rewrites or logging steps.
-        /// </remarks>
-        protected virtual Expression VisitPreOptimize(Expression node) => node;
+    /// <summary>
+    /// Checks if the specified expression should be optimized.
+    /// </summary>
+    /// <param name="node">The expression to check.</param>
+    /// <returns>true if the expression should be optimized; otherwise, false.</returns>
+    /// <remarks>
+    /// This method supports the suppression of optimizations to various nodes where optimization
+    /// may be undesirable. An example is a node of type <see cref="ExpressionType.Quote"/>.
+    /// </remarks>
+    protected virtual bool ShouldOptimize(Expression node) => true;
 
-        /// <summary>
-        /// Visits an expression after optimizations have been applied.
-        /// </summary>
-        /// <param name="original">The original expression returned from <see cref="VisitPreOptimize"/>.</param>
-        /// <param name="optimized">The result of applying optimizations to the <paramref name="original"/> expression.</param>
-        /// <returns>The expression to return from the visitor.</returns>
-        /// <remarks>
-        /// This method supports plugging in post-optimization rewrites or logging steps. It can also
-        /// be used to undo an optimization.
-        /// </remarks>
-        protected virtual Expression VisitPostOptimize(Expression original, Expression optimized)
-        {
-            AssertTypes(original, optimized);
+    /// <summary>
+    /// Visits the specified expression prior to applying optimizations.
+    /// </summary>
+    /// <param name="node">The expression to visit prior to applying optimizations.</param>
+    /// <returns>The result of visiting the specified expression prior to optimization.</returns>
+    /// <remarks>
+    /// This method supports plugging in pre-optimization rewrites or logging steps.
+    /// </remarks>
+    protected virtual Expression VisitPreOptimize(Expression node) => node;
 
-            return optimized;
-        }
+    /// <summary>
+    /// Visits an expression after optimizations have been applied.
+    /// </summary>
+    /// <param name="original">The original expression returned from <see cref="VisitPreOptimize"/>.</param>
+    /// <param name="optimized">The result of applying optimizations to the <paramref name="original"/> expression.</param>
+    /// <returns>The expression to return from the visitor.</returns>
+    /// <remarks>
+    /// This method supports plugging in post-optimization rewrites or logging steps. It can also
+    /// be used to undo an optimization.
+    /// </remarks>
+    protected virtual Expression VisitPostOptimize(Expression original, Expression optimized)
+    {
+        AssertTypes(original, optimized);
+
+        return optimized;
     }
 }

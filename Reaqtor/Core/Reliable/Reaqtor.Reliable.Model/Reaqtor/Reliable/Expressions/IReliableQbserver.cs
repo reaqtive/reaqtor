@@ -6,14 +6,13 @@ using System;
 
 using Reaqtor.Reliable.Client;
 
-namespace Reaqtor.Reliable.Expressions
-{
-    public interface IReliableQbserver : IReliableReactiveExpressible
-    {
-        Type ElementType { get; }
-    }
+namespace Reaqtor.Reliable.Expressions;
 
-    public interface IReliableQbserver<in T> : IReliableReactiveObserver<T>, IReliableQbserver
-    {
-    }
+public interface IReliableQbserver : IReliableReactiveExpressible
+{
+    Type ElementType { get; }
+}
+
+public interface IReliableQbserver<in T> : IReliableReactiveObserver<T>, IReliableQbserver
+{
 }

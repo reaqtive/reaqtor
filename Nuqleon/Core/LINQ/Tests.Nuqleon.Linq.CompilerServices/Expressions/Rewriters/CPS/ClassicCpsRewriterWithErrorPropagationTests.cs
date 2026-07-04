@@ -16,808 +16,807 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class ClassicCpsRewriterWithErrorPropagationTests
 {
-    [TestClass]
-    public class ClassicCpsRewriterWithErrorPropagationTests
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_ArgumentChecking()
     {
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_ArgumentChecking()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
-            var e1 = Expression.Constant(42);
+        var e1 = Expression.Constant(42);
 
-            var f1 = (Expression<Func<int>>)(() => 42);
-            var c1 = (Expression<Action<int>>)(x => Console.WriteLine(x));
-            var d1 = (Expression<Action<Exception>>)(x => Console.WriteLine(x.Message));
+        var f1 = (Expression<Func<int>>)(() => 42);
+        var c1 = (Expression<Action<int>>)(x => Console.WriteLine(x));
+        var d1 = (Expression<Action<Exception>>)(x => Console.WriteLine(x.Message));
 
-            var f2 = (Expression<Action>)(() => Console.WriteLine("bar"));
-            var c2 = (Expression<Action>)(() => Console.WriteLine("foo"));
+        var f2 = (Expression<Action>)(() => Console.WriteLine("bar"));
+        var c2 = (Expression<Action>)(() => Console.WriteLine("foo"));
 
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression)));
-            Assert.AreEqual("expression", ex.ParamName);
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression)));
+        Assert.AreEqual("expression", ex.ParamName);
 
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(LambdaExpression)));
-            Assert.AreEqual("expression", ex2.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(LambdaExpression)));
+        Assert.AreEqual("expression", ex2.ParamName);
 
-            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Func<int>>)));
-            Assert.AreEqual("expression", ex3.ParamName);
-            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int>(default(Expression<Func<int, int>>)));
-            Assert.AreEqual("expression", ex4.ParamName);
-            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int, int>(default(Expression<Func<int, int, int>>)));
-            Assert.AreEqual("expression", ex5.ParamName);
-            var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int, int, int>(default(Expression<Func<int, int, int, int>>)));
-            Assert.AreEqual("expression", ex6.ParamName);
+        var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Func<int>>)));
+        Assert.AreEqual("expression", ex3.ParamName);
+        var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int>(default(Expression<Func<int, int>>)));
+        Assert.AreEqual("expression", ex4.ParamName);
+        var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int, int>(default(Expression<Func<int, int, int>>)));
+        Assert.AreEqual("expression", ex5.ParamName);
+        var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int, int, int>(default(Expression<Func<int, int, int, int>>)));
+        Assert.AreEqual("expression", ex6.ParamName);
 
-            var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression<Action>)));
-            Assert.AreEqual("expression", ex7.ParamName);
-            var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Action<int>>)));
-            Assert.AreEqual("expression", ex8.ParamName);
-            var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int>(default(Expression<Action<int, int>>)));
-            Assert.AreEqual("expression", ex9.ParamName);
-            var ex10 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int, int>(default(Expression<Action<int, int, int>>)));
-            Assert.AreEqual("expression", ex10.ParamName);
+        var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression<Action>)));
+        Assert.AreEqual("expression", ex7.ParamName);
+        var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Action<int>>)));
+        Assert.AreEqual("expression", ex8.ParamName);
+        var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int>(default(Expression<Action<int, int>>)));
+        Assert.AreEqual("expression", ex9.ParamName);
+        var ex10 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int, int, int>(default(Expression<Action<int, int, int>>)));
+        Assert.AreEqual("expression", ex10.ParamName);
 
-            var ex11 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression<Action>), c2, d1));
-            Assert.AreEqual("expression", ex11.ParamName);
-            var ex12 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(f2, default(Expression<Action>), d1));
-            Assert.AreEqual("success", ex12.ParamName);
-            var ex13 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(f2, c2, default(Expression<Action<Exception>>)));
-            Assert.AreEqual("failure", ex13.ParamName);
+        var ex11 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression<Action>), c2, d1));
+        Assert.AreEqual("expression", ex11.ParamName);
+        var ex12 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(f2, default(Expression<Action>), d1));
+        Assert.AreEqual("success", ex12.ParamName);
+        var ex13 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(f2, c2, default(Expression<Action<Exception>>)));
+        Assert.AreEqual("failure", ex13.ParamName);
 
-            var ex14 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Func<int>>), c1, d1));
-            Assert.AreEqual("expression", ex14.ParamName);
-            var ex15 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(f1, default(Expression<Action<int>>), d1));
-            Assert.AreEqual("success", ex15.ParamName);
-            var ex16 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(f1, c1, default(Expression<Action<Exception>>)));
-            Assert.AreEqual("failure", ex16.ParamName);
+        var ex14 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(default(Expression<Func<int>>), c1, d1));
+        Assert.AreEqual("expression", ex14.ParamName);
+        var ex15 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(f1, default(Expression<Action<int>>), d1));
+        Assert.AreEqual("success", ex15.ParamName);
+        var ex16 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite<int>(f1, c1, default(Expression<Action<Exception>>)));
+        Assert.AreEqual("failure", ex16.ParamName);
 
-            var ex17 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression), e1, e1));
-            Assert.AreEqual("expression", ex17.ParamName);
-            var ex18 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(e1, default(Expression), e1));
-            Assert.AreEqual("success", ex18.ParamName);
-            var ex19 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(e1, e1, default(Expression)));
-            Assert.AreEqual("failure", ex19.ParamName);
+        var ex17 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(default(Expression), e1, e1));
+        Assert.AreEqual("expression", ex17.ParamName);
+        var ex18 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(e1, default(Expression), e1));
+        Assert.AreEqual("success", ex18.ParamName);
+        var ex19 = Assert.ThrowsExactly<ArgumentNullException>(() => cps.Rewrite(e1, e1, default(Expression)));
+        Assert.AreEqual("failure", ex19.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
-        }
+    }
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Return_Func1()
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Return_Func1()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var f = (Expression<Func<int>>)(() => Calculator.Return(42));
+
+        var g = cps.Rewrite(f);
+
+        var res = default(int);
+        g.Compile()(x => res = x, ex => Assert.Fail());
+
+        Assert.AreEqual(42, res);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Return_Func2()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var f = (Expression<Func<int>>)(() => Calculator.Return(42));
+
+        var g = (Expression<Action<Action<int>, Action<Exception>>>)cps.Rewrite((LambdaExpression)f);
+
+        var res = default(int);
+        g.Compile()(x => res = x, ex => Assert.Fail());
+
+        Assert.AreEqual(42, res);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Return_Func3()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var f = (Expression<Func<int>>)(() => Calculator.Return(42));
+
+        var g = (Expression<Action<Action<int>, Action<Exception>>>)cps.Rewrite(f.Body);
+
+        var res = default(int);
+        g.Compile()(x => res = x, ex => Assert.Fail());
+
+        Assert.AreEqual(42, res);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Return_Func4()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var res = default(int);
+        var set = new Action<int>(x => res = x);
+        var onNext = (Expression<Action<int>>)(x => set(x));
+        var onError = (Expression<Action<Exception>>)(ex => Assert.Fail());
+
+        var f = (Expression<Func<int>>)(() => Calculator.Return(42));
+
+        var g = Expression.Lambda<Action>(cps.Rewrite(f.Body, onNext, onError));
+
+        g.Compile()();
+
+        Assert.AreEqual(42, res);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Return_Func5()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var res = default(int);
+        var set = new Action<int>(x => res = x);
+        var onNext = (Expression<Action<int>>)(x => set(x));
+        var onError = (Expression<Action<Exception>>)(ex => Assert.Fail());
+
+        var f = (Expression<Func<int>>)(() => Calculator.Return(42));
+
+        var g = Expression.Lambda<Action>(cps.Rewrite(f, onNext, onError));
+
+        g.Compile()();
+
+        Assert.AreEqual(42, res);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Throw_Action1()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var ex = new Exception();
+        var f = (Expression<Action>)(() => Calculator.Throw(ex));
+
+        var g = cps.Rewrite(f);
+
+        var err = default(Exception);
+        g.Compile()(() => Assert.Fail(), e => err = e);
+
+        Assert.AreSame(ex, err);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Throw_Action2()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var ex = new Exception();
+        var f = (Expression<Action>)(() => Calculator.Throw(ex));
+
+        var g = (Expression<Action<Action, Action<Exception>>>)cps.Rewrite((LambdaExpression)f);
+
+        var err = default(Exception);
+        g.Compile()(() => Assert.Fail(), e => err = e);
+
+        Assert.AreSame(ex, err);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Throw_Action3()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var ex = new Exception();
+        var f = (Expression<Action>)(() => Calculator.Throw(ex));
+
+        var g = (Expression<Action<Action, Action<Exception>>>)cps.Rewrite(f.Body);
+
+        var err = default(Exception);
+        g.Compile()(() => Assert.Fail(), e => err = e);
+
+        Assert.AreSame(ex, err);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Throw_Action4()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var err = default(Exception);
+        var set = new Action<Exception>(e => err = e);
+        var onNext = (Expression<Action>)(() => Assert.Fail());
+        var onError = (Expression<Action<Exception>>)(e => set(e));
+
+        var ex = new Exception();
+        var f = (Expression<Action>)(() => Calculator.Throw(ex));
+
+        var g = Expression.Lambda<Action>(cps.Rewrite(f.Body, onNext, onError));
+
+        g.Compile()();
+
+        Assert.AreSame(ex, err);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Throw_Action5()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var err = default(Exception);
+        var set = new Action<Exception>(e => err = e);
+        var onNext = (Expression<Action>)(() => Assert.Fail());
+        var onError = (Expression<Action<Exception>>)(e => set(e));
+
+        var ex = new Exception();
+        var f = (Expression<Action>)(() => Calculator.Throw(ex));
+
+        var g = Expression.Lambda<Action>(cps.Rewrite(f.Body, onNext, onError));
+
+        g.Compile()();
+
+        Assert.AreSame(ex, err);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Basics1()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var f = (Expression<Func<int>>)(() => Calculator.Add(Calculator.Add(1, Calculator.Div(4, 2)), 3));
+
+        var g = cps.Rewrite(f);
+
+        var res = default(int);
+        g.Compile()(x => res = x, ex => Assert.Fail());
+
+        Assert.AreEqual(6, res);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Basics2()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var done = false;
+        var complete = new Action(() => done = true);
+
+        var bar = new Bar();
+
+        var f = (Expression<Action>)(() => bar.Foo());
+        var s = (Expression<Action>)(() => complete());
+        var e = (Expression<Action<Exception>>)(err => Assert.Fail());
+
+        var g = Expression.Lambda<Action>(cps.Rewrite(f, s, e));
+
+        g.Compile()();
+
+        Assert.IsTrue(done);
+        Assert.IsTrue(bar.HasFood);
+    }
+
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Basics3()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var bar = new Bar();
+
+        var f = (Expression<Func<int, int>>)(x => bar.I(x));
+
+        var g = (Expression<Action<int, Action<int>, Action<Exception>>>)cps.Rewrite((LambdaExpression)f);
+
+        var res = default(int);
+        g.Compile()(42, x => res = x, ex => Assert.Fail());
+
+        Assert.AreEqual(42, res);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Basics4()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var bar = new Bar();
+
+        var f = (Expression<Action<int>>)(x => bar.J(x));
+
+        var g = (Expression<Action<int, Action, Action<Exception>>>)cps.Rewrite((LambdaExpression)f);
+
+        var h = g.Compile();
+
+        var done = default(bool);
+        var err = default(Exception);
+        h(1, () => done = true, ex => Assert.Fail());
+        h(0, () => Assert.Fail(), ex => err = ex);
+
+        Assert.IsTrue(done);
+        Assert.IsTrue(err is DivideByZeroException);
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Basics5()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var log = new List<int>();
+
+        var getX = new Func<bool>(() =>
         {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+            log.Add(1);
+            return true;
+        });
 
-            var f = (Expression<Func<int>>)(() => Calculator.Return(42));
-
-            var g = cps.Rewrite(f);
-
-            var res = default(int);
-            g.Compile()(x => res = x, ex => Assert.Fail());
-
-            Assert.AreEqual(42, res);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Return_Func2()
+        var getY = new Func<string>(() =>
         {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+            log.Add(2);
+            return "Hello";
+        });
 
-            var f = (Expression<Func<int>>)(() => Calculator.Return(42));
-
-            var g = (Expression<Action<Action<int>, Action<Exception>>>)cps.Rewrite((LambdaExpression)f);
-
-            var res = default(int);
-            g.Compile()(x => res = x, ex => Assert.Fail());
-
-            Assert.AreEqual(42, res);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Return_Func3()
+        var getZ = new Func<int>(() =>
         {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+            log.Add(3);
+            return 42;
+        });
 
-            var f = (Expression<Func<int>>)(() => Calculator.Return(42));
+        var bar = new Bar();
 
-            var g = (Expression<Action<Action<int>, Action<Exception>>>)cps.Rewrite(f.Body);
+        var f = (Expression<Func<long>>)(() => bar.K(getX(), getY(), getZ()));
 
-            var res = default(int);
-            g.Compile()(x => res = x, ex => Assert.Fail());
+        var g = cps.Rewrite(f);
 
-            Assert.AreEqual(42, res);
-        }
+        var res = default(long);
+        g.Compile()(x => res = x, ex => Assert.Fail());
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Return_Func4()
+        Assert.AreEqual(1 + 42 / 5, res);
+
+        Assert.IsTrue(new[] { 1, 2, 3 }.SequenceEqual(log));
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Basics6()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var log = new List<int>();
+
+        var getX = new Func<bool>(() =>
         {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+            log.Add(1);
+            return true;
+        });
 
-            var res = default(int);
-            var set = new Action<int>(x => res = x);
-            var onNext = (Expression<Action<int>>)(x => set(x));
-            var onError = (Expression<Action<Exception>>)(ex => Assert.Fail());
-
-            var f = (Expression<Func<int>>)(() => Calculator.Return(42));
-
-            var g = Expression.Lambda<Action>(cps.Rewrite(f.Body, onNext, onError));
-
-            g.Compile()();
-
-            Assert.AreEqual(42, res);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Return_Func5()
+        var getY = new Func<string>(() =>
         {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+            log.Add(2);
+            return "Hello";
+        });
 
-            var res = default(int);
-            var set = new Action<int>(x => res = x);
-            var onNext = (Expression<Action<int>>)(x => set(x));
-            var onError = (Expression<Action<Exception>>)(ex => Assert.Fail());
-
-            var f = (Expression<Func<int>>)(() => Calculator.Return(42));
-
-            var g = Expression.Lambda<Action>(cps.Rewrite(f, onNext, onError));
-
-            g.Compile()();
-
-            Assert.AreEqual(42, res);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Throw_Action1()
+        var getZ = new Func<int>(() =>
         {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+            log.Add(3);
+            return 42;
+        });
 
-            var ex = new Exception();
-            var f = (Expression<Action>)(() => Calculator.Throw(ex));
+        var f = (Expression<Func<int>>)(() => Calculator.Add(getX() ? 1 : 0, Calculator.Div(getZ(), getY().Length)));
 
-            var g = cps.Rewrite(f);
+        var g = cps.Rewrite(f);
 
-            var err = default(Exception);
-            g.Compile()(() => Assert.Fail(), e => err = e);
+        var res = default(int);
+        g.Compile()(x => res = x, ex => Assert.Fail());
 
-            Assert.AreSame(ex, err);
-        }
+        Assert.AreEqual(1 + 42 / 5, res);
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Throw_Action2()
+        Assert.IsTrue(new[] { 1, 3, 2 }.SequenceEqual(log));
+    }
+
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Basics7()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
+
+        var log = new List<int>();
+
+        var getX = new Func<bool>(() =>
         {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+            log.Add(1);
+            return true;
+        });
 
-            var ex = new Exception();
-            var f = (Expression<Action>)(() => Calculator.Throw(ex));
-
-            var g = (Expression<Action<Action, Action<Exception>>>)cps.Rewrite((LambdaExpression)f);
-
-            var err = default(Exception);
-            g.Compile()(() => Assert.Fail(), e => err = e);
-
-            Assert.AreSame(ex, err);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Throw_Action3()
+        var getY = new Func<string>(() =>
         {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+            log.Add(2);
+            return "Hello";
+        });
 
-            var ex = new Exception();
-            var f = (Expression<Action>)(() => Calculator.Throw(ex));
+        var ex = new Exception();
 
-            var g = (Expression<Action<Action, Action<Exception>>>)cps.Rewrite(f.Body);
-
-            var err = default(Exception);
-            g.Compile()(() => Assert.Fail(), e => err = e);
-
-            Assert.AreSame(ex, err);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Throw_Action4()
+        var getZ = new Func<int>(() =>
         {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+            log.Add(3);
+            throw ex;
+        });
 
-            var err = default(Exception);
-            var set = new Action<Exception>(e => err = e);
-            var onNext = (Expression<Action>)(() => Assert.Fail());
-            var onError = (Expression<Action<Exception>>)(e => set(e));
+        var f = (Expression<Func<int>>)(() => Calculator.Add(getX() ? 1 : 0, Calculator.Div(getZ(), getY().Length)));
 
-            var ex = new Exception();
-            var f = (Expression<Action>)(() => Calculator.Throw(ex));
+        var g = cps.Rewrite(f);
 
-            var g = Expression.Lambda<Action>(cps.Rewrite(f.Body, onNext, onError));
+        var err = default(Exception);
+        g.Compile()(x => Assert.Fail(), e => err = e);
 
-            g.Compile()();
+        Assert.AreSame(ex, err);
 
-            Assert.AreSame(ex, err);
-        }
+        Assert.IsTrue(new[] { 1, 3 }.SequenceEqual(log));
+    }
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Throw_Action5()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_ThrowExpression()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
-            var err = default(Exception);
-            var set = new Action<Exception>(e => err = e);
-            var onNext = (Expression<Action>)(() => Assert.Fail());
-            var onError = (Expression<Action<Exception>>)(e => set(e));
+        var ex = new Exception();
+        var f = Expression.Throw(Expression.Constant(ex), typeof(int));
 
-            var ex = new Exception();
-            var f = (Expression<Action>)(() => Calculator.Throw(ex));
+        var g = (Expression<Action<Action<int>, Action<Exception>>>)cps.Rewrite(f);
 
-            var g = Expression.Lambda<Action>(cps.Rewrite(f.Body, onNext, onError));
+        var err = default(Exception);
+        g.Compile()(x => Assert.Fail(), e => err = e);
 
-            g.Compile()();
+        Assert.AreSame(ex, err);
+    }
 
-            Assert.AreSame(ex, err);
-        }
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Func1()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Basics1()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+        var foo = new Foo();
 
-            var f = (Expression<Func<int>>)(() => Calculator.Add(Calculator.Add(1, Calculator.Div(4, 2)), 3));
+        var f = (Expression<Func<int>>)(() => foo.Bar());
 
-            var g = cps.Rewrite(f);
+        var g = cps.Rewrite(f);
 
-            var res = default(int);
-            g.Compile()(x => res = x, ex => Assert.Fail());
+        var res = default(int);
+        g.Compile()(x => res = x, ex => Assert.Fail());
 
-            Assert.AreEqual(6, res);
-        }
+        Assert.AreEqual(42, res);
+    }
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Basics2()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Func2()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
-            var done = false;
-            var complete = new Action(() => done = true);
+        var foo = new Foo();
 
-            var bar = new Bar();
+        var f = (Expression<Func<int, int>>)(x => foo.Bar(x));
 
-            var f = (Expression<Action>)(() => bar.Foo());
-            var s = (Expression<Action>)(() => complete());
-            var e = (Expression<Action<Exception>>)(err => Assert.Fail());
+        var g = cps.Rewrite(f);
 
-            var g = Expression.Lambda<Action>(cps.Rewrite(f, s, e));
+        var res = default(int);
+        g.Compile()(42, x => res = x, ex => Assert.Fail());
 
-            g.Compile()();
+        Assert.AreEqual(42, res);
+    }
 
-            Assert.IsTrue(done);
-            Assert.IsTrue(bar.HasFood);
-        }
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Func3()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
+        var foo = new Foo();
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Basics3()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+        var f = (Expression<Func<int, int, int>>)((x, y) => foo.Bar(x, y));
 
-            var bar = new Bar();
+        var g = cps.Rewrite(f);
 
-            var f = (Expression<Func<int, int>>)(x => bar.I(x));
+        var res = default(int);
+        g.Compile()(19, 23, x => res = x, ex => Assert.Fail());
 
-            var g = (Expression<Action<int, Action<int>, Action<Exception>>>)cps.Rewrite((LambdaExpression)f);
+        Assert.AreEqual(42, res);
+    }
 
-            var res = default(int);
-            g.Compile()(42, x => res = x, ex => Assert.Fail());
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Func4()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
-            Assert.AreEqual(42, res);
-        }
+        var foo = new Foo();
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Basics4()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+        var f = (Expression<Func<int, int, int, int>>)((x, y, z) => foo.Bar(x, y, z));
 
-            var bar = new Bar();
+        var g = cps.Rewrite(f);
 
-            var f = (Expression<Action<int>>)(x => bar.J(x));
+        var res = default(int);
+        g.Compile()(19, 16, 7, x => res = x, ex => Assert.Fail());
 
-            var g = (Expression<Action<int, Action, Action<Exception>>>)cps.Rewrite((LambdaExpression)f);
+        Assert.AreEqual(42, res);
+    }
 
-            var h = g.Compile();
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Action1()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
-            var done = default(bool);
-            var err = default(Exception);
-            h(1, () => done = true, ex => Assert.Fail());
-            h(0, () => Assert.Fail(), ex => err = ex);
+        var foo = new Foo();
 
-            Assert.IsTrue(done);
-            Assert.IsTrue(err is DivideByZeroException);
-        }
+        var f = (Expression<Action>)(() => foo.Qux());
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Basics5()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+        var g = cps.Rewrite(f);
 
-            var log = new List<int>();
+        var done = default(bool);
+        g.Compile()(() => done = true, ex => Assert.Fail());
 
-            var getX = new Func<bool>(() =>
-            {
-                log.Add(1);
-                return true;
-            });
+        Assert.IsTrue(done);
+        Assert.AreEqual(42, foo.Qux0);
+    }
 
-            var getY = new Func<string>(() =>
-            {
-                log.Add(2);
-                return "Hello";
-            });
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Action2()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
-            var getZ = new Func<int>(() =>
-            {
-                log.Add(3);
-                return 42;
-            });
+        var foo = new Foo();
 
-            var bar = new Bar();
+        var f = (Expression<Action<int>>)(x => foo.Qux(x));
 
-            var f = (Expression<Func<long>>)(() => bar.K(getX(), getY(), getZ()));
+        var g = cps.Rewrite(f);
 
-            var g = cps.Rewrite(f);
+        var done = default(bool);
+        g.Compile()(42, () => done = true, ex => Assert.Fail());
 
-            var res = default(long);
-            g.Compile()(x => res = x, ex => Assert.Fail());
+        Assert.IsTrue(done);
+        Assert.AreEqual(42, foo.Qux1);
+    }
 
-            Assert.AreEqual(1 + 42 / 5, res);
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Action3()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
-            Assert.IsTrue(new[] { 1, 2, 3 }.SequenceEqual(log));
-        }
+        var foo = new Foo();
 
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Basics6()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
+        var f = (Expression<Action<int, int>>)((x, y) => foo.Qux(x, y));
 
-            var log = new List<int>();
+        var g = cps.Rewrite(f);
 
-            var getX = new Func<bool>(() =>
-            {
-                log.Add(1);
-                return true;
-            });
+        var done = default(bool);
+        g.Compile()(19, 23, () => done = true, ex => Assert.Fail());
 
-            var getY = new Func<string>(() =>
-            {
-                log.Add(2);
-                return "Hello";
-            });
+        Assert.IsTrue(done);
+        Assert.AreEqual(42, foo.Qux2);
+    }
 
-            var getZ = new Func<int>(() =>
-            {
-                log.Add(3);
-                return 42;
-            });
+    [TestMethod]
+    public void ClassicCpsRewriterWithErrorPropagation_Action4()
+    {
+        var cps = new ClassicCpsRewriterWithErrorPropagation();
 
-            var f = (Expression<Func<int>>)(() => Calculator.Add(getX() ? 1 : 0, Calculator.Div(getZ(), getY().Length)));
+        var foo = new Foo();
 
-            var g = cps.Rewrite(f);
+        var f = (Expression<Action<int, int, int>>)((x, y, z) => foo.Qux(x, y, z));
 
-            var res = default(int);
-            g.Compile()(x => res = x, ex => Assert.Fail());
+        var g = cps.Rewrite(f);
 
-            Assert.AreEqual(1 + 42 / 5, res);
+        var done = default(bool);
+        g.Compile()(19, 16, 7, () => done = true, ex => Assert.Fail());
 
-            Assert.IsTrue(new[] { 1, 3, 2 }.SequenceEqual(log));
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Basics7()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var log = new List<int>();
-
-            var getX = new Func<bool>(() =>
-            {
-                log.Add(1);
-                return true;
-            });
-
-            var getY = new Func<string>(() =>
-            {
-                log.Add(2);
-                return "Hello";
-            });
-
-            var ex = new Exception();
-
-            var getZ = new Func<int>(() =>
-            {
-                log.Add(3);
-                throw ex;
-            });
-
-            var f = (Expression<Func<int>>)(() => Calculator.Add(getX() ? 1 : 0, Calculator.Div(getZ(), getY().Length)));
-
-            var g = cps.Rewrite(f);
-
-            var err = default(Exception);
-            g.Compile()(x => Assert.Fail(), e => err = e);
-
-            Assert.AreSame(ex, err);
-
-            Assert.IsTrue(new[] { 1, 3 }.SequenceEqual(log));
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_ThrowExpression()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var ex = new Exception();
-            var f = Expression.Throw(Expression.Constant(ex), typeof(int));
-
-            var g = (Expression<Action<Action<int>, Action<Exception>>>)cps.Rewrite(f);
-
-            var err = default(Exception);
-            g.Compile()(x => Assert.Fail(), e => err = e);
-
-            Assert.AreSame(ex, err);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Func1()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var foo = new Foo();
-
-            var f = (Expression<Func<int>>)(() => foo.Bar());
-
-            var g = cps.Rewrite(f);
-
-            var res = default(int);
-            g.Compile()(x => res = x, ex => Assert.Fail());
-
-            Assert.AreEqual(42, res);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Func2()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var foo = new Foo();
-
-            var f = (Expression<Func<int, int>>)(x => foo.Bar(x));
-
-            var g = cps.Rewrite(f);
-
-            var res = default(int);
-            g.Compile()(42, x => res = x, ex => Assert.Fail());
-
-            Assert.AreEqual(42, res);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Func3()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var foo = new Foo();
-
-            var f = (Expression<Func<int, int, int>>)((x, y) => foo.Bar(x, y));
-
-            var g = cps.Rewrite(f);
-
-            var res = default(int);
-            g.Compile()(19, 23, x => res = x, ex => Assert.Fail());
-
-            Assert.AreEqual(42, res);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Func4()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var foo = new Foo();
-
-            var f = (Expression<Func<int, int, int, int>>)((x, y, z) => foo.Bar(x, y, z));
-
-            var g = cps.Rewrite(f);
-
-            var res = default(int);
-            g.Compile()(19, 16, 7, x => res = x, ex => Assert.Fail());
-
-            Assert.AreEqual(42, res);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Action1()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var foo = new Foo();
-
-            var f = (Expression<Action>)(() => foo.Qux());
-
-            var g = cps.Rewrite(f);
-
-            var done = default(bool);
-            g.Compile()(() => done = true, ex => Assert.Fail());
-
-            Assert.IsTrue(done);
-            Assert.AreEqual(42, foo.Qux0);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Action2()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var foo = new Foo();
-
-            var f = (Expression<Action<int>>)(x => foo.Qux(x));
-
-            var g = cps.Rewrite(f);
-
-            var done = default(bool);
-            g.Compile()(42, () => done = true, ex => Assert.Fail());
-
-            Assert.IsTrue(done);
-            Assert.AreEqual(42, foo.Qux1);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Action3()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var foo = new Foo();
-
-            var f = (Expression<Action<int, int>>)((x, y) => foo.Qux(x, y));
-
-            var g = cps.Rewrite(f);
-
-            var done = default(bool);
-            g.Compile()(19, 23, () => done = true, ex => Assert.Fail());
-
-            Assert.IsTrue(done);
-            Assert.AreEqual(42, foo.Qux2);
-        }
-
-        [TestMethod]
-        public void ClassicCpsRewriterWithErrorPropagation_Action4()
-        {
-            var cps = new ClassicCpsRewriterWithErrorPropagation();
-
-            var foo = new Foo();
-
-            var f = (Expression<Action<int, int, int>>)((x, y, z) => foo.Qux(x, y, z));
-
-            var g = cps.Rewrite(f);
-
-            var done = default(bool);
-            g.Compile()(19, 16, 7, () => done = true, ex => Assert.Fail());
-
-            Assert.IsTrue(done);
-            Assert.AreEqual(42, foo.Qux3);
-        }
+        Assert.IsTrue(done);
+        Assert.AreEqual(42, foo.Qux3);
+    }
 
 #pragma warning disable IDE0060 // Remove unused parameter
 #pragma warning disable CA1822 // Mark as static
-        private sealed class Calculator
+    private sealed class Calculator
+    {
+        [UseAsyncMethod]
+        public static int Return(int value)
         {
-            [UseAsyncMethod]
-            public static int Return(int value)
-            {
-                throw new NotImplementedException();
-            }
+            throw new NotImplementedException();
+        }
 
-            public static void Return(int value, Action<int> @return, Action<Exception> @throw)
-            {
-                @return(value);
-            }
+        public static void Return(int value, Action<int> @return, Action<Exception> @throw)
+        {
+            @return(value);
+        }
 
-            [UseAsyncMethod]
-            public static void Throw(Exception ex)
-            {
-                throw new NotImplementedException();
-            }
+        [UseAsyncMethod]
+        public static void Throw(Exception ex)
+        {
+            throw new NotImplementedException();
+        }
 
-            public static void Throw(Exception ex, Action @return, Action<Exception> @throw)
+        public static void Throw(Exception ex, Action @return, Action<Exception> @throw)
+        {
+            @throw(ex);
+        }
+
+        [UseAsyncMethod]
+        public static int Add(int x, int y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Add(int x, int y, Action<int> @return, Action<Exception> @throw)
+        {
+            @return(x + y);
+        }
+
+        [UseAsyncMethod]
+        public static int Div(int x, int y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static void Div(int x, int y, Action<int> @return, Action<Exception> @throw)
+        {
+            int res;
+            try
+            {
+                res = x / y;
+            }
+            catch (Exception ex)
             {
                 @throw(ex);
+                return;
             }
 
-            [UseAsyncMethod]
-            public static int Add(int x, int y)
-            {
-                throw new NotImplementedException();
-            }
+            @return(res);
+        }
+    }
 
-            public static void Add(int x, int y, Action<int> @return, Action<Exception> @throw)
-            {
-                @return(x + y);
-            }
+    private sealed class Bar
+    {
+        public bool HasFood;
 
-            [UseAsyncMethod]
-            public static int Div(int x, int y)
-            {
-                throw new NotImplementedException();
-            }
-
-            public static void Div(int x, int y, Action<int> @return, Action<Exception> @throw)
-            {
-                int res;
-                try
-                {
-                    res = x / y;
-                }
-                catch (Exception ex)
-                {
-                    @throw(ex);
-                    return;
-                }
-
-                @return(res);
-            }
+        [UseAsyncMethod]
+        public void Foo()
+        {
+            throw new NotImplementedException();
         }
 
-        private sealed class Bar
+        public void Foo(Action @return, Action<Exception> @throw)
         {
-            public bool HasFood;
+            HasFood = true;
+            @return();
+        }
 
-            [UseAsyncMethod]
-            public void Foo()
-            {
-                throw new NotImplementedException();
-            }
+        [UseAsyncMethod]
+        public int I(int x)
+        {
+            throw new NotImplementedException();
+        }
 
-            public void Foo(Action @return, Action<Exception> @throw)
-            {
-                HasFood = true;
+        public void I(int x, Action<int> @return, Action<Exception> @throw)
+        {
+            @return(x);
+        }
+
+        [UseAsyncMethod]
+        public void J(int x)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void J(int x, Action @return, Action<Exception> @throw)
+        {
+            if (x != 0)
                 @return();
-            }
-
-            [UseAsyncMethod]
-            public int I(int x)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void I(int x, Action<int> @return, Action<Exception> @throw)
-            {
-                @return(x);
-            }
-
-            [UseAsyncMethod]
-            public void J(int x)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void J(int x, Action @return, Action<Exception> @throw)
-            {
-                if (x != 0)
-                    @return();
-                else
-                    @throw(new DivideByZeroException());
-            }
-
-            [UseAsyncMethod]
-            public long K(bool x, string y, int z)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void K(bool x, string y, int z, Action<long> @return, Action<Exception> @throw)
-            {
-                @return((x ? 1 : 0) + z / y.Length);
-            }
+            else
+                @throw(new DivideByZeroException());
         }
 
-        private sealed class Foo
+        [UseAsyncMethod]
+        public long K(bool x, string y, int z)
         {
-            [UseAsyncMethod]
-            public int Bar()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Bar(Action<int> success, Action<Exception> failure)
-            {
-                success(42);
-            }
-
-            [UseAsyncMethod]
-            public int Bar(int x)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Bar(int x, Action<int> success, Action<Exception> failure)
-            {
-                success(x);
-            }
-
-            [UseAsyncMethod]
-            public int Bar(int x, int y)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Bar(int x, int y, Action<int> success, Action<Exception> failure)
-            {
-                success(x + y);
-            }
-
-            [UseAsyncMethod]
-            public int Bar(int x, int y, int z)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Bar(int x, int y, int z, Action<int> success, Action<Exception> failure)
-            {
-                success(x + y + z);
-            }
-
-            public int Qux0;
-
-            [UseAsyncMethod]
-            public void Qux()
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Qux(Action success, Action<Exception> failure)
-            {
-                Qux0 = 42;
-                success();
-            }
-
-            public int Qux1;
-
-            [UseAsyncMethod]
-            public void Qux(int x)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Qux(int x, Action success, Action<Exception> failure)
-            {
-                Qux1 = 42;
-                success();
-            }
-
-            public int Qux2;
-
-            [UseAsyncMethod]
-            public void Qux(int x, int y)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Qux(int x, int y, Action success, Action<Exception> failure)
-            {
-                Qux2 = x + y;
-                success();
-            }
-
-            public int Qux3;
-
-            [UseAsyncMethod]
-            public void Qux(int x, int y, int z)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void Qux(int x, int y, int z, Action success, Action<Exception> failure)
-            {
-                Qux3 = x + y + z;
-                success();
-            }
+            throw new NotImplementedException();
         }
+
+        public void K(bool x, string y, int z, Action<long> @return, Action<Exception> @throw)
+        {
+            @return((x ? 1 : 0) + z / y.Length);
+        }
+    }
+
+    private sealed class Foo
+    {
+        [UseAsyncMethod]
+        public int Bar()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bar(Action<int> success, Action<Exception> failure)
+        {
+            success(42);
+        }
+
+        [UseAsyncMethod]
+        public int Bar(int x)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bar(int x, Action<int> success, Action<Exception> failure)
+        {
+            success(x);
+        }
+
+        [UseAsyncMethod]
+        public int Bar(int x, int y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bar(int x, int y, Action<int> success, Action<Exception> failure)
+        {
+            success(x + y);
+        }
+
+        [UseAsyncMethod]
+        public int Bar(int x, int y, int z)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Bar(int x, int y, int z, Action<int> success, Action<Exception> failure)
+        {
+            success(x + y + z);
+        }
+
+        public int Qux0;
+
+        [UseAsyncMethod]
+        public void Qux()
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Qux(Action success, Action<Exception> failure)
+        {
+            Qux0 = 42;
+            success();
+        }
+
+        public int Qux1;
+
+        [UseAsyncMethod]
+        public void Qux(int x)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Qux(int x, Action success, Action<Exception> failure)
+        {
+            Qux1 = 42;
+            success();
+        }
+
+        public int Qux2;
+
+        [UseAsyncMethod]
+        public void Qux(int x, int y)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Qux(int x, int y, Action success, Action<Exception> failure)
+        {
+            Qux2 = x + y;
+            success();
+        }
+
+        public int Qux3;
+
+        [UseAsyncMethod]
+        public void Qux(int x, int y, int z)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Qux(int x, int y, int z, Action success, Action<Exception> failure)
+        {
+            Qux3 = x + y + z;
+            success();
+        }
+    }
 #pragma warning restore CA1822 // Mark as static
 #pragma warning restore IDE0060 // Remove unused parameter
-    }
 }

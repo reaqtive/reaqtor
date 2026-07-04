@@ -8,11 +8,10 @@
 // BD - January 2018
 //
 
-namespace Utilities
+namespace Utilities;
+
+public enum StateWriterOperationKind
 {
-    public enum StateWriterOperationKind
-    {
-        AddOrUpdate,
-        Delete,
-    }
+    AddOrUpdate,
+    Delete,
 }

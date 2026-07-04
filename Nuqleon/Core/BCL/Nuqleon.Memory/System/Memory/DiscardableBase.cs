@@ -8,45 +8,44 @@
 //   ER - 11/14/2014 - Created this type.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Base implementation of cached reference including a finalizer.
+/// </summary>
+/// <typeparam name="T">Type of the objects kept in the cache.</typeparam>
+public abstract class DiscardableBase<T> : IDiscardable<T>
 {
     /// <summary>
-    /// Base implementation of cached reference including a finalizer.
+    /// Gets the cached value.
     /// </summary>
-    /// <typeparam name="T">Type of the objects kept in the cache.</typeparam>
-    public abstract class DiscardableBase<T> : IDiscardable<T>
+    public abstract T Value
     {
-        /// <summary>
-        /// Gets the cached value.
-        /// </summary>
-        public abstract T Value
-        {
-            get;
-        }
+        get;
+    }
 
-        /// <summary>
-        /// Disposes the cached reference.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
-        }
+    /// <summary>
+    /// Disposes the cached reference.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
 
-        /// <summary>
-        /// Disposes the cached reference.
-        /// </summary>
-        /// <param name="disposing">
-        /// <b>true</b> if the dispose was explicit.
-        /// </param>
-        protected abstract void Dispose(bool disposing);
+    /// <summary>
+    /// Disposes the cached reference.
+    /// </summary>
+    /// <param name="disposing">
+    /// <b>true</b> if the dispose was explicit.
+    /// </param>
+    protected abstract void Dispose(bool disposing);
 
-        /// <summary>
-        /// Finalizes the cached reference.
-        /// </summary>
-        ~DiscardableBase()
-        {
-            Dispose(disposing: false);
-        }
+    /// <summary>
+    /// Finalizes the cached reference.
+    /// </summary>
+    ~DiscardableBase()
+    {
+        Dispose(disposing: false);
     }
 }

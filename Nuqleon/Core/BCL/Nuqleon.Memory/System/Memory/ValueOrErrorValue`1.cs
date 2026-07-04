@@ -8,16 +8,15 @@
 //   BD - 08/06/2015 - Extended ValueOrError functionality.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+internal class ValueOrErrorValue<T> : IValueOrError<T>
 {
-    internal class ValueOrErrorValue<T> : IValueOrError<T>
-    {
-        public ValueOrErrorValue(T value) => Value = value;
+    public ValueOrErrorValue(T value) => Value = value;
 
-        public ValueOrErrorKind Kind => ValueOrErrorKind.Value;
+    public ValueOrErrorKind Kind => ValueOrErrorKind.Value;
 
-        public T Value { get; }
+    public T Value { get; }
 
-        public Exception Exception => throw new InvalidOperationException("The object represents a value and does not have an error.");
-    }
+    public Exception Exception => throw new InvalidOperationException("The object represents a value and does not have an error.");
 }

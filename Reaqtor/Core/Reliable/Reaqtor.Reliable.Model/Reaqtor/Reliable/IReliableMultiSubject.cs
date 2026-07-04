@@ -4,18 +4,17 @@
 
 using System;
 
-namespace Reaqtor.Reliable
+namespace Reaqtor.Reliable;
+
+public interface IReliableMultiSubject : IDisposable
 {
-    public interface IReliableMultiSubject : IDisposable
-    {
-    }
+}
 
-    public interface IReliableMultiSubject<in TInput, out TOutput> : IReliableMultiSubject, IReliableObservable<TOutput>
-    {
-        IReliableObserver<TInput> CreateObserver();
-    }
+public interface IReliableMultiSubject<in TInput, out TOutput> : IReliableMultiSubject, IReliableObservable<TOutput>
+{
+    IReliableObserver<TInput> CreateObserver();
+}
 
-    public interface IReliableMultiSubject<T> : IReliableMultiSubject<T, T>
-    {
-    }
+public interface IReliableMultiSubject<T> : IReliableMultiSubject<T, T>
+{
 }

@@ -7,67 +7,66 @@ using System.Diagnostics;
 
 using Reaqtive.Scheduler;
 
-namespace Reaqtive.Tasks
+namespace Reaqtive.Tasks;
+
+/// <summary>
+/// Simple action task.
+/// </summary>
+/// <typeparam name="T">Type of the parameter passed to the task.</typeparam>
+public sealed class ActionTask<T> : ISchedulerTask
 {
     /// <summary>
-    /// Simple action task.
+    /// The action.
     /// </summary>
-    /// <typeparam name="T">Type of the parameter passed to the task.</typeparam>
-    public sealed class ActionTask<T> : ISchedulerTask
+    private readonly Action<T> _action;
+
+    /// <summary>
+    /// The state to pass to the action.
+    /// </summary>
+    private readonly T _state;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ActionTask"/> class.
+    /// </summary>
+    /// <param name="action">The action.</param>
+    /// <param name="state">The state to pass to the action.</param>
+    public ActionTask(Action<T> action, T state)
     {
-        /// <summary>
-        /// The action.
-        /// </summary>
-        private readonly Action<T> _action;
+        _action = action ?? throw new ArgumentNullException(nameof(action));
+        _state = state;
+    }
 
-        /// <summary>
-        /// The state to pass to the action.
-        /// </summary>
-        private readonly T _state;
+    /// <summary>
+    /// Gets task priority.
+    /// </summary>
+    public long Priority => ActionTask.TaskPriority;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActionTask"/> class.
-        /// </summary>
-        /// <param name="action">The action.</param>
-        /// <param name="state">The state to pass to the action.</param>
-        public ActionTask(Action<T> action, T state)
-        {
-            _action = action ?? throw new ArgumentNullException(nameof(action));
-            _state = state;
-        }
+    /// <summary>
+    /// Gets a value indicating whether the task is runnable.
+    /// </summary>
+    public bool IsRunnable => true;
 
-        /// <summary>
-        /// Gets task priority.
-        /// </summary>
-        public long Priority => ActionTask.TaskPriority;
+    /// <summary>
+    /// Executes the task.
+    /// </summary>
+    /// <param name="scheduler">The scheduler.</param>
+    /// <returns>
+    /// True if the task has been completed.
+    /// </returns>
+    public bool Execute(IScheduler scheduler)
+    {
+        Debug.Assert(scheduler != null, "Scheduler should not be null.");
 
-        /// <summary>
-        /// Gets a value indicating whether the task is runnable.
-        /// </summary>
-        public bool IsRunnable => true;
+        _action(_state);
 
-        /// <summary>
-        /// Executes the task.
-        /// </summary>
-        /// <param name="scheduler">The scheduler.</param>
-        /// <returns>
-        /// True if the task has been completed.
-        /// </returns>
-        public bool Execute(IScheduler scheduler)
-        {
-            Debug.Assert(scheduler != null, "Scheduler should not be null.");
+        return true;
+    }
 
-            _action(_state);
-
-            return true;
-        }
-
-        /// <summary>
-        /// Recalculates the priority of the task. The task can become runnable
-        /// as the result of this operation.
-        /// </summary>
-        public void RecalculatePriority()
-        {
-        }
+    /// <summary>
+    /// Recalculates the priority of the task. The task can become runnable
+    /// as the result of this operation.
+    /// </summary>
+    public void RecalculatePriority()
+    {
     }
 }

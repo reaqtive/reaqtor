@@ -13,37 +13,36 @@ using System.Memory;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class ValueOrErrorTests
 {
-    [TestClass]
-    public class ValueOrErrorTests
+    [TestMethod]
+    public void ValueOrError_CreateValue()
     {
-        [TestMethod]
-        public void ValueOrError_CreateValue()
-        {
-            var val = ValueOrError.CreateValue<int>(42);
+        var val = ValueOrError.CreateValue<int>(42);
 
-            Assert.AreEqual(42, val.Value);
-            Assert.AreEqual(ValueOrErrorKind.Value, val.Kind);
-            Assert.ThrowsExactly<InvalidOperationException>(() => val.Exception);
-        }
+        Assert.AreEqual(42, val.Value);
+        Assert.AreEqual(ValueOrErrorKind.Value, val.Kind);
+        Assert.ThrowsExactly<InvalidOperationException>(() => val.Exception);
+    }
 
-        [TestMethod]
-        public void ValueOrError_CreateError_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => ValueOrError.CreateError<int>(exception: null));
-        }
+    [TestMethod]
+    public void ValueOrError_CreateError_ArgumentChecking()
+    {
+        Assert.ThrowsExactly<ArgumentNullException>(() => ValueOrError.CreateError<int>(exception: null));
+    }
 
-        [TestMethod]
-        public void ValueOrError_CreateError()
-        {
-            var ex = new Exception();
-            var val = ValueOrError.CreateError<int>(ex);
+    [TestMethod]
+    public void ValueOrError_CreateError()
+    {
+        var ex = new Exception();
+        var val = ValueOrError.CreateError<int>(ex);
 
-            Assert.AreSame(ex, val.Exception);
-            Assert.AreEqual(ValueOrErrorKind.Error, val.Kind);
-            var err = Assert.ThrowsExactly<Exception>(() => val.Value);
-            object.ReferenceEquals(err, ex);
-        }
+        Assert.AreSame(ex, val.Exception);
+        Assert.AreEqual(ValueOrErrorKind.Error, val.Kind);
+        var err = Assert.ThrowsExactly<Exception>(() => val.Value);
+        object.ReferenceEquals(err, ex);
     }
 }

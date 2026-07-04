@@ -5,20 +5,19 @@
 using System;
 using System.Collections.Generic;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+public class RemoveOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
 {
-    public class RemoveOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
-    {
-        private readonly bool _keyDoesNotExist;
+    private readonly bool _keyDoesNotExist;
 
-        public RemoveOperationResult(bool keyDoesNotExist) => _keyDoesNotExist = keyDoesNotExist;
+    public RemoveOperationResult(bool keyDoesNotExist) => _keyDoesNotExist = keyDoesNotExist;
 
-        public override Exception Exception => _keyDoesNotExist ? new KeyNotFoundException() : null;
+    public override Exception Exception => _keyDoesNotExist ? new KeyNotFoundException() : null;
 
-        public override object Result => throw new NotSupportedException();
+    public override object Result => throw new NotSupportedException();
 
-        public override bool Equals(object obj) => obj is RemoveOperationResult<TKey, TValue> state && _keyDoesNotExist == state._keyDoesNotExist;
+    public override bool Equals(object obj) => obj is RemoveOperationResult<TKey, TValue> state && _keyDoesNotExist == state._keyDoesNotExist;
 
-        public override int GetHashCode() => _keyDoesNotExist.GetHashCode();
-    }
+    public override int GetHashCode() => _keyDoesNotExist.GetHashCode();
 }

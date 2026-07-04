@@ -10,17 +10,16 @@
 
 using System.Reflection;
 
-namespace System.Linq.CompilerServices.Reflection
+namespace System.Linq.CompilerServices.Reflection;
+
+internal static class FieldInfoExtensions
 {
-    internal static class FieldInfoExtensions
+    internal static string ToCSharpString(this FieldInfo field)
     {
-        internal static string ToCSharpString(this FieldInfo field)
-        {
-            // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
+        // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
 
-            var dot = field.IsStatic ? "::" : ".";
+        var dot = field.IsStatic ? "::" : ".";
 
-            return field.FieldType.ToCSharpString() + " " + field.DeclaringType.ToCSharpString() + dot + field.Name;
-        }
+        return field.FieldType.ToCSharpString() + " " + field.DeclaringType.ToCSharpString() + dot + field.Name;
     }
 }

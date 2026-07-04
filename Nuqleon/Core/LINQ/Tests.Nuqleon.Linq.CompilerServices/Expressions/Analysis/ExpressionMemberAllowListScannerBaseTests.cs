@@ -16,206 +16,205 @@ using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class ExpressionMemberAllowListScannerBaseTests
 {
-    [TestClass]
-    public class ExpressionMemberAllowListScannerBaseTests
+    [TestMethod]
+    public void ExpressionMemberAllowListScannerBase_AllPass()
     {
-        [TestMethod]
-        public void ExpressionMemberAllowListScannerBase_AllPass()
-        {
-            var aps = new AllPassScanner();
+        var aps = new AllPassScanner();
 
-            foreach (var e in new Expression[] {
-                (Expression<Func<int, int>>)(x => -x),
-                (Expression<Func<int, int, int>>)((a, b) => a + b),
-                (Expression<Func<TimeSpan, TimeSpan>>)(t => -t),
-                (Expression<Func<DateTime, TimeSpan, DateTime>>)((d, t) => d + t),
+        foreach (var e in new Expression[] {
+            (Expression<Func<int, int>>)(x => -x),
+            (Expression<Func<int, int, int>>)((a, b) => a + b),
+            (Expression<Func<TimeSpan, TimeSpan>>)(t => -t),
+            (Expression<Func<DateTime, TimeSpan, DateTime>>)((d, t) => d + t),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<DateTime>>)(() => DateTime.Now),
-                (Expression<Func<DateTime, int>>)(d => d.Year),
-                (Expression<Func<string, string>>)(s => s.ToUpper()),
-                (Expression<Func<string, bool>>)(s => string.IsNullOrEmpty(s)),
-                (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
-                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
-                (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
-                (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
+            (Expression<Func<DateTime>>)(() => DateTime.Now),
+            (Expression<Func<DateTime, int>>)(d => d.Year),
+            (Expression<Func<string, string>>)(s => s.ToUpper()),
+            (Expression<Func<string, bool>>)(s => string.IsNullOrEmpty(s)),
+            (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
+            Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
+            (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
+            (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
 #pragma warning restore IDE0004
-            })
-            {
-                Assert.AreSame(e, aps.Visit(e));
-            }
+        })
+        {
+            Assert.AreSame(e, aps.Visit(e));
+        }
+    }
+
+    [TestMethod]
+    public void ExpressionMemberAllowListScannerBase_NoPass()
+    {
+        var aps = new NoPassScanner();
+
+        foreach (var e in new Expression[] {
+            (Expression<Func<int, int>>)(x => -x),
+            (Expression<Func<int, int, int>>)((a, b) => a + b),
+        })
+        {
+            Assert.AreSame(e, aps.Visit(e));
         }
 
-        [TestMethod]
-        public void ExpressionMemberAllowListScannerBase_NoPass()
-        {
-            var aps = new NoPassScanner();
-
-            foreach (var e in new Expression[] {
-                (Expression<Func<int, int>>)(x => -x),
-                (Expression<Func<int, int, int>>)((a, b) => a + b),
-            })
-            {
-                Assert.AreSame(e, aps.Visit(e));
-            }
-
-            foreach (var e in new Expression[] {
-                (Expression<Func<TimeSpan, TimeSpan>>)(t => -t),
-                (Expression<Func<DateTime, TimeSpan, DateTime>>)((d, t) => d + t),
+        foreach (var e in new Expression[] {
+            (Expression<Func<TimeSpan, TimeSpan>>)(t => -t),
+            (Expression<Func<DateTime, TimeSpan, DateTime>>)((d, t) => d + t),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<DateTime>>)(() => DateTime.Now),
-                (Expression<Func<DateTime, int>>)(d => d.Year),
-                (Expression<Func<string, string>>)(s => s.ToUpper()),
-                (Expression<Func<string, bool>>)(s => string.IsNullOrEmpty(s)),
-                (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
-                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
-                (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
-                (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
+            (Expression<Func<DateTime>>)(() => DateTime.Now),
+            (Expression<Func<DateTime, int>>)(d => d.Year),
+            (Expression<Func<string, string>>)(s => s.ToUpper()),
+            (Expression<Func<string, bool>>)(s => string.IsNullOrEmpty(s)),
+            (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
+            Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
+            (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
+            (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
 #pragma warning restore IDE0004
-            })
-            {
-                Assert.ThrowsExactly<NotSupportedException>(() => aps.Visit(e));
-            }
-        }
-
-        [TestMethod]
-        public void ExpressionMemberAllowListScannerBase_SomePass()
+        })
         {
-            var aps = new SomePassScanner();
+            Assert.ThrowsExactly<NotSupportedException>(() => aps.Visit(e));
+        }
+    }
 
-            foreach (var e in new Expression[] {
-                (Expression<Func<int, int>>)(x => -x),
-                (Expression<Func<int, int, int>>)((a, b) => a + b),
-                (Expression<Func<DateTime, TimeSpan, DateTime>>)((d, t) => d + t),
+    [TestMethod]
+    public void ExpressionMemberAllowListScannerBase_SomePass()
+    {
+        var aps = new SomePassScanner();
+
+        foreach (var e in new Expression[] {
+            (Expression<Func<int, int>>)(x => -x),
+            (Expression<Func<int, int, int>>)((a, b) => a + b),
+            (Expression<Func<DateTime, TimeSpan, DateTime>>)((d, t) => d + t),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<DateTime>>)(() => DateTime.Now),
-                (Expression<Func<DateTime, int>>)(d => d.Year),
-                (Expression<Func<string, string>>)(s => s.ToUpper()),
-                (Expression<Func<string, bool>>)(s => string.IsNullOrEmpty(s)),
-                (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
+            (Expression<Func<DateTime>>)(() => DateTime.Now),
+            (Expression<Func<DateTime, int>>)(d => d.Year),
+            (Expression<Func<string, string>>)(s => s.ToUpper()),
+            (Expression<Func<string, bool>>)(s => string.IsNullOrEmpty(s)),
+            (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
 #pragma warning restore IDE0004
-            })
-            {
-                Assert.AreSame(e, aps.Visit(e));
-            }
+        })
+        {
+            Assert.AreSame(e, aps.Visit(e));
+        }
 
-            foreach (var e in new Expression[] {
-                (Expression<Func<TimeSpan, TimeSpan>>)(t => -t),
+        foreach (var e in new Expression[] {
+            (Expression<Func<TimeSpan, TimeSpan>>)(t => -t),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
-                Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
-                (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
+            (Expression<Func<TimeSpan>>)(() => new TimeSpan(1, 2, 3)),
+            Expression.MakeIndex(Expression.Parameter(typeof(Dictionary<int, int>)), typeof(Dictionary<int, int>).GetProperty("Item"), [Expression.Constant(1)]),
+            (Expression<Func<List<int>>>)(() => new List<int> { 1 }),
 #pragma warning restore IDE0004
-            })
-            {
-                Assert.ThrowsExactly<NotSupportedException>(() => aps.Visit(e));
-            }
-        }
-
-        [TestMethod]
-        public void ExpressionMemberAllowListScannerBase_Custom()
+        })
         {
-            var cps = new CustomScanner();
+            Assert.ThrowsExactly<NotSupportedException>(() => aps.Visit(e));
+        }
+    }
 
-            foreach (var e in new Expression[] {
-                (Expression<Func<string, string>>)(s => s.ToLower()),
+    [TestMethod]
+    public void ExpressionMemberAllowListScannerBase_Custom()
+    {
+        var cps = new CustomScanner();
+
+        foreach (var e in new Expression[] {
+            (Expression<Func<string, string>>)(s => s.ToLower()),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
-                (Expression<Func<List<int>>>)(() => new List<int> { 2 }),
+            (Expression<Func<Bar>>)(() => new Bar { Foo = 1 }),
+            (Expression<Func<List<int>>>)(() => new List<int> { 2 }),
 #pragma warning restore IDE0004
-            })
-            {
-                Assert.AreSame(e, cps.Visit(e));
-            }
+        })
+        {
+            Assert.AreSame(e, cps.Visit(e));
+        }
 
-            foreach (var e in new Expression[] {
-                (Expression<Func<string, string>>)(s => s.TrimStart()),
+        foreach (var e in new Expression[] {
+            (Expression<Func<string, string>>)(s => s.TrimStart()),
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<Bar>>)(() => new Bar { Qux = 1 }),
-                (Expression<Func<Dictionary<string, int>>>)(() => new Dictionary<string, int> { { "bar", 2 } }),
+            (Expression<Func<Bar>>)(() => new Bar { Qux = 1 }),
+            (Expression<Func<Dictionary<string, int>>>)(() => new Dictionary<string, int> { { "bar", 2 } }),
 #pragma warning restore IDE0004
-            })
-            {
-                Assert.ThrowsExactly<NotSupportedException>(() => cps.Visit(e));
-            }
-        }
-
-        private sealed class Bar
+        })
         {
-            public int Foo { get; set; }
-            public int Qux { get; set; }
+            Assert.ThrowsExactly<NotSupportedException>(() => cps.Visit(e));
         }
+    }
 
-        private sealed class AllPassScanner : ExpressionMemberAllowListScannerBase
+    private sealed class Bar
+    {
+        public int Foo { get; set; }
+        public int Qux { get; set; }
+    }
+
+    private sealed class AllPassScanner : ExpressionMemberAllowListScannerBase
+    {
+        protected override bool Check(MemberInfo member) => true;
+    }
+
+    private sealed class NoPassScanner : ExpressionMemberAllowListScannerBase
+    {
+        protected override bool Check(MemberInfo member) => false;
+    }
+
+    private sealed class SomePassScanner : ExpressionMemberAllowListScannerBase
+    {
+        protected override bool Check(MemberInfo member)
         {
-            protected override bool Check(MemberInfo member) => true;
+            return member.DeclaringType == typeof(DateTime) || member.DeclaringType == typeof(string) || member.DeclaringType == typeof(Bar);
         }
+    }
 
-        private sealed class NoPassScanner : ExpressionMemberAllowListScannerBase
+    private sealed class CustomScanner : ExpressionMemberAllowListScannerBase
+    {
+        protected override bool Check(MemberInfo member) => false;
+
+        protected override Expression ResolveExpression<T>(T expression, MemberInfo member, Func<T, Expression> visit)
         {
-            protected override bool Check(MemberInfo member) => false;
-        }
-
-        private sealed class SomePassScanner : ExpressionMemberAllowListScannerBase
-        {
-            protected override bool Check(MemberInfo member)
-            {
-                return member.DeclaringType == typeof(DateTime) || member.DeclaringType == typeof(string) || member.DeclaringType == typeof(Bar);
-            }
-        }
-
-        private sealed class CustomScanner : ExpressionMemberAllowListScannerBase
-        {
-            protected override bool Check(MemberInfo member) => false;
-
-            protected override Expression ResolveExpression<T>(T expression, MemberInfo member, Func<T, Expression> visit)
-            {
-                if (member.MemberType is MemberTypes.Property or MemberTypes.Method)
-                {
-#pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
-#pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
-                    if (member.Name.Contains("e"))
-#pragma warning restore CA1847
-#pragma warning restore IDE0079
-                    {
-                        return visit(expression);
-                    }
-                    else
-                    {
-                        return base.ResolveExpression<T>(expression, member, visit);
-                    }
-                }
-
-                return visit(expression);
-            }
-
-            protected override ElementInit ResolveElementInit(ElementInit initializer, Func<ElementInit, ElementInit> visit)
-            {
-                if (initializer.Arguments.Count == 1)
-                {
-                    return visit(initializer);
-                }
-                else
-                {
-                    return base.ResolveElementInit(initializer, visit);
-                }
-            }
-
-            protected override MemberBinding ResolveMemberBinding<T>(T binding, Func<T, MemberBinding> visit)
+            if (member.MemberType is MemberTypes.Property or MemberTypes.Method)
             {
 #pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
 #pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
-                if (binding.Member.Name.Contains("o"))
+                if (member.Name.Contains("e"))
 #pragma warning restore CA1847
 #pragma warning restore IDE0079
                 {
-                    return visit(binding);
+                    return visit(expression);
                 }
                 else
                 {
-                    return base.ResolveMemberBinding<T>(binding, visit);
+                    return base.ResolveExpression<T>(expression, member, visit);
                 }
+            }
+
+            return visit(expression);
+        }
+
+        protected override ElementInit ResolveElementInit(ElementInit initializer, Func<ElementInit, ElementInit> visit)
+        {
+            if (initializer.Arguments.Count == 1)
+            {
+                return visit(initializer);
+            }
+            else
+            {
+                return base.ResolveElementInit(initializer, visit);
+            }
+        }
+
+        protected override MemberBinding ResolveMemberBinding<T>(T binding, Func<T, MemberBinding> visit)
+        {
+#pragma warning disable IDE0079 // The following supression is flagged as unnecessary on .NET Framework (but is required for other targets)
+#pragma warning disable CA1847  // Use 'string.Contains(char)' instead of 'string.Contains(string)' - unavailable on .NET Framework
+            if (binding.Member.Name.Contains("o"))
+#pragma warning restore CA1847
+#pragma warning restore IDE0079
+            {
+                return visit(binding);
+            }
+            else
+            {
+                return base.ResolveMemberBinding<T>(binding, visit);
             }
         }
     }

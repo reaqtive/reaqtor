@@ -2,10 +2,9 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal interface IQbservable<T> : IQProviderBound
 {
-    internal interface IQbservable<T> : IQProviderBound
-    {
-        IQubscription Subscribe(string id, IQbserver<T> observer);
-    }
+    IQubscription Subscribe(string id, IQbserver<T> observer);
 }

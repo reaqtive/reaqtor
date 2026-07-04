@@ -13,21 +13,20 @@
 // BD - November 2014 - Created this file.
 //
 
-namespace Rxcel
+namespace Rxcel;
+
+internal enum ExcelExpressionKind
 {
-    internal enum ExcelExpressionKind
-    {
-        Cell,
-        Range,
+    Cell,
+    Range,
 
-        Number,
+    Number,
 
-        Add,
-        Subtract,
-        Multiply,
-        Divide,
-        Modulo,
+    Add,
+    Subtract,
+    Multiply,
+    Divide,
+    Modulo,
 
-        Formula,
-    }
+    Formula,
 }

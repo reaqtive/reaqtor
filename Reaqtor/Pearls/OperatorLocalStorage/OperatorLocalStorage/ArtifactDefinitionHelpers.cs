@@ -14,24 +14,23 @@ using Reaqtive;
 
 using Reaqtor;
 
-namespace Playground
+namespace Playground;
+
+/// <summary>
+/// Helper methods to make definition of artifacts more fluent.
+/// </summary>
+internal static class ArtifactDefinitionHelpers
 {
-    /// <summary>
-    /// Helper methods to make definition of artifacts more fluent.
-    /// </summary>
-    internal static class ArtifactDefinitionHelpers
-    {
-        //
-        // NB: None of these have an implementation body; they're simply used within expression trees for artifact definitions, for CastVisitor to pick up on rx://builtin/id.
-        //
+    //
+    // NB: None of these have an implementation body; they're simply used within expression trees for artifact definitions, for CastVisitor to pick up on rx://builtin/id.
+    //
 
-        [KnownResource("rx://builtin/id")]
-        public static ISubscribable<T> ToSubscribable<T>(this IReactiveQbservable<T> source) => throw new NotImplementedException();
+    [KnownResource("rx://builtin/id")]
+    public static ISubscribable<T> ToSubscribable<T>(this IReactiveQbservable<T> source) => throw new NotImplementedException();
 
-        [KnownResource("rx://builtin/id")]
-        public static IReactiveQbservable<T> ToQbservable<T>(this ISubscribable<T> source) => throw new NotImplementedException();
+    [KnownResource("rx://builtin/id")]
+    public static IReactiveQbservable<T> ToQbservable<T>(this ISubscribable<T> source) => throw new NotImplementedException();
 
-        [KnownResource("rx://builtin/id")]
-        public static IReactiveQbserver<T> ToQbserver<T>(this IObserver<T> observer) => throw new NotImplementedException();
-    }
+    [KnownResource("rx://builtin/id")]
+    public static IReactiveQbserver<T> ToQbserver<T>(this IObserver<T> observer) => throw new NotImplementedException();
 }

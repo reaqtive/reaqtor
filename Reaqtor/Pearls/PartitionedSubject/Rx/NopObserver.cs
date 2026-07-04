@@ -10,20 +10,19 @@
 
 using System;
 
-namespace PartitionedSubject
+namespace PartitionedSubject;
+
+internal class NopObserver<T> : IObserver<T>
 {
-    internal class NopObserver<T> : IObserver<T>
+    public void OnCompleted()
     {
-        public void OnCompleted()
-        {
-        }
+    }
 
-        public void OnError(Exception error)
-        {
-        }
+    public void OnError(Exception error)
+    {
+    }
 
-        public void OnNext(T value)
-        {
-        }
+    public void OnNext(T value)
+    {
     }
 }

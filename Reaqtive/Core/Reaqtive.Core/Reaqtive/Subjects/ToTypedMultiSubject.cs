@@ -4,35 +4,34 @@
 
 using System;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+internal class ToTypedMultiSubject<TInput, TOutput> : IMultiSubject<TInput, TOutput>
 {
-    internal class ToTypedMultiSubject<TInput, TOutput> : IMultiSubject<TInput, TOutput>
+    private readonly IMultiSubject _innerSubject;
+
+    public ToTypedMultiSubject(IMultiSubject innerSubject)
     {
-        private readonly IMultiSubject _innerSubject;
+        _innerSubject = innerSubject;
+    }
 
-        public ToTypedMultiSubject(IMultiSubject innerSubject)
-        {
-            _innerSubject = innerSubject;
-        }
+    public IObserver<TInput> CreateObserver()
+    {
+        return _innerSubject.GetObserver<TInput>();
+    }
 
-        public IObserver<TInput> CreateObserver()
-        {
-            return _innerSubject.GetObserver<TInput>();
-        }
+    public ISubscription Subscribe(IObserver<TOutput> observer)
+    {
+        return _innerSubject.GetObservable<TOutput>().Subscribe(observer);
+    }
 
-        public ISubscription Subscribe(IObserver<TOutput> observer)
-        {
-            return _innerSubject.GetObservable<TOutput>().Subscribe(observer);
-        }
+    IDisposable IObservable<TOutput>.Subscribe(IObserver<TOutput> observer)
+    {
+        return Subscribe(observer);
+    }
 
-        IDisposable IObservable<TOutput>.Subscribe(IObserver<TOutput> observer)
-        {
-            return Subscribe(observer);
-        }
-
-        public void Dispose()
-        {
-            _innerSubject.Dispose();
-        }
+    public void Dispose()
+    {
+        _innerSubject.Dispose();
     }
 }

@@ -4,16 +4,15 @@
 
 using System;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Versions used for persistence of transaction log records.
+/// </summary>
+internal static class TransactionStateVersion
 {
     /// <summary>
-    /// Versions used for persistence of transaction log records.
+    /// Version 1.0.0.0 (current).
     /// </summary>
-    internal static class TransactionStateVersion
-    {
-        /// <summary>
-        /// Version 1.0.0.0 (current).
-        /// </summary>
-        public static readonly Version v1 = new(1, 0, 0, 0);
-    }
+    public static readonly Version v1 = new(1, 0, 0, 0);
 }

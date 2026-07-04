@@ -12,22 +12,21 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for an observable represented by an expression tree.
+/// </summary>
+/// <typeparam name="T">Type of the data produced by the observable.</typeparam>
+public interface IAsyncReactiveQbservable<out T> : IAsyncReactiveObservable<T>, IAsyncReactiveQbservable
 {
     /// <summary>
-    /// Interface for an observable represented by an expression tree.
+    /// Subscribes to the observable using the given observer.
     /// </summary>
-    /// <typeparam name="T">Type of the data produced by the observable.</typeparam>
-    public interface IAsyncReactiveQbservable<out T> : IAsyncReactiveObservable<T>, IAsyncReactiveQbservable
-    {
-        /// <summary>
-        /// Subscribes to the observable using the given observer.
-        /// </summary>
-        /// <param name="observer">Observer to send the observable's data to.</param>
-        /// <param name="subscriptionUri">URI to identify the subscription.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <param name="token">Token to observe for cancellation of the request.</param>
-        /// <returns>Task returning a subscription object that can be used to cancel the subscription, or an exception if the subscription was unsuccessful.</returns>
-        Task<IAsyncReactiveQubscription> SubscribeAsync(IAsyncReactiveQbserver<T> observer, Uri subscriptionUri, object state = null, CancellationToken token = default);
-    }
+    /// <param name="observer">Observer to send the observable's data to.</param>
+    /// <param name="subscriptionUri">URI to identify the subscription.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <param name="token">Token to observe for cancellation of the request.</param>
+    /// <returns>Task returning a subscription object that can be used to cancel the subscription, or an exception if the subscription was unsuccessful.</returns>
+    Task<IAsyncReactiveQubscription> SubscribeAsync(IAsyncReactiveQbserver<T> observer, Uri subscriptionUri, object state = null, CancellationToken token = default);
 }

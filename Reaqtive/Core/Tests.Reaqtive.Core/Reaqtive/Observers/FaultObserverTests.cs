@@ -8,40 +8,39 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtive;
 
-namespace Test.Reaqtive
+namespace Test.Reaqtive;
+
+[TestClass]
+public class FaultObserverTests
 {
-    [TestClass]
-    public class FaultObserverTests
+    [TestMethod]
+    public void FaultObserver_ArgumentChecking()
     {
-        [TestMethod]
-        public void FaultObserver_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => new FaultObserver<int>(null));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => new FaultObserver<int>(null));
+    }
 
-        [TestMethod]
-        public void FaultObserver_Disposed()
-        {
-            var d = FaultObserver<int>.Disposed;
+    [TestMethod]
+    public void FaultObserver_Disposed()
+    {
+        var d = FaultObserver<int>.Disposed;
 
-            Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnNext(42));
-            Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnError(new Exception()));
-            Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnCompleted());
-        }
+        Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnNext(42));
+        Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnError(new Exception()));
+        Assert.ThrowsExactly<ObjectDisposedException>(() => d.OnCompleted());
+    }
 
-        [TestMethod]
-        public void FaultObserver_Basics()
-        {
-            var ex = new Exception();
+    [TestMethod]
+    public void FaultObserver_Basics()
+    {
+        var ex = new Exception();
 
-            var d = new FaultObserver<int>(() => ex);
+        var d = new FaultObserver<int>(() => ex);
 
-            var err = Assert.ThrowsExactly<Exception>(() => d.OnNext(42));
-            Assert.AreSame(ex, err);
-            var err2 = Assert.ThrowsExactly<Exception>(() => d.OnError(new Exception()));
-            Assert.AreSame(ex, err2);
-            var err3 = Assert.ThrowsExactly<Exception>(() => d.OnCompleted());
-            Assert.AreSame(ex, err3);
-        }
+        var err = Assert.ThrowsExactly<Exception>(() => d.OnNext(42));
+        Assert.AreSame(ex, err);
+        var err2 = Assert.ThrowsExactly<Exception>(() => d.OnError(new Exception()));
+        Assert.AreSame(ex, err2);
+        var err3 = Assert.ThrowsExactly<Exception>(() => d.OnCompleted());
+        Assert.AreSame(ex, err3);
     }
 }

@@ -12,35 +12,34 @@ using System;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class ServiceProviderExtensionsTests
 {
-    [TestClass]
-    public class ServiceProviderExtensionsTests
+    [TestMethod]
+    public void ServiceProviderExtensions_GetServiceOfT()
     {
-        [TestMethod]
-        public void ServiceProviderExtensions_GetServiceOfT()
+        var f = new Foo();
+        Assert.AreEqual(42, f.GetService<int>());
+
+        var o = (object)f;
+        Assert.AreEqual(42, o.GetService<int>());
+
+        Assert.IsNull("".GetService<object>());
+        Assert.IsNull("".GetService(typeof(object)));
+    }
+
+    private sealed class Foo : IServiceProvider
+    {
+        public object GetService(Type serviceType)
         {
-            var f = new Foo();
-            Assert.AreEqual(42, f.GetService<int>());
-
-            var o = (object)f;
-            Assert.AreEqual(42, o.GetService<int>());
-
-            Assert.IsNull("".GetService<object>());
-            Assert.IsNull("".GetService(typeof(object)));
-        }
-
-        private sealed class Foo : IServiceProvider
-        {
-            public object GetService(Type serviceType)
+            if (serviceType == typeof(int))
             {
-                if (serviceType == typeof(int))
-                {
-                    return 42;
-                }
-
-                return null;
+                return 42;
             }
+
+            return null;
         }
     }
 }

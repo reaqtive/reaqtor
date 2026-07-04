@@ -8,28 +8,27 @@
 // BD - May 2017 - Initial prototype of JIT.
 //
 
-namespace System.Linq.Expressions.Jit
+namespace System.Linq.Expressions.Jit;
+
+/// <summary>
+/// Enum for different storage kinds for variables.
+/// Designed to support combinations of storage requirements, e.g. <c>Hoisted | Boxed</c>.
+/// </summary>
+[Flags]
+internal enum StorageKind
 {
     /// <summary>
-    /// Enum for different storage kinds for variables.
-    /// Designed to support combinations of storage requirements, e.g. <c>Hoisted | Boxed</c>.
+    /// Store the variable in a local (default).
     /// </summary>
-    [Flags]
-    internal enum StorageKind
-    {
-        /// <summary>
-        /// Store the variable in a local (default).
-        /// </summary>
-        Local = 0,
+    Local = 0,
 
-        /// <summary>
-        /// Hoist the variable for storage in a closure object.
-        /// </summary>
-        Hoisted = 1,
+    /// <summary>
+    /// Hoist the variable for storage in a closure object.
+    /// </summary>
+    Hoisted = 1,
 
-        /// <summary>
-        /// Store the variable in a strong box, for use within a RuntimeVariables or Quote expression.
-        /// </summary>
-        Boxed = 2,
-    }
+    /// <summary>
+    /// Store the variable in a strong box, for use within a RuntimeVariables or Quote expression.
+    /// </summary>
+    Boxed = 2,
 }

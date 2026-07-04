@@ -8,74 +8,73 @@
 // PS - February 2015 - Created this file.
 //
 
-namespace System.Linq.CompilerServices.Optimizers
+namespace System.Linq.CompilerServices.Optimizers;
+
+/// <summary>
+/// A representation of a first query expression operator with a predicate.
+/// </summary>
+public class FirstPredicateOperator : QueryOperator
 {
     /// <summary>
-    /// A representation of a first query expression operator with a predicate.
+    /// Creates a representation of a first query expression operator with a predicate.
     /// </summary>
-    public class FirstPredicateOperator : QueryOperator
+    /// <param name="elementType">The element type of the resulting monad.</param>
+    /// <param name="source">The source on which to filter.</param>
+    /// <param name="predicate">The function used to filter.</param>
+    protected internal FirstPredicateOperator(Type elementType, MonadMember source, QueryTree predicate)
+        : base(elementType)
     {
-        /// <summary>
-        /// Creates a representation of a first query expression operator with a predicate.
-        /// </summary>
-        /// <param name="elementType">The element type of the resulting monad.</param>
-        /// <param name="source">The source on which to filter.</param>
-        /// <param name="predicate">The function used to filter.</param>
-        protected internal FirstPredicateOperator(Type elementType, MonadMember source, QueryTree predicate)
-            : base(elementType)
+        Source = source;
+        Predicate = predicate;
+    }
+
+    /// <summary>
+    /// Gets the <see cref="OperatorType"/> of the <see cref="QueryOperator"/>.
+    /// </summary>
+    public override OperatorType NodeType => OperatorType.FirstPredicate;
+
+    /// <summary>
+    /// The source on which this operator acts.
+    /// </summary>
+    public MonadMember Source { get; }
+
+    /// <summary>
+    /// The predicate used to filter the source monad.
+    /// </summary>
+    public QueryTree Predicate { get; }
+
+    /// <summary>
+    /// Creates a first predicate operator query expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
+    /// </summary>
+    /// <param name="source">The <see cref="Source"/> child node of the result.</param>
+    /// <param name="predicate">The <see cref="Predicate"/> child node of the result.</param>
+    /// <returns>This query expression if no children are changed or an expression with the updated children.</returns>
+    public FirstPredicateOperator Update(MonadMember source, QueryTree predicate)
+    {
+        if (source == Source && predicate == Predicate)
         {
-            Source = source;
-            Predicate = predicate;
+            return this;
         }
 
-        /// <summary>
-        /// Gets the <see cref="OperatorType"/> of the <see cref="QueryOperator"/>.
-        /// </summary>
-        public override OperatorType NodeType => OperatorType.FirstPredicate;
-
-        /// <summary>
-        /// The source on which this operator acts.
-        /// </summary>
-        public MonadMember Source { get; }
-
-        /// <summary>
-        /// The predicate used to filter the source monad.
-        /// </summary>
-        public QueryTree Predicate { get; }
-
-        /// <summary>
-        /// Creates a first predicate operator query expression that is like this one, but using the supplied children. If all of the children are the same, it will return this expression.
-        /// </summary>
-        /// <param name="source">The <see cref="Source"/> child node of the result.</param>
-        /// <param name="predicate">The <see cref="Predicate"/> child node of the result.</param>
-        /// <returns>This query expression if no children are changed or an expression with the updated children.</returns>
-        public FirstPredicateOperator Update(MonadMember source, QueryTree predicate)
-        {
-            if (source == Source && predicate == Predicate)
-            {
-                return this;
-            }
-
-            return QueryExpressionFactory.First(ElementType, source, predicate);
-        }
+        return QueryExpressionFactory.First(ElementType, source, predicate);
+    }
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1062 // Omitted null checks. (Similar to expression tree visitor implementation pattern.)
 
-        /// <summary>
-        /// Accepts the query expression tree node in the specified visitor.
-        /// </summary>
-        /// <typeparam name="TQueryTree">Target type for query expressions.</typeparam>
-        /// <typeparam name="TMonadMember">Target type for monad member query expressions. This type has to derive from TQueryTree.</typeparam>
-        /// <typeparam name="TQueryOperator">Target type for query operator query expressions. This type has to derive from TMonadMember.</typeparam>
-        /// <param name="visitor">Visitor to process the current query expression tree node.</param>
-        /// <returns>Result of visiting the node.</returns>
-        protected internal override TQueryTree Accept<TQueryTree, TMonadMember, TQueryOperator>(QueryVisitor<TQueryTree, TMonadMember, TQueryOperator> visitor)
-        {
-            return visitor.VisitFirstPredicate(this);
-        }
+    /// <summary>
+    /// Accepts the query expression tree node in the specified visitor.
+    /// </summary>
+    /// <typeparam name="TQueryTree">Target type for query expressions.</typeparam>
+    /// <typeparam name="TMonadMember">Target type for monad member query expressions. This type has to derive from TQueryTree.</typeparam>
+    /// <typeparam name="TQueryOperator">Target type for query operator query expressions. This type has to derive from TMonadMember.</typeparam>
+    /// <param name="visitor">Visitor to process the current query expression tree node.</param>
+    /// <returns>Result of visiting the node.</returns>
+    protected internal override TQueryTree Accept<TQueryTree, TMonadMember, TQueryOperator>(QueryVisitor<TQueryTree, TMonadMember, TQueryOperator> visitor)
+    {
+        return visitor.VisitFirstPredicate(this);
+    }
 
 #pragma warning restore CA1062
 #pragma warning restore IDE0079
-    }
 }

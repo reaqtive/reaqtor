@@ -4,67 +4,66 @@
 
 using System;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class Finally<T> : SubscribableBase<T>
 {
-    internal sealed class Finally<T> : SubscribableBase<T>
+    private readonly ISubscribable<T> _source;
+    private readonly Action _finally;
+
+    public Finally(ISubscribable<T> source, Action @finally)
     {
-        private readonly ISubscribable<T> _source;
-        private readonly Action _finally;
+        _source = source;
+        _finally = @finally;
+    }
 
-        public Finally(ISubscribable<T> source, Action @finally)
+    protected override ISubscription SubscribeCore(IObserver<T> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<Finally<T>, T>, IObserver<T>
+    {
+        public _(Finally<T> parent, IObserver<T> observer)
+            : base(parent, observer)
         {
-            _source = source;
-            _finally = @finally;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<T> observer)
+        public override string Name => "rc:Finally";
+
+        public override Version Version => Versioning.v1;
+
+        protected override ISubscription OnSubscribe()
         {
-            return new _(this, observer);
+            return Params._source.Subscribe(this);
         }
 
-        private sealed class _ : StatefulUnaryOperator<Finally<T>, T>, IObserver<T>
+        public void OnCompleted()
         {
-            public _(Finally<T> parent, IObserver<T> observer)
-                : base(parent, observer)
+            Output.OnCompleted();
+            Dispose();
+        }
+
+        public void OnError(Exception error)
+        {
+            Output.OnError(error);
+            Dispose();
+        }
+
+        public void OnNext(T value)
+        {
+            Output.OnNext(value);
+        }
+
+        protected override void OnDispose()
+        {
+            try
             {
+                base.OnDispose();
             }
-
-            public override string Name => "rc:Finally";
-
-            public override Version Version => Versioning.v1;
-
-            protected override ISubscription OnSubscribe()
+            finally
             {
-                return Params._source.Subscribe(this);
-            }
-
-            public void OnCompleted()
-            {
-                Output.OnCompleted();
-                Dispose();
-            }
-
-            public void OnError(Exception error)
-            {
-                Output.OnError(error);
-                Dispose();
-            }
-
-            public void OnNext(T value)
-            {
-                Output.OnNext(value);
-            }
-
-            protected override void OnDispose()
-            {
-                try
-                {
-                    base.OnDispose();
-                }
-                finally
-                {
-                    Params._finally();
-                }
+                Params._finally();
             }
         }
     }

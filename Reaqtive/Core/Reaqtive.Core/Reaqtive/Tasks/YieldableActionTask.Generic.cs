@@ -7,82 +7,81 @@ using System.Diagnostics;
 
 using Reaqtive.Scheduler;
 
-namespace Reaqtive.Tasks
+namespace Reaqtive.Tasks;
+
+/// <summary>
+/// Simple action task with yielding support.
+/// </summary>
+/// <typeparam name="T">Type of the parameter passed to the task.</typeparam>
+public sealed class YieldableActionTask<T> : ISchedulerTask, IYieldableSchedulerTask
 {
     /// <summary>
-    /// Simple action task with yielding support.
+    /// The action to execute.
     /// </summary>
-    /// <typeparam name="T">Type of the parameter passed to the task.</typeparam>
-    public sealed class YieldableActionTask<T> : ISchedulerTask, IYieldableSchedulerTask
+    private readonly Func<T, YieldToken, bool> _action;
+
+    /// <summary>
+    /// The state to pass to the action.
+    /// </summary>
+    private readonly T _state;
+
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ActionTask"/> class.
+    /// </summary>
+    /// <param name="action">The action to execute.</param>
+    /// <param name="state">The state to pass to the action.</param>
+    /// <remarks>
+    /// The return value of the <paramref name="action"/> indicates whether the task has been completed. If
+    /// a value of <c>true</c> is returned, the task won't be scheduled again. If a value of <c>false</c> is
+    /// returned, the task will be scheduled again. This is usable for tasks that support yielding and can
+    /// interrupt their work for it to be resumed later.
+    /// </remarks>
+    public YieldableActionTask(Func<T, YieldToken, bool> action, T state)
     {
-        /// <summary>
-        /// The action to execute.
-        /// </summary>
-        private readonly Func<T, YieldToken, bool> _action;
+        _action = action ?? throw new ArgumentNullException(nameof(action));
+        _state = state;
+    }
 
-        /// <summary>
-        /// The state to pass to the action.
-        /// </summary>
-        private readonly T _state;
+    /// <summary>
+    /// Gets task priority.
+    /// </summary>
+    public long Priority => ActionTask.TaskPriority;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="ActionTask"/> class.
-        /// </summary>
-        /// <param name="action">The action to execute.</param>
-        /// <param name="state">The state to pass to the action.</param>
-        /// <remarks>
-        /// The return value of the <paramref name="action"/> indicates whether the task has been completed. If
-        /// a value of <c>true</c> is returned, the task won't be scheduled again. If a value of <c>false</c> is
-        /// returned, the task will be scheduled again. This is usable for tasks that support yielding and can
-        /// interrupt their work for it to be resumed later.
-        /// </remarks>
-        public YieldableActionTask(Func<T, YieldToken, bool> action, T state)
-        {
-            _action = action ?? throw new ArgumentNullException(nameof(action));
-            _state = state;
-        }
+    /// <summary>
+    /// Gets a value indicating whether the task is runnable.
+    /// </summary>
+    public bool IsRunnable => true;
 
-        /// <summary>
-        /// Gets task priority.
-        /// </summary>
-        public long Priority => ActionTask.TaskPriority;
+    /// <summary>
+    /// Executes the task.
+    /// </summary>
+    /// <param name="scheduler">The scheduler.</param>
+    /// <returns><c>true</c> if the task has been completed; otherwise, <c>false</c>.</returns>
+    public bool Execute(IScheduler scheduler)
+    {
+        Debug.Assert(scheduler != null, "Scheduler should not be null.");
 
-        /// <summary>
-        /// Gets a value indicating whether the task is runnable.
-        /// </summary>
-        public bool IsRunnable => true;
+        return _action(_state, default);
+    }
 
-        /// <summary>
-        /// Executes the task.
-        /// </summary>
-        /// <param name="scheduler">The scheduler.</param>
-        /// <returns><c>true</c> if the task has been completed; otherwise, <c>false</c>.</returns>
-        public bool Execute(IScheduler scheduler)
-        {
-            Debug.Assert(scheduler != null, "Scheduler should not be null.");
+    /// <summary>
+    /// Executes the task.
+    /// </summary>
+    /// <param name="scheduler">The scheduler.</param>
+    /// <param name="yieldToken">Token to observe for yield requests.</param>
+    /// <returns><c>true</c> if the task has been completed; otherwise, <c>false</c>.</returns>
+    public bool Execute(IScheduler scheduler, YieldToken yieldToken)
+    {
+        Debug.Assert(scheduler != null, "Scheduler should not be null.");
 
-            return _action(_state, default);
-        }
+        return _action(_state, yieldToken);
+    }
 
-        /// <summary>
-        /// Executes the task.
-        /// </summary>
-        /// <param name="scheduler">The scheduler.</param>
-        /// <param name="yieldToken">Token to observe for yield requests.</param>
-        /// <returns><c>true</c> if the task has been completed; otherwise, <c>false</c>.</returns>
-        public bool Execute(IScheduler scheduler, YieldToken yieldToken)
-        {
-            Debug.Assert(scheduler != null, "Scheduler should not be null.");
-
-            return _action(_state, yieldToken);
-        }
-
-        /// <summary>
-        /// Recalculates the priority of the task. The task can become runnable
-        /// as the result of this operation.
-        /// </summary>
-        public void RecalculatePriority()
-        {
-        }
+    /// <summary>
+    /// Recalculates the priority of the task. The task can become runnable
+    /// as the result of this operation.
+    /// </summary>
+    public void RecalculatePriority()
+    {
     }
 }

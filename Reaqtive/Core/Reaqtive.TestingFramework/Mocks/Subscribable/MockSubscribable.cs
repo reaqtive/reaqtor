@@ -7,48 +7,47 @@ using System.Collections.Generic;
 
 using Reaqtive.Testing;
 
-namespace Reaqtive.TestingFramework.Mocks
+namespace Reaqtive.TestingFramework.Mocks;
+
+public abstract class MockSubscribable<T> : ITestableSubscribable<T>
 {
-    public abstract class MockSubscribable<T> : ITestableSubscribable<T>
+    protected MockSubscribable(IClockable<long> clock)
     {
-        protected MockSubscribable(IClockable<long> clock)
-        {
-            Clock = clock ?? throw new ArgumentNullException(nameof(clock));
-            Subscriptions = [];
-            TheObserver = NopObserver<T>.Instance;
-        }
-
-        protected IClockable<long> Clock { get; }
-
-        public IList<Subscription> Subscriptions { get; }
-
-        public abstract IList<Recorded<Notification<T>>> ObserverMessages { get; }
-
-        public virtual ISubscription Subscribe(IObserver<T> observer)
-        {
-            Subscriptions.Add(new Subscription(Clock.Clock));
-            var index = Subscriptions.Count - 1;
-
-            TheObserver = observer ?? throw new ArgumentNullException(nameof(observer));
-            AfterSubscribe(observer);
-
-            return new MockSubscription(
-                () =>
-                {
-                    Subscriptions[index] = new Subscription(Subscriptions[index].Subscribe, Clock.Clock);
-                    if (index == Subscriptions.Count - 1)
-                    {
-                        TheObserver = NopObserver<T>.Instance;
-                    }
-                });
-        }
-
-        IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => Subscribe(observer);
-
-        protected virtual void AfterSubscribe(IObserver<T> observer)
-        {
-        }
-
-        protected IObserver<T> TheObserver { get; set; }
+        Clock = clock ?? throw new ArgumentNullException(nameof(clock));
+        Subscriptions = [];
+        TheObserver = NopObserver<T>.Instance;
     }
+
+    protected IClockable<long> Clock { get; }
+
+    public IList<Subscription> Subscriptions { get; }
+
+    public abstract IList<Recorded<Notification<T>>> ObserverMessages { get; }
+
+    public virtual ISubscription Subscribe(IObserver<T> observer)
+    {
+        Subscriptions.Add(new Subscription(Clock.Clock));
+        var index = Subscriptions.Count - 1;
+
+        TheObserver = observer ?? throw new ArgumentNullException(nameof(observer));
+        AfterSubscribe(observer);
+
+        return new MockSubscription(
+            () =>
+            {
+                Subscriptions[index] = new Subscription(Subscriptions[index].Subscribe, Clock.Clock);
+                if (index == Subscriptions.Count - 1)
+                {
+                    TheObserver = NopObserver<T>.Instance;
+                }
+            });
+    }
+
+    IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => Subscribe(observer);
+
+    protected virtual void AfterSubscribe(IObserver<T> observer)
+    {
+    }
+
+    protected IObserver<T> TheObserver { get; set; }
 }

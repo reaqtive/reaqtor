@@ -10,41 +10,40 @@
 
 #pragma warning disable CA1720 // Identifier 'X' contains type name (for Object and String). By design; models JSON.
 
-namespace Nuqleon.Json.Expressions
+namespace Nuqleon.Json.Expressions;
+
+/// <summary>
+/// Expression tree types.
+/// </summary>
+public enum ExpressionType
 {
     /// <summary>
-    /// Expression tree types.
+    /// JSON object.
     /// </summary>
-    public enum ExpressionType
-    {
-        /// <summary>
-        /// JSON object.
-        /// </summary>
-        Object,
+    Object,
 
-        /// <summary>
-        /// JSON array.
-        /// </summary>
-        Array,
+    /// <summary>
+    /// JSON array.
+    /// </summary>
+    Array,
 
-        /// <summary>
-        /// JSON Boolean constant value.
-        /// </summary>
-        Boolean,
+    /// <summary>
+    /// JSON Boolean constant value.
+    /// </summary>
+    Boolean,
 
-        /// <summary>
-        /// JSON numeric constant value.
-        /// </summary>
-        Number,
+    /// <summary>
+    /// JSON numeric constant value.
+    /// </summary>
+    Number,
 
-        /// <summary>
-        /// JSON string constant value.
-        /// </summary>
-        String,
+    /// <summary>
+    /// JSON string constant value.
+    /// </summary>
+    String,
 
-        /// <summary>
-        /// JSON null value.
-        /// </summary>
-        Null,
-    }
+    /// <summary>
+    /// JSON null value.
+    /// </summary>
+    Null,
 }

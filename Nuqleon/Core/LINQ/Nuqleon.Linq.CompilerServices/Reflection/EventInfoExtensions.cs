@@ -10,19 +10,18 @@
 
 using System.Reflection;
 
-namespace System.Linq.CompilerServices.Reflection
+namespace System.Linq.CompilerServices.Reflection;
+
+internal static class EventInfoExtensions
 {
-    internal static class EventInfoExtensions
+    internal static bool IsStatic(this EventInfo @event) => @event.GetAddMethod().IsStatic;
+
+    internal static string ToCSharpString(this EventInfo @event)
     {
-        internal static bool IsStatic(this EventInfo @event) => @event.GetAddMethod().IsStatic;
+        // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
 
-        internal static string ToCSharpString(this EventInfo @event)
-        {
-            // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
+        var dot = IsStatic(@event) ? "::" : ".";
 
-            var dot = IsStatic(@event) ? "::" : ".";
-
-            return "event " + @event.EventHandlerType.ToCSharpString() + " " + @event.DeclaringType.ToCSharpString() + dot + @event.Name;
-        }
+        return "event " + @event.EventHandlerType.ToCSharpString() + " " + @event.DeclaringType.ToCSharpString() + dot + @event.Name;
     }
 }

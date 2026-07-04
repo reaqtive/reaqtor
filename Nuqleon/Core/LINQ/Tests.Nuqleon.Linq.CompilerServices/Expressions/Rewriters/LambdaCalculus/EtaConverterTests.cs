@@ -14,32 +14,31 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class EtaConverterTests
 {
-    [TestClass]
-    public class EtaConverterTests
+    [TestMethod]
+    public void EtaConverter_ArgumentChecking()
     {
-        [TestMethod]
-        public void EtaConverter_ArgumentChecking()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => EtaConverter.Convert(expression: null));
-            Assert.AreEqual("expression", ex.ParamName);
-        }
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => EtaConverter.Convert(expression: null));
+        Assert.AreEqual("expression", ex.ParamName);
+    }
 
-        [TestMethod]
-        public void EtaConverter_Simple()
-        {
-            var e = (Expression<Func<Func<int, int, int>, Func<int, int, int>>>)(f => (x, y) => f(x, y));
-            var c = EtaConverter.Convert(e.Body);
-            Assert.AreSame(e.Parameters[0], c);
-        }
+    [TestMethod]
+    public void EtaConverter_Simple()
+    {
+        var e = (Expression<Func<Func<int, int, int>, Func<int, int, int>>>)(f => (x, y) => f(x, y));
+        var c = EtaConverter.Convert(e.Body);
+        Assert.AreSame(e.Parameters[0], c);
+    }
 
-        [TestMethod]
-        public void EtaConverter_Negative()
-        {
-            var e = (Expression<Func<Func<int, int, int>, Func<int, int, int>>>)(f => (x, y) => f(y, x));
-            var c = EtaConverter.Convert(e);
-            Assert.AreSame(e, c);
-        }
+    [TestMethod]
+    public void EtaConverter_Negative()
+    {
+        var e = (Expression<Func<Func<int, int, int>, Func<int, int, int>>>)(f => (x, y) => f(y, x));
+        var c = EtaConverter.Convert(e);
+        Assert.AreSame(e, c);
     }
 }

@@ -9,19 +9,18 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reaqtive;
 using Reaqtive.Testing;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class DelaySubscription : OperatorTestBase
 {
-    [TestClass]
-    public partial class DelaySubscription : OperatorTestBase
+    [TestMethod]
+    public void DelaySubscription_ArgumentChecking()
     {
-        [TestMethod]
-        public void DelaySubscription_ArgumentChecking()
-        {
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.DelaySubscription(default(ISubscribable<int>), DateTimeOffset.Now));
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.DelaySubscription(default(ISubscribable<int>), DateTimeOffset.Now));
 
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.DelaySubscription(default(ISubscribable<int>), TimeSpan.Zero));
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.DelaySubscription(default(ISubscribable<int>), TimeSpan.Zero));
 
-            ReactiveAssert.Throws<ArgumentOutOfRangeException>(() => Subscribable.DelaySubscription(DummySubscribable<int>.Instance, TimeSpan.FromSeconds(-1)));
-        }
+        ReactiveAssert.Throws<ArgumentOutOfRangeException>(() => Subscribable.DelaySubscription(DummySubscribable<int>.Instance, TimeSpan.FromSeconds(-1)));
     }
 }

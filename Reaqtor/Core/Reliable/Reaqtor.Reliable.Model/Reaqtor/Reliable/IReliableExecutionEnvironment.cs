@@ -6,10 +6,9 @@ using System;
 
 using Reaqtive;
 
-namespace Reaqtor.Reliable
+namespace Reaqtor.Reliable;
+
+public interface IReliableExecutionEnvironment : IExecutionEnvironment
 {
-    public interface IReliableExecutionEnvironment : IExecutionEnvironment
-    {
-        IReliableMultiSubject<TInput, TOutput> GetReliableSubject<TInput, TOutput>(Uri uri);
-    }
+    IReliableMultiSubject<TInput, TOutput> GetReliableSubject<TInput, TOutput>(Uri uri);
 }

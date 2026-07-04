@@ -4,11 +4,10 @@
 
 using System;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+internal /* <DontEventThinkAbout> */ /* public */ /* </DontEventThinkAbout> */ static class Sentinels<T>
 {
-    internal /* <DontEventThinkAbout> */ /* public */ /* </DontEventThinkAbout> */ static class Sentinels<T>
-    {
-        public static readonly IObserver<T> Disposed = new FaultObserver<T>(() => new ObjectDisposedException("this"));
-        public static readonly IObserver<T> Nop = new NopObserver<T>();
-    }
+    public static readonly IObserver<T> Disposed = new FaultObserver<T>(() => new ObjectDisposedException("this"));
+    public static readonly IObserver<T> Nop = new NopObserver<T>();
 }

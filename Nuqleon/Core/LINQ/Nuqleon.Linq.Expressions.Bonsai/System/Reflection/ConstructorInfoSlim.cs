@@ -11,34 +11,33 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Lightweight representation of a constructor.
+/// </summary>
+public class ConstructorInfoSlim : MemberInfoSlim
 {
     /// <summary>
-    /// Lightweight representation of a constructor.
+    /// Creates a new constructor representation object.
     /// </summary>
-    public class ConstructorInfoSlim : MemberInfoSlim
+    /// <param name="declaringType">Type declaring the member.</param>
+    /// <param name="parameterTypes">Types of the parameters.</param>
+    protected internal ConstructorInfoSlim(TypeSlim declaringType, ReadOnlyCollection<TypeSlim> parameterTypes)
+        : base(declaringType)
     {
-        /// <summary>
-        /// Creates a new constructor representation object.
-        /// </summary>
-        /// <param name="declaringType">Type declaring the member.</param>
-        /// <param name="parameterTypes">Types of the parameters.</param>
-        protected internal ConstructorInfoSlim(TypeSlim declaringType, ReadOnlyCollection<TypeSlim> parameterTypes)
-            : base(declaringType)
-        {
-            Debug.Assert(parameterTypes != null);
+        Debug.Assert(parameterTypes != null);
 
-            ParameterTypes = parameterTypes;
-        }
-
-        /// <summary>
-        /// Gets the member type of the member.
-        /// </summary>
-        public sealed override MemberTypes MemberType => MemberTypes.Constructor;
-
-        /// <summary>
-        /// Gets the types of the parameters.
-        /// </summary>
-        public ReadOnlyCollection<TypeSlim> ParameterTypes { get; }
+        ParameterTypes = parameterTypes;
     }
+
+    /// <summary>
+    /// Gets the member type of the member.
+    /// </summary>
+    public sealed override MemberTypes MemberType => MemberTypes.Constructor;
+
+    /// <summary>
+    /// Gets the types of the parameters.
+    /// </summary>
+    public ReadOnlyCollection<TypeSlim> ParameterTypes { get; }
 }

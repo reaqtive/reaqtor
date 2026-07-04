@@ -4,26 +4,25 @@
 
 using System;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Exposed version numbers of operator state.
+/// </summary>
+internal static class Versioning
 {
     /// <summary>
-    /// Exposed version numbers of operator state.
+    /// Version 1.0 of operator state.
     /// </summary>
-    internal static class Versioning
-    {
-        /// <summary>
-        /// Version 1.0 of operator state.
-        /// </summary>
-        public static readonly Version v1 = new(1, 0, 0, 0);
+    public static readonly Version v1 = new(1, 0, 0, 0);
 
-        /// <summary>
-        /// Version 2.0 of operator state.
-        /// </summary>
-        public static readonly Version v2 = new(2, 0, 0, 0);
+    /// <summary>
+    /// Version 2.0 of operator state.
+    /// </summary>
+    public static readonly Version v2 = new(2, 0, 0, 0);
 
-        /// <summary>
-        /// Version 3.0 of operator state.
-        /// </summary>
-        public static readonly Version v3 = new(3, 0, 0, 0);
-    }
+    /// <summary>
+    /// Version 3.0 of operator state.
+    /// </summary>
+    public static readonly Version v3 = new(3, 0, 0, 0);
 }

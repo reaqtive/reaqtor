@@ -8,38 +8,37 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Provides a set of methods to work with trimmable objects.
+/// </summary>
+public static class Trimmable
 {
     /// <summary>
-    /// Provides a set of methods to work with trimmable objects.
+    /// Creates a new trimmable object using the specified <paramref name="trim"/> function.
     /// </summary>
-    public static class Trimmable
+    /// <typeparam name="T">The type of the elements held by the trimmable data structure.</typeparam>
+    /// <param name="trim">The trim function to use for the trimmable implementation.</param>
+    /// <returns>An object implementing the trimmable interface using the specified <paramref name="trim"/> function.</returns>
+    public static ITrimmable<T> Create<T>(Func<Func<T, bool>, int> trim)
     {
-        /// <summary>
-        /// Creates a new trimmable object using the specified <paramref name="trim"/> function.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements held by the trimmable data structure.</typeparam>
-        /// <param name="trim">The trim function to use for the trimmable implementation.</param>
-        /// <returns>An object implementing the trimmable interface using the specified <paramref name="trim"/> function.</returns>
-        public static ITrimmable<T> Create<T>(Func<Func<T, bool>, int> trim)
+        ArgumentNullException.ThrowIfNull(trim);
+
+        return new Impl<T>(trim);
+    }
+
+    private sealed class Impl<T> : ITrimmable<T>
+    {
+        private readonly Func<Func<T, bool>, int> _trim;
+
+        public Impl(Func<Func<T, bool>, int> trim) => _trim = trim;
+
+        public int Trim(Func<T, bool> shouldTrim)
         {
-            ArgumentNullException.ThrowIfNull(trim);
+            ArgumentNullException.ThrowIfNull(shouldTrim);
 
-            return new Impl<T>(trim);
-        }
-
-        private sealed class Impl<T> : ITrimmable<T>
-        {
-            private readonly Func<Func<T, bool>, int> _trim;
-
-            public Impl(Func<Func<T, bool>, int> trim) => _trim = trim;
-
-            public int Trim(Func<T, bool> shouldTrim)
-            {
-                ArgumentNullException.ThrowIfNull(shouldTrim);
-
-                return _trim(shouldTrim);
-            }
+            return _trim(shouldTrim);
         }
     }
 }

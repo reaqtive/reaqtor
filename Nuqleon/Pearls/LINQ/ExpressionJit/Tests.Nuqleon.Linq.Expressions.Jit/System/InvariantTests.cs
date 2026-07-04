@@ -6,21 +6,20 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using MsTest = Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace System
-{
-    [TestClass]
-    public class InvariantTests
-    {
-        [TestMethod]
-        public void Assert()
-        {
-            MsTest.Assert.ThrowsExactly<InvalidOperationException>(() => Invariant.Assert(false));
-        }
+namespace System;
 
-        [TestMethod]
-        public void Unreachable()
-        {
-            MsTest.Assert.ThrowsExactly<InvalidOperationException>(() => { throw Invariant.Unreachable; });
-        }
+[TestClass]
+public class InvariantTests
+{
+    [TestMethod]
+    public void Assert()
+    {
+        MsTest.Assert.ThrowsExactly<InvalidOperationException>(() => Invariant.Assert(false));
+    }
+
+    [TestMethod]
+    public void Unreachable()
+    {
+        MsTest.Assert.ThrowsExactly<InvalidOperationException>(() => { throw Invariant.Unreachable; });
     }
 }

@@ -10,20 +10,19 @@
 
 using System.CodeDom.Compiler;
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Interface representing a reflection provider used to instantiate <see cref="MethodInfo"/> objects.
+/// </summary>
+[GeneratedCode("", "1.0.0.0")] // NB: A mirror image of System.Reflection APIs, so considering this to be "generated".
+public interface IMethodCreationProvider
 {
     /// <summary>
-    /// Interface representing a reflection provider used to instantiate <see cref="MethodInfo"/> objects.
+    /// Makes a generic method with the specified generic method definition and type arguments.
     /// </summary>
-    [GeneratedCode("", "1.0.0.0")] // NB: A mirror image of System.Reflection APIs, so considering this to be "generated".
-    public interface IMethodCreationProvider
-    {
-        /// <summary>
-        /// Makes a generic method with the specified generic method definition and type arguments.
-        /// </summary>
-        /// <param name="genericMethodDefinition">The generic method definition.</param>
-        /// <param name="typeArguments">The type arguments.</param>
-        /// <returns>A generic method with the specified generic method definition and type arguments.</returns>
-        MethodInfo MakeGenericMethod(MethodInfo genericMethodDefinition, params Type[] typeArguments);
-    }
+    /// <param name="genericMethodDefinition">The generic method definition.</param>
+    /// <param name="typeArguments">The type arguments.</param>
+    /// <returns>A generic method with the specified generic method definition and type arguments.</returns>
+    MethodInfo MakeGenericMethod(MethodInfo genericMethodDefinition, params Type[] typeArguments);
 }

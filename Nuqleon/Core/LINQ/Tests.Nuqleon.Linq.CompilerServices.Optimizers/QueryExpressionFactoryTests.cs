@@ -15,157 +15,156 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices.Optimizers
+namespace Tests.System.Linq.CompilerServices.Optimizers;
+
+[TestClass]
+public class QueryExpressionFactoryTests
 {
-    [TestClass]
-    public class QueryExpressionFactoryTests
+    [TestMethod]
+    public void QueryExpressionFactory_ArgumentChecks()
     {
-        [TestMethod]
-        public void QueryExpressionFactory_ArgumentChecks()
+        var factory = DefaultQueryExpressionFactory.Instance;
+        var unsafeFactory = new UnsafeQueryExpressionFactory();
+        var comparer = new QueryExpressionEqualityComparator();
+        var type1 = typeof(Exception);
+        var type2 = typeof(ArgumentException);
+        var type3 = typeof(ArgumentNullException);
+        var lambdaAbstraction1 = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(type1)));
+        var lambdaAbstraction2 = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(type2)));
+        var monadMember1 = factory.MonadAbstraction(type1, lambdaAbstraction1);
+        var monadMember2 = factory.MonadAbstraction(type2, lambdaAbstraction2);
+
+        // First
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(default(Type), default)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(default(Type), monadMember1)));
+        AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(type1, source: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.First(type2, monadMember1)));
+        Assert.IsTrue(comparer.Equals(
+            factory.First(type1, monadMember2),
+            unsafeFactory.First(type1, monadMember2)
+        ));
+
+        // First Predicate
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(elementType: null, source: null, predicate: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(elementType: null, monadMember1, lambdaAbstraction1)));
+        AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(type1, source: null, lambdaAbstraction1)));
+        AssertParameterName("predicate")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(type1, monadMember1, predicate: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.First(type2, monadMember1, lambdaAbstraction1)));
+        Assert.IsTrue(comparer.Equals(
+            factory.First(type1, monadMember2, lambdaAbstraction1),
+            unsafeFactory.First(type1, monadMember2, lambdaAbstraction1)
+        ));
+
+        // Select
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Take(elementType: null, source: null, count: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Take(elementType: null, monadMember1, lambdaAbstraction1)));
+        AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Take(type1, source: null, lambdaAbstraction1)));
+        AssertParameterName("count")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Take(type1, monadMember1, count: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.Take(type2, monadMember1, lambdaAbstraction1)));
+        Assert.IsTrue(comparer.Equals(
+            factory.Take(type1, monadMember2, lambdaAbstraction1),
+            unsafeFactory.Take(type1, monadMember2, lambdaAbstraction1)
+        ));
+
+        // Take
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(elementType: null, inputElementType: null, source: null, selector: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(elementType: null, type3, monadMember1, lambdaAbstraction1)));
+        AssertParameterName("inputElementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(type1, inputElementType: null, monadMember1, lambdaAbstraction1)));
+        AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(type1, type3, source: null, lambdaAbstraction1)));
+        AssertParameterName("selector")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(type1, type3, monadMember1, selector: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.Select(type2, type3, monadMember1, lambdaAbstraction1)));
+        Assert.IsTrue(comparer.Equals(
+            factory.Select(type3, type1, monadMember2, lambdaAbstraction1),
+            unsafeFactory.Select(type3, type1, monadMember2, lambdaAbstraction1)
+        ));
+
+        // Where
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Where(elementType: null, source: null, predicate: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Where(elementType: null, monadMember1, lambdaAbstraction1)));
+        AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Where(type1, source: null, lambdaAbstraction1)));
+        AssertParameterName("predicate")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Where(type1, monadMember1, predicate: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.Where(type2, monadMember1, lambdaAbstraction1)));
+        Assert.IsTrue(comparer.Equals(
+            factory.Where(type1, monadMember2, lambdaAbstraction1),
+            unsafeFactory.Where(type1, monadMember2, lambdaAbstraction1)
+        ));
+
+        // Monad Member
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.MonadAbstraction(elementType: null, inner: null)));
+        AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.MonadAbstraction(elementType: null, lambdaAbstraction1)));
+        AssertParameterName("inner")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.MonadAbstraction(type1, inner: null)));
+        Assert.IsTrue(comparer.Equals(
+            factory.MonadAbstraction(type1, lambdaAbstraction1),
+            unsafeFactory.MonadAbstraction(type1, lambdaAbstraction1)
+        ));
+
+
+        // Lambda Abstraction
+        AssertParameterName("body")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.LambdaAbstraction(body: null)));
+        Assert.ThrowsExactly<ArgumentException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1))));
+        Assert.IsTrue(comparer.Equals(
+            factory.LambdaAbstraction(Expression.Lambda(Expression.Empty())),
+            unsafeFactory.LambdaAbstraction(Expression.Lambda(Expression.Empty()), [])
+        ));
+
+        AssertParameterName("body")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.LambdaAbstraction(body: null, parameters: null)));
+        AssertParameterName("body")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.LambdaAbstraction(body: null, Array.Empty<QueryTree>().ToReadOnly())));
+        AssertParameterName("parameters")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), parameters: null)));
+
+        Assert.ThrowsExactly<ArgumentException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), Array.Empty<QueryTree>().ToReadOnly()));
+        Assert.IsTrue(comparer.Equals(
+            factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), new QueryTree[] { monadMember1 }.ToReadOnly()),
+            unsafeFactory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), new QueryTree[] { monadMember1 }.ToReadOnly())
+        ));
+    }
+
+    [TestMethod]
+    public void DefaultQueryExpressionFactory_Assembly()
+    {
+        Type type = typeof(DefaultQueryExpressionFactory);
+        string assembly = type.Assembly.GetName().Name;
+        Assert.AreEqual("Nuqleon.Linq.CompilerServices.Optimizers", assembly);
+    }
+
+    [TestMethod]
+    public void QueryExpressionFactory_Inference()
+    {
+        var factory = DefaultQueryExpressionFactory.Instance;
+        var type1 = typeof(Exception);
+        var type2 = typeof(ArgumentException);
+        var lambdaAbstraction1 = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(type1)));
+        var lambdaAbstraction2 = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(type2)));
+        var monadMember1 = factory.MonadAbstraction(type1, lambdaAbstraction1);
+
         {
-            var factory = DefaultQueryExpressionFactory.Instance;
-            var unsafeFactory = new UnsafeQueryExpressionFactory();
-            var comparer = new QueryExpressionEqualityComparator();
-            var type1 = typeof(Exception);
-            var type2 = typeof(ArgumentException);
-            var type3 = typeof(ArgumentNullException);
-            var lambdaAbstraction1 = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(type1)));
-            var lambdaAbstraction2 = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(type2)));
-            var monadMember1 = factory.MonadAbstraction(type1, lambdaAbstraction1);
-            var monadMember2 = factory.MonadAbstraction(type2, lambdaAbstraction2);
-
-            // First
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(default(Type), default)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(default(Type), monadMember1)));
-            AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(type1, source: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.First(type2, monadMember1)));
-            Assert.IsTrue(comparer.Equals(
-                factory.First(type1, monadMember2),
-                unsafeFactory.First(type1, monadMember2)
-            ));
-
-            // First Predicate
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(elementType: null, source: null, predicate: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(elementType: null, monadMember1, lambdaAbstraction1)));
-            AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(type1, source: null, lambdaAbstraction1)));
-            AssertParameterName("predicate")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.First(type1, monadMember1, predicate: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.First(type2, monadMember1, lambdaAbstraction1)));
-            Assert.IsTrue(comparer.Equals(
-                factory.First(type1, monadMember2, lambdaAbstraction1),
-                unsafeFactory.First(type1, monadMember2, lambdaAbstraction1)
-            ));
-
-            // Select
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Take(elementType: null, source: null, count: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Take(elementType: null, monadMember1, lambdaAbstraction1)));
-            AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Take(type1, source: null, lambdaAbstraction1)));
-            AssertParameterName("count")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Take(type1, monadMember1, count: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.Take(type2, monadMember1, lambdaAbstraction1)));
-            Assert.IsTrue(comparer.Equals(
-                factory.Take(type1, monadMember2, lambdaAbstraction1),
-                unsafeFactory.Take(type1, monadMember2, lambdaAbstraction1)
-            ));
-
-            // Take
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(elementType: null, inputElementType: null, source: null, selector: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(elementType: null, type3, monadMember1, lambdaAbstraction1)));
-            AssertParameterName("inputElementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(type1, inputElementType: null, monadMember1, lambdaAbstraction1)));
-            AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(type1, type3, source: null, lambdaAbstraction1)));
-            AssertParameterName("selector")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Select(type1, type3, monadMember1, selector: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.Select(type2, type3, monadMember1, lambdaAbstraction1)));
-            Assert.IsTrue(comparer.Equals(
-                factory.Select(type3, type1, monadMember2, lambdaAbstraction1),
-                unsafeFactory.Select(type3, type1, monadMember2, lambdaAbstraction1)
-            ));
-
-            // Where
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Where(elementType: null, source: null, predicate: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Where(elementType: null, monadMember1, lambdaAbstraction1)));
-            AssertParameterName("source")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Where(type1, source: null, lambdaAbstraction1)));
-            AssertParameterName("predicate")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.Where(type1, monadMember1, predicate: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentException>(() => factory.Where(type2, monadMember1, lambdaAbstraction1)));
-            Assert.IsTrue(comparer.Equals(
-                factory.Where(type1, monadMember2, lambdaAbstraction1),
-                unsafeFactory.Where(type1, monadMember2, lambdaAbstraction1)
-            ));
-
-            // Monad Member
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.MonadAbstraction(elementType: null, inner: null)));
-            AssertParameterName("elementType")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.MonadAbstraction(elementType: null, lambdaAbstraction1)));
-            AssertParameterName("inner")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.MonadAbstraction(type1, inner: null)));
-            Assert.IsTrue(comparer.Equals(
-                factory.MonadAbstraction(type1, lambdaAbstraction1),
-                unsafeFactory.MonadAbstraction(type1, lambdaAbstraction1)
-            ));
-
-
-            // Lambda Abstraction
-            AssertParameterName("body")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.LambdaAbstraction(body: null)));
-            Assert.ThrowsExactly<ArgumentException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1))));
-            Assert.IsTrue(comparer.Equals(
-                factory.LambdaAbstraction(Expression.Lambda(Expression.Empty())),
-                unsafeFactory.LambdaAbstraction(Expression.Lambda(Expression.Empty()), [])
-            ));
-
-            AssertParameterName("body")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.LambdaAbstraction(body: null, parameters: null)));
-            AssertParameterName("body")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.LambdaAbstraction(body: null, Array.Empty<QueryTree>().ToReadOnly())));
-            AssertParameterName("parameters")(Assert.ThrowsExactly<ArgumentNullException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), parameters: null)));
-
-            Assert.ThrowsExactly<ArgumentException>(() => factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), Array.Empty<QueryTree>().ToReadOnly()));
-            Assert.IsTrue(comparer.Equals(
-                factory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), new QueryTree[] { monadMember1 }.ToReadOnly()),
-                unsafeFactory.LambdaAbstraction(Expression.Lambda(Expression.Empty(), Expression.Parameter(type1)), new QueryTree[] { monadMember1 }.ToReadOnly())
-            ));
+            var q = factory.First(monadMember1);
+            Assert.AreSame(type1, q.ElementType);
         }
 
-        [TestMethod]
-        public void DefaultQueryExpressionFactory_Assembly()
         {
-            Type type = typeof(DefaultQueryExpressionFactory);
-            string assembly = type.Assembly.GetName().Name;
-            Assert.AreEqual("Nuqleon.Linq.CompilerServices.Optimizers", assembly);
+            var q = factory.First(monadMember1, lambdaAbstraction1);
+            Assert.AreSame(type1, q.ElementType);
         }
 
-        [TestMethod]
-        public void QueryExpressionFactory_Inference()
         {
-            var factory = DefaultQueryExpressionFactory.Instance;
-            var type1 = typeof(Exception);
-            var type2 = typeof(ArgumentException);
-            var lambdaAbstraction1 = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(type1)));
-            var lambdaAbstraction2 = factory.LambdaAbstraction(Expression.Lambda(Expression.Default(type2)));
-            var monadMember1 = factory.MonadAbstraction(type1, lambdaAbstraction1);
-
-            {
-                var q = factory.First(monadMember1);
-                Assert.AreSame(type1, q.ElementType);
-            }
-
-            {
-                var q = factory.First(monadMember1, lambdaAbstraction1);
-                Assert.AreSame(type1, q.ElementType);
-            }
-
-            {
-                var q = factory.Select(monadMember1, lambdaAbstraction2);
-                Assert.AreSame(type2, q.ElementType);
-                Assert.AreSame(type1, q.InputElementType);
-            }
-
-            {
-                var q = factory.Take(monadMember1, lambdaAbstraction1);
-                Assert.AreSame(type1, q.ElementType);
-            }
-
-            {
-                var q = factory.Where(monadMember1, lambdaAbstraction1);
-                Assert.AreSame(type1, q.ElementType);
-            }
+            var q = factory.Select(monadMember1, lambdaAbstraction2);
+            Assert.AreSame(type2, q.ElementType);
+            Assert.AreSame(type1, q.InputElementType);
         }
 
-        private static Action<ArgumentException> AssertParameterName(string paramName)
         {
-            return ex => { Assert.AreEqual(paramName, ex.ParamName); };
+            var q = factory.Take(monadMember1, lambdaAbstraction1);
+            Assert.AreSame(type1, q.ElementType);
         }
+
+        {
+            var q = factory.Where(monadMember1, lambdaAbstraction1);
+            Assert.AreSame(type1, q.ElementType);
+        }
+    }
+
+    private static Action<ArgumentException> AssertParameterName(string paramName)
+    {
+        return ex => { Assert.AreEqual(paramName, ex.ParamName); };
     }
 }

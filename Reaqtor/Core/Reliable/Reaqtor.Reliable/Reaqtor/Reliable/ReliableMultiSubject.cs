@@ -9,51 +9,50 @@ using System.Linq;
 
 using Reaqtive;
 
-namespace Reaqtor.Reliable
+namespace Reaqtor.Reliable;
+
+public class ReliableMultiSubject<T> : ReliableMultiSubjectBase<T>, IStatefulOperator
 {
-    public class ReliableMultiSubject<T> : ReliableMultiSubjectBase<T>, IStatefulOperator
+    private Uri _id;
+
+    public override Uri Id => _id;
+
+    public string Name => "rcr:MultiSubject";
+
+    public Version Version => Versioning.v1;
+
+    protected override void DisposeCore()
     {
-        private Uri _id;
-
-        public override Uri Id => _id;
-
-        public string Name => "rcr:MultiSubject";
-
-        public Version Version => Versioning.v1;
-
-        protected override void DisposeCore()
-        {
-        }
-
-        public IEnumerable<ISubscription> Inputs => [];
-
-        public void Subscribe() { }
-
-        public void SetContext(IOperatorContext context)
-        {
-            Debug.Assert(context != null);
-
-            _id = context.InstanceId;
-        }
-
-        protected override void OnNext(T item, long sequenceId)
-        {
-            base.OnNext(item, sequenceId);
-            NotifySubscriptions();
-        }
-
-        protected override void OnError(Exception error)
-        {
-            base.OnError(error);
-            NotifySubscriptions();
-        }
-
-        protected override void OnCompleted()
-        {
-            base.OnCompleted();
-            NotifySubscriptions();
-        }
-
-        protected override bool ShouldBufferedEventsBeDropped() => SubscriptionCount == 0;
     }
+
+    public IEnumerable<ISubscription> Inputs => [];
+
+    public void Subscribe() { }
+
+    public void SetContext(IOperatorContext context)
+    {
+        Debug.Assert(context != null);
+
+        _id = context.InstanceId;
+    }
+
+    protected override void OnNext(T item, long sequenceId)
+    {
+        base.OnNext(item, sequenceId);
+        NotifySubscriptions();
+    }
+
+    protected override void OnError(Exception error)
+    {
+        base.OnError(error);
+        NotifySubscriptions();
+    }
+
+    protected override void OnCompleted()
+    {
+        base.OnCompleted();
+        NotifySubscriptions();
+    }
+
+    protected override bool ShouldBufferedEventsBeDropped() => SubscriptionCount == 0;
 }

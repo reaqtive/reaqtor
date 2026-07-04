@@ -15,137 +15,136 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Parser;
 
-namespace Tests.Nuqleon.Json
+namespace Tests.Nuqleon.Json;
+
+[TestClass]
+public class TokenizerTests
 {
-    [TestClass]
-    public class TokenizerTests
+    [TestMethod]
+    public void Tokenizer_Potpourri()
     {
-        [TestMethod]
-        public void Tokenizer_Potpourri()
+        var tests = new Dictionary<string, string>
         {
-            var tests = new Dictionary<string, string>
-            {
-                { "true", "TRUE" },
-                { "false", "FALSE" },
+            { "true", "TRUE" },
+            { "false", "FALSE" },
 
-                { "null", "NULL" },
+            { "null", "NULL" },
 
-                { "\"foo\"", "STRING(foo)" },
+            { "\"foo\"", "STRING(foo)" },
 
-                { "42", "NUM(42)" },
-                { "-42", "NUM(-42)" },
-                { "12.34", "NUM(12.34)" },
+            { "42", "NUM(42)" },
+            { "-42", "NUM(-42)" },
+            { "12.34", "NUM(12.34)" },
 
-                { ":", "COLON" },
-                { ",", "COMMA" },
+            { ":", "COLON" },
+            { ",", "COMMA" },
 
-                { "{", "LEFTCURLY" },
-                { "}", "RIGHTCURLY" },
+            { "{", "LEFTCURLY" },
+            { "}", "RIGHTCURLY" },
 
-                { "[", "LEFTBRACKET" },
-                { "]", "RIGHTBRACKET" },
+            { "[", "LEFTBRACKET" },
+            { "]", "RIGHTBRACKET" },
 
-                { " \t\r\n ", "WHITE" },
+            { " \t\r\n ", "WHITE" },
 
-                { "\0", "EOF" },
-            };
+            { "\0", "EOF" },
+        };
 
-            foreach (var kv in tests)
-            {
-                AssertTokens(kv.Key, kv.Value);
-            }
+        foreach (var kv in tests)
+        {
+            AssertTokens(kv.Key, kv.Value);
         }
+    }
 
-        [TestMethod]
-        public void Tokenizer_Numbers()
+    [TestMethod]
+    public void Tokenizer_Numbers()
+    {
+        var tests = new List<string>
         {
-            var tests = new List<string>
-            {
-                "0",
-                "-0",
+            "0",
+            "-0",
 
-                "1",
-                "-1",
+            "1",
+            "-1",
 
-                "42",
-                "-42",
+            "42",
+            "-42",
 
-                "123",
-                "-123",
+            "123",
+            "-123",
 
-                "0.1",
-                "-0.1",
+            "0.1",
+            "-0.1",
 
-                "1.2",
-                "-1.2",
+            "1.2",
+            "-1.2",
 
-                "12.34",
-                "-12.34",
+            "12.34",
+            "-12.34",
 
-                "1e1",
-                "-1e1",
-                "1e+1",
-                "-1e+1",
-                "1e-1",
-                "-1e-1",
+            "1e1",
+            "-1e1",
+            "1e+1",
+            "-1e+1",
+            "1e-1",
+            "-1e-1",
 
-                "1E1",
-                "-1E1",
-                "1E+1",
-                "-1E+1",
-                "1E-1",
-                "-1E-1",
+            "1E1",
+            "-1E1",
+            "1E+1",
+            "-1E+1",
+            "1E-1",
+            "-1E-1",
 
-                "12.34e56",
-                "-12.34e56",
-                "12.34e+56",
-                "-12.34e+56",
-                "12.34e-56",
-                "-12.34e-56",
+            "12.34e56",
+            "-12.34e56",
+            "12.34e+56",
+            "-12.34e+56",
+            "12.34e-56",
+            "-12.34e-56",
 
-                "12.34E56",
-                "-12.34E56",
-                "12.34E+56",
-                "-12.34E+56",
-                "12.34E-56",
-                "-12.34E-56",
-            };
+            "12.34E56",
+            "-12.34E56",
+            "12.34E+56",
+            "-12.34E+56",
+            "12.34E-56",
+            "-12.34E-56",
+        };
 
-            foreach (var test in tests)
-            {
-                AssertTokens(test, "NUM(" + test + ")");
-            }
+        foreach (var test in tests)
+        {
+            AssertTokens(test, "NUM(" + test + ")");
         }
+    }
 
-        [TestMethod]
-        public void Tokenizer_IsControl()
+    [TestMethod]
+    public void Tokenizer_IsControl()
+    {
+        for (char c = '\x0000'; c <= '\x0100'; c++)
         {
-            for (char c = '\x0000'; c <= '\x0100'; c++)
+            Assert.AreEqual(char.IsControl(c), Tokenizer.IsControl(c));
+        }
+    }
+
+    private static void AssertTokens(string text, string tokens)
+    {
+        var res = Tokenize(text);
+        Assert.AreEqual(tokens, res, "Unexpected tokenization: " + text);
+    }
+
+    private static string Tokenize(string text)
+    {
+        var tokens = new Tokenizer(text).Tokenize();
+        return string.Join(";", AsEnumerable(tokens).Select(t => t.ToString()).ToArray());
+    }
+
+    private static IEnumerable<T> AsEnumerable<T>(IEnumerator<T> enumerator)
+    {
+        using (enumerator)
+        {
+            while (enumerator.MoveNext())
             {
-                Assert.AreEqual(char.IsControl(c), Tokenizer.IsControl(c));
-            }
-        }
-
-        private static void AssertTokens(string text, string tokens)
-        {
-            var res = Tokenize(text);
-            Assert.AreEqual(tokens, res, "Unexpected tokenization: " + text);
-        }
-
-        private static string Tokenize(string text)
-        {
-            var tokens = new Tokenizer(text).Tokenize();
-            return string.Join(";", AsEnumerable(tokens).Select(t => t.ToString()).ToArray());
-        }
-
-        private static IEnumerable<T> AsEnumerable<T>(IEnumerator<T> enumerator)
-        {
-            using (enumerator)
-            {
-                while (enumerator.MoveNext())
-                {
-                    yield return enumerator.Current;
-                }
+                yield return enumerator.Current;
             }
         }
     }

@@ -8,218 +8,217 @@ using System.Linq.Expressions;
 using System.Reactive.Linq;
 using System.Reflection;
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal class Client
 {
-    internal class Client
+    private readonly IQProvider _provider;
+
+    public Client(IService service)
     {
-        private readonly IQProvider _provider;
+        _provider = new Provider(service);
+    }
 
-        public Client(IService service)
+    public IQbservable<T> GetObservable<T>(string id)
+    {
+        return new ObservableProxy<T>(Expression.Parameter(typeof(IQbservable<T>), id), _provider);
+    }
+
+    public IQbserver<T> GetObserver<T>(string id)
+    {
+        return new ObserverProxy<T>(Expression.Parameter(typeof(IQbserver<T>), id), _provider);
+    }
+
+    public IQubscription GetSubscription(string id)
+    {
+        return new SubscriptionProxy(Expression.Parameter(typeof(IQubscription), id), _provider);
+    }
+
+    public IQubjectFactory<T> GetSubjectFactory<T>(string id)
+    {
+        return new SubjectFactoryProxy<T>(Expression.Parameter(typeof(IQubjectFactory<T>), id), _provider);
+    }
+
+    private class ObservableProxy<T> : IQbservable<T>
+    {
+        public ObservableProxy(Expression expression, IQProvider provider)
         {
-            _provider = new Provider(service);
+            Expression = expression;
+            Provider = provider;
         }
 
-        public IQbservable<T> GetObservable<T>(string id)
+        public Expression Expression { get; }
+
+        public IQProvider Provider { get; }
+
+        public IQubscription Subscribe(string id, IQbserver<T> observer)
         {
-            return new ObservableProxy<T>(Expression.Parameter(typeof(IQbservable<T>), id), _provider);
+            var expression = Expression.Invoke(Expression.Parameter(typeof(Func<IQbservable<T>, string, IQbserver<T>, IQubscription>), "rx://builtin/subscribe"), Expression, Expression.Constant(id, typeof(string)), observer.Expression);
+            var normalized = ExpressionService.Normalize(expression);
+            Provider.Service.Evaluate(normalized);
+            return Provider.CreateSubscription(Expression.Parameter(typeof(IQubscription), id));
+        }
+    }
+
+    private class ObserverProxy<T> : IQbserver<T>
+    {
+        public ObserverProxy(Expression expression, IQProvider provider)
+        {
+            Expression = expression;
+            Provider = provider;
         }
 
-        public IQbserver<T> GetObserver<T>(string id)
+        public Expression Expression { get; }
+
+        public IQProvider Provider { get; }
+
+        public void OnNext(T value)
         {
-            return new ObserverProxy<T>(Expression.Parameter(typeof(IQbserver<T>), id), _provider);
+            var expression = Expression.Invoke(Expression.Parameter(typeof(Action<IQbserver<T>, T>), "rx://builtin/onNext"), Expression, Expression.Constant(value, typeof(T)));
+            var normalized = ExpressionService.Normalize(expression);
+            Provider.Service.Evaluate(normalized);
+        }
+    }
+
+    private class SubscriptionProxy : IQubscription
+    {
+        public SubscriptionProxy(Expression expression, IQProvider provider)
+        {
+            Expression = expression;
+            Provider = provider;
         }
 
-        public IQubscription GetSubscription(string id)
+        public Expression Expression { get; }
+
+        public IQProvider Provider { get; }
+
+        public void Dispose()
         {
-            return new SubscriptionProxy(Expression.Parameter(typeof(IQubscription), id), _provider);
+            var expression = Expression.Invoke(Expression.Parameter(typeof(Action<IQubscription>), "rx://builtin/dispose"), Expression);
+            var normalized = ExpressionService.Normalize(expression);
+            Provider.Service.Evaluate(normalized);
+        }
+    }
+
+    private class SubjectFactoryProxy<T> : IQubjectFactory<T>
+    {
+        public SubjectFactoryProxy(Expression expression, IQProvider provider)
+        {
+            Expression = expression;
+            Provider = provider;
         }
 
-        public IQubjectFactory<T> GetSubjectFactory<T>(string id)
+        public Expression Expression { get; }
+
+        public IQProvider Provider { get; }
+
+        public IQubject<T> Create(string id)
         {
-            return new SubjectFactoryProxy<T>(Expression.Parameter(typeof(IQubjectFactory<T>), id), _provider);
+            var expression = Expression.Invoke(Expression.Parameter(typeof(Func<IQubjectFactory<T>, string, IQubject<T>>), "rx://builtin/createSubject"), Expression, Expression.Constant(id, typeof(string)));
+            var normalized = ExpressionService.Normalize(expression);
+            Provider.Service.Evaluate(normalized);
+            return new SubjectProxy<T>(Expression.Parameter(typeof(IQubject<T>), id), Provider);
+        }
+    }
+
+    private class SubjectProxy<T> : IQubject<T>
+    {
+        public SubjectProxy(Expression expression, IQProvider provider)
+        {
+            Expression = expression;
+            Provider = provider;
         }
 
-        private class ObservableProxy<T> : IQbservable<T>
+        public Expression Expression { get; }
+
+        public IQProvider Provider { get; }
+
+        public void Dispose()
         {
-            public ObservableProxy(Expression expression, IQProvider provider)
-            {
-                Expression = expression;
-                Provider = provider;
-            }
-
-            public Expression Expression { get; }
-
-            public IQProvider Provider { get; }
-
-            public IQubscription Subscribe(string id, IQbserver<T> observer)
-            {
-                var expression = Expression.Invoke(Expression.Parameter(typeof(Func<IQbservable<T>, string, IQbserver<T>, IQubscription>), "rx://builtin/subscribe"), Expression, Expression.Constant(id, typeof(string)), observer.Expression);
-                var normalized = ExpressionService.Normalize(expression);
-                Provider.Service.Evaluate(normalized);
-                return Provider.CreateSubscription(Expression.Parameter(typeof(IQubscription), id));
-            }
+            throw new NotImplementedException();
         }
 
-        private class ObserverProxy<T> : IQbserver<T>
+        public IQubscription Subscribe(string id, IQbserver<T> observer)
         {
-            public ObserverProxy(Expression expression, IQProvider provider)
-            {
-                Expression = expression;
-                Provider = provider;
-            }
-
-            public Expression Expression { get; }
-
-            public IQProvider Provider { get; }
-
-            public void OnNext(T value)
-            {
-                var expression = Expression.Invoke(Expression.Parameter(typeof(Action<IQbserver<T>, T>), "rx://builtin/onNext"), Expression, Expression.Constant(value, typeof(T)));
-                var normalized = ExpressionService.Normalize(expression);
-                Provider.Service.Evaluate(normalized);
-            }
+            throw new NotImplementedException();
         }
 
-        private class SubscriptionProxy : IQubscription
+        public void OnNext(T value)
         {
-            public SubscriptionProxy(Expression expression, IQProvider provider)
-            {
-                Expression = expression;
-                Provider = provider;
-            }
+            throw new NotImplementedException();
+        }
+    }
 
-            public Expression Expression { get; }
-
-            public IQProvider Provider { get; }
-
-            public void Dispose()
-            {
-                var expression = Expression.Invoke(Expression.Parameter(typeof(Action<IQubscription>), "rx://builtin/dispose"), Expression);
-                var normalized = ExpressionService.Normalize(expression);
-                Provider.Service.Evaluate(normalized);
-            }
+    private class Provider : IQProvider
+    {
+        public Provider(IService service)
+        {
+            Service = service;
         }
 
-        private class SubjectFactoryProxy<T> : IQubjectFactory<T>
+        public IService Service { get; }
+
+        public IQbservable<T> CreateObservable<T>(Expression expression)
         {
-            public SubjectFactoryProxy(Expression expression, IQProvider provider)
-            {
-                Expression = expression;
-                Provider = provider;
-            }
-
-            public Expression Expression { get; }
-
-            public IQProvider Provider { get; }
-
-            public IQubject<T> Create(string id)
-            {
-                var expression = Expression.Invoke(Expression.Parameter(typeof(Func<IQubjectFactory<T>, string, IQubject<T>>), "rx://builtin/createSubject"), Expression, Expression.Constant(id, typeof(string)));
-                var normalized = ExpressionService.Normalize(expression);
-                Provider.Service.Evaluate(normalized);
-                return new SubjectProxy<T>(Expression.Parameter(typeof(IQubject<T>), id), Provider);
-            }
+            return new ObservableProxy<T>(expression, this);
         }
 
-        private class SubjectProxy<T> : IQubject<T>
+        public IQbserver<T> CreateObserver<T>(Expression expression)
         {
-            public SubjectProxy(Expression expression, IQProvider provider)
-            {
-                Expression = expression;
-                Provider = provider;
-            }
-
-            public Expression Expression { get; }
-
-            public IQProvider Provider { get; }
-
-            public void Dispose()
-            {
-                throw new NotImplementedException();
-            }
-
-            public IQubscription Subscribe(string id, IQbserver<T> observer)
-            {
-                throw new NotImplementedException();
-            }
-
-            public void OnNext(T value)
-            {
-                throw new NotImplementedException();
-            }
+            return new ObserverProxy<T>(expression, this);
         }
 
-        private class Provider : IQProvider
+        public IQubscription CreateSubscription(Expression expression)
         {
-            public Provider(IService service)
-            {
-                Service = service;
-            }
-
-            public IService Service { get; }
-
-            public IQbservable<T> CreateObservable<T>(Expression expression)
-            {
-                return new ObservableProxy<T>(expression, this);
-            }
-
-            public IQbserver<T> CreateObserver<T>(Expression expression)
-            {
-                return new ObserverProxy<T>(expression, this);
-            }
-
-            public IQubscription CreateSubscription(Expression expression)
-            {
-                return new SubscriptionProxy(expression, this);
-            }
-
-            public IQubjectFactory<T> CreateQubjectFactory<T>(Expression expression)
-            {
-                return new SubjectFactoryProxy<T>(expression, this);
-            }
+            return new SubscriptionProxy(expression, this);
         }
 
-        private class ExpressionService
+        public IQubjectFactory<T> CreateQubjectFactory<T>(Expression expression)
         {
-            public static Expression Normalize(Expression expression)
-            {
-                var rw = new ResourceRewriter().Visit(expression);
-                var ce = new ClosureEliminator().Visit(rw);
-                return ce;
-            }
+            return new SubjectFactoryProxy<T>(expression, this);
+        }
+    }
 
-            private class ResourceRewriter : ExpressionVisitor
+    private class ExpressionService
+    {
+        public static Expression Normalize(Expression expression)
+        {
+            var rw = new ResourceRewriter().Visit(expression);
+            var ce = new ClosureEliminator().Visit(rw);
+            return ce;
+        }
+
+        private class ResourceRewriter : ExpressionVisitor
+        {
+            protected override Expression VisitMethodCall(MethodCallExpression node)
             {
-                protected override Expression VisitMethodCall(MethodCallExpression node)
+                var res = node.Method.GetCustomAttribute<ResourceAttribute>();
+                if (res != null)
                 {
-                    var res = node.Method.GetCustomAttribute<ResourceAttribute>();
-                    if (res != null)
+                    if (!node.Method.IsStatic || node.Method.ReturnType == typeof(void)) // NOTE: just for prototyping; IRP deals with all cases
                     {
-                        if (!node.Method.IsStatic || node.Method.ReturnType == typeof(void)) // NOTE: just for prototyping; IRP deals with all cases
-                        {
-                            throw new NotSupportedException();
-                        }
-
-                        var args = Visit(node.Arguments);
-                        var func = Expression.GetFuncType([.. node.Method.GetParameters().Select(p => p.ParameterType), node.Method.ReturnType]); // NOTE: breaks down on > 16 args; IRP deals with this with tuples
-                        return Expression.Invoke(Expression.Parameter(func, res.Id), args);
+                        throw new NotSupportedException();
                     }
 
-                    return base.VisitMethodCall(node);
+                    var args = Visit(node.Arguments);
+                    var func = Expression.GetFuncType([.. node.Method.GetParameters().Select(p => p.ParameterType), node.Method.ReturnType]); // NOTE: breaks down on > 16 args; IRP deals with this with tuples
+                    return Expression.Invoke(Expression.Parameter(func, res.Id), args);
                 }
+
+                return base.VisitMethodCall(node);
             }
+        }
 
-            private class ClosureEliminator : ExpressionVisitor
+        private class ClosureEliminator : ExpressionVisitor
+        {
+            protected override Expression VisitMember(MemberExpression node)
             {
-                protected override Expression VisitMember(MemberExpression node)
+                if (node.Member.DeclaringType.IsClosureClass())
                 {
-                    if (node.Member.DeclaringType.IsClosureClass())
-                    {
-                        return Expression.Constant(node.Evaluate(), node.Type);
-                    }
-
-                    return base.VisitMember(node);
+                    return Expression.Constant(node.Evaluate(), node.Type);
                 }
+
+                return base.VisitMember(node);
             }
         }
     }

@@ -13,35 +13,34 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Exposes reactive processing client-side operations using a provider to perform service-side operations.
+/// </summary>
+public class ReactiveClient : ReactiveClientBase
 {
+    #region Constructor & fields
+
+    private readonly ReactiveQueryProvider _provider;
+
     /// <summary>
-    /// Exposes reactive processing client-side operations using a provider to perform service-side operations.
+    /// Creates a new reactive processing client using the specified client operations provider.
     /// </summary>
-    public class ReactiveClient : ReactiveClientBase
+    /// <param name="provider">Client operations provider.</param>
+    /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
+    public ReactiveClient(IReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
+        : base(new ReactiveQueryProvider(provider, expressionServices))
     {
-        #region Constructor & fields
+        ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(expressionServices);
 
-        private readonly ReactiveQueryProvider _provider;
+        _provider = new ReactiveQueryProvider(provider, expressionServices);
 
-        /// <summary>
-        /// Creates a new reactive processing client using the specified client operations provider.
-        /// </summary>
-        /// <param name="provider">Client operations provider.</param>
-        /// <param name="expressionServices">Expression services object, used to perform expression tree manipulations.</param>
-        public ReactiveClient(IReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
-            : base(new ReactiveQueryProvider(provider, expressionServices))
-        {
-            ArgumentNullException.ThrowIfNull(provider);
-            ArgumentNullException.ThrowIfNull(expressionServices);
-
-            _provider = new ReactiveQueryProvider(provider, expressionServices);
-
-            var thisParameter = ResourceNaming.GetThisReferenceExpression(this);
-            expressionServices.RegisterObject(this, thisParameter);
-            expressionServices.RegisterObject(_provider, Expression.Property(thisParameter, (PropertyInfo)ReflectionHelpers.InfoOf((IReactiveClient c) => c.Provider)));
-        }
-
-        #endregion
+        var thisParameter = ResourceNaming.GetThisReferenceExpression(this);
+        expressionServices.RegisterObject(this, thisParameter);
+        expressionServices.RegisterObject(_provider, Expression.Property(thisParameter, (PropertyInfo)ReflectionHelpers.InfoOf((IReactiveClient c) => c.Provider)));
     }
+
+    #endregion
 }

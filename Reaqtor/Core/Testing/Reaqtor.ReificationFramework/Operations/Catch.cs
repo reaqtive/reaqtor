@@ -6,23 +6,22 @@
 
 using System;
 
-namespace Reaqtor.ReificationFramework
-{
-    /// <summary>
-    /// Operation to catch exceptions thrown by the inner operation.
-    /// </summary>
-    public class Catch<T> : OperationBase
-        where T : Exception
-    {
-        internal Catch(ReifiedOperation operation, Action<T> handler)
-            : base(ReifiedOperationKind.Catch, operation)
-        {
-            Handler = handler ?? throw new ArgumentNullException(nameof(handler));
-        }
+namespace Reaqtor.ReificationFramework;
 
-        /// <summary>
-        /// Callback when exceptions are thrown.
-        /// </summary>
-        public Action<T> Handler { get; }
+/// <summary>
+/// Operation to catch exceptions thrown by the inner operation.
+/// </summary>
+public class Catch<T> : OperationBase
+    where T : Exception
+{
+    internal Catch(ReifiedOperation operation, Action<T> handler)
+        : base(ReifiedOperationKind.Catch, operation)
+    {
+        Handler = handler ?? throw new ArgumentNullException(nameof(handler));
     }
+
+    /// <summary>
+    /// Callback when exceptions are thrown.
+    /// </summary>
+    public Action<T> Handler { get; }
 }

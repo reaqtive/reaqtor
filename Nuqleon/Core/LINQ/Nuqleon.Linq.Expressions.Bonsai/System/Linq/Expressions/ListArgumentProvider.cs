@@ -11,96 +11,95 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+internal sealed class ListArgumentProviderSlim : IList<ExpressionSlim>
 {
-    internal sealed class ListArgumentProviderSlim : IList<ExpressionSlim>
+    private readonly IArgumentProviderSlim _provider;
+    private readonly ExpressionSlim _arg0;
+
+    public ListArgumentProviderSlim(IArgumentProviderSlim provider, ExpressionSlim arg0)
     {
-        private readonly IArgumentProviderSlim _provider;
-        private readonly ExpressionSlim _arg0;
+        _provider = provider;
+        _arg0 = arg0;
+    }
 
-        public ListArgumentProviderSlim(IArgumentProviderSlim provider, ExpressionSlim arg0)
+    public ExpressionSlim this[int index]
+    {
+        get => index == 0 ? _arg0 : _provider.GetArgument(index);
+        set => throw new NotSupportedException();
+    }
+
+    public int Count => _provider.ArgumentCount;
+
+    public bool IsReadOnly => true;
+
+    public bool Contains(ExpressionSlim item) => IndexOf(item) != -1;
+
+    public int IndexOf(ExpressionSlim item)
+    {
+        if (item == _arg0)
         {
-            _provider = provider;
-            _arg0 = arg0;
+            return 0;
         }
 
-        public ExpressionSlim this[int index]
+        for (int i = 1, n = _provider.ArgumentCount; i < n; i++)
         {
-            get => index == 0 ? _arg0 : _provider.GetArgument(index);
-            set => throw new NotSupportedException();
-        }
-
-        public int Count => _provider.ArgumentCount;
-
-        public bool IsReadOnly => true;
-
-        public bool Contains(ExpressionSlim item) => IndexOf(item) != -1;
-
-        public int IndexOf(ExpressionSlim item)
-        {
-            if (item == _arg0)
+            if (item == _provider.GetArgument(i))
             {
-                return 0;
-            }
-
-            for (int i = 1, n = _provider.ArgumentCount; i < n; i++)
-            {
-                if (item == _provider.GetArgument(i))
-                {
-                    return i;
-                }
-            }
-
-            return -1;
-        }
-
-        public void CopyTo(ExpressionSlim[] array, int arrayIndex)
-        {
-            ArgumentNullException.ThrowIfNull(array);
-
-            array[arrayIndex++] = _arg0;
-
-            for (int i = 1, n = _provider.ArgumentCount; i < n; i++)
-            {
-                array[arrayIndex++] = _provider.GetArgument(i);
+                return i;
             }
         }
 
-        public IEnumerator<ExpressionSlim> GetEnumerator()
+        return -1;
+    }
+
+    public void CopyTo(ExpressionSlim[] array, int arrayIndex)
+    {
+        ArgumentNullException.ThrowIfNull(array);
+
+        array[arrayIndex++] = _arg0;
+
+        for (int i = 1, n = _provider.ArgumentCount; i < n; i++)
         {
-            yield return _arg0;
-
-            for (int i = 1, n = _provider.ArgumentCount; i < n; i++)
-            {
-                yield return _provider.GetArgument(i);
-            }
+            array[arrayIndex++] = _provider.GetArgument(i);
         }
+    }
 
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+    public IEnumerator<ExpressionSlim> GetEnumerator()
+    {
+        yield return _arg0;
 
-        public void Add(ExpressionSlim item)
+        for (int i = 1, n = _provider.ArgumentCount; i < n; i++)
         {
-            throw new NotSupportedException();
+            yield return _provider.GetArgument(i);
         }
+    }
 
-        public void Clear()
-        {
-            throw new NotSupportedException();
-        }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 
-        public void Insert(int index, ExpressionSlim item)
-        {
-            throw new NotSupportedException();
-        }
+    public void Add(ExpressionSlim item)
+    {
+        throw new NotSupportedException();
+    }
 
-        public bool Remove(ExpressionSlim item)
-        {
-            throw new NotSupportedException();
-        }
+    public void Clear()
+    {
+        throw new NotSupportedException();
+    }
 
-        public void RemoveAt(int index)
-        {
-            throw new NotSupportedException();
-        }
+    public void Insert(int index, ExpressionSlim item)
+    {
+        throw new NotSupportedException();
+    }
+
+    public bool Remove(ExpressionSlim item)
+    {
+        throw new NotSupportedException();
+    }
+
+    public void RemoveAt(int index)
+    {
+        throw new NotSupportedException();
     }
 }

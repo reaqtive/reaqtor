@@ -4,12 +4,11 @@
 
 using System;
 
-namespace Reaqtor.QueryEngine.Events
+namespace Reaqtor.QueryEngine.Events;
+
+/// <summary>
+/// Event arguments for a <see cref="CheckpointingQueryEngine.SchedulerContinued"/> event.
+/// </summary>
+public class SchedulerContinuedEventArgs : EventArgs
 {
-    /// <summary>
-    /// Event arguments for a <see cref="CheckpointingQueryEngine.SchedulerContinued"/> event.
-    /// </summary>
-    public class SchedulerContinuedEventArgs : EventArgs
-    {
-    }
 }

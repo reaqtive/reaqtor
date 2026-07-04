@@ -4,12 +4,11 @@
 
 using Reaqtor.Reliable;
 
-namespace Reaqtor.Shebang.Service
-{
-    public interface IIngressEgressManager
-    {
-        IReliableObserver<T> GetObserver<T>(string name);
+namespace Reaqtor.Shebang.Service;
 
-        IReliableObservable<T> GetObservable<T>(string name);
-    }
+public interface IIngressEgressManager
+{
+    IReliableObserver<T> GetObserver<T>(string name);
+
+    IReliableObservable<T> GetObservable<T>(string name);
 }

@@ -8,13 +8,12 @@
 //   ER - 10/27/2014 - Created this type.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// An interface for disposable references to objects.
+/// </summary>
+/// <typeparam name="T">Type of the referenced object.</typeparam>
+public interface IDiscardable<T> : IReference<T>, IDisposable
 {
-    /// <summary>
-    /// An interface for disposable references to objects.
-    /// </summary>
-    /// <typeparam name="T">Type of the referenced object.</typeparam>
-    public interface IDiscardable<T> : IReference<T>, IDisposable
-    {
-    }
 }

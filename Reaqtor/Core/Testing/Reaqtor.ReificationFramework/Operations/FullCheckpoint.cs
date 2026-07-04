@@ -2,19 +2,18 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace Reaqtor.ReificationFramework
+namespace Reaqtor.ReificationFramework;
+
+/// <summary>
+/// Operation to perform a full checkpoint.
+/// </summary>
+public class FullCheckpoint : QueryEngineOperation
 {
     /// <summary>
-    /// Operation to perform a full checkpoint.
+    /// Creates a new full checkpoint operation.
     /// </summary>
-    public class FullCheckpoint : QueryEngineOperation
+    public FullCheckpoint(/* TODO: query engine URI? */)
+        : base(QueryEngineOperationKind.FullCheckpoint, targetObjectUri: null, state: null)
     {
-        /// <summary>
-        /// Creates a new full checkpoint operation.
-        /// </summary>
-        public FullCheckpoint(/* TODO: query engine URI? */)
-            : base(QueryEngineOperationKind.FullCheckpoint, targetObjectUri: null, state: null)
-        {
-        }
     }
 }

@@ -16,29 +16,28 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Serialization;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class DefaultNameResolverTests
 {
-    [TestClass]
-    public class DefaultNameResolverTests
+    [TestMethod]
+    public void DefaultNameResolver_ArgumentChecking()
     {
-        [TestMethod]
-        public void DefaultNameResolver_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameResolver.Instance.GetNames(default(FieldInfo)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameResolver.Instance.GetNames(default(PropertyInfo)));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameResolver.Instance.GetNames(default(FieldInfo)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameResolver.Instance.GetNames(default(PropertyInfo)));
+    }
 
-        [TestMethod]
-        public void DefaultNameResolver_Simple()
-        {
-            Assert.IsTrue(new[] { "Foo" }.SequenceEqual(DefaultNameResolver.Instance.GetNames(typeof(Bar).GetProperty("Foo"))));
-            Assert.IsTrue(new[] { "Qux" }.SequenceEqual(DefaultNameResolver.Instance.GetNames(typeof(Bar).GetField("Qux"))));
-        }
+    [TestMethod]
+    public void DefaultNameResolver_Simple()
+    {
+        Assert.IsTrue(new[] { "Foo" }.SequenceEqual(DefaultNameResolver.Instance.GetNames(typeof(Bar).GetProperty("Foo"))));
+        Assert.IsTrue(new[] { "Qux" }.SequenceEqual(DefaultNameResolver.Instance.GetNames(typeof(Bar).GetField("Qux"))));
+    }
 
-        private sealed class Bar
-        {
-            public int Foo { get; set; }
-            public int Qux = 42;
-        }
+    private sealed class Bar
+    {
+        public int Foo { get; set; }
+        public int Qux = 42;
     }
 }

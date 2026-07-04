@@ -4,27 +4,26 @@
 
 using System;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// Base implementation of the non-generic multi-subject, with support for versioning.
+/// </summary>
+public abstract class VersionedMultiSubjectBase : MultiSubjectBase, IVersioned
 {
     /// <summary>
-    /// Base implementation of the non-generic multi-subject, with support for versioning.
+    /// The name of the multi-subject.
     /// </summary>
-    public abstract class VersionedMultiSubjectBase : MultiSubjectBase, IVersioned
+    public abstract string Name
     {
-        /// <summary>
-        /// The name of the multi-subject.
-        /// </summary>
-        public abstract string Name
-        {
-            get;
-        }
+        get;
+    }
 
-        /// <summary>
-        /// The version of the multi-subject.
-        /// </summary>
-        public abstract Version Version
-        {
-            get;
-        }
+    /// <summary>
+    /// The version of the multi-subject.
+    /// </summary>
+    public abstract Version Version
+    {
+        get;
     }
 }

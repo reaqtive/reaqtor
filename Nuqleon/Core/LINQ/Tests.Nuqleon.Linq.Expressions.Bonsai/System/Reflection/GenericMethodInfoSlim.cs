@@ -17,22 +17,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.System.Linq.Expressions.Bonsai;
 
-namespace Tests.System.Reflection
-{
-    [TestClass]
-    public class GenericMethodInfoSlimTests : TestBase
-    {
-        [TestMethod]
-        public void GenericMethodInfoSlim_ArgumentChecks()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetGenericMethod(type: null, methodDefinition: null, arguments: null));
-            Assert.AreEqual("type", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetGenericMethod(methodDefinition: null, arguments: null));
-            Assert.AreEqual("methodDefinition", ex2.ParamName);
+namespace Tests.System.Reflection;
 
-            var def = SlimType.GetGenericDefinitionMethod("Foo", new List<TypeSlim> { SlimType }.AsReadOnly(), EmptyReadOnlyCollection<TypeSlim>.Instance, returnType: null);
-            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => def.DeclaringType.GetGenericMethod(def, arguments: null));
-            Assert.AreEqual("arguments", ex3.ParamName);
-        }
+[TestClass]
+public class GenericMethodInfoSlimTests : TestBase
+{
+    [TestMethod]
+    public void GenericMethodInfoSlim_ArgumentChecks()
+    {
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetGenericMethod(type: null, methodDefinition: null, arguments: null));
+        Assert.AreEqual("type", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetGenericMethod(methodDefinition: null, arguments: null));
+        Assert.AreEqual("methodDefinition", ex2.ParamName);
+
+        var def = SlimType.GetGenericDefinitionMethod("Foo", new List<TypeSlim> { SlimType }.AsReadOnly(), EmptyReadOnlyCollection<TypeSlim>.Instance, returnType: null);
+        var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => def.DeclaringType.GetGenericMethod(def, arguments: null));
+        Assert.AreEqual("arguments", ex3.ParamName);
     }
 }

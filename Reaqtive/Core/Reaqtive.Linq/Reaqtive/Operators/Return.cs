@@ -6,55 +6,54 @@ using System;
 
 using Reaqtive.Tasks;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class Return<TResult> : SubscribableBase<TResult>
 {
-    internal sealed class Return<TResult> : SubscribableBase<TResult>
+    private readonly TResult _value;
+
+    public Return(TResult value)
     {
-        private readonly TResult _value;
+        _value = value;
+    }
 
-        public Return(TResult value)
+    protected override ISubscription SubscribeCore(IObserver<TResult> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<Return<TResult>, TResult>
+    {
+        private IOperatorContext _context;
+
+        public _(Return<TResult> parent, IObserver<TResult> observer)
+            : base(parent, observer)
         {
-            _value = value;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<TResult> observer)
+        public override string Name => "rc:Return";
+
+        public override Version Version => Versioning.v1;
+
+        public override void SetContext(IOperatorContext context)
         {
-            return new _(this, observer);
+            base.SetContext(context);
+
+            _context = context;
         }
 
-        private sealed class _ : StatefulUnaryOperator<Return<TResult>, TResult>
+        protected override void OnStart()
         {
-            private IOperatorContext _context;
-
-            public _(Return<TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
+            _context.Scheduler.Schedule(new ActionTask(() =>
             {
-            }
+                _context.TraceSource.Return_Processing(_context.InstanceId);
 
-            public override string Name => "rc:Return";
+                Output.OnNext(Params._value);
+                Output.OnCompleted();
+                Dispose();
+            }));
 
-            public override Version Version => Versioning.v1;
-
-            public override void SetContext(IOperatorContext context)
-            {
-                base.SetContext(context);
-
-                _context = context;
-            }
-
-            protected override void OnStart()
-            {
-                _context.Scheduler.Schedule(new ActionTask(() =>
-                {
-                    _context.TraceSource.Return_Processing(_context.InstanceId);
-
-                    Output.OnNext(Params._value);
-                    Output.OnCompleted();
-                    Dispose();
-                }));
-
-                _context.TraceSource.Return_Scheduling(_context.InstanceId);
-            }
+            _context.TraceSource.Return_Scheduling(_context.InstanceId);
         }
     }
 }

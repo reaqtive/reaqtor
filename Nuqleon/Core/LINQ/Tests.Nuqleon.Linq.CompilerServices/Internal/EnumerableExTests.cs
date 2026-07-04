@@ -13,25 +13,24 @@ using System.Linq;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
-{
-    [TestClass]
-    public class EnumerableExTests
-    {
-        [TestMethod]
-        public void EnumerableEx_AsArray()
-        {
-            {
-                var arr = new[] { 1, 2, 3 };
-                var res = EnumerableEx.AsArray(arr);
-                Assert.AreSame(arr, res);
-            }
+namespace Tests.System.Linq.CompilerServices;
 
-            {
-                var lst = new List<int> { 1, 2, 3 };
-                var res = EnumerableEx.AsArray(lst);
-                Assert.IsTrue(res.SequenceEqual(lst));
-            }
+[TestClass]
+public class EnumerableExTests
+{
+    [TestMethod]
+    public void EnumerableEx_AsArray()
+    {
+        {
+            var arr = new[] { 1, 2, 3 };
+            var res = EnumerableEx.AsArray(arr);
+            Assert.AreSame(arr, res);
+        }
+
+        {
+            var lst = new List<int> { 1, 2, 3 };
+            var res = EnumerableEx.AsArray(lst);
+            Assert.IsTrue(res.SequenceEqual(lst));
         }
     }
 }

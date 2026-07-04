@@ -13,80 +13,79 @@ using System.Reflection;
 
 using Json = Nuqleon.Json.Expressions;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal sealed class PropertyDef : DeclaredMemberDef
 {
-    internal sealed class PropertyDef : DeclaredMemberDef
+    #region Fields
+
+    private readonly PropertyInfoSlim _property;
+
+    #endregion
+
+    #region Constructors
+
+    public PropertyDef(TypeRef declaringType, PropertyInfoSlim property)
+        : base(declaringType)
     {
-        #region Fields
+        _property = property;
+    }
 
-        private readonly PropertyInfoSlim _property;
+    #endregion
 
-        #endregion
+    #region Methods
 
-        #region Constructors
+    public override MemberInfoSlim ToMember(DeserializationDomain domain) => _property;
 
-        public PropertyDef(TypeRef declaringType, PropertyInfoSlim property)
-            : base(declaringType)
+    public override Json.Expression ToJson(SerializationDomain domain)
+    {
+        var declType = DeclaringType.ToJson();
+
+        if (!domain.IsV08)
         {
-            _property = property;
-        }
+            var indexParameterTypes = _property.IndexParameterTypes;
+            var indexParameterCount = indexParameterTypes.Count;
 
-        #endregion
+            var indexParameterList = new Json.Expression[indexParameterCount];
 
-        #region Methods
-
-        public override MemberInfoSlim ToMember(DeserializationDomain domain) => _property;
-
-        public override Json.Expression ToJson(SerializationDomain domain)
-        {
-            var declType = DeclaringType.ToJson();
-
-            if (!domain.IsV08)
+            for (var i = 0; i < indexParameterCount; i++)
             {
-                var indexParameterTypes = _property.IndexParameterTypes;
-                var indexParameterCount = indexParameterTypes.Count;
+                indexParameterList[i] = domain.AddType(indexParameterTypes[i]).ToJson();
+            }
 
-                var indexParameterList = new Json.Expression[indexParameterCount];
+            var indexParameters = Json.Expression.Array(indexParameterList);
 
-                for (var i = 0; i < indexParameterCount; i++)
-                {
-                    indexParameterList[i] = domain.AddType(indexParameterTypes[i]).ToJson();
-                }
+            if (_property.PropertyType != null)
+            {
+                var propType = domain.AddType(_property.PropertyType).ToJson();
 
-                var indexParameters = Json.Expression.Array(indexParameterList);
-
-                if (_property.PropertyType != null)
-                {
-                    var propType = domain.AddType(_property.PropertyType).ToJson();
-
-                    return Json.Expression.Array(
-                        Discriminators.MemberInfo.PropertyDiscriminator,
-                        declType,
-                        Json.Expression.String(_property.Name),
-                        indexParameters,
-                        propType
-                    );
-                }
-                else
-                {
-                    return Json.Expression.Array(
-                        Discriminators.MemberInfo.PropertyDiscriminator,
-                        declType,
-                        Json.Expression.String(_property.Name),
-                        indexParameters
-                    );
-                }
+                return Json.Expression.Array(
+                    Discriminators.MemberInfo.PropertyDiscriminator,
+                    declType,
+                    Json.Expression.String(_property.Name),
+                    indexParameters,
+                    propType
+                );
             }
             else
             {
                 return Json.Expression.Array(
                     Discriminators.MemberInfo.PropertyDiscriminator,
                     declType,
-                    Json.Expression.String(_property.Name)
+                    Json.Expression.String(_property.Name),
+                    indexParameters
                 );
             }
         }
-
-        #endregion
+        else
+        {
+            return Json.Expression.Array(
+                Discriminators.MemberInfo.PropertyDiscriminator,
+                declType,
+                Json.Expression.String(_property.Name)
+            );
+        }
     }
+
+    #endregion
 }

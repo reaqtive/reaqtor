@@ -4,10 +4,9 @@
 
 using System.Threading;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+public static class Sequenced
 {
-    public static class Sequenced
-    {
-        public static long Next => Interlocked.Increment(ref field);
-    }
+    public static long Next => Interlocked.Increment(ref field);
 }

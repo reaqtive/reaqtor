@@ -8,21 +8,20 @@
 //   BD - 08/03/2015 - Created ValueOrError functionality.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Enumeration indicating whether an object represents a value or an error.
+/// </summary>
+public enum ValueOrErrorKind
 {
     /// <summary>
-    /// Enumeration indicating whether an object represents a value or an error.
+    /// Representation of a value.
     /// </summary>
-    public enum ValueOrErrorKind
-    {
-        /// <summary>
-        /// Representation of a value.
-        /// </summary>
-        Value,
+    Value,
 
-        /// <summary>
-        /// Representation of an error.
-        /// </summary>
-        Error,
-    }
+    /// <summary>
+    /// Representation of an error.
+    /// </summary>
+    Error,
 }

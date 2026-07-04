@@ -6,45 +6,44 @@ using System.Linq.Expressions;
 
 using Nuqleon.DataModel.CompilerServices.Bonsai;
 
-namespace Reaqtor.Hosting.Shared.Serialization
+namespace Reaqtor.Hosting.Shared.Serialization;
+
+/// <summary>
+/// Helper class to serialize and deserialize expressions and data model-
+/// compliant objects.
+/// </summary>
+/// <remarks>
+/// This serializer also ensures that all structural data model types
+/// are fully anonymized prior to serializing the expression.
+/// </remarks>
+public class ClientSerializationHelpers : SerializationHelpers
 {
     /// <summary>
-    /// Helper class to serialize and deserialize expressions and data model-
-    /// compliant objects.
+    /// Creates an expression serializer.
     /// </summary>
-    /// <remarks>
-    /// This serializer also ensures that all structural data model types
-    /// are fully anonymized prior to serializing the expression.
-    /// </remarks>
-    public class ClientSerializationHelpers : SerializationHelpers
+    /// <returns>An expression serializer.</returns>
+    protected override IExpressionSerializer CreateExpressionSerializer()
     {
-        /// <summary>
-        /// Creates an expression serializer.
-        /// </summary>
-        /// <returns>An expression serializer.</returns>
-        protected override IExpressionSerializer CreateExpressionSerializer()
+        return new AnonymizingExpressionSerializer(this);
+    }
+
+    private sealed class AnonymizingExpressionSerializer : SerializationHelpersExpressionSerializer
+    {
+        public AnonymizingExpressionSerializer(SerializationHelpers parent)
+            : base(parent)
         {
-            return new AnonymizingExpressionSerializer(this);
         }
 
-        private sealed class AnonymizingExpressionSerializer : SerializationHelpersExpressionSerializer
+        public override ExpressionSlim Lift(Expression expression)
         {
-            public AnonymizingExpressionSerializer(SerializationHelpers parent)
-                : base(parent)
-            {
-            }
+            var slim = base.Lift(expression);
+            var recordizer = new ExpressionSlimEntityTypeRecordizer();
+            return recordizer.Apply(slim);
+        }
 
-            public override ExpressionSlim Lift(Expression expression)
-            {
-                var slim = base.Lift(expression);
-                var recordizer = new ExpressionSlimEntityTypeRecordizer();
-                return recordizer.Apply(slim);
-            }
-
-            protected override ExpressionToExpressionSlimConverter CreateLifter()
-            {
-                return new ExpressionToExpressionSlimConverter(new DataModelTypeSpace());
-            }
+        protected override ExpressionToExpressionSlimConverter CreateLifter()
+        {
+            return new ExpressionToExpressionSlimConverter(new DataModelTypeSpace());
         }
     }
 }

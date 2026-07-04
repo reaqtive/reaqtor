@@ -8,81 +8,80 @@
 // BD - November 2009 - Created this file.
 //
 
-namespace Nuqleon.Json.Parser
+namespace Nuqleon.Json.Parser;
+
+/// <summary>
+/// JSON token types.
+/// </summary>
+internal enum TokenType : byte
 {
     /// <summary>
-    /// JSON token types.
+    /// No token, used to represent the absence of a token (i.e. C# "null").
     /// </summary>
-    internal enum TokenType : byte
-    {
-        /// <summary>
-        /// No token, used to represent the absence of a token (i.e. C# "null").
-        /// </summary>
-        None = 0,
+    None = 0,
 
-        /// <summary>
-        /// End of file.
-        /// </summary>
-        Eof,
+    /// <summary>
+    /// End of file.
+    /// </summary>
+    Eof,
 
-        /// <summary>
-        /// Whitespace.
-        /// </summary>
-        White,
+    /// <summary>
+    /// Whitespace.
+    /// </summary>
+    White,
 
-        /// <summary>
-        /// Left curly brace.
-        /// </summary>
-        LeftCurly,
+    /// <summary>
+    /// Left curly brace.
+    /// </summary>
+    LeftCurly,
 
-        /// <summary>
-        /// Right curly brace.
-        /// </summary>
-        RightCurly,
+    /// <summary>
+    /// Right curly brace.
+    /// </summary>
+    RightCurly,
 
-        /// <summary>
-        /// Left square bracket.
-        /// </summary>
-        LeftBracket,
+    /// <summary>
+    /// Left square bracket.
+    /// </summary>
+    LeftBracket,
 
-        /// <summary>
-        /// Right square bracket.
-        /// </summary>
-        RightBracket,
+    /// <summary>
+    /// Right square bracket.
+    /// </summary>
+    RightBracket,
 
-        /// <summary>
-        /// Comma.
-        /// </summary>
-        Comma,
+    /// <summary>
+    /// Comma.
+    /// </summary>
+    Comma,
 
-        /// <summary>
-        /// Colon.
-        /// </summary>
-        Colon,
+    /// <summary>
+    /// Colon.
+    /// </summary>
+    Colon,
 
-        /// <summary>
-        /// "false" literal.
-        /// </summary>
-        False,
+    /// <summary>
+    /// "false" literal.
+    /// </summary>
+    False,
 
-        /// <summary>
-        /// "true" literal.
-        /// </summary>
-        True,
+    /// <summary>
+    /// "true" literal.
+    /// </summary>
+    True,
 
-        /// <summary>
-        /// "null" literal.
-        /// </summary>
-        Null,
+    /// <summary>
+    /// "null" literal.
+    /// </summary>
+    Null,
 
-        /// <summary>
-        /// String literal.
-        /// </summary>
-        String,
+    /// <summary>
+    /// String literal.
+    /// </summary>
+    String,
 
-        /// <summary>
-        /// Number literal.
-        /// </summary>
-        Number,
-    }
+    /// <summary>
+    /// Number literal.
+    /// </summary>
+    Number,
 }

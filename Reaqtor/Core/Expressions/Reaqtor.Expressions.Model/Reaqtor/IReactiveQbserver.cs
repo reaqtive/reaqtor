@@ -10,16 +10,15 @@
 
 using System;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for an observer represented by an expression tree.
+/// </summary>
+public interface IReactiveQbserver : IReactiveExpressible
 {
     /// <summary>
-    /// Interface for an observer represented by an expression tree.
+    /// Gets the type of the data received by the observer.
     /// </summary>
-    public interface IReactiveQbserver : IReactiveExpressible
-    {
-        /// <summary>
-        /// Gets the type of the data received by the observer.
-        /// </summary>
-        Type ElementType { get; }
-    }
+    Type ElementType { get; }
 }

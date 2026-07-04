@@ -8,25 +8,24 @@
 // PS - February 2015 - Created this file.
 //
 
-namespace System.Linq.CompilerServices.Optimizers
+namespace System.Linq.CompilerServices.Optimizers;
+
+/// <summary>
+/// A representation of the monad member like source nodes and the results of operators.
+/// </summary>
+public abstract class MonadMember : QueryTree
 {
     /// <summary>
-    /// A representation of the monad member like source nodes and the results of operators.
+    /// Creates a representation of a monad member.
     /// </summary>
-    public abstract class MonadMember : QueryTree
+    /// <param name="elementType">The element type of the monad.</param>
+    protected MonadMember(Type elementType)
     {
-        /// <summary>
-        /// Creates a representation of a monad member.
-        /// </summary>
-        /// <param name="elementType">The element type of the monad.</param>
-        protected MonadMember(Type elementType)
-        {
-            ElementType = elementType;
-        }
-
-        /// <summary>
-        /// The element type of the monad.
-        /// </summary>
-        public Type ElementType { get; }
+        ElementType = elementType;
     }
+
+    /// <summary>
+    /// The element type of the monad.
+    /// </summary>
+    public Type ElementType { get; }
 }

@@ -10,311 +10,310 @@
 
 using System.Linq.CompilerServices;
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+/// <summary>
+/// Provides a set of extension methods for System.Linq.Expressions.Expression.
+/// </summary>
+public static class ExpressionExtensions
 {
+    #region Evaluate
+
     /// <summary>
-    /// Provides a set of extension methods for System.Linq.Expressions.Expression.
+    /// Evaluates the specified expression tree.
+    /// If the specified expression has unbound parameters, an exception will be thrown.
     /// </summary>
-    public static class ExpressionExtensions
+    /// <typeparam name="TResult">Type of the evaluation result.</typeparam>
+    /// <param name="expression">Expression to evaluate.</param>
+    /// <returns>Result of evaluating the expression tree.</returns>
+    public static TResult Evaluate<TResult>(this Expression<Func<TResult>> expression)
     {
-        #region Evaluate
+        ArgumentNullException.ThrowIfNull(expression);
 
-        /// <summary>
-        /// Evaluates the specified expression tree.
-        /// If the specified expression has unbound parameters, an exception will be thrown.
-        /// </summary>
-        /// <typeparam name="TResult">Type of the evaluation result.</typeparam>
-        /// <param name="expression">Expression to evaluate.</param>
-        /// <returns>Result of evaluating the expression tree.</returns>
-        public static TResult Evaluate<TResult>(this Expression<Func<TResult>> expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return EvalImpl(expression, cache: null);
-        }
-
-        /// <summary>
-        /// Evaluates the specified expression tree.
-        /// If the specified expression has unbound parameters, an exception will be thrown.
-        /// </summary>
-        /// <typeparam name="TResult">Type of the evaluation result.</typeparam>
-        /// <param name="expression">Expression to evaluate.</param>
-        /// <returns>Result of evaluating the expression tree.</returns>
-        public static TResult Evaluate<TResult>(this Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return EvalImpl<TResult>(expression, cache: null);
-        }
-
-        /// <summary>
-        /// Evaluates the specified expression tree.
-        /// If the specified expression has unbound parameters, an exception will be thrown.
-        /// </summary>
-        /// <param name="expression">Expression to evaluate.</param>
-        /// <returns>Result of evaluating the expression tree.</returns>
-        public static object Evaluate(this Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return EvalImpl<object>(expression, cache: null);
-        }
-
-        /// <summary>
-        /// Evaluates the specified expression tree.
-        /// If the specified expression has unbound parameters, an exception will be thrown.
-        /// </summary>
-        /// <typeparam name="TResult">Type of the evaluation result.</typeparam>
-        /// <param name="expression">Expression to evaluate.</param>
-        /// <param name="cache">Compiled delegate cache.</param>
-        /// <returns>Result of evaluating the expression tree.</returns>
-        public static TResult Evaluate<TResult>(this Expression expression, ICompiledDelegateCache cache)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-            ArgumentNullException.ThrowIfNull(cache);
-
-            return EvalImpl<TResult>(expression, cache);
-        }
-
-        /// <summary>
-        /// Evaluates the specified expression tree.
-        /// If the specified expression has unbound parameters, an exception will be thrown.
-        /// </summary>
-        /// <typeparam name="TResult">Type of the evaluation result.</typeparam>
-        /// <param name="expression">Expression to evaluate.</param>
-        /// <param name="cache">Compiled delegate cache.</param>
-        /// <returns>Result of evaluating the expression tree.</returns>
-        public static TResult Evaluate<TResult>(this Expression<Func<TResult>> expression, ICompiledDelegateCache cache)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-            ArgumentNullException.ThrowIfNull(cache);
-
-            return EvalImpl(expression, cache);
-        }
-
-        /// <summary>
-        /// Evaluates the specified expression tree.
-        /// If the specified expression has unbound parameters, an exception will be thrown.
-        /// </summary>
-        /// <param name="expression">Expression to evaluate.</param>
-        /// <param name="cache">Compiled delegate cache.</param>
-        /// <returns>Result of evaluating the expression tree.</returns>
-        public static object Evaluate(this Expression expression, ICompiledDelegateCache cache)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-            ArgumentNullException.ThrowIfNull(cache);
-
-            return EvalImpl<object>(expression, cache);
-        }
-
-        #endregion
-
-        #region Funcletize
-
-        /// <summary>
-        /// Creates a funclet expression for the specified expression tree. This funclet can be used to evaluate the expression tree.
-        /// If the specified expression has unbound parameters, an exception will be thrown.
-        /// </summary>
-        /// <typeparam name="TResult">Result type of the expression.</typeparam>
-        /// <param name="expression">Expression to funcletize.</param>
-        /// <returns>Funclet to evaluate the expression tree.</returns>
-        public static Expression<Func<TResult>> Funcletize<TResult>(this Expression<Func<TResult>> expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return FuncletizeImpl(expression);
-        }
-
-        /// <summary>
-        /// Creates a funclet expression for the specified expression tree. This funclet can be used to evaluate the expression tree.
-        /// If the specified expression has unbound parameters, an exception will be thrown.
-        /// </summary>
-        /// <typeparam name="TResult">Result type of the expression.</typeparam>
-        /// <param name="expression">Expression to funcletize.</param>
-        /// <returns>Funclet to evaluate the expression tree.</returns>
-        public static Expression<Func<TResult>> Funcletize<TResult>(this Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return FuncletizeImpl<TResult>(expression);
-        }
-
-        /// <summary>
-        /// Creates a funclet expression for the specified expression tree. This funclet can be used to evaluate the expression tree.
-        /// If the specified expression has unbound parameters, an exception will be thrown.
-        /// </summary>
-        /// <param name="expression">Expression to funcletize.</param>
-        /// <returns>Funclet to evaluate the expression tree.</returns>
-        public static Expression<Func<object>> Funcletize(this Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return FuncletizeImpl<object>(expression);
-        }
-
-        #endregion
-
-        #region ToExpressionTree
-
-        /// <summary>
-        /// Converts an expression tree to an ITree representation that can be used with rewriter tools.
-        /// </summary>
-        /// <param name="expression">Expression tree to convert.</param>
-        /// <returns>ITree representation of the expression tree.</returns>
-        public static ExpressionTree ToExpressionTree(this Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            var visitor = new ExpressionTreeConversion();
-            return visitor.Visit(expression);
-        }
-
-        /// <summary>
-        /// Converts an element initializer to an ITree representation that can be used with rewriter tools.
-        /// </summary>
-        /// <param name="elementInitializer">Element initializer to convert.</param>
-        /// <returns>ITree representation of the element initializer.</returns>
-        public static ElementInitExpressionTree ToExpressionTree(this ElementInit elementInitializer)
-        {
-            ArgumentNullException.ThrowIfNull(elementInitializer);
-
-            var visitor = new ExpressionTreeConversion();
-            return visitor.Visit(elementInitializer);
-        }
-
-        /// <summary>
-        /// Converts a member binding to an ITree representation that can be used with rewriter tools.
-        /// </summary>
-        /// <param name="memberBinding">Member binding to convert.</param>
-        /// <returns>ITree representation of the member binding.</returns>
-        public static MemberBindingExpressionTree ToExpressionTree(this MemberBinding memberBinding)
-        {
-            ArgumentNullException.ThrowIfNull(memberBinding);
-
-            var visitor = new ExpressionTreeConversion();
-            return visitor.Visit(memberBinding);
-        }
-
-        #endregion
-
-        #region ToCSharpString
-
-        /// <summary>
-        /// Gets a string representation of the specified expression tree using C# syntax.
-        /// The resulting string is not guaranteed to be semantically equivalent and should be used for diagnostic purposes only.
-        /// </summary>
-        /// <param name="expression">Expression to provide a C# code fragment for.</param>
-        /// <returns>String representation of the specified expression tree using C# syntax.</returns>
-        public static string ToCSharpString(this Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return ToCSharpStringImpl(expression, allowCompilerGeneratedNames: false).Code;
-        }
-
-        /// <summary>
-        /// Gets a string representation of the specified expression tree using C# syntax, with configurable exposure of compiler-generated names.
-        /// The resulting string is not guaranteed to be semantically equivalent and should be used for diagnostic purposes only.
-        /// </summary>
-        /// <param name="expression">Expression to provide a C# code fragment for.</param>
-        /// <param name="allowCompilerGeneratedNames">Indicates whether compiler-generated names are allowed in the output. If enabled, the resulting C# syntax may not be syntactically valid.</param>
-        /// <returns>String representation of the specified expression tree using C# syntax.</returns>
-        public static string ToCSharpString(this Expression expression, bool allowCompilerGeneratedNames)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return ToCSharpStringImpl(expression, allowCompilerGeneratedNames).Code;
-        }
-
-        /// <summary>
-        /// Converts the specified expression tree to a representation using C# syntax, and acquires constants and globals that occur in the expression tree.
-        /// </summary>
-        /// <param name="expression">Expression to provide a C# representation for.</param>
-        /// <returns>C# representation of the specified expression tree.</returns>
-        public static CSharpExpression ToCSharp(this Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return ToCSharpStringImpl(expression, allowCompilerGeneratedNames: false);
-        }
-
-        /// <summary>
-        /// Converts the specified expression tree to a representation using C# syntax, with configurable exposure of compiler-generated names, and acquires constants and globals that occur in the expression tree.
-        /// </summary>
-        /// <param name="expression">Expression to provide a C# representation for.</param>
-        /// <param name="allowCompilerGeneratedNames">Indicates whether compiler-generated names are allowed in the output. If enabled, the resulting C# syntax may not be syntactically valid.</param>
-        /// <returns>C# representation of the specified expression tree.</returns>
-        public static CSharpExpression ToCSharp(this Expression expression, bool allowCompilerGeneratedNames)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
-
-            return ToCSharpStringImpl(expression, allowCompilerGeneratedNames);
-        }
-
-        #endregion
-
-        #region Private implementation
-
-        private static TResult EvalImpl<TResult>(Expression expression, ICompiledDelegateCache cache)
-        {
-            // Adding the case for ExpressionType.Default turns out to be a bit tricky
-            // when dealing with value types that don't have a default constructor (e.g.
-            // the decimal type). See EmitDefault in ILGen.
-
-            switch (expression.NodeType)
-            {
-                case ExpressionType.Constant:
-                    if (typeof(TResult).IsAssignableFrom(expression.Type))
-                    {
-                        return (TResult)((ConstantExpression)expression).Value;
-                    }
-                    break;
-            }
-
-            var funcletized = FuncletizeImpl<TResult>(expression);
-            return cache != null ? funcletized.Compile(cache)() : funcletized.Compile()();
-        }
-
-        private static TResult EvalImpl<TResult>(Expression<Func<TResult>> expression, ICompiledDelegateCache cache)
-        {
-            var funcletized = FuncletizeImpl<TResult>(expression);
-            return cache != null ? funcletized.Compile(cache)() : funcletized.Compile()();
-        }
-
-        private static Expression<Func<TResult>> FuncletizeImpl<TResult>(Expression expression)
-        {
-            CheckOpenParameters(expression);
-
-            if (expression.Type != typeof(TResult))
-            {
-                expression = Expression.Convert(expression, typeof(TResult));
-            }
-
-            return Expression.Lambda<Func<TResult>>(expression);
-        }
-
-        private static Expression<Func<TResult>> FuncletizeImpl<TResult>(Expression<Func<TResult>> expression)
-        {
-            CheckOpenParameters(expression);
-
-            return expression;
-        }
-
-        private static void CheckOpenParameters(Expression expression)
-        {
-            UnboundParameterException.ThrowIfOpen(expression, "The specified expression contains unbound parameters and cannot be funcletized or evaluated.");
-        }
-
-        private static CSharpExpression ToCSharpStringImpl(Expression expression, bool allowCompilerGeneratedNames)
-        {
-            // TODO: add usings as input parameter
-            var prn = new ExpressionCSharpPrinter(allowCompilerGeneratedNames);
-
-            var res = prn.Visit(expression);
-
-            return new CSharpExpression(res, prn.Constants, prn.Globals);
-        }
-
-        #endregion
+        return EvalImpl(expression, cache: null);
     }
+
+    /// <summary>
+    /// Evaluates the specified expression tree.
+    /// If the specified expression has unbound parameters, an exception will be thrown.
+    /// </summary>
+    /// <typeparam name="TResult">Type of the evaluation result.</typeparam>
+    /// <param name="expression">Expression to evaluate.</param>
+    /// <returns>Result of evaluating the expression tree.</returns>
+    public static TResult Evaluate<TResult>(this Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        return EvalImpl<TResult>(expression, cache: null);
+    }
+
+    /// <summary>
+    /// Evaluates the specified expression tree.
+    /// If the specified expression has unbound parameters, an exception will be thrown.
+    /// </summary>
+    /// <param name="expression">Expression to evaluate.</param>
+    /// <returns>Result of evaluating the expression tree.</returns>
+    public static object Evaluate(this Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        return EvalImpl<object>(expression, cache: null);
+    }
+
+    /// <summary>
+    /// Evaluates the specified expression tree.
+    /// If the specified expression has unbound parameters, an exception will be thrown.
+    /// </summary>
+    /// <typeparam name="TResult">Type of the evaluation result.</typeparam>
+    /// <param name="expression">Expression to evaluate.</param>
+    /// <param name="cache">Compiled delegate cache.</param>
+    /// <returns>Result of evaluating the expression tree.</returns>
+    public static TResult Evaluate<TResult>(this Expression expression, ICompiledDelegateCache cache)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+        ArgumentNullException.ThrowIfNull(cache);
+
+        return EvalImpl<TResult>(expression, cache);
+    }
+
+    /// <summary>
+    /// Evaluates the specified expression tree.
+    /// If the specified expression has unbound parameters, an exception will be thrown.
+    /// </summary>
+    /// <typeparam name="TResult">Type of the evaluation result.</typeparam>
+    /// <param name="expression">Expression to evaluate.</param>
+    /// <param name="cache">Compiled delegate cache.</param>
+    /// <returns>Result of evaluating the expression tree.</returns>
+    public static TResult Evaluate<TResult>(this Expression<Func<TResult>> expression, ICompiledDelegateCache cache)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+        ArgumentNullException.ThrowIfNull(cache);
+
+        return EvalImpl(expression, cache);
+    }
+
+    /// <summary>
+    /// Evaluates the specified expression tree.
+    /// If the specified expression has unbound parameters, an exception will be thrown.
+    /// </summary>
+    /// <param name="expression">Expression to evaluate.</param>
+    /// <param name="cache">Compiled delegate cache.</param>
+    /// <returns>Result of evaluating the expression tree.</returns>
+    public static object Evaluate(this Expression expression, ICompiledDelegateCache cache)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+        ArgumentNullException.ThrowIfNull(cache);
+
+        return EvalImpl<object>(expression, cache);
+    }
+
+    #endregion
+
+    #region Funcletize
+
+    /// <summary>
+    /// Creates a funclet expression for the specified expression tree. This funclet can be used to evaluate the expression tree.
+    /// If the specified expression has unbound parameters, an exception will be thrown.
+    /// </summary>
+    /// <typeparam name="TResult">Result type of the expression.</typeparam>
+    /// <param name="expression">Expression to funcletize.</param>
+    /// <returns>Funclet to evaluate the expression tree.</returns>
+    public static Expression<Func<TResult>> Funcletize<TResult>(this Expression<Func<TResult>> expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        return FuncletizeImpl(expression);
+    }
+
+    /// <summary>
+    /// Creates a funclet expression for the specified expression tree. This funclet can be used to evaluate the expression tree.
+    /// If the specified expression has unbound parameters, an exception will be thrown.
+    /// </summary>
+    /// <typeparam name="TResult">Result type of the expression.</typeparam>
+    /// <param name="expression">Expression to funcletize.</param>
+    /// <returns>Funclet to evaluate the expression tree.</returns>
+    public static Expression<Func<TResult>> Funcletize<TResult>(this Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        return FuncletizeImpl<TResult>(expression);
+    }
+
+    /// <summary>
+    /// Creates a funclet expression for the specified expression tree. This funclet can be used to evaluate the expression tree.
+    /// If the specified expression has unbound parameters, an exception will be thrown.
+    /// </summary>
+    /// <param name="expression">Expression to funcletize.</param>
+    /// <returns>Funclet to evaluate the expression tree.</returns>
+    public static Expression<Func<object>> Funcletize(this Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        return FuncletizeImpl<object>(expression);
+    }
+
+    #endregion
+
+    #region ToExpressionTree
+
+    /// <summary>
+    /// Converts an expression tree to an ITree representation that can be used with rewriter tools.
+    /// </summary>
+    /// <param name="expression">Expression tree to convert.</param>
+    /// <returns>ITree representation of the expression tree.</returns>
+    public static ExpressionTree ToExpressionTree(this Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        var visitor = new ExpressionTreeConversion();
+        return visitor.Visit(expression);
+    }
+
+    /// <summary>
+    /// Converts an element initializer to an ITree representation that can be used with rewriter tools.
+    /// </summary>
+    /// <param name="elementInitializer">Element initializer to convert.</param>
+    /// <returns>ITree representation of the element initializer.</returns>
+    public static ElementInitExpressionTree ToExpressionTree(this ElementInit elementInitializer)
+    {
+        ArgumentNullException.ThrowIfNull(elementInitializer);
+
+        var visitor = new ExpressionTreeConversion();
+        return visitor.Visit(elementInitializer);
+    }
+
+    /// <summary>
+    /// Converts a member binding to an ITree representation that can be used with rewriter tools.
+    /// </summary>
+    /// <param name="memberBinding">Member binding to convert.</param>
+    /// <returns>ITree representation of the member binding.</returns>
+    public static MemberBindingExpressionTree ToExpressionTree(this MemberBinding memberBinding)
+    {
+        ArgumentNullException.ThrowIfNull(memberBinding);
+
+        var visitor = new ExpressionTreeConversion();
+        return visitor.Visit(memberBinding);
+    }
+
+    #endregion
+
+    #region ToCSharpString
+
+    /// <summary>
+    /// Gets a string representation of the specified expression tree using C# syntax.
+    /// The resulting string is not guaranteed to be semantically equivalent and should be used for diagnostic purposes only.
+    /// </summary>
+    /// <param name="expression">Expression to provide a C# code fragment for.</param>
+    /// <returns>String representation of the specified expression tree using C# syntax.</returns>
+    public static string ToCSharpString(this Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        return ToCSharpStringImpl(expression, allowCompilerGeneratedNames: false).Code;
+    }
+
+    /// <summary>
+    /// Gets a string representation of the specified expression tree using C# syntax, with configurable exposure of compiler-generated names.
+    /// The resulting string is not guaranteed to be semantically equivalent and should be used for diagnostic purposes only.
+    /// </summary>
+    /// <param name="expression">Expression to provide a C# code fragment for.</param>
+    /// <param name="allowCompilerGeneratedNames">Indicates whether compiler-generated names are allowed in the output. If enabled, the resulting C# syntax may not be syntactically valid.</param>
+    /// <returns>String representation of the specified expression tree using C# syntax.</returns>
+    public static string ToCSharpString(this Expression expression, bool allowCompilerGeneratedNames)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        return ToCSharpStringImpl(expression, allowCompilerGeneratedNames).Code;
+    }
+
+    /// <summary>
+    /// Converts the specified expression tree to a representation using C# syntax, and acquires constants and globals that occur in the expression tree.
+    /// </summary>
+    /// <param name="expression">Expression to provide a C# representation for.</param>
+    /// <returns>C# representation of the specified expression tree.</returns>
+    public static CSharpExpression ToCSharp(this Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        return ToCSharpStringImpl(expression, allowCompilerGeneratedNames: false);
+    }
+
+    /// <summary>
+    /// Converts the specified expression tree to a representation using C# syntax, with configurable exposure of compiler-generated names, and acquires constants and globals that occur in the expression tree.
+    /// </summary>
+    /// <param name="expression">Expression to provide a C# representation for.</param>
+    /// <param name="allowCompilerGeneratedNames">Indicates whether compiler-generated names are allowed in the output. If enabled, the resulting C# syntax may not be syntactically valid.</param>
+    /// <returns>C# representation of the specified expression tree.</returns>
+    public static CSharpExpression ToCSharp(this Expression expression, bool allowCompilerGeneratedNames)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
+
+        return ToCSharpStringImpl(expression, allowCompilerGeneratedNames);
+    }
+
+    #endregion
+
+    #region Private implementation
+
+    private static TResult EvalImpl<TResult>(Expression expression, ICompiledDelegateCache cache)
+    {
+        // Adding the case for ExpressionType.Default turns out to be a bit tricky
+        // when dealing with value types that don't have a default constructor (e.g.
+        // the decimal type). See EmitDefault in ILGen.
+
+        switch (expression.NodeType)
+        {
+            case ExpressionType.Constant:
+                if (typeof(TResult).IsAssignableFrom(expression.Type))
+                {
+                    return (TResult)((ConstantExpression)expression).Value;
+                }
+                break;
+        }
+
+        var funcletized = FuncletizeImpl<TResult>(expression);
+        return cache != null ? funcletized.Compile(cache)() : funcletized.Compile()();
+    }
+
+    private static TResult EvalImpl<TResult>(Expression<Func<TResult>> expression, ICompiledDelegateCache cache)
+    {
+        var funcletized = FuncletizeImpl<TResult>(expression);
+        return cache != null ? funcletized.Compile(cache)() : funcletized.Compile()();
+    }
+
+    private static Expression<Func<TResult>> FuncletizeImpl<TResult>(Expression expression)
+    {
+        CheckOpenParameters(expression);
+
+        if (expression.Type != typeof(TResult))
+        {
+            expression = Expression.Convert(expression, typeof(TResult));
+        }
+
+        return Expression.Lambda<Func<TResult>>(expression);
+    }
+
+    private static Expression<Func<TResult>> FuncletizeImpl<TResult>(Expression<Func<TResult>> expression)
+    {
+        CheckOpenParameters(expression);
+
+        return expression;
+    }
+
+    private static void CheckOpenParameters(Expression expression)
+    {
+        UnboundParameterException.ThrowIfOpen(expression, "The specified expression contains unbound parameters and cannot be funcletized or evaluated.");
+    }
+
+    private static CSharpExpression ToCSharpStringImpl(Expression expression, bool allowCompilerGeneratedNames)
+    {
+        // TODO: add usings as input parameter
+        var prn = new ExpressionCSharpPrinter(allowCompilerGeneratedNames);
+
+        var res = prn.Visit(expression);
+
+        return new CSharpExpression(res, prn.Constants, prn.Globals);
+    }
+
+    #endregion
 }

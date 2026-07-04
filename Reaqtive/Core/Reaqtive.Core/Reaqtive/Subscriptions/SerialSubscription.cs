@@ -5,87 +5,86 @@
 using System;
 using System.Threading;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// Serial subscription that disposes an existing subscriptions upon reassigment.
+/// </summary>
+public class SerialSubscription : IFutureSubscription
 {
+    private readonly Lock _gate = new();
+    private ISubscription _current;
+    private bool _disposed;
+
     /// <summary>
-    /// Serial subscription that disposes an existing subscriptions upon reassigment.
+    /// Gets or sets the underlying subscription.
     /// </summary>
-    public class SerialSubscription : IFutureSubscription
+    /// <remarks>If the SerialDisposable has already been disposed, assignment to this property causes immediate disposal of the given disposable object. Assigning this property disposes the previous disposable object.</remarks>
+    public ISubscription Subscription
     {
-        private readonly Lock _gate = new();
-        private ISubscription _current;
-        private bool _disposed;
+        get => _current;
 
-        /// <summary>
-        /// Gets or sets the underlying subscription.
-        /// </summary>
-        /// <remarks>If the SerialDisposable has already been disposed, assignment to this property causes immediate disposal of the given disposable object. Assigning this property disposes the previous disposable object.</remarks>
-        public ISubscription Subscription
+        set
         {
-            get => _current;
+            bool shouldDispose;
 
-            set
+            var old = default(ISubscription);
+            lock (_gate)
             {
-                bool shouldDispose;
-
-                var old = default(ISubscription);
-                lock (_gate)
+                shouldDispose = _disposed;
+                if (!shouldDispose)
                 {
-                    shouldDispose = _disposed;
-                    if (!shouldDispose)
-                    {
-                        old = _current;
-                        _current = value;
-                    }
+                    old = _current;
+                    _current = value;
                 }
-
-                old?.Dispose();
-
-                if (shouldDispose && value != null)
-                    value.Dispose();
             }
-        }
 
-        /// <summary>
-        /// Accepts a visitor that will be dispatched through the subscription, causing the inner subscription to be visited.
-        /// </summary>
-        /// <param name="visitor">Visitor to accept.</param>
-        public void Accept(ISubscriptionVisitor visitor)
-        {
-            _current?.Accept(visitor);
-        }
+            old?.Dispose();
 
-        /// <summary>
-        /// Disposes the underlying disposable as well as all future replacements.
-        /// </summary>
-        public void Dispose()
-        {
-            Dispose(disposing: true);
-            GC.SuppressFinalize(this);
+            if (shouldDispose && value != null)
+                value.Dispose();
         }
+    }
 
-        /// <summary>
-        /// Disposes the object.
-        /// </summary>
-        /// <param name="disposing">true if called from <see cref="IDisposable.Dispose"/>; otherwise, false.</param>
-        protected virtual void Dispose(bool disposing)
+    /// <summary>
+    /// Accepts a visitor that will be dispatched through the subscription, causing the inner subscription to be visited.
+    /// </summary>
+    /// <param name="visitor">Visitor to accept.</param>
+    public void Accept(ISubscriptionVisitor visitor)
+    {
+        _current?.Accept(visitor);
+    }
+
+    /// <summary>
+    /// Disposes the underlying disposable as well as all future replacements.
+    /// </summary>
+    public void Dispose()
+    {
+        Dispose(disposing: true);
+        GC.SuppressFinalize(this);
+    }
+
+    /// <summary>
+    /// Disposes the object.
+    /// </summary>
+    /// <param name="disposing">true if called from <see cref="IDisposable.Dispose"/>; otherwise, false.</param>
+    protected virtual void Dispose(bool disposing)
+    {
+        if (disposing)
         {
-            if (disposing)
+            var old = default(ISubscription);
+
+            lock (_gate)
             {
-                var old = default(ISubscription);
-
-                lock (_gate)
+                if (!_disposed)
                 {
-                    if (!_disposed)
-                    {
-                        _disposed = true;
-                        old = _current;
-                        _current = null;
-                    }
+                    _disposed = true;
+                    old = _current;
+                    _current = null;
                 }
-
-                old?.Dispose();
             }
+
+            old?.Dispose();
         }
     }
 }

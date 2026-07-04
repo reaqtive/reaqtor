@@ -10,66 +10,65 @@ using Reaqtive;
 using Reaqtive.Testing;
 using Reaqtive.TestingFramework;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class Sample : OperatorTestBase
 {
-    [TestClass]
-    public partial class Sample : OperatorTestBase
+    [TestInitialize]
+    public void Initialize()
     {
-        [TestInitialize]
-        public void Initialize()
-        {
-            base.TestInitialize();
-        }
+        base.TestInitialize();
+    }
 
-        [TestCleanup]
-        public void Cleanup()
-        {
-            base.TestCleanup();
-        }
+    [TestCleanup]
+    public void Cleanup()
+    {
+        base.TestCleanup();
+    }
 
-        [TestMethod]
-        public void Sample_ArgumentChecking()
-        {
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.Sample(default(ISubscribable<int>), TimeSpan.Zero));
+    [TestMethod]
+    public void Sample_ArgumentChecking()
+    {
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.Sample(default(ISubscribable<int>), TimeSpan.Zero));
 
-            ReactiveAssert.Throws<ArgumentOutOfRangeException>(() => Subscribable.Sample(DummySubscribable<int>.Instance, TimeSpan.FromSeconds(-1)));
+        ReactiveAssert.Throws<ArgumentOutOfRangeException>(() => Subscribable.Sample(DummySubscribable<int>.Instance, TimeSpan.FromSeconds(-1)));
 
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.Sample(default(ISubscribable<int>), DummySubscribable<int>.Instance));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.Sample(DummySubscribable<int>.Instance, default(ISubscribable<int>)));
-        }
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.Sample(default(ISubscribable<int>), DummySubscribable<int>.Instance));
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.Sample(DummySubscribable<int>.Instance, default(ISubscribable<int>)));
+    }
 
-        [TestMethod]
-        public void Sample_SaveAndReload()
-        {
-            var state = Scheduler.CreateStateContainer();
+    [TestMethod]
+    public void Sample_SaveAndReload()
+    {
+        var state = Scheduler.CreateStateContainer();
 
-            var checkpoints = new[] {
-                OnSave(275, state),
-                OnLoad(290, state),
-            };
+        var checkpoints = new[] {
+            OnSave(275, state),
+            OnLoad(290, state),
+        };
 
-            var xs = Scheduler.CreateHotObservable(
-                OnNext(230, 1),
-                OnNext(270, 2),
-                // state saved @275
-                OnNext(280, 3),
-                // state loaded @290
-                OnNext(310, 4),
-                OnNext(320, 5),
-                OnCompleted<int>(400)
-            );
+        var xs = Scheduler.CreateHotObservable(
+            OnNext(230, 1),
+            OnNext(270, 2),
+            // state saved @275
+            OnNext(280, 3),
+            // state loaded @290
+            OnNext(310, 4),
+            OnNext(320, 5),
+            OnCompleted<int>(400)
+        );
 
-            var res = Scheduler.Start(
-                () =>
-                    xs.Sample(TimeSpan.FromTicks(50)).Apply(Scheduler, checkpoints)
-            );
+        var res = Scheduler.Start(
+            () =>
+                xs.Sample(TimeSpan.FromTicks(50)).Apply(Scheduler, checkpoints)
+        );
 
-            res.Messages.AssertEqual(
-                OnNext(250, 1),
-                OnNext(300, 2),
-                OnNext(350, 5),
-                OnCompleted<int>(400)
-            );
-        }
+        res.Messages.AssertEqual(
+            OnNext(250, 1),
+            OnNext(300, 2),
+            OnNext(350, 5),
+            OnCompleted<int>(400)
+        );
     }
 }

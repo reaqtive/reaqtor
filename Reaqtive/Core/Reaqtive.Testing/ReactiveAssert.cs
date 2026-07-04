@@ -16,261 +16,260 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtive.Linq;
 
-namespace Reaqtive.Testing
+namespace Reaqtive.Testing;
+
+/// <summary>
+/// Helper class to write asserts in unit tests for applications and libraries built using Reactive Extensions.
+/// </summary>
+public static class ReactiveAssert
 {
-    /// <summary>
-    /// Helper class to write asserts in unit tests for applications and libraries built using Reactive Extensions.
-    /// </summary>
-    public static class ReactiveAssert
+    private static string Message<T>(IEnumerable<T> actual, IEnumerable<T> expected)
     {
-        private static string Message<T>(IEnumerable<T> actual, IEnumerable<T> expected)
+        return new StringBuilder()
+            .AppendLine()
+            .Append("Expected: [")
+            .Append(string.Join(", ", expected.Select(x => x.ToString()).ToArray()))
+            .Append(']')
+            .AppendLine()
+            .Append("Actual..: [")
+            .Append(string.Join(", ", actual.Select(x => x.ToString()).ToArray()))
+            .Append(']')
+            .AppendLine()
+            .ToString();
+    }
+
+    /// <summary>
+    /// Asserts that both enumerable sequences have equal length and equal elements.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <param name="expected">Expected sequence.</param>
+    /// <param name="actual">Actual sequence to compare against the expected one.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
+    public static void AreElementsEqual<T>(IEnumerable<T> expected, IEnumerable<T> actual)
+    {
+        ArgumentNullException.ThrowIfNull(expected);
+        ArgumentNullException.ThrowIfNull(actual);
+
+        if (!expected.SequenceEqual(actual))
+            Assert.Fail(Message(actual, expected));
+    }
+
+    /// <summary>
+    /// Asserts that both enumerable sequences have equal length and equal elements.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <param name="expected">Expected sequence.</param>
+    /// <param name="actual">Actual sequence to compare against the expected one.</param>
+    /// <param name="message">Error message for assert failure.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
+    public static void AreElementsEqual<T>(IEnumerable<T> expected, IEnumerable<T> actual, string message)
+    {
+        ArgumentNullException.ThrowIfNull(expected);
+        ArgumentNullException.ThrowIfNull(actual);
+
+        if (!expected.SequenceEqual(actual))
+            Assert.Fail(message);
+    }
+
+    /// <summary>
+    /// Asserts that both observable sequences have equal length and equal notifications.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <param name="expected">Expected sequence.</param>
+    /// <param name="actual">Actual sequence to compare against the expected one.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
+    public static void AreElementsEqual<T>(IObservable<T> expected, IObservable<T> actual)
+    {
+        ArgumentNullException.ThrowIfNull(expected);
+        ArgumentNullException.ThrowIfNull(actual);
+
+        AreElementsEqual(expected.Materialize().ToEnumerable(), actual.Materialize().ToEnumerable());
+    }
+
+    /// <summary>
+    /// Asserts that both observable sequences have equal length and equal elements.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <param name="expected">Expected sequence.</param>
+    /// <param name="actual">Actual sequence to compare against the expected one.</param>
+    /// <param name="message">Error message for assert failure.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
+    public static void AreElementsEqual<T>(IObservable<T> expected, IObservable<T> actual, string message)
+    {
+        ArgumentNullException.ThrowIfNull(expected);
+        ArgumentNullException.ThrowIfNull(actual);
+
+        AreElementsEqual(expected.Materialize().ToEnumerable(), actual.Materialize().ToEnumerable(), message);
+    }
+
+    /// <summary>
+    /// Asserts that the given action throws an exception of the type specified in the generic parameter, or a subtype thereof.
+    /// </summary>
+    /// <typeparam name="TException">Type of the exception to check for.</typeparam>
+    /// <param name="action">Action to run.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
+    public static void Throws<TException>(Action action) where TException : Exception
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        var failed = false;
+        try
         {
-            return new StringBuilder()
-                .AppendLine()
-                .Append("Expected: [")
-                .Append(string.Join(", ", expected.Select(x => x.ToString()).ToArray()))
-                .Append(']')
-                .AppendLine()
-                .Append("Actual..: [")
-                .Append(string.Join(", ", actual.Select(x => x.ToString()).ToArray()))
-                .Append(']')
-                .AppendLine()
-                .ToString();
+            action();
+            failed = true;
         }
-
-        /// <summary>
-        /// Asserts that both enumerable sequences have equal length and equal elements.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
-        /// <param name="expected">Expected sequence.</param>
-        /// <param name="actual">Actual sequence to compare against the expected one.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
-        public static void AreElementsEqual<T>(IEnumerable<T> expected, IEnumerable<T> actual)
+        catch (TException)
         {
-            ArgumentNullException.ThrowIfNull(expected);
-            ArgumentNullException.ThrowIfNull(actual);
-
-            if (!expected.SequenceEqual(actual))
-                Assert.Fail(Message(actual, expected));
         }
-
-        /// <summary>
-        /// Asserts that both enumerable sequences have equal length and equal elements.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
-        /// <param name="expected">Expected sequence.</param>
-        /// <param name="actual">Actual sequence to compare against the expected one.</param>
-        /// <param name="message">Error message for assert failure.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
-        public static void AreElementsEqual<T>(IEnumerable<T> expected, IEnumerable<T> actual, string message)
-        {
-            ArgumentNullException.ThrowIfNull(expected);
-            ArgumentNullException.ThrowIfNull(actual);
-
-            if (!expected.SequenceEqual(actual))
-                Assert.Fail(message);
-        }
-
-        /// <summary>
-        /// Asserts that both observable sequences have equal length and equal notifications.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
-        /// <param name="expected">Expected sequence.</param>
-        /// <param name="actual">Actual sequence to compare against the expected one.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
-        public static void AreElementsEqual<T>(IObservable<T> expected, IObservable<T> actual)
-        {
-            ArgumentNullException.ThrowIfNull(expected);
-            ArgumentNullException.ThrowIfNull(actual);
-
-            AreElementsEqual(expected.Materialize().ToEnumerable(), actual.Materialize().ToEnumerable());
-        }
-
-        /// <summary>
-        /// Asserts that both observable sequences have equal length and equal elements.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
-        /// <param name="expected">Expected sequence.</param>
-        /// <param name="actual">Actual sequence to compare against the expected one.</param>
-        /// <param name="message">Error message for assert failure.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
-        public static void AreElementsEqual<T>(IObservable<T> expected, IObservable<T> actual, string message)
-        {
-            ArgumentNullException.ThrowIfNull(expected);
-            ArgumentNullException.ThrowIfNull(actual);
-
-            AreElementsEqual(expected.Materialize().ToEnumerable(), actual.Materialize().ToEnumerable(), message);
-        }
-
-        /// <summary>
-        /// Asserts that the given action throws an exception of the type specified in the generic parameter, or a subtype thereof.
-        /// </summary>
-        /// <typeparam name="TException">Type of the exception to check for.</typeparam>
-        /// <param name="action">Action to run.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
-        public static void Throws<TException>(Action action) where TException : Exception
-        {
-            ArgumentNullException.ThrowIfNull(action);
-
-            var failed = false;
-            try
-            {
-                action();
-                failed = true;
-            }
-            catch (TException)
-            {
-            }
 #pragma warning disable CA1031 // Do not catch general exception types
-            catch (Exception ex)
+        catch (Exception ex)
 #pragma warning restore CA1031
-            {
-                Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0} threw {1}.\r\n\r\nStack trace:\r\n{2}", typeof(TException).Name, ex.GetType().Name, ex.StackTrace));
-            }
-
-            if (failed)
-                Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0}.", typeof(TException).Name));
+        {
+            Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0} threw {1}.\r\n\r\nStack trace:\r\n{2}", typeof(TException).Name, ex.GetType().Name, ex.StackTrace));
         }
 
-        /// <summary>
-        /// Asserts that the given action throws an exception of the type specified in the generic parameter, or a subtype thereof.
-        /// </summary>
-        /// <typeparam name="TException">Type of the exception to check for.</typeparam>
-        /// <param name="action">Action to run.</param>
-        /// <param name="message">Error message for assert failure.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
-        public static void Throws<TException>(Action action, string message) where TException : Exception
-        {
-            ArgumentNullException.ThrowIfNull(action);
+        if (failed)
+            Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0}.", typeof(TException).Name));
+    }
 
-            var failed = false;
-            try
-            {
-                action();
-                failed = true;
-            }
-            catch (TException)
-            {
-            }
+    /// <summary>
+    /// Asserts that the given action throws an exception of the type specified in the generic parameter, or a subtype thereof.
+    /// </summary>
+    /// <typeparam name="TException">Type of the exception to check for.</typeparam>
+    /// <param name="action">Action to run.</param>
+    /// <param name="message">Error message for assert failure.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
+    public static void Throws<TException>(Action action, string message) where TException : Exception
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        var failed = false;
+        try
+        {
+            action();
+            failed = true;
+        }
+        catch (TException)
+        {
+        }
 #pragma warning disable CA1031 // Do not catch general exception types
-            catch
+        catch
 #pragma warning restore CA1031
-            {
-                Assert.Fail(message);
-            }
-
-            if (failed)
-                Assert.Fail(message);
+        {
+            Assert.Fail(message);
         }
 
-        /// <summary>
-        /// Asserts that the given action throws the specified exception.
-        /// </summary>
-        /// <typeparam name="TException">Type of the exception to check for.</typeparam>
-        /// <param name="exception">Exception to assert being thrown.</param>
-        /// <param name="action">Action to run.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
-        public static void Throws<TException>(TException exception, Action action) where TException : Exception
-        {
-            ArgumentNullException.ThrowIfNull(action);
+        if (failed)
+            Assert.Fail(message);
+    }
 
-            var failed = false;
-            try
-            {
-                action();
-                failed = true;
-            }
-            catch (TException ex)
-            {
-                Assert.AreSame(exception, ex);
-            }
+    /// <summary>
+    /// Asserts that the given action throws the specified exception.
+    /// </summary>
+    /// <typeparam name="TException">Type of the exception to check for.</typeparam>
+    /// <param name="exception">Exception to assert being thrown.</param>
+    /// <param name="action">Action to run.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
+    public static void Throws<TException>(TException exception, Action action) where TException : Exception
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        var failed = false;
+        try
+        {
+            action();
+            failed = true;
+        }
+        catch (TException ex)
+        {
+            Assert.AreSame(exception, ex);
+        }
 #pragma warning disable CA1031 // Do not catch general exception types
-            catch (Exception ex)
+        catch (Exception ex)
 #pragma warning restore CA1031
-            {
-                Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0} threw {1}.\r\n\r\nStack trace:\r\n{2}", typeof(TException).Name, ex.GetType().Name, ex.StackTrace));
-            }
-
-            if (failed)
-                Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0}.", typeof(TException).Name));
+        {
+            Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0} threw {1}.\r\n\r\nStack trace:\r\n{2}", typeof(TException).Name, ex.GetType().Name, ex.StackTrace));
         }
 
-        /// <summary>
-        /// Asserts that the given action throws the specified exception.
-        /// </summary>
-        /// <typeparam name="TException">Type of the exception to check for.</typeparam>
-        /// <param name="exception">Exception to assert being thrown.</param>
-        /// <param name="action">Action to run.</param>
-        /// <param name="message">Error message for assert failure.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
-        public static void Throws<TException>(TException exception, Action action, string message) where TException : Exception
-        {
-            ArgumentNullException.ThrowIfNull(action);
+        if (failed)
+            Assert.Fail(string.Format(CultureInfo.CurrentCulture, "Expected {0}.", typeof(TException).Name));
+    }
 
-            var failed = false;
-            try
-            {
-                action();
-                failed = true;
-            }
-            catch (TException ex)
-            {
-                Assert.AreSame(exception, ex);
-            }
+    /// <summary>
+    /// Asserts that the given action throws the specified exception.
+    /// </summary>
+    /// <typeparam name="TException">Type of the exception to check for.</typeparam>
+    /// <param name="exception">Exception to assert being thrown.</param>
+    /// <param name="action">Action to run.</param>
+    /// <param name="message">Error message for assert failure.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="action"/> is null.</exception>
+    public static void Throws<TException>(TException exception, Action action, string message) where TException : Exception
+    {
+        ArgumentNullException.ThrowIfNull(action);
+
+        var failed = false;
+        try
+        {
+            action();
+            failed = true;
+        }
+        catch (TException ex)
+        {
+            Assert.AreSame(exception, ex);
+        }
 #pragma warning disable CA1031 // Do not catch general exception types
-            catch
-            {
+        catch
+        {
 #pragma warning restore CA1031 // Do not catch general exception types
-                Assert.Fail(message);
-            }
-
-            if (failed)
-                Assert.Fail(message);
+            Assert.Fail(message);
         }
 
-        /// <summary>
-        /// Asserts that both enumerable sequences have equal length and equal elements.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
-        /// <param name="actual">Actual sequence to compare against the expected one.</param>
-        /// <param name="expected">Expected sequence.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
-        public static void AssertEqual<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
-        {
-            ArgumentNullException.ThrowIfNull(actual);
-            ArgumentNullException.ThrowIfNull(expected);
+        if (failed)
+            Assert.Fail(message);
+    }
 
-            AreElementsEqual(expected, actual);
-        }
+    /// <summary>
+    /// Asserts that both enumerable sequences have equal length and equal elements.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <param name="actual">Actual sequence to compare against the expected one.</param>
+    /// <param name="expected">Expected sequence.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
+    public static void AssertEqual<T>(this IEnumerable<T> actual, IEnumerable<T> expected)
+    {
+        ArgumentNullException.ThrowIfNull(actual);
+        ArgumentNullException.ThrowIfNull(expected);
 
-        /// <summary>
-        /// Asserts the enumerable sequence has the expected elements.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
-        /// <param name="actual">Actual sequence to compare against the expected elements.</param>
-        /// <param name="expected">Expected elements.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
-        public static void AssertEqual<T>(this IEnumerable<T> actual, params T[] expected)
-        {
-            ArgumentNullException.ThrowIfNull(actual);
-            ArgumentNullException.ThrowIfNull(expected);
+        AreElementsEqual(expected, actual);
+    }
 
-            AreElementsEqual(expected, actual);
-        }
+    /// <summary>
+    /// Asserts the enumerable sequence has the expected elements.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <param name="actual">Actual sequence to compare against the expected elements.</param>
+    /// <param name="expected">Expected elements.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
+    public static void AssertEqual<T>(this IEnumerable<T> actual, params T[] expected)
+    {
+        ArgumentNullException.ThrowIfNull(actual);
+        ArgumentNullException.ThrowIfNull(expected);
 
-        /// <summary>
-        /// Asserts that both observable sequences have equal length and equal notifications.
-        /// </summary>
-        /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
-        /// <param name="actual">Actual sequence to compare against the expected one.</param>
-        /// <param name="expected">Expected sequence.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
-        public static void AssertEqual<T>(this IObservable<T> actual, IObservable<T> expected)
-        {
-            ArgumentNullException.ThrowIfNull(actual);
-            ArgumentNullException.ThrowIfNull(expected);
+        AreElementsEqual(expected, actual);
+    }
 
-            AreElementsEqual(expected, actual);
-        }
+    /// <summary>
+    /// Asserts that both observable sequences have equal length and equal notifications.
+    /// </summary>
+    /// <typeparam name="T">The type of the elements in the sequence.</typeparam>
+    /// <param name="actual">Actual sequence to compare against the expected one.</param>
+    /// <param name="expected">Expected sequence.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="expected"/> or <paramref name="actual"/> is null.</exception>
+    public static void AssertEqual<T>(this IObservable<T> actual, IObservable<T> expected)
+    {
+        ArgumentNullException.ThrowIfNull(actual);
+        ArgumentNullException.ThrowIfNull(expected);
+
+        AreElementsEqual(expected, actual);
     }
 }

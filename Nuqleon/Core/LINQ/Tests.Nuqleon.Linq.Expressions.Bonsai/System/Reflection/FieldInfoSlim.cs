@@ -15,23 +15,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.System.Linq.Expressions.Bonsai;
 
-namespace Tests.System.Reflection
-{
-    [TestClass]
-    public class FieldInfoSlimTests : TestBase
-    {
-        [TestMethod]
-        public void FieldInfoSlim_ArgumentChecks()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetField(type: null, "bar", fieldType: null));
-            Assert.AreEqual("type", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetField(name: null, fieldType: null));
-            Assert.AreEqual("name", ex2.ParamName);
-            var ex3 = Assert.ThrowsExactly<ArgumentException>(() => SlimType.GetField("", fieldType: null));
-            Assert.AreEqual("name", ex3.ParamName);
+namespace Tests.System.Reflection;
 
-            var f = SlimType.GetField("value", fieldType: null);
-            Assert.IsNull(f.FieldType);
-        }
+[TestClass]
+public class FieldInfoSlimTests : TestBase
+{
+    [TestMethod]
+    public void FieldInfoSlim_ArgumentChecks()
+    {
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlimExtensions.GetField(type: null, "bar", fieldType: null));
+        Assert.AreEqual("type", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => SlimType.GetField(name: null, fieldType: null));
+        Assert.AreEqual("name", ex2.ParamName);
+        var ex3 = Assert.ThrowsExactly<ArgumentException>(() => SlimType.GetField("", fieldType: null));
+        Assert.AreEqual("name", ex3.ParamName);
+
+        var f = SlimType.GetField("value", fieldType: null);
+        Assert.IsNull(f.FieldType);
     }
 }

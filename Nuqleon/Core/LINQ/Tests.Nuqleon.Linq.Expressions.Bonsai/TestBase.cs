@@ -14,89 +14,88 @@ using System.Linq.CompilerServices;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Tests.System.Linq.Expressions.Bonsai
-{
-    public class TestBase
-    {
-        protected static readonly ReadOnlyCollection<TypeSlim> Empty = EmptyReadOnlyCollection<TypeSlim>.Instance;
+namespace Tests.System.Linq.Expressions.Bonsai;
 
-        protected static SimpleTypeSlim SlimType => TypeSlimExtensions.IntegerType;
+public class TestBase
+{
+    protected static readonly ReadOnlyCollection<TypeSlim> Empty = EmptyReadOnlyCollection<TypeSlim>.Instance;
+
+    protected static SimpleTypeSlim SlimType => TypeSlimExtensions.IntegerType;
 
 #pragma warning disable IDE0060 // Remove unused parameter
 #pragma warning disable CA1822 // Mark static
-        protected class Foo
-        {
-            public int baz;
+    protected class Foo
+    {
+        public int baz;
 
-            public Foo(int i, int j) { baz = 0; }
+        public Foo(int i, int j) { baz = 0; }
 
-            public int this[int i, int j] => i * j;
+        public int this[int i, int j] => i * j;
 
-            public int Bar { get; set; }
+        public int Bar { get; set; }
 
-            public int Qux1(int i, int j) { return 0; }
+        public int Qux1(int i, int j) { return 0; }
 
-            public T Qux2<T>(T i) { return i; }
+        public T Qux2<T>(T i) { return i; }
 
-            public Bar Element { get; set; }
-        }
+        public Bar Element { get; set; }
+    }
 
-        protected class Qux
-        {
-            public int baz;
+    protected class Qux
+    {
+        public int baz;
 
-            public Qux(int i, int j) { baz = 0; }
+        public Qux(int i, int j) { baz = 0; }
 
-            public int this[int i, int j] => i * j;
+        public int this[int i, int j] => i * j;
 
-            public int Bar { get; set; }
+        public int Bar { get; set; }
 
-            public int Qux1(int i, int j) { return 0; }
+        public int Qux1(int i, int j) { return 0; }
 
-            public T Qux2<T>(T i) { return i; }
+        public T Qux2<T>(T i) { return i; }
 
-            public Baz Element { get; set; }
-        }
+        public Baz Element { get; set; }
+    }
 #pragma warning restore CA1822
 
-        protected class Bar
-        {
-        }
+    protected class Bar
+    {
+    }
 
-        protected class Baz
-        {
-        }
+    protected class Baz
+    {
+    }
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        protected static Expression ExpressionRoundtrip(Expression e)
-        {
-            var exprToSlim = new ExpressionToExpressionSlimConverter();
-            var slimToExpr = new ExpressionSlimToExpressionConverter();
-            return slimToExpr.Visit(exprToSlim.Visit(e));
-        }
+    protected static Expression ExpressionRoundtrip(Expression e)
+    {
+        var exprToSlim = new ExpressionToExpressionSlimConverter();
+        var slimToExpr = new ExpressionSlimToExpressionConverter();
+        return slimToExpr.Visit(exprToSlim.Visit(e));
+    }
 
-        protected static Type TypeRoundtrip(Type t)
-        {
-            var ts = new TypeSpace();
-            var its = new InvertedTypeSpace();
-            return TypeRoundtrip(t, ts, its);
-        }
+    protected static Type TypeRoundtrip(Type t)
+    {
+        var ts = new TypeSpace();
+        var its = new InvertedTypeSpace();
+        return TypeRoundtrip(t, ts, its);
+    }
 
-        protected static Type TypeRoundtrip(Type t, TypeSpace ts, InvertedTypeSpace its)
-        {
-            return its.ConvertType(ts.ConvertType(t));
-        }
+    protected static Type TypeRoundtrip(Type t, TypeSpace ts, InvertedTypeSpace its)
+    {
+        return its.ConvertType(ts.ConvertType(t));
+    }
 
-        protected static MemberInfo MemberInfoRoundtrip(MemberInfo m)
-        {
-            var ts = new TypeSpace();
-            var its = new InvertedTypeSpace();
-            return MemberInfoRoundtrip(m, ts, its);
-        }
+    protected static MemberInfo MemberInfoRoundtrip(MemberInfo m)
+    {
+        var ts = new TypeSpace();
+        var its = new InvertedTypeSpace();
+        return MemberInfoRoundtrip(m, ts, its);
+    }
 
-        protected static MemberInfo MemberInfoRoundtrip(MemberInfo m, TypeSpace ts, InvertedTypeSpace its)
-        {
-            return its.GetMember(ts.GetMember(m));
-        }
+    protected static MemberInfo MemberInfoRoundtrip(MemberInfo m, TypeSpace ts, InvertedTypeSpace its)
+    {
+        return its.GetMember(ts.GetMember(m));
     }
 }

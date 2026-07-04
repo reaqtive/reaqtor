@@ -8,31 +8,30 @@
 // PS - February 2015 - Created this file.
 //
 
-namespace System.Linq.CompilerServices.Optimizers
+namespace System.Linq.CompilerServices.Optimizers;
+
+/// <summary>
+/// Describes the node types for the nodes of an expression tree.
+/// </summary>
+public enum QueryNodeType
 {
     /// <summary>
-    /// Describes the node types for the nodes of an expression tree.
+    /// Unknown node type.
     /// </summary>
-    public enum QueryNodeType
-    {
-        /// <summary>
-        /// Unknown node type.
-        /// </summary>
-        Unknown = 0,
+    Unknown = 0,
 
-        /// <summary>
-        /// A node that is a wrapper around a query node, allowing it to be treated as a monad member.
-        /// </summary>
-        MonadAbstraction = 1,
+    /// <summary>
+    /// A node that is a wrapper around a query node, allowing it to be treated as a monad member.
+    /// </summary>
+    MonadAbstraction = 1,
 
-        /// <summary>
-        /// A node that represents an operation on the monad.
-        /// </summary>
-        Operator = 2,
+    /// <summary>
+    /// A node that represents an operation on the monad.
+    /// </summary>
+    Operator = 2,
 
-        /// <summary>
-        /// A node that abstracts over unknown query expressions.
-        /// </summary>
-        Lambda = 3,
-    }
+    /// <summary>
+    /// A node that abstracts over unknown query expressions.
+    /// </summary>
+    Lambda = 3,
 }

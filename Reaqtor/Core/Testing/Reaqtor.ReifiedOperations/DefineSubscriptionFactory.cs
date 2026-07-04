@@ -11,18 +11,17 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
-{
-    public class DefineSubscriptionFactory : DefineServiceOperation
-    {
-        public DefineSubscriptionFactory(Uri subscriptionFactoryUri)
-            : this(subscriptionFactoryUri, subscriptionFactory: null, state: null)
-        {
-        }
+namespace Reaqtor.TestingFramework;
 
-        public DefineSubscriptionFactory(Uri subscriptionFactoryUri, Expression subscriptionFactory, object state)
-            : base(ServiceOperationKind.DefineSubscriptionFactory, subscriptionFactoryUri, subscriptionFactory, state)
-        {
-        }
+public class DefineSubscriptionFactory : DefineServiceOperation
+{
+    public DefineSubscriptionFactory(Uri subscriptionFactoryUri)
+        : this(subscriptionFactoryUri, subscriptionFactory: null, state: null)
+    {
+    }
+
+    public DefineSubscriptionFactory(Uri subscriptionFactoryUri, Expression subscriptionFactory, object state)
+        : base(ServiceOperationKind.DefineSubscriptionFactory, subscriptionFactoryUri, subscriptionFactory, state)
+    {
     }
 }

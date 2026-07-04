@@ -10,31 +10,30 @@ using System.Linq.Expressions;
 
 using Reaqtor.Reliable.Expressions;
 
-namespace Reaqtor.Reliable.Service
+namespace Reaqtor.Reliable.Service;
+
+public class ReliableQubjectFactory<TInput, TOutput> : ReliableQubjectFactoryBase<TInput, TOutput>
 {
-    public class ReliableQubjectFactory<TInput, TOutput> : ReliableQubjectFactoryBase<TInput, TOutput>
+    public ReliableQubjectFactory(Expression expression, IReliableQueryProvider provider)
+        : base(provider)
     {
-        public ReliableQubjectFactory(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, object state) => ((ReliableQueryProviderBase)Provider).CreateStream(this, streamUri, state);
+        Expression = expression;
     }
 
-    public class ReliableQubjectFactory<TInput, TOutput, TArg> : ReliableQubjectFactoryBase<TInput, TOutput, TArg>
+    public override Expression Expression { get; }
+
+    protected override IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, object state) => ((ReliableQueryProviderBase)Provider).CreateStream(this, streamUri, state);
+}
+
+public class ReliableQubjectFactory<TInput, TOutput, TArg> : ReliableQubjectFactoryBase<TInput, TOutput, TArg>
+{
+    public ReliableQubjectFactory(Expression expression, IReliableQueryProvider provider)
+        : base(provider)
     {
-        public ReliableQubjectFactory(Expression expression, IReliableQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg argument, object state) => ((ReliableQueryProviderBase)Provider).CreateStream(this, argument, streamUri, state);
+        Expression = expression;
     }
+
+    public override Expression Expression { get; }
+
+    protected override IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg argument, object state) => ((ReliableQueryProviderBase)Provider).CreateStream(this, argument, streamUri, state);
 }

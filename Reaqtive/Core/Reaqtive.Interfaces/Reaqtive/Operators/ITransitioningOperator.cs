@@ -5,14 +5,13 @@
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1040 // Avoid empty interfaces.
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// Annotate operators with this interface to denote that existing
+/// subscriptions with this operator may need to transition from a
+/// stateless variant to a stateful one.
+/// </summary>
+public interface ITransitioningOperator
 {
-    /// <summary>
-    /// Annotate operators with this interface to denote that existing
-    /// subscriptions with this operator may need to transition from a
-    /// stateless variant to a stateful one.
-    /// </summary>
-    public interface ITransitioningOperator
-    {
-    }
 }

@@ -12,35 +12,34 @@ using System.Linq.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class _LabeledTreeTests
 {
-    [TestClass]
-    public class _LabeledTreeTests
+    [TestMethod]
+    public void LabeledTree_ToString()
     {
-        [TestMethod]
-        public void LabeledTree_ToString()
-        {
-            var tree = new Tree<int>(42,
-                new Tree<int>(19),
-                new Tree<int>(23,
-                    new Tree<int>(7)
-                )
-            );
+        var tree = new Tree<int>(42,
+            new Tree<int>(19),
+            new Tree<int>(23,
+                new Tree<int>(7)
+            )
+        );
 
-            var ltre = new LabeledTree<int>(new Label<int>(tree, [new Match(1)]), [
-                new LabeledTree<int>(new Label<int>(tree.Children[0], [new Match(2)]), []),
-                new LabeledTree<int>(new Label<int>(tree.Children[1], [new Match(3)]), [
-                    new LabeledTree<int>(new Label<int>(tree.Children[1].Children[0], [new Match(4)]), [])
-                ]),
-            ]);
+        var ltre = new LabeledTree<int>(new Label<int>(tree, [new Match(1)]), [
+            new LabeledTree<int>(new Label<int>(tree.Children[0], [new Match(2)]), []),
+            new LabeledTree<int>(new Label<int>(tree.Children[1], [new Match(3)]), [
+                new LabeledTree<int>(new Label<int>(tree.Children[1].Children[0], [new Match(4)]), [])
+            ]),
+        ]);
 
-            Assert.AreEqual("[1 (0$)] 42([2 (0$)] 19(), [3 (0$)] 23([4 (0$)] 7()))", ltre.ToString());
-            Assert.AreEqual(@"[1 (0$)] 42(
+        Assert.AreEqual("[1 (0$)] 42([2 (0$)] 19(), [3 (0$)] 23([4 (0$)] 7()))", ltre.ToString());
+        Assert.AreEqual(@"[1 (0$)] 42(
   [2 (0$)] 19(), 
   [3 (0$)] 23(
     [4 (0$)] 7()
   )
 )".Replace("\r", string.Empty), ltre.ToString(indent: 0).Replace("\r", string.Empty));
-        }
     }
 }

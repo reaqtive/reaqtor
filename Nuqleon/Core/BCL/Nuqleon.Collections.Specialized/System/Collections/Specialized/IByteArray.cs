@@ -8,16 +8,15 @@
 //   PS - 10/17/2014 - Created this type.
 //
 
-namespace System.Collections.Specialized
-{
-    internal interface IByteArray
-    {
-        int Length { get; }
+namespace System.Collections.Specialized;
 
-        byte this[int index]
-        {
-            get;
-            set;
-        }
+internal interface IByteArray
+{
+    int Length { get; }
+
+    byte this[int index]
+    {
+        get;
+        set;
     }
 }

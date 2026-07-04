@@ -6,41 +6,40 @@ using System;
 using System.ComponentModel;
 using System.Linq.Expressions;
 
-namespace Reaqtive.Expressions
+namespace Reaqtive.Expressions;
+
+/// <summary>
+/// Extensions methods for the expression options interface.
+/// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+public static class ExpressionEvaluationPolicyExtensions
 {
     /// <summary>
-    /// Extensions methods for the expression options interface.
+    /// Evaluates the expression using the given expression policy.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public static class ExpressionEvaluationPolicyExtensions
+    /// <typeparam name="T">The expected result type.</typeparam>
+    /// <param name="policy">The expression policy.</param>
+    /// <param name="expression">The expression.</param>
+    /// <returns>The result of evaluating the expression with the given policy.</returns>
+    public static T Evaluate<T>(this IExpressionEvaluationPolicy policy, Expression expression)
     {
-        /// <summary>
-        /// Evaluates the expression using the given expression policy.
-        /// </summary>
-        /// <typeparam name="T">The expected result type.</typeparam>
-        /// <param name="policy">The expression policy.</param>
-        /// <param name="expression">The expression.</param>
-        /// <returns>The result of evaluating the expression with the given policy.</returns>
-        public static T Evaluate<T>(this IExpressionEvaluationPolicy policy, Expression expression)
+        ArgumentNullException.ThrowIfNull(policy);
+
+        ArgumentNullException.ThrowIfNull(expression);
+
+        var delegateCache = policy.DelegateCache;
+        if (delegateCache == null)
         {
-            ArgumentNullException.ThrowIfNull(policy);
-
-            ArgumentNullException.ThrowIfNull(expression);
-
-            var delegateCache = policy.DelegateCache;
-            if (delegateCache == null)
-            {
-                throw new ArgumentException("Expected non-null compiled delegate cache.", nameof(policy));
-            }
-
-            var constantHoister = policy.ConstantHoister;
-            if (constantHoister == null)
-            {
-                throw new ArgumentException("Expected non-null constant hoister.", nameof(policy));
-            }
-
-            var lambda = Expression.Lambda<Func<T>>(expression);
-            return lambda.Compile(delegateCache, policy.OutlineCompilation, constantHoister)();
+            throw new ArgumentException("Expected non-null compiled delegate cache.", nameof(policy));
         }
+
+        var constantHoister = policy.ConstantHoister;
+        if (constantHoister == null)
+        {
+            throw new ArgumentException("Expected non-null constant hoister.", nameof(policy));
+        }
+
+        var lambda = Expression.Lambda<Func<T>>(expression);
+        return lambda.Compile(delegateCache, policy.OutlineCompilation, constantHoister)();
     }
 }

@@ -8,25 +8,24 @@
 
 using System;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+internal sealed class AnonymousObserver<T> : IObserver<T>
 {
-    internal sealed class AnonymousObserver<T> : IObserver<T>
+    private readonly Action<T> _onNext;
+    private readonly Action<Exception> _onError;
+    private readonly Action _onCompleted;
+
+    public AnonymousObserver(Action<T> onNext, Action<Exception> onError, Action onCompleted)
     {
-        private readonly Action<T> _onNext;
-        private readonly Action<Exception> _onError;
-        private readonly Action _onCompleted;
-
-        public AnonymousObserver(Action<T> onNext, Action<Exception> onError, Action onCompleted)
-        {
-            _onNext = onNext;
-            _onError = onError;
-            _onCompleted = onCompleted;
-        }
-
-        public void OnCompleted() => _onCompleted();
-
-        public void OnError(Exception error) => _onError(error);
-
-        public void OnNext(T value) => _onNext(value);
+        _onNext = onNext;
+        _onError = onError;
+        _onCompleted = onCompleted;
     }
+
+    public void OnCompleted() => _onCompleted();
+
+    public void OnError(Exception error) => _onError(error);
+
+    public void OnNext(T value) => _onNext(value);
 }

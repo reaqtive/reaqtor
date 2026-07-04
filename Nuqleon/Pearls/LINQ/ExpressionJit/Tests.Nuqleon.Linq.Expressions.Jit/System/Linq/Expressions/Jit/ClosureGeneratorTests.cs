@@ -10,125 +10,124 @@ using System.Runtime.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class ClosureGeneratorTests
 {
-    [TestClass]
-    public class ClosureGeneratorTests
+    [TestMethod]
+    public void ClosureGeneratorAll()
     {
-        [TestMethod]
-        public void ClosureGeneratorAll()
+        var eq = new ExpressionEqualityComparer();
+
+        var x = Expression.Parameter(typeof(int));
+        var y = Expression.Parameter(typeof(string));
+        var z = Expression.Parameter(typeof(bool));
+
+        var variables = new[]
         {
-            var eq = new ExpressionEqualityComparer();
+            new KeyValuePair<ParameterExpression, StorageKind>(x, StorageKind.Hoisted),
+            new KeyValuePair<ParameterExpression, StorageKind>(y, StorageKind.Hoisted | StorageKind.Boxed),
+            new KeyValuePair<ParameterExpression, StorageKind>(z, StorageKind.Hoisted),
+        };
 
-            var x = Expression.Parameter(typeof(int));
-            var y = Expression.Parameter(typeof(string));
-            var z = Expression.Parameter(typeof(bool));
+        var res = ClosureGenerator.Create(variables);
 
-            var variables = new[]
-            {
-                new KeyValuePair<ParameterExpression, StorageKind>(x, StorageKind.Hoisted),
-                new KeyValuePair<ParameterExpression, StorageKind>(y, StorageKind.Hoisted | StorageKind.Boxed),
-                new KeyValuePair<ParameterExpression, StorageKind>(z, StorageKind.Hoisted),
-            };
+        var closureType = res.ClosureType;
 
-            var res = ClosureGenerator.Create(variables);
+        var fx = closureType.GetField("Item1");
+        Assert.IsNotNull(fx);
+        Assert.AreEqual(typeof(int), fx.FieldType);
+        Assert.AreEqual(fx, res.FieldMap[x].Field);
+        Assert.AreEqual(StorageKind.Hoisted, res.FieldMap[x].Kind);
 
-            var closureType = res.ClosureType;
+        var fy = closureType.GetField("Item2");
+        Assert.IsNotNull(fy);
+        Assert.AreEqual(typeof(StrongBox<string>), fy.FieldType);
+        Assert.AreEqual(fy, res.FieldMap[y].Field);
+        Assert.AreEqual(StorageKind.Hoisted | StorageKind.Boxed, res.FieldMap[y].Kind);
 
-            var fx = closureType.GetField("Item1");
-            Assert.IsNotNull(fx);
-            Assert.AreEqual(typeof(int), fx.FieldType);
-            Assert.AreEqual(fx, res.FieldMap[x].Field);
-            Assert.AreEqual(StorageKind.Hoisted, res.FieldMap[x].Kind);
+        var fz = closureType.GetField("Item3");
+        Assert.IsNotNull(fz);
+        Assert.AreEqual(typeof(bool), fz.FieldType);
+        Assert.AreEqual(fz, res.FieldMap[z].Field);
+        Assert.AreEqual(StorageKind.Hoisted, res.FieldMap[z].Kind);
 
-            var fy = closureType.GetField("Item2");
-            Assert.IsNotNull(fy);
-            Assert.AreEqual(typeof(StrongBox<string>), fy.FieldType);
-            Assert.AreEqual(fy, res.FieldMap[y].Field);
-            Assert.AreEqual(StorageKind.Hoisted | StorageKind.Boxed, res.FieldMap[y].Kind);
+        var closure = Expression.Parameter(closureType);
 
-            var fz = closureType.GetField("Item3");
-            Assert.IsNotNull(fz);
-            Assert.AreEqual(typeof(bool), fz.FieldType);
-            Assert.AreEqual(fz, res.FieldMap[z].Field);
-            Assert.AreEqual(StorageKind.Hoisted, res.FieldMap[z].Kind);
+        var ax = res.Access(closure, x);
+        Assert.IsTrue(
+            eq.Equals(ax,
+                Expression.Field(
+                    closure,
+                    fx
+                )
+            )
+        );
 
-            var closure = Expression.Parameter(closureType);
-
-            var ax = res.Access(closure, x);
-            Assert.IsTrue(
-                eq.Equals(ax,
+        var sx = res.Assign(closure, x, Expression.Constant(1));
+        Assert.IsTrue(
+            eq.Equals(sx,
+                Expression.Assign(
                     Expression.Field(
                         closure,
                         fx
-                    )
+                    ),
+                    Expression.Constant(1)
                 )
-            );
+            )
+        );
 
-            var sx = res.Assign(closure, x, Expression.Constant(1));
-            Assert.IsTrue(
-                eq.Equals(sx,
-                    Expression.Assign(
-                        Expression.Field(
-                            closure,
-                            fx
-                        ),
-                        Expression.Constant(1)
-                    )
-                )
-            );
-
-            var ay = res.Access(closure, y);
-            Assert.IsTrue(
-                eq.Equals(ay,
+        var ay = res.Access(closure, y);
+        Assert.IsTrue(
+            eq.Equals(ay,
+                Expression.Field(
                     Expression.Field(
-                        Expression.Field(
-                            closure,
-                            fy
-                        ),
-                        typeof(StrongBox<string>).GetField("Value")
+                        closure,
+                        fy
+                    ),
+                    typeof(StrongBox<string>).GetField("Value")
+                )
+            )
+        );
+
+        var sy = res.Assign(closure, y, Expression.Constant("bar"));
+        Assert.IsTrue(
+            eq.Equals(sy,
+                Expression.Assign(
+                    Expression.Field(
+                        closure,
+                        fy
+                    ),
+                    Expression.New(
+                        typeof(StrongBox<string>).GetConstructor([typeof(string)]),
+                        Expression.Constant("bar")
                     )
                 )
-            );
+            )
+        );
 
-            var sy = res.Assign(closure, y, Expression.Constant("bar"));
-            Assert.IsTrue(
-                eq.Equals(sy,
-                    Expression.Assign(
-                        Expression.Field(
-                            closure,
-                            fy
-                        ),
-                        Expression.New(
-                            typeof(StrongBox<string>).GetConstructor([typeof(string)]),
-                            Expression.Constant("bar")
-                        )
-                    )
+        var az = res.Access(closure, z);
+        Assert.IsTrue(
+            eq.Equals(az,
+                Expression.Field(
+                    closure,
+                    fz
                 )
-            );
+            )
+        );
 
-            var az = res.Access(closure, z);
-            Assert.IsTrue(
-                eq.Equals(az,
+        var sz = res.Assign(closure, z, Expression.Constant(true));
+        Assert.IsTrue(
+            eq.Equals(sz,
+                Expression.Assign(
                     Expression.Field(
                         closure,
                         fz
-                    )
+                    ),
+                    Expression.Constant(true)
                 )
-            );
-
-            var sz = res.Assign(closure, z, Expression.Constant(true));
-            Assert.IsTrue(
-                eq.Equals(sz,
-                    Expression.Assign(
-                        Expression.Field(
-                            closure,
-                            fz
-                        ),
-                        Expression.Constant(true)
-                    )
-                )
-            );
-        }
+            )
+        );
     }
 }

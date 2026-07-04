@@ -13,49 +13,48 @@ using System.Reflection;
 
 using Json = Nuqleon.Json.Expressions;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal sealed class ConstructorDef : DeclaredMemberDef
 {
-    internal sealed class ConstructorDef : DeclaredMemberDef
+    #region Fields
+
+    private readonly ConstructorInfoSlim _constructor;
+    private readonly TypeRef[] _parameters;
+
+    #endregion
+
+    #region Constructors
+
+    public ConstructorDef(TypeRef declaringType, ConstructorInfoSlim constructor, params TypeRef[] parameters)
+        : base(declaringType)
     {
-        #region Fields
-
-        private readonly ConstructorInfoSlim _constructor;
-        private readonly TypeRef[] _parameters;
-
-        #endregion
-
-        #region Constructors
-
-        public ConstructorDef(TypeRef declaringType, ConstructorInfoSlim constructor, params TypeRef[] parameters)
-            : base(declaringType)
-        {
-            _constructor = constructor;
-            _parameters = parameters;
-        }
-
-        #endregion
-
-        #region Methods
-
-        public override MemberInfoSlim ToMember(DeserializationDomain domain) => _constructor;
-
-        public override Json.Expression ToJson(SerializationDomain domain)
-        {
-            var count = _parameters.Length;
-
-            var parameters = new Json.Expression[count];
-            for (var i = 0; i < count; i++)
-            {
-                parameters[i] = _parameters[i].ToJson();
-            }
-
-            return Json.Expression.Array(
-                Discriminators.MemberInfo.ConstructorDiscriminator,
-                DeclaringType.ToJson(),
-                Json.Expression.Array(parameters)
-            );
-        }
-
-        #endregion
+        _constructor = constructor;
+        _parameters = parameters;
     }
+
+    #endregion
+
+    #region Methods
+
+    public override MemberInfoSlim ToMember(DeserializationDomain domain) => _constructor;
+
+    public override Json.Expression ToJson(SerializationDomain domain)
+    {
+        var count = _parameters.Length;
+
+        var parameters = new Json.Expression[count];
+        for (var i = 0; i < count; i++)
+        {
+            parameters[i] = _parameters[i].ToJson();
+        }
+
+        return Json.Expression.Array(
+            Discriminators.MemberInfo.ConstructorDiscriminator,
+            DeclaringType.ToJson(),
+            Json.Expression.Array(parameters)
+        );
+    }
+
+    #endregion
 }

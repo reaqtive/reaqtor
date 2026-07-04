@@ -4,15 +4,14 @@
 
 using System.IO;
 
-namespace Nuqleon.DataModel.Serialization.Binary
-{
-    internal static class CustomMemoryStreamPool
-    {
-        /// <remarks>
-        /// Be sure to set the `maxCapacity` to some value that makes sense for the domain.
-        /// </remarks>
-        private static readonly MemoryStreamPool s_pool = MemoryStreamPool.Create(1024, 1024, 1024 * 10);
+namespace Nuqleon.DataModel.Serialization.Binary;
 
-        public static PooledMemoryStream Allocate() => s_pool.Allocate();
-    }
+internal static class CustomMemoryStreamPool
+{
+    /// <remarks>
+    /// Be sure to set the `maxCapacity` to some value that makes sense for the domain.
+    /// </remarks>
+    private static readonly MemoryStreamPool s_pool = MemoryStreamPool.Create(1024, 1024, 1024 * 10);
+
+    public static PooledMemoryStream Allocate() => s_pool.Allocate();
 }

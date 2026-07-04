@@ -4,13 +4,12 @@
 
 using System.Reactive.Subjects;
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal sealed class SubjectFactory<T> : ISubjectFactory<T>
 {
-    internal sealed class SubjectFactory<T> : ISubjectFactory<T>
+    public ISubject<T> Create()
     {
-        public ISubject<T> Create()
-        {
-            return new Subject<T>();
-        }
+        return new Subject<T>();
     }
 }

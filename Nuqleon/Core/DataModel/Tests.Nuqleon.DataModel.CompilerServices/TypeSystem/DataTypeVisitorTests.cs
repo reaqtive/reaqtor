@@ -20,263 +20,262 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.DataModel.TypeSystem;
 
-namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem
+namespace Tests.Nuqleon.DataModel.CompilerServices.TypeSystem;
+
+[TestClass]
+public class DataTypeVisitorTests
 {
-    [TestClass]
-    public class DataTypeVisitorTests
+    [TestMethod]
+    public void DataTypeVisitor_ArgumentChecking()
     {
-        [TestMethod]
-        public void DataTypeVisitor_ArgumentChecking()
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(nodes: null, x => x));
+        Assert.AreEqual("nodes", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(new List<int> { 5 }.AsReadOnly(), elementVisitor: null));
+        Assert.AreEqual("elementVisitor", ex2.ParamName);
+    }
+
+    [TestMethod]
+    public void DataTypeVisitor_InconsistentRewrite()
+    {
+        var v = new BrokenQuotationVisitor();
+        Assert.ThrowsExactly<InvalidOperationException>(() => v.Visit(DataType.FromType(typeof(Expression<Func<int>>))));
+    }
+
+    [TestMethod]
+    public void DataTypeVisitor_Simple()
+    {
+        var mv = new MyVisitor();
+
+        Assert.IsNull(mv.Visit(type: null));
+
+        foreach (var kv in new Dictionary<Type, Type>
         {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(nodes: null, x => x));
-            Assert.AreEqual("nodes", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => DataTypeVisitor.Visit<int>(new List<int> { 5 }.AsReadOnly(), elementVisitor: null));
-            Assert.AreEqual("elementVisitor", ex2.ParamName);
+            { typeof(int), typeof(long) },
+            { typeof(int?), typeof(long?) },
+            { typeof(int[]), typeof(long[]) },
+            { typeof(List<int>), typeof(List<long>) },
+            { typeof(Func<int>), typeof(Func<long>) },
+            { typeof(Func<int, bool>), typeof(Func<long, bool>) },
+            { typeof(Func<bool, double, int>), typeof(Func<bool, double, long>) },
+            { typeof(Tuple<bool, int, double>), typeof(Tuple<bool, long, double>) },
+            { typeof(Expression<Func<int>>), typeof(Expression<Func<long>>) },
+            { typeof(BinaryExpression), typeof(BinaryExpression) },
+        })
+        {
+            var t = DataType.FromType(kv.Key);
+            var e = DataType.FromType(kv.Value);
+            var r = mv.Visit(t);
+
+            Assert.AreEqual(e.ToString(), r.ToString());
+        }
+    }
+
+    [TestMethod]
+    public void DataTypeVisitor_Custom()
+    {
+        var v = new MyVisitor();
+
+        var d = new MyDataType();
+        var e = v.Visit(d);
+
+        Assert.ThrowsExactly<NotImplementedException>(() => _ = new DataTypeVisitor().Visit(d));
+
+        Assert.AreSame(d, e);
+        Assert.AreEqual(d.ToString(), e.ToString());
+    }
+
+    [TestMethod]
+    public void DataTypeVisitor_Change()
+    {
+        var v = new IncompleteVisitor();
+
+        var d1 = DataType.FromType(typeof(int[]));
+        Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d1));
+
+        var d2 = DataType.FromType(typeof(bool[]));
+        Assert.AreSame(d2, v.Visit(d2));
+
+        var d3 = DataType.FromType(new { a = 1 }.GetType());
+        Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d3));
+
+        var d4 = DataType.FromType(new { a = true }.GetType());
+        Assert.AreSame(d4, v.Visit(d4));
+
+        var d5 = new StructuralDataType(typeof(Foo), new[] { new DataProperty(typeof(Foo).GetField("Bar"), "Bar", DataType.FromType(typeof(int))) }.ToReadOnly(), StructuralDataTypeKinds.Entity);
+        Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d5));
+    }
+
+    private class Foo
+    {
+        public int Bar = 0;
+    }
+
+    [TestMethod]
+    public void DataTypeVisitor_Generic_Simple()
+    {
+        var v = new GenericVisitor();
+
+        Assert.IsNull(v.Visit(type: null));
+
+        foreach (var t in new[] {
+            typeof(int),
+            typeof(int[]),
+            typeof(Func<int, int>),
+        })
+        {
+            var d = DataType.FromType(t);
+            var r = v.Visit(d);
+            Assert.AreEqual(t, r, t.ToString());
         }
 
-        [TestMethod]
-        public void DataTypeVisitor_InconsistentRewrite()
+        var c = new MyDataType();
+        Assert.AreSame(c.UnderlyingType, v.Visit(c));
+
+        v.Test();
+    }
+
+    private class MyVisitor : DataTypeVisitor
+    {
+        protected override DataType VisitPrimitive(PrimitiveDataType type)
         {
-            var v = new BrokenQuotationVisitor();
-            Assert.ThrowsExactly<InvalidOperationException>(() => v.Visit(DataType.FromType(typeof(Expression<Func<int>>))));
-        }
-
-        [TestMethod]
-        public void DataTypeVisitor_Simple()
-        {
-            var mv = new MyVisitor();
-
-            Assert.IsNull(mv.Visit(type: null));
-
-            foreach (var kv in new Dictionary<Type, Type>
+            if (type.UnderlyingType == typeof(int))
             {
-                { typeof(int), typeof(long) },
-                { typeof(int?), typeof(long?) },
-                { typeof(int[]), typeof(long[]) },
-                { typeof(List<int>), typeof(List<long>) },
-                { typeof(Func<int>), typeof(Func<long>) },
-                { typeof(Func<int, bool>), typeof(Func<long, bool>) },
-                { typeof(Func<bool, double, int>), typeof(Func<bool, double, long>) },
-                { typeof(Tuple<bool, int, double>), typeof(Tuple<bool, long, double>) },
-                { typeof(Expression<Func<int>>), typeof(Expression<Func<long>>) },
-                { typeof(BinaryExpression), typeof(BinaryExpression) },
-            })
-            {
-                var t = DataType.FromType(kv.Key);
-                var e = DataType.FromType(kv.Value);
-                var r = mv.Visit(t);
-
-                Assert.AreEqual(e.ToString(), r.ToString());
+                return new PrimitiveDataType(typeof(long), PrimitiveDataTypeKinds.Atom);
             }
-        }
 
-        [TestMethod]
-        public void DataTypeVisitor_Custom()
-        {
-            var v = new MyVisitor();
-
-            var d = new MyDataType();
-            var e = v.Visit(d);
-
-            Assert.ThrowsExactly<NotImplementedException>(() => _ = new DataTypeVisitor().Visit(d));
-
-            Assert.AreSame(d, e);
-            Assert.AreEqual(d.ToString(), e.ToString());
-        }
-
-        [TestMethod]
-        public void DataTypeVisitor_Change()
-        {
-            var v = new IncompleteVisitor();
-
-            var d1 = DataType.FromType(typeof(int[]));
-            Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d1));
-
-            var d2 = DataType.FromType(typeof(bool[]));
-            Assert.AreSame(d2, v.Visit(d2));
-
-            var d3 = DataType.FromType(new { a = 1 }.GetType());
-            Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d3));
-
-            var d4 = DataType.FromType(new { a = true }.GetType());
-            Assert.AreSame(d4, v.Visit(d4));
-
-            var d5 = new StructuralDataType(typeof(Foo), new[] { new DataProperty(typeof(Foo).GetField("Bar"), "Bar", DataType.FromType(typeof(int))) }.ToReadOnly(), StructuralDataTypeKinds.Entity);
-            Assert.ThrowsExactly<NotImplementedException>(() => v.Visit(d5));
-        }
-
-        private class Foo
-        {
-            public int Bar = 0;
-        }
-
-        [TestMethod]
-        public void DataTypeVisitor_Generic_Simple()
-        {
-            var v = new GenericVisitor();
-
-            Assert.IsNull(v.Visit(type: null));
-
-            foreach (var t in new[] {
-                typeof(int),
-                typeof(int[]),
-                typeof(Func<int, int>),
-            })
+            if (type.UnderlyingType == typeof(int?))
             {
-                var d = DataType.FromType(t);
-                var r = v.Visit(d);
-                Assert.AreEqual(t, r, t.ToString());
+                return new PrimitiveDataType(typeof(long?), PrimitiveDataTypeKinds.Atom);
             }
 
-            var c = new MyDataType();
-            Assert.AreSame(c.UnderlyingType, v.Visit(c));
-
-            v.Test();
+            return base.VisitPrimitive(type);
         }
 
-        private class MyVisitor : DataTypeVisitor
+        protected override Type ChangeUnderlyingType(Type type)
         {
-            protected override DataType VisitPrimitive(PrimitiveDataType type)
+            return new ChangeType().Visit(type);
+        }
+
+        protected override MemberInfo ChangeProperty(PropertyInfo property)
+        {
+            return ChangeUnderlyingType(property.DeclaringType).GetProperty(property.Name);
+        }
+
+        protected override DataType VisitCustom(DataType type)
+        {
+            return type;
+        }
+
+        private class ChangeType : TypeVisitor
+        {
+            public override Type Visit(Type type)
             {
-                if (type.UnderlyingType == typeof(int))
+                if (type == typeof(int))
                 {
-                    return new PrimitiveDataType(typeof(long), PrimitiveDataTypeKinds.Atom);
+                    return typeof(long);
                 }
 
-                if (type.UnderlyingType == typeof(int?))
-                {
-                    return new PrimitiveDataType(typeof(long?), PrimitiveDataTypeKinds.Atom);
-                }
-
-                return base.VisitPrimitive(type);
-            }
-
-            protected override Type ChangeUnderlyingType(Type type)
-            {
-                return new ChangeType().Visit(type);
-            }
-
-            protected override MemberInfo ChangeProperty(PropertyInfo property)
-            {
-                return ChangeUnderlyingType(property.DeclaringType).GetProperty(property.Name);
-            }
-
-            protected override DataType VisitCustom(DataType type)
-            {
-                return type;
-            }
-
-            private class ChangeType : TypeVisitor
-            {
-                public override Type Visit(Type type)
-                {
-                    if (type == typeof(int))
-                    {
-                        return typeof(long);
-                    }
-
-                    return base.Visit(type);
-                }
+                return base.Visit(type);
             }
         }
+    }
 
-        private class BrokenQuotationVisitor : DataTypeVisitor
+    private class BrokenQuotationVisitor : DataTypeVisitor
+    {
+        protected override DataType VisitFunction(FunctionDataType type)
         {
-            protected override DataType VisitFunction(FunctionDataType type)
-            {
-                return DataType.FromType(typeof(int));
-            }
+            return DataType.FromType(typeof(int));
+        }
+    }
+
+    private class MyDataType : DataType
+    {
+        public MyDataType()
+            : base(typeof(int))
+        {
         }
 
-        private class MyDataType : DataType
+        public override DataTypeKinds Kind => DataTypeKinds.Custom;
+
+        public override DataType Reduce()
         {
-            public MyDataType()
-                : base(typeof(int))
-            {
-            }
-
-            public override DataTypeKinds Kind => DataTypeKinds.Custom;
-
-            public override DataType Reduce()
-            {
-                return base.Reduce();
-            }
-
-            public override string ToString()
-            {
-                return "Custom(" + UnderlyingType + ")";
-            }
-
-            public override object CreateInstance(params object[] arguments)
-            {
-                throw new NotImplementedException();
-            }
+            return base.Reduce();
         }
 
-        private class IncompleteVisitor : DataTypeVisitor
+        public override string ToString()
         {
-            protected override DataType VisitPrimitive(PrimitiveDataType type)
-            {
-                if (type.UnderlyingType == typeof(int))
-                {
-                    return DataType.FromType(typeof(long));
-                }
-
-                return type;
-            }
+            return "Custom(" + UnderlyingType + ")";
         }
 
-        private class GenericVisitor : DataTypeVisitor<Type, Tuple<string, Type>>
+        public override object CreateInstance(params object[] arguments)
         {
-            protected override Type MakeArray(ArrayDataType type, Type elementType)
+            throw new NotImplementedException();
+        }
+    }
+
+    private class IncompleteVisitor : DataTypeVisitor
+    {
+        protected override DataType VisitPrimitive(PrimitiveDataType type)
+        {
+            if (type.UnderlyingType == typeof(int))
             {
-                return elementType.MakeArrayType();
+                return DataType.FromType(typeof(long));
             }
 
-            protected override Type VisitExpression(ExpressionDataType type)
-            {
-                return type.UnderlyingType;
-            }
+            return type;
+        }
+    }
 
-            protected override Type MakeFunction(FunctionDataType type, ReadOnlyCollection<Type> parameterTypes, Type returnType)
-            {
-                return Expression.GetFuncType([.. parameterTypes, returnType]); // don't care about actions here for testing
-            }
+    private class GenericVisitor : DataTypeVisitor<Type, Tuple<string, Type>>
+    {
+        protected override Type MakeArray(ArrayDataType type, Type elementType)
+        {
+            return elementType.MakeArrayType();
+        }
 
-            protected override Type VisitOpenGenericParameter(OpenGenericParameterDataType type)
-            {
-                return type.UnderlyingType;
-            }
+        protected override Type VisitExpression(ExpressionDataType type)
+        {
+            return type.UnderlyingType;
+        }
 
-            protected override Type VisitPrimitive(PrimitiveDataType type)
-            {
-                return type.UnderlyingType; // don't care about nullable here for testing
-            }
+        protected override Type MakeFunction(FunctionDataType type, ReadOnlyCollection<Type> parameterTypes, Type returnType)
+        {
+            return Expression.GetFuncType([.. parameterTypes, returnType]); // don't care about actions here for testing
+        }
 
-            protected override Type MakeQuotation(QuotationDataType type, Type functionType)
-            {
-                return typeof(Expression<>).MakeGenericType(functionType);
-            }
+        protected override Type VisitOpenGenericParameter(OpenGenericParameterDataType type)
+        {
+            return type.UnderlyingType;
+        }
 
-            protected override Type MakeStructural(StructuralDataType type, ReadOnlyCollection<Tuple<string, Type>> properties)
-            {
-                return RuntimeCompiler.CreateAnonymousType(properties.Select(p => new KeyValuePair<string, Type>(p.Item1, p.Item2)));
-            }
+        protected override Type VisitPrimitive(PrimitiveDataType type)
+        {
+            return type.UnderlyingType; // don't care about nullable here for testing
+        }
 
-            protected override Type VisitCustom(DataType type)
-            {
-                return type.UnderlyingType;
-            }
+        protected override Type MakeQuotation(QuotationDataType type, Type functionType)
+        {
+            return typeof(Expression<>).MakeGenericType(functionType);
+        }
 
-            protected override Tuple<string, Type> MakeProperty(DataProperty property, Type propertyType)
-            {
-                return new Tuple<string, Type>(property.Name, propertyType);
-            }
+        protected override Type MakeStructural(StructuralDataType type, ReadOnlyCollection<Tuple<string, Type>> properties)
+        {
+            return RuntimeCompiler.CreateAnonymousType(properties.Select(p => new KeyValuePair<string, Type>(p.Item1, p.Item2)));
+        }
 
-            public void Test()
-            {
-                Assert.IsNull(VisitProperty(property: null));
-            }
+        protected override Type VisitCustom(DataType type)
+        {
+            return type.UnderlyingType;
+        }
+
+        protected override Tuple<string, Type> MakeProperty(DataProperty property, Type propertyType)
+        {
+            return new Tuple<string, Type>(property.Name, propertyType);
+        }
+
+        public void Test()
+        {
+            Assert.IsNull(VisitProperty(property: null));
         }
     }
 }

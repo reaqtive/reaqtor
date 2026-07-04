@@ -8,41 +8,40 @@
 // BD - May 2013 - Created this file.
 //
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Provides commonly used types.
+/// </summary>
+public static class Types
 {
     /// <summary>
-    /// Provides commonly used types.
+    /// Represents the top type of a type system. Every type is assignable to Top.
     /// </summary>
-    public static class Types
+    /// <example>The root of a type hierarchy, such as System.Object in the CLR, is typically implemented as Top.</example>
+    public static IType Top { get; } = new TopImpl();
+
+    /// <summary>
+    /// Represents the bottom type of a type system. Every type is assignable from Bottom.
+    /// </summary>
+    /// <example>A type representing the empty data type or the Nil value is typically implemented as Bottom.</example>
+    public static IType Bottom { get; } = new BotImpl();
+
+    private sealed class TopImpl : IType
     {
-        /// <summary>
-        /// Represents the top type of a type system. Every type is assignable to Top.
-        /// </summary>
-        /// <example>The root of a type hierarchy, such as System.Object in the CLR, is typically implemented as Top.</example>
-        public static IType Top { get; } = new TopImpl();
+        public bool IsAssignableTo(IType type) => object.ReferenceEquals(this, type);
 
-        /// <summary>
-        /// Represents the bottom type of a type system. Every type is assignable from Bottom.
-        /// </summary>
-        /// <example>A type representing the empty data type or the Nil value is typically implemented as Bottom.</example>
-        public static IType Bottom { get; } = new BotImpl();
+        public bool Equals(IType other) => object.ReferenceEquals(this, other);
 
-        private sealed class TopImpl : IType
-        {
-            public bool IsAssignableTo(IType type) => object.ReferenceEquals(this, type);
+        public override string ToString() => "Top";
+    }
 
-            public bool Equals(IType other) => object.ReferenceEquals(this, other);
+    private sealed class BotImpl : IType
+    {
+        public bool IsAssignableTo(IType type) => true;
 
-            public override string ToString() => "Top";
-        }
+        public bool Equals(IType other) => object.ReferenceEquals(this, other);
 
-        private sealed class BotImpl : IType
-        {
-            public bool IsAssignableTo(IType type) => true;
-
-            public bool Equals(IType other) => object.ReferenceEquals(this, other);
-
-            public override string ToString() => "Bot";
-        }
+        public override string ToString() => "Bot";
     }
 }

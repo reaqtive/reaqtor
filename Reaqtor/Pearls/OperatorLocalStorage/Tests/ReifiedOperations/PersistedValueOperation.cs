@@ -10,29 +10,28 @@
 
 using Reaqtive.Storage;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal interface IPersistedValueOperationFactory<T> : IValueOperationFactory<T>, IPersistedOperationFactory<IPersistedValue<T>>
 {
-    internal interface IPersistedValueOperationFactory<T> : IValueOperationFactory<T>, IPersistedOperationFactory<IPersistedValue<T>>
+}
+
+internal static class PersistedValueOperation
+{
+    public static IPersistedValueOperationFactory<T> WithType<T>() => new PersistedValueOperationFactory<T>();
+
+    private sealed class PersistedValueOperationFactory<T> : IPersistedValueOperationFactory<T>
     {
-    }
+        public GetValueOperation<T> Get() => ValueOperation.WithType<T>().Get();
 
-    internal static class PersistedValueOperation
-    {
-        public static IPersistedValueOperationFactory<T> WithType<T>() => new PersistedValueOperationFactory<T>();
+        public GetIdPersistedOperation<IPersistedValue<T>> GetId() => GetId<IPersistedValue<T>>();
 
-        private sealed class PersistedValueOperationFactory<T> : IPersistedValueOperationFactory<T>
-        {
-            public GetValueOperation<T> Get() => ValueOperation.WithType<T>().Get();
+        public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
 
-            public GetIdPersistedOperation<IPersistedValue<T>> GetId() => GetId<IPersistedValue<T>>();
+        public SetValueOperation<T> Set(T value) => ValueOperation.WithType<T>().Set(value);
 
-            public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
+        public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
 
-            public SetValueOperation<T> Set(T value) => ValueOperation.WithType<T>().Set(value);
-
-            public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
-
-            public ThisResultOperation<IPersistedValue<T>> This() => This<IPersistedValue<T>>();
-        }
+        public ThisResultOperation<IPersistedValue<T>> This() => This<IPersistedValue<T>>();
     }
 }

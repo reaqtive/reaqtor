@@ -15,97 +15,96 @@ using System.Reflection;
 using Reaqtor;
 using Reaqtor.TestingFramework;
 
-namespace Tests.Reaqtor.Service
+namespace Tests.Reaqtor.Service;
+
+public class ReactiveServiceContextTestBase
 {
-    public class ReactiveServiceContextTestBase
+    internal static void Apply(Action<ReactiveServiceContext> action, params ServiceOperation[] expectedOperations)
     {
-        internal static void Apply(Action<ReactiveServiceContext> action, params ServiceOperation[] expectedOperations)
-        {
-            Apply<ReactiveServiceContext>(provider => new TestServiceContext(provider), action, expectedOperations);
-        }
-
-        internal static void Apply<T>(Func<IReactiveEngineProvider, T> create, Action<T> action, params ServiceOperation[] expectedOperations)
-            where T : IReactiveClient
-        {
-            using var assert = new SequentialAssertionTestEngineProvider(new StructuralServiceOperationEqualityComparer(), expectedOperations);
-
-            var ctx = create(assert);
-            action(ctx);
-        }
+        Apply<ReactiveServiceContext>(provider => new TestServiceContext(provider), action, expectedOperations);
     }
 
-    internal class MyContext : TestServiceContext
+    internal static void Apply<T>(Func<IReactiveEngineProvider, T> create, Action<T> action, params ServiceOperation[] expectedOperations)
+        where T : IReactiveClient
     {
-        public MyContext(IReactiveEngineProvider provider)
-            : base(provider)
-        {
-        }
+        using var assert = new SequentialAssertionTestEngineProvider(new StructuralServiceOperationEqualityComparer(), expectedOperations);
 
-        [KnownResource(Constants.Observable.XS)]
-        public IReactiveQbservable<int> Xs => GetObservable<int>(new Uri(Constants.Observable.XS));
+        var ctx = create(assert);
+        action(ctx);
+    }
+}
+
+internal class MyContext : TestServiceContext
+{
+    public MyContext(IReactiveEngineProvider provider)
+        : base(provider)
+    {
     }
 
-    internal static class Operators
+    [KnownResource(Constants.Observable.XS)]
+    public IReactiveQbservable<int> Xs => GetObservable<int>(new Uri(Constants.Observable.XS));
+}
+
+internal static class Operators
+{
+    [KnownResource(Constants.Observable.Where)]
+    public static IReactiveQbservable<T> Where<T>(this IReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
     {
-        [KnownResource(Constants.Observable.Where)]
-        public static IReactiveQbservable<T> Where<T>(this IReactiveQbservable<T> source, Expression<Func<T, bool>> predicate)
-        {
-            return source.Provider.CreateQbservable<T>(
-                Expression.Call(
-                    ((MethodInfo)MethodInfo.GetCurrentMethod()).MakeGenericMethod(typeof(T)),
-                    source.Expression,
-                    predicate
-                )
-            );
-        }
+        return source.Provider.CreateQbservable<T>(
+            Expression.Call(
+                ((MethodInfo)MethodInfo.GetCurrentMethod()).MakeGenericMethod(typeof(T)),
+                source.Expression,
+                predicate
+            )
+        );
+    }
 
-        [KnownResource(Constants.Observable.Select)]
-        public static IReactiveQbservable<R> Select<T, R>(this IReactiveQbservable<T> source, Expression<Func<T, R>> selector)
-        {
-            return source.Provider.CreateQbservable<R>(
-                Expression.Call(
-                    ((MethodInfo)MethodInfo.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(R)),
-                    source.Expression,
-                    selector
-                )
-            );
-        }
+    [KnownResource(Constants.Observable.Select)]
+    public static IReactiveQbservable<R> Select<T, R>(this IReactiveQbservable<T> source, Expression<Func<T, R>> selector)
+    {
+        return source.Provider.CreateQbservable<R>(
+            Expression.Call(
+                ((MethodInfo)MethodInfo.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(R)),
+                source.Expression,
+                selector
+            )
+        );
+    }
 
-        [KnownResource(Constants.Observable.SelectMany)]
-        public static IReactiveQbservable<R> SelectMany<T, C, R>(this IReactiveQbservable<T> source, Expression<Func<T, IReactiveQbservable<C>>> collectionSelector, Expression<Func<T, C, R>> resultSelector)
-        {
-            return source.Provider.CreateQbservable<R>(
-                Expression.Call(
-                    ((MethodInfo)MethodInfo.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(C), typeof(R)),
-                    source.Expression,
-                    collectionSelector,
-                    resultSelector
-                )
-            );
-        }
+    [KnownResource(Constants.Observable.SelectMany)]
+    public static IReactiveQbservable<R> SelectMany<T, C, R>(this IReactiveQbservable<T> source, Expression<Func<T, IReactiveQbservable<C>>> collectionSelector, Expression<Func<T, C, R>> resultSelector)
+    {
+        return source.Provider.CreateQbservable<R>(
+            Expression.Call(
+                ((MethodInfo)MethodInfo.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(C), typeof(R)),
+                source.Expression,
+                collectionSelector,
+                resultSelector
+            )
+        );
+    }
 
-        [KnownResource(Constants.Observable.Bind)]
-        public static IReactiveQbservable<R> SelectMany<T, R>(this IReactiveQbservable<T> source, Expression<Func<T, IReactiveQbservable<R>>> resultSelector)
-        {
-            return source.Provider.CreateQbservable<R>(
-                Expression.Call(
-                    ((MethodInfo)MethodInfo.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(R)),
-                    source.Expression,
-                    resultSelector
-                )
-            );
-        }
+    [KnownResource(Constants.Observable.Bind)]
+    public static IReactiveQbservable<R> SelectMany<T, R>(this IReactiveQbservable<T> source, Expression<Func<T, IReactiveQbservable<R>>> resultSelector)
+    {
+        return source.Provider.CreateQbservable<R>(
+            Expression.Call(
+                ((MethodInfo)MethodInfo.GetCurrentMethod()).MakeGenericMethod(typeof(T), typeof(R)),
+                source.Expression,
+                resultSelector
+            )
+        );
+    }
 
-        [KnownResource(Constants.Observable.Timer)]
-        public static IReactiveQbservable<long> Timer(this IReactive context, TimeSpan dueTime)
-        {
-            return context.Provider.CreateQbservable<long>(
-                Expression.Call(
-                    (MethodInfo)MethodInfo.GetCurrentMethod(),
-                    Expression.Constant(context, typeof(IReactive)),
-                    Expression.Constant(dueTime, typeof(TimeSpan))
-                )
-            );
-        }
+    [KnownResource(Constants.Observable.Timer)]
+    public static IReactiveQbservable<long> Timer(this IReactive context, TimeSpan dueTime)
+    {
+        return context.Provider.CreateQbservable<long>(
+            Expression.Call(
+                (MethodInfo)MethodInfo.GetCurrentMethod(),
+                Expression.Constant(context, typeof(IReactive)),
+                Expression.Constant(dueTime, typeof(TimeSpan))
+            )
+        );
     }
 }

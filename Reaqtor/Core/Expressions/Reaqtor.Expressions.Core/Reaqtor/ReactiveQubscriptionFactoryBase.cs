@@ -11,121 +11,120 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Base class for the implementation of subscription factories represented by an expression tree.
+/// </summary>
+public abstract class ReactiveQubscriptionFactoryBase : IReactiveQubscriptionFactory
 {
     /// <summary>
-    /// Base class for the implementation of subscription factories represented by an expression tree.
+    /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
     /// </summary>
-    public abstract class ReactiveQubscriptionFactoryBase : IReactiveQubscriptionFactory
+    /// <param name="provider">Query provider associated with the subscription factory.</param>
+    protected ReactiveQubscriptionFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
+
+    /// <summary>
+    /// Creates a new subscription with the specified subscription URI.
+    /// </summary>
+    /// <param name="subscriptionUri">URI identifying the subscription.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+    public IReactiveQubscription Create(Uri subscriptionUri, object state = null)
     {
-        /// <summary>
-        /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
-        /// </summary>
-        /// <param name="provider">Query provider associated with the subscription factory.</param>
-        protected ReactiveQubscriptionFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
 
-        /// <summary>
-        /// Creates a new subscription with the specified subscription URI.
-        /// </summary>
-        /// <param name="subscriptionUri">URI identifying the subscription.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
-        public IReactiveQubscription Create(Uri subscriptionUri, object state = null)
-        {
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return CreateCore(subscriptionUri, state);
-        }
-
-        /// <summary>
-        /// Creates a new subscription with the specified subscription URI.
-        /// </summary>
-        /// <param name="subscriptionUri">URI identifying the subscription.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
-        IReactiveSubscription IReactiveSubscriptionFactory.Create(Uri subscriptionUri, object state)
-        {
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return CreateCore(subscriptionUri, state);
-        }
-
-        /// <summary>
-        /// Creates a new subscription with the specified subscription URI.
-        /// </summary>
-        /// <param name="subscriptionUri">URI identifying the subscription.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
-        protected abstract IReactiveQubscription CreateCore(Uri subscriptionUri, object state);
-
-        /// <summary>
-        /// Gets the query provider that is associated with the subscription factory.
-        /// </summary>
-        public IReactiveQueryProvider Provider { get; }
-
-        /// <summary>
-        /// Gets the expression tree representing the subscription factory.
-        /// </summary>
-        public abstract Expression Expression { get; }
+        return CreateCore(subscriptionUri, state);
     }
 
     /// <summary>
-    /// Base class for the implementation of parameterized subscription factories represented by an expression tree.
+    /// Creates a new subscription with the specified subscription URI.
     /// </summary>
-    /// <typeparam name="TArgs">Type of the parameter passed to the subscription factory.</typeparam>
-    public abstract class ReactiveQubscriptionFactoryBase<TArgs> : IReactiveQubscriptionFactory<TArgs>
+    /// <param name="subscriptionUri">URI identifying the subscription.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+    IReactiveSubscription IReactiveSubscriptionFactory.Create(Uri subscriptionUri, object state)
     {
-        /// <summary>
-        /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
-        /// </summary>
-        /// <param name="provider">Query provider associated with the subscription factory.</param>
-        protected ReactiveQubscriptionFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
 
-        /// <summary>
-        /// Creates a new subscription with the specified subscription URI.
-        /// </summary>
-        /// <param name="subscriptionUri">URI identifying the subscription.</param>
-        /// <param name="argument">Parameter to pass to the subscription factory.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
-        public IReactiveQubscription Create(Uri subscriptionUri, TArgs argument, object state = null)
-        {
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return CreateCore(subscriptionUri, argument, state);
-        }
-
-        /// <summary>
-        /// Creates a new subscription with the specified subscription URI.
-        /// </summary>
-        /// <param name="subscriptionUri">URI identifying the subscription.</param>
-        /// <param name="argument">Parameter to pass to the subscription factory.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
-        IReactiveSubscription IReactiveSubscriptionFactory<TArgs>.Create(Uri subscriptionUri, TArgs argument, object state)
-        {
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return CreateCore(subscriptionUri, argument, state);
-        }
-
-        /// <summary>
-        /// Creates a new subscription with the specified subscription URI.
-        /// </summary>
-        /// <param name="subscriptionUri">URI identifying the subscription.</param>
-        /// <param name="argument">Parameter to pass to the subscription factory.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
-        protected abstract IReactiveQubscription CreateCore(Uri subscriptionUri, TArgs argument, object state);
-
-        /// <summary>
-        /// Gets the query provider that is associated with the subscription factory.
-        /// </summary>
-        public IReactiveQueryProvider Provider { get; }
-
-        /// <summary>
-        /// Gets the expression tree representing the subscription factory.
-        /// </summary>
-        public abstract Expression Expression { get; }
+        return CreateCore(subscriptionUri, state);
     }
+
+    /// <summary>
+    /// Creates a new subscription with the specified subscription URI.
+    /// </summary>
+    /// <param name="subscriptionUri">URI identifying the subscription.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+    protected abstract IReactiveQubscription CreateCore(Uri subscriptionUri, object state);
+
+    /// <summary>
+    /// Gets the query provider that is associated with the subscription factory.
+    /// </summary>
+    public IReactiveQueryProvider Provider { get; }
+
+    /// <summary>
+    /// Gets the expression tree representing the subscription factory.
+    /// </summary>
+    public abstract Expression Expression { get; }
+}
+
+/// <summary>
+/// Base class for the implementation of parameterized subscription factories represented by an expression tree.
+/// </summary>
+/// <typeparam name="TArgs">Type of the parameter passed to the subscription factory.</typeparam>
+public abstract class ReactiveQubscriptionFactoryBase<TArgs> : IReactiveQubscriptionFactory<TArgs>
+{
+    /// <summary>
+    /// Creates a new subscription factory represented by an expression tree, using the specified associated query provider.
+    /// </summary>
+    /// <param name="provider">Query provider associated with the subscription factory.</param>
+    protected ReactiveQubscriptionFactoryBase(IReactiveQueryProvider provider) => Provider = provider;
+
+    /// <summary>
+    /// Creates a new subscription with the specified subscription URI.
+    /// </summary>
+    /// <param name="subscriptionUri">URI identifying the subscription.</param>
+    /// <param name="argument">Parameter to pass to the subscription factory.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+    public IReactiveQubscription Create(Uri subscriptionUri, TArgs argument, object state = null)
+    {
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
+
+        return CreateCore(subscriptionUri, argument, state);
+    }
+
+    /// <summary>
+    /// Creates a new subscription with the specified subscription URI.
+    /// </summary>
+    /// <param name="subscriptionUri">URI identifying the subscription.</param>
+    /// <param name="argument">Parameter to pass to the subscription factory.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+    IReactiveSubscription IReactiveSubscriptionFactory<TArgs>.Create(Uri subscriptionUri, TArgs argument, object state)
+    {
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
+
+        return CreateCore(subscriptionUri, argument, state);
+    }
+
+    /// <summary>
+    /// Creates a new subscription with the specified subscription URI.
+    /// </summary>
+    /// <param name="subscriptionUri">URI identifying the subscription.</param>
+    /// <param name="argument">Parameter to pass to the subscription factory.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+    protected abstract IReactiveQubscription CreateCore(Uri subscriptionUri, TArgs argument, object state);
+
+    /// <summary>
+    /// Gets the query provider that is associated with the subscription factory.
+    /// </summary>
+    public IReactiveQueryProvider Provider { get; }
+
+    /// <summary>
+    /// Gets the expression tree representing the subscription factory.
+    /// </summary>
+    public abstract Expression Expression { get; }
 }

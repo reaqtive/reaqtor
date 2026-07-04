@@ -2,21 +2,20 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace Reaqtive.Scheduler
+namespace Reaqtive.Scheduler;
+
+/// <summary>
+/// Represents a source of yield tokens.
+/// </summary>
+public interface IYieldTokenSource
 {
     /// <summary>
-    /// Represents a source of yield tokens.
+    /// Gets a yield token to observe yield requests.
     /// </summary>
-    public interface IYieldTokenSource
-    {
-        /// <summary>
-        /// Gets a yield token to observe yield requests.
-        /// </summary>
-        YieldToken Token { get; }
+    YieldToken Token { get; }
 
-        /// <summary>
-        /// Gets a value indicating whether a yield has been requested.
-        /// </summary>
-        bool IsYieldRequested { get; }
-    }
+    /// <summary>
+    /// Gets a value indicating whether a yield has been requested.
+    /// </summary>
+    bool IsYieldRequested { get; }
 }

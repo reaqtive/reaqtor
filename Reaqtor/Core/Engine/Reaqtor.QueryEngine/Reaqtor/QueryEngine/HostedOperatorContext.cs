@@ -10,16 +10,15 @@ using Reaqtive.Scheduler;
 
 using Reaqtor.Reactive;
 
-namespace Reaqtor.QueryEngine
-{
-    internal sealed class HostedOperatorContext : OperatorContext, IHostedOperatorContext
-    {
-        public HostedOperatorContext(Uri instanceId, IScheduler scheduler, TraceSource traceSource, IExecutionEnvironment executionEnvironment, IReactive service)
-            : base(instanceId, scheduler, traceSource, executionEnvironment)
-        {
-            ReactiveService = service ?? throw new ArgumentNullException(nameof(service));
-        }
+namespace Reaqtor.QueryEngine;
 
-        public IReactive ReactiveService { get; }
+internal sealed class HostedOperatorContext : OperatorContext, IHostedOperatorContext
+{
+    public HostedOperatorContext(Uri instanceId, IScheduler scheduler, TraceSource traceSource, IExecutionEnvironment executionEnvironment, IReactive service)
+        : base(instanceId, scheduler, traceSource, executionEnvironment)
+    {
+        ReactiveService = service ?? throw new ArgumentNullException(nameof(service));
     }
+
+    public IReactive ReactiveService { get; }
 }

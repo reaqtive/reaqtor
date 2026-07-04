@@ -10,18 +10,17 @@
 
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Interface for facilities that hoist constants out of an expression tree into an environment.
+/// </summary>
+public interface IConstantHoister
 {
     /// <summary>
-    /// Interface for facilities that hoist constants out of an expression tree into an environment.
+    /// Hoists constants in the specified expression and returns an environment.
     /// </summary>
-    public interface IConstantHoister
-    {
-        /// <summary>
-        /// Hoists constants in the specified expression and returns an environment.
-        /// </summary>
-        /// <param name="expression">Expression to hoist constants in.</param>
-        /// <returns>Expression bound by an environment consisting of the hoisted constants.</returns>
-        IExpressionWithEnvironment Hoist(Expression expression);
-    }
+    /// <param name="expression">Expression to hoist constants in.</param>
+    /// <returns>Expression bound by an environment consisting of the hoisted constants.</returns>
+    IExpressionWithEnvironment Hoist(Expression expression);
 }

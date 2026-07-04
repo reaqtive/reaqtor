@@ -14,230 +14,228 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2>
 {
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2>
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, streamUri, state, token);
-        }
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, object state, CancellationToken token)
     {
-        public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, streamUri, state, token);
+    }
+}
 
-        public override Expression Expression { get; }
-
-        protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, TArg15 arg15, object state, CancellationToken token)
-        {
-            return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, streamUri, state, token);
-        }
+internal class QubjectFactory<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15> : AsyncReactiveQubjectFactoryBase<TInput, TOutput, TArg1, TArg2, TArg3, TArg4, TArg5, TArg6, TArg7, TArg8, TArg9, TArg10, TArg11, TArg12, TArg13, TArg14, TArg15>
+{
+    public QubjectFactory(Expression expression, IAsyncReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
     }
 
+    public override Expression Expression { get; }
+
+    protected override Task<IAsyncReactiveQubject<TInput, TOutput>> CreateAsyncCore(Uri streamUri, TArg1 arg1, TArg2 arg2, TArg3 arg3, TArg4 arg4, TArg5 arg5, TArg6 arg6, TArg7 arg7, TArg8 arg8, TArg9 arg9, TArg10 arg10, TArg11 arg11, TArg12 arg12, TArg13 arg13, TArg14 arg14, TArg15 arg15, object state, CancellationToken token)
+    {
+        return ((AsyncReactiveQueryProviderBase)base.Provider).CreateStreamAsync(this, arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8, arg9, arg10, arg11, arg12, arg13, arg14, arg15, streamUri, state, token);
+    }
 }

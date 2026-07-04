@@ -4,20 +4,19 @@
 
 using Reaqtor.Metadata;
 
-namespace Reaqtor.QueryEngine.Events
+namespace Reaqtor.QueryEngine.Events;
+
+/// <summary>
+/// Event arguments involving a stream factory.
+/// </summary>
+internal sealed class StreamFactoryEventArgs : ReactiveEntityEventArgs
 {
     /// <summary>
-    /// Event arguments involving a stream factory.
+    /// Creates a new instance of <see cref="StreamFactoryEventArgs"/> class for the specified entity.
     /// </summary>
-    internal sealed class StreamFactoryEventArgs : ReactiveEntityEventArgs
+    /// <param name="entity">The entity representing the stream factory.</param>
+    public StreamFactoryEventArgs(IReactiveResource entity)
+        : base(entity.Uri, entity, ReactiveEntityKind.StreamFactory)
     {
-        /// <summary>
-        /// Creates a new instance of <see cref="StreamFactoryEventArgs"/> class for the specified entity.
-        /// </summary>
-        /// <param name="entity">The entity representing the stream factory.</param>
-        public StreamFactoryEventArgs(IReactiveResource entity)
-            : base(entity.Uri, entity, ReactiveEntityKind.StreamFactory)
-        {
-        }
     }
 }

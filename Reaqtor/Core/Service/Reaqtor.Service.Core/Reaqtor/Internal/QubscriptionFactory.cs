@@ -11,37 +11,36 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal class QubscriptionFactory : ReactiveQubscriptionFactoryBase
 {
-    internal class QubscriptionFactory : ReactiveQubscriptionFactoryBase
+    public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
+        : base(provider)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override IReactiveQubscription CreateCore(Uri subscriptionUri, object state)
-        {
-            return ((ReactiveQueryProviderBase)base.Provider).CreateSubscription(this, subscriptionUri, state);
-        }
+        Expression = expression;
     }
 
-    internal class QubscriptionFactory<TArg> : ReactiveQubscriptionFactoryBase<TArg>
+    public override Expression Expression { get; }
+
+    protected override IReactiveQubscription CreateCore(Uri subscriptionUri, object state)
     {
-        public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((ReactiveQueryProviderBase)base.Provider).CreateSubscription(this, subscriptionUri, state);
+    }
+}
 
-        public override Expression Expression { get; }
+internal class QubscriptionFactory<TArg> : ReactiveQubscriptionFactoryBase<TArg>
+{
+    public QubscriptionFactory(Expression expression, IReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
+    }
 
-        protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg argument, object state)
-        {
-            return ((ReactiveQueryProviderBase)base.Provider).CreateSubscription(this, argument, subscriptionUri, state);
-        }
+    public override Expression Expression { get; }
+
+    protected override IReactiveQubscription CreateCore(Uri subscriptionUri, TArg argument, object state)
+    {
+        return ((ReactiveQueryProviderBase)base.Provider).CreateSubscription(this, argument, subscriptionUri, state);
     }
 }

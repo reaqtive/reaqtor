@@ -4,22 +4,21 @@
 
 using System;
 
-namespace Reaqtor.ReificationFramework
-{
-    /// <summary>
-    /// Base class for reified operations.
-    /// </summary>
-    public abstract class OperationBase : ReifiedOperation
-    {
-        internal OperationBase(ReifiedOperationKind kind, ReifiedOperation operation)
-            : base(kind)
-        {
-            Operation = operation ?? throw new ArgumentNullException(nameof(operation));
-        }
+namespace Reaqtor.ReificationFramework;
 
-        /// <summary>
-        /// The inner operation.
-        /// </summary>
-        public ReifiedOperation Operation { get; }
+/// <summary>
+/// Base class for reified operations.
+/// </summary>
+public abstract class OperationBase : ReifiedOperation
+{
+    internal OperationBase(ReifiedOperationKind kind, ReifiedOperation operation)
+        : base(kind)
+    {
+        Operation = operation ?? throw new ArgumentNullException(nameof(operation));
     }
+
+    /// <summary>
+    /// The inner operation.
+    /// </summary>
+    public ReifiedOperation Operation { get; }
 }

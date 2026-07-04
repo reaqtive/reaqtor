@@ -8,12 +8,11 @@
 //   BD - 08/03/2015 - Added this type to make dictionaries with null entries easier to build.
 //
 
-namespace System
-{
-    internal readonly struct Maybe<T>
-    {
-        public Maybe(T value) => Value = value;
+namespace System;
 
-        public T Value { get; }
-    }
+internal readonly struct Maybe<T>
+{
+    public Maybe(T value) => Value = value;
+
+    public T Value { get; }
 }

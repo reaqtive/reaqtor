@@ -6,21 +6,20 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor.Hosting.Shared.Tools;
 
-namespace Tests.Microsoft.Hosting.Shared.Tools
+namespace Tests.Microsoft.Hosting.Shared.Tools;
+
+[TestClass]
+public class ReactiveEntitiesTests
 {
-    [TestClass]
-    public class ReactiveEntitiesTests
+    [TestMethod]
+    public void ReactiveEntities_AssertTables()
     {
-        [TestMethod]
-        public void ReactiveEntities_AssertTables()
-        {
-            var entities = new ReactiveEntities();
-            Assert.IsNotNull(entities.Observables);
-            Assert.IsNotNull(entities.Observers);
-            Assert.IsNotNull(entities.StreamFactories);
-            Assert.IsNotNull(entities.SubscriptionFactories);
-            Assert.IsNotNull(entities.Streams);
-            Assert.IsNotNull(entities.Subscriptions);
-        }
+        var entities = new ReactiveEntities();
+        Assert.IsNotNull(entities.Observables);
+        Assert.IsNotNull(entities.Observers);
+        Assert.IsNotNull(entities.StreamFactories);
+        Assert.IsNotNull(entities.SubscriptionFactories);
+        Assert.IsNotNull(entities.Streams);
+        Assert.IsNotNull(entities.Subscriptions);
     }
 }

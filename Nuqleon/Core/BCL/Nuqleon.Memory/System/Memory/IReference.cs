@@ -8,17 +8,16 @@
 //   ER - 11/14/2014 - Created this type.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// An interface for references to objects.
+/// </summary>
+/// <typeparam name="T">Type of the referenced object.</typeparam>
+public interface IReference<out T>
 {
     /// <summary>
-    /// An interface for references to objects.
+    /// Gets the contained value.
     /// </summary>
-    /// <typeparam name="T">Type of the referenced object.</typeparam>
-    public interface IReference<out T>
-    {
-        /// <summary>
-        /// Gets the contained value.
-        /// </summary>
-        T Value { get; }
-    }
+    T Value { get; }
 }

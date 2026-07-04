@@ -4,10 +4,9 @@
 
 using System.Linq.Expressions;
 
-namespace DelegatingBinder
+namespace DelegatingBinder;
+
+internal interface IDelegationTarget
 {
-    internal interface IDelegationTarget
-    {
-        Expression Apply(Expression expression, ParameterExpression self);
-    }
+    Expression Apply(Expression expression, ParameterExpression self);
 }

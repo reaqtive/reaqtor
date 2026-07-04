@@ -4,27 +4,26 @@
 
 using System;
 
-namespace Reaqtor.ReificationFramework
-{
-    /// <summary>
-    /// Operation to repeat an operation a given number of times.
-    /// </summary>
-    public sealed class Repeat : OperationBase
-    {
-        internal Repeat(ReifiedOperation operation, long count)
-            : base(ReifiedOperationKind.Repeat, operation)
-        {
-            if (count <= 0)
-            {
-                throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 0.");
-            }
+namespace Reaqtor.ReificationFramework;
 
-            Count = count;
+/// <summary>
+/// Operation to repeat an operation a given number of times.
+/// </summary>
+public sealed class Repeat : OperationBase
+{
+    internal Repeat(ReifiedOperation operation, long count)
+        : base(ReifiedOperationKind.Repeat, operation)
+    {
+        if (count <= 0)
+        {
+            throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 0.");
         }
 
-        /// <summary>
-        /// The number of times to repeat the operation.
-        /// </summary>
-        public long Count { get; }
+        Count = count;
     }
+
+    /// <summary>
+    /// The number of times to repeat the operation.
+    /// </summary>
+    public long Count { get; }
 }

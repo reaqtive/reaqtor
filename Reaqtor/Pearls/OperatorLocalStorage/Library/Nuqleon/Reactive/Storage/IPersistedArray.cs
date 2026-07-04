@@ -10,13 +10,12 @@
 
 using System.Collections.Generic;
 
-namespace Reaqtive.Storage
+namespace Reaqtive.Storage;
+
+/// <summary>
+/// Interface representing a persisted array.
+/// </summary>
+/// <typeparam name="T">The type of the elements in the persisted array.</typeparam>
+public interface IPersistedArray<T> : IArray<T>, IPersisted
 {
-    /// <summary>
-    /// Interface representing a persisted array.
-    /// </summary>
-    /// <typeparam name="T">The type of the elements in the persisted array.</typeparam>
-    public interface IPersistedArray<T> : IArray<T>, IPersisted
-    {
-    }
 }

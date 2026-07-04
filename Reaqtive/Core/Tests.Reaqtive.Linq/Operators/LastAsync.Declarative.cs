@@ -15,195 +15,194 @@ using Reaqtor.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public partial class LastAsync : OperatorTestBase
 {
-    public partial class LastAsync : OperatorTestBase
+    [TestMethod]
+    public void LastAsync_Empty()
     {
-        [TestMethod]
-        public void LastAsync_Empty()
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.LastAsync()
-                );
+            var res = client.Start(() =>
+                xs.LastAsync()
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<int>(250, e => e is InvalidOperationException)
-                );
+            res.Messages.AssertEqual(
+                OnError<int>(250, e => e is InvalidOperationException)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void LastAsync_One()
+    [TestMethod]
+    public void LastAsync_One()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.LastAsync()
-                );
+            var res = client.Start(() =>
+                xs.LastAsync()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(250, 2),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(250, 2),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void LastAsync_Many()
+    [TestMethod]
+    public void LastAsync_Many()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2),
-                    OnNext(220, 3),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2),
+                OnNext(220, 3),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.LastAsync()
-                );
+            var res = client.Start(() =>
+                xs.LastAsync()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(250, 3),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(250, 3),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void LastAsync_Error()
+    [TestMethod]
+    public void LastAsync_Error()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
+            var ex = new Exception();
 
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnError<int>(210, ex)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnError<int>(210, ex)
+            );
 
-                var res = client.Start(() =>
-                    xs.LastAsync()
-                );
+            var res = client.Start(() =>
+                xs.LastAsync()
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<int>(210, ex)
-                );
+            res.Messages.AssertEqual(
+                OnError<int>(210, ex)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 210)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 210)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void LastAsync_Predicate()
+    [TestMethod]
+    public void LastAsync_Predicate()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2),
-                    OnNext(220, 3),
-                    OnNext(230, 4),
-                    OnNext(240, 5),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2),
+                OnNext(220, 3),
+                OnNext(230, 4),
+                OnNext(240, 5),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.LastAsync(x => x % 2 == 1)
-                );
+            var res = client.Start(() =>
+                xs.LastAsync(x => x % 2 == 1)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(250, 5),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(250, 5),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void LastAsync_Predicate_None()
+    [TestMethod]
+    public void LastAsync_Predicate_None()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2),
-                    OnNext(220, 3),
-                    OnNext(230, 4),
-                    OnNext(240, 5),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2),
+                OnNext(220, 3),
+                OnNext(230, 4),
+                OnNext(240, 5),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.LastAsync(x => x > 10)
-                );
+            var res = client.Start(() =>
+                xs.LastAsync(x => x > 10)
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<int>(250, e => e is InvalidOperationException)
-                );
+            res.Messages.AssertEqual(
+                OnError<int>(250, e => e is InvalidOperationException)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void LastAsync_Predicate_Throw()
+    [TestMethod]
+    public void LastAsync_Predicate_Throw()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
+            var ex = new Exception();
 
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2),
-                    OnError<int>(220, ex)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2),
+                OnError<int>(220, ex)
+            );
 
-                var res = client.Start(() =>
-                    xs.LastAsync(x => x % 2 == 1)
-                );
+            var res = client.Start(() =>
+                xs.LastAsync(x => x % 2 == 1)
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<int>(220, ex)
-                );
+            res.Messages.AssertEqual(
+                OnError<int>(220, ex)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 220)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 220)
+            );
+        });
     }
 }

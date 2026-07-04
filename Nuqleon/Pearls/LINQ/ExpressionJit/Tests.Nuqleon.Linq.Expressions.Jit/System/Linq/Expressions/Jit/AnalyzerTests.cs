@@ -9,308 +9,307 @@ using System.Runtime.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class AnalyzerTests
 {
-    [TestClass]
-    public class AnalyzerTests
+    [TestMethod]
+    public void Analyze_Unbound()
     {
-        [TestMethod]
-        public void Analyze_Unbound()
-        {
-            var e = Expression.Lambda<Func<int>>(Expression.Parameter(typeof(int)));
-            Assert.ThrowsExactly<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
-        }
+        var e = Expression.Lambda<Func<int>>(Expression.Parameter(typeof(int)));
+        Assert.ThrowsExactly<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
+    }
 
-        [TestMethod]
-        public void Analyze_Extension()
-        {
-            var e = Expression.Lambda<Func<int>>(new Extension());
-            Assert.ThrowsExactly<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
-        }
-
-        [TestMethod]
-        public void Analyze_Lambda_NoLocals()
-        {
-            var e = Expression.Lambda<Action>(Expression.Empty());
+    [TestMethod]
+    public void Analyze_Extension()
+    {
+        var e = Expression.Lambda<Func<int>>(new Extension());
+        Assert.ThrowsExactly<InvalidOperationException>(() => Analyzer.Analyze(e, methodTable: null));
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_Lambda_NoLocals()
+    {
+        var e = Expression.Lambda<Action>(Expression.Empty());
 
-            Assert.AreEqual(1, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l = a[e];
+        Assert.AreEqual(1, a.Count);
 
-            Assert.AreSame(e, l.Node);
-            Assert.IsNull(l.Parent);
-            Assert.IsFalse(l.NeedsClosure);
-            Assert.IsFalse(l.HasHoistedLocals);
-            Assert.AreEqual(0, l.Locals.Count);
-        }
+        var l = a[e];
 
-        [TestMethod]
-        public void Analyze_Lambda_OnlyLocals1()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var e = Expression.Lambda<Action<int>>(Expression.Empty(), x);
+        Assert.AreSame(e, l.Node);
+        Assert.IsNull(l.Parent);
+        Assert.IsFalse(l.NeedsClosure);
+        Assert.IsFalse(l.HasHoistedLocals);
+        Assert.AreEqual(0, l.Locals.Count);
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_Lambda_OnlyLocals1()
+    {
+        var x = Expression.Parameter(typeof(int));
+        var e = Expression.Lambda<Action<int>>(Expression.Empty(), x);
 
-            Assert.AreEqual(1, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l = a[e];
+        Assert.AreEqual(1, a.Count);
 
-            Assert.AreSame(e, l.Node);
-            Assert.IsNull(l.Parent);
-            Assert.IsFalse(l.NeedsClosure);
-            Assert.IsFalse(l.HasHoistedLocals);
-            Assert.AreEqual(1, l.Locals.Count);
+        var l = a[e];
 
-            Assert.AreEqual(StorageKind.Local, l.Locals[x]);
-        }
+        Assert.AreSame(e, l.Node);
+        Assert.IsNull(l.Parent);
+        Assert.IsFalse(l.NeedsClosure);
+        Assert.IsFalse(l.HasHoistedLocals);
+        Assert.AreEqual(1, l.Locals.Count);
 
-        [TestMethod]
-        public void Analyze_Lambda_OnlyLocals2()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var e = Expression.Lambda<Func<int, int>>(Expression.Negate(x), x);
+        Assert.AreEqual(StorageKind.Local, l.Locals[x]);
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_Lambda_OnlyLocals2()
+    {
+        var x = Expression.Parameter(typeof(int));
+        var e = Expression.Lambda<Func<int, int>>(Expression.Negate(x), x);
 
-            Assert.AreEqual(1, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l = a[e];
+        Assert.AreEqual(1, a.Count);
 
-            Assert.AreSame(e, l.Node);
-            Assert.IsNull(l.Parent);
-            Assert.IsFalse(l.NeedsClosure);
-            Assert.IsFalse(l.HasHoistedLocals);
-            Assert.AreEqual(1, l.Locals.Count);
+        var l = a[e];
 
-            Assert.AreEqual(StorageKind.Local, l.Locals[x]);
-        }
+        Assert.AreSame(e, l.Node);
+        Assert.IsNull(l.Parent);
+        Assert.IsFalse(l.NeedsClosure);
+        Assert.IsFalse(l.HasHoistedLocals);
+        Assert.AreEqual(1, l.Locals.Count);
 
-        [TestMethod]
-        public void Analyze_Lambda_Nested1()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var y = Expression.Parameter(typeof(int));
-            var i = Expression.Lambda<Func<int, int>>(y, y);
-            var e = Expression.Lambda<Func<int, Func<int, int>>>(i, x);
+        Assert.AreEqual(StorageKind.Local, l.Locals[x]);
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_Lambda_Nested1()
+    {
+        var x = Expression.Parameter(typeof(int));
+        var y = Expression.Parameter(typeof(int));
+        var i = Expression.Lambda<Func<int, int>>(y, y);
+        var e = Expression.Lambda<Func<int, Func<int, int>>>(i, x);
 
-            Assert.AreEqual(2, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l1 = a[e];
+        Assert.AreEqual(2, a.Count);
 
-            Assert.AreSame(e, l1.Node);
-            Assert.IsNull(l1.Parent);
-            Assert.IsFalse(l1.NeedsClosure);
-            Assert.IsFalse(l1.HasHoistedLocals);
-            Assert.AreEqual(1, l1.Locals.Count);
+        var l1 = a[e];
 
-            Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
+        Assert.AreSame(e, l1.Node);
+        Assert.IsNull(l1.Parent);
+        Assert.IsFalse(l1.NeedsClosure);
+        Assert.IsFalse(l1.HasHoistedLocals);
+        Assert.AreEqual(1, l1.Locals.Count);
 
-            var l2 = a[i];
+        Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
 
-            Assert.AreSame(i, l2.Node);
-            Assert.AreSame(l1, l2.Parent);
-            Assert.IsFalse(l2.NeedsClosure);
-            Assert.IsFalse(l2.HasHoistedLocals);
-            Assert.AreEqual(1, l2.Locals.Count);
+        var l2 = a[i];
 
-            Assert.AreEqual(StorageKind.Local, l2.Locals[y]);
-        }
+        Assert.AreSame(i, l2.Node);
+        Assert.AreSame(l1, l2.Parent);
+        Assert.IsFalse(l2.NeedsClosure);
+        Assert.IsFalse(l2.HasHoistedLocals);
+        Assert.AreEqual(1, l2.Locals.Count);
 
-        [TestMethod]
-        public void Analyze_Lambda_Nested2()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var y = Expression.Parameter(typeof(int));
-            var i = Expression.Lambda<Func<int, int>>(Expression.Add(x, y), y);
-            var e = Expression.Lambda<Func<int, Func<int, int>>>(i, x);
+        Assert.AreEqual(StorageKind.Local, l2.Locals[y]);
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_Lambda_Nested2()
+    {
+        var x = Expression.Parameter(typeof(int));
+        var y = Expression.Parameter(typeof(int));
+        var i = Expression.Lambda<Func<int, int>>(Expression.Add(x, y), y);
+        var e = Expression.Lambda<Func<int, Func<int, int>>>(i, x);
 
-            Assert.AreEqual(2, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l1 = a[e];
+        Assert.AreEqual(2, a.Count);
 
-            Assert.AreSame(e, l1.Node);
-            Assert.IsNull(l1.Parent);
-            Assert.IsFalse(l1.NeedsClosure);
-            Assert.IsTrue(l1.HasHoistedLocals);
-            Assert.AreEqual(1, l1.Locals.Count);
+        var l1 = a[e];
 
-            Assert.AreEqual(StorageKind.Hoisted, l1.Locals[x]);
+        Assert.AreSame(e, l1.Node);
+        Assert.IsNull(l1.Parent);
+        Assert.IsFalse(l1.NeedsClosure);
+        Assert.IsTrue(l1.HasHoistedLocals);
+        Assert.AreEqual(1, l1.Locals.Count);
 
-            var l2 = a[i];
+        Assert.AreEqual(StorageKind.Hoisted, l1.Locals[x]);
 
-            Assert.AreSame(i, l2.Node);
-            Assert.AreSame(l1, l2.Parent);
-            Assert.IsTrue(l2.NeedsClosure);
-            Assert.IsFalse(l2.HasHoistedLocals);
-            Assert.AreEqual(1, l2.Locals.Count);
+        var l2 = a[i];
 
-            Assert.AreEqual(StorageKind.Local, l2.Locals[y]);
-        }
+        Assert.AreSame(i, l2.Node);
+        Assert.AreSame(l1, l2.Parent);
+        Assert.IsTrue(l2.NeedsClosure);
+        Assert.IsFalse(l2.HasHoistedLocals);
+        Assert.AreEqual(1, l2.Locals.Count);
 
-        [TestMethod]
-        public void Analyze_Lambda_Quote()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var y = Expression.Parameter(typeof(int));
-            var i = Expression.Lambda<Func<int, int>>(Expression.Add(x, y), y);
-            var e = Expression.Lambda<Func<int, Expression<Func<int, int>>>>(Expression.Quote(i), x);
+        Assert.AreEqual(StorageKind.Local, l2.Locals[y]);
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_Lambda_Quote()
+    {
+        var x = Expression.Parameter(typeof(int));
+        var y = Expression.Parameter(typeof(int));
+        var i = Expression.Lambda<Func<int, int>>(Expression.Add(x, y), y);
+        var e = Expression.Lambda<Func<int, Expression<Func<int, int>>>>(Expression.Quote(i), x);
 
-            Assert.AreEqual(2, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l1 = a[e];
+        Assert.AreEqual(2, a.Count);
 
-            Assert.AreSame(e, l1.Node);
-            Assert.IsNull(l1.Parent);
-            Assert.IsFalse(l1.NeedsClosure);
-            Assert.IsTrue(l1.HasHoistedLocals);
-            Assert.AreEqual(1, l1.Locals.Count);
+        var l1 = a[e];
 
-            Assert.AreEqual(StorageKind.Hoisted | StorageKind.Boxed, l1.Locals[x]);
+        Assert.AreSame(e, l1.Node);
+        Assert.IsNull(l1.Parent);
+        Assert.IsFalse(l1.NeedsClosure);
+        Assert.IsTrue(l1.HasHoistedLocals);
+        Assert.AreEqual(1, l1.Locals.Count);
 
-            var l2 = a[i];
+        Assert.AreEqual(StorageKind.Hoisted | StorageKind.Boxed, l1.Locals[x]);
 
-            Assert.AreSame(i, l2.Node);
-            Assert.AreSame(l1, l2.Parent);
-            Assert.IsTrue(l2.NeedsClosure);
-            Assert.IsFalse(l2.HasHoistedLocals);
-            Assert.AreEqual(1, l2.Locals.Count);
+        var l2 = a[i];
 
-            Assert.AreEqual(StorageKind.Local, l2.Locals[y]);
-        }
+        Assert.AreSame(i, l2.Node);
+        Assert.AreSame(l1, l2.Parent);
+        Assert.IsTrue(l2.NeedsClosure);
+        Assert.IsFalse(l2.HasHoistedLocals);
+        Assert.AreEqual(1, l2.Locals.Count);
 
-        [TestMethod]
-        public void Analyze_Block()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var y = Expression.Parameter(typeof(int));
-            var b = Expression.Block([y], Expression.Add(x, y));
-            var e = Expression.Lambda<Func<int, int>>(b, x);
+        Assert.AreEqual(StorageKind.Local, l2.Locals[y]);
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_Block()
+    {
+        var x = Expression.Parameter(typeof(int));
+        var y = Expression.Parameter(typeof(int));
+        var b = Expression.Block([y], Expression.Add(x, y));
+        var e = Expression.Lambda<Func<int, int>>(b, x);
 
-            Assert.AreEqual(2, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l1 = a[e];
+        Assert.AreEqual(2, a.Count);
 
-            Assert.AreSame(e, l1.Node);
-            Assert.IsNull(l1.Parent);
-            Assert.IsFalse(l1.NeedsClosure);
-            Assert.IsFalse(l1.HasHoistedLocals);
-            Assert.AreEqual(1, l1.Locals.Count);
+        var l1 = a[e];
 
-            Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
+        Assert.AreSame(e, l1.Node);
+        Assert.IsNull(l1.Parent);
+        Assert.IsFalse(l1.NeedsClosure);
+        Assert.IsFalse(l1.HasHoistedLocals);
+        Assert.AreEqual(1, l1.Locals.Count);
 
-            var b1 = a[b];
+        Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
 
-            Assert.AreSame(b, b1.Node);
-            Assert.AreSame(l1, b1.Parent);
-            Assert.IsTrue(b1.NeedsClosure); // REVIEW
-            Assert.IsFalse(b1.HasHoistedLocals);
-            Assert.AreEqual(1, b1.Locals.Count);
+        var b1 = a[b];
 
-            Assert.AreEqual(StorageKind.Local, b1.Locals[y]);
-        }
+        Assert.AreSame(b, b1.Node);
+        Assert.AreSame(l1, b1.Parent);
+        Assert.IsTrue(b1.NeedsClosure); // REVIEW
+        Assert.IsFalse(b1.HasHoistedLocals);
+        Assert.AreEqual(1, b1.Locals.Count);
 
-        [TestMethod]
-        public void Analyze_RuntimeVariables()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var e = Expression.Lambda<Func<int, IRuntimeVariables>>(Expression.RuntimeVariables(x), x);
+        Assert.AreEqual(StorageKind.Local, b1.Locals[y]);
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_RuntimeVariables()
+    {
+        var x = Expression.Parameter(typeof(int));
+        var e = Expression.Lambda<Func<int, IRuntimeVariables>>(Expression.RuntimeVariables(x), x);
 
-            Assert.AreEqual(1, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l = a[e];
+        Assert.AreEqual(1, a.Count);
 
-            Assert.AreSame(e, l.Node);
-            Assert.IsNull(l.Parent);
-            Assert.IsFalse(l.NeedsClosure);
-            Assert.IsTrue(l.HasHoistedLocals);
-            Assert.AreEqual(1, l.Locals.Count);
+        var l = a[e];
 
-            Assert.AreEqual(StorageKind.Boxed | StorageKind.Hoisted, l.Locals[x]);
-        }
+        Assert.AreSame(e, l.Node);
+        Assert.IsNull(l.Parent);
+        Assert.IsFalse(l.NeedsClosure);
+        Assert.IsTrue(l.HasHoistedLocals);
+        Assert.AreEqual(1, l.Locals.Count);
 
-        [TestMethod]
-        public void Analyze_CatchBlock()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var r = Expression.Parameter(typeof(Exception));
-            var c = Expression.Catch(r, Expression.Empty());
-            var t = Expression.TryCatch(Expression.Empty(), c);
-            var e = Expression.Lambda<Action<int>>(t, x);
+        Assert.AreEqual(StorageKind.Boxed | StorageKind.Hoisted, l.Locals[x]);
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_CatchBlock()
+    {
+        var x = Expression.Parameter(typeof(int));
+        var r = Expression.Parameter(typeof(Exception));
+        var c = Expression.Catch(r, Expression.Empty());
+        var t = Expression.TryCatch(Expression.Empty(), c);
+        var e = Expression.Lambda<Action<int>>(t, x);
 
-            Assert.AreEqual(2, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l1 = a[e];
+        Assert.AreEqual(2, a.Count);
 
-            Assert.AreSame(e, l1.Node);
-            Assert.IsNull(l1.Parent);
-            Assert.IsFalse(l1.NeedsClosure);
-            Assert.IsFalse(l1.HasHoistedLocals);
-            Assert.AreEqual(1, l1.Locals.Count);
+        var l1 = a[e];
 
-            Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
+        Assert.AreSame(e, l1.Node);
+        Assert.IsNull(l1.Parent);
+        Assert.IsFalse(l1.NeedsClosure);
+        Assert.IsFalse(l1.HasHoistedLocals);
+        Assert.AreEqual(1, l1.Locals.Count);
 
-            var c1 = a[c];
+        Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
 
-            Assert.AreSame(c, c1.Node);
-            Assert.AreSame(l1, c1.Parent);
-            Assert.IsFalse(c1.NeedsClosure);
-            Assert.IsFalse(c1.HasHoistedLocals);
-            Assert.AreEqual(1, c1.Locals.Count);
+        var c1 = a[c];
 
-            Assert.AreEqual(StorageKind.Local, c1.Locals[r]);
-        }
+        Assert.AreSame(c, c1.Node);
+        Assert.AreSame(l1, c1.Parent);
+        Assert.IsFalse(c1.NeedsClosure);
+        Assert.IsFalse(c1.HasHoistedLocals);
+        Assert.AreEqual(1, c1.Locals.Count);
 
-        [TestMethod]
-        public void Analyze_CatchBlock_NoVariable()
-        {
-            var x = Expression.Parameter(typeof(int));
-            var c = Expression.Catch(typeof(Exception), Expression.Empty());
-            var t = Expression.TryCatch(Expression.Empty(), c);
-            var e = Expression.Lambda<Action<int>>(t, x);
+        Assert.AreEqual(StorageKind.Local, c1.Locals[r]);
+    }
 
-            var a = Analyzer.Analyze(e, methodTable: null);
+    [TestMethod]
+    public void Analyze_CatchBlock_NoVariable()
+    {
+        var x = Expression.Parameter(typeof(int));
+        var c = Expression.Catch(typeof(Exception), Expression.Empty());
+        var t = Expression.TryCatch(Expression.Empty(), c);
+        var e = Expression.Lambda<Action<int>>(t, x);
 
-            Assert.AreEqual(2, a.Count);
+        var a = Analyzer.Analyze(e, methodTable: null);
 
-            var l1 = a[e];
+        Assert.AreEqual(2, a.Count);
 
-            Assert.AreSame(e, l1.Node);
-            Assert.IsNull(l1.Parent);
-            Assert.IsFalse(l1.NeedsClosure);
-            Assert.IsFalse(l1.HasHoistedLocals);
-            Assert.AreEqual(1, l1.Locals.Count);
+        var l1 = a[e];
 
-            Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
+        Assert.AreSame(e, l1.Node);
+        Assert.IsNull(l1.Parent);
+        Assert.IsFalse(l1.NeedsClosure);
+        Assert.IsFalse(l1.HasHoistedLocals);
+        Assert.AreEqual(1, l1.Locals.Count);
 
-            var c1 = a[c];
+        Assert.AreEqual(StorageKind.Local, l1.Locals[x]);
 
-            Assert.AreSame(c, c1.Node);
-            Assert.AreSame(l1, c1.Parent);
-            Assert.IsFalse(c1.NeedsClosure);
-            Assert.IsFalse(c1.HasHoistedLocals);
-            Assert.AreEqual(0, c1.Locals.Count);
-        }
+        var c1 = a[c];
 
-        private sealed class Extension : Expression
-        {
-            public override bool CanReduce => false;
-            public override ExpressionType NodeType => ExpressionType.Extension;
-            public override Type Type => typeof(int);
-        }
+        Assert.AreSame(c, c1.Node);
+        Assert.AreSame(l1, c1.Parent);
+        Assert.IsFalse(c1.NeedsClosure);
+        Assert.IsFalse(c1.HasHoistedLocals);
+        Assert.AreEqual(0, c1.Locals.Count);
+    }
+
+    private sealed class Extension : Expression
+    {
+        public override bool CanReduce => false;
+        public override ExpressionType NodeType => ExpressionType.Extension;
+        public override Type Type => typeof(int);
     }
 }

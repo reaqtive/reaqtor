@@ -12,59 +12,58 @@ using System.Collections.Generic;
 
 using Reaqtive.Storage;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal interface IPersistedSortedDictionaryOperationFactory<TKey, TValue> : ISortedDictionaryOperationFactory<TKey, TValue>, IPersistedOperationFactory<IPersistedSortedDictionary<TKey, TValue>>
 {
-    internal interface IPersistedSortedDictionaryOperationFactory<TKey, TValue> : ISortedDictionaryOperationFactory<TKey, TValue>, IPersistedOperationFactory<IPersistedSortedDictionary<TKey, TValue>>
+}
+
+internal static class PersistedSortedDictionaryOperation
+{
+    public static IPersistedSortedDictionaryOperationFactory<TKey, TValue> WithType<TKey, TValue>() => new PersistedSortedDictionaryOperationFactory<TKey, TValue>();
+
+    private sealed class PersistedSortedDictionaryOperationFactory<TKey, TValue> : IPersistedSortedDictionaryOperationFactory<TKey, TValue>
     {
-    }
+        public CountDictionaryOperation<TKey, TValue> Count() => DictionaryOperation.Count<TKey, TValue>();
 
-    internal static class PersistedSortedDictionaryOperation
-    {
-        public static IPersistedSortedDictionaryOperationFactory<TKey, TValue> WithType<TKey, TValue>() => new PersistedSortedDictionaryOperationFactory<TKey, TValue>();
+        public EnumerateEnumerableOperation<KeyValuePair<TKey, TValue>> Enumerate() => DictionaryOperation.Enumerate<TKey, TValue>();
 
-        private sealed class PersistedSortedDictionaryOperationFactory<TKey, TValue> : IPersistedSortedDictionaryOperationFactory<TKey, TValue>
-        {
-            public CountDictionaryOperation<TKey, TValue> Count() => DictionaryOperation.Count<TKey, TValue>();
+        public GetIdPersistedOperation<IPersistedSortedDictionary<TKey, TValue>> GetId() => GetId<IPersistedSortedDictionary<TKey, TValue>>();
 
-            public EnumerateEnumerableOperation<KeyValuePair<TKey, TValue>> Enumerate() => DictionaryOperation.Enumerate<TKey, TValue>();
+        public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
 
-            public GetIdPersistedOperation<IPersistedSortedDictionary<TKey, TValue>> GetId() => GetId<IPersistedSortedDictionary<TKey, TValue>>();
+        public AddDictionaryOperation<TKey, TValue> Add(TKey key, TValue value) => DictionaryOperation.Add(key, value);
 
-            public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
+        AddCollectionOperation<KeyValuePair<TKey, TValue>> ICollectionOperationFactory<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> value) => CollectionOperation.Add(value);
 
-            public AddDictionaryOperation<TKey, TValue> Add(TKey key, TValue value) => DictionaryOperation.Add(key, value);
+        public ClearCollectionOperation<KeyValuePair<TKey, TValue>> Clear() => DictionaryOperation.Clear<TKey, TValue>();
 
-            AddCollectionOperation<KeyValuePair<TKey, TValue>> ICollectionOperationFactory<KeyValuePair<TKey, TValue>>.Add(KeyValuePair<TKey, TValue> value) => CollectionOperation.Add(value);
+        public ContainsCollectionOperation<KeyValuePair<TKey, TValue>> Contains(KeyValuePair<TKey, TValue> value) => DictionaryOperation.Contains(value);
 
-            public ClearCollectionOperation<KeyValuePair<TKey, TValue>> Clear() => DictionaryOperation.Clear<TKey, TValue>();
+        public ContainsKeyDictionaryOperation<TKey, TValue> ContainsKey(TKey key) => DictionaryOperation.ContainsKey<TKey, TValue>(key);
 
-            public ContainsCollectionOperation<KeyValuePair<TKey, TValue>> Contains(KeyValuePair<TKey, TValue> value) => DictionaryOperation.Contains(value);
+        public CopyToCollectionOperation<KeyValuePair<TKey, TValue>> CopyTo(KeyValuePair<TKey, TValue>[] array, int index) => DictionaryOperation.CopyTo(array, index);
 
-            public ContainsKeyDictionaryOperation<TKey, TValue> ContainsKey(TKey key) => DictionaryOperation.ContainsKey<TKey, TValue>(key);
+        public RemoveCollectionOperation<KeyValuePair<TKey, TValue>> Remove(KeyValuePair<TKey, TValue> value) => DictionaryOperation.Remove(value);
 
-            public CopyToCollectionOperation<KeyValuePair<TKey, TValue>> CopyTo(KeyValuePair<TKey, TValue>[] array, int index) => DictionaryOperation.CopyTo(array, index);
+        public IsReadOnlyCollectionOperation<KeyValuePair<TKey, TValue>> IsReadOnly() => DictionaryOperation.IsReadOnly<TKey, TValue>();
 
-            public RemoveCollectionOperation<KeyValuePair<TKey, TValue>> Remove(KeyValuePair<TKey, TValue> value) => DictionaryOperation.Remove(value);
+        public ThisResultOperation<T> This<T>() => Operation.This<T>();
 
-            public IsReadOnlyCollectionOperation<KeyValuePair<TKey, TValue>> IsReadOnly() => DictionaryOperation.IsReadOnly<TKey, TValue>();
+        public ThisResultOperation<IPersistedSortedDictionary<TKey, TValue>> This() => This<IPersistedSortedDictionary<TKey, TValue>>();
 
-            public ThisResultOperation<T> This<T>() => Operation.This<T>();
+        CountReadOnlyCollectionOperation<KeyValuePair<TKey, TValue>> IReadOnlyCollectionOperationFactory<KeyValuePair<TKey, TValue>>.Count() => CollectionOperation.Count<KeyValuePair<TKey, TValue>>();
 
-            public ThisResultOperation<IPersistedSortedDictionary<TKey, TValue>> This() => This<IPersistedSortedDictionary<TKey, TValue>>();
+        public GetDictionaryOperation<TKey, TValue> Get(TKey key) => DictionaryOperation.Get<TKey, TValue>(key);
 
-            CountReadOnlyCollectionOperation<KeyValuePair<TKey, TValue>> IReadOnlyCollectionOperationFactory<KeyValuePair<TKey, TValue>>.Count() => CollectionOperation.Count<KeyValuePair<TKey, TValue>>();
+        public SetDictionaryOperation<TKey, TValue> Set(TKey key, TValue value) => DictionaryOperation.Set<TKey, TValue>(key, value);
 
-            public GetDictionaryOperation<TKey, TValue> Get(TKey key) => DictionaryOperation.Get<TKey, TValue>(key);
+        public GetKeysDictionaryOperation<TKey, TValue> GetKeys() => DictionaryOperation.GetKeys<TKey, TValue>();
 
-            public SetDictionaryOperation<TKey, TValue> Set(TKey key, TValue value) => DictionaryOperation.Set<TKey, TValue>(key, value);
+        public GetValuesDictionaryOperation<TKey, TValue> GetValues() => DictionaryOperation.GetValues<TKey, TValue>();
 
-            public GetKeysDictionaryOperation<TKey, TValue> GetKeys() => DictionaryOperation.GetKeys<TKey, TValue>();
+        public RemoveDictionaryOperation<TKey, TValue> Remove(TKey key) => DictionaryOperation.Remove<TKey, TValue>(key);
 
-            public GetValuesDictionaryOperation<TKey, TValue> GetValues() => DictionaryOperation.GetValues<TKey, TValue>();
-
-            public RemoveDictionaryOperation<TKey, TValue> Remove(TKey key) => DictionaryOperation.Remove<TKey, TValue>(key);
-
-            public TryGetValueDictionaryOperation<TKey, TValue> TryGetValue(TKey key) => DictionaryOperation.TryGetValue<TKey, TValue>(key);
-        }
+        public TryGetValueDictionaryOperation<TKey, TValue> TryGetValue(TKey key) => DictionaryOperation.TryGetValue<TKey, TValue>(key);
     }
 }

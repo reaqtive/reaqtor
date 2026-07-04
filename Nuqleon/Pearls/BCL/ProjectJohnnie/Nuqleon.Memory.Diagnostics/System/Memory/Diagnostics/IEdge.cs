@@ -8,22 +8,21 @@
 //   BD - 08/05/2017 - Created this type.
 //
 
-namespace System.Memory.Diagnostics
+namespace System.Memory.Diagnostics;
+
+/// <summary>
+/// Interface representing a directed edge in an object graph.
+/// </summary>
+/// <remarks>
+/// Use the generic <see cref="IEdge{T}"/> variant to get access to the source object of the edge.
+/// </remarks>
+public interface IEdge
 {
     /// <summary>
-    /// Interface representing a directed edge in an object graph.
+    /// Gets the access representation of the edge.
     /// </summary>
-    /// <remarks>
-    /// Use the generic <see cref="IEdge{T}"/> variant to get access to the source object of the edge.
-    /// </remarks>
-    public interface IEdge
-    {
-        /// <summary>
-        /// Gets the access representation of the edge.
-        /// </summary>
-        /// <example>
-        /// For example, an access pattern could be a field traversal using <see cref="FieldAccess"/>.
-        /// </example>
-        Access Access { get; }
-    }
+    /// <example>
+    /// For example, an access pattern could be a field traversal using <see cref="FieldAccess"/>.
+    /// </example>
+    Access Access { get; }
 }

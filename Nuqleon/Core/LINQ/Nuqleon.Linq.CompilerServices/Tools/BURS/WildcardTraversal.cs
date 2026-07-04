@@ -10,33 +10,32 @@
 
 using System.Collections.Generic;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+internal sealed class WildcardTraversal<TSource>
 {
-    internal sealed class WildcardTraversal<TSource>
+    private readonly Stack<int> _path;
+
+    public WildcardTraversal(TSource wildcard)
     {
-        private readonly Stack<int> _path;
-
-        public WildcardTraversal(TSource wildcard)
-        {
-            _path = new Stack<int>();
-            Wildcard = wildcard;
-        }
-
-        public TSource Wildcard { get; }
-
-        public void Push(int next) => _path.Push(next);
-
-        public ITree<T> Get<T>(ITree<T> root)
-        {
-            var cur = root;
-            foreach (var nxt in _path)
-            {
-                cur = cur.Children[nxt];
-            }
-
-            return cur;
-        }
-
-        public override string ToString() => string.Join(" -> ", _path.ToArray());
+        _path = new Stack<int>();
+        Wildcard = wildcard;
     }
+
+    public TSource Wildcard { get; }
+
+    public void Push(int next) => _path.Push(next);
+
+    public ITree<T> Get<T>(ITree<T> root)
+    {
+        var cur = root;
+        foreach (var nxt in _path)
+        {
+            cur = cur.Children[nxt];
+        }
+
+        return cur;
+    }
+
+    public override string ToString() => string.Join(" -> ", _path.ToArray());
 }

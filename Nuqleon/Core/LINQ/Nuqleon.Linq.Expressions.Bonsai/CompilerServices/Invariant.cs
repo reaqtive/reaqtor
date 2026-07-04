@@ -8,20 +8,19 @@
 // BD - May 2013 - Created this file.
 //
 
-namespace System.Linq.Expressions.Bonsai
-{
-    internal static class Invariant
-    {
-        public static void Assert(bool condition, string message)
-        {
-#if DEBUG
-            System.Diagnostics.Debug.Assert(condition, message);
-#else
-            if (!condition)
-                throw new InvalidOperationException(message);
-#endif
-        }
+namespace System.Linq.Expressions.Bonsai;
 
-        public static Exception Unreachable => new InvalidOperationException("Unreachable code.");
+internal static class Invariant
+{
+    public static void Assert(bool condition, string message)
+    {
+#if DEBUG
+        System.Diagnostics.Debug.Assert(condition, message);
+#else
+        if (!condition)
+            throw new InvalidOperationException(message);
+#endif
     }
+
+    public static Exception Unreachable => new InvalidOperationException("Unreachable code.");
 }

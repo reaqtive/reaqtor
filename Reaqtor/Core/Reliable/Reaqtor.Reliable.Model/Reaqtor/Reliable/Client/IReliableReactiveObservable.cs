@@ -4,10 +4,9 @@
 
 using System;
 
-namespace Reaqtor.Reliable.Client
+namespace Reaqtor.Reliable.Client;
+
+public interface IReliableReactiveObservable<out T>
 {
-    public interface IReliableReactiveObservable<out T>
-    {
-        IReliableReactiveSubscription Subscribe(IReliableReactiveObserver<T> observer, Uri subscriptionUri, object state = null);
-    }
+    IReliableReactiveSubscription Subscribe(IReliableReactiveObserver<T> observer, Uri subscriptionUri, object state = null);
 }

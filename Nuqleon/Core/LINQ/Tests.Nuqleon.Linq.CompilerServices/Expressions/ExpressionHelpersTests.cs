@@ -14,90 +14,89 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class ExpressionHelpersTests
 {
-    [TestClass]
-    public class ExpressionHelpersTests
+    #region StripQuotes
+
+    [TestMethod]
+    public void StripQuotes_ArgumentChecking()
     {
-        #region StripQuotes
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionHelpers.StripQuotes(expression: null));
+        Assert.AreEqual("expression", ex.ParamName);
+    }
 
-        [TestMethod]
-        public void StripQuotes_ArgumentChecking()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionHelpers.StripQuotes(expression: null));
-            Assert.AreEqual("expression", ex.ParamName);
-        }
+    [TestMethod]
+    public void StripQuotes_NoLambda()
+    {
+        var c = Expression.Constant(42);
+        var r = ExpressionHelpers.StripQuotes(c);
+        Assert.AreSame(c, r);
+    }
 
-        [TestMethod]
-        public void StripQuotes_NoLambda()
-        {
-            var c = Expression.Constant(42);
-            var r = ExpressionHelpers.StripQuotes(c);
-            Assert.AreSame(c, r);
-        }
+    [TestMethod]
+    public void StripQuotes_Lambda()
+    {
+        var f = (Expression<Func<int, int>>)(x => x);
+        var r = ExpressionHelpers.StripQuotes(f);
+        Assert.AreSame(f, r);
+    }
 
-        [TestMethod]
-        public void StripQuotes_Lambda()
-        {
-            var f = (Expression<Func<int, int>>)(x => x);
-            var r = ExpressionHelpers.StripQuotes(f);
-            Assert.AreSame(f, r);
-        }
+    [TestMethod]
+    public void StripQuotes_QuotedLambda()
+    {
+        var f = (Expression<Action>)(() => QuoteMe(x => x));
+        var e = ((MethodCallExpression)f.Body).Arguments[0];
+        var r = ExpressionHelpers.StripQuotes(e);
+        Assert.AreSame(((UnaryExpression)e).Operand, r);
+    }
 
-        [TestMethod]
-        public void StripQuotes_QuotedLambda()
-        {
-            var f = (Expression<Action>)(() => QuoteMe(x => x));
-            var e = ((MethodCallExpression)f.Body).Arguments[0];
-            var r = ExpressionHelpers.StripQuotes(e);
-            Assert.AreSame(((UnaryExpression)e).Operand, r);
-        }
+    #endregion
 
-        #endregion
+    #region Unquote
 
-        #region Unquote
+    [TestMethod]
+    public void Unquote_ArgumentChecking()
+    {
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionHelpers.Unquote(expression: null));
+        Assert.AreEqual("expression", ex.ParamName);
+    }
 
-        [TestMethod]
-        public void Unquote_ArgumentChecking()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => ExpressionHelpers.Unquote(expression: null));
-            Assert.AreEqual("expression", ex.ParamName);
-        }
+    [TestMethod]
+    public void Unquote_NoLambda()
+    {
+        var c = Expression.Constant(42);
+        Assert.ThrowsExactly<InvalidCastException>(() => ExpressionHelpers.Unquote(c));
+    }
 
-        [TestMethod]
-        public void Unquote_NoLambda()
-        {
-            var c = Expression.Constant(42);
-            Assert.ThrowsExactly<InvalidCastException>(() => ExpressionHelpers.Unquote(c));
-        }
+    [TestMethod]
+    public void Unquote_Lambda()
+    {
+        var f = (Expression<Func<int, int>>)(x => x);
+        var r = ExpressionHelpers.Unquote(f);
+        Assert.AreSame(f, r);
+    }
 
-        [TestMethod]
-        public void Unquote_Lambda()
-        {
-            var f = (Expression<Func<int, int>>)(x => x);
-            var r = ExpressionHelpers.Unquote(f);
-            Assert.AreSame(f, r);
-        }
+    [TestMethod]
+    public void Unquote_QuotedLambda()
+    {
+        var f = (Expression<Action>)(() => QuoteMe(x => x));
+        var e = ((MethodCallExpression)f.Body).Arguments[0];
+        var r = ExpressionHelpers.Unquote(e);
+        Assert.AreSame(((UnaryExpression)e).Operand, r);
+    }
 
-        [TestMethod]
-        public void Unquote_QuotedLambda()
-        {
-            var f = (Expression<Action>)(() => QuoteMe(x => x));
-            var e = ((MethodCallExpression)f.Body).Arguments[0];
-            var r = ExpressionHelpers.Unquote(e);
-            Assert.AreSame(((UnaryExpression)e).Operand, r);
-        }
+    #endregion
 
-        #endregion
-
-        #region Helpers
+    #region Helpers
 
 #pragma warning disable IDE0060 // Remove unused parameter
-        private static void QuoteMe(Expression<Func<int, int>> e)
-        {
-        }
+    private static void QuoteMe(Expression<Func<int, int>> e)
+    {
+    }
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        #endregion
-    }
+    #endregion
 }

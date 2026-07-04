@@ -8,21 +8,20 @@
 // BD - May 2017 - Initial prototype of JIT.
 //
 
-namespace System.Runtime.CompilerServices
+namespace System.Runtime.CompilerServices;
+
+/// <summary>
+/// Interface for thunk types factories.
+/// </summary>
+internal interface IThunkFactory
 {
     /// <summary>
-    /// Interface for thunk types factories.
+    /// Gets the thunk type for the specified delegate type. If the delegate type is
+    /// generic, it should be a closed generic type. The specified closure type will
+    /// be used for the closure type parameter of the thunk type.
     /// </summary>
-    internal interface IThunkFactory
-    {
-        /// <summary>
-        /// Gets the thunk type for the specified delegate type. If the delegate type is
-        /// generic, it should be a closed generic type. The specified closure type will
-        /// be used for the closure type parameter of the thunk type.
-        /// </summary>
-        /// <param name="delegateType">The delegate type to get a thunk type for.</param>
-        /// <param name="closureType">The closure type to parameterize the thunk type on.</param>
-        /// <returns>The thunk type, closed over the specified closure type.</returns>
-        Type GetThunkType(Type delegateType, Type closureType);
-    }
+    /// <param name="delegateType">The delegate type to get a thunk type for.</param>
+    /// <param name="closureType">The closure type to parameterize the thunk type on.</param>
+    /// <returns>The thunk type, closed over the specified closure type.</returns>
+    Type GetThunkType(Type delegateType, Type closureType);
 }

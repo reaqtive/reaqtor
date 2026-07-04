@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class UndefineSubscriptionFactory : UndefineServiceOperation
 {
-    public class UndefineSubscriptionFactory : UndefineServiceOperation
+    public UndefineSubscriptionFactory(Uri subscriptionFactoryUri)
+        : base(ServiceOperationKind.UndefineSubscriptionFactory, subscriptionFactoryUri)
     {
-        public UndefineSubscriptionFactory(Uri subscriptionFactoryUri)
-            : base(ServiceOperationKind.UndefineSubscriptionFactory, subscriptionFactoryUri)
-        {
-        }
     }
 }

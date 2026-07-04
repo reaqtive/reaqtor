@@ -2,26 +2,25 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Enum with different checkpoint kinds.
+/// </summary>
+public enum CheckpointKind
 {
     /// <summary>
-    /// Enum with different checkpoint kinds.
+    /// Invalid transaction kind.
     /// </summary>
-    public enum CheckpointKind
-    {
-        /// <summary>
-        /// Invalid transaction kind.
-        /// </summary>
-        Invalid,
+    Invalid,
 
-        /// <summary>
-        /// The complete state is part of the transaction.
-        /// </summary>
-        Full,
+    /// <summary>
+    /// The complete state is part of the transaction.
+    /// </summary>
+    Full,
 
-        /// <summary>
-        /// Only the differences in the state are part of the transaction.
-        /// </summary>
-        Differential,
-    }
+    /// <summary>
+    /// Only the differences in the state are part of the transaction.
+    /// </summary>
+    Differential,
 }

@@ -15,211 +15,210 @@ using System.Linq;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class PooledDictionaryTests : TestBase
 {
-    [TestClass]
-    public class PooledDictionaryTests : TestBase
+    [TestMethod]
+    public void PooledDictionary_ArgumentChecking()
     {
-        [TestMethod]
-        public void PooledDictionary_ArgumentChecking()
+        Assert.ThrowsExactly<ArgumentNullException>(() => DictionaryPool<string, int>.Create(4, comparer: null));
+
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, -1));
+
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, -1, EqualityComparer<string>.Default));
+        Assert.ThrowsExactly<ArgumentNullException>(() => DictionaryPool<string, int>.Create(4, 16, comparer: null));
+
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, 16, EqualityComparer<string>.Default, -1));
+    }
+
+    [TestMethod]
+    public void PooledDictionary_ManOrBoy()
+    {
+        PooledDictionary_ManOrBoy_Impl(false);
+    }
+
+    [TestMethod]
+    public void PooledDictionary_ManOrBoy_RAII()
+    {
+        PooledDictionary_ManOrBoy_Impl(true);
+    }
+
+    private void PooledDictionary_ManOrBoy_Impl(bool useRAII)
+    {
+        var res = from C in new[] { 4, 8, 16, 32, 64 }
+                  from P in Enumerable.Range(1, Math.Min(Environment.ProcessorCount * 2, 8))
+                  from M in new[] { 1000, 5000, 10000 }
+                  select (C, P, M);
+
+        foreach (var cpm in res.Trim())
         {
-            Assert.ThrowsExactly<ArgumentNullException>(() => DictionaryPool<string, int>.Create(4, comparer: null));
-
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, -1));
-
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, -1, EqualityComparer<string>.Default));
-            Assert.ThrowsExactly<ArgumentNullException>(() => DictionaryPool<string, int>.Create(4, 16, comparer: null));
-
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => DictionaryPool<string, int>.Create(4, 16, EqualityComparer<string>.Default, -1));
-        }
-
-        [TestMethod]
-        public void PooledDictionary_ManOrBoy()
-        {
-            PooledDictionary_ManOrBoy_Impl(false);
-        }
-
-        [TestMethod]
-        public void PooledDictionary_ManOrBoy_RAII()
-        {
-            PooledDictionary_ManOrBoy_Impl(true);
-        }
-
-        private void PooledDictionary_ManOrBoy_Impl(bool useRAII)
-        {
-            var res = from C in new[] { 4, 8, 16, 32, 64 }
-                      from P in Enumerable.Range(1, Math.Min(Environment.ProcessorCount * 2, 8))
-                      from M in new[] { 1000, 5000, 10000 }
-                      select (C, P, M);
-
-            foreach (var cpm in res.Trim())
+            Do(cpm.C, cpm.P, cpm.M, false, useRAII, map =>
             {
-                Do(cpm.C, cpm.P, cpm.M, false, useRAII, map =>
+                var N = 128;
+
+                for (var i = 0; i < N; i++)
                 {
-                    var N = 128;
+                    map.Add(i.ToString(), i);
+                }
 
-                    for (var i = 0; i < N; i++)
-                    {
-                        map.Add(i.ToString(), i);
-                    }
-
-                    return N;
-                });
-            }
+                return N;
+            });
         }
+    }
 
-        [TestMethod]
-        public void PooledDictionary_ManOrBoy_Random()
+    [TestMethod]
+    public void PooledDictionary_ManOrBoy_Random()
+    {
+        PooledDictionary_ManOrBoy_Random_Impl(false);
+    }
+
+    [TestMethod]
+    public void PooledDictionary_ManOrBoy_Random_RAII()
+    {
+        PooledDictionary_ManOrBoy_Random_Impl(true);
+    }
+
+    private void PooledDictionary_ManOrBoy_Random_Impl(bool useRAII)
+    {
+        var res = from C in new[] { 4, 8, 16, 32, 64 }
+                  from P in Enumerable.Range(1, Math.Min(Environment.ProcessorCount * 2, 8))
+                  from M in new[] { 100, 200, 500 }
+                  select (C, P, M);
+
+        foreach (var cpm in res.Trim())
         {
-            PooledDictionary_ManOrBoy_Random_Impl(false);
-        }
-
-        [TestMethod]
-        public void PooledDictionary_ManOrBoy_Random_RAII()
-        {
-            PooledDictionary_ManOrBoy_Random_Impl(true);
-        }
-
-        private void PooledDictionary_ManOrBoy_Random_Impl(bool useRAII)
-        {
-            var res = from C in new[] { 4, 8, 16, 32, 64 }
-                      from P in Enumerable.Range(1, Math.Min(Environment.ProcessorCount * 2, 8))
-                      from M in new[] { 100, 200, 500 }
-                      select (C, P, M);
-
-            foreach (var cpm in res.Trim())
+            Do(cpm.C, cpm.P, cpm.M, false, useRAII, map =>
             {
-                Do(cpm.C, cpm.P, cpm.M, false, useRAII, map =>
+                var rand = GetRandom();
+
+                var L = rand.Next(1, 128);
+
+                for (var i = 0; i < L; i++)
                 {
-                    var rand = GetRandom();
+                    map.Add(i.ToString(), i);
+                }
 
-                    var L = rand.Next(1, 128);
-
-                    for (var i = 0; i < L; i++)
-                    {
-                        map.Add(i.ToString(), i);
-                    }
-
-                    return L;
-                });
-            }
+                return L;
+            });
         }
+    }
 
-        private void Do(int C, int P, int M, bool noisy, bool useRAII, Func<Dictionary<string, int>, int> test)
+    private void Do(int C, int P, int M, bool noisy, bool useRAII, Func<Dictionary<string, int>, int> test)
+    {
+        var pool = DictionaryPool<string, int>.Create(C);
+
+        void testCore(Dictionary<string, int> map)
         {
-            var pool = DictionaryPool<string, int>.Create(C);
+            var len = map.Count;
+            Assert.AreEqual(0, len);
 
-            void testCore(Dictionary<string, int> map)
-            {
-                var len = map.Count;
-                Assert.AreEqual(0, len);
+            var L = test(map);
 
-                var L = test(map);
-
-                len = map.Count;
-                Assert.AreEqual(L, len);
-            }
-
-            if (useRAII)
-            {
-                Run(() => pool.New(), o => o.Dictionary, o => o.Dispose(), testCore, P, M, noisy);
-            }
-            else
-            {
-                Run(() => pool.Allocate(), o => o, o => pool.Free(o), testCore, P, M, noisy);
-            }
+            len = map.Count;
+            Assert.AreEqual(L, len);
         }
 
-        [TestMethod]
-        public void PooledDictionary_Simple1()
+        if (useRAII)
         {
-            var pool = DictionaryPool<string, int>.Create(4);
-            PooledDictionary_Simple_Impl(pool);
+            Run(() => pool.New(), o => o.Dictionary, o => o.Dispose(), testCore, P, M, noisy);
         }
-
-        [TestMethod]
-        public void PooledDictionary_Simple2()
+        else
         {
-            var pool = DictionaryPool<string, int>.Create(4, EqualityComparer<string>.Default);
-            PooledDictionary_Simple_Impl(pool);
+            Run(() => pool.Allocate(), o => o, o => pool.Free(o), testCore, P, M, noisy);
         }
+    }
 
-        [TestMethod]
-        public void PooledDictionary_Simple3()
+    [TestMethod]
+    public void PooledDictionary_Simple1()
+    {
+        var pool = DictionaryPool<string, int>.Create(4);
+        PooledDictionary_Simple_Impl(pool);
+    }
+
+    [TestMethod]
+    public void PooledDictionary_Simple2()
+    {
+        var pool = DictionaryPool<string, int>.Create(4, EqualityComparer<string>.Default);
+        PooledDictionary_Simple_Impl(pool);
+    }
+
+    [TestMethod]
+    public void PooledDictionary_Simple3()
+    {
+        var pool = DictionaryPool<string, int>.Create(4, 16);
+        PooledDictionary_Simple_Impl(pool);
+    }
+
+    [TestMethod]
+    public void PooledDictionary_Simple4()
+    {
+        var pool = DictionaryPool<string, int>.Create(4, 16, EqualityComparer<string>.Default);
+        PooledDictionary_Simple_Impl(pool);
+    }
+
+    private static void PooledDictionary_Simple_Impl(DictionaryPool<string, int> pool)
+    {
+        for (var i = 0; i < 100; i++)
         {
-            var pool = DictionaryPool<string, int>.Create(4, 16);
-            PooledDictionary_Simple_Impl(pool);
-        }
+            using var obj = i % 2 == 0 ? pool.New() : PooledDictionary<string, int>.New(pool);
 
-        [TestMethod]
-        public void PooledDictionary_Simple4()
+            var map = obj.Dictionary;
+
+            Assert.AreEqual(0, map.Count);
+
+            map.Add("qux", 42);
+            map.Add("foo", 43);
+            map.Add("bar", 44);
+            map.Add("baz", 45);
+        }
+    }
+
+    [TestMethod]
+    public void PooledDictionary_GlobalPool()
+    {
+        for (var i = 0; i < 100; i++)
         {
-            var pool = DictionaryPool<string, int>.Create(4, 16, EqualityComparer<string>.Default);
-            PooledDictionary_Simple_Impl(pool);
-        }
+            using var obj = PooledDictionary<string, int>.New();
 
-        private static void PooledDictionary_Simple_Impl(DictionaryPool<string, int> pool)
+            var map = obj.Dictionary;
+
+            Assert.AreEqual(0, map.Count);
+
+            map.Add("qux", 42);
+            map.Add("foo", 43);
+            map.Add("bar", 44);
+            map.Add("baz", 45);
+        }
+    }
+
+    [TestMethod]
+    public void PooledDictionary_GetInstance()
+    {
+        for (var i = 0; i < 100; i++)
         {
-            for (var i = 0; i < 100; i++)
-            {
-                using var obj = i % 2 == 0 ? pool.New() : PooledDictionary<string, int>.New(pool);
+            var map = PooledDictionary<string, int>.GetInstance();
 
-                var map = obj.Dictionary;
+            Assert.AreEqual(0, map.Count);
 
-                Assert.AreEqual(0, map.Count);
+            map.Add("qux", 42);
+            map.Add("foo", 43);
+            map.Add("bar", 44);
+            map.Add("baz", 45);
 
-                map.Add("qux", 42);
-                map.Add("foo", 43);
-                map.Add("bar", 44);
-                map.Add("baz", 45);
-            }
+            map.Free();
         }
-
-        [TestMethod]
-        public void PooledDictionary_GlobalPool()
-        {
-            for (var i = 0; i < 100; i++)
-            {
-                using var obj = PooledDictionary<string, int>.New();
-
-                var map = obj.Dictionary;
-
-                Assert.AreEqual(0, map.Count);
-
-                map.Add("qux", 42);
-                map.Add("foo", 43);
-                map.Add("bar", 44);
-                map.Add("baz", 45);
-            }
-        }
-
-        [TestMethod]
-        public void PooledDictionary_GetInstance()
-        {
-            for (var i = 0; i < 100; i++)
-            {
-                var map = PooledDictionary<string, int>.GetInstance();
-
-                Assert.AreEqual(0, map.Count);
-
-                map.Add("qux", 42);
-                map.Add("foo", 43);
-                map.Add("bar", 44);
-                map.Add("baz", 45);
-
-                map.Free();
-            }
-        }
+    }
 
 
-        [TestMethod]
-        public void PooledDictionary_GottenTooBig()
-        {
-            var bigPool = DictionaryPool<int, string>.Create(1, 16, EqualityComparer<int>.Default, 2048);
-            var smallPool = DictionaryPool<int, string>.Create(1, 16, EqualityComparer<int>.Default, 16);
-            TooBig(() => PooledDictionary<int, string>.New(), h => h.Dictionary, (h, n) => { for (var i = 0; i < n; i++) h.Add(i, ""); }, 1024);
-            TooBig(() => bigPool.New(), h => h.Dictionary, (h, n) => { for (var i = 0; i < n; i++) h.Add(i, ""); }, 2048);
-            TooBig(() => smallPool.New(), h => h.Dictionary, (h, n) => { for (var i = 0; i < n; i++) h.Add(i, ""); }, 16);
-        }
+    [TestMethod]
+    public void PooledDictionary_GottenTooBig()
+    {
+        var bigPool = DictionaryPool<int, string>.Create(1, 16, EqualityComparer<int>.Default, 2048);
+        var smallPool = DictionaryPool<int, string>.Create(1, 16, EqualityComparer<int>.Default, 16);
+        TooBig(() => PooledDictionary<int, string>.New(), h => h.Dictionary, (h, n) => { for (var i = 0; i < n; i++) h.Add(i, ""); }, 1024);
+        TooBig(() => bigPool.New(), h => h.Dictionary, (h, n) => { for (var i = 0; i < n; i++) h.Add(i, ""); }, 2048);
+        TooBig(() => smallPool.New(), h => h.Dictionary, (h, n) => { for (var i = 0; i < n; i++) h.Add(i, ""); }, 16);
     }
 }

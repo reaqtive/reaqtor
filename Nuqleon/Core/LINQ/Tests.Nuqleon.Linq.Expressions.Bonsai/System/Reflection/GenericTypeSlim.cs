@@ -16,131 +16,130 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.System.Linq.Expressions.Bonsai;
 
-namespace Tests.System.Reflection
+namespace Tests.System.Reflection;
+
+[TestClass]
+public class GenericTypeSlimTests : TestBase
 {
-    [TestClass]
-    public class GenericTypeSlimTests : TestBase
+    [TestMethod]
+    public void GenericTypeSlim_ArgumentChecks()
     {
-        [TestMethod]
-        public void GenericTypeSlim_ArgumentChecks()
-        {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(typeDefinition: null, default(TypeSlim)));
-            Assert.AreEqual("typeDefinition", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(typeDefinition: null, default(TypeSlim[])));
-            Assert.AreEqual("typeDefinition", ex2.ParamName);
-            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(typeDefinition: null, default(ReadOnlyCollection<TypeSlim>)));
-            Assert.AreEqual("typeDefinition", ex3.ParamName);
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(typeDefinition: null, default(TypeSlim)));
+        Assert.AreEqual("typeDefinition", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(typeDefinition: null, default(TypeSlim[])));
+        Assert.AreEqual("typeDefinition", ex2.ParamName);
+        var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(typeDefinition: null, default(ReadOnlyCollection<TypeSlim>)));
+        Assert.AreEqual("typeDefinition", ex3.ParamName);
 
-            var typ = typeof(int).ToTypeSlim();
-            var def = TypeSlim.GenericDefinition(SlimType.Assembly, "Foo");
+        var typ = typeof(int).ToTypeSlim();
+        var def = TypeSlim.GenericDefinition(SlimType.Assembly, "Foo");
 
-            var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim[])));
-            Assert.AreEqual("arguments", ex4.ParamName);
-            var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(ReadOnlyCollection<TypeSlim>)));
-            Assert.AreEqual("arguments", ex5.ParamName);
+        var ex4 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim[])));
+        Assert.AreEqual("arguments", ex4.ParamName);
+        var ex5 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(ReadOnlyCollection<TypeSlim>)));
+        Assert.AreEqual("arguments", ex5.ParamName);
 
-            var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim)));
-            Assert.AreEqual("argument1", ex6.ParamName);
-            var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim), typ));
-            Assert.AreEqual("argument1", ex7.ParamName);
-            var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim), typ, typ));
-            Assert.AreEqual("argument1", ex8.ParamName);
-            var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim), typ, typ, typ));
-            Assert.AreEqual("argument1", ex9.ParamName);
+        var ex6 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim)));
+        Assert.AreEqual("argument1", ex6.ParamName);
+        var ex7 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim), typ));
+        Assert.AreEqual("argument1", ex7.ParamName);
+        var ex8 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim), typ, typ));
+        Assert.AreEqual("argument1", ex8.ParamName);
+        var ex9 = Assert.ThrowsExactly<ArgumentNullException>(() => TypeSlim.Generic(def, default(TypeSlim), typ, typ, typ));
+        Assert.AreEqual("argument1", ex9.ParamName);
 #pragma warning restore IDE0034 // Simplify 'default' expression
-        }
+    }
 
-        [TestMethod]
-        public void GenericTypeSlim_Optimized1()
+    [TestMethod]
+    public void GenericTypeSlim_Optimized1()
+    {
+        var arg1 = typeof(int).ToTypeSlim();
+
+        var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), arg1);
+        var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), new[] { arg1 });
+        var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1]));
+
+        foreach (var gen in new[] { gen1, gen2, gen3 })
         {
-            var arg1 = typeof(int).ToTypeSlim();
-
-            var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), arg1);
-            var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), new[] { arg1 });
-            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1]));
-
-            foreach (var gen in new[] { gen1, gen2, gen3 })
-            {
-                AssertOptimized(gen, 1, arg1);
-            }
+            AssertOptimized(gen, 1, arg1);
         }
+    }
 
-        [TestMethod]
-        public void GenericTypeSlim_Optimized2()
+    [TestMethod]
+    public void GenericTypeSlim_Optimized2()
+    {
+        var arg1 = typeof(int).ToTypeSlim();
+        var arg2 = typeof(long).ToTypeSlim();
+
+        var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), arg1, arg2);
+        var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), new[] { arg1, arg2 });
+        var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1, arg2]));
+
+        foreach (var gen in new[] { gen1, gen2, gen3 })
         {
-            var arg1 = typeof(int).ToTypeSlim();
-            var arg2 = typeof(long).ToTypeSlim();
-
-            var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), arg1, arg2);
-            var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), new[] { arg1, arg2 });
-            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1, arg2]));
-
-            foreach (var gen in new[] { gen1, gen2, gen3 })
-            {
-                AssertOptimized(gen, 2, arg1, arg2);
-            }
+            AssertOptimized(gen, 2, arg1, arg2);
         }
+    }
 
-        [TestMethod]
-        public void GenericTypeSlim_Optimized3()
+    [TestMethod]
+    public void GenericTypeSlim_Optimized3()
+    {
+        var arg1 = typeof(int).ToTypeSlim();
+        var arg2 = typeof(long).ToTypeSlim();
+        var arg3 = typeof(byte).ToTypeSlim();
+
+        var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), arg1, arg2, arg3);
+        var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), new[] { arg1, arg2, arg3 });
+        var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1, arg2, arg3]));
+
+        foreach (var gen in new[] { gen1, gen2, gen3 })
         {
-            var arg1 = typeof(int).ToTypeSlim();
-            var arg2 = typeof(long).ToTypeSlim();
-            var arg3 = typeof(byte).ToTypeSlim();
-
-            var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), arg1, arg2, arg3);
-            var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), new[] { arg1, arg2, arg3 });
-            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1, arg2, arg3]));
-
-            foreach (var gen in new[] { gen1, gen2, gen3 })
-            {
-                AssertOptimized(gen, 3, arg1, arg2, arg3);
-            }
+            AssertOptimized(gen, 3, arg1, arg2, arg3);
         }
+    }
 
-        [TestMethod]
-        public void GenericTypeSlim_Optimized4()
+    [TestMethod]
+    public void GenericTypeSlim_Optimized4()
+    {
+        var arg1 = typeof(int).ToTypeSlim();
+        var arg2 = typeof(long).ToTypeSlim();
+        var arg3 = typeof(byte).ToTypeSlim();
+        var arg4 = typeof(char).ToTypeSlim();
+
+        var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), arg1, arg2, arg3, arg4);
+        var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), new[] { arg1, arg2, arg3, arg4 });
+        var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1, arg2, arg3, arg4]));
+
+        foreach (var gen in new[] { gen1, gen2, gen3 })
         {
-            var arg1 = typeof(int).ToTypeSlim();
-            var arg2 = typeof(long).ToTypeSlim();
-            var arg3 = typeof(byte).ToTypeSlim();
-            var arg4 = typeof(char).ToTypeSlim();
-
-            var gen1 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), arg1, arg2, arg3, arg4);
-            var gen2 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), new[] { arg1, arg2, arg3, arg4 });
-            var gen3 = TypeSlim.Generic((GenericDefinitionTypeSlim)typeof(Func<,,,>).ToTypeSlim(), new ReadOnlyCollection<TypeSlim>([arg1, arg2, arg3, arg4]));
-
-            foreach (var gen in new[] { gen1, gen2, gen3 })
-            {
-                AssertOptimized(gen, 4, arg1, arg2, arg3, arg4);
-            }
+            AssertOptimized(gen, 4, arg1, arg2, arg3, arg4);
         }
+    }
 
-        private static void AssertOptimized(GenericTypeSlim type, int arity, params TypeSlim[] args)
+    private static void AssertOptimized(GenericTypeSlim type, int arity, params TypeSlim[] args)
+    {
+        Assert.IsTrue(type.GetType().Name.EndsWith(arity.ToString()));
+
+        Assert.AreEqual(arity, type.GenericArgumentCount);
+
+        for (var i = 0; i < args.Length; i++)
         {
-            Assert.IsTrue(type.GetType().Name.EndsWith(arity.ToString()));
-
-            Assert.AreEqual(arity, type.GenericArgumentCount);
-
-            for (var i = 0; i < args.Length; i++)
-            {
-                Assert.AreSame(args[i], type.GetGenericArgument(i));
-            }
-
-            var genArgs = type.GenericArguments;
-
-            Assert.AreSame(genArgs, type.GenericArguments);
-
-            Assert.AreEqual(arity, genArgs.Count);
-
-            for (var i = 0; i < args.Length; i++)
-            {
-                Assert.AreSame(args[i], genArgs[i]);
-            }
-
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => type.GetGenericArgument(-1));
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => type.GetGenericArgument(arity));
+            Assert.AreSame(args[i], type.GetGenericArgument(i));
         }
+
+        var genArgs = type.GenericArguments;
+
+        Assert.AreSame(genArgs, type.GenericArguments);
+
+        Assert.AreEqual(arity, genArgs.Count);
+
+        for (var i = 0; i < args.Length; i++)
+        {
+            Assert.AreSame(args[i], genArgs[i]);
+        }
+
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => type.GetGenericArgument(-1));
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => type.GetGenericArgument(arity));
     }
 }

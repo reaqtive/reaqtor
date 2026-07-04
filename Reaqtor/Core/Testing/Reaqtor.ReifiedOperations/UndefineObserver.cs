@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class UndefineObserver : UndefineServiceOperation
 {
-    public class UndefineObserver : UndefineServiceOperation
+    public UndefineObserver(Uri observerUri)
+        : base(ServiceOperationKind.UndefineObserver, observerUri)
     {
-        public UndefineObserver(Uri observerUri)
-            : base(ServiceOperationKind.UndefineObserver, observerUri)
-        {
-        }
     }
 }

@@ -8,21 +8,20 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Interface representing a cache to store memoization entries for a memoized function.
+/// </summary>
+public interface IMemoizationCache : IClearable, IDisposable
 {
     /// <summary>
-    /// Interface representing a cache to store memoization entries for a memoized function.
+    /// Gets a debug view on the memoization cache.
     /// </summary>
-    public interface IMemoizationCache : IClearable, IDisposable
-    {
-        /// <summary>
-        /// Gets a debug view on the memoization cache.
-        /// </summary>
-        string DebugView { get; }
+    string DebugView { get; }
 
-        /// <summary>
-        /// Gets the number of entries in the cache.
-        /// </summary>
-        int Count { get; }
-    }
+    /// <summary>
+    /// Gets the number of entries in the cache.
+    /// </summary>
+    int Count { get; }
 }

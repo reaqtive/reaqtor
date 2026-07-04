@@ -10,67 +10,66 @@
 
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Provides an expression tree optimization by inlining invocations to delegates as method calls.
+/// </summary>
+public static class DelegateInvocationInliner
 {
     /// <summary>
-    /// Provides an expression tree optimization by inlining invocations to delegates as method calls.
+    /// Inlines delegate invocations in the specified expression by using method call expressions.
     /// </summary>
-    public static class DelegateInvocationInliner
+    /// <param name="expression">Expression to inline delegate invocations for.</param>
+    /// <param name="inlineNonPublicMethods">Indicates whether to inline non-public methods.</param>
+    /// <returns>Optimized expression with delegate invocations inlined as method call expressions.</returns>
+    public static Expression Apply(Expression expression, bool inlineNonPublicMethods)
     {
-        /// <summary>
-        /// Inlines delegate invocations in the specified expression by using method call expressions.
-        /// </summary>
-        /// <param name="expression">Expression to inline delegate invocations for.</param>
-        /// <param name="inlineNonPublicMethods">Indicates whether to inline non-public methods.</param>
-        /// <returns>Optimized expression with delegate invocations inlined as method call expressions.</returns>
-        public static Expression Apply(Expression expression, bool inlineNonPublicMethods)
+        ArgumentNullException.ThrowIfNull(expression);
+
+        var visitor = inlineNonPublicMethods ? Impl.InlineNonPublicMethods : Impl.NoInlineNonPublicMethods;
+
+        return visitor.Visit(expression);
+    }
+
+    private sealed class Impl : ExpressionVisitor
+    {
+        public static readonly Impl NoInlineNonPublicMethods = new(inlineNonPublicMethods: false);
+        public static readonly Impl InlineNonPublicMethods = new(inlineNonPublicMethods: true);
+
+        private readonly bool _inlineNonPublicMethods;
+
+        private Impl(bool inlineNonPublicMethods) => _inlineNonPublicMethods = inlineNonPublicMethods;
+
+        protected override Expression VisitInvocation(InvocationExpression node)
         {
-            ArgumentNullException.ThrowIfNull(expression);
+            var expression = Visit(node.Expression);
+            var arguments = Visit(node.Arguments);
 
-            var visitor = inlineNonPublicMethods ? Impl.InlineNonPublicMethods : Impl.NoInlineNonPublicMethods;
-
-            return visitor.Visit(expression);
-        }
-
-        private sealed class Impl : ExpressionVisitor
-        {
-            public static readonly Impl NoInlineNonPublicMethods = new(inlineNonPublicMethods: false);
-            public static readonly Impl InlineNonPublicMethods = new(inlineNonPublicMethods: true);
-
-            private readonly bool _inlineNonPublicMethods;
-
-            private Impl(bool inlineNonPublicMethods) => _inlineNonPublicMethods = inlineNonPublicMethods;
-
-            protected override Expression VisitInvocation(InvocationExpression node)
+            if (typeof(Delegate).IsAssignableFrom(expression.Type))
             {
-                var expression = Visit(node.Expression);
-                var arguments = Visit(node.Arguments);
-
-                if (typeof(Delegate).IsAssignableFrom(expression.Type))
+                if (expression is ConstantExpression constExpr)
                 {
-                    if (expression is ConstantExpression constExpr)
+                    var d = (Delegate)constExpr.Value;
+                    if (d != null)
                     {
-                        var d = (Delegate)constExpr.Value;
-                        if (d != null)
+                        var i = d.GetInvocationList();
+                        if (i.Length == 1)
                         {
-                            var i = d.GetInvocationList();
-                            if (i.Length == 1)
+                            var mtd = i[0].Method;
+
+                            if (_inlineNonPublicMethods || mtd.IsPublic)
                             {
-                                var mtd = i[0].Method;
+                                var obj = mtd.IsStatic ? default(Expression) : Expression.Constant(d.Target, mtd.DeclaringType);
 
-                                if (_inlineNonPublicMethods || mtd.IsPublic)
-                                {
-                                    var obj = mtd.IsStatic ? default(Expression) : Expression.Constant(d.Target, mtd.DeclaringType);
-
-                                    return Expression.Call(obj, mtd, arguments);
-                                }
+                                return Expression.Call(obj, mtd, arguments);
                             }
                         }
                     }
                 }
-
-                return node.Update(expression, arguments);
             }
+
+            return node.Update(expression, arguments);
         }
     }
 }

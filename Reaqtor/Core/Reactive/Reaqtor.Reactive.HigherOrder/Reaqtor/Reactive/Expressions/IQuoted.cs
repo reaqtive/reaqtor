@@ -4,19 +4,18 @@
 
 using System.Linq.Expressions;
 
-namespace Reaqtor.Reactive.Expressions
-{
-    // CONSIDER: Move to Nuqleon.Linq.CompilerServices if there's a meaningful generalization
+namespace Reaqtor.Reactive.Expressions;
 
+// CONSIDER: Move to Nuqleon.Linq.CompilerServices if there's a meaningful generalization
+
+/// <summary>
+/// Represents a quoted value, i.e. a value that has an expression representation attached to it.
+/// </summary>
+/// <typeparam name="T">Type of the quoted value.</typeparam>
+public interface IQuoted<T> : IExpressible
+{
     /// <summary>
-    /// Represents a quoted value, i.e. a value that has an expression representation attached to it.
+    /// Gets the value represented by the quote.
     /// </summary>
-    /// <typeparam name="T">Type of the quoted value.</typeparam>
-    public interface IQuoted<T> : IExpressible
-    {
-        /// <summary>
-        /// Gets the value represented by the quote.
-        /// </summary>
-        T Value { get; }
-    }
+    T Value { get; }
 }

@@ -16,221 +16,220 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Json = Nuqleon.Json.Expressions;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class DomainTests
 {
-    [TestClass]
-    public class DomainTests
+    [TestMethod]
+    public void Domain_Constructor_ThrowsInvalidOperation()
     {
-        [TestMethod]
-        public void Domain_Constructor_ThrowsInvalidOperation()
+        var exprs = new[]
         {
-            var exprs = new[]
-            {
 
-                #region Invalid Input
+            #region Invalid Input
 
-                @"null",
+            @"null",
 
-                #endregion
+            #endregion
 
-                #region Invalid Version
+            #region Invalid Version
 
-                @"{""Version"": null, ""Assemblies"": [], ""Types"": []}",
+            @"{""Version"": null, ""Assemblies"": [], ""Types"": []}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Assemblies
+            #region Invalid Assemblies
 
-                @"{""Types"": []}",
-                @"{""Assemblies"": null, ""Types"": []}",
-                @"{""Assemblies"": [null], ""Types"": []}",
+            @"{""Types"": []}",
+            @"{""Assemblies"": null, ""Types"": []}",
+            @"{""Assemblies"": [null], ""Types"": []}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Types
+            #region Invalid Types
 
-                #region Invalid Type Input
+            #region Invalid Type Input
 
-                @"{""Assemblies"": []}",
-                @"{""Assemblies"": [], ""Types"": null}",
-                @"{""Assemblies"": [], ""Types"": [null]}",
-                @"{""Assemblies"": [], ""Types"": [[]]}",
-                @"{""Assemblies"": [], ""Types"": [[null]]}",
-                @"{""Assemblies"": [], ""Types"": [[""foo""]]}",
+            @"{""Assemblies"": []}",
+            @"{""Assemblies"": [], ""Types"": null}",
+            @"{""Assemblies"": [], ""Types"": [null]}",
+            @"{""Assemblies"": [], ""Types"": [[]]}",
+            @"{""Assemblies"": [], ""Types"": [[null]]}",
+            @"{""Assemblies"": [], ""Types"": [[""foo""]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Simple Types
+            #region Invalid Simple Types
 
-                @"{""Assemblies"": [], ""Types"": [[""::""]]}",
-                @"{""Assemblies"": [], ""Types"": [[""::"", null, 0]]}",
-                @"{""Assemblies"": [], ""Types"": [[""::"", ""Foo"", null]]}",
+            @"{""Assemblies"": [], ""Types"": [[""::""]]}",
+            @"{""Assemblies"": [], ""Types"": [[""::"", null, 0]]}",
+            @"{""Assemblies"": [], ""Types"": [[""::"", ""Foo"", null]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Generic Types
+            #region Invalid Generic Types
 
-                @"{""Assemblies"": [], ""Types"": [[""<>""]]}",
-                @"{""Assemblies"": [], ""Types"": [[""<>"", null, [0]]]}",
-                @"{""Assemblies"": [], ""Types"": [[""<>"", 0, null]]}",
-                @"{""Assemblies"": [], ""Types"": [[""<>"", 0, []]]}",
+            @"{""Assemblies"": [], ""Types"": [[""<>""]]}",
+            @"{""Assemblies"": [], ""Types"": [[""<>"", null, [0]]]}",
+            @"{""Assemblies"": [], ""Types"": [[""<>"", 0, null]]}",
+            @"{""Assemblies"": [], ""Types"": [[""<>"", 0, []]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Array Types
+            #region Invalid Array Types
 
-                @"{""Assemblies"": [], ""Types"": [[""[]""]]}",
-                @"{""Assemblies"": [], ""Types"": [[""[]"", 0, []]]}",
-                @"{""Assemblies"": [], ""Types"": [[""[]"", 0, ""foo""]]}",
+            @"{""Assemblies"": [], ""Types"": [[""[]""]]}",
+            @"{""Assemblies"": [], ""Types"": [[""[]"", 0, []]]}",
+            @"{""Assemblies"": [], ""Types"": [[""[]"", 0, ""foo""]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Structural Types
+            #region Invalid Structural Types
 
-                @"{""Assemblies"": [], ""Types"": [[""{}"", ""0""]]}",
-                @"{""Assemblies"": [], ""Types"": [[""{}"", []]]}",
-                @"{""Assemblies"": [], ""Types"": [[""{}"", [0,1]]]}",
-                @"{""Assemblies"": [], ""Types"": [[""{}"", [""foo"",1,0]]]}",
-                @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}""]]}",
-                @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}"", 0]]}",
-                @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}"", [0]]]}",
-                @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}"", [[]]]]}",
-                @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}"", [], 0]]}",
+            @"{""Assemblies"": [], ""Types"": [[""{}"", ""0""]]}",
+            @"{""Assemblies"": [], ""Types"": [[""{}"", []]]}",
+            @"{""Assemblies"": [], ""Types"": [[""{}"", [0,1]]]}",
+            @"{""Assemblies"": [], ""Types"": [[""{}"", [""foo"",1,0]]]}",
+            @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}""]]}",
+            @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}"", 0]]}",
+            @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}"", [0]]]}",
+            @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}"", [[]]]]}",
+            @"{""Version"": ""0.9.0.0"", ""Assemblies"": [], ""Types"": [[""{;}"", [], 0]]}",
 
-                #endregion
+            #endregion
 
-                #endregion
+            #endregion
 
-                #region Invalid Members
+            #region Invalid Members
 
-                #region Invalid Member Input
+            #region Invalid Member Input
 
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : 0}",
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : [0]}",
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[]]}",
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[0, null]]}",
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""foo"", null]]}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : 0}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : [0]}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[]]}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[0, null]]}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""foo"", null]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Constructor
+            #region Invalid Constructor
 
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""C""]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""C"", 0, 0]]}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""C""]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""C"", 0, 0]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Field
+            #region Invalid Field
 
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""F""]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""F"", 0, 0]]}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""F""]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""F"", 0, 0]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Property
+            #region Invalid Property
 
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""P""]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""P"", 0, 0]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""P"", 0, ""Foo"", 0]]}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""P""]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""P"", 0, 0]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""P"", 0, ""Foo"", 0]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Simple Method
+            #region Invalid Simple Method
 
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""M""]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M"", 0, 0, []]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M"", 0, ""Foo"", 0]]}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""M""]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M"", 0, 0, []]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M"", 0, ""Foo"", 0]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Open Generic Method
+            #region Invalid Open Generic Method
 
-                @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""M`""]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M`"", 0, 0, 0, []]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M`"", 0, ""Foo"", ""0"", []]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M`"", 0, ""Foo"", 0, 0]]}",
+            @"{""Assemblies"": [], ""Types"": [], ""Members"" : [[""M`""]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M`"", 0, 0, 0, []]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M`"", 0, ""Foo"", ""0"", []]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M`"", 0, ""Foo"", 0, 0]]}",
 
-                #endregion
+            #endregion
 
-                #region Invalid Closed Generic Method
+            #region Invalid Closed Generic Method
 
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M<>""]]}",
-                @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M<>"", 0, 0]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M<>""]]}",
+            @"{""Assemblies"": [""Foo""], ""Types"": [[""::"", ""Foo"", 0]], ""Members"" : [[""M<>"", 0, 0]]}",
 
-                #endregion
+            #endregion
 
-                #endregion
-            };
+            #endregion
+        };
 
-            ConstructDomainAndThrow<BonsaiParseException>(exprs);
-        }
+        ConstructDomainAndThrow<BonsaiParseException>(exprs);
+    }
 
-        [TestMethod]
-        public void Domain_Constructor_ThrowsNotSupported()
+    [TestMethod]
+    public void Domain_Constructor_ThrowsNotSupported()
+    {
+        var exprs = new[]
         {
-            var exprs = new[]
-            {
-                @"{""Assemblies"": [], ""Types"": [[""{;}"", [], true]]}",
-            };
+            @"{""Assemblies"": [], ""Types"": [[""{;}"", [], true]]}",
+        };
 
-            ConstructDomainAndThrow<NotSupportedException>(exprs);
-        }
+        ConstructDomainAndThrow<NotSupportedException>(exprs);
+    }
 
-        [TestMethod]
-        public void Domain_AddMember_Exceptions()
+    [TestMethod]
+    public void Domain_AddMember_Exceptions()
+    {
+        var domain = new SerializationDomain(BonsaiVersion.Default);
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => domain.AddMember(member: null));
+        Assert.AreEqual("member", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void Domain_GetMember_Exceptions()
+    {
+        var domain = GetDomain();
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => domain.GetMember(expression: null));
+        Assert.AreEqual("expression", ex.ParamName);
+        Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Null()));
+        Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("-1")));
+        Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("99")));
+    }
+
+    [TestMethod]
+    public void Domain_GetType_Exceptions()
+    {
+        var domain = GetDomain();
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => domain.GetType((Json.Expression)null));
+        Assert.AreEqual("expression", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => domain.GetType((TypeRef)null));
+        Assert.AreEqual("typeRef", ex2.ParamName);
+        Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetType(Json.Expression.Null()));
+        Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetType(Json.Expression.Number("99")));
+    }
+
+    private static DeserializationDomain GetDomain()
+    {
+        var json = (Json.ObjectExpression)Json.Expression.Parse(@"{""Context"": {""Types"": [[""::"", ""System.Int32"", 0], [""::"", ""System.Func`2"", 0], [""<>"", 1, [0, 0]]], ""Assemblies"": [""mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089""], ""Version"": ""0.9.0.0""}, ""Expression"": [""=>"", 2, [""*"", [""$"", 0, 0], ["":"", 2, 0]], [[0, ""x""]]]}");
+        var context = json.Members["Context"];
+        return new DeserializationDomain(context);
+    }
+
+    [TestMethod]
+    public void Domain_SupportsVersion()
+    {
+        var domain = new SerializationDomain(new Version(1, 0, 0, 0));
+        Assert.IsTrue(domain.SupportsVersion(new Version(1, 0)));
+        Assert.IsTrue(domain.SupportsVersion(new Version(0, 9)));
+        Assert.IsFalse(domain.SupportsVersion(new Version(2, 0)));
+    }
+
+    private static void ConstructDomainAndThrow<T>(IEnumerable<string> jsonExpressions)
+        where T : Exception
+    {
+        foreach (var expr in jsonExpressions)
         {
-            var domain = new SerializationDomain(BonsaiVersion.Default);
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => domain.AddMember(member: null));
-            Assert.AreEqual("member", ex.ParamName);
-        }
-
-        [TestMethod]
-        public void Domain_GetMember_Exceptions()
-        {
-            var domain = GetDomain();
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => domain.GetMember(expression: null));
-            Assert.AreEqual("expression", ex.ParamName);
-            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Null()));
-            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("-1")));
-            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetMember(Json.Expression.Number("99")));
-        }
-
-        [TestMethod]
-        public void Domain_GetType_Exceptions()
-        {
-            var domain = GetDomain();
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => domain.GetType((Json.Expression)null));
-            Assert.AreEqual("expression", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => domain.GetType((TypeRef)null));
-            Assert.AreEqual("typeRef", ex2.ParamName);
-            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetType(Json.Expression.Null()));
-            Assert.ThrowsExactly<BonsaiParseException>(() => domain.GetType(Json.Expression.Number("99")));
-        }
-
-        private static DeserializationDomain GetDomain()
-        {
-            var json = (Json.ObjectExpression)Json.Expression.Parse(@"{""Context"": {""Types"": [[""::"", ""System.Int32"", 0], [""::"", ""System.Func`2"", 0], [""<>"", 1, [0, 0]]], ""Assemblies"": [""mscorlib, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089""], ""Version"": ""0.9.0.0""}, ""Expression"": [""=>"", 2, [""*"", [""$"", 0, 0], ["":"", 2, 0]], [[0, ""x""]]]}");
-            var context = json.Members["Context"];
-            return new DeserializationDomain(context);
-        }
-
-        [TestMethod]
-        public void Domain_SupportsVersion()
-        {
-            var domain = new SerializationDomain(new Version(1, 0, 0, 0));
-            Assert.IsTrue(domain.SupportsVersion(new Version(1, 0)));
-            Assert.IsTrue(domain.SupportsVersion(new Version(0, 9)));
-            Assert.IsFalse(domain.SupportsVersion(new Version(2, 0)));
-        }
-
-        private static void ConstructDomainAndThrow<T>(IEnumerable<string> jsonExpressions)
-            where T : Exception
-        {
-            foreach (var expr in jsonExpressions)
-            {
-                var json = Json.Expression.Parse(expr, ensureTopLevelObjectOrArray: false);
-                Assert.ThrowsExactly<T>(() => new DeserializationDomain(json));
-            }
+            var json = Json.Expression.Parse(expr, ensureTopLevelObjectOrArray: false);
+            Assert.ThrowsExactly<T>(() => new DeserializationDomain(json));
         }
     }
 }

@@ -10,25 +10,24 @@
 
 using System.Runtime.ExceptionServices;
 
-namespace System.Memory
+namespace System.Memory;
+
+internal class ValueOrErrorError<T> : IValueOrError<T>
 {
-    internal class ValueOrErrorError<T> : IValueOrError<T>
+    private readonly ExceptionDispatchInfo _error;
+
+    public ValueOrErrorError(ExceptionDispatchInfo error) => _error = error;
+
+    public ValueOrErrorKind Kind => ValueOrErrorKind.Error;
+
+    public T Value
     {
-        private readonly ExceptionDispatchInfo _error;
-
-        public ValueOrErrorError(ExceptionDispatchInfo error) => _error = error;
-
-        public ValueOrErrorKind Kind => ValueOrErrorKind.Error;
-
-        public T Value
+        get
         {
-            get
-            {
-                _error.Throw();
-                return default;
-            }
+            _error.Throw();
+            return default;
         }
-
-        public Exception Exception => _error.SourceException;
     }
+
+    public Exception Exception => _error.SourceException;
 }

@@ -11,33 +11,32 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace Pearls.Reaqtor.CSE
+namespace Pearls.Reaqtor.CSE;
+
+/// <summary>
+/// Registry for known resources.
+/// </summary>
+internal class Registry : Dictionary<string, Entry>
+{
+}
+
+/// <summary>
+/// Entry representing a known resource in the registry.
+/// </summary>
+internal struct Entry
 {
     /// <summary>
-    /// Registry for known resources.
+    /// Gets a Boolean indicating whether the resource can be shared without duplication of side-effects.
     /// </summary>
-    internal class Registry : Dictionary<string, Entry>
-    {
-    }
+    public bool CanShare; // omitted fine-grained classification (pure, stateless, hot)
 
     /// <summary>
-    /// Entry representing a known resource in the registry.
+    /// Gets a Boolean indicating whether the resource is a subject.
     /// </summary>
-    internal struct Entry
-    {
-        /// <summary>
-        /// Gets a Boolean indicating whether the resource can be shared without duplication of side-effects.
-        /// </summary>
-        public bool CanShare; // omitted fine-grained classification (pure, stateless, hot)
+    public bool IsSubject; // omitted partitioning of registry
 
-        /// <summary>
-        /// Gets a Boolean indicating whether the resource is a subject.
-        /// </summary>
-        public bool IsSubject; // omitted partitioning of registry
-
-        /// <summary>
-        /// Gets the expression representation of the known resource.
-        /// </summary>
-        public Expression Expression;
-    }
+    /// <summary>
+    /// Gets the expression representation of the known resource.
+    /// </summary>
+    public Expression Expression;
 }

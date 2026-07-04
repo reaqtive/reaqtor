@@ -16,106 +16,105 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Tests.System.Linq.Expressions.Bonsai;
 
-namespace Tests.System.Linq.Expressions
+namespace Tests.System.Linq.Expressions;
+
+[TestClass]
+public class ExpressionSlimToExpressionConverterTests : TestBase
 {
-    [TestClass]
-    public class ExpressionSlimToExpressionConverterTests : TestBase
+    [TestMethod]
+    public void ExpressionSlimToExpressionConverter_NullArgument()
     {
-        [TestMethod]
-        public void ExpressionSlimToExpressionConverter_NullArgument()
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionSlimToExpressionConverter(typeSpace: null));
+        Assert.AreEqual("typeSpace", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionSlimToExpressionConverter(new InvertedTypeSpace(), factory: null));
+        Assert.AreEqual("factory", ex2.ParamName);
+    }
+
+    [TestMethod]
+    public void ExpressionSlimToExpressionConverter_BaseClass()
+    {
+        new MyConverter().TestBase();
+    }
+
+    [TestMethod]
+    public void ExpressionSlimToExpressionConverter_Constant_Null()
+    {
+        var objNull = ObjectSlim.Create(value: null, typeof(object).ToTypeSlim(), typeof(object));
+        var strNull = ObjectSlim.Create(value: null, typeof(string).ToTypeSlim(), typeof(string));
+
+        var n1 = ExpressionSlim.Constant(objNull);
+        var n2 = ExpressionSlim.Constant(strNull, typeof(string).ToTypeSlim());
+
+        var c1 = (ConstantExpression)n1.ToExpression();
+        var c2 = (ConstantExpression)n2.ToExpression();
+
+        Assert.IsNull(c1.Value);
+        Assert.AreEqual(typeof(object), c1.Type);
+
+        Assert.IsNull(c2.Value);
+        Assert.AreEqual(typeof(string), c2.Type);
+    }
+
+    [TestMethod]
+    public void ExpressionSlimToExpressionConverter_Throw()
+    {
+        var ex = new Exception();
+
+        var conv = new ExpressionSlimToExpressionConverter();
+
         {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionSlimToExpressionConverter(typeSpace: null));
-            Assert.AreEqual("typeSpace", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => new ExpressionSlimToExpressionConverter(new InvertedTypeSpace(), factory: null));
-            Assert.AreEqual("factory", ex2.ParamName);
+            var t = ExpressionSlim.Throw(Expression.Constant(ex).ToExpressionSlim());
+            var e = conv.Visit(t);
+
+            Assert.AreEqual(ExpressionType.Throw, e.NodeType);
+
+            var u = (UnaryExpression)e;
+            Assert.AreEqual(typeof(void), u.Type);
+
+            Assert.AreEqual(ExpressionType.Constant, u.Operand.NodeType);
+            var c = (ConstantExpression)u.Operand;
+            Assert.AreSame(ex, c.Value);
         }
 
-        [TestMethod]
-        public void ExpressionSlimToExpressionConverter_BaseClass()
         {
-            new MyConverter().TestBase();
+            var t = ExpressionSlim.Throw(Expression.Constant(ex).ToExpressionSlim(), typeof(int).ToTypeSlim());
+            var e = conv.Visit(t);
+
+            Assert.AreEqual(ExpressionType.Throw, e.NodeType);
+
+            var u = (UnaryExpression)e;
+            Assert.AreEqual(typeof(int), u.Type);
+
+            Assert.AreEqual(ExpressionType.Constant, u.Operand.NodeType);
+            var c = (ConstantExpression)u.Operand;
+            Assert.AreSame(ex, c.Value);
         }
 
-        [TestMethod]
-        public void ExpressionSlimToExpressionConverter_Constant_Null()
         {
-            var objNull = ObjectSlim.Create(value: null, typeof(object).ToTypeSlim(), typeof(object));
-            var strNull = ObjectSlim.Create(value: null, typeof(string).ToTypeSlim(), typeof(string));
+            var t = ExpressionSlim.MakeUnary(ExpressionType.Throw, Expression.Constant(ex).ToExpressionSlim(), type: null);
+            var e = conv.Visit(t);
 
-            var n1 = ExpressionSlim.Constant(objNull);
-            var n2 = ExpressionSlim.Constant(strNull, typeof(string).ToTypeSlim());
+            Assert.AreEqual(ExpressionType.Throw, e.NodeType);
 
-            var c1 = (ConstantExpression)n1.ToExpression();
-            var c2 = (ConstantExpression)n2.ToExpression();
+            var u = (UnaryExpression)e;
+            Assert.AreEqual(typeof(void), u.Type);
 
-            Assert.IsNull(c1.Value);
-            Assert.AreEqual(typeof(object), c1.Type);
+            Assert.AreEqual(ExpressionType.Constant, u.Operand.NodeType);
+            var c = (ConstantExpression)u.Operand;
+            Assert.AreSame(ex, c.Value);
+        }
+    }
 
-            Assert.IsNull(c2.Value);
-            Assert.AreEqual(typeof(string), c2.Type);
+    private sealed class MyConverter : ExpressionSlimToExpressionConverter
+    {
+        public MyConverter()
+            : base()
+        {
         }
 
-        [TestMethod]
-        public void ExpressionSlimToExpressionConverter_Throw()
+        public void TestBase()
         {
-            var ex = new Exception();
-
-            var conv = new ExpressionSlimToExpressionConverter();
-
-            {
-                var t = ExpressionSlim.Throw(Expression.Constant(ex).ToExpressionSlim());
-                var e = conv.Visit(t);
-
-                Assert.AreEqual(ExpressionType.Throw, e.NodeType);
-
-                var u = (UnaryExpression)e;
-                Assert.AreEqual(typeof(void), u.Type);
-
-                Assert.AreEqual(ExpressionType.Constant, u.Operand.NodeType);
-                var c = (ConstantExpression)u.Operand;
-                Assert.AreSame(ex, c.Value);
-            }
-
-            {
-                var t = ExpressionSlim.Throw(Expression.Constant(ex).ToExpressionSlim(), typeof(int).ToTypeSlim());
-                var e = conv.Visit(t);
-
-                Assert.AreEqual(ExpressionType.Throw, e.NodeType);
-
-                var u = (UnaryExpression)e;
-                Assert.AreEqual(typeof(int), u.Type);
-
-                Assert.AreEqual(ExpressionType.Constant, u.Operand.NodeType);
-                var c = (ConstantExpression)u.Operand;
-                Assert.AreSame(ex, c.Value);
-            }
-
-            {
-                var t = ExpressionSlim.MakeUnary(ExpressionType.Throw, Expression.Constant(ex).ToExpressionSlim(), type: null);
-                var e = conv.Visit(t);
-
-                Assert.AreEqual(ExpressionType.Throw, e.NodeType);
-
-                var u = (UnaryExpression)e;
-                Assert.AreEqual(typeof(void), u.Type);
-
-                Assert.AreEqual(ExpressionType.Constant, u.Operand.NodeType);
-                var c = (ConstantExpression)u.Operand;
-                Assert.AreSame(ex, c.Value);
-            }
-        }
-
-        private sealed class MyConverter : ExpressionSlimToExpressionConverter
-        {
-            public MyConverter()
-                : base()
-            {
-            }
-
-            public void TestBase()
-            {
-                Assert.IsNotNull(base.TypeSpace);
-            }
+            Assert.IsNotNull(base.TypeSpace);
         }
     }
 }

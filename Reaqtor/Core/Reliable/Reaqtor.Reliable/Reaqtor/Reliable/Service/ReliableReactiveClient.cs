@@ -7,23 +7,22 @@ using System;
 using Reaqtor.Reliable.Engine;
 using Reaqtor.Reliable.Expressions;
 
-namespace Reaqtor.Reliable.Service
+namespace Reaqtor.Reliable.Service;
+
+public class ReliableReactiveClient : ReliableReactiveClientBase
 {
-    public class ReliableReactiveClient : ReliableReactiveClientBase
+    public ReliableReactiveClient(IReliableReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
+        : base(expressionServices)
     {
-        public ReliableReactiveClient(IReliableReactiveClientEngineProvider provider, IReactiveExpressionServices expressionServices)
-            : base(expressionServices)
-        {
-            ArgumentNullException.ThrowIfNull(provider);
+        ArgumentNullException.ThrowIfNull(provider);
 
-            Provider = new ReliableQueryProvider(provider, expressionServices);
+        Provider = new ReliableQueryProvider(provider, expressionServices);
 
-            // TODO: Re-enable this.
-            //var thisParameter = ResourceNaming.GetThisReferenceExpression(this);
-            //expressionServices.RegisterObject(this, thisParameter);
-            //expressionServices.RegisterObject(_provider, Expression.Property(thisParameter, (PropertyInfo)ReflectionHelpers.InfoOf((IReactiveClient c) => c.Provider)));
-        }
-
-        public override IReliableQueryProvider Provider { get; }
+        // TODO: Re-enable this.
+        //var thisParameter = ResourceNaming.GetThisReferenceExpression(this);
+        //expressionServices.RegisterObject(this, thisParameter);
+        //expressionServices.RegisterObject(_provider, Expression.Property(thisParameter, (PropertyInfo)ReflectionHelpers.InfoOf((IReactiveClient c) => c.Provider)));
     }
+
+    public override IReliableQueryProvider Provider { get; }
 }

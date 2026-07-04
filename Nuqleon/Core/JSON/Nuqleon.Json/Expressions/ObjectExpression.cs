@@ -12,58 +12,57 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 
-namespace Nuqleon.Json.Expressions
+namespace Nuqleon.Json.Expressions;
+
+/// <summary>
+/// Expression tree node representing a JSON object.
+/// </summary>
+public sealed class ObjectExpression : Expression
 {
     /// <summary>
-    /// Expression tree node representing a JSON object.
+    /// Creates a new object expression tree node object with the given members.
     /// </summary>
-    public sealed class ObjectExpression : Expression
+    /// <param name="members">Object members.</param>
+    internal ObjectExpression(IDictionary<string, Expression> members) => Members = new ReadOnlyDictionary<string, Expression>(members);
+
+    /// <summary>
+    /// Gets the members defined on the object.
+    /// </summary>
+    public IReadOnlyDictionary<string, Expression> Members { get; }
+
+    /// <summary>
+    /// Gets the type of the JSON expression tree node.
+    /// </summary>
+    public override ExpressionType NodeType => ExpressionType.Object;
+
+    /// <summary>
+    /// Appends the JSON fragment corresponding to the expression tree node to the specified string builder.
+    /// </summary>
+    /// <param name="builder">The string builder to append to.</param>
+    internal override void ToStringCore(StringBuilder builder)
     {
-        /// <summary>
-        /// Creates a new object expression tree node object with the given members.
-        /// </summary>
-        /// <param name="members">Object members.</param>
-        internal ObjectExpression(IDictionary<string, Expression> members) => Members = new ReadOnlyDictionary<string, Expression>(members);
+        builder.Append('{');
 
-        /// <summary>
-        /// Gets the members defined on the object.
-        /// </summary>
-        public IReadOnlyDictionary<string, Expression> Members { get; }
+        var n = Members.Count;
 
-        /// <summary>
-        /// Gets the type of the JSON expression tree node.
-        /// </summary>
-        public override ExpressionType NodeType => ExpressionType.Object;
-
-        /// <summary>
-        /// Appends the JSON fragment corresponding to the expression tree node to the specified string builder.
-        /// </summary>
-        /// <param name="builder">The string builder to append to.</param>
-        internal override void ToStringCore(StringBuilder builder)
+        if (n > 0)
         {
-            builder.Append('{');
-
-            var n = Members.Count;
-
-            if (n > 0)
+            var i = 0;
+            foreach (var member in Members)
             {
-                var i = 0;
-                foreach (var member in Members)
+                builder.AppendJsonString(member.Key);
+                builder.Append(':');
+                member.Value.ToStringCore(builder);
+
+                if (i < n - 1)
                 {
-                    builder.AppendJsonString(member.Key);
-                    builder.Append(':');
-                    member.Value.ToStringCore(builder);
-
-                    if (i < n - 1)
-                    {
-                        builder.Append(',');
-                    }
-
-                    i++;
+                    builder.Append(',');
                 }
-            }
 
-            builder.Append('}');
+                i++;
+            }
         }
+
+        builder.Append('}');
     }
 }

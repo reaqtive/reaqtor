@@ -10,19 +10,18 @@
 
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+internal static class Errors
 {
-    internal static class Errors
+    public static Exception NotSupportedByNarrowVisitor(object node)
     {
-        public static Exception NotSupportedByNarrowVisitor(object node)
-        {
-            var type = node is Expression expr ? expr.NodeType.ToString() : node.GetType().Name;
+        var type = node is Expression expr ? expr.NodeType.ToString() : node.GetType().Name;
 
-            return new NotSupportedException("Expression of type " + type + " is not supported.");
-        }
-
-        public static Exception InvalidChildNodeCount() => new InvalidOperationException("The number of children in the updated tree doesn't match the expected number.");
-
-        public static Exception NotSupportedNode(ExpressionType type) => new NotSupportedException("Expression of type " + type + " is not supported.");
+        return new NotSupportedException("Expression of type " + type + " is not supported.");
     }
+
+    public static Exception InvalidChildNodeCount() => new InvalidOperationException("The number of children in the updated tree doesn't match the expected number.");
+
+    public static Exception NotSupportedNode(ExpressionType type) => new NotSupportedException("Expression of type " + type + " is not supported.");
 }

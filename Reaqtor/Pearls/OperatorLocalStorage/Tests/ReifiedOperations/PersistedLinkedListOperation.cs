@@ -12,67 +12,66 @@ using System.Collections.Generic;
 
 using Reaqtive.Storage;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal interface IPersistedLinkedListOperationFactory<T> : ILinkedListOperationFactory<T>, IPersistedOperationFactory<IPersistedLinkedList<T>>
 {
-    internal interface IPersistedLinkedListOperationFactory<T> : ILinkedListOperationFactory<T>, IPersistedOperationFactory<IPersistedLinkedList<T>>
+}
+
+internal static class PersistedLinkedListOperation
+{
+    public static IPersistedLinkedListOperationFactory<T> WithType<T>() => new PersistedLinkedListOperationFactory<T>();
+
+    private sealed class PersistedLinkedListOperationFactory<T> : IPersistedLinkedListOperationFactory<T>
     {
-    }
+        public AddCollectionOperation<T> Add(T value) => LinkedListOperation.Add(value);
 
-    internal static class PersistedLinkedListOperation
-    {
-        public static IPersistedLinkedListOperationFactory<T> WithType<T>() => new PersistedLinkedListOperationFactory<T>();
+        public AddAfterLinkedListOperation<T> AddAfter(ILinkedListNode<T> node, T value) => LinkedListOperation.AddAfter<T>(node, value);
 
-        private sealed class PersistedLinkedListOperationFactory<T> : IPersistedLinkedListOperationFactory<T>
-        {
-            public AddCollectionOperation<T> Add(T value) => LinkedListOperation.Add(value);
+        public AddBeforeLinkedListOperation<T> AddBefore(ILinkedListNode<T> node, T value) => LinkedListOperation.AddBefore<T>(node, value);
 
-            public AddAfterLinkedListOperation<T> AddAfter(ILinkedListNode<T> node, T value) => LinkedListOperation.AddAfter<T>(node, value);
+        public AddFirstLinkedListOperation<T> AddFirst(T value) => LinkedListOperation.AddFirst<T>(value);
 
-            public AddBeforeLinkedListOperation<T> AddBefore(ILinkedListNode<T> node, T value) => LinkedListOperation.AddBefore<T>(node, value);
+        public AddLastLinkedListOperation<T> AddLast(T value) => LinkedListOperation.AddLast<T>(value);
 
-            public AddFirstLinkedListOperation<T> AddFirst(T value) => LinkedListOperation.AddFirst<T>(value);
+        public ClearCollectionOperation<T> Clear() => LinkedListOperation.Clear<T>();
 
-            public AddLastLinkedListOperation<T> AddLast(T value) => LinkedListOperation.AddLast<T>(value);
+        public ContainsCollectionOperation<T> Contains(T value) => LinkedListOperation.Contains(value);
 
-            public ClearCollectionOperation<T> Clear() => LinkedListOperation.Clear<T>();
+        public CopyToCollectionOperation<T> CopyTo(T[] array, int index) => LinkedListOperation.CopyTo(array, index);
 
-            public ContainsCollectionOperation<T> Contains(T value) => LinkedListOperation.Contains(value);
+        public CountReadOnlyCollectionOperation<T> Count() => LinkedListOperation.Count<T>();
 
-            public CopyToCollectionOperation<T> CopyTo(T[] array, int index) => LinkedListOperation.CopyTo(array, index);
+        public EnumerateEnumerableOperation<T> Enumerate() => LinkedListOperation.Enumerate<T>();
 
-            public CountReadOnlyCollectionOperation<T> Count() => LinkedListOperation.Count<T>();
+        public FindLinkedListOperation<T> Find(T value) => LinkedListOperation.Find<T>(value);
 
-            public EnumerateEnumerableOperation<T> Enumerate() => LinkedListOperation.Enumerate<T>();
+        public FindLastLinkedListOperation<T> FindLast(T value) => LinkedListOperation.FindLast<T>(value);
 
-            public FindLinkedListOperation<T> Find(T value) => LinkedListOperation.Find<T>(value);
+        public FirstLinkedListOperation<T> First() => LinkedListOperation.First<T>();
 
-            public FindLastLinkedListOperation<T> FindLast(T value) => LinkedListOperation.FindLast<T>(value);
+        FirstReadOnlyLinkedListOperation<T> IReadOnlyLinkedListOperationFactory<T>.First() => ReadOnlyLinkedListOperation.First<T>();
 
-            public FirstLinkedListOperation<T> First() => LinkedListOperation.First<T>();
+        public GetIdPersistedOperation<IPersistedLinkedList<T>> GetId() => GetId<IPersistedLinkedList<T>>();
 
-            FirstReadOnlyLinkedListOperation<T> IReadOnlyLinkedListOperationFactory<T>.First() => ReadOnlyLinkedListOperation.First<T>();
+        public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
 
-            public GetIdPersistedOperation<IPersistedLinkedList<T>> GetId() => GetId<IPersistedLinkedList<T>>();
+        public IsReadOnlyCollectionOperation<T> IsReadOnly() => LinkedListOperation.IsReadOnly<T>();
 
-            public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
+        public LastLinkedListOperation<T> Last() => LinkedListOperation.Last<T>();
 
-            public IsReadOnlyCollectionOperation<T> IsReadOnly() => LinkedListOperation.IsReadOnly<T>();
+        LastReadOnlyLinkedListOperation<T> IReadOnlyLinkedListOperationFactory<T>.Last() => ReadOnlyLinkedListOperation.Last<T>();
 
-            public LastLinkedListOperation<T> Last() => LinkedListOperation.Last<T>();
+        public RemoveCollectionOperation<T> Remove(T value) => LinkedListOperation.Remove(value);
 
-            LastReadOnlyLinkedListOperation<T> IReadOnlyLinkedListOperationFactory<T>.Last() => ReadOnlyLinkedListOperation.Last<T>();
+        public RemoveLinkedListOperation<T> Remove(ILinkedListNode<T> node) => LinkedListOperation.Remove<T>(node);
 
-            public RemoveCollectionOperation<T> Remove(T value) => LinkedListOperation.Remove(value);
+        public RemoveFirstLinkedListOperation<T> RemoveFirst() => LinkedListOperation.RemoveFirst<T>();
 
-            public RemoveLinkedListOperation<T> Remove(ILinkedListNode<T> node) => LinkedListOperation.Remove<T>(node);
+        public RemoveLastLinkedListOperation<T> RemoveLast() => LinkedListOperation.RemoveLast<T>();
 
-            public RemoveFirstLinkedListOperation<T> RemoveFirst() => LinkedListOperation.RemoveFirst<T>();
+        public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
 
-            public RemoveLastLinkedListOperation<T> RemoveLast() => LinkedListOperation.RemoveLast<T>();
-
-            public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
-
-            public ThisResultOperation<IPersistedLinkedList<T>> This() => This<IPersistedLinkedList<T>>();
-        }
+        public ThisResultOperation<IPersistedLinkedList<T>> This() => This<IPersistedLinkedList<T>>();
     }
 }

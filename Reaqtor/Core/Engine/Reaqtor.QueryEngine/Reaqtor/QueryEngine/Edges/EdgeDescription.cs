@@ -7,23 +7,22 @@ using System.Linq.Expressions;
 
 using Nuqleon.DataModel;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+internal class EdgeDescription
 {
-    internal class EdgeDescription
-    {
-        [Mapping("reaqtor://engine/edge_description/expression")]
-        public Expression Expression { get; set; }
+    [Mapping("reaqtor://engine/edge_description/expression")]
+    public Expression Expression { get; set; }
 
-        [Mapping("reaqtor://engine/edge_description/internal_uri")]
-        public Uri InternalUri { get; set; }
+    [Mapping("reaqtor://engine/edge_description/internal_uri")]
+    public Uri InternalUri { get; set; }
 
-        [Mapping("reaqtor://engine/edge_description/internal_subscription_uri")]
-        public Uri InternalSubscriptionUri { get; set; }
+    [Mapping("reaqtor://engine/edge_description/internal_subscription_uri")]
+    public Uri InternalSubscriptionUri { get; set; }
 
-        [Mapping("reaqtor://engine/edge_description/external_uri")]
-        public Uri ExternalUri { get; set; }
+    [Mapping("reaqtor://engine/edge_description/external_uri")]
+    public Uri ExternalUri { get; set; }
 
-        [Mapping("reaqtor://engine/edge_description/external_subscription_uri")]
-        public Uri ExternalSubscriptionUri { get; set; }
-    }
+    [Mapping("reaqtor://engine/edge_description/external_subscription_uri")]
+    public Uri ExternalSubscriptionUri { get; set; }
 }

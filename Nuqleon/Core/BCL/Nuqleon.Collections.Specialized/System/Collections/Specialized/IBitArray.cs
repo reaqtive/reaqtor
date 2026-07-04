@@ -8,33 +8,32 @@
 //   PS - 10/17/2014 - Created this type.
 //
 
-namespace System.Collections.Specialized
+namespace System.Collections.Specialized;
+
+/// <summary>
+/// An interface for a minimal array of bits.
+/// </summary>
+public interface IBitArray
 {
     /// <summary>
-    /// An interface for a minimal array of bits.
+    /// Gets the number of bits in the bit array.
     /// </summary>
-    public interface IBitArray
+    int Count { get; }
+
+    /// <summary>
+    /// Gets or sets the bit at position index.
+    /// </summary>
+    /// <param name="index">The index of the bit.</param>
+    /// <returns>The bit at position index.</returns>
+    bool this[int index]
     {
-        /// <summary>
-        /// Gets the number of bits in the bit array.
-        /// </summary>
-        int Count { get; }
-
-        /// <summary>
-        /// Gets or sets the bit at position index.
-        /// </summary>
-        /// <param name="index">The index of the bit.</param>
-        /// <returns>The bit at position index.</returns>
-        bool this[int index]
-        {
-            get;
-            set;
-        }
-
-        /// <summary>
-        /// Sets all the bits to value.
-        /// </summary>
-        /// <param name="value">The value to set all the bits to.</param>
-        void SetAll(bool value);
+        get;
+        set;
     }
+
+    /// <summary>
+    /// Sets all the bits to value.
+    /// </summary>
+    /// <param name="value">The value to set all the bits to.</param>
+    void SetAll(bool value);
 }

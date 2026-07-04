@@ -10,10 +10,9 @@
 
 using System;
 
-namespace PartitionedSubject
+namespace PartitionedSubject;
+
+internal static class Sentinels<T>
 {
-    internal static class Sentinels<T>
-    {
-        public static readonly IObserver<T> Empty = new NopObserver<T>();
-    }
+    public static readonly IObserver<T> Empty = new NopObserver<T>();
 }

@@ -8,12 +8,11 @@
 // BD - June 2013 - Created this file.
 //
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for a subscription represented by an expression tree.
+/// </summary>
+public interface IAsyncReactiveQubscription : IAsyncReactiveSubscription, IAsyncReactiveExpressible
 {
-    /// <summary>
-    /// Interface for a subscription represented by an expression tree.
-    /// </summary>
-    public interface IAsyncReactiveQubscription : IAsyncReactiveSubscription, IAsyncReactiveExpressible
-    {
-    }
 }

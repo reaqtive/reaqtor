@@ -14,14 +14,13 @@ using System.Threading.Tasks;
 
 using Reaqtor;
 
-namespace Tests.Reaqtor.Expressions.Core
+namespace Tests.Reaqtor.Expressions.Core;
+
+public sealed class MyLocalAsyncObserver<T> : AsyncReactiveObserverBase<T>
 {
-    public sealed class MyLocalAsyncObserver<T> : AsyncReactiveObserverBase<T>
-    {
-        protected override Task OnNextAsyncCore(T value, CancellationToken token) => throw new NotImplementedException();
+    protected override Task OnNextAsyncCore(T value, CancellationToken token) => throw new NotImplementedException();
 
-        protected override Task OnErrorAsyncCore(Exception error, CancellationToken token) => throw new NotImplementedException();
+    protected override Task OnErrorAsyncCore(Exception error, CancellationToken token) => throw new NotImplementedException();
 
-        protected override Task OnCompletedAsyncCore(CancellationToken token) => throw new NotImplementedException();
-    }
+    protected override Task OnCompletedAsyncCore(CancellationToken token) => throw new NotImplementedException();
 }

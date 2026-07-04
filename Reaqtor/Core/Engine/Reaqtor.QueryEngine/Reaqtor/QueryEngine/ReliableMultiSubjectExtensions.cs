@@ -4,23 +4,22 @@
 
 using Reaqtor.Reliable;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Utility and extension methods for reliable multi-subjects.
+/// </summary>
+internal static class ReliableMultiSubjectExtensions
 {
     /// <summary>
-    /// Utility and extension methods for reliable multi-subjects.
+    /// Creates a reliable observable from a reliable multi-subject.
     /// </summary>
-    internal static class ReliableMultiSubjectExtensions
-    {
-        /// <summary>
-        /// Creates a reliable observable from a reliable multi-subject.
-        /// </summary>
-        /// <typeparam name="TInput">The input type of the subject.</typeparam>
-        /// <typeparam name="TOutput">The output type of the subject.</typeparam>
-        /// <param name="subject">The subject.</param>
-        /// <returns>A reliable observer to the subject.</returns>
-        /// <remarks>
-        /// This method is needed to provide an accessible generic method for calling `CreateObserver()` on a reliable multi-subject.
-        /// </remarks>
-        public static IReliableObserver<TInput> ToReliableObserver<TInput, TOutput>(this IReliableMultiSubject<TInput, TOutput> subject) => subject.CreateObserver();
-    }
+    /// <typeparam name="TInput">The input type of the subject.</typeparam>
+    /// <typeparam name="TOutput">The output type of the subject.</typeparam>
+    /// <param name="subject">The subject.</param>
+    /// <returns>A reliable observer to the subject.</returns>
+    /// <remarks>
+    /// This method is needed to provide an accessible generic method for calling `CreateObserver()` on a reliable multi-subject.
+    /// </remarks>
+    public static IReliableObserver<TInput> ToReliableObserver<TInput, TOutput>(this IReliableMultiSubject<TInput, TOutput> subject) => subject.CreateObserver();
 }

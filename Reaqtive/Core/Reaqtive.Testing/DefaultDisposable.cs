@@ -8,28 +8,27 @@
 
 using System;
 
-namespace Reaqtive.Disposables
+namespace Reaqtive.Disposables;
+
+/// <summary>
+/// Represents a disposable that does nothing on disposal.
+/// </summary>
+internal sealed class DefaultDisposable : IDisposable
 {
     /// <summary>
-    /// Represents a disposable that does nothing on disposal.
+    /// Singleton default disposable.
     /// </summary>
-    internal sealed class DefaultDisposable : IDisposable
+    public static readonly DefaultDisposable Instance = new();
+
+    private DefaultDisposable()
     {
-        /// <summary>
-        /// Singleton default disposable.
-        /// </summary>
-        public static readonly DefaultDisposable Instance = new();
+    }
 
-        private DefaultDisposable()
-        {
-        }
-
-        /// <summary>
-        /// Does nothing.
-        /// </summary>
-        public void Dispose()
-        {
-            // no op
-        }
+    /// <summary>
+    /// Does nothing.
+    /// </summary>
+    public void Dispose()
+    {
+        // no op
     }
 }

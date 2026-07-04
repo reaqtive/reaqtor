@@ -13,56 +13,55 @@ using System.Time;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class VirtualTimeClockTests
 {
-    [TestClass]
-    public class VirtualTimeClockTests
+    [TestMethod]
+    public void VirtualTimeClock_ArgumentChecking()
     {
-        [TestMethod]
-        public void VirtualTimeClock_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new VirtualTimeClock(-1));
-            Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new VirtualTimeClock().Now = -1);
-        }
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new VirtualTimeClock(-1));
+        Assert.ThrowsExactly<ArgumentOutOfRangeException>(() => _ = new VirtualTimeClock().Now = -1);
+    }
 
-        [TestMethod]
-        public void VirtualTimeClock_Assembly()
-        {
-            Type type = typeof(VirtualTimeClock);
-            string assembly = type.Assembly.GetName().Name;
-            Assert.AreEqual("Nuqleon.Time", assembly);
-        }
+    [TestMethod]
+    public void VirtualTimeClock_Assembly()
+    {
+        Type type = typeof(VirtualTimeClock);
+        string assembly = type.Assembly.GetName().Name;
+        Assert.AreEqual("Nuqleon.Time", assembly);
+    }
 
-        [TestMethod]
-        public void VirtualTimeClock_Simple1()
-        {
-            var c = new VirtualTimeClock();
+    [TestMethod]
+    public void VirtualTimeClock_Simple1()
+    {
+        var c = new VirtualTimeClock();
 
-            Assert.AreEqual(0, c.Now);
+        Assert.AreEqual(0, c.Now);
 
-            c.Now += 20;
+        c.Now += 20;
 
-            Assert.AreEqual(20, c.Now);
+        Assert.AreEqual(20, c.Now);
 
-            c.Now -= 10;
+        c.Now -= 10;
 
-            Assert.AreEqual(10, c.Now);
-        }
+        Assert.AreEqual(10, c.Now);
+    }
 
-        [TestMethod]
-        public void VirtualTimeClock_Simple2()
-        {
-            var c = new VirtualTimeClock(10);
+    [TestMethod]
+    public void VirtualTimeClock_Simple2()
+    {
+        var c = new VirtualTimeClock(10);
 
-            Assert.AreEqual(10, c.Now);
+        Assert.AreEqual(10, c.Now);
 
-            c.Now += 20;
+        c.Now += 20;
 
-            Assert.AreEqual(30, c.Now);
+        Assert.AreEqual(30, c.Now);
 
-            c.Now -= 10;
+        c.Now -= 10;
 
-            Assert.AreEqual(20, c.Now);
-        }
+        Assert.AreEqual(20, c.Now);
     }
 }

@@ -5,35 +5,34 @@
 using System;
 using System.Collections.Generic;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Used to specify mappings between quotation types and target types.
+/// </summary>
+public static class QuotedTypeConversionTargets
 {
     /// <summary>
-    /// Used to specify mappings between quotation types and target types.
+    /// Gets an empty conversion map.
     /// </summary>
-    public static class QuotedTypeConversionTargets
+    /// <remarks>
+    /// This is the default and is useful when operators are defined using `new` expressions rather than
+    /// factory methods on some static class.
+    /// </remarks>
+    public static IQuotedTypeConversionTargets Empty { get; } = new Impl(new Dictionary<Type, Type>());
+
+    /// <summary>
+    /// Creates a conversion map from the specified dictionary.
+    /// </summary>
+    /// <param name="typeMap">Dictionary mapping quoted types to non-quoted types.</param>
+    /// <returns>A new conversion map instance.</returns>
+    public static IQuotedTypeConversionTargets From(IReadOnlyDictionary<Type, Type> typeMap)
+        => new Impl(typeMap ?? throw new ArgumentNullException(nameof(typeMap)));
+
+    private sealed class Impl : IQuotedTypeConversionTargets
     {
-        /// <summary>
-        /// Gets an empty conversion map.
-        /// </summary>
-        /// <remarks>
-        /// This is the default and is useful when operators are defined using `new` expressions rather than
-        /// factory methods on some static class.
-        /// </remarks>
-        public static IQuotedTypeConversionTargets Empty { get; } = new Impl(new Dictionary<Type, Type>());
+        public Impl(IReadOnlyDictionary<Type, Type> typeMap) => TypeMap = typeMap;
 
-        /// <summary>
-        /// Creates a conversion map from the specified dictionary.
-        /// </summary>
-        /// <param name="typeMap">Dictionary mapping quoted types to non-quoted types.</param>
-        /// <returns>A new conversion map instance.</returns>
-        public static IQuotedTypeConversionTargets From(IReadOnlyDictionary<Type, Type> typeMap)
-            => new Impl(typeMap ?? throw new ArgumentNullException(nameof(typeMap)));
-
-        private sealed class Impl : IQuotedTypeConversionTargets
-        {
-            public Impl(IReadOnlyDictionary<Type, Type> typeMap) => TypeMap = typeMap;
-
-            public IReadOnlyDictionary<Type, Type> TypeMap { get; }
-        }
+        public IReadOnlyDictionary<Type, Type> TypeMap { get; }
     }
 }

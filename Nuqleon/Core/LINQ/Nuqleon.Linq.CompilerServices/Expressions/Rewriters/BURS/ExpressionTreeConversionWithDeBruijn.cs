@@ -11,97 +11,96 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+internal sealed class ExpressionTreeConversionWithDeBruijn : ExpressionTreeConversion
 {
-    internal sealed class ExpressionTreeConversionWithDeBruijn : ExpressionTreeConversion
+    private readonly Dictionary<ParameterExpression, ExpressionTree<ParameterExpression>> _wildcardMap;
+    private readonly Stack<IList<ParameterExpression>> _environment;
+
+    public ExpressionTreeConversionWithDeBruijn() => _environment = new Stack<IList<ParameterExpression>>();
+
+    public ExpressionTreeConversionWithDeBruijn(Dictionary<ParameterExpression, ExpressionTree<ParameterExpression>> wildcardMap)
+        : this()
     {
-        private readonly Dictionary<ParameterExpression, ExpressionTree<ParameterExpression>> _wildcardMap;
-        private readonly Stack<IList<ParameterExpression>> _environment;
+        _wildcardMap = wildcardMap;
+    }
 
-        public ExpressionTreeConversionWithDeBruijn() => _environment = new Stack<IList<ParameterExpression>>();
+    protected override ExpressionTree VisitLambda<T>(Expression<T> node)
+    {
+        _environment.Push(node.Parameters);
 
-        public ExpressionTreeConversionWithDeBruijn(Dictionary<ParameterExpression, ExpressionTree<ParameterExpression>> wildcardMap)
-            : this()
+        var b = Visit(node.Body);
+
+        _environment.Pop();
+
+        var parameters = node.Parameters.Select(p => (ExpressionTree<ParameterExpression>)new ParameterDeclaration(p)).ToList().AsReadOnly();
+
+        return MakeLambda<T>(node, b, parameters);
+    }
+
+    protected override ExpressionTree<ParameterExpression> MakeParameter(ParameterExpression node)
+    {
+        if (_wildcardMap != null && _wildcardMap.TryGetValue(node, out ExpressionTree<ParameterExpression> res))
         {
-            _wildcardMap = wildcardMap;
+            return res;
         }
 
-        protected override ExpressionTree VisitLambda<T>(Expression<T> node)
+        var scope = 0;
+        foreach (var frame in _environment)
         {
-            _environment.Push(node.Parameters);
+            var index = 0;
 
-            var b = Visit(node.Body);
-
-            _environment.Pop();
-
-            var parameters = node.Parameters.Select(p => (ExpressionTree<ParameterExpression>)new ParameterDeclaration(p)).ToList().AsReadOnly();
-
-            return MakeLambda<T>(node, b, parameters);
-        }
-
-        protected override ExpressionTree<ParameterExpression> MakeParameter(ParameterExpression node)
-        {
-            if (_wildcardMap != null && _wildcardMap.TryGetValue(node, out ExpressionTree<ParameterExpression> res))
+            foreach (var p in frame)
             {
-                return res;
-            }
-
-            var scope = 0;
-            foreach (var frame in _environment)
-            {
-                var index = 0;
-
-                foreach (var p in frame)
+                if (p == node)
                 {
-                    if (p == node)
-                    {
-                        return new DeBruijnParameter(node, scope, index);
-                    }
-
-                    index++;
+                    return new DeBruijnParameter(node, scope, index);
                 }
 
-                scope++;
+                index++;
             }
 
-            return base.MakeParameter(node);
+            scope++;
         }
-    }
 
-    internal sealed class DeBruijnParameter : ExpressionTree<ParameterExpression>
+        return base.MakeParameter(node);
+    }
+}
+
+internal sealed class DeBruijnParameter : ExpressionTree<ParameterExpression>
+{
+    private readonly int _scope;
+    private readonly int _index;
+
+    public DeBruijnParameter(ParameterExpression parameter, int scope, int index)
+        : base(parameter)
     {
-        private readonly int _scope;
-        private readonly int _index;
-
-        public DeBruijnParameter(ParameterExpression parameter, int scope, int index)
-            : base(parameter)
-        {
-            _scope = scope;
-            _index = index;
-        }
-
-        public override bool Equals(object obj) => Equals(obj as ExpressionTreeBase);
-
-        public override bool Equals(ExpressionTreeBase other) => other is DeBruijnParameter dbp && base.Expression.Type == dbp.Expression.Type && _scope == dbp._scope && _index == dbp._index;
-
-        public override int GetHashCode() => base.Expression.Type.GetHashCode() << 16 + _scope << 8 + _index;
-
-        public override string ToStringFormat() => "Parameter[@" + _scope + "." + _index + " : " + Expression.Type.ToCSharpString(useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false) + "]";
+        _scope = scope;
+        _index = index;
     }
 
-    internal sealed class ParameterDeclaration : ExpressionTree<ParameterExpression>
+    public override bool Equals(object obj) => Equals(obj as ExpressionTreeBase);
+
+    public override bool Equals(ExpressionTreeBase other) => other is DeBruijnParameter dbp && base.Expression.Type == dbp.Expression.Type && _scope == dbp._scope && _index == dbp._index;
+
+    public override int GetHashCode() => base.Expression.Type.GetHashCode() << 16 + _scope << 8 + _index;
+
+    public override string ToStringFormat() => "Parameter[@" + _scope + "." + _index + " : " + Expression.Type.ToCSharpString(useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false) + "]";
+}
+
+internal sealed class ParameterDeclaration : ExpressionTree<ParameterExpression>
+{
+    public ParameterDeclaration(ParameterExpression parameter)
+        : base(parameter)
     {
-        public ParameterDeclaration(ParameterExpression parameter)
-            : base(parameter)
-        {
-        }
-
-        public override bool Equals(object obj) => Equals(obj as ExpressionTreeBase);
-
-        public override bool Equals(ExpressionTreeBase other) => other is ParameterDeclaration pd && base.Expression.Type == pd.Expression.Type;
-
-        public override int GetHashCode() => base.Expression.Type.GetHashCode();
-
-        public override string ToStringFormat() => "Parameter[" + Expression.Type.ToCSharpString(useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false) + "]";
     }
+
+    public override bool Equals(object obj) => Equals(obj as ExpressionTreeBase);
+
+    public override bool Equals(ExpressionTreeBase other) => other is ParameterDeclaration pd && base.Expression.Type == pd.Expression.Type;
+
+    public override int GetHashCode() => base.Expression.Type.GetHashCode();
+
+    public override string ToStringFormat() => "Parameter[" + Expression.Type.ToCSharpString(useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false) + "]";
 }

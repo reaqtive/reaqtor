@@ -4,25 +4,24 @@
 
 using System;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class Never<TResult> : SubscribableBase<TResult>
 {
-    internal sealed class Never<TResult> : SubscribableBase<TResult>
+    protected override ISubscription SubscribeCore(IObserver<TResult> observer)
     {
-        protected override ISubscription SubscribeCore(IObserver<TResult> observer)
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<Never<TResult>, TResult>
+    {
+        public _(Never<TResult> parent, IObserver<TResult> observer)
+            : base(parent, observer)
         {
-            return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<Never<TResult>, TResult>
-        {
-            public _(Never<TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
-            {
-            }
+        public override string Name => "rc:Never";
 
-            public override string Name => "rc:Never";
-
-            public override Version Version => Versioning.v1;
-        }
+        public override Version Version => Versioning.v1;
     }
 }

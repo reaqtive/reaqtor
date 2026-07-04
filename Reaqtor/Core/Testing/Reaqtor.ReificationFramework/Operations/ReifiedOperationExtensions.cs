@@ -12,431 +12,430 @@ using System.Threading.Tasks;
 
 using Reaqtor.TestingFramework;
 
-namespace Reaqtor.ReificationFramework
+namespace Reaqtor.ReificationFramework;
+
+/// <summary>
+/// Helper methods to work with reified operations.
+/// </summary>
+public static class ReifiedOperationExtensions
 {
     /// <summary>
-    /// Helper methods to work with reified operations.
+    /// Converts a set of query engine operations to a set of reified operations.
     /// </summary>
-    public static class ReifiedOperationExtensions
+    /// <param name="operations">The query engine operations.</param>
+    /// <returns>The query engine operations as reified operations.</returns>
+    public static IEnumerable<ReifiedOperation> AsReified(this IEnumerable<QueryEngineOperation> operations)
     {
-        /// <summary>
-        /// Converts a set of query engine operations to a set of reified operations.
-        /// </summary>
-        /// <param name="operations">The query engine operations.</param>
-        /// <returns>The query engine operations as reified operations.</returns>
-        public static IEnumerable<ReifiedOperation> AsReified(this IEnumerable<QueryEngineOperation> operations)
+        ArgumentNullException.ThrowIfNull(operations);
+
+        return operations.Select<QueryEngineOperation, ReifiedOperation>(o => o);
+    }
+
+    /// <summary>
+    /// Converts a set of service operations to a set of reified operations.
+    /// </summary>
+    /// <param name="operations">The service operations.</param>
+    /// <returns>The service operations as reified operations.</returns>
+    public static IEnumerable<ReifiedOperation> AsReified(this IEnumerable<ServiceOperation> operations)
+    {
+        ArgumentNullException.ThrowIfNull(operations);
+
+        return operations.Select<ServiceOperation, ReifiedOperation>(o => o);
+    }
+
+    /// <summary>
+    /// Converts a query engine operation to a reified operation.
+    /// </summary>
+    /// <param name="operation">The query engine operation.</param>
+    /// <returns>The query engine operations as a reified operation.</returns>
+    public static ReifiedOperation AsReified(this QueryEngineOperation operation)
+    {
+        return operation;
+    }
+
+    /// <summary>
+    /// Converts a query engine operation to a reified operation.
+    /// </summary>
+    /// <param name="operation">The query engine operation.</param>
+    /// <returns>The query engine operations as a reified operation.</returns>
+    public static ReifiedOperation AsReified(this ServiceOperation operation)
+    {
+        return operation;
+    }
+
+    /// <summary>
+    /// Starts an operation on a thread pool thread.
+    /// </summary>
+    /// <param name="operation">The operation.</param>
+    /// <param name="onStart">
+    /// A callback to return the task after the operation has been started.
+    /// </param>
+    /// <param name="token">
+    /// A cancellation token to give to the task factory.
+    /// </param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation Async(this ReifiedOperation operation, Action<Task> onStart, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(onStart);
+
+        return new Async(operation, onStart, token);
+    }
+
+    /// <summary>
+    /// Binds a reified operation to a given environment.
+    /// </summary>
+    /// <typeparam name="TEnvironment">The environment type.</typeparam>
+    /// <param name="operation">The operation to bind.</param>
+    /// <param name="binder">The binder to use.</param>
+    /// <returns>
+    /// A lambda expression to evaluate the reified operation.
+    /// </returns>
+    public static Expression<Action<TEnvironment>> Bind<TEnvironment>(this ReifiedOperation operation, IReificationBinder<TEnvironment> binder)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(binder);
+
+        var flattener = new ReifiedOperationFlattener();
+        var opBinder = new ReifiedOperationBinder<TEnvironment>(binder);
+        var flattened = flattener.Visit(operation);
+        var bound = opBinder.Visit(flattened);
+        return binder.Optimize(bound);
+    }
+
+    /// <summary>
+    /// Catches any exception thrown by the given operation.
+    /// </summary>
+    /// <param name="operation">The operation.</param>
+    /// <param name="handler">The callback for any exceptions thrown.</param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation Catch(this ReifiedOperation operation, Action<Exception> handler)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(handler);
+
+        return new Catch<Exception>(operation, handler);
+    }
+
+    /// <summary>
+    /// Catches any exception of the given type thrown by the given operation.
+    /// </summary>
+    /// <typeparam name="T">The exception type.</typeparam>
+    /// <param name="operation">The operation.</param>
+    /// <param name="handler">The callback for any exceptions thrown.</param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation Catch<T>(this ReifiedOperation operation, Action<T> handler)
+        where T : Exception
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(handler);
+
+        return new Catch<T>(operation, handler);
+    }
+
+    /// <summary>
+    /// Wraps a sequence of operations as a single, ordered operation.
+    /// </summary>
+    /// <param name="operations">The operations.</param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation Chain(this IEnumerable<ReifiedOperation> operations)
+    {
+        ArgumentNullException.ThrowIfNull(operations);
+
+        return new Chain(operations.First(), operations.Skip(1));
+    }
+
+    /// <summary>
+    /// Wraps a sequence of operations as a single, ordered operation.
+    /// </summary>
+    /// <param name="first">The first operation.</param>
+    /// <param name="rest">The rest of the operations.</param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation Chain(this ReifiedOperation first, params ReifiedOperation[] rest)
+    {
+        ArgumentNullException.ThrowIfNull(first);
+        ArgumentNullException.ThrowIfNull(rest);
+
+        return new Chain(first, rest);
+    }
+
+    /// <summary>
+    /// Instruments an operation with callbacks that are invoked before and after the operation.
+    /// </summary>
+    /// <param name="operation">The operation.</param>
+    /// <param name="onEnter">
+    /// Callback to invoke prior to evaluating the operation.
+    /// </param>
+    /// <param name="onExit">
+    /// Callback to invoke after evaluating the operation.
+    /// </param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation Instrument(this ReifiedOperation operation, Action onEnter, Action onExit)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(onEnter);
+        ArgumentNullException.ThrowIfNull(onExit);
+
+        return new Instrument(operation, onEnter, onExit);
+    }
+
+    /// <summary>
+    /// Remaps all the wildcards in an operation to unique identifiers.
+    /// </summary>
+    /// <param name="operation">The operation.</param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation LiftWildcards(this ReifiedOperation operation)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+
+        return LiftWildcards(operation, WildcardGenerator.Instance);
+    }
+
+    /// <summary>
+    /// Remaps all the wildcards in an operation to identifiers taken from the wildcard generator.
+    /// </summary>
+    /// <param name="operation">The operation.</param>
+    /// <param name="generator">The wildcard generator.</param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation LiftWildcards(this ReifiedOperation operation, IWildcardGenerator generator)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(generator);
+
+        return new LiftWildcards(operation, generator);
+    }
+
+    /// <summary>
+    /// Maps a URI in a service operation to a new URI.
+    /// </summary>
+    /// <param name="operation">The service operation.</param>
+    /// <param name="original">The original URI.</param>
+    /// <param name="replacement">The replacement URI.</param>
+    /// <returns>The mapped operation.</returns>
+    public static ServiceOperation Map(this ServiceOperation operation, Uri original, Uri replacement)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(original);
+        ArgumentNullException.ThrowIfNull(replacement);
+
+        var rewriter = new ServiceOperationUriRewriter(u => u == original ? replacement : u);
+        return rewriter.Visit(operation);
+    }
+
+    /// <summary>
+    /// Maps a wildcard in a service operation to a new URI.
+    /// </summary>
+    /// <param name="operation">The service operation.</param>
+    /// <param name="uri">The replacement URI.</param>
+    /// <returns>The mapped operation.</returns>
+    public static ServiceOperation MapWildcard(this ServiceOperation operation, Uri uri)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(uri);
+
+        var rewriter = new ServiceOperationUriRewriter(u => u.IsWildcard() ? uri : u);
+        return rewriter.Visit(operation);
+    }
+
+    /// <summary>
+    /// Repeat an operation a given number of times.
+    /// </summary>
+    /// <param name="operation">The operation.</param>
+    /// <param name="count">The number of times to repeat the operation.</param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation Repeat(this ReifiedOperation operation, long count)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        if (count <= 0)
+            throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 0.");
+
+        return new Repeat(operation, count);
+    }
+
+    /// <summary>
+    /// Repeat an operation until cancellation is requested.
+    /// </summary>
+    /// <param name="operation">The operation.</param>
+    /// <param name="token">The cancellation token.</param>
+    /// <returns>The wrapped operation.</returns>
+    public static ReifiedOperation RepeatUntil(this ReifiedOperation operation, CancellationToken token)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+
+        return new RepeatUntil(operation, token);
+    }
+
+    /// <summary>
+    /// Rewrites segments of the service operation expression.
+    /// </summary>
+    /// <param name="operation">The service operation.</param>
+    /// <param name="original">The expression to rewrite.</param>
+    /// <param name="replacement">The replacement expression.</param>
+    /// <returns>The service operation with the expression rewritten.</returns>
+    public static ServiceOperation Rewrite(this ServiceOperation operation, Expression original, Expression replacement)
+    {
+        ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(original);
+        ArgumentNullException.ThrowIfNull(replacement);
+
+        var rewriter = new ServiceOperationExpressionRewriter(
+            new Dictionary<Expression, Expression>(Comparer.Instance) { { original, replacement } });
+        return rewriter.Visit(operation);
+    }
+
+    private sealed class ReifiedOperationFlattener : ReifiedOperationVisitor
+    {
+        protected override ReifiedOperation VisitChain(Chain operation)
         {
-            ArgumentNullException.ThrowIfNull(operations);
+            var result = base.VisitChain(operation);
 
-            return operations.Select<QueryEngineOperation, ReifiedOperation>(o => o);
-        }
-
-        /// <summary>
-        /// Converts a set of service operations to a set of reified operations.
-        /// </summary>
-        /// <param name="operations">The service operations.</param>
-        /// <returns>The service operations as reified operations.</returns>
-        public static IEnumerable<ReifiedOperation> AsReified(this IEnumerable<ServiceOperation> operations)
-        {
-            ArgumentNullException.ThrowIfNull(operations);
-
-            return operations.Select<ServiceOperation, ReifiedOperation>(o => o);
-        }
-
-        /// <summary>
-        /// Converts a query engine operation to a reified operation.
-        /// </summary>
-        /// <param name="operation">The query engine operation.</param>
-        /// <returns>The query engine operations as a reified operation.</returns>
-        public static ReifiedOperation AsReified(this QueryEngineOperation operation)
-        {
-            return operation;
-        }
-
-        /// <summary>
-        /// Converts a query engine operation to a reified operation.
-        /// </summary>
-        /// <param name="operation">The query engine operation.</param>
-        /// <returns>The query engine operations as a reified operation.</returns>
-        public static ReifiedOperation AsReified(this ServiceOperation operation)
-        {
-            return operation;
-        }
-
-        /// <summary>
-        /// Starts an operation on a thread pool thread.
-        /// </summary>
-        /// <param name="operation">The operation.</param>
-        /// <param name="onStart">
-        /// A callback to return the task after the operation has been started.
-        /// </param>
-        /// <param name="token">
-        /// A cancellation token to give to the task factory.
-        /// </param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation Async(this ReifiedOperation operation, Action<Task> onStart, CancellationToken token)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            ArgumentNullException.ThrowIfNull(onStart);
-
-            return new Async(operation, onStart, token);
-        }
-
-        /// <summary>
-        /// Binds a reified operation to a given environment.
-        /// </summary>
-        /// <typeparam name="TEnvironment">The environment type.</typeparam>
-        /// <param name="operation">The operation to bind.</param>
-        /// <param name="binder">The binder to use.</param>
-        /// <returns>
-        /// A lambda expression to evaluate the reified operation.
-        /// </returns>
-        public static Expression<Action<TEnvironment>> Bind<TEnvironment>(this ReifiedOperation operation, IReificationBinder<TEnvironment> binder)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            ArgumentNullException.ThrowIfNull(binder);
-
-            var flattener = new ReifiedOperationFlattener();
-            var opBinder = new ReifiedOperationBinder<TEnvironment>(binder);
-            var flattened = flattener.Visit(operation);
-            var bound = opBinder.Visit(flattened);
-            return binder.Optimize(bound);
-        }
-
-        /// <summary>
-        /// Catches any exception thrown by the given operation.
-        /// </summary>
-        /// <param name="operation">The operation.</param>
-        /// <param name="handler">The callback for any exceptions thrown.</param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation Catch(this ReifiedOperation operation, Action<Exception> handler)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            ArgumentNullException.ThrowIfNull(handler);
-
-            return new Catch<Exception>(operation, handler);
-        }
-
-        /// <summary>
-        /// Catches any exception of the given type thrown by the given operation.
-        /// </summary>
-        /// <typeparam name="T">The exception type.</typeparam>
-        /// <param name="operation">The operation.</param>
-        /// <param name="handler">The callback for any exceptions thrown.</param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation Catch<T>(this ReifiedOperation operation, Action<T> handler)
-            where T : Exception
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            ArgumentNullException.ThrowIfNull(handler);
-
-            return new Catch<T>(operation, handler);
-        }
-
-        /// <summary>
-        /// Wraps a sequence of operations as a single, ordered operation.
-        /// </summary>
-        /// <param name="operations">The operations.</param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation Chain(this IEnumerable<ReifiedOperation> operations)
-        {
-            ArgumentNullException.ThrowIfNull(operations);
-
-            return new Chain(operations.First(), operations.Skip(1));
-        }
-
-        /// <summary>
-        /// Wraps a sequence of operations as a single, ordered operation.
-        /// </summary>
-        /// <param name="first">The first operation.</param>
-        /// <param name="rest">The rest of the operations.</param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation Chain(this ReifiedOperation first, params ReifiedOperation[] rest)
-        {
-            ArgumentNullException.ThrowIfNull(first);
-            ArgumentNullException.ThrowIfNull(rest);
-
-            return new Chain(first, rest);
-        }
-
-        /// <summary>
-        /// Instruments an operation with callbacks that are invoked before and after the operation.
-        /// </summary>
-        /// <param name="operation">The operation.</param>
-        /// <param name="onEnter">
-        /// Callback to invoke prior to evaluating the operation.
-        /// </param>
-        /// <param name="onExit">
-        /// Callback to invoke after evaluating the operation.
-        /// </param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation Instrument(this ReifiedOperation operation, Action onEnter, Action onExit)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            ArgumentNullException.ThrowIfNull(onEnter);
-            ArgumentNullException.ThrowIfNull(onExit);
-
-            return new Instrument(operation, onEnter, onExit);
-        }
-
-        /// <summary>
-        /// Remaps all the wildcards in an operation to unique identifiers.
-        /// </summary>
-        /// <param name="operation">The operation.</param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation LiftWildcards(this ReifiedOperation operation)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-
-            return LiftWildcards(operation, WildcardGenerator.Instance);
-        }
-
-        /// <summary>
-        /// Remaps all the wildcards in an operation to identifiers taken from the wildcard generator.
-        /// </summary>
-        /// <param name="operation">The operation.</param>
-        /// <param name="generator">The wildcard generator.</param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation LiftWildcards(this ReifiedOperation operation, IWildcardGenerator generator)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            ArgumentNullException.ThrowIfNull(generator);
-
-            return new LiftWildcards(operation, generator);
-        }
-
-        /// <summary>
-        /// Maps a URI in a service operation to a new URI.
-        /// </summary>
-        /// <param name="operation">The service operation.</param>
-        /// <param name="original">The original URI.</param>
-        /// <param name="replacement">The replacement URI.</param>
-        /// <returns>The mapped operation.</returns>
-        public static ServiceOperation Map(this ServiceOperation operation, Uri original, Uri replacement)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            ArgumentNullException.ThrowIfNull(original);
-            ArgumentNullException.ThrowIfNull(replacement);
-
-            var rewriter = new ServiceOperationUriRewriter(u => u == original ? replacement : u);
-            return rewriter.Visit(operation);
-        }
-
-        /// <summary>
-        /// Maps a wildcard in a service operation to a new URI.
-        /// </summary>
-        /// <param name="operation">The service operation.</param>
-        /// <param name="uri">The replacement URI.</param>
-        /// <returns>The mapped operation.</returns>
-        public static ServiceOperation MapWildcard(this ServiceOperation operation, Uri uri)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            ArgumentNullException.ThrowIfNull(uri);
-
-            var rewriter = new ServiceOperationUriRewriter(u => u.IsWildcard() ? uri : u);
-            return rewriter.Visit(operation);
-        }
-
-        /// <summary>
-        /// Repeat an operation a given number of times.
-        /// </summary>
-        /// <param name="operation">The operation.</param>
-        /// <param name="count">The number of times to repeat the operation.</param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation Repeat(this ReifiedOperation operation, long count)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            if (count <= 0)
-                throw new ArgumentOutOfRangeException(nameof(count), "Count must be at least 0.");
-
-            return new Repeat(operation, count);
-        }
-
-        /// <summary>
-        /// Repeat an operation until cancellation is requested.
-        /// </summary>
-        /// <param name="operation">The operation.</param>
-        /// <param name="token">The cancellation token.</param>
-        /// <returns>The wrapped operation.</returns>
-        public static ReifiedOperation RepeatUntil(this ReifiedOperation operation, CancellationToken token)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-
-            return new RepeatUntil(operation, token);
-        }
-
-        /// <summary>
-        /// Rewrites segments of the service operation expression.
-        /// </summary>
-        /// <param name="operation">The service operation.</param>
-        /// <param name="original">The expression to rewrite.</param>
-        /// <param name="replacement">The replacement expression.</param>
-        /// <returns>The service operation with the expression rewritten.</returns>
-        public static ServiceOperation Rewrite(this ServiceOperation operation, Expression original, Expression replacement)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
-            ArgumentNullException.ThrowIfNull(original);
-            ArgumentNullException.ThrowIfNull(replacement);
-
-            var rewriter = new ServiceOperationExpressionRewriter(
-                new Dictionary<Expression, Expression>(Comparer.Instance) { { original, replacement } });
-            return rewriter.Visit(operation);
-        }
-
-        private sealed class ReifiedOperationFlattener : ReifiedOperationVisitor
-        {
-            protected override ReifiedOperation VisitChain(Chain operation)
+            if (result is Chain chain)
             {
-                var result = base.VisitChain(operation);
-
-                if (result is Chain chain)
+                var operations = default(List<ReifiedOperation>);
+                var count = 0;
+                foreach (var op in chain.Rest)
                 {
-                    var operations = default(List<ReifiedOperation>);
-                    var count = 0;
-                    foreach (var op in chain.Rest)
+                    if (op is Chain link)
                     {
-                        if (op is Chain link)
-                        {
-                            operations ??= [.. chain.Rest.Take(count)];
+                        operations ??= [.. chain.Rest.Take(count)];
 
-                            operations.Add(link.Operation);
-                            operations.AddRange(link.Rest);
-                        }
-                        else operations?.Add(op);
-
-                        count++;
+                        operations.Add(link.Operation);
+                        operations.AddRange(link.Rest);
                     }
+                    else operations?.Add(op);
 
-                    if (operations != null)
-                    {
-                        return new Chain(chain.Operation, operations);
-                    }
+                    count++;
                 }
 
-                return result;
+                if (operations != null)
+                {
+                    return new Chain(chain.Operation, operations);
+                }
             }
+
+            return result;
+        }
+    }
+
+    private sealed class ServiceOperationExpressionRewriter : ServiceOperationVisitor
+    {
+        private readonly Visitor _visitor;
+
+        public ServiceOperationExpressionRewriter(IDictionary<Expression, Expression> targets)
+        {
+            _visitor = new Visitor(targets);
         }
 
-        private sealed class ServiceOperationExpressionRewriter : ServiceOperationVisitor
+        protected override Expression VisitExpression(Expression expression)
         {
-            private readonly Visitor _visitor;
-
-            public ServiceOperationExpressionRewriter(IDictionary<Expression, Expression> targets)
-            {
-                _visitor = new Visitor(targets);
-            }
-
-            protected override Expression VisitExpression(Expression expression)
-            {
-                return _visitor.Visit(expression);
-            }
-
-            private sealed class Visitor : ExpressionVisitor
-            {
-                private readonly IDictionary<Expression, Expression> _rewrites;
-
-                public Visitor(IDictionary<Expression, Expression> rewrites)
-                {
-                    _rewrites = rewrites;
-                }
-
-                public override Expression Visit(Expression node)
-                {
-                    if (_rewrites.TryGetValue(node, out var result))
-                    {
-                        return result;
-                    }
-
-                    return base.Visit(node);
-                }
-            }
+            return _visitor.Visit(expression);
         }
 
-        private sealed class ServiceOperationUriRewriter : ServiceOperationVisitor
+        private sealed class Visitor : ExpressionVisitor
         {
-            private readonly Func<Uri, Uri> _uriMapping;
+            private readonly IDictionary<Expression, Expression> _rewrites;
 
-            public ServiceOperationUriRewriter(Func<Uri, Uri> uriMapping)
+            public Visitor(IDictionary<Expression, Expression> rewrites)
             {
-                _uriMapping = uriMapping;
+                _rewrites = rewrites;
             }
 
-            protected override Uri VisitUri(Uri uri)
+            public override Expression Visit(Expression node)
             {
-                return _uriMapping(uri);
-            }
-
-            protected override Expression VisitExpression(Expression expression)
-            {
-                var freeVariables = FreeVariableScanner.Scan(expression);
-
-                var replacements = new Dictionary<ParameterExpression, ParameterExpression>();
-                foreach (var parameter in freeVariables)
+                if (_rewrites.TryGetValue(node, out var result))
                 {
-                    var uri = new Uri(parameter.Name);
-                    var newUri = _uriMapping(uri);
-                    if (newUri != uri)
-                    {
-                        replacements.Add(parameter, Expression.Parameter(parameter.Type, newUri.ToCanonicalString()));
-                    }
+                    return result;
                 }
 
-                var substitutor = new FreeVariableSubstitutor(replacements);
-                return substitutor.Visit(expression);
-            }
-
-            private sealed class FreeVariableSubstitutor : ScopedExpressionVisitor<ParameterExpression>
-            {
-                private readonly IDictionary<ParameterExpression, ParameterExpression> _substitutions;
-
-                public FreeVariableSubstitutor(IDictionary<ParameterExpression, ParameterExpression> substitutions)
-                {
-                    _substitutions = substitutions;
-                }
-
-                protected override Expression VisitParameter(ParameterExpression node)
-                {
-                    if (!TryLookup(node, out _) && _substitutions.TryGetValue(node, out var replacement))
-                    {
-                        return replacement;
-                    }
-
-                    return base.VisitParameter(node);
-                }
-
-                protected override ParameterExpression GetState(ParameterExpression parameter)
-                {
-                    return parameter;
-                }
+                return base.Visit(node);
             }
         }
+    }
 
-        private sealed class Comparer : ExpressionEqualityComparer
+    private sealed class ServiceOperationUriRewriter : ServiceOperationVisitor
+    {
+        private readonly Func<Uri, Uri> _uriMapping;
+
+        public ServiceOperationUriRewriter(Func<Uri, Uri> uriMapping)
         {
-            private Comparer()
-                : base(() => new Comparator())
+            _uriMapping = uriMapping;
+        }
+
+        protected override Uri VisitUri(Uri uri)
+        {
+            return _uriMapping(uri);
+        }
+
+        protected override Expression VisitExpression(Expression expression)
+        {
+            var freeVariables = FreeVariableScanner.Scan(expression);
+
+            var replacements = new Dictionary<ParameterExpression, ParameterExpression>();
+            foreach (var parameter in freeVariables)
             {
+                var uri = new Uri(parameter.Name);
+                var newUri = _uriMapping(uri);
+                if (newUri != uri)
+                {
+                    replacements.Add(parameter, Expression.Parameter(parameter.Type, newUri.ToCanonicalString()));
+                }
             }
 
-            public static Comparer Instance { get; } = new Comparer();
+            var substitutor = new FreeVariableSubstitutor(replacements);
+            return substitutor.Visit(expression);
+        }
 
-            private sealed class Comparator : ExpressionEqualityComparator
+        private sealed class FreeVariableSubstitutor : ScopedExpressionVisitor<ParameterExpression>
+        {
+            private readonly IDictionary<ParameterExpression, ParameterExpression> _substitutions;
+
+            public FreeVariableSubstitutor(IDictionary<ParameterExpression, ParameterExpression> substitutions)
             {
-                private const uint Prime = 0xa5555529; // See CompilationPass.cpp in C# compiler codebase.
+                _substitutions = substitutions;
+            }
 
-                protected override bool EqualsGlobalParameter(ParameterExpression x, ParameterExpression y)
+            protected override Expression VisitParameter(ParameterExpression node)
+            {
+                if (!TryLookup(node, out _) && _substitutions.TryGetValue(node, out var replacement))
                 {
-                    return x.Name == y.Name && Equals(x.Type, y.Type);
+                    return replacement;
                 }
 
-                protected override int GetHashCodeGlobalParameter(ParameterExpression obj)
-                {
-                    var hash = obj.Name.GetHashCode(StringComparison.Ordinal);
+                return base.VisitParameter(node);
+            }
 
-                    unchecked
-                    {
-                        return (int)(hash * Prime) + GetHashCode(obj.Type);
-                    }
+            protected override ParameterExpression GetState(ParameterExpression parameter)
+            {
+                return parameter;
+            }
+        }
+    }
+
+    private sealed class Comparer : ExpressionEqualityComparer
+    {
+        private Comparer()
+            : base(() => new Comparator())
+        {
+        }
+
+        public static Comparer Instance { get; } = new Comparer();
+
+        private sealed class Comparator : ExpressionEqualityComparator
+        {
+            private const uint Prime = 0xa5555529; // See CompilationPass.cpp in C# compiler codebase.
+
+            protected override bool EqualsGlobalParameter(ParameterExpression x, ParameterExpression y)
+            {
+                return x.Name == y.Name && Equals(x.Type, y.Type);
+            }
+
+            protected override int GetHashCodeGlobalParameter(ParameterExpression obj)
+            {
+                var hash = obj.Name.GetHashCode(StringComparison.Ordinal);
+
+                unchecked
+                {
+                    return (int)(hash * Prime) + GetHashCode(obj.Type);
                 }
             }
         }

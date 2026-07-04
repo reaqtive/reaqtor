@@ -10,21 +10,20 @@
 
 using System;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal abstract class OperationBase : IOperation
 {
-    internal abstract class OperationBase : IOperation
+    private readonly Lazy<string> _debugView;
+
+    public OperationBase()
     {
-        private readonly Lazy<string> _debugView;
-
-        public OperationBase()
-        {
-            _debugView = new Lazy<string>(() => DebugViewCore);
-        }
-
-        public string DebugView => _debugView.Value;
-
-        protected abstract string DebugViewCore { get; }
-
-        public override string ToString() => DebugView;
+        _debugView = new Lazy<string>(() => DebugViewCore);
     }
+
+    public string DebugView => _debugView.Value;
+
+    protected abstract string DebugViewCore { get; }
+
+    public override string ToString() => DebugView;
 }

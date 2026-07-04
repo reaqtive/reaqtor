@@ -10,22 +10,21 @@
 
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
-{
-    /// <summary>
-    /// (Infrastructure) Represents a wildcard for expression tree matching.
-    /// </summary>
-    public class ExpressionTreeWildcard : ExpressionTree<ParameterExpression>
-    {
-        internal ExpressionTreeWildcard(ParameterExpression expression)
-            : base(expression)
-        {
-        }
+namespace System.Linq.CompilerServices;
 
-        /// <summary>
-        /// Gets a friendly string representation of the wildcard.
-        /// </summary>
-        /// <returns>Friendly string representation of the wildcard.</returns>
-        public override string ToString() => "(" + Expression.Type.ToCSharpString(useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false) + ")*";
+/// <summary>
+/// (Infrastructure) Represents a wildcard for expression tree matching.
+/// </summary>
+public class ExpressionTreeWildcard : ExpressionTree<ParameterExpression>
+{
+    internal ExpressionTreeWildcard(ParameterExpression expression)
+        : base(expression)
+    {
     }
+
+    /// <summary>
+    /// Gets a friendly string representation of the wildcard.
+    /// </summary>
+    /// <returns>Friendly string representation of the wildcard.</returns>
+    public override string ToString() => "(" + Expression.Type.ToCSharpString(useNamespaceQualifiedNames: false, useCSharpTypeAliases: true, disallowCompilerGeneratedTypes: false) + ")*";
 }

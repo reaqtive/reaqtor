@@ -12,23 +12,22 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Serialization;
 
-namespace Tests
-{
-    public partial class EmitterTests
-    {
-        [TestMethod]
-        public void FastEmitter_Boolean()
-        {
-            AssertEmit(Emitter.EmitBoolean, true, "true");
-            AssertEmit(Emitter.EmitBoolean, false, "false");
-        }
+namespace Tests;
 
-        [TestMethod]
-        public void FastEmitter_NullableBoolean()
-        {
-            AssertEmit<bool?>(Emitter.EmitNullableBoolean, null, "null");
-            AssertEmit<bool?>(Emitter.EmitNullableBoolean, true, "true");
-            AssertEmit<bool?>(Emitter.EmitNullableBoolean, false, "false");
-        }
+public partial class EmitterTests
+{
+    [TestMethod]
+    public void FastEmitter_Boolean()
+    {
+        AssertEmit(Emitter.EmitBoolean, true, "true");
+        AssertEmit(Emitter.EmitBoolean, false, "false");
+    }
+
+    [TestMethod]
+    public void FastEmitter_NullableBoolean()
+    {
+        AssertEmit<bool?>(Emitter.EmitNullableBoolean, null, "null");
+        AssertEmit<bool?>(Emitter.EmitNullableBoolean, true, "true");
+        AssertEmit<bool?>(Emitter.EmitNullableBoolean, false, "false");
     }
 }

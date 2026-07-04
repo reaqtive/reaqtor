@@ -10,16 +10,15 @@
 
 using System;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for an observable represented by an expression tree.
+/// </summary>
+public interface IAsyncReactiveQbservable : IAsyncReactiveExpressible
 {
     /// <summary>
-    /// Interface for an observable represented by an expression tree.
+    /// Gets the type of the data produced by the observable.
     /// </summary>
-    public interface IAsyncReactiveQbservable : IAsyncReactiveExpressible
-    {
-        /// <summary>
-        /// Gets the type of the data produced by the observable.
-        /// </summary>
-        Type ElementType { get; }
-    }
+    Type ElementType { get; }
 }

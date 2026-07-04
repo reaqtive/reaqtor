@@ -18,97 +18,96 @@ using System.Threading;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class WeakCacheDictionaryTests
 {
-    [TestClass]
-    public class WeakCacheDictionaryTests
+    [TestMethod]
+    public void WeakCacheDictionary_Simple()
     {
-        [TestMethod]
-        public void WeakCacheDictionary_Simple()
-        {
-            var cd = new WeakCacheDictionary<string, string>();
+        var cd = new WeakCacheDictionary<string, string>();
 
-            var n = 0;
+        var n = 0;
 
-            Assert.AreEqual("FOO", cd.GetOrAdd("foo", s => { n++; return s.ToUpper(); }));
-            Assert.AreEqual(1, n);
+        Assert.AreEqual("FOO", cd.GetOrAdd("foo", s => { n++; return s.ToUpper(); }));
+        Assert.AreEqual(1, n);
 
-            Assert.AreEqual("FOO", cd.GetOrAdd("foo", s => { n++; return s.ToUpper(); }));
-            Assert.AreEqual(1, n);
+        Assert.AreEqual("FOO", cd.GetOrAdd("foo", s => { n++; return s.ToUpper(); }));
+        Assert.AreEqual(1, n);
 
-            Assert.AreEqual("BAR", cd.GetOrAdd("bar", s => { n++; return s.ToUpper(); }));
-            Assert.AreEqual(2, n);
+        Assert.AreEqual("BAR", cd.GetOrAdd("bar", s => { n++; return s.ToUpper(); }));
+        Assert.AreEqual(2, n);
 
-            Assert.IsTrue(cd.Remove("bar"));
-            Assert.AreEqual(2, n);
+        Assert.IsTrue(cd.Remove("bar"));
+        Assert.AreEqual(2, n);
 
-            Assert.IsFalse(cd.Remove("qux"));
-            Assert.AreEqual(2, n);
+        Assert.IsFalse(cd.Remove("qux"));
+        Assert.AreEqual(2, n);
 
-            Assert.AreEqual("BAR", cd.GetOrAdd("bar", s => { n++; return s.ToUpper(); }));
-            Assert.AreEqual(3, n);
+        Assert.AreEqual("BAR", cd.GetOrAdd("bar", s => { n++; return s.ToUpper(); }));
+        Assert.AreEqual(3, n);
 
 #if DEBUG
-            Assert.IsTrue(cd.Keys.OrderBy(x => x).SequenceEqual(["bar", "foo"]));
+        Assert.IsTrue(cd.Keys.OrderBy(x => x).SequenceEqual(["bar", "foo"]));
 #endif
-        }
+    }
 
-        [TestMethod]
-        public void WeakCacheDictionary_Null()
-        {
-            var cd = new WeakCacheDictionary<string, string>();
+    [TestMethod]
+    public void WeakCacheDictionary_Null()
+    {
+        var cd = new WeakCacheDictionary<string, string>();
 
-            var n = 0;
+        var n = 0;
 
-            Assert.AreEqual("NULL", cd.GetOrAdd(key: null, s => { n++; return (s ?? "null").ToUpper(); }));
-            Assert.AreEqual(1, n);
+        Assert.AreEqual("NULL", cd.GetOrAdd(key: null, s => { n++; return (s ?? "null").ToUpper(); }));
+        Assert.AreEqual(1, n);
 
-            Assert.AreEqual("NULL", cd.GetOrAdd(key: null, s => { n++; return (s ?? "null").ToUpper(); }));
-            Assert.AreEqual(1, n);
+        Assert.AreEqual("NULL", cd.GetOrAdd(key: null, s => { n++; return (s ?? "null").ToUpper(); }));
+        Assert.AreEqual(1, n);
 
-            Assert.IsTrue(cd.Remove(key: null));
-            Assert.AreEqual(1, n);
+        Assert.IsTrue(cd.Remove(key: null));
+        Assert.AreEqual(1, n);
 
-            Assert.AreEqual("NULL", cd.GetOrAdd(key: null, s => { n++; return (s ?? "null").ToUpper(); }));
-            Assert.AreEqual(2, n);
+        Assert.AreEqual("NULL", cd.GetOrAdd(key: null, s => { n++; return (s ?? "null").ToUpper(); }));
+        Assert.AreEqual(2, n);
 
 #if DEBUG
-            Assert.IsTrue(cd.Keys.Any(x => x == null));
+        Assert.IsTrue(cd.Keys.Any(x => x == null));
 #endif
-        }
+    }
 
-        [TestMethod]
-        public void WeakCacheDictionary_Finalizers()
+    [TestMethod]
+    public void WeakCacheDictionary_Finalizers()
+    {
+        var cd = new WeakCacheDictionary<Obj, string>();
+
+        var initial = Obj.FinalizeCount;
+
+        for (var i = 1; i <= 10; i++)
         {
-            var cd = new WeakCacheDictionary<Obj, string>();
+            Assert.IsTrue(GetOrAdd(cd).Contains("Obj"));
 
-            var initial = Obj.FinalizeCount;
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
 
-            for (var i = 1; i <= 10; i++)
-            {
-                Assert.IsTrue(GetOrAdd(cd).Contains("Obj"));
-
-                GC.Collect();
-                GC.WaitForPendingFinalizers();
-
-                Assert.AreEqual(i, Obj.FinalizeCount - initial);
-            }
+            Assert.AreEqual(i, Obj.FinalizeCount - initial);
         }
+    }
 
-        [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
-        private static string GetOrAdd(IWeakCacheDictionary<Obj, string> cache)
+    [MethodImpl(MethodImplOptions.NoInlining | MethodImplOptions.NoOptimization)]
+    private static string GetOrAdd(IWeakCacheDictionary<Obj, string> cache)
+    {
+        return cache.GetOrAdd(new Obj(), o => o.ToString());
+    }
+
+    private sealed class Obj
+    {
+        public static int FinalizeCount;
+
+        ~Obj()
         {
-            return cache.GetOrAdd(new Obj(), o => o.ToString());
-        }
-
-        private sealed class Obj
-        {
-            public static int FinalizeCount;
-
-            ~Obj()
-            {
-                Interlocked.Increment(ref FinalizeCount);
-            }
+            Interlocked.Increment(ref FinalizeCount);
         }
     }
 }

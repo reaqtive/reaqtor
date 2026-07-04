@@ -7,55 +7,54 @@ using System.Linq.Expressions;
 
 using Reaqtor.Reliable.Client;
 
-namespace Reaqtor.Reliable.Expressions
+namespace Reaqtor.Reliable.Expressions;
+
+public abstract class ReliableQubjectFactoryBase<TInput, TOutput> : IReliableQubjectFactory<TInput, TOutput>
 {
-    public abstract class ReliableQubjectFactoryBase<TInput, TOutput> : IReliableQubjectFactory<TInput, TOutput>
+    protected ReliableQubjectFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+
+    public IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, object state = null)
     {
-        protected ReliableQubjectFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+        ArgumentNullException.ThrowIfNull(streamUri);
 
-        public IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, object state = null)
-        {
-            ArgumentNullException.ThrowIfNull(streamUri);
-
-            return CreateCore(streamUri, state);
-        }
-
-        IReliableReactiveMultiSubject<TInput, TOutput> IReliableReactiveSubjectFactory<TInput, TOutput>.Create(Uri streamUri, object state)
-        {
-            ArgumentNullException.ThrowIfNull(streamUri);
-
-            return CreateCore(streamUri, state);
-        }
-
-        protected abstract IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, object state);
-
-        public IReliableQueryProvider Provider { get; }
-
-        public abstract Expression Expression { get; }
+        return CreateCore(streamUri, state);
     }
 
-    public abstract class ReliableQubjectFactoryBase<TInput, TOutput, TArg> : IReliableQubjectFactory<TInput, TOutput, TArg>
+    IReliableReactiveMultiSubject<TInput, TOutput> IReliableReactiveSubjectFactory<TInput, TOutput>.Create(Uri streamUri, object state)
     {
-        protected ReliableQubjectFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+        ArgumentNullException.ThrowIfNull(streamUri);
 
-        public IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, TArg argument, object state = null)
-        {
-            ArgumentNullException.ThrowIfNull(streamUri);
-
-            return CreateCore(streamUri, argument, state);
-        }
-
-        IReliableReactiveMultiSubject<TInput, TOutput> IReliableReactiveSubjectFactory<TInput, TOutput, TArg>.Create(Uri streamUri, TArg argument, object state)
-        {
-            ArgumentNullException.ThrowIfNull(streamUri);
-
-            return CreateCore(streamUri, argument, state);
-        }
-
-        protected abstract IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg argument, object state);
-
-        public IReliableQueryProvider Provider { get; }
-
-        public abstract Expression Expression { get; }
+        return CreateCore(streamUri, state);
     }
+
+    protected abstract IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, object state);
+
+    public IReliableQueryProvider Provider { get; }
+
+    public abstract Expression Expression { get; }
+}
+
+public abstract class ReliableQubjectFactoryBase<TInput, TOutput, TArg> : IReliableQubjectFactory<TInput, TOutput, TArg>
+{
+    protected ReliableQubjectFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+
+    public IReliableMultiQubject<TInput, TOutput> Create(Uri streamUri, TArg argument, object state = null)
+    {
+        ArgumentNullException.ThrowIfNull(streamUri);
+
+        return CreateCore(streamUri, argument, state);
+    }
+
+    IReliableReactiveMultiSubject<TInput, TOutput> IReliableReactiveSubjectFactory<TInput, TOutput, TArg>.Create(Uri streamUri, TArg argument, object state)
+    {
+        ArgumentNullException.ThrowIfNull(streamUri);
+
+        return CreateCore(streamUri, argument, state);
+    }
+
+    protected abstract IReliableMultiQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg argument, object state);
+
+    public IReliableQueryProvider Provider { get; }
+
+    public abstract Expression Expression { get; }
 }

@@ -7,56 +7,54 @@ using System.Linq.Expressions;
 
 using Reaqtor.Reliable.Client;
 
-namespace Reaqtor.Reliable.Expressions
+namespace Reaqtor.Reliable.Expressions;
+
+public abstract class ReliableQubscriptionFactoryBase : IReliableQubscriptionFactory
 {
-    public abstract class ReliableQubscriptionFactoryBase : IReliableQubscriptionFactory
+    protected ReliableQubscriptionFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+
+    public IReliableQubscription Create(Uri subscriptionUri, object state = null)
     {
-        protected ReliableQubscriptionFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
 
-        public IReliableQubscription Create(Uri subscriptionUri, object state = null)
-        {
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return CreateCore(subscriptionUri, state);
-        }
-
-        IReliableReactiveSubscription IReliableReactiveSubscriptionFactory.Create(Uri subscriptionUri, object state)
-        {
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return CreateCore(subscriptionUri, state);
-        }
-
-        protected abstract IReliableQubscription CreateCore(Uri subscriptionUri, object state);
-
-        public IReliableQueryProvider Provider { get; }
-
-        public abstract Expression Expression { get; }
+        return CreateCore(subscriptionUri, state);
     }
 
-    public abstract class ReliableQubscriptionFactoryBase<TArg> : IReliableQubscriptionFactory<TArg>
+    IReliableReactiveSubscription IReliableReactiveSubscriptionFactory.Create(Uri subscriptionUri, object state)
     {
-        protected ReliableQubscriptionFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
 
-        public IReliableQubscription Create(Uri subscriptionUri, TArg argument, object state = null)
-        {
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return CreateCore(subscriptionUri, argument, state);
-        }
-
-        IReliableReactiveSubscription IReliableReactiveSubscriptionFactory<TArg>.Create(Uri subscriptionUri, TArg argument, object state)
-        {
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return CreateCore(subscriptionUri, argument, state);
-        }
-
-        protected abstract IReliableQubscription CreateCore(Uri subscriptionUri, TArg argument, object state);
-
-        public IReliableQueryProvider Provider { get; }
-
-        public abstract Expression Expression { get; }
+        return CreateCore(subscriptionUri, state);
     }
 
+    protected abstract IReliableQubscription CreateCore(Uri subscriptionUri, object state);
+
+    public IReliableQueryProvider Provider { get; }
+
+    public abstract Expression Expression { get; }
+}
+
+public abstract class ReliableQubscriptionFactoryBase<TArg> : IReliableQubscriptionFactory<TArg>
+{
+    protected ReliableQubscriptionFactoryBase(IReliableQueryProvider provider) => Provider = provider;
+
+    public IReliableQubscription Create(Uri subscriptionUri, TArg argument, object state = null)
+    {
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
+
+        return CreateCore(subscriptionUri, argument, state);
+    }
+
+    IReliableReactiveSubscription IReliableReactiveSubscriptionFactory<TArg>.Create(Uri subscriptionUri, TArg argument, object state)
+    {
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
+
+        return CreateCore(subscriptionUri, argument, state);
+    }
+
+    protected abstract IReliableQubscription CreateCore(Uri subscriptionUri, TArg argument, object state);
+
+    public IReliableQueryProvider Provider { get; }
+
+    public abstract Expression Expression { get; }
 }

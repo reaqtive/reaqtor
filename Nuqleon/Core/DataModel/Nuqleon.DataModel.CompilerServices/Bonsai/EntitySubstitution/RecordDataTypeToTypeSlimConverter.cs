@@ -11,16 +11,15 @@
 using System.Linq.CompilerServices;
 using System.Reflection;
 
-namespace Nuqleon.DataModel.CompilerServices.Bonsai
-{
-    internal sealed class RecordDataTypeToTypeSlimConverter : DataTypeToTypeSlimConverter
-    {
-        protected override StructuralTypeSlimReference GetTypeSlimBuilder() => StructuralTypeSlimReference.Create(hasValueEqualitySemantics: true, StructuralTypeSlimKind.Record);
+namespace Nuqleon.DataModel.CompilerServices.Bonsai;
 
-        protected override void AddProperty(StructuralTypeSlimReference builder, PropertyDataSlim property)
-        {
-            var propertyInfo = builder.GetProperty(property.Name, property.Type, EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: true);
-            builder.AddProperty(propertyInfo);
-        }
+internal sealed class RecordDataTypeToTypeSlimConverter : DataTypeToTypeSlimConverter
+{
+    protected override StructuralTypeSlimReference GetTypeSlimBuilder() => StructuralTypeSlimReference.Create(hasValueEqualitySemantics: true, StructuralTypeSlimKind.Record);
+
+    protected override void AddProperty(StructuralTypeSlimReference builder, PropertyDataSlim property)
+    {
+        var propertyInfo = builder.GetProperty(property.Name, property.Type, EmptyReadOnlyCollection<TypeSlim>.Instance, canWrite: true);
+        builder.AddProperty(propertyInfo);
     }
 }

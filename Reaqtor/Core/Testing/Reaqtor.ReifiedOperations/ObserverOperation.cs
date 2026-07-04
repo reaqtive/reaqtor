@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class ObserverOperation : ServiceOperation
 {
-    public class ObserverOperation : ServiceOperation
+    public ObserverOperation(ServiceOperationKind kind, Uri observerUri)
+        : base(kind, observerUri, state: null)
     {
-        public ObserverOperation(ServiceOperationKind kind, Uri observerUri)
-            : base(kind, observerUri, state: null)
-        {
-        }
     }
 }

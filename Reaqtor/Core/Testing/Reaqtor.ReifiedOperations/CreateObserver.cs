@@ -4,13 +4,12 @@
 
 using System;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class CreateObserver : CreateServiceOperation
 {
-    public class CreateObserver : CreateServiceOperation
+    public CreateObserver(Uri streamUri)
+        : base(ServiceOperationKind.CreateObserver, streamUri, expression: null, state: null)
     {
-        public CreateObserver(Uri streamUri)
-            : base(ServiceOperationKind.CreateObserver, streamUri, expression: null, state: null)
-        {
-        }
     }
 }

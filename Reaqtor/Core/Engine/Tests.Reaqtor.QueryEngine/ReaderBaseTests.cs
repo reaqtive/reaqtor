@@ -11,82 +11,81 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor.QueryEngine;
 
-namespace Tests.Reaqtor.QueryEngine
+namespace Tests.Reaqtor.QueryEngine;
+
+[TestClass]
+public class ReaderBaseTests
 {
-    [TestClass]
-    public class ReaderBaseTests
+    [TestMethod]
+    public void ReaderBase_ReadHeader_InvalidDataExceptions()
     {
-        [TestMethod]
-        public void ReaderBase_ReadHeader_InvalidDataExceptions()
-        {
-            var stream = new MemoryStream();
-            var writer = new WriterBase(stream, SerializationPolicy.Default);
-            writer.WriteHeader();
-            var bytes = stream.ToArray();
+        var stream = new MemoryStream();
+        var writer = new WriterBase(stream, SerializationPolicy.Default);
+        writer.WriteHeader();
+        var bytes = stream.ToArray();
 
-            // AD 1.0.0.0 ...
-            bytes[0] = b('A');
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadHeader());
-            bytes[0] = b('B');
+        // AD 1.0.0.0 ...
+        bytes[0] = b('A');
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadHeader());
+        bytes[0] = b('B');
 
-            // BD 0.9.0.0 ...
-            bytes[2] = 0;
-            bytes[6] = 9;
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadHeader());
-            bytes[2] = 1;
-            bytes[6] = 0;
-        }
+        // BD 0.9.0.0 ...
+        bytes[2] = 0;
+        bytes[6] = 9;
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadHeader());
+        bytes[2] = 1;
+        bytes[6] = 0;
+    }
 
-        [TestMethod]
-        public void ReaderBase_ReadHeader_MissingHeaderExceptions()
-        {
-            var stream = new MemoryStream();
-            var writer = new WriterBase(stream, SerializationPolicy.Default);
-            writer.WriteHeader();
-            var bytes = stream.ToArray();
+    [TestMethod]
+    public void ReaderBase_ReadHeader_MissingHeaderExceptions()
+    {
+        var stream = new MemoryStream();
+        var writer = new WriterBase(stream, SerializationPolicy.Default);
+        writer.WriteHeader();
+        var bytes = stream.ToArray();
 
-            // B
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(1)]), SerializationPolicy.Default).ReadHeader());
+        // B
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(1)]), SerializationPolicy.Default).ReadHeader());
 
-            // BD 1.0
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(10)]), SerializationPolicy.Default).ReadHeader());
+        // BD 1.0
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(10)]), SerializationPolicy.Default).ReadHeader());
 
-            // BD 1.0.0.0
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(18)]), SerializationPolicy.Default).ReadHeader());
+        // BD 1.0.0.0
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(18)]), SerializationPolicy.Default).ReadHeader());
 
-            // BD 1.0.0.0 0 1.0
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(30)]), SerializationPolicy.Default).ReadHeader());
-        }
+        // BD 1.0.0.0 0 1.0
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream([.. bytes.Take(30)]), SerializationPolicy.Default).ReadHeader());
+    }
 
-        [TestMethod]
-        public void ReaderBase_ReadFooter_InvalidDataExceptions()
-        {
-            var stream = new MemoryStream();
-            var writer = new WriterBase(stream, SerializationPolicy.Default);
-            writer.Dispose();
-            var bytes = stream.ToArray();
+    [TestMethod]
+    public void ReaderBase_ReadFooter_InvalidDataExceptions()
+    {
+        var stream = new MemoryStream();
+        var writer = new WriterBase(stream, SerializationPolicy.Default);
+        writer.Dispose();
+        var bytes = stream.ToArray();
 
-            bytes[0] = 0xDA;
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
-            bytes[0] = 0xDE;
+        bytes[0] = 0xDA;
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
+        bytes[0] = 0xDE;
 
-            bytes[1] = 0xAE;
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
-            bytes[1] = 0xAD;
+        bytes[1] = 0xAE;
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
+        bytes[1] = 0xAD;
 
-            bytes[2] = 0xDA;
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
-            bytes[2] = 0xDE;
+        bytes[2] = 0xDA;
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
+        bytes[2] = 0xDE;
 
-            bytes[3] = 0xAE;
-            Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
-            bytes[3] = 0xAD;
-        }
+        bytes[3] = 0xAE;
+        Assert.ThrowsExactly<InvalidDataException>(() => new ReaderBase(new MemoryStream(bytes), SerializationPolicy.Default).ReadFooter());
+        bytes[3] = 0xAD;
+    }
 
-        private static byte b<T>(T value)
-            where T : IConvertible
-        {
-            return value.ToByte(CultureInfo.InvariantCulture);
-        }
+    private static byte b<T>(T value)
+        where T : IConvertible
+    {
+        return value.ToByte(CultureInfo.InvariantCulture);
     }
 }

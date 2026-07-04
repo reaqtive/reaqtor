@@ -11,18 +11,17 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
-{
-    public class InsertObserverMetadata : InsertMetadataOperation
-    {
-        public InsertObserverMetadata(Uri observerUri)
-            : this(observerUri, null, null)
-        {
-        }
+namespace Reaqtor.TestingFramework;
 
-        public InsertObserverMetadata(Uri observerUri, Expression expression, object state)
-            : base(ServiceOperationKind.InsertObserverMetadata, observerUri, expression, state)
-        {
-        }
+public class InsertObserverMetadata : InsertMetadataOperation
+{
+    public InsertObserverMetadata(Uri observerUri)
+        : this(observerUri, null, null)
+    {
+    }
+
+    public InsertObserverMetadata(Uri observerUri, Expression expression, object state)
+        : base(ServiceOperationKind.InsertObserverMetadata, observerUri, expression, state)
+    {
     }
 }

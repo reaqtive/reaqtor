@@ -11,137 +11,136 @@
 using System.Collections.Generic;
 using System.Globalization;
 
-namespace System.Linq.CompilerServices.Optimizers
+namespace System.Linq.CompilerServices.Optimizers;
+
+/// <summary>
+/// Provides a set of combinators for optimizers.
+/// </summary>
+public static class Optimizer
 {
     /// <summary>
-    /// Provides a set of combinators for optimizers.
+    /// Gets an optimizer that does no optimizations.
     /// </summary>
-    public static class Optimizer
+    /// <returns>An optimizer that does no optimizations.</returns>
+    public static IOptimizer Nop() => NopOptimizer.Instance;
+
+    /// <summary>
+    /// Creates an optimizer that chains the given optimizers sequentially.
+    /// </summary>
+    /// <param name="first">The first optimizer.</param>
+    /// <param name="second">The second optimizer.</param>
+    /// <returns>An optimizer that chains the given optimizers sequentially.</returns>
+    public static IOptimizer Then(this IOptimizer first, IOptimizer second)
     {
-        /// <summary>
-        /// Gets an optimizer that does no optimizations.
-        /// </summary>
-        /// <returns>An optimizer that does no optimizations.</returns>
-        public static IOptimizer Nop() => NopOptimizer.Instance;
+        ArgumentNullException.ThrowIfNull(first);
 
-        /// <summary>
-        /// Creates an optimizer that chains the given optimizers sequentially.
-        /// </summary>
-        /// <param name="first">The first optimizer.</param>
-        /// <param name="second">The second optimizer.</param>
-        /// <returns>An optimizer that chains the given optimizers sequentially.</returns>
-        public static IOptimizer Then(this IOptimizer first, IOptimizer second)
+        ArgumentNullException.ThrowIfNull(second);
+
+        return new ThenOptimizer(first, second);
+    }
+
+    /// <summary>
+    /// Creates an optimizer that applies the given optimizer until a fixed point is found or retry limit is hit.
+    /// </summary>
+    /// <param name="optimizer">The optimizer whose fixed point to find.</param>
+    /// <param name="throwOnCycle">Flag indicating whether to throw on finding a cycle.</param>
+    /// <param name="maxIterations">The maximum number of iterations.</param>
+    /// <returns>An optimizer that applies the given optimizer until a fixed point is found or retry limit is hit.</returns>
+    public static IOptimizer FixedPoint(this IOptimizer optimizer, bool throwOnCycle, int maxIterations)
+    {
+        ArgumentNullException.ThrowIfNull(optimizer);
+
+        ArgumentOutOfRangeException.ThrowIfNegative(maxIterations);
+
+        return new FixedPointOptimizer(optimizer, maxIterations, throwOnCycle);
+    }
+
+    /// <summary>
+    /// Creates an optimizer that applies the given optimizer until a fixed point is found.
+    /// </summary>
+    /// <param name="optimizer">The optimizer whose fixed point to find.</param>
+    /// <param name="throwOnCycle">Flag indicating whether to throw on finding a cycle.</param>
+    /// <returns>An optimizer that applies the given optimizer until a fixed point is found.</returns>
+    public static IOptimizer FixedPoint(this IOptimizer optimizer, bool throwOnCycle)
+    {
+        ArgumentNullException.ThrowIfNull(optimizer);
+
+        return new FixedPointOptimizer(optimizer, int.MaxValue, throwOnCycle);
+    }
+
+    /// <summary>
+    /// Creates an optimizer that applies the given optimizer until a fixed point is found.
+    /// </summary>
+    /// <param name="optimizer">The optimizer whose fixed point to find.</param>
+    /// <returns>An optimizer that applies the given optimizer until a fixed point is found.</returns>
+    public static IOptimizer FixedPoint(this IOptimizer optimizer)
+    {
+        ArgumentNullException.ThrowIfNull(optimizer);
+
+        return new FixedPointOptimizer(optimizer, int.MaxValue, throwOnCycle: true);
+    }
+
+    private sealed class ThenOptimizer : IOptimizer
+    {
+        private readonly IOptimizer _first;
+        private readonly IOptimizer _second;
+
+        public ThenOptimizer(IOptimizer first, IOptimizer second)
         {
-            ArgumentNullException.ThrowIfNull(first);
-
-            ArgumentNullException.ThrowIfNull(second);
-
-            return new ThenOptimizer(first, second);
+            _first = first;
+            _second = second;
         }
 
-        /// <summary>
-        /// Creates an optimizer that applies the given optimizer until a fixed point is found or retry limit is hit.
-        /// </summary>
-        /// <param name="optimizer">The optimizer whose fixed point to find.</param>
-        /// <param name="throwOnCycle">Flag indicating whether to throw on finding a cycle.</param>
-        /// <param name="maxIterations">The maximum number of iterations.</param>
-        /// <returns>An optimizer that applies the given optimizer until a fixed point is found or retry limit is hit.</returns>
-        public static IOptimizer FixedPoint(this IOptimizer optimizer, bool throwOnCycle, int maxIterations)
+        public QueryTree Optimize(QueryTree queryTree) => _second.Optimize(_first.Optimize(queryTree));
+    }
+
+    private sealed class FixedPointOptimizer : IOptimizer
+    {
+        private readonly IOptimizer _optimizer;
+        private readonly int _maxIterations;
+        private readonly bool _throwOnCycle;
+
+        public FixedPointOptimizer(IOptimizer optimizer, int maxIterations, bool throwOnCycle)
         {
-            ArgumentNullException.ThrowIfNull(optimizer);
-
-            ArgumentOutOfRangeException.ThrowIfNegative(maxIterations);
-
-            return new FixedPointOptimizer(optimizer, maxIterations, throwOnCycle);
+            _optimizer = optimizer;
+            _maxIterations = maxIterations;
+            _throwOnCycle = throwOnCycle;
         }
 
-        /// <summary>
-        /// Creates an optimizer that applies the given optimizer until a fixed point is found.
-        /// </summary>
-        /// <param name="optimizer">The optimizer whose fixed point to find.</param>
-        /// <param name="throwOnCycle">Flag indicating whether to throw on finding a cycle.</param>
-        /// <returns>An optimizer that applies the given optimizer until a fixed point is found.</returns>
-        public static IOptimizer FixedPoint(this IOptimizer optimizer, bool throwOnCycle)
+        public QueryTree Optimize(QueryTree queryTree)
         {
-            ArgumentNullException.ThrowIfNull(optimizer);
+            var history = new HashSet<QueryTree>(new QueryExpressionEqualityComparator());
 
-            return new FixedPointOptimizer(optimizer, int.MaxValue, throwOnCycle);
-        }
+            var current = queryTree;
+            var reduced = default(QueryTree);
 
-        /// <summary>
-        /// Creates an optimizer that applies the given optimizer until a fixed point is found.
-        /// </summary>
-        /// <param name="optimizer">The optimizer whose fixed point to find.</param>
-        /// <returns>An optimizer that applies the given optimizer until a fixed point is found.</returns>
-        public static IOptimizer FixedPoint(this IOptimizer optimizer)
-        {
-            ArgumentNullException.ThrowIfNull(optimizer);
-
-            return new FixedPointOptimizer(optimizer, int.MaxValue, throwOnCycle: true);
-        }
-
-        private sealed class ThenOptimizer : IOptimizer
-        {
-            private readonly IOptimizer _first;
-            private readonly IOptimizer _second;
-
-            public ThenOptimizer(IOptimizer first, IOptimizer second)
+            var i = 0;
+            while (current != reduced)
             {
-                _first = first;
-                _second = second;
-            }
-
-            public QueryTree Optimize(QueryTree queryTree) => _second.Optimize(_first.Optimize(queryTree));
-        }
-
-        private sealed class FixedPointOptimizer : IOptimizer
-        {
-            private readonly IOptimizer _optimizer;
-            private readonly int _maxIterations;
-            private readonly bool _throwOnCycle;
-
-            public FixedPointOptimizer(IOptimizer optimizer, int maxIterations, bool throwOnCycle)
-            {
-                _optimizer = optimizer;
-                _maxIterations = maxIterations;
-                _throwOnCycle = throwOnCycle;
-            }
-
-            public QueryTree Optimize(QueryTree queryTree)
-            {
-                var history = new HashSet<QueryTree>(new QueryExpressionEqualityComparator());
-
-                var current = queryTree;
-                var reduced = default(QueryTree);
-
-                var i = 0;
-                while (current != reduced)
+                if (!history.Add(current))
                 {
-                    if (!history.Add(current))
+                    if (_throwOnCycle)
                     {
-                        if (_throwOnCycle)
-                        {
-                            throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Irreducible recursive query tree detected: '{0}'.", current));
-                        }
-                        else
-                        {
-                            break;
-                        }
+                        throw new InvalidOperationException(string.Format(CultureInfo.InvariantCulture, "Irreducible recursive query tree detected: '{0}'.", current));
                     }
-
-                    if (i == _maxIterations)
+                    else
                     {
                         break;
                     }
-
-                    reduced = current;
-                    current = _optimizer.Optimize(current);
-
-                    i++;
                 }
 
-                return current;
+                if (i == _maxIterations)
+                {
+                    break;
+                }
+
+                reduced = current;
+                current = _optimizer.Optimize(current);
+
+                i++;
             }
+
+            return current;
         }
     }
 }

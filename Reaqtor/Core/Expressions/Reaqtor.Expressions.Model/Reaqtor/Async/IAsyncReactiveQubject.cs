@@ -8,12 +8,11 @@
 // BD - June 2013 - Created this file.
 //
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for a subject represented by an expression tree.
+/// </summary>
+public interface IAsyncReactiveQubject : IAsyncReactiveQbserver, IAsyncReactiveQbservable, IAsyncReactiveExpressible
 {
-    /// <summary>
-    /// Interface for a subject represented by an expression tree.
-    /// </summary>
-    public interface IAsyncReactiveQubject : IAsyncReactiveQbserver, IAsyncReactiveQbservable, IAsyncReactiveExpressible
-    {
-    }
 }

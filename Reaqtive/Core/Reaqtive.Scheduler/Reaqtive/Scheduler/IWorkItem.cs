@@ -4,60 +4,59 @@
 
 using System;
 
-namespace Reaqtive.Scheduler
+namespace Reaqtive.Scheduler;
+
+/// <summary>
+/// Interface representing a scheduler work item.
+/// </summary>
+/// <typeparam name="TTime">The type used to represent the due time.</typeparam>
+public interface IWorkItem<out TTime> : IWorkItem
+    where TTime : IComparable<TTime>
 {
     /// <summary>
-    /// Interface representing a scheduler work item.
+    /// Gets the due time when the work item should run.
     /// </summary>
-    /// <typeparam name="TTime">The type used to represent the due time.</typeparam>
-    public interface IWorkItem<out TTime> : IWorkItem
-        where TTime : IComparable<TTime>
-    {
-        /// <summary>
-        /// Gets the due time when the work item should run.
-        /// </summary>
-        TTime DueTime { get; }
-    }
+    TTime DueTime { get; }
+}
+
+/// <summary>
+/// Interface representing a scheduler work item.
+/// </summary>
+public interface IWorkItem
+{
+    /// <summary>
+    /// Gets the item's priority.
+    /// </summary>
+    long Priority { get; }
 
     /// <summary>
-    /// Interface representing a scheduler work item.
+    /// Gets the task to run.
     /// </summary>
-    public interface IWorkItem
-    {
-        /// <summary>
-        /// Gets the item's priority.
-        /// </summary>
-        long Priority { get; }
+    ISchedulerTask Task { get; }
 
-        /// <summary>
-        /// Gets the task to run.
-        /// </summary>
-        ISchedulerTask Task { get; }
+    /// <summary>
+    /// Gets the logical scheduler that owns the work item.
+    /// </summary>
+    IScheduler Scheduler { get; }
 
-        /// <summary>
-        /// Gets the logical scheduler that owns the work item.
-        /// </summary>
-        IScheduler Scheduler { get; }
+    /// <summary>
+    /// Gets or sets a value indicating whether the item is paused.
+    /// </summary>
+    bool IsPaused { get; set; }
 
-        /// <summary>
-        /// Gets or sets a value indicating whether the item is paused.
-        /// </summary>
-        bool IsPaused { get; set; }
+    /// <summary>
+    /// Gets a value indicating whether this instance is runnable.
+    /// </summary>
+    bool IsRunnable { get; }
 
-        /// <summary>
-        /// Gets a value indicating whether this instance is runnable.
-        /// </summary>
-        bool IsRunnable { get; }
+    /// <summary>
+    /// Invokes the item.
+    /// </summary>
+    /// <returns><c>true</c> if the task has completed and should not be rescheduled; otherwise, <c>false</c>.</returns>
+    bool Invoke();
 
-        /// <summary>
-        /// Invokes the item.
-        /// </summary>
-        /// <returns><c>true</c> if the task has completed and should not be rescheduled; otherwise, <c>false</c>.</returns>
-        bool Invoke();
-
-        /// <summary>
-        /// Recalculates the priority.
-        /// </summary>
-        void RecalculatePriority();
-    }
+    /// <summary>
+    /// Recalculates the priority.
+    /// </summary>
+    void RecalculatePriority();
 }

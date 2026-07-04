@@ -6,42 +6,41 @@ using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+public partial class CheckpointingQueryEngine
 {
-    public partial class CheckpointingQueryEngine
+    private partial class CoreReactiveEngine
     {
-        private partial class CoreReactiveEngine
+        private static void FailSafe(Action a, List<Exception> errors)
         {
-            private static void FailSafe(Action a, List<Exception> errors)
-            {
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1031 // Do not catch general exception types. (Purpose of Safe variant.)
 
-                try
-                {
-                    a();
-                }
-                catch (Exception ex)
-                {
-                    errors.Add(ex);
-                }
+            try
+            {
+                a();
+            }
+            catch (Exception ex)
+            {
+                errors.Add(ex);
+            }
 
 #pragma warning restore CA1031
 #pragma warning restore IDE0079
-            }
+        }
 
-            private static bool TryParse(string pattern, out Regex regex)
+        private static bool TryParse(string pattern, out Regex regex)
+        {
+            try
             {
-                try
-                {
-                    regex = new Regex(pattern, RegexOptions.Compiled);
-                    return true;
-                }
-                catch (ArgumentException)
-                {
-                    regex = null;
-                    return false;
-                }
+                regex = new Regex(pattern, RegexOptions.Compiled);
+                return true;
+            }
+            catch (ArgumentException)
+            {
+                regex = null;
+                return false;
             }
         }
     }

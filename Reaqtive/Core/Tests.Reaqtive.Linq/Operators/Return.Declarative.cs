@@ -12,26 +12,25 @@ using Reaqtor.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public partial class Return : OperatorTestBase
 {
-    public partial class Return : OperatorTestBase
+    [TestMethod]
+    public void Return_Simple()
     {
-        [TestMethod]
-        public void Return_Simple()
+        Run(client =>
         {
-            Run(client =>
-            {
-                var context = GetContext(client);
+            var context = GetContext(client);
 
-                var res = client.Start(() =>
-                    context.Return<int>(42)
-                );
+            var res = client.Start(() =>
+                context.Return<int>(42)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext<int>(Increment(200, 1), 42),
-                    OnCompleted<int>(Increment(200, 1))
-                );
-            });
-        }
+            res.Messages.AssertEqual(
+                OnNext<int>(Increment(200, 1), 42),
+                OnCompleted<int>(Increment(200, 1))
+            );
+        });
     }
 }

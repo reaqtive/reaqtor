@@ -10,12 +10,11 @@
 
 using System.Linq.Expressions;
 
-namespace Reaqtor.Metadata
+namespace Reaqtor.Metadata;
+
+/// <summary>
+/// Interface representing a resource available in a reactive processing service.
+/// </summary>
+public interface IReactiveResource : IKnownResource, IExpressible
 {
-    /// <summary>
-    /// Interface representing a resource available in a reactive processing service.
-    /// </summary>
-    public interface IReactiveResource : IKnownResource, IExpressible
-    {
-    }
 }

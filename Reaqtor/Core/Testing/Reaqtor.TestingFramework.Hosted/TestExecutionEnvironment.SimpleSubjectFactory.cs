@@ -5,43 +5,42 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public partial class TestExecutionEnvironment
 {
-    public partial class TestExecutionEnvironment
+    private sealed class SimpleSubjectFactory<I, O> : IReactiveQubjectFactory<I, O>
     {
-        private sealed class SimpleSubjectFactory<I, O> : IReactiveQubjectFactory<I, O>
+        private readonly TestExecutionEnvironment _parent;
+
+        public SimpleSubjectFactory(TestExecutionEnvironment parent)
         {
-            private readonly TestExecutionEnvironment _parent;
-
-            public SimpleSubjectFactory(TestExecutionEnvironment parent)
-            {
-                _parent = parent;
-            }
-
-            public IReactiveQubject<I, O> Create(Uri streamUri, object state)
-            {
-                if (typeof(I) == typeof(O))
-                {
-                    var res = new NotSoSimpleSubject<I>(_parent, streamUri);
-                    _parent.AddArtifact(streamUri, res);
-                    return (IReactiveQubject<I, O>)res;
-                }
-
-                throw new NotImplementedException();
-            }
-
-            IReactiveSubject<I, O> IReactiveSubjectFactory<I, O>.Create(Uri streamUri, object state)
-            {
-                return Create(streamUri, state);
-            }
-
-            #region Not implemented
-
-            public IReactiveQueryProvider Provider => throw new NotImplementedException();
-
-            public Expression Expression => throw new NotImplementedException();
-
-            #endregion
+            _parent = parent;
         }
+
+        public IReactiveQubject<I, O> Create(Uri streamUri, object state)
+        {
+            if (typeof(I) == typeof(O))
+            {
+                var res = new NotSoSimpleSubject<I>(_parent, streamUri);
+                _parent.AddArtifact(streamUri, res);
+                return (IReactiveQubject<I, O>)res;
+            }
+
+            throw new NotImplementedException();
+        }
+
+        IReactiveSubject<I, O> IReactiveSubjectFactory<I, O>.Create(Uri streamUri, object state)
+        {
+            return Create(streamUri, state);
+        }
+
+        #region Not implemented
+
+        public IReactiveQueryProvider Provider => throw new NotImplementedException();
+
+        public Expression Expression => throw new NotImplementedException();
+
+        #endregion
     }
 }

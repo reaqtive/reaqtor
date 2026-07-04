@@ -11,21 +11,20 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Interface for the representation of an expression bound by an environment.
+/// </summary>
+public interface IExpressionWithEnvironment
 {
     /// <summary>
-    /// Interface for the representation of an expression bound by an environment.
+    /// Gets the expression bound to the environment.
     /// </summary>
-    public interface IExpressionWithEnvironment
-    {
-        /// <summary>
-        /// Gets the expression bound to the environment.
-        /// </summary>
-        Expression Expression { get; }
+    Expression Expression { get; }
 
-        /// <summary>
-        /// Gets the environment containing bindings of parameters to values in the expression.
-        /// </summary>
-        IReadOnlyList<Binding> Bindings { get; }
-    }
+    /// <summary>
+    /// Gets the environment containing bindings of parameters to values in the expression.
+    /// </summary>
+    IReadOnlyList<Binding> Bindings { get; }
 }

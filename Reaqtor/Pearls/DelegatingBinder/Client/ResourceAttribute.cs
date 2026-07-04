@@ -4,16 +4,15 @@
 
 using System;
 
-namespace DelegatingBinder
-{
-    [AttributeUsage(AttributeTargets.Method)]
-    internal sealed class ResourceAttribute : Attribute
-    {
-        public ResourceAttribute(string id)
-        {
-            Id = id;
-        }
+namespace DelegatingBinder;
 
-        public string Id { get; }
+[AttributeUsage(AttributeTargets.Method)]
+internal sealed class ResourceAttribute : Attribute
+{
+    public ResourceAttribute(string id)
+    {
+        Id = id;
     }
+
+    public string Id { get; }
 }

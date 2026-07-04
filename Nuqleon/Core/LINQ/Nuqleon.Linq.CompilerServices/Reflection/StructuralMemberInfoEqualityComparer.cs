@@ -10,54 +10,53 @@
 
 using System.Collections.Generic;
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// MemberInfo comparer for structural types.
+/// </summary>
+public class StructuralMemberInfoEqualityComparer : IEqualityComparer<MemberInfo>
 {
+    private readonly Func<StructuralMemberInfoEqualityComparator> _comparatorFactory;
+
     /// <summary>
-    /// MemberInfo comparer for structural types.
+    /// Instantiates a MemberInfo comparer for structural type members, using a default comparator factory.
     /// </summary>
-    public class StructuralMemberInfoEqualityComparer : IEqualityComparer<MemberInfo>
+    public StructuralMemberInfoEqualityComparer()
+        : this(() => new StructuralMemberInfoEqualityComparator())
     {
-        private readonly Func<StructuralMemberInfoEqualityComparator> _comparatorFactory;
-
-        /// <summary>
-        /// Instantiates a MemberInfo comparer for structural type members, using a default comparator factory.
-        /// </summary>
-        public StructuralMemberInfoEqualityComparer()
-            : this(() => new StructuralMemberInfoEqualityComparator())
-        {
-        }
-
-        /// <summary>
-        /// Instantiates a MemberInfo comparer for structural type members, using the given comparator factory.
-        /// </summary>
-        /// <param name="comparatorFactory">Factory to produce comparator instances for performing equals and hash code operations.</param>
-        public StructuralMemberInfoEqualityComparer(Func<StructuralMemberInfoEqualityComparator> comparatorFactory) => _comparatorFactory = comparatorFactory;
-
-        /// <summary>
-        /// A default instance of the equality comparer.
-        /// </summary>
-        public static StructuralMemberInfoEqualityComparer Default
-        {
-            get
-            {
-                field ??= new StructuralMemberInfoEqualityComparer();
-                return field;
-            }
-        }
-
-        /// <summary>
-        /// Checks whether two given members are equal.
-        /// </summary>
-        /// <param name="x">The left member.</param>
-        /// <param name="y">The right member.</param>
-        /// <returns>true if the given members are equal, false otherwise.</returns>
-        public bool Equals(MemberInfo x, MemberInfo y) => _comparatorFactory().Equals(x, y);
-
-        /// <summary>
-        /// Returns a hash code for the specified member.
-        /// </summary>
-        /// <param name="obj">The member for which a hash code is to be returned.</param>
-        /// <returns>The hash code of the member.</returns>
-        public int GetHashCode(MemberInfo obj) => _comparatorFactory().GetHashCode(obj);
     }
+
+    /// <summary>
+    /// Instantiates a MemberInfo comparer for structural type members, using the given comparator factory.
+    /// </summary>
+    /// <param name="comparatorFactory">Factory to produce comparator instances for performing equals and hash code operations.</param>
+    public StructuralMemberInfoEqualityComparer(Func<StructuralMemberInfoEqualityComparator> comparatorFactory) => _comparatorFactory = comparatorFactory;
+
+    /// <summary>
+    /// A default instance of the equality comparer.
+    /// </summary>
+    public static StructuralMemberInfoEqualityComparer Default
+    {
+        get
+        {
+            field ??= new StructuralMemberInfoEqualityComparer();
+            return field;
+        }
+    }
+
+    /// <summary>
+    /// Checks whether two given members are equal.
+    /// </summary>
+    /// <param name="x">The left member.</param>
+    /// <param name="y">The right member.</param>
+    /// <returns>true if the given members are equal, false otherwise.</returns>
+    public bool Equals(MemberInfo x, MemberInfo y) => _comparatorFactory().Equals(x, y);
+
+    /// <summary>
+    /// Returns a hash code for the specified member.
+    /// </summary>
+    /// <param name="obj">The member for which a hash code is to be returned.</param>
+    /// <returns>The hash code of the member.</returns>
+    public int GetHashCode(MemberInfo obj) => _comparatorFactory().GetHashCode(obj);
 }

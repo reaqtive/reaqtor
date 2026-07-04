@@ -12,42 +12,41 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Base class for observables.
+/// </summary>
+/// <typeparam name="T">Type of the data produced by the observable.</typeparam>
+public abstract class AsyncReactiveObservableBase<T> : IAsyncReactiveObservable<T>
 {
+    #region SubscribeAsync
+
     /// <summary>
-    /// Base class for observables.
+    /// Subscribes to the observable using the given observer.
     /// </summary>
-    /// <typeparam name="T">Type of the data produced by the observable.</typeparam>
-    public abstract class AsyncReactiveObservableBase<T> : IAsyncReactiveObservable<T>
+    /// <param name="observer">Observer to send the observable's data to.</param>
+    /// <param name="subscriptionUri">URI to identify the subscription.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <param name="token">Token to observe for cancellation of the request.</param>
+    /// <returns>Task returning a subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
+    public Task<IAsyncReactiveSubscription> SubscribeAsync(IAsyncReactiveObserver<T> observer, Uri subscriptionUri, object state = null, CancellationToken token = default)
     {
-        #region SubscribeAsync
+        ArgumentNullException.ThrowIfNull(observer);
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
 
-        /// <summary>
-        /// Subscribes to the observable using the given observer.
-        /// </summary>
-        /// <param name="observer">Observer to send the observable's data to.</param>
-        /// <param name="subscriptionUri">URI to identify the subscription.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <param name="token">Token to observe for cancellation of the request.</param>
-        /// <returns>Task returning a subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
-        public Task<IAsyncReactiveSubscription> SubscribeAsync(IAsyncReactiveObserver<T> observer, Uri subscriptionUri, object state = null, CancellationToken token = default)
-        {
-            ArgumentNullException.ThrowIfNull(observer);
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return SubscribeAsyncCore(observer, subscriptionUri, state, token);
-        }
-
-        /// <summary>
-        /// Subscribes to the observable using the given observer.
-        /// </summary>
-        /// <param name="observer">Observer to send the observable's data to.</param>
-        /// <param name="subscriptionUri">URI to identify the subscription.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <param name="token">Token to observe for cancellation of the request.</param>
-        /// <returns>Task returning a subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
-        protected abstract Task<IAsyncReactiveSubscription> SubscribeAsyncCore(IAsyncReactiveObserver<T> observer, Uri subscriptionUri, object state, CancellationToken token);
-
-        #endregion
+        return SubscribeAsyncCore(observer, subscriptionUri, state, token);
     }
+
+    /// <summary>
+    /// Subscribes to the observable using the given observer.
+    /// </summary>
+    /// <param name="observer">Observer to send the observable's data to.</param>
+    /// <param name="subscriptionUri">URI to identify the subscription.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <param name="token">Token to observe for cancellation of the request.</param>
+    /// <returns>Task returning a subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
+    protected abstract Task<IAsyncReactiveSubscription> SubscribeAsyncCore(IAsyncReactiveObserver<T> observer, Uri subscriptionUri, object state, CancellationToken token);
+
+    #endregion
 }

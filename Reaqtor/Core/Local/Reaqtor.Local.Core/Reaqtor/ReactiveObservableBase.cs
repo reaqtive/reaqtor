@@ -10,40 +10,39 @@
 
 using System;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Base class for observables.
+/// </summary>
+/// <typeparam name="T">Type of the data produced by the observable.</typeparam>
+public abstract class ReactiveObservableBase<T> : IReactiveObservable<T>
 {
+    #region Subscribe
+
     /// <summary>
-    /// Base class for observables.
+    /// Subscribes to the observable using the given observer.
     /// </summary>
-    /// <typeparam name="T">Type of the data produced by the observable.</typeparam>
-    public abstract class ReactiveObservableBase<T> : IReactiveObservable<T>
+    /// <param name="observer">Observer to send the observable's data to.</param>
+    /// <param name="subscriptionUri">URI to identify the subscription.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>Subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
+    public IReactiveSubscription Subscribe(IReactiveObserver<T> observer, Uri subscriptionUri, object state = null)
     {
-        #region Subscribe
+        ArgumentNullException.ThrowIfNull(observer);
+        ArgumentNullException.ThrowIfNull(subscriptionUri);
 
-        /// <summary>
-        /// Subscribes to the observable using the given observer.
-        /// </summary>
-        /// <param name="observer">Observer to send the observable's data to.</param>
-        /// <param name="subscriptionUri">URI to identify the subscription.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>Subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
-        public IReactiveSubscription Subscribe(IReactiveObserver<T> observer, Uri subscriptionUri, object state = null)
-        {
-            ArgumentNullException.ThrowIfNull(observer);
-            ArgumentNullException.ThrowIfNull(subscriptionUri);
-
-            return SubscribeCore(observer, subscriptionUri, state);
-        }
-
-        /// <summary>
-        /// Subscribes to the observable using the given observer.
-        /// </summary>
-        /// <param name="observer">Observer to send the observable's data to.</param>
-        /// <param name="subscriptionUri">URI to identify the subscription.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>Subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
-        protected abstract IReactiveSubscription SubscribeCore(IReactiveObserver<T> observer, Uri subscriptionUri, object state);
-
-        #endregion
+        return SubscribeCore(observer, subscriptionUri, state);
     }
+
+    /// <summary>
+    /// Subscribes to the observable using the given observer.
+    /// </summary>
+    /// <param name="observer">Observer to send the observable's data to.</param>
+    /// <param name="subscriptionUri">URI to identify the subscription.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>Subscription object that can be used to cancel the subscription, or an exception if the submission was unsuccessful.</returns>
+    protected abstract IReactiveSubscription SubscribeCore(IReactiveObserver<T> observer, Uri subscriptionUri, object state);
+
+    #endregion
 }

@@ -10,33 +10,32 @@
 
 using System.Collections.ObjectModel;
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Lightweight representation of a simple method, i.e. not generic.
+/// </summary>
+public class SimpleMethodInfoSlim : SimpleMethodInfoSlimBase
 {
     /// <summary>
-    /// Lightweight representation of a simple method, i.e. not generic.
+    /// Creates a new simple method representation object.
     /// </summary>
-    public class SimpleMethodInfoSlim : SimpleMethodInfoSlimBase
+    /// <param name="declaringType">Type declaring the method.</param>
+    /// <param name="name">Name of the method.</param>
+    /// <param name="parameterTypes">Type of the method parameters.</param>
+    /// <param name="returnType">Return type of the method.</param>
+    internal SimpleMethodInfoSlim(TypeSlim declaringType, string name, ReadOnlyCollection<TypeSlim> parameterTypes, TypeSlim returnType)
+        : base(declaringType, name, parameterTypes, returnType)
     {
-        /// <summary>
-        /// Creates a new simple method representation object.
-        /// </summary>
-        /// <param name="declaringType">Type declaring the method.</param>
-        /// <param name="name">Name of the method.</param>
-        /// <param name="parameterTypes">Type of the method parameters.</param>
-        /// <param name="returnType">Return type of the method.</param>
-        internal SimpleMethodInfoSlim(TypeSlim declaringType, string name, ReadOnlyCollection<TypeSlim> parameterTypes, TypeSlim returnType)
-            : base(declaringType, name, parameterTypes, returnType)
-        {
-        }
-
-        /// <summary>
-        /// Gets the kind of the method.
-        /// </summary>
-        public override MethodInfoSlimKind Kind => MethodInfoSlimKind.Simple;
-
-        /// <summary>
-        /// Checks if the method is generic.
-        /// </summary>
-        public override bool IsGenericMethod => false;
     }
+
+    /// <summary>
+    /// Gets the kind of the method.
+    /// </summary>
+    public override MethodInfoSlimKind Kind => MethodInfoSlimKind.Simple;
+
+    /// <summary>
+    /// Checks if the method is generic.
+    /// </summary>
+    public override bool IsGenericMethod => false;
 }

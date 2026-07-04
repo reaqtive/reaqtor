@@ -6,32 +6,31 @@ using System;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class TypeUtilsTests
 {
-    [TestClass]
-    public class TypeUtilsTests
+    [TestMethod]
+    public void IsNullableType()
     {
-        [TestMethod]
-        public void IsNullableType()
-        {
-            Assert.IsFalse(typeof(int).IsNullableType());
-            Assert.IsFalse(typeof(Nullable<>).IsNullableType());
-            Assert.IsTrue(typeof(int?).IsNullableType());
-        }
+        Assert.IsFalse(typeof(int).IsNullableType());
+        Assert.IsFalse(typeof(Nullable<>).IsNullableType());
+        Assert.IsTrue(typeof(int?).IsNullableType());
+    }
 
-        [TestMethod]
-        public void GetNonNullableType()
-        {
-            Assert.AreEqual(typeof(int), typeof(int).GetNonNullableType());
-            Assert.AreEqual(typeof(int), typeof(int?).GetNonNullableType());
-            Assert.AreEqual(typeof(string), typeof(string).GetNonNullableType());
-        }
+    [TestMethod]
+    public void GetNonNullableType()
+    {
+        Assert.AreEqual(typeof(int), typeof(int).GetNonNullableType());
+        Assert.AreEqual(typeof(int), typeof(int?).GetNonNullableType());
+        Assert.AreEqual(typeof(string), typeof(string).GetNonNullableType());
+    }
 
-        [TestMethod]
-        public void AreEquivalent()
-        {
-            Assert.IsTrue(TypeUtils.AreEquivalent(typeof(int), typeof(int)));
-            Assert.IsFalse(TypeUtils.AreEquivalent(typeof(int), typeof(string)));
-        }
+    [TestMethod]
+    public void AreEquivalent()
+    {
+        Assert.IsTrue(TypeUtils.AreEquivalent(typeof(int), typeof(int)));
+        Assert.IsFalse(TypeUtils.AreEquivalent(typeof(int), typeof(string)));
     }
 }

@@ -11,18 +11,17 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
-{
-    public class CreateSubscription : CreateServiceOperation
-    {
-        public CreateSubscription(Uri subscriptionUri)
-            : this(subscriptionUri, subscription: null, state: null)
-        {
-        }
+namespace Reaqtor.TestingFramework;
 
-        public CreateSubscription(Uri subscriptionUri, Expression subscription, object state)
-            : base(ServiceOperationKind.CreateSubscription, subscriptionUri, subscription, state)
-        {
-        }
+public class CreateSubscription : CreateServiceOperation
+{
+    public CreateSubscription(Uri subscriptionUri)
+        : this(subscriptionUri, subscription: null, state: null)
+    {
+    }
+
+    public CreateSubscription(Uri subscriptionUri, Expression subscription, object state)
+        : base(ServiceOperationKind.CreateSubscription, subscriptionUri, subscription, state)
+    {
     }
 }

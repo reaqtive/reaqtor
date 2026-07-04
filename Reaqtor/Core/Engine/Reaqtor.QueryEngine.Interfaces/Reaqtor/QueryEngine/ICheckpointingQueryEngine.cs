@@ -2,12 +2,11 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Represents a query engine that can be checkpointed.
+/// </summary>
+public interface ICheckpointingQueryEngine : IReliableQueryEngine, ICheckpointable
 {
-    /// <summary>
-    /// Represents a query engine that can be checkpointed.
-    /// </summary>
-    public interface ICheckpointingQueryEngine : IReliableQueryEngine, ICheckpointable
-    {
-    }
 }

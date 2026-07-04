@@ -11,47 +11,46 @@
 
 using Json = Nuqleon.Json.Expressions;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal abstract class TypeRef
 {
-    internal abstract class TypeRef
+    #region Properties
+
+    public abstract int Index { get; }
+
+    #endregion
+
+    #region Methods
+
+    public Json.Expression ToJson() => Index.ToJsonNumber();
+
+    public static TypeRef FromJson(Json.Expression expression)
     {
-        #region Properties
+        if (expression.NodeType != Json.ExpressionType.Number)
+            throw new BonsaiParseException("Expected a JSON number for a type table index used in a type reference.", expression);
 
-        public abstract int Index { get; }
-
-        #endregion
-
-        #region Methods
-
-        public Json.Expression ToJson() => Index.ToJsonNumber();
-
-        public static TypeRef FromJson(Json.Expression expression)
-        {
-            if (expression.NodeType != Json.ExpressionType.Number)
-                throw new BonsaiParseException("Expected a JSON number for a type table index used in a type reference.", expression);
-
-            var index = Helpers.ParseInt32((string)((Json.ConstantExpression)expression).Value);
-            return new SimpleTypeRef(index);
-        }
-
-        #endregion
+        var index = Helpers.ParseInt32((string)((Json.ConstantExpression)expression).Value);
+        return new SimpleTypeRef(index);
     }
 
-    internal sealed class SimpleTypeRef : TypeRef
+    #endregion
+}
+
+internal sealed class SimpleTypeRef : TypeRef
+{
+    #region Constructors
+
+    public SimpleTypeRef(int index)
     {
-        #region Constructors
-
-        public SimpleTypeRef(int index)
-        {
-            Index = index;
-        }
-
-        #endregion
-
-        #region Properties
-
-        public sealed override int Index { get; }
-
-        #endregion
+        Index = index;
     }
+
+    #endregion
+
+    #region Properties
+
+    public sealed override int Index { get; }
+
+    #endregion
 }

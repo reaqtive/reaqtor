@@ -10,47 +10,46 @@
 
 using System.Collections.Generic;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Equality comparer for structural types.
+/// </summary>
+public class StructuralTypeEqualityComparer : IEqualityComparer<Type>
 {
+    private readonly Func<StructuralTypeEqualityComparator> _comparatorFactory;
+
     /// <summary>
-    /// Equality comparer for structural types.
+    /// Instantiates an equality comparer for structural types, using the default structural type comparator
     /// </summary>
-    public class StructuralTypeEqualityComparer : IEqualityComparer<Type>
+    public StructuralTypeEqualityComparer()
+        : this(() => new StructuralTypeEqualityComparator())
     {
-        private readonly Func<StructuralTypeEqualityComparator> _comparatorFactory;
-
-        /// <summary>
-        /// Instantiates an equality comparer for structural types, using the default structural type comparator
-        /// </summary>
-        public StructuralTypeEqualityComparer()
-            : this(() => new StructuralTypeEqualityComparator())
-        {
-        }
-
-        /// <summary>
-        /// Instantiates an equality comparer for structural types.
-        /// </summary>
-        /// <param name="comparatorFactory">A factory to get structural type comparator instances.</param>
-        public StructuralTypeEqualityComparer(Func<StructuralTypeEqualityComparator> comparatorFactory) => _comparatorFactory = comparatorFactory ?? throw new ArgumentNullException(nameof(comparatorFactory));
-
-        /// <summary>
-        /// A default instance of the equality comparer.
-        /// </summary>
-        public static StructuralTypeEqualityComparer Default => field ??= new StructuralTypeEqualityComparer();
-
-        /// <summary>
-        /// Checks whether two given types are equal.
-        /// </summary>
-        /// <param name="x">The left type.</param>
-        /// <param name="y">The right type.</param>
-        /// <returns>true if the given types are equal, false otherwise.</returns>
-        public bool Equals(Type x, Type y) => _comparatorFactory().Equals(x, y);
-
-        /// <summary>
-        /// Returns a hash code for the specified type.
-        /// </summary>
-        /// <param name="obj">The type for which a hash code is to be returned.</param>
-        /// <returns>The hash code of the type.</returns>
-        public int GetHashCode(Type obj) => _comparatorFactory().GetHashCode(obj);
     }
+
+    /// <summary>
+    /// Instantiates an equality comparer for structural types.
+    /// </summary>
+    /// <param name="comparatorFactory">A factory to get structural type comparator instances.</param>
+    public StructuralTypeEqualityComparer(Func<StructuralTypeEqualityComparator> comparatorFactory) => _comparatorFactory = comparatorFactory ?? throw new ArgumentNullException(nameof(comparatorFactory));
+
+    /// <summary>
+    /// A default instance of the equality comparer.
+    /// </summary>
+    public static StructuralTypeEqualityComparer Default => field ??= new StructuralTypeEqualityComparer();
+
+    /// <summary>
+    /// Checks whether two given types are equal.
+    /// </summary>
+    /// <param name="x">The left type.</param>
+    /// <param name="y">The right type.</param>
+    /// <returns>true if the given types are equal, false otherwise.</returns>
+    public bool Equals(Type x, Type y) => _comparatorFactory().Equals(x, y);
+
+    /// <summary>
+    /// Returns a hash code for the specified type.
+    /// </summary>
+    /// <param name="obj">The type for which a hash code is to be returned.</param>
+    /// <returns>The hash code of the type.</returns>
+    public int GetHashCode(Type obj) => _comparatorFactory().GetHashCode(obj);
 }

@@ -8,12 +8,11 @@
 // BD - December 2016 - Created this file.
 //
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Interface representing a reflection provider.
+/// </summary>
+public interface IReflectionProvider : IReflectionIntrospectionProvider, IReflectionCreationProvider, IReflectionInvocationProvider, IReflectionTypeSystemProvider, IReflectionLoadingProvider, IReflectionHandlerResolver
 {
-    /// <summary>
-    /// Interface representing a reflection provider.
-    /// </summary>
-    public interface IReflectionProvider : IReflectionIntrospectionProvider, IReflectionCreationProvider, IReflectionInvocationProvider, IReflectionTypeSystemProvider, IReflectionLoadingProvider, IReflectionHandlerResolver
-    {
-    }
 }

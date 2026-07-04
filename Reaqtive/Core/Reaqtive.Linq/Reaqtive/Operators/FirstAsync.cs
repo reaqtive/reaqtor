@@ -5,87 +5,86 @@
 using System;
 using System.Diagnostics;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class FirstAsync<TSource> : SubscribableBase<TSource>
 {
-    internal sealed class FirstAsync<TSource> : SubscribableBase<TSource>
+    private readonly ISubscribable<TSource> _source;
+    private readonly Func<TSource, bool> _predicate;
+    private readonly bool _throwOnEmpty;
+
+    public FirstAsync(ISubscribable<TSource> source, Func<TSource, bool> predicate, bool throwOnEmpty)
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, bool> _predicate;
-        private readonly bool _throwOnEmpty;
+        Debug.Assert(source != null);
 
-        public FirstAsync(ISubscribable<TSource> source, Func<TSource, bool> predicate, bool throwOnEmpty)
+        _source = source;
+        _predicate = predicate ?? (_ => true);
+        _throwOnEmpty = throwOnEmpty;
+    }
+
+    protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<FirstAsync<TSource>, TSource>, IObserver<TSource>
+    {
+        public _(FirstAsync<TSource> parent, IObserver<TSource> observer)
+            : base(parent, observer)
         {
-            Debug.Assert(source != null);
-
-            _source = source;
-            _predicate = predicate ?? (_ => true);
-            _throwOnEmpty = throwOnEmpty;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+        public override string Name => "rc:First";
+
+        public override Version Version => Versioning.v1;
+
+        public void OnCompleted()
         {
-            return new _(this, observer);
+            if (Params._throwOnEmpty)
+            {
+                Output.OnError(new InvalidOperationException("Observable has no elements."));
+            }
+            else
+            {
+                Output.OnNext(default);
+                Output.OnCompleted();
+            }
+
+            Dispose();
         }
 
-        private sealed class _ : StatefulUnaryOperator<FirstAsync<TSource>, TSource>, IObserver<TSource>
+        public void OnError(Exception error)
         {
-            public _(FirstAsync<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
+            Output.OnError(error);
+            Dispose();
+        }
+
+        public void OnNext(TSource value)
+        {
+            bool b;
+
+            try
             {
+                b = Params._predicate(value);
+            }
+            catch (Exception ex)
+            {
+                Output.OnError(ex);
+                Dispose();
+                return;
             }
 
-            public override string Name => "rc:First";
-
-            public override Version Version => Versioning.v1;
-
-            public void OnCompleted()
+            if (b)
             {
-                if (Params._throwOnEmpty)
-                {
-                    Output.OnError(new InvalidOperationException("Observable has no elements."));
-                }
-                else
-                {
-                    Output.OnNext(default);
-                    Output.OnCompleted();
-                }
-
+                Output.OnNext(value);
+                Output.OnCompleted();
                 Dispose();
             }
+        }
 
-            public void OnError(Exception error)
-            {
-                Output.OnError(error);
-                Dispose();
-            }
-
-            public void OnNext(TSource value)
-            {
-                bool b;
-
-                try
-                {
-                    b = Params._predicate(value);
-                }
-                catch (Exception ex)
-                {
-                    Output.OnError(ex);
-                    Dispose();
-                    return;
-                }
-
-                if (b)
-                {
-                    Output.OnNext(value);
-                    Output.OnCompleted();
-                    Dispose();
-                }
-            }
-
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(this);
-            }
+        protected override ISubscription OnSubscribe()
+        {
+            return Params._source.Subscribe(this);
         }
     }
 }

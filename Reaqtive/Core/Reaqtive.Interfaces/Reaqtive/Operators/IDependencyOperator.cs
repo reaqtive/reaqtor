@@ -5,18 +5,17 @@
 using System;
 using System.Collections.Generic;
 
-namespace Reaqtive
-{
-    // TODO: does this belong in Reaqtive which has very little notion of URI-based artifacts (except for persistable subscriptions)?
+namespace Reaqtive;
 
+// TODO: does this belong in Reaqtive which has very little notion of URI-based artifacts (except for persistable subscriptions)?
+
+/// <summary>
+/// Represents an operator that's part of a dependency graph between related artifacts.
+/// </summary>
+public interface IDependencyOperator : IOperator
+{
     /// <summary>
-    /// Represents an operator that's part of a dependency graph between related artifacts.
+    /// Gets the list of known artifacts the operator depends on.
     /// </summary>
-    public interface IDependencyOperator : IOperator
-    {
-        /// <summary>
-        /// Gets the list of known artifacts the operator depends on.
-        /// </summary>
-        IEnumerable<Uri> Dependencies { get; }
-    }
+    IEnumerable<Uri> Dependencies { get; }
 }

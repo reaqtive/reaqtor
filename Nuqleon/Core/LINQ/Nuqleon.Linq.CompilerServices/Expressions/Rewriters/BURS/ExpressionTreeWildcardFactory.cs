@@ -10,18 +10,17 @@
 
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// (Infrastructure) Factory for wildcards used during expression tree matching.
+/// </summary>
+public class ExpressionTreeWildcardFactory : IWildcardFactory<ExpressionTreeBase>
 {
     /// <summary>
-    /// (Infrastructure) Factory for wildcards used during expression tree matching.
+    /// Creates a new wildcard object for the given hole in a pattern.
     /// </summary>
-    public class ExpressionTreeWildcardFactory : IWildcardFactory<ExpressionTreeBase>
-    {
-        /// <summary>
-        /// Creates a new wildcard object for the given hole in a pattern.
-        /// </summary>
-        /// <param name="hole">Parameter expression used for holes in a pattern, which will be matched by the wildcard.</param>
-        /// <returns>Wildcard for the given hole in a pattern.</returns>
-        public ExpressionTreeBase CreateWildcard(ParameterExpression hole) => new ExpressionTreeWildcard(hole);
-    }
+    /// <param name="hole">Parameter expression used for holes in a pattern, which will be matched by the wildcard.</param>
+    /// <returns>Wildcard for the given hole in a pattern.</returns>
+    public ExpressionTreeBase CreateWildcard(ParameterExpression hole) => new ExpressionTreeWildcard(hole);
 }

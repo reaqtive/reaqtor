@@ -10,10 +10,9 @@
 
 using System.Collections.Generic;
 
-namespace System.Linq
+namespace System.Linq;
+
+internal static class EnumerableEx
 {
-    internal static class EnumerableEx
-    {
-        public static T[] AsArray<T>(this IEnumerable<T> source) => source is T[] res ? res : [.. source];
-    }
+    public static T[] AsArray<T>(this IEnumerable<T> source) => source is T[] res ? res : [.. source];
 }

@@ -15,29 +15,28 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Serialization;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class DefaultNameProviderTests
 {
-    [TestClass]
-    public class DefaultNameProviderTests
+    [TestMethod]
+    public void DefaultNameProvider_ArgumentChecking()
     {
-        [TestMethod]
-        public void DefaultNameProvider_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameProvider.Instance.GetName(default(FieldInfo)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameProvider.Instance.GetName(default(PropertyInfo)));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameProvider.Instance.GetName(default(FieldInfo)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => DefaultNameProvider.Instance.GetName(default(PropertyInfo)));
+    }
 
-        [TestMethod]
-        public void DefaultNameProvider_Simple()
-        {
-            Assert.AreEqual("Foo", DefaultNameProvider.Instance.GetName(typeof(Bar).GetProperty("Foo")));
-            Assert.AreEqual("Qux", DefaultNameProvider.Instance.GetName(typeof(Bar).GetField("Qux")));
-        }
+    [TestMethod]
+    public void DefaultNameProvider_Simple()
+    {
+        Assert.AreEqual("Foo", DefaultNameProvider.Instance.GetName(typeof(Bar).GetProperty("Foo")));
+        Assert.AreEqual("Qux", DefaultNameProvider.Instance.GetName(typeof(Bar).GetField("Qux")));
+    }
 
-        private sealed class Bar
-        {
-            public int Foo { get; set; }
-            public int Qux = 42;
-        }
+    private sealed class Bar
+    {
+        public int Foo { get; set; }
+        public int Qux = 42;
     }
 }

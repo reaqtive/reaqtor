@@ -5,26 +5,25 @@
 using System;
 using System.Collections.Immutable;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+public class GetOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
 {
-    public class GetOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
+    public GetOperation(TKey key) => Key = key;
+
+    public override OperationType OperationType => OperationType.Get;
+
+    public TKey Key { get; }
+
+    public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
     {
-        public GetOperation(TKey key) => Key = key;
+        ArgumentNullException.ThrowIfNull(dictionary);
 
-        public override OperationType OperationType => OperationType.Get;
-
-        public TKey Key { get; }
-
-        public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
+        if (dictionary.TryGetValue(Key, out Sequenced<TValue> value))
         {
-            ArgumentNullException.ThrowIfNull(dictionary);
-
-            if (dictionary.TryGetValue(Key, out Sequenced<TValue> value))
-            {
-                return new GetOperationResult<TKey, TValue>(value, keyNotFound: false);
-            }
-
-            return new GetOperationResult<TKey, TValue>(default, keyNotFound: true);
+            return new GetOperationResult<TKey, TValue>(value, keyNotFound: false);
         }
+
+        return new GetOperationResult<TKey, TValue>(default, keyNotFound: true);
     }
 }

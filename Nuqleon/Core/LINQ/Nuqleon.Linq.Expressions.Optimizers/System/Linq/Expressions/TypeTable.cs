@@ -11,111 +11,110 @@
 using System.Collections;
 using System.Collections.Generic;
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+/// <summary>
+/// Represents a table with <see cref="Type"/> objects.
+/// </summary>
+public partial class TypeTable : IEnumerable<Type>
 {
     /// <summary>
-    /// Represents a table with <see cref="Type"/> objects.
+    /// Indicates whether the table is read-only.
     /// </summary>
-    public partial class TypeTable : IEnumerable<Type>
+    private bool _readOnly;
+
+    /// <summary>
+    /// A set of types.
+    /// </summary>
+    private readonly HashSet<Type> Types = [];
+
+    /// <summary>
+    /// Marks the current type table as read-only, preventing subsequent mutation.
+    /// </summary>
+    /// <returns>The current type table after being marked as read-only.</returns>
+    public TypeTable ToReadOnly()
     {
-        /// <summary>
-        /// Indicates whether the table is read-only.
-        /// </summary>
-        private bool _readOnly;
+        _readOnly = true;
+        return this;
+    }
 
-        /// <summary>
-        /// A set of types.
-        /// </summary>
-        private readonly HashSet<Type> Types = [];
+    /// <summary>
+    /// Copies the entries in the specified type <paramref name="table"/> to the current table.
+    /// </summary>
+    /// <param name="table">The type table whose entries to copy.</param>
+    public void Add(TypeTable table)
+    {
+        ArgumentNullException.ThrowIfNull(table);
 
-        /// <summary>
-        /// Marks the current type table as read-only, preventing subsequent mutation.
-        /// </summary>
-        /// <returns>The current type table after being marked as read-only.</returns>
-        public TypeTable ToReadOnly()
+        CheckReadOnly();
+
+        foreach (var type in table.Types)
         {
-            _readOnly = true;
-            return this;
-        }
-
-        /// <summary>
-        /// Copies the entries in the specified type <paramref name="table"/> to the current table.
-        /// </summary>
-        /// <param name="table">The type table whose entries to copy.</param>
-        public void Add(TypeTable table)
-        {
-            ArgumentNullException.ThrowIfNull(table);
-
-            CheckReadOnly();
-
-            foreach (var type in table.Types)
-            {
-                Types.Add(type);
-            }
-        }
-
-        /// <summary>
-        /// Adds the specified <paramref name="type"/> to the table.
-        /// </summary>
-        /// <param name="type">The type to add to the table.</param>
-        public void Add(Type type)
-        {
-            ArgumentNullException.ThrowIfNull(type);
-
-            CheckReadOnly();
-
             Types.Add(type);
         }
+    }
 
-        /// <summary>
-        /// Gets a sequence of types in the current type table.
-        /// </summary>
-        /// <returns>A sequence of types in the current type table.</returns>
-        public IEnumerator<Type> GetEnumerator() => Types.GetEnumerator();
+    /// <summary>
+    /// Adds the specified <paramref name="type"/> to the table.
+    /// </summary>
+    /// <param name="type">The type to add to the table.</param>
+    public void Add(Type type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
 
-        /// <summary>
-        /// Gets a sequence of types in the current type table.
-        /// </summary>
-        /// <returns>A sequence of types in the current type table.</returns>
-        IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+        CheckReadOnly();
 
-        /// <summary>
-        /// Checks if the specified <paramref name="type"/> is present in the table.
-        /// </summary>
-        /// <param name="type">The type to check.</param>
-        /// <returns><c>true</c> if the specified <paramref name="type"/> is present in the table; otherwise, <c>false</c>.</returns>
-        public bool Contains(Type type)
+        Types.Add(type);
+    }
+
+    /// <summary>
+    /// Gets a sequence of types in the current type table.
+    /// </summary>
+    /// <returns>A sequence of types in the current type table.</returns>
+    public IEnumerator<Type> GetEnumerator() => Types.GetEnumerator();
+
+    /// <summary>
+    /// Gets a sequence of types in the current type table.
+    /// </summary>
+    /// <returns>A sequence of types in the current type table.</returns>
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
+
+    /// <summary>
+    /// Checks if the specified <paramref name="type"/> is present in the table.
+    /// </summary>
+    /// <param name="type">The type to check.</param>
+    /// <returns><c>true</c> if the specified <paramref name="type"/> is present in the table; otherwise, <c>false</c>.</returns>
+    public bool Contains(Type type)
+    {
+        ArgumentNullException.ThrowIfNull(type);
+
+        if (Types.Contains(type))
         {
-            ArgumentNullException.ThrowIfNull(type);
+            return true;
+        }
 
-            if (Types.Contains(type))
+        if (type.IsGenericType && !type.IsGenericTypeDefinition)
+        {
+            var def = type.GetGenericTypeDefinition();
+
+            if (Types.Contains(def))
             {
                 return true;
             }
-
-            if (type.IsGenericType && !type.IsGenericTypeDefinition)
-            {
-                var def = type.GetGenericTypeDefinition();
-
-                if (Types.Contains(def))
-                {
-                    return true;
-                }
-            }
-
-            return false;
         }
 
-        /// <summary>
-        /// Checks if the current type table is marked as read-only.
-        /// </summary>
-        /// <exception cref="InvalidOperationException">
-        /// Thrown when the current type table is marked as read-only.
-        /// </exception>
-        private void CheckReadOnly()
-        {
-            if (_readOnly)
-                throw new InvalidOperationException("The table is marked as read-only.");
-        }
+        return false;
+    }
+
+    /// <summary>
+    /// Checks if the current type table is marked as read-only.
+    /// </summary>
+    /// <exception cref="InvalidOperationException">
+    /// Thrown when the current type table is marked as read-only.
+    /// </exception>
+    private void CheckReadOnly()
+    {
+        if (_readOnly)
+            throw new InvalidOperationException("The table is marked as read-only.");
     }
 }

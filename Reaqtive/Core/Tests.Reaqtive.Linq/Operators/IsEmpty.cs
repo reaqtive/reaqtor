@@ -9,17 +9,16 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reaqtive;
 using Reaqtive.Testing;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class IsEmpty : OperatorTestBase
 {
-    [TestClass]
-    public partial class IsEmpty : OperatorTestBase
+    [TestMethod]
+    public void IsEmpty_ArgumentChecking()
     {
-        [TestMethod]
-        public void IsEmpty_ArgumentChecking()
-        {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.IsEmpty<int>(default(ISubscribable<int>)));
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.IsEmpty<int>(default(ISubscribable<int>)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
-        }
     }
 }

@@ -15,233 +15,232 @@ using Reaqtor.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public partial class Scan : OperatorTestBase
 {
-    public partial class Scan : OperatorTestBase
+    [TestMethod]
+    public void Scan_Simple1()
     {
-        [TestMethod]
-        public void Scan_Simple1()
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 3),
-                    OnNext<int>(30, 5),
-                    OnNext<int>(40, 7),
-                    OnCompleted<int>(50)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 3),
+                OnNext<int>(30, 5),
+                OnNext<int>(40, 7),
+                OnCompleted<int>(50)
+            );
 
-                var res = client.Start(() =>
-                    xs.Scan((l, r) => l * r)
-                );
+            var res = client.Start(() =>
+                xs.Scan((l, r) => l * r)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext<int>(220, 2 * 3),
-                    OnNext<int>(230, 2 * 3 * 5),
-                    OnNext<int>(240, 2 * 3 * 5 * 7),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext<int>(220, 2 * 3),
+                OnNext<int>(230, 2 * 3 * 5),
+                OnNext<int>(240, 2 * 3 * 5 * 7),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Scan_Simple2()
+    [TestMethod]
+    public void Scan_Simple2()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 3),
-                    OnNext<int>(30, 5),
-                    OnNext<int>(40, 7),
-                    OnCompleted<int>(50)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 3),
+                OnNext<int>(30, 5),
+                OnNext<int>(40, 7),
+                OnCompleted<int>(50)
+            );
 
-                var res = client.Start(() =>
-                    xs.Scan(1, (l, r) => l * r)
-                );
+            var res = client.Start(() =>
+                xs.Scan(1, (l, r) => l * r)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext<int>(210, 1 * 2),
-                    OnNext<int>(220, 1 * 2 * 3),
-                    OnNext<int>(230, 1 * 2 * 3 * 5),
-                    OnNext<int>(240, 1 * 2 * 3 * 5 * 7),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext<int>(210, 1 * 2),
+                OnNext<int>(220, 1 * 2 * 3),
+                OnNext<int>(230, 1 * 2 * 3 * 5),
+                OnNext<int>(240, 1 * 2 * 3 * 5 * 7),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Scan_Throw1()
+    [TestMethod]
+    public void Scan_Throw1()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
+            var ex = new Exception();
 
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 3),
-                    OnNext<int>(30, 5),
-                    OnNext<int>(40, 7),
-                    OnError<int>(50, ex)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 3),
+                OnNext<int>(30, 5),
+                OnNext<int>(40, 7),
+                OnError<int>(50, ex)
+            );
 
-                var res = client.Start(() =>
-                    xs.Scan((l, r) => l * r)
-                );
+            var res = client.Start(() =>
+                xs.Scan((l, r) => l * r)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext<int>(220, 2 * 3),
-                    OnNext<int>(230, 2 * 3 * 5),
-                    OnNext<int>(240, 2 * 3 * 5 * 7),
-                    OnError<int>(250, ex)
-                );
+            res.Messages.AssertEqual(
+                OnNext<int>(220, 2 * 3),
+                OnNext<int>(230, 2 * 3 * 5),
+                OnNext<int>(240, 2 * 3 * 5 * 7),
+                OnError<int>(250, ex)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Scan_Throw2()
+    [TestMethod]
+    public void Scan_Throw2()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
+            var ex = new Exception();
 
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 3),
-                    OnNext<int>(30, 5),
-                    OnNext<int>(40, 7),
-                    OnError<int>(50, ex)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 3),
+                OnNext<int>(30, 5),
+                OnNext<int>(40, 7),
+                OnError<int>(50, ex)
+            );
 
-                var res = client.Start(() =>
-                    xs.Scan(1, (l, r) => l * r)
-                );
+            var res = client.Start(() =>
+                xs.Scan(1, (l, r) => l * r)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext<int>(210, 1 * 2),
-                    OnNext<int>(220, 1 * 2 * 3),
-                    OnNext<int>(230, 1 * 2 * 3 * 5),
-                    OnNext<int>(240, 1 * 2 * 3 * 5 * 7),
-                    OnError<int>(250, ex)
-                );
+            res.Messages.AssertEqual(
+                OnNext<int>(210, 1 * 2),
+                OnNext<int>(220, 1 * 2 * 3),
+                OnNext<int>(230, 1 * 2 * 3 * 5),
+                OnNext<int>(240, 1 * 2 * 3 * 5 * 7),
+                OnError<int>(250, ex)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Scan_Empty1()
+    [TestMethod]
+    public void Scan_Empty1()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnCompleted<int>(50)
-                );
+            var xs = client.CreateColdObservable(
+                OnCompleted<int>(50)
+            );
 
-                var res = client.Start(() =>
-                    xs.Scan((l, r) => l * r)
-                );
+            var res = client.Start(() =>
+                xs.Scan((l, r) => l * r)
+            );
 
-                res.Messages.AssertEqual(
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Scan_Empty2()
+    [TestMethod]
+    public void Scan_Empty2()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnCompleted<int>(50)
-                );
+            var xs = client.CreateColdObservable(
+                OnCompleted<int>(50)
+            );
 
-                var res = client.Start(() =>
-                    xs.Scan(1, (l, r) => l * r)
-                );
+            var res = client.Start(() =>
+                xs.Scan(1, (l, r) => l * r)
+            );
 
-                res.Messages.AssertEqual(
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Scan_AggregatorThrows()
+    [TestMethod]
+    public void Scan_AggregatorThrows()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 0),
-                    OnNext<int>(30, 1),
-                    OnCompleted<int>(40)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 0),
+                OnNext<int>(30, 1),
+                OnCompleted<int>(40)
+            );
 
-                var res = client.Start(() =>
-                    xs.Scan((l, r) => l / r)
-                );
+            var res = client.Start(() =>
+                xs.Scan((l, r) => l / r)
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<int>(220, ex => ex is DivideByZeroException)
-                );
+            res.Messages.AssertEqual(
+                OnError<int>(220, ex => ex is DivideByZeroException)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 220)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 220)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Scan_AccumulatorThrows1()
+    [TestMethod]
+    public void Scan_AccumulatorThrows1()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 0),
-                    OnNext<int>(30, 1),
-                    OnCompleted<int>(40)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 0),
+                OnNext<int>(30, 1),
+                OnCompleted<int>(40)
+            );
 
-                var res = client.Start(() =>
-                    xs.Scan(42, (l, r) => l / r)
-                );
+            var res = client.Start(() =>
+                xs.Scan(42, (l, r) => l / r)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(210, 42 / 2),
-                    OnError<int>(220, ex => ex is DivideByZeroException)
-                );
+            res.Messages.AssertEqual(
+                OnNext(210, 42 / 2),
+                OnError<int>(220, ex => ex is DivideByZeroException)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 220)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 220)
+            );
+        });
     }
 }

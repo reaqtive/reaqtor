@@ -6,17 +6,16 @@ using System.Collections.Generic;
 
 using Reaqtive.Scheduler;
 
-namespace Reaqtive.TestingFramework
+namespace Reaqtive.TestingFramework;
+
+/// <summary>
+/// Interface for schedulers that keep a log of scheduled actions.
+/// </summary>
+/// <typeparam name="TAbsolute">Type of the absolute time values used to schedule actions.</typeparam>
+public interface ILoggingScheduler<TAbsolute> : IScheduler
 {
     /// <summary>
-    /// Interface for schedulers that keep a log of scheduled actions.
+    /// Gets a sequence of times at which actions are scheduled.
     /// </summary>
-    /// <typeparam name="TAbsolute">Type of the absolute time values used to schedule actions.</typeparam>
-    public interface ILoggingScheduler<TAbsolute> : IScheduler
-    {
-        /// <summary>
-        /// Gets a sequence of times at which actions are scheduled.
-        /// </summary>
-        IEnumerable<TAbsolute> ScheduledTimes { get; }
-    }
+    IEnumerable<TAbsolute> ScheduledTimes { get; }
 }

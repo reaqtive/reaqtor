@@ -10,23 +10,22 @@
 
 using System.Collections.Generic;
 
-namespace System.Linq
+namespace System.Linq;
+
+/// <summary>
+/// Interface for queryable dictionaries, allowing execution of queries against dictionary collections.
+/// </summary>
+/// <typeparam name="TKey">Type of the keys in the dictionary.</typeparam>
+/// <typeparam name="TValue">Type of the values in the dictionary.</typeparam>
+public interface IQueryableDictionary<TKey, TValue> : IQueryable<KeyValuePair<TKey, TValue>>, IReadOnlyDictionary<TKey, TValue>
 {
     /// <summary>
-    /// Interface for queryable dictionaries, allowing execution of queries against dictionary collections.
+    /// Gets the keys in the dictionary.
     /// </summary>
-    /// <typeparam name="TKey">Type of the keys in the dictionary.</typeparam>
-    /// <typeparam name="TValue">Type of the values in the dictionary.</typeparam>
-    public interface IQueryableDictionary<TKey, TValue> : IQueryable<KeyValuePair<TKey, TValue>>, IReadOnlyDictionary<TKey, TValue>
-    {
-        /// <summary>
-        /// Gets the keys in the dictionary.
-        /// </summary>
-        new IQueryable<TKey> Keys { get; }
+    new IQueryable<TKey> Keys { get; }
 
-        /// <summary>
-        /// Gets the values in the dictionary.
-        /// </summary>
-        new IQueryable<TValue> Values { get; }
-    }
+    /// <summary>
+    /// Gets the values in the dictionary.
+    /// </summary>
+    new IQueryable<TValue> Values { get; }
 }

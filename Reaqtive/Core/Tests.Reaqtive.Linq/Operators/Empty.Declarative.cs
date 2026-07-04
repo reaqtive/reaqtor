@@ -13,45 +13,44 @@ using Reaqtor.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public partial class Empty : OperatorTestBase
 {
-    public partial class Empty : OperatorTestBase
+    [TestMethod]
+    public void Empty_Simple()
     {
-        [TestMethod]
-        public void Empty_Simple()
+        Run(client =>
         {
-            Run(client =>
-            {
-                var context = GetContext(client);
+            var context = GetContext(client);
 
-                var res = client.Start(() =>
-                    context.Empty<int>()
-                );
+            var res = client.Start(() =>
+                context.Empty<int>()
+            );
 
-                res.Messages.AssertEqual(
-                    OnCompleted<int>(Increment(200, 1))
-                );
-            });
-        }
+            res.Messages.AssertEqual(
+                OnCompleted<int>(Increment(200, 1))
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Empty_Chained()
+    [TestMethod]
+    public void Empty_Chained()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var context = GetContext(client);
+            var context = GetContext(client);
 
-                var res = client.Start(() =>
-                    context.Empty<int>().StartWith(1, 2, 3)
-                );
+            var res = client.Start(() =>
+                context.Empty<int>().StartWith(1, 2, 3)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(Increment(200, 1), 1),
-                    OnNext(Increment(200, 2), 2),
-                    OnNext(Increment(200, 3), 3),
-                    OnCompleted<int>(Increment(200, 4))
-                );
-            });
-        }
+            res.Messages.AssertEqual(
+                OnNext(Increment(200, 1), 1),
+                OnNext(Increment(200, 2), 2),
+                OnNext(Increment(200, 3), 3),
+                OnCompleted<int>(Increment(200, 4))
+            );
+        });
     }
 }

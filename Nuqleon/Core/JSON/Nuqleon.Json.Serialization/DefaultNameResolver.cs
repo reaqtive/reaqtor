@@ -12,53 +12,52 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 
-namespace Nuqleon.Json.Serialization
+namespace Nuqleon.Json.Serialization;
+
+/// <summary>
+/// Default name resolver using reflection to resolve names of fields and properties.
+/// </summary>
+public class DefaultNameResolver : INameResolver
 {
     /// <summary>
-    /// Default name resolver using reflection to resolve names of fields and properties.
+    /// Gets the singleton instance of the default name resolver.
     /// </summary>
-    public class DefaultNameResolver : INameResolver
+    public static INameResolver Instance { get; } = new DefaultNameResolver();
+
+    /// <summary>
+    /// Creates a new default name resolver.
+    /// </summary>
+    protected DefaultNameResolver()
     {
-        /// <summary>
-        /// Gets the singleton instance of the default name resolver.
-        /// </summary>
-        public static INameResolver Instance { get; } = new DefaultNameResolver();
+    }
 
-        /// <summary>
-        /// Creates a new default name resolver.
-        /// </summary>
-        protected DefaultNameResolver()
-        {
-        }
+    /// <summary>
+    /// Gets expected JSON property names for the specified CLR field.
+    /// </summary>
+    /// <param name="field">The field for which to get JSON property names.</param>
+    /// <returns>A sequence of JSON property names to recognize when deserializing the specified CLR field.</returns>
+    public virtual IEnumerable<string> GetNames(FieldInfo field)
+    {
+        ArgumentNullException.ThrowIfNull(field);
 
-        /// <summary>
-        /// Gets expected JSON property names for the specified CLR field.
-        /// </summary>
-        /// <param name="field">The field for which to get JSON property names.</param>
-        /// <returns>A sequence of JSON property names to recognize when deserializing the specified CLR field.</returns>
-        public virtual IEnumerable<string> GetNames(FieldInfo field)
-        {
-            ArgumentNullException.ThrowIfNull(field);
-
-            return [field.Name];
-        }
+        return [field.Name];
+    }
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1716 // Conflict with reserved language keyword 'Property'.
 
-        /// <summary>
-        /// Gets expected JSON property names for the specified CLR property.
-        /// </summary>
-        /// <param name="property">The property for which to get JSON property names.</param>
-        /// <returns>A sequence of JSON property names to recognize when deserializing the specified CLR property.</returns>
-        public virtual IEnumerable<string> GetNames(PropertyInfo property)
-        {
-            ArgumentNullException.ThrowIfNull(property);
+    /// <summary>
+    /// Gets expected JSON property names for the specified CLR property.
+    /// </summary>
+    /// <param name="property">The property for which to get JSON property names.</param>
+    /// <returns>A sequence of JSON property names to recognize when deserializing the specified CLR property.</returns>
+    public virtual IEnumerable<string> GetNames(PropertyInfo property)
+    {
+        ArgumentNullException.ThrowIfNull(property);
 
-            return [property.Name];
-        }
+        return [property.Name];
+    }
 
 #pragma warning restore CA1716
 #pragma warning restore IDE0079
-    }
 }

@@ -14,65 +14,64 @@ using System.IO;
 
 using Reaqtor.QueryEngine;
 
-namespace Utilities
+namespace Utilities;
+
+/// <summary>
+/// Implementation of <see cref="IStateReader"/> with logging of operations through a <see cref="TextWriter"/>.
+/// </summary>
+public sealed class LoggingStateReader : LoggingStateReaderWriterBase, IStateReader
 {
-    /// <summary>
-    /// Implementation of <see cref="IStateReader"/> with logging of operations through a <see cref="TextWriter"/>.
-    /// </summary>
-    public sealed class LoggingStateReader : LoggingStateReaderWriterBase, IStateReader
-    {
 #pragma warning disable CA2213 // "Change the Dispose method to call Close or Dispose on this field." We don't own the underlying stream, so this is an inappropriate suggestion.
-        private readonly IStateReader _reader;
+    private readonly IStateReader _reader;
 #pragma warning restore CA2213
 
-        public LoggingStateReader(IStateReader reader, TextWriter log, bool keepOpen = true)
-            : base(log, keepOpen)
+    public LoggingStateReader(IStateReader reader, TextWriter log, bool keepOpen = true)
+        : base(log, keepOpen)
+    {
+        _reader = reader;
+    }
+
+    protected override void DisposeCore() => _reader.Dispose();
+
+    public IEnumerable<string> GetCategories()
+    {
+        LogStart(nameof(GetCategories));
+        try
         {
-            _reader = reader;
+            return _reader.GetCategories();
         }
-
-        protected override void DisposeCore() => _reader.Dispose();
-
-        public IEnumerable<string> GetCategories()
+        catch (Exception ex) when (LogError(nameof(GetCategories), ex)) { throw; }
+        finally
         {
-            LogStart(nameof(GetCategories));
-            try
-            {
-                return _reader.GetCategories();
-            }
-            catch (Exception ex) when (LogError(nameof(GetCategories), ex)) { throw; }
-            finally
-            {
-                LogStop(nameof(GetCategories));
-            }
+            LogStop(nameof(GetCategories));
         }
+    }
 
-        public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
+    public bool TryGetItemKeys(string category, out IEnumerable<string> keys)
+    {
+        LogStart(nameof(TryGetItemKeys), category);
+        try
         {
-            LogStart(nameof(TryGetItemKeys), category);
-            try
-            {
-                return _reader.TryGetItemKeys(category, out keys);
-            }
-            catch (Exception ex) when (LogError(nameof(TryGetItemKeys), ex, category)) { throw; }
-            finally
-            {
-                LogStop(nameof(TryGetItemKeys), category);
-            }
+            return _reader.TryGetItemKeys(category, out keys);
         }
-
-        public bool TryGetItemReader(string category, string key, out Stream stream)
+        catch (Exception ex) when (LogError(nameof(TryGetItemKeys), ex, category)) { throw; }
+        finally
         {
-            LogStart(nameof(TryGetItemReader), category, key);
-            try
-            {
-                return _reader.TryGetItemReader(category, key, out stream);
-            }
-            catch (Exception ex) when (LogError(nameof(TryGetItemReader), ex, category, key)) { throw; }
-            finally
-            {
-                LogStop(nameof(TryGetItemReader), category, key);
-            }
+            LogStop(nameof(TryGetItemKeys), category);
+        }
+    }
+
+    public bool TryGetItemReader(string category, string key, out Stream stream)
+    {
+        LogStart(nameof(TryGetItemReader), category, key);
+        try
+        {
+            return _reader.TryGetItemReader(category, key, out stream);
+        }
+        catch (Exception ex) when (LogError(nameof(TryGetItemReader), ex, category, key)) { throw; }
+        finally
+        {
+            LogStop(nameof(TryGetItemReader), category, key);
         }
     }
 }

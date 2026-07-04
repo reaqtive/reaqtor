@@ -11,33 +11,32 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Base class for the implementation of observers represented by an expression tree.
+/// </summary>
+/// <typeparam name="T">Type of the data received by the observer.</typeparam>
+public abstract class AsyncReactiveQbserverBase<T> : AsyncReactiveObserverBase<T>, IAsyncReactiveQbserver<T>
 {
     /// <summary>
-    /// Base class for the implementation of observers represented by an expression tree.
+    /// Creates a new observer represented by an expression tree, using the specified associated query provider.
     /// </summary>
-    /// <typeparam name="T">Type of the data received by the observer.</typeparam>
-    public abstract class AsyncReactiveQbserverBase<T> : AsyncReactiveObserverBase<T>, IAsyncReactiveQbserver<T>
-    {
-        /// <summary>
-        /// Creates a new observer represented by an expression tree, using the specified associated query provider.
-        /// </summary>
-        /// <param name="provider">Query provider associated with the observer.</param>
-        protected AsyncReactiveQbserverBase(IAsyncReactiveQueryProvider provider) => Provider = provider;
+    /// <param name="provider">Query provider associated with the observer.</param>
+    protected AsyncReactiveQbserverBase(IAsyncReactiveQueryProvider provider) => Provider = provider;
 
-        /// <summary>
-        /// Gets the type of the data received by the observer.
-        /// </summary>
-        public Type ElementType => typeof(T);
+    /// <summary>
+    /// Gets the type of the data received by the observer.
+    /// </summary>
+    public Type ElementType => typeof(T);
 
-        /// <summary>
-        /// Gets the query provider that is associated with the observer.
-        /// </summary>
-        public IAsyncReactiveQueryProvider Provider { get; }
+    /// <summary>
+    /// Gets the query provider that is associated with the observer.
+    /// </summary>
+    public IAsyncReactiveQueryProvider Provider { get; }
 
-        /// <summary>
-        /// Gets the expression tree representing the observer.
-        /// </summary>
-        public abstract Expression Expression { get; }
-    }
+    /// <summary>
+    /// Gets the expression tree representing the observer.
+    /// </summary>
+    public abstract Expression Expression { get; }
 }

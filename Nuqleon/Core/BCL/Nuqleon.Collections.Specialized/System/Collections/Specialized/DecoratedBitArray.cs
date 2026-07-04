@@ -8,22 +8,21 @@
 //   PS - 10/17/2014 - Created this type.
 //
 
-namespace System.Collections.Specialized
+namespace System.Collections.Specialized;
+
+internal readonly struct DecoratedBitArray : IBitArray
 {
-    internal readonly struct DecoratedBitArray : IBitArray
+    private readonly BitArray _bitArray;
+
+    public DecoratedBitArray(int size) => _bitArray = new BitArray(size);
+
+    public int Count => _bitArray.Length;
+
+    public bool this[int index]
     {
-        private readonly BitArray _bitArray;
-
-        public DecoratedBitArray(int size) => _bitArray = new BitArray(size);
-
-        public int Count => _bitArray.Length;
-
-        public bool this[int index]
-        {
-            get => _bitArray[index];
-            set => _bitArray[index] = value;
-        }
-
-        public void SetAll(bool value) => _bitArray.SetAll(value);
+        get => _bitArray[index];
+        set => _bitArray[index] = value;
     }
+
+    public void SetAll(bool value) => _bitArray.SetAll(value);
 }

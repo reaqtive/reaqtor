@@ -9,106 +9,105 @@ using System.Linq.Expressions;
 using System.Memory;
 using System.Reflection;
 
-namespace Reaqtive.Expressions
+namespace Reaqtive.Expressions;
+
+/// <summary>
+/// A default implementation of the expression policy.
+/// </summary>
+[EditorBrowsable(EditorBrowsableState.Never)]
+public class DefaultExpressionPolicy : IExpressionPolicy
 {
     /// <summary>
-    /// A default implementation of the expression policy.
+    /// Default expression policy without any side-effects.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public class DefaultExpressionPolicy : IExpressionPolicy
+    public static readonly DefaultExpressionPolicy Instance = new();
+
+    private DefaultExpressionPolicy() { }
+
+    /// <summary>
+    /// Compiled delegate cache for reuse across expressions.
+    /// </summary>
+    public ICache<Expression> InMemoryCache => DefaultExpressionCache.Instance;
+
+    /// <summary>
+    /// Cache for in-memory storage of expressions.
+    /// </summary>
+    public ICompiledDelegateCache DelegateCache => DefaultCompiledDelegateCache.Instance;
+
+    /// <summary>
+    /// Constant hoister for optimized sharing in expressions and evaluation.
+    /// </summary>
+    public IConstantHoister ConstantHoister { get; } = System.Linq.CompilerServices.ConstantHoister.Create(useDefaultForNull: false);
+
+    /// <summary>
+    /// Specifies whether nested lambda expressions should be outlined into
+    /// delegate constants by recursive compilation using the cache.
+    /// </summary>
+    public bool OutlineCompilation => false;
+
+    /// <summary>
+    /// Gets the reflection provider to use for reducing ExpressionSlim instances
+    /// to Expression instances during deserialization.
+    /// </summary>
+    public IReflectionProvider ReflectionProvider => DefaultReflectionProvider.Instance;
+
+    /// <summary>
+    /// Gets the expression factory to use for reducing ExpressionSlim instances
+    /// to Expression instances during deserialization.
+    /// </summary>
+    public IExpressionFactory ExpressionFactory => System.Linq.Expressions.ExpressionFactory.Instance;
+
+    /// <summary>
+    /// Gets the memoizer used to memoize strongly typed lift functions used
+    /// by the expression serializer.
+    /// </summary>
+    public IMemoizer LiftMemoizer { get; } = Memoizer.Create(ConcurrentMemoizationCacheFactory.Unbounded);
+
+    /// <summary>
+    /// Gets the memoizer used to memoize strongly typed reduce functions used
+    /// by the expression deserializer.
+    /// </summary>
+    public IMemoizer ReduceMemoizer => LiftMemoizer;
+
+    private sealed class DefaultCompiledDelegateCache : ICompiledDelegateCache
     {
-        /// <summary>
-        /// Default expression policy without any side-effects.
-        /// </summary>
-        public static readonly DefaultExpressionPolicy Instance = new();
+        public static readonly DefaultCompiledDelegateCache Instance = new();
 
-        private DefaultExpressionPolicy() { }
+        private DefaultCompiledDelegateCache() { }
 
-        /// <summary>
-        /// Compiled delegate cache for reuse across expressions.
-        /// </summary>
-        public ICache<Expression> InMemoryCache => DefaultExpressionCache.Instance;
+        public int Count => 0;
 
-        /// <summary>
-        /// Cache for in-memory storage of expressions.
-        /// </summary>
-        public ICompiledDelegateCache DelegateCache => DefaultCompiledDelegateCache.Instance;
-
-        /// <summary>
-        /// Constant hoister for optimized sharing in expressions and evaluation.
-        /// </summary>
-        public IConstantHoister ConstantHoister { get; } = System.Linq.CompilerServices.ConstantHoister.Create(useDefaultForNull: false);
-
-        /// <summary>
-        /// Specifies whether nested lambda expressions should be outlined into
-        /// delegate constants by recursive compilation using the cache.
-        /// </summary>
-        public bool OutlineCompilation => false;
-
-        /// <summary>
-        /// Gets the reflection provider to use for reducing ExpressionSlim instances
-        /// to Expression instances during deserialization.
-        /// </summary>
-        public IReflectionProvider ReflectionProvider => DefaultReflectionProvider.Instance;
-
-        /// <summary>
-        /// Gets the expression factory to use for reducing ExpressionSlim instances
-        /// to Expression instances during deserialization.
-        /// </summary>
-        public IExpressionFactory ExpressionFactory => System.Linq.Expressions.ExpressionFactory.Instance;
-
-        /// <summary>
-        /// Gets the memoizer used to memoize strongly typed lift functions used
-        /// by the expression serializer.
-        /// </summary>
-        public IMemoizer LiftMemoizer { get; } = Memoizer.Create(ConcurrentMemoizationCacheFactory.Unbounded);
-
-        /// <summary>
-        /// Gets the memoizer used to memoize strongly typed reduce functions used
-        /// by the expression deserializer.
-        /// </summary>
-        public IMemoizer ReduceMemoizer => LiftMemoizer;
-
-        private sealed class DefaultCompiledDelegateCache : ICompiledDelegateCache
+        public Delegate GetOrAdd(LambdaExpression expression)
         {
-            public static readonly DefaultCompiledDelegateCache Instance = new();
+            ArgumentNullException.ThrowIfNull(expression);
 
-            private DefaultCompiledDelegateCache() { }
-
-            public int Count => 0;
-
-            public Delegate GetOrAdd(LambdaExpression expression)
-            {
-                ArgumentNullException.ThrowIfNull(expression);
-
-                return expression.Compile();
-            }
-
-            public void Clear()
-            {
-            }
+            return expression.Compile();
         }
 
-        private sealed class DefaultExpressionCache : ICache<Expression>
+        public void Clear()
         {
-            public static readonly DefaultExpressionCache Instance = new();
+        }
+    }
 
-            private DefaultExpressionCache() { }
+    private sealed class DefaultExpressionCache : ICache<Expression>
+    {
+        public static readonly DefaultExpressionCache Instance = new();
 
-            public IDiscardable<Expression> Create(Expression value) => new CacheReference(value);
+        private DefaultExpressionCache() { }
 
-            private sealed class CacheReference : IDiscardable<Expression>
+        public IDiscardable<Expression> Create(Expression value) => new CacheReference(value);
+
+        private sealed class CacheReference : IDiscardable<Expression>
+        {
+            public CacheReference(Expression expression)
             {
-                public CacheReference(Expression expression)
-                {
-                    Value = expression;
-                }
+                Value = expression;
+            }
 
-                public Expression Value { get; }
+            public Expression Value { get; }
 
-                public void Dispose()
-                {
-                }
+            public void Dispose()
+            {
             }
         }
     }

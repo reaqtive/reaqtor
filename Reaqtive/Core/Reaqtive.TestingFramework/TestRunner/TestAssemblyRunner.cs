@@ -11,51 +11,50 @@ using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Reaqtive.TestingFramework.TestRunner
+namespace Reaqtive.TestingFramework.TestRunner;
+
+public sealed class TestAssemblyRunner : IDisposable
 {
-    public sealed class TestAssemblyRunner : IDisposable
+    private List<TestClassRunner> _testClasses;
+
+    public int TotalFailures => _testClasses.Sum(c => c.TotalFailures);
+
+    public int TotalRuns => _testClasses.Sum(c => c.TotalRuns);
+
+    public void Configure(string assemblyName)
     {
-        private List<TestClassRunner> _testClasses;
+        _testClasses?.ForEach(r => r.Dispose());
 
-        public int TotalFailures => _testClasses.Sum(c => c.TotalFailures);
+        _testClasses = CreateTestClassRunners(Assembly.LoadFrom(assemblyName));
+    }
 
-        public int TotalRuns => _testClasses.Sum(c => c.TotalRuns);
+    public void Run(int repeat)
+    {
+        var sw = Stopwatch.StartNew();
+        _testClasses.ForEach(r => r.Run(repeat));
+        Report(sw.Elapsed);
+    }
 
-        public void Configure(string assemblyName)
-        {
-            _testClasses?.ForEach(r => r.Dispose());
+    public void Dispose()
+    {
+        _testClasses.ForEach(r => r.Dispose());
+    }
 
-            _testClasses = CreateTestClassRunners(Assembly.LoadFrom(assemblyName));
-        }
+    private void Report(TimeSpan elapsed)
+    {
+        var originalColor = Console.ForegroundColor;
 
-        public void Run(int repeat)
-        {
-            var sw = Stopwatch.StartNew();
-            _testClasses.ForEach(r => r.Run(repeat));
-            Report(sw.Elapsed);
-        }
+        Console.ForegroundColor = TotalFailures > 0
+            ? ConsoleColor.Red
+            : ConsoleColor.Green;
 
-        public void Dispose()
-        {
-            _testClasses.ForEach(r => r.Dispose());
-        }
+        Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "Total: {0} Passed: {1} Failed: {2} in {3} ms", TotalRuns, TotalRuns - TotalFailures, TotalFailures, elapsed.TotalMilliseconds));
 
-        private void Report(TimeSpan elapsed)
-        {
-            var originalColor = Console.ForegroundColor;
+        Console.ForegroundColor = originalColor;
+    }
 
-            Console.ForegroundColor = TotalFailures > 0
-                ? ConsoleColor.Red
-                : ConsoleColor.Green;
-
-            Console.WriteLine(string.Format(CultureInfo.InvariantCulture, "Total: {0} Passed: {1} Failed: {2} in {3} ms", TotalRuns, TotalRuns - TotalFailures, TotalFailures, elapsed.TotalMilliseconds));
-
-            Console.ForegroundColor = originalColor;
-        }
-
-        private static List<TestClassRunner> CreateTestClassRunners(Assembly assembly)
-        {
-            return [.. assembly.GetTypes().Where(t => t.IsDefined(typeof(TestClassAttribute))).Select(t => new TestClassRunner(t))];
-        }
+    private static List<TestClassRunner> CreateTestClassRunners(Assembly assembly)
+    {
+        return [.. assembly.GetTypes().Where(t => t.IsDefined(typeof(TestClassAttribute))).Select(t => new TestClassRunner(t))];
     }
 }

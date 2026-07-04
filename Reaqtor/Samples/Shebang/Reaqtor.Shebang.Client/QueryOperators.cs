@@ -6,24 +6,23 @@ using System;
 using System.Linq.Expressions;
 using System.Reflection;
 
-namespace Reaqtor.Shebang.Linq
+namespace Reaqtor.Shebang.Linq;
+
+public static partial class QueryOperators
 {
-    public static partial class QueryOperators
+    [KnownResource("rx://observable/cast")]
+    public static IAsyncReactiveQbservable<TResult> Cast<TResult>(this IAsyncReactiveQbservable<object> source)
     {
-        [KnownResource("rx://observable/cast")]
-        public static IAsyncReactiveQbservable<TResult> Cast<TResult>(this IAsyncReactiveQbservable<object> source)
-        {
-            ArgumentNullException.ThrowIfNull(source);
+        ArgumentNullException.ThrowIfNull(source);
 
-            return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TResult)), source.Expression));
-        }
+        return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TResult)), source.Expression));
+    }
 
-        [KnownResource("rx://observable/oftype")]
-        public static IAsyncReactiveQbservable<TResult> OfType<TResult>(this IAsyncReactiveQbservable<object> source)
-        {
-            ArgumentNullException.ThrowIfNull(source);
+    [KnownResource("rx://observable/oftype")]
+    public static IAsyncReactiveQbservable<TResult> OfType<TResult>(this IAsyncReactiveQbservable<object> source)
+    {
+        ArgumentNullException.ThrowIfNull(source);
 
-            return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TResult)), source.Expression));
-        }
+        return source.Provider.CreateQbservable<TResult>(Expression.Call(((MethodInfo)MethodBase.GetCurrentMethod()).MakeGenericMethod(typeof(TResult)), source.Expression));
     }
 }

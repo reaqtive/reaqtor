@@ -8,15 +8,14 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtive;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class Throw : OperatorTestBase
 {
-    [TestClass]
-    public partial class Throw : OperatorTestBase
+    [TestMethod]
+    public void Throw_ArgumentChecking()
     {
-        [TestMethod]
-        public void Throw_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => Subscribable.Throw<int>(null));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => Subscribable.Throw<int>(null));
     }
 }

@@ -8,10 +8,9 @@
 // BD - January 2018
 //
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal interface IReifiedResultOperation<in TValue, out TResult, out TReified> : IResultOperation<TValue, TResult>
 {
-    internal interface IReifiedResultOperation<in TValue, out TResult, out TReified> : IResultOperation<TValue, TResult>
-    {
-        TReified Reified { get; }
-    }
+    TReified Reified { get; }
 }

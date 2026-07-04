@@ -16,92 +16,91 @@ using System.Reflection;
 
 using Nuqleon.DataModel;
 
-namespace Tests.Nuqleon.DataModel.CompilerServices
+namespace Tests.Nuqleon.DataModel.CompilerServices;
+
+internal class NoEntityTypesRemainingChecker : ExpressionVisitorWithReflection
 {
-    internal class NoEntityTypesRemainingChecker : ExpressionVisitorWithReflection
+    private readonly NoEntityTypesRemainingTypeChecker _typeChecker = new();
+
+    public override Expression Visit(Expression node)
     {
-        private readonly NoEntityTypesRemainingTypeChecker _typeChecker = new();
-
-        public override Expression Visit(Expression node)
+        if (node != null)
         {
-            if (node != null)
-            {
-                VisitType(node.Type);
-            }
-
-            return base.Visit(node);
+            VisitType(node.Type);
         }
 
-        protected override MethodInfo VisitMethod(MethodInfo method)
+        return base.Visit(node);
+    }
+
+    protected override MethodInfo VisitMethod(MethodInfo method)
+    {
+        if (method != null)
         {
-            if (method != null)
+            VisitType(method.DeclaringType);
+
+            if (method.IsGenericMethod)
             {
-                VisitType(method.DeclaringType);
-
-                if (method.IsGenericMethod)
+                foreach (var argType in method.GetGenericArguments())
                 {
-                    foreach (var argType in method.GetGenericArguments())
-                    {
-                        VisitType(argType);
-                    }
-                }
-
-                VisitType(method.ReturnType);
-
-                foreach (var parameter in method.GetParameters())
-                {
-                    VisitType(parameter.ParameterType);
+                    VisitType(argType);
                 }
             }
 
-            return base.VisitMethod(method);
+            VisitType(method.ReturnType);
+
+            foreach (var parameter in method.GetParameters())
+            {
+                VisitType(parameter.ParameterType);
+            }
         }
 
-        protected override MemberInfo VisitProperty(PropertyInfo property)
-        {
-            if (property != null)
-            {
-                VisitType(property.DeclaringType);
-                VisitType(property.PropertyType);
-            }
+        return base.VisitMethod(method);
+    }
 
-            return base.VisitProperty(property);
+    protected override MemberInfo VisitProperty(PropertyInfo property)
+    {
+        if (property != null)
+        {
+            VisitType(property.DeclaringType);
+            VisitType(property.PropertyType);
         }
 
-        protected override ConstructorInfo VisitConstructor(ConstructorInfo constructor)
+        return base.VisitProperty(property);
+    }
+
+    protected override ConstructorInfo VisitConstructor(ConstructorInfo constructor)
+    {
+        if (constructor != null)
         {
-            if (constructor != null)
+            VisitType(constructor.DeclaringType);
+
+            foreach (var parameter in constructor.GetParameters())
             {
-                VisitType(constructor.DeclaringType);
-
-                foreach (var parameter in constructor.GetParameters())
-                {
-                    VisitType(parameter.ParameterType);
-                }
+                VisitType(parameter.ParameterType);
             }
-
-            return base.VisitConstructor(constructor);
         }
 
-        protected override Type VisitType(Type type)
-        {
-            if (type != null)
-            {
-                _typeChecker.Visit(type);
-            }
+        return base.VisitConstructor(constructor);
+    }
 
-            return base.VisitType(type);
+    protected override Type VisitType(Type type)
+    {
+        if (type != null)
+        {
+            _typeChecker.Visit(type);
         }
 
-        private class NoEntityTypesRemainingTypeChecker : TypeVisitor
-        {
-            public override Type Visit(Type type)
-            {
-                if (type.GetProperties().Any(p => p.IsDefined(typeof(MappingAttribute), inherit: true)))
-                    throw new InvalidOperationException(string.Format("Where did '{0}' come from?", type));
+        return base.VisitType(type);
+    }
 
-                return base.Visit(type);
-            }
+    private class NoEntityTypesRemainingTypeChecker : TypeVisitor
+    {
+        public override Type Visit(Type type)
+        {
+            if (type.GetProperties().Any(p => p.IsDefined(typeof(MappingAttribute), inherit: true)))
+                throw new InvalidOperationException(string.Format("Where did '{0}' come from?", type));
+
+            return base.Visit(type);
         }
     }
 }

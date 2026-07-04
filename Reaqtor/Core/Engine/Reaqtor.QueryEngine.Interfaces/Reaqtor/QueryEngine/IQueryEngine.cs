@@ -4,21 +4,20 @@
 
 using System;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Represents a query engine.
+/// </summary>
+public interface IQueryEngine
 {
     /// <summary>
-    /// Represents a query engine.
+    /// Gets the URI identifying the engine.
     /// </summary>
-    public interface IQueryEngine
-    {
-        /// <summary>
-        /// Gets the URI identifying the engine.
-        /// </summary>
-        Uri Uri { get; }
+    Uri Uri { get; }
 
-        /// <summary>
-        /// Gets the reactive service exposed by the engine.
-        /// </summary>
-        IReactive ReactiveService { get; }
-    }
+    /// <summary>
+    /// Gets the reactive service exposed by the engine.
+    /// </summary>
+    IReactive ReactiveService { get; }
 }

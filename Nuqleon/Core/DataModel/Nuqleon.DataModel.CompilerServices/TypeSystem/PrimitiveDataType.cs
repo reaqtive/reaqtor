@@ -11,59 +11,58 @@
 using System;
 using System.Linq;
 
-namespace Nuqleon.DataModel.TypeSystem
+namespace Nuqleon.DataModel.TypeSystem;
+
+/// <summary>
+/// Represents a primitive data type, i.e. a type treated as an atom by the data model.
+/// </summary>
+public class PrimitiveDataType : DataType
 {
-    /// <summary>
-    /// Represents a primitive data type, i.e. a type treated as an atom by the data model.
-    /// </summary>
-    public class PrimitiveDataType : DataType
+    private readonly Type _type;
+
+    internal PrimitiveDataType(Type type, PrimitiveDataTypeKinds kind)
+        : base(type)
     {
-        private readonly Type _type;
+        _type = type;
+        PrimitiveKind = kind;
+    }
 
-        internal PrimitiveDataType(Type type, PrimitiveDataTypeKinds kind)
-            : base(type)
+    /// <summary>
+    /// Gets the kind of the data type.
+    /// </summary>
+    public override DataTypeKinds Kind => DataTypeKinds.Primitive;
+
+    /// <summary>
+    /// Indicates whether the type has a null value.
+    /// </summary>
+    public bool IsNullable => !_type.IsValueType || Nullable.GetUnderlyingType(_type) != null;
+
+    /// <summary>
+    /// Gets the primitive data type kind.
+    /// </summary>
+    public PrimitiveDataTypeKinds PrimitiveKind { get; }
+
+    /// <summary>
+    /// Creates a new instance of the primitive data type.
+    /// </summary>
+    /// <param name="arguments">Only one parameter can be specified, containing the value.</param>
+    /// <returns>Instance of the primitive data type.</returns>
+    public override object CreateInstance(params object[] arguments)
+    {
+        ArgumentNullException.ThrowIfNull(arguments);
+
+        var value = arguments.Single();
+
+        if (value == null)
         {
-            _type = type;
-            PrimitiveKind = kind;
-        }
-
-        /// <summary>
-        /// Gets the kind of the data type.
-        /// </summary>
-        public override DataTypeKinds Kind => DataTypeKinds.Primitive;
-
-        /// <summary>
-        /// Indicates whether the type has a null value.
-        /// </summary>
-        public bool IsNullable => !_type.IsValueType || Nullable.GetUnderlyingType(_type) != null;
-
-        /// <summary>
-        /// Gets the primitive data type kind.
-        /// </summary>
-        public PrimitiveDataTypeKinds PrimitiveKind { get; }
-
-        /// <summary>
-        /// Creates a new instance of the primitive data type.
-        /// </summary>
-        /// <param name="arguments">Only one parameter can be specified, containing the value.</param>
-        /// <returns>Instance of the primitive data type.</returns>
-        public override object CreateInstance(params object[] arguments)
-        {
-            ArgumentNullException.ThrowIfNull(arguments);
-
-            var value = arguments.Single();
-
-            if (value == null)
+            if (!IsNullable)
             {
-                if (!IsNullable)
-                {
-                    throw new InvalidOperationException("Cannot assign a null value to a value of non-nullable primitive data type.");
-                }
+                throw new InvalidOperationException("Cannot assign a null value to a value of non-nullable primitive data type.");
             }
-
-            CheckType(value);
-
-            return value;
         }
+
+        CheckType(value);
+
+        return value;
     }
 }

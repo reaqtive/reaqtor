@@ -4,27 +4,26 @@
 
 using System;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// Represents the execution environment in which operators execute.
+/// </summary>
+public interface IExecutionEnvironment
 {
     /// <summary>
-    /// Represents the execution environment in which operators execute.
+    /// Gets the subject with the specified identifier from the execution environment.
     /// </summary>
-    public interface IExecutionEnvironment
-    {
-        /// <summary>
-        /// Gets the subject with the specified identifier from the execution environment.
-        /// </summary>
-        /// <typeparam name="TInput">Type of the elements received by the subject.</typeparam>
-        /// <typeparam name="TOutput">Type of the elements produced by the subject.</typeparam>
-        /// <param name="uri">Identifier of the subject.</param>
-        /// <returns>Subject with the specified identifier, obtained from the execution environment.</returns>
-        IMultiSubject<TInput, TOutput> GetSubject<TInput, TOutput>(Uri uri);
+    /// <typeparam name="TInput">Type of the elements received by the subject.</typeparam>
+    /// <typeparam name="TOutput">Type of the elements produced by the subject.</typeparam>
+    /// <param name="uri">Identifier of the subject.</param>
+    /// <returns>Subject with the specified identifier, obtained from the execution environment.</returns>
+    IMultiSubject<TInput, TOutput> GetSubject<TInput, TOutput>(Uri uri);
 
-        /// <summary>
-        /// Gets the subscription with the specified identifier from the execution environment.
-        /// </summary>
-        /// <param name="uri">Identifier of the subscription.</param>
-        /// <returns>Subscription with the specified identifier, obtained from the execution environment.</returns>
-        ISubscription GetSubscription(Uri uri);
-    }
+    /// <summary>
+    /// Gets the subscription with the specified identifier from the execution environment.
+    /// </summary>
+    /// <param name="uri">Identifier of the subscription.</param>
+    /// <returns>Subscription with the specified identifier, obtained from the execution environment.</returns>
+    ISubscription GetSubscription(Uri uri);
 }

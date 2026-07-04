@@ -4,17 +4,16 @@
 
 using System;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// Represents a subscription to a subscribable source.
+/// </summary>
+public interface ISubscription : IDisposable
 {
     /// <summary>
-    /// Represents a subscription to a subscribable source.
+    /// Accepts a visitor that will be dispatched through the subscription.
     /// </summary>
-    public interface ISubscription : IDisposable
-    {
-        /// <summary>
-        /// Accepts a visitor that will be dispatched through the subscription.
-        /// </summary>
-        /// <param name="visitor">Visitor to accept.</param>
-        void Accept(ISubscriptionVisitor visitor);
-    }
+    /// <param name="visitor">Visitor to accept.</param>
+    void Accept(ISubscriptionVisitor visitor);
 }

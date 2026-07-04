@@ -7,127 +7,126 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class UnboundVariableScannerTests
 {
-    [TestClass]
-    public class UnboundVariableScannerTests
+    [TestMethod]
+    public void Bound_Lambda()
     {
-        [TestMethod]
-        public void Bound_Lambda()
-        {
-            var uvs = new UnboundVariableScanner();
+        var uvs = new UnboundVariableScanner();
 
-            var e = (Expression<Func<int, int>>)(x => x);
+        var e = (Expression<Func<int, int>>)(x => x);
 
-            uvs.Visit(e);
+        uvs.Visit(e);
 
-            Assert.AreEqual(0, uvs.UnboundVariables.Count);
-        }
+        Assert.AreEqual(0, uvs.UnboundVariables.Count);
+    }
 
-        [TestMethod]
-        public void Bound_Block()
-        {
-            var uvs = new UnboundVariableScanner();
+    [TestMethod]
+    public void Bound_Block()
+    {
+        var uvs = new UnboundVariableScanner();
 
-            var p = Expression.Parameter(typeof(int));
-            var e = Expression.Block([p], p);
+        var p = Expression.Parameter(typeof(int));
+        var e = Expression.Block([p], p);
 
-            uvs.Visit(e);
+        uvs.Visit(e);
 
-            Assert.AreEqual(0, uvs.UnboundVariables.Count);
-        }
+        Assert.AreEqual(0, uvs.UnboundVariables.Count);
+    }
 
-        [TestMethod]
-        public void Bound_Catch()
-        {
-            var uvs = new UnboundVariableScanner();
+    [TestMethod]
+    public void Bound_Catch()
+    {
+        var uvs = new UnboundVariableScanner();
 
-            var p = Expression.Parameter(typeof(Exception));
-            var e = Expression.TryCatch(Expression.Empty(), Expression.Catch(p, Expression.Empty()));
+        var p = Expression.Parameter(typeof(Exception));
+        var e = Expression.TryCatch(Expression.Empty(), Expression.Catch(p, Expression.Empty()));
 
-            uvs.Visit(e);
+        uvs.Visit(e);
 
-            Assert.AreEqual(0, uvs.UnboundVariables.Count);
-        }
+        Assert.AreEqual(0, uvs.UnboundVariables.Count);
+    }
 
-        [TestMethod]
-        public void Unbound_Parameter()
-        {
-            var uvs = new UnboundVariableScanner();
+    [TestMethod]
+    public void Unbound_Parameter()
+    {
+        var uvs = new UnboundVariableScanner();
 
-            var p = Expression.Parameter(typeof(int));
+        var p = Expression.Parameter(typeof(int));
 
-            uvs.Visit(p);
+        uvs.Visit(p);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
-        }
+        Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
+    }
 
-        [TestMethod]
-        public void Unbound_Lambda()
-        {
-            var uvs = new UnboundVariableScanner();
+    [TestMethod]
+    public void Unbound_Lambda()
+    {
+        var uvs = new UnboundVariableScanner();
 
-            var p = Expression.Parameter(typeof(int));
-            var e = Expression.Lambda(p);
+        var p = Expression.Parameter(typeof(int));
+        var e = Expression.Lambda(p);
 
-            uvs.Visit(e);
+        uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
-        }
+        Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
+    }
 
-        [TestMethod]
-        public void Unbound_Block()
-        {
-            var uvs = new UnboundVariableScanner();
+    [TestMethod]
+    public void Unbound_Block()
+    {
+        var uvs = new UnboundVariableScanner();
 
-            var p = Expression.Parameter(typeof(int));
-            var e = Expression.Block(p);
+        var p = Expression.Parameter(typeof(int));
+        var e = Expression.Block(p);
 
-            uvs.Visit(e);
+        uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
-        }
+        Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
+    }
 
-        [TestMethod]
-        public void Unbound_Catch_Body()
-        {
-            var uvs = new UnboundVariableScanner();
+    [TestMethod]
+    public void Unbound_Catch_Body()
+    {
+        var uvs = new UnboundVariableScanner();
 
-            var p = Expression.Parameter(typeof(int));
-            var e = Expression.TryCatch(Expression.Default(typeof(int)), Expression.Catch(typeof(Exception), p));
+        var p = Expression.Parameter(typeof(int));
+        var e = Expression.TryCatch(Expression.Default(typeof(int)), Expression.Catch(typeof(Exception), p));
 
-            uvs.Visit(e);
+        uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
-        }
+        Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
+    }
 
-        [TestMethod]
-        public void Unbound_Catch_Filter()
-        {
-            var uvs = new UnboundVariableScanner();
+    [TestMethod]
+    public void Unbound_Catch_Filter()
+    {
+        var uvs = new UnboundVariableScanner();
 
-            var p = Expression.Parameter(typeof(bool));
-            var e = Expression.TryCatch(Expression.Empty(), Expression.Catch(typeof(Exception), Expression.Empty(), p));
+        var p = Expression.Parameter(typeof(bool));
+        var e = Expression.TryCatch(Expression.Empty(), Expression.Catch(typeof(Exception), Expression.Empty(), p));
 
-            uvs.Visit(e);
+        uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
-        }
+        Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
+    }
 
-        [TestMethod]
-        public void Unbound_Nested()
-        {
-            var uvs = new UnboundVariableScanner();
+    [TestMethod]
+    public void Unbound_Nested()
+    {
+        var uvs = new UnboundVariableScanner();
 
-            var p = Expression.Parameter(typeof(int));
-            var x = Expression.Parameter(typeof(int));
-            var y = Expression.Parameter(typeof(int));
-            var z = Expression.Parameter(typeof(Exception));
-            var e = Expression.Lambda(Expression.Block([x], Expression.TryCatch(Expression.Default(typeof(int)), Expression.Catch(z, Expression.Add(x, y))), p), y);
+        var p = Expression.Parameter(typeof(int));
+        var x = Expression.Parameter(typeof(int));
+        var y = Expression.Parameter(typeof(int));
+        var z = Expression.Parameter(typeof(Exception));
+        var e = Expression.Lambda(Expression.Block([x], Expression.TryCatch(Expression.Default(typeof(int)), Expression.Catch(z, Expression.Add(x, y))), p), y);
 
-            uvs.Visit(e);
+        uvs.Visit(e);
 
-            Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
-        }
+        Assert.IsTrue(uvs.UnboundVariables.SetEquals([p]));
     }
 }

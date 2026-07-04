@@ -9,18 +9,17 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reaqtive;
 using Reaqtive.Testing;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+[TestClass]
+public partial class All : OperatorTestBase
 {
-    [TestClass]
-    public partial class All : OperatorTestBase
+    [TestMethod]
+    public void All_ArgumentChecking()
     {
-        [TestMethod]
-        public void All_ArgumentChecking()
-        {
 #pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.All<int>(default(ISubscribable<int>), x => true));
-            ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.All<int>(DummySubscribable<int>.Instance, default(Func<int, bool>)));
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.All<int>(default(ISubscribable<int>), x => true));
+        ReactiveAssert.Throws<ArgumentNullException>(() => Subscribable.All<int>(DummySubscribable<int>.Instance, default(Func<int, bool>)));
 #pragma warning restore IDE0034 // Simplify 'default' expression
-        }
     }
 }

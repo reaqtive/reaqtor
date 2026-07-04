@@ -10,49 +10,48 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor.QueryEngine;
 
-namespace Tests.Reaqtor.QueryEngine
+namespace Tests.Reaqtor.QueryEngine;
+
+[TestClass]
+public class ReactiveEntityCollectionTests
 {
-    [TestClass]
-    public class ReactiveEntityCollectionTests
+    /// <remarks>
+    /// This test was run prior to adding a lock to prevent removal during
+    /// snapshot operations, and was found to fail.
+    /// </remarks>
+    [TestMethod]
+    public void ReactiveEntityCollection_RemoveDuringClone()
     {
-        /// <remarks>
-        /// This test was run prior to adding a lock to prevent removal during
-        /// snapshot operations, and was found to fail.
-        /// </remarks>
-        [TestMethod]
-        public void ReactiveEntityCollection_RemoveDuringClone()
+        var collection = new ReactiveEntityCollection<int, int>(EqualityComparer<int>.Default);
+        var count = 100;
+        var repeat = 1000;
+
+        for (var i = 0; i < count; ++i)
         {
-            var collection = new ReactiveEntityCollection<int, int>(EqualityComparer<int>.Default);
-            var count = 100;
-            var repeat = 1000;
+            Assert.IsTrue(collection.TryAdd(i, i * i));
+        }
 
-            for (var i = 0; i < count; ++i)
+        var rand = Random.Shared;
+        for (var i = 0; i < repeat; ++i)
+        {
+            var cloned = default(ReadOnlyReactiveEntityCollection<int, int>);
+            var target = rand.Next(count);
+
+            var t1 = Task.Run(() =>
             {
-                Assert.IsTrue(collection.TryAdd(i, i * i));
-            }
+                cloned = collection.Clone();
+            });
 
-            var rand = Random.Shared;
-            for (var i = 0; i < repeat; ++i)
+            var t2 = Task.Run(() =>
             {
-                var cloned = default(ReadOnlyReactiveEntityCollection<int, int>);
-                var target = rand.Next(count);
+                collection.TryRemove(target, out var unused);
+            });
 
-                var t1 = Task.Run(() =>
-                {
-                    cloned = collection.Clone();
-                });
+            Task.WaitAll(t1, t2);
 
-                var t2 = Task.Run(() =>
-                {
-                    collection.TryRemove(target, out var unused);
-                });
-
-                Task.WaitAll(t1, t2);
-
-                foreach (var key in cloned.RemovedKeys)
-                {
-                    Assert.IsFalse(cloned.Entries.TryGetValue(key, out var unused));
-                }
+            foreach (var key in cloned.RemovedKeys)
+            {
+                Assert.IsFalse(cloned.Entries.TryGetValue(key, out var unused));
             }
         }
     }

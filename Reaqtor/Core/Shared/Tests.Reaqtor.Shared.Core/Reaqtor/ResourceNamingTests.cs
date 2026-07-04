@@ -9,43 +9,42 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor;
 
-namespace Tests.Reaqtor.Shared.Core.Reaqtor
+namespace Tests.Reaqtor.Shared.Core.Reaqtor;
+
+[TestClass]
+public class ResourceNamingTests
 {
-    [TestClass]
-    public class ResourceNamingTests
+    [TestMethod]
+    public void ResourceNaming_ArgumentChecks()
     {
-        [TestMethod]
-        public void ResourceNaming_ArgumentChecks()
-        {
 #pragma warning disable IDE0079 // Remove unnecessary suppression (only on .NET 5)
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Makes the intent clear.)
-            Assert.ThrowsExactly<ArgumentNullException>(() => ResourceNaming.GetThisReferenceExpression((object)null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => ResourceNaming.GetThisReferenceExpression((Type)null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => ResourceNaming.IsThisReferenceExpression(typeof(int), null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ResourceNaming.GetThisReferenceExpression((object)null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ResourceNaming.GetThisReferenceExpression((Type)null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => ResourceNaming.IsThisReferenceExpression(typeof(int), null));
 #pragma warning restore IDE0004
 #pragma warning restore IDE0079
-        }
+    }
 
-        [TestMethod]
-        public void ResourceNaming_Simple()
-        {
-            var x = new object();
-            var p = ResourceNaming.GetThisReferenceExpression(x) as ParameterExpression;
-            Assert.IsNotNull(p);
-            Assert.AreEqual(typeof(object), p.Type);
-            Assert.AreEqual(Constants.CurrentInstanceUri, p.Name);
+    [TestMethod]
+    public void ResourceNaming_Simple()
+    {
+        var x = new object();
+        var p = ResourceNaming.GetThisReferenceExpression(x) as ParameterExpression;
+        Assert.IsNotNull(p);
+        Assert.AreEqual(typeof(object), p.Type);
+        Assert.AreEqual(Constants.CurrentInstanceUri, p.Name);
 
-            var p2 = ResourceNaming.GetThisReferenceExpression(typeof(string)) as ParameterExpression;
-            Assert.AreEqual(typeof(string), p2.Type);
-            Assert.AreEqual(Constants.CurrentInstanceUri, p.Name);
+        var p2 = ResourceNaming.GetThisReferenceExpression(typeof(string)) as ParameterExpression;
+        Assert.AreEqual(typeof(string), p2.Type);
+        Assert.AreEqual(Constants.CurrentInstanceUri, p.Name);
 
-            var p3 = Expression.Parameter(typeof(object), Constants.IdentityFunctionUri);
-            Assert.IsFalse(ResourceNaming.IsThisReferenceExpression(typeof(object), p3));
-            Assert.IsFalse(ResourceNaming.IsThisReferenceExpression(typeof(string), p3));
+        var p3 = Expression.Parameter(typeof(object), Constants.IdentityFunctionUri);
+        Assert.IsFalse(ResourceNaming.IsThisReferenceExpression(typeof(object), p3));
+        Assert.IsFalse(ResourceNaming.IsThisReferenceExpression(typeof(string), p3));
 
-            var p4 = Expression.Parameter(typeof(string), Constants.CurrentInstanceUri);
-            Assert.IsFalse(ResourceNaming.IsThisReferenceExpression(typeof(object), p4));
-            Assert.IsTrue(ResourceNaming.IsThisReferenceExpression(typeof(string), p4));
-        }
+        var p4 = Expression.Parameter(typeof(string), Constants.CurrentInstanceUri);
+        Assert.IsFalse(ResourceNaming.IsThisReferenceExpression(typeof(object), p4));
+        Assert.IsTrue(ResourceNaming.IsThisReferenceExpression(typeof(string), p4));
     }
 }

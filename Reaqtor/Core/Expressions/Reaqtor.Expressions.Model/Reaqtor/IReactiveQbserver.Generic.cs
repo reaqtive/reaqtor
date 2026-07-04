@@ -8,13 +8,12 @@
 // BD - June 2013 - Created this file.
 //
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for an observer represented by an expression tree.
+/// </summary>
+/// <typeparam name="T">Type of the data received by the observer.</typeparam>
+public interface IReactiveQbserver<in T> : IReactiveObserver<T>, IReactiveQbserver
 {
-    /// <summary>
-    /// Interface for an observer represented by an expression tree.
-    /// </summary>
-    /// <typeparam name="T">Type of the data received by the observer.</typeparam>
-    public interface IReactiveQbserver<in T> : IReactiveObserver<T>, IReactiveQbserver
-    {
-    }
 }

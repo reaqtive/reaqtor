@@ -10,21 +10,20 @@
 
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal class Qubscription : ReactiveQubscriptionBase
 {
-    internal class Qubscription : ReactiveQubscriptionBase
+    public Qubscription(Expression expression, IReactiveQueryProvider provider)
+        : base(provider)
     {
-        public Qubscription(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        protected override void DisposeCore()
-        {
-            ((ReactiveQueryProviderBase)base.Provider).DeleteSubscription(this);
-        }
-
-        public override Expression Expression { get; }
+        Expression = expression;
     }
+
+    protected override void DisposeCore()
+    {
+        ((ReactiveQueryProviderBase)base.Provider).DeleteSubscription(this);
+    }
+
+    public override Expression Expression { get; }
 }

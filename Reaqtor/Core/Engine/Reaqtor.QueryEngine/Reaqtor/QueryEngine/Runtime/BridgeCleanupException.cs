@@ -7,12 +7,11 @@
 
 using System;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+internal class BridgeCleanupException : Exception
 {
-    internal class BridgeCleanupException : Exception
-    {
-        public BridgeCleanupException() { }
-        public BridgeCleanupException(string message) : base(message) { }
-        public BridgeCleanupException(string message, Exception inner) : base(message, inner) { }
-    }
+    public BridgeCleanupException() { }
+    public BridgeCleanupException(string message) : base(message) { }
+    public BridgeCleanupException(string message, Exception inner) : base(message, inner) { }
 }

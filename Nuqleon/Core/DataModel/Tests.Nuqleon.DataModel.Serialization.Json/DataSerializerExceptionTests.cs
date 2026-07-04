@@ -15,34 +15,33 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.DataModel.Serialization.Json;
 
-namespace Tests.Nuqleon.DataModel.Serialization.Json
+namespace Tests.Nuqleon.DataModel.Serialization.Json;
+
+[TestClass]
+public class DataSerializerExceptionTests
 {
-    [TestClass]
-    public class DataSerializerExceptionTests
+    [TestMethod]
+    public void DataSerializerException_Default()
     {
-        [TestMethod]
-        public void DataSerializerException_Default()
-        {
-            var ex = new DataSerializerException();
-            Assert.IsFalse(string.IsNullOrEmpty(ex.Message));
-        }
-
-        [TestMethod]
-        public void DataSerializerException_Message()
-        {
-            var ex = new DataSerializerException("foo");
-            Assert.AreEqual("foo", ex.Message);
-        }
-
-        [TestMethod]
-        public void DataSerializerException_MessageInner()
-        {
-            var err = new Exception();
-
-            var ex = new DataSerializerException("foo", err);
-            Assert.AreEqual("foo", ex.Message);
-            Assert.AreSame(err, ex.InnerException);
-        }
-
+        var ex = new DataSerializerException();
+        Assert.IsFalse(string.IsNullOrEmpty(ex.Message));
     }
+
+    [TestMethod]
+    public void DataSerializerException_Message()
+    {
+        var ex = new DataSerializerException("foo");
+        Assert.AreEqual("foo", ex.Message);
+    }
+
+    [TestMethod]
+    public void DataSerializerException_MessageInner()
+    {
+        var err = new Exception();
+
+        var ex = new DataSerializerException("foo", err);
+        Assert.AreEqual("foo", ex.Message);
+        Assert.AreSame(err, ex.InnerException);
+    }
+
 }

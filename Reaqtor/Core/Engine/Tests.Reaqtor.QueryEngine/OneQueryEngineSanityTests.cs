@@ -24,774 +24,818 @@ using Reaqtor.QueryEngine.KeyValueStore.InMemory;
 using Reaqtor.QueryEngine.Mocks;
 using Reaqtor.Reliable;
 
-namespace Tests.Reaqtor.QueryEngine
+namespace Tests.Reaqtor.QueryEngine;
+
+[TestClass]
+public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
 {
-    [TestClass]
-    public class OneQueryEngineSanityTests : PhysicalTimeEngineTest
-    {
 #pragma warning disable IDE0079 // Remove unnecessary suppression (only on .NET 5.0)
 #pragma warning disable IDE0060 // Remove unused parameter (MSTest)
-        [ClassInitialize]
-        public static void ClassSetup(TestContext ignored)
-        {
-            PhysicalTimeEngineTest.ClassSetup();
-        }
+    [ClassInitialize]
+    public static void ClassSetup(TestContext ignored)
+    {
+        PhysicalTimeEngineTest.ClassSetup();
+    }
 #pragma warning restore IDE0060 // Remove unused parameter
 #pragma warning restore IDE0079 // Remove unnecessary suppression
 
-        [ClassCleanup]
-        public static void ClassTeardown()
-        {
-            PhysicalTimeEngineTest.ClassCleanup();
-        }
+    [ClassCleanup]
+    public static void ClassTeardown()
+    {
+        PhysicalTimeEngineTest.ClassCleanup();
+    }
 
-        [TestInitialize]
-        public void TestSetup()
-        {
-            base.Setup();
-        }
+    [TestInitialize]
+    public void TestSetup()
+    {
+        base.Setup();
+    }
 
-        [TestCleanup]
-        public void TestTeardown()
-        {
-            base.Cleanup();
-        }
+    [TestCleanup]
+    public void TestTeardown()
+    {
+        base.Cleanup();
+    }
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression (only on .NET 5.0)
 #pragma warning disable IDE0063 // 'using' statement can be simplified (clarity of the code)
 
-        [TestMethod]
-        public void CheckpointingQueryEngine_ArgumentChecks()
+    [TestMethod]
+    public void CheckpointingQueryEngine_ArgumentChecks()
+    {
+        var uri = new Uri("qe:/qe1");
+        var invalidUri = new Uri("test://qe/");
+
+        var sch = GetScheduler();
+        var kvs = new InMemoryKeyValueStore();
+        var ser = SerializationPolicy.Default;
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(null, Resolver, sch, Context, kvs, ser, null));
+        Assert.ThrowsExactly<ArgumentException>(() => new CheckpointingQueryEngine(invalidUri, Resolver, GetScheduler(), Context, kvs, ser, null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, null, GetScheduler(), Context, kvs, ser, null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, null, Context, kvs, ser, null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), null, kvs, ser, null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, null, ser, null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, kvs, null, null));
+    }
+
+    [TestMethod]
+    public void DefineUndefineObservable()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        Uri uri = new Uri("io:/o1");
+        Expression<Func<string, IReactiveQbservable<T>>> obs = id => MockObservable.CreateObservable<T>(id).AsQbservable();
+
+        ctx.DefineObservable<string, T>(uri, obs, null);
+
+        Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observables[uri].Expression, Rewrite(obs)));
+        Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineObservable<string, T>(uri, obs, null));
+
+        ctx.UndefineObservable(uri);
+
+        Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineObservable(uri));
+    }
+
+    [TestMethod]
+    public async Task DefineUndefineObservableAsync()
+    {
+        await
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+        var asyncCtx = new TupletizingClientContext(qe.ServiceProvider);
+
+        Uri uri = new Uri("io:/o1");
+        Expression<Func<string, IAsyncReactiveQbservable<T>>> obs = id => MockObservable.CreateObservable<T>(id).AsQbservable().To<IReactiveQbservable<T>, IAsyncReactiveQbservable<T>>();
+
+        await asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None);
+
+        Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observables[uri].Expression, Rewrite((Expression<Func<string, IReactiveQbservable<T>>>)(id => MockObservable.CreateObservable<T>(id).AsQbservable()))));
+        await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None));
+
+        await asyncCtx.UndefineObservableAsync(uri, CancellationToken.None);
+
+        await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineObservableAsync(uri, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public void DefineUndefineObserver()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        Uri uri = new Uri("iv:/v1");
+        Expression<Func<string, IReactiveQbserver<T>>> obv = (id) => MockObserver.CreateObserver<T>(id).AsQbserver();
+
+        ctx.DefineObserver<string, T>(uri, obv, null);
+
+        Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observers[uri].Expression, Rewrite(obv)));
+        Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineObserver<string, T>(uri, obv, null));
+
+        ctx.UndefineObserver(uri);
+
+        Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineObserver(uri));
+    }
+
+    [TestMethod]
+    public async Task DefineUndefineObserverAsync()
+    {
+        await
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+        var asyncCtx = new TupletizingClientContext(qe.ServiceProvider);
+
+        Uri uri = new Uri("iv:/v1");
+        Expression<Func<string, IAsyncReactiveQbserver<T>>> obv = (id) => MockObserver.CreateObserver<T>(id).To<IObserver<T>, IAsyncReactiveQbserver<T>>();
+
+        await asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None);
+
+        Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observers[uri].Expression, (Expression<Func<string, IObserver<T>>>)(id => MockObserver.CreateObserver<T>(id))));
+        await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None));
+
+        await asyncCtx.UndefineObserverAsync(uri, CancellationToken.None);
+
+        await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineObserverAsync(uri, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public void DefineUndefineStreamFactory()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = qe.ReactiveService;
+
+        Uri uri = new Uri("sf:/s2");
+        var sf = ctx.GetStreamFactory<int, int>(new Uri("sf:/s1"));
+
+        ctx.DefineStreamFactory<int, int>(uri, sf, null);
+
+        Assert.IsTrue(new ExpressionComparator().Equals(ctx.StreamFactories[uri].Expression, Rewrite(sf.Expression)));
+        Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineStreamFactory<int, int>(uri, sf, null));
+
+        ctx.UndefineStreamFactory(uri);
+
+        Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineStreamFactory(uri));
+    }
+
+    [TestMethod]
+    public async Task DefineUndefineStreamFactoryAsync()
+    {
+        await
+        using var qe = CreateQueryEngine();
+
+        var ctx = qe.ReactiveService;
+        var asyncCtx = new TupletizingClientContext(qe.ServiceProvider);
+
+        Uri uri = new Uri("sf:/s2");
+        var sf = asyncCtx.GetStreamFactory<int, int>(new Uri("sf:/s1"));
+
+        await asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None);
+
+        Assert.IsTrue(new ExpressionComparator().Equals(ctx.StreamFactories[uri].Expression, Rewrite(sf.Expression)));
+        await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None));
+
+        await asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None);
+
+        await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None));
+    }
+
+    [TestMethod]
+    public void SubscriptionLifecycle()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        AssertObservableNotCreated<int>("o1");
+        AssertObserverNotCreated<int>("v1");
+
+        var uri = new Uri("s:/sub1");
+
+        var src = ctx.GetObservable<string, int>(MockObservableUri)("o1");
+        var obv = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+        var sub = src.Subscribe(obv, uri, null);
+
+        Assert.ThrowsExactly<EntityAlreadyExistsException>(() =>
         {
-            var uri = new Uri("qe:/qe1");
-            var invalidUri = new Uri("test://qe/");
+            // Subscription with uri already exists
+            src.Subscribe(obv, uri, null);
+        });
 
-            var sch = GetScheduler();
-            var kvs = new InMemoryKeyValueStore();
-            var ser = SerializationPolicy.Default;
+        var o1 = MockObservable.Get<int>("o1");
+        Assert.IsNotNull(o1);
+        Assert.AreEqual(1, o1.SubscriptionCount);
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(null, Resolver, sch, Context, kvs, ser, null));
-            Assert.ThrowsExactly<ArgumentException>(() => new CheckpointingQueryEngine(invalidUri, Resolver, GetScheduler(), Context, kvs, ser, null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, null, GetScheduler(), Context, kvs, ser, null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, null, Context, kvs, ser, null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), null, kvs, ser, null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, null, ser, null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => new CheckpointingQueryEngine(uri, Resolver, GetScheduler(), Context, kvs, null, null));
-        }
+        var v1 = GetMockObserver<int>("v1");
+        Assert.AreEqual(uri, v1.InstanceId);
 
-        [TestMethod]
-        public void DefineUndefineObservable()
+        o1.OnNext(0);
+        o1.OnNext(1);
+
+        Assert.IsFalse(v1.Completed);
+        Assert.IsFalse(v1.Error);
+        AssertEx.AreSequenceEqual([0, 1], v1.Values);
+
+        sub.Dispose();
+
+        Assert.AreEqual(0, o1.SubscriptionCount);
+
+        o1.OnNext(2); // ignored
+
+        Assert.ThrowsExactly<EntityNotFoundException>(() =>
         {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            Uri uri = new Uri("io:/o1");
-            Expression<Func<string, IReactiveQbservable<T>>> obs = id => MockObservable.CreateObservable<T>(id).AsQbservable();
-
-            ctx.DefineObservable<string, T>(uri, obs, null);
-
-            Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observables[uri].Expression, Rewrite(obs)));
-            Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineObservable<string, T>(uri, obs, null));
-
-            ctx.UndefineObservable(uri);
-
-            Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineObservable(uri));
-        }
-
-        [TestMethod]
-        public async Task DefineUndefineObservableAsync()
-        {
-            await
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-            var asyncCtx = new TupletizingClientContext(qe.ServiceProvider);
-
-            Uri uri = new Uri("io:/o1");
-            Expression<Func<string, IAsyncReactiveQbservable<T>>> obs = id => MockObservable.CreateObservable<T>(id).AsQbservable().To<IReactiveQbservable<T>, IAsyncReactiveQbservable<T>>();
-
-            await asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None);
-
-            Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observables[uri].Expression, Rewrite((Expression<Func<string, IReactiveQbservable<T>>>)(id => MockObservable.CreateObservable<T>(id).AsQbservable()))));
-            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObservableAsync<string, T>(uri, obs, null, CancellationToken.None));
-
-            await asyncCtx.UndefineObservableAsync(uri, CancellationToken.None);
-
-            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineObservableAsync(uri, CancellationToken.None));
-        }
-
-        [TestMethod]
-        public void DefineUndefineObserver()
-        {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            Uri uri = new Uri("iv:/v1");
-            Expression<Func<string, IReactiveQbserver<T>>> obv = (id) => MockObserver.CreateObserver<T>(id).AsQbserver();
-
-            ctx.DefineObserver<string, T>(uri, obv, null);
-
-            Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observers[uri].Expression, Rewrite(obv)));
-            Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineObserver<string, T>(uri, obv, null));
-
-            ctx.UndefineObserver(uri);
-
-            Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineObserver(uri));
-        }
-
-        [TestMethod]
-        public async Task DefineUndefineObserverAsync()
-        {
-            await
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-            var asyncCtx = new TupletizingClientContext(qe.ServiceProvider);
-
-            Uri uri = new Uri("iv:/v1");
-            Expression<Func<string, IAsyncReactiveQbserver<T>>> obv = (id) => MockObserver.CreateObserver<T>(id).To<IObserver<T>, IAsyncReactiveQbserver<T>>();
-
-            await asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None);
-
-            Assert.IsTrue(new ExpressionComparator().Equals(ctx.Observers[uri].Expression, (Expression<Func<string, IObserver<T>>>)(id => MockObserver.CreateObserver<T>(id))));
-            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineObserverAsync<string, T>(uri, obv, null, CancellationToken.None));
-
-            await asyncCtx.UndefineObserverAsync(uri, CancellationToken.None);
-
-            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineObserverAsync(uri, CancellationToken.None));
-        }
-
-        [TestMethod]
-        public void DefineUndefineStreamFactory()
-        {
-            using var qe = CreateQueryEngine();
-
-            var ctx = qe.ReactiveService;
-
-            Uri uri = new Uri("sf:/s2");
-            var sf = ctx.GetStreamFactory<int, int>(new Uri("sf:/s1"));
-
-            ctx.DefineStreamFactory<int, int>(uri, sf, null);
-
-            Assert.IsTrue(new ExpressionComparator().Equals(ctx.StreamFactories[uri].Expression, Rewrite(sf.Expression)));
-            Assert.ThrowsExactly<EntityAlreadyExistsException>(() => ctx.DefineStreamFactory<int, int>(uri, sf, null));
-
-            ctx.UndefineStreamFactory(uri);
-
-            Assert.ThrowsExactly<EntityNotFoundException>(() => ctx.UndefineStreamFactory(uri));
-        }
-
-        [TestMethod]
-        public async Task DefineUndefineStreamFactoryAsync()
-        {
-            await
-            using var qe = CreateQueryEngine();
-
-            var ctx = qe.ReactiveService;
-            var asyncCtx = new TupletizingClientContext(qe.ServiceProvider);
-
-            Uri uri = new Uri("sf:/s2");
-            var sf = asyncCtx.GetStreamFactory<int, int>(new Uri("sf:/s1"));
-
-            await asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None);
-
-            Assert.IsTrue(new ExpressionComparator().Equals(ctx.StreamFactories[uri].Expression, Rewrite(sf.Expression)));
-            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(() => asyncCtx.DefineStreamFactoryAsync<int, int>(uri, sf, null, CancellationToken.None));
-
-            await asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None);
-
-            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() => asyncCtx.UndefineStreamFactoryAsync(uri, CancellationToken.None));
-        }
-
-        [TestMethod]
-        public void SubscriptionLifecycle()
-        {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            AssertObservableNotCreated<int>("o1");
-            AssertObserverNotCreated<int>("v1");
-
-            var uri = new Uri("s:/sub1");
-
-            var src = ctx.GetObservable<string, int>(MockObservableUri)("o1");
-            var obv = ctx.GetObserver<string, int>(MockObserverUri)("v1");
-            var sub = src.Subscribe(obv, uri, null);
-
-            Assert.ThrowsExactly<EntityAlreadyExistsException>(() =>
-            {
-                // Subscription with uri already exists
-                src.Subscribe(obv, uri, null);
-            });
-
-            var o1 = MockObservable.Get<int>("o1");
-            Assert.IsNotNull(o1);
-            Assert.AreEqual(1, o1.SubscriptionCount);
-
-            var v1 = GetMockObserver<int>("v1");
-            Assert.AreEqual(uri, v1.InstanceId);
-
-            o1.OnNext(0);
-            o1.OnNext(1);
-
-            Assert.IsFalse(v1.Completed);
-            Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual([0, 1], v1.Values);
-
+            // Subscription with uri doesn't exist
             sub.Dispose();
+        });
 
-            Assert.AreEqual(0, o1.SubscriptionCount);
+        // Lazy evaluation - doesn't throw until Dispose is called
+        sub = ctx.GetSubscription(uri);
 
-            o1.OnNext(2); // ignored
-
-            Assert.ThrowsExactly<EntityNotFoundException>(() =>
-            {
-                // Subscription with uri doesn't exist
-                sub.Dispose();
-            });
-
-            // Lazy evaluation - doesn't throw until Dispose is called
-            sub = ctx.GetSubscription(uri);
-
-            Assert.ThrowsExactly<EntityNotFoundException>(() =>
-            {
-                // Subscription with uri doesn't exist
-                sub.Dispose();
-            });
-
-            o1.OnNext(3); // ignored
-
-            Assert.IsFalse(v1.Completed);
-            Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual([0, 1], v1.Values);
-
-            sub = src.Subscribe(obv, uri, null);
-
-            Assert.AreEqual(1, o1.SubscriptionCount);
-            Assert.AreEqual(uri, v1.InstanceId);
-
-            o1.OnNext(4);
-            o1.OnNext(5);
-
-            sub = ctx.GetSubscription(uri);
-            sub.Dispose();
-
-            Assert.AreEqual(0, o1.SubscriptionCount);
-
-            o1.OnNext(6); // ignored
-
-            Assert.IsFalse(v1.Completed);
-            Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
-        }
-
-        [TestMethod]
-        public async Task SubscriptionLifecycleAsync()
+        Assert.ThrowsExactly<EntityNotFoundException>(() =>
         {
-            await
-            using var qe = CreateQueryEngine();
+            // Subscription with uri doesn't exist
+            sub.Dispose();
+        });
 
-            var ctx = new TupletizingClientContext(qe.ServiceProvider);
+        o1.OnNext(3); // ignored
 
-            AssertObservableNotCreated<int>("o1");
-            AssertObserverNotCreated<int>("v1");
+        Assert.IsFalse(v1.Completed);
+        Assert.IsFalse(v1.Error);
+        AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
-            var uri = new Uri("s:/sub1");
+        sub = src.Subscribe(obv, uri, null);
 
-            var src = ctx.GetObservable<string, int>(MockObservableUri)("o1");
-            var obv = ctx.GetObserver<string, int>(MockObserverUri)("v1");
-            var sub = await src.SubscribeAsync(obv, uri, null, CancellationToken.None);
+        Assert.AreEqual(1, o1.SubscriptionCount);
+        Assert.AreEqual(uri, v1.InstanceId);
 
-            await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(async () =>
-            {
-                // Subscription with uri already exists
-                await src.SubscribeAsync(obv, uri, null);
-            });
+        o1.OnNext(4);
+        o1.OnNext(5);
 
-            var o1 = MockObservable.Get<int>("o1");
-            Assert.IsNotNull(o1);
-            Assert.AreEqual(1, o1.SubscriptionCount);
+        sub = ctx.GetSubscription(uri);
+        sub.Dispose();
 
-            var v1 = GetMockObserver<int>("v1");
-            Assert.AreEqual(uri, v1.InstanceId);
+        Assert.AreEqual(0, o1.SubscriptionCount);
 
-            o1.OnNext(0);
-            o1.OnNext(1);
+        o1.OnNext(6); // ignored
 
-            Assert.IsFalse(v1.Completed);
-            Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual([0, 1], v1.Values);
+        Assert.IsFalse(v1.Completed);
+        Assert.IsFalse(v1.Error);
+        AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
+    }
 
+    [TestMethod]
+    public async Task SubscriptionLifecycleAsync()
+    {
+        await
+        using var qe = CreateQueryEngine();
+
+        var ctx = new TupletizingClientContext(qe.ServiceProvider);
+
+        AssertObservableNotCreated<int>("o1");
+        AssertObserverNotCreated<int>("v1");
+
+        var uri = new Uri("s:/sub1");
+
+        var src = ctx.GetObservable<string, int>(MockObservableUri)("o1");
+        var obv = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+        var sub = await src.SubscribeAsync(obv, uri, null, CancellationToken.None);
+
+        await Assert.ThrowsExactlyAsync<EntityAlreadyExistsException>(async () =>
+        {
+            // Subscription with uri already exists
+            await src.SubscribeAsync(obv, uri, null);
+        });
+
+        var o1 = MockObservable.Get<int>("o1");
+        Assert.IsNotNull(o1);
+        Assert.AreEqual(1, o1.SubscriptionCount);
+
+        var v1 = GetMockObserver<int>("v1");
+        Assert.AreEqual(uri, v1.InstanceId);
+
+        o1.OnNext(0);
+        o1.OnNext(1);
+
+        Assert.IsFalse(v1.Completed);
+        Assert.IsFalse(v1.Error);
+        AssertEx.AreSequenceEqual([0, 1], v1.Values);
+
+        await sub.DisposeAsync(CancellationToken.None);
+
+        Assert.AreEqual(0, o1.SubscriptionCount);
+
+        o1.OnNext(2); // ignored
+
+        await Assert.ThrowsExactlyAsync<EntityNotFoundException>(async () =>
+        {
+            // Subscription with uri doesn't exist
             await sub.DisposeAsync(CancellationToken.None);
+        });
 
-            Assert.AreEqual(0, o1.SubscriptionCount);
+        // Lazy evaluation - doesn't throw until Dispose is called
+        sub = ctx.GetSubscription(uri);
 
-            o1.OnNext(2); // ignored
-
-            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(async () =>
-            {
-                // Subscription with uri doesn't exist
-                await sub.DisposeAsync(CancellationToken.None);
-            });
-
-            // Lazy evaluation - doesn't throw until Dispose is called
-            sub = ctx.GetSubscription(uri);
-
-            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(async () =>
-            {
-                // Subscription with uri doesn't exist
-                await sub.DisposeAsync(CancellationToken.None);
-            });
-
-            o1.OnNext(3); // ignored
-
-            Assert.IsFalse(v1.Completed);
-            Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual([0, 1], v1.Values);
-
-            sub = await src.SubscribeAsync(obv, uri, null, CancellationToken.None);
-
-            Assert.AreEqual(1, o1.SubscriptionCount);
-            Assert.AreEqual(uri, v1.InstanceId);
-
-            o1.OnNext(4);
-            o1.OnNext(5);
-
-            sub = ctx.GetSubscription(uri);
+        await Assert.ThrowsExactlyAsync<EntityNotFoundException>(async () =>
+        {
+            // Subscription with uri doesn't exist
             await sub.DisposeAsync(CancellationToken.None);
+        });
 
-            Assert.AreEqual(0, o1.SubscriptionCount);
+        o1.OnNext(3); // ignored
 
-            o1.OnNext(6); // ignored
+        Assert.IsFalse(v1.Completed);
+        Assert.IsFalse(v1.Error);
+        AssertEx.AreSequenceEqual([0, 1], v1.Values);
 
-            Assert.IsFalse(v1.Completed);
-            Assert.IsFalse(v1.Error);
-            AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
+        sub = await src.SubscribeAsync(obv, uri, null, CancellationToken.None);
+
+        Assert.AreEqual(1, o1.SubscriptionCount);
+        Assert.AreEqual(uri, v1.InstanceId);
+
+        o1.OnNext(4);
+        o1.OnNext(5);
+
+        sub = ctx.GetSubscription(uri);
+        await sub.DisposeAsync(CancellationToken.None);
+
+        Assert.AreEqual(0, o1.SubscriptionCount);
+
+        o1.OnNext(6); // ignored
+
+        Assert.IsFalse(v1.Completed);
+        Assert.IsFalse(v1.Error);
+        AssertEx.AreSequenceEqual([0, 1, 4, 5], v1.Values);
+    }
+
+    [TestMethod]
+    public void PassThroughQuery()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        AssertObservableNotCreated<int>("o1");
+        AssertObserverNotCreated<int>("v1");
+
+        var sub =
+            ctx.GetObservable<string, int>(MockObservableUri)("o1")
+            .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null);
+
+        var o1 = MockObservable.Get<int>("o1");
+        Assert.IsNotNull(o1);
+        Assert.AreEqual(1, o1.SubscriptionCount);
+
+        var v1 = GetMockObserver<int>("v1");
+        Assert.AreEqual(new Uri("s:/sub1"), v1.InstanceId);
+
+        o1.OnNext(0);
+        o1.OnNext(1);
+
+        Assert.IsFalse(v1.Completed);
+        Assert.IsFalse(v1.Error);
+
+        o1.OnCompleted();
+
+        Assert.IsTrue(v1.Completed);
+        Assert.IsFalse(v1.Error);
+
+        sub.Dispose();
+
+        Assert.AreEqual(0, o1.SubscriptionCount);
+
+        o1.OnNext(3);
+        o1.OnNext(4);
+
+        AssertResult(v1, 2, (i, v) => Assert.AreEqual(i, v));
+    }
+
+    [TestMethod]
+    public void ErrorInStream()
+    {
+        using var engine = CreateQueryEngine();
+
+        var reactive = GetQueryEngineReactiveService(engine);
+
+        // Create stream.
+        var sourceUri = new Uri("reactor:/source");
+        var subscriptionUri = new Uri("reactor:/subscription");
+        var src = reactive.CreateStream<int>(sourceUri);
+        var observable = reactive.GetObservable<int>(sourceUri);
+
+        // Create subscription
+        observable.Subscribe(reactive.GetObserver<string, int>(MockObserverUri)("result"), subscriptionUri, null);
+
+        var srcs = src.Synchronize(engine.Scheduler);
+
+        srcs.OnNext(0);
+
+        var result = GetObserver<int>("result");
+        AssertResult(result, 1, static (x, y) => Assert.AreEqual(x, y));
+        Assert.IsFalse(result.Completed);
+        Assert.IsFalse(result.Error);
+
+        srcs.OnError(new Exception());
+        Assert.IsFalse(result.Completed);
+        Assert.IsTrue(result.Error);
+
+        srcs.OnNext(1);
+        AssertResult(result, 1, static (x, y) => Assert.AreEqual(x, y));
+    }
+
+    [TestMethod]
+    public void SimpleQuery()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        AssertObservableNotCreated<int>("o1");
+        AssertObserverNotCreated<int>("v1");
+
+        var sub =
+            ctx.GetObservable<string, int>(MockObservableUri)("o1")
+            .Where(x => x % 2 == 0)
+            .Take(5)
+            .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null);
+
+        var o1 = MockObservable.Get<int>("o1");
+        Assert.IsNotNull(o1);
+        Assert.AreEqual(1, o1.SubscriptionCount);
+
+        var o1s = o1.Synchronize(qe.Scheduler);
+
+        var v1 = GetMockObserver<int>("v1");
+        Assert.AreEqual(new Uri("s:/sub1"), v1.InstanceId);
+
+        for (int i = 0; i < 20; i++)
+        {
+            o1s.OnNext(i);
         }
 
-        [TestMethod]
-        public void PassThroughQuery()
+        Assert.IsTrue(v1.Completed);
+        Assert.IsFalse(v1.Error);
+
+        o1s.OnCompleted();
+
+        Assert.IsTrue(v1.Completed);
+        Assert.IsFalse(v1.Error);
+
+        sub.Dispose();
+
+        Assert.AreEqual(0, o1.SubscriptionCount);
+
+        AssertResult(v1, 5, (i, v) => Assert.AreEqual(i * 2, v));
+    }
+
+    [TestMethod]
+    public void ForeignFunction()
+    {
+        using var qe = CreateQueryEngine();
+
+        // NB: Have to use async here; the sync path uses the UriToReactiveBinder which does not
+        //     support foreign functions because it can't leave any parameter unbound.
+
+        var ctx = GetQueryEngineAsyncReactiveService(qe);
+
+        AssertObservableNotCreated<int>("o1");
+        AssertObserverNotCreated<int>("v1");
+
+        var sub =
+            ctx.GetObservable<string, int>(MockObservableUri)("o1")
+            .Select(i => Square(i))
+            .SubscribeAsync(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null, CancellationToken.None).Result;
+
+        var o1 = MockObservable.Get<int>("o1");
+        Assert.IsNotNull(o1);
+        Assert.AreEqual(1, o1.SubscriptionCount);
+
+        var o1s = o1.Synchronize(qe.Scheduler);
+
+        var v1 = GetMockObserver<int>("v1");
+        Assert.AreEqual(new Uri("s:/sub1"), v1.InstanceId);
+
+        for (int i = 0; i < 10; i++)
         {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            AssertObservableNotCreated<int>("o1");
-            AssertObserverNotCreated<int>("v1");
-
-            var sub =
-                ctx.GetObservable<string, int>(MockObservableUri)("o1")
-                .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null);
-
-            var o1 = MockObservable.Get<int>("o1");
-            Assert.IsNotNull(o1);
-            Assert.AreEqual(1, o1.SubscriptionCount);
-
-            var v1 = GetMockObserver<int>("v1");
-            Assert.AreEqual(new Uri("s:/sub1"), v1.InstanceId);
-
-            o1.OnNext(0);
-            o1.OnNext(1);
-
-            Assert.IsFalse(v1.Completed);
-            Assert.IsFalse(v1.Error);
-
-            o1.OnCompleted();
-
-            Assert.IsTrue(v1.Completed);
-            Assert.IsFalse(v1.Error);
-
-            sub.Dispose();
-
-            Assert.AreEqual(0, o1.SubscriptionCount);
-
-            o1.OnNext(3);
-            o1.OnNext(4);
-
-            AssertResult(v1, 2, (i, v) => Assert.AreEqual(i, v));
+            o1s.OnNext(i);
         }
 
-        [TestMethod]
-        public void ErrorInStream()
+        sub.DisposeAsync(CancellationToken.None)
+            .AsTask()
+            .Wait();
+
+        AssertResult(v1, 10, (i, v) => Assert.AreEqual(i * i, v));
+    }
+
+    [KnownResource("function://int/square")]
+    public static int Square(int x)
+    {
+        throw new NotImplementedException();
+    }
+
+    [TestMethod]
+    public void DistinctUntilQuery()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        var o1 = MockObservable.Get<int>("o1");
+        Assert.IsNull(o1);
+
+        var v1 = MockObserver.Get<int>("v1");
+        Assert.IsNull(v1);
+
+        var sub =
+            ctx.GetObservable<string, int>(MockObservableUri)("o1")
+            .DistinctUntilChanged(x => x)
+            .Take(10)
+            .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null);
+
+        o1 = MockObservable.Get<int>("o1");
+        Assert.IsNotNull(o1);
+        Assert.AreEqual(1, o1.SubscriptionCount);
+
+        v1 = MockObserver.Get<int>("v1");
+        Assert.IsNotNull(v1);
+        Assert.IsFalse(v1.Completed);
+        Assert.IsFalse(v1.Error);
+        Assert.AreEqual(0, v1.Values.Count);
+
+        var o1s = o1.Synchronize(qe.Scheduler);
+
+        for (int i = 0; i < 20; i++)
         {
-            using var engine = CreateQueryEngine();
-
-            var reactive = GetQueryEngineReactiveService(engine);
-
-            // Create stream.
-            var sourceUri = new Uri("reactor:/source");
-            var subscriptionUri = new Uri("reactor:/subscription");
-            var src = reactive.CreateStream<int>(sourceUri);
-            var observable = reactive.GetObservable<int>(sourceUri);
-
-            // Create subscription
-            observable.Subscribe(reactive.GetObserver<string, int>(MockObserverUri)("result"), subscriptionUri, null);
-
-            var srcs = src.Synchronize(engine.Scheduler);
-
-            srcs.OnNext(0);
-
-            var result = GetObserver<int>("result");
-            AssertResult(result, 1, static (x, y) => Assert.AreEqual(x, y));
-            Assert.IsFalse(result.Completed);
-            Assert.IsFalse(result.Error);
-
-            srcs.OnError(new Exception());
-            Assert.IsFalse(result.Completed);
-            Assert.IsTrue(result.Error);
-
-            srcs.OnNext(1);
-            AssertResult(result, 1, static (x, y) => Assert.AreEqual(x, y));
+            o1s.OnNext(i / 2);
         }
 
-        [TestMethod]
-        public void SimpleQuery()
+        Assert.IsTrue(v1.Completed);
+        Assert.IsFalse(v1.Error);
+
+        o1s.OnCompleted();
+
+        Assert.IsTrue(v1.Completed);
+        Assert.IsFalse(v1.Error);
+
+        sub.Dispose();
+
+        Assert.AreEqual(0, o1.SubscriptionCount);
+
+        Assert.AreEqual(10, v1.Values.Count);
+
+        for (int i = 0; i < 10; i++)
         {
-            using var qe = CreateQueryEngine();
+            Assert.AreEqual(i, v1.Values[i]);
+        }
+    }
 
-            var ctx = GetQueryEngineReactiveService(qe);
+    [TestMethod]
+    public void CreateDeleteStream()
+    {
+        using var qe = CreateQueryEngine();
 
-            AssertObservableNotCreated<int>("o1");
-            AssertObserverNotCreated<int>("v1");
+        Uri uri = new Uri("str:/s1");
+        var s1 = qe.ReactiveService.CreateStream<int>(uri);
+        Assert.IsNotNull(s1);
+        s1.Dispose();
+    }
 
-            var sub =
-                ctx.GetObservable<string, int>(MockObservableUri)("o1")
-                .Where(x => x % 2 == 0)
-                .Take(5)
-                .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null);
+    [TestMethod]
+    public void StreamPassThrough()
+    {
+        using var qe = CreateQueryEngine();
 
-            var o1 = MockObservable.Get<int>("o1");
-            Assert.IsNotNull(o1);
-            Assert.AreEqual(1, o1.SubscriptionCount);
+        var ctx = GetQueryEngineReactiveService(qe);
 
-            var o1s = o1.Synchronize(qe.Scheduler);
+        Uri str1 = new Uri("str:/s1");
 
-            var v1 = GetMockObserver<int>("v1");
-            Assert.AreEqual(new Uri("s:/sub1"), v1.InstanceId);
+        var s1 = ctx.CreateStream<int>(str1);
+        Assert.IsNotNull(s1);
 
-            for (int i = 0; i < 20; i++)
-            {
-                o1s.OnNext(i);
-            }
+        var s1o = ctx.GetObservable<int>(str1);
+        Assert.IsNotNull(s1o);
 
-            Assert.IsTrue(v1.Completed);
-            Assert.IsFalse(v1.Error);
+        AssertObserverNotCreated<int>("v1");
 
-            o1s.OnCompleted();
+        var sub = s1o
+            .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null);
 
-            Assert.IsTrue(v1.Completed);
-            Assert.IsFalse(v1.Error);
+        var v1 = GetMockObserver<int>("v1");
 
-            sub.Dispose();
+        var s1v = qe.ReactiveService.GetObserver<int>(str1);
+        Assert.IsNotNull(s1v);
 
-            Assert.AreEqual(0, o1.SubscriptionCount);
+        var s1vs = s1v.Synchronize(qe.Scheduler);
 
-            AssertResult(v1, 5, (i, v) => Assert.AreEqual(i * 2, v));
+        for (int i = 0; i < 5; i++)
+        {
+            s1vs.OnNext(i);
         }
 
-        [TestMethod]
-        public void ForeignFunction()
+        sub.Dispose();
+        s1.Dispose();
+
+        AssertResult(v1, 5, (i, v) => Assert.AreEqual(i, v));
+    }
+
+    [TestMethod]
+    public void TimerQuery()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        ctx.DefineObservable(new Uri("qe:/engine1/timer"), ctx.Timer(DateTime.Now), null);
+        var o1 = ctx.GetObservable<long>(new Uri("qe:/engine1/timer"));
+
+        _ = o1.Subscribe(ctx.GetObserver<string, long>(MockObserverUri)("result"), new Uri("s:/sub1"), null);
+
+        var res = MockObserver.Get<long>("result");
+        Assert.IsNotNull(res);
+
+        Assert.IsTrue(res.WaitForCompleted(Timeout));
+
+        Assert.IsTrue(res.Completed);
+        Assert.IsFalse(res.Error);
+        Assert.AreEqual(1, res.Values.Count);
+    }
+
+    [TestMethod]
+    public void PeriodicTimerQuery()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        ctx.DefineObservable(new Uri("qe:/engine1/timer"), ctx.Timer(DateTime.Now, TimeSpan.FromMinutes(5)), null);
+        var o1 = ctx.GetObservable<long>(new Uri("qe:/engine1/timer"));
+
+        ctx.DefineObservable(new Uri("qe:/engine2/o2"), o1.Take(2), null);
+        var o2 = ctx.GetObservable<long>(new Uri("qe:/engine2/o2"));
+
+        _ = o2.Subscribe(ctx.GetObserver<string, long>(MockObserverUri)("result"), new Uri("s:/sub1"), null);
+
+        var res = MockObserver.Get<long>("result");
+        Assert.IsNotNull(res);
+
+        Assert.IsTrue(res.WaitForCount(1, Timeout));
+
+        Assert.IsFalse(res.Completed);
+        Assert.IsFalse(res.Error);
+        Assert.AreEqual(1, res.Values.Count);
+    }
+
+    [TestMethod]
+    public void SelectMany()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        var o1 = ctx.GetObservable<string, int>(MockObservableUri)("o1");
+        var o2 = ctx.GetObservable<string, int>(MockObservableUri)("o2");
+
+        var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+
+        var sub1 = o1.SelectMany(x => o2.Where(y => x < y), (x, y) => x + y).Subscribe(v1, new Uri("s:/s1"), null);
+
+        var s3 = GetMockObserver<int>("v1");
+
+        var s1 = MockObservable.Get<int>("o1");
+        Assert.IsNotNull(s1);
+        Assert.AreEqual(1, s1.SubscriptionCount);
+
+        var s1s = s1.Synchronize(qe.Scheduler);
+
+        s1s.OnNext(3);
+
+        var s2 = MockObservable.Get<int>("o2");
+        Assert.IsNotNull(s2);
+        Assert.AreEqual(1, s2.SubscriptionCount);
+
+        var s2s = s2.Synchronize(qe.Scheduler);
+
+        s2s.OnNext(4);
+
+        var res = s3.Values;
+        Assert.AreEqual(1, res.Count);
+        Assert.AreEqual(7, res[0]);
+
+        sub1.Dispose();
+    }
+
+    [TestMethod]
+    public void Throttle()
+    {
+        // Throttles (i.e., ignores) two observations from the main stream. Testing that
+        // resources are persisted through the QE's reactive service context (there are
+        // comprehensive one-machine tests elsewhere)
+
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        var o1 = ctx.GetObservable<string, int>(MockObservableUri)("o1");
+        var o2 = ctx.GetObservable<string, int>(MockObservableUri)("o2");
+        var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+
+        var sub1 = o1.Throttle<int, int>((_) => o2).Subscribe(v1, new Uri("s:/s1"), null);
+
+        var s3 = GetMockObserver<int>("v1");
+
+        var s1 = MockObservable.Get<int>("o1");
+        Assert.IsNotNull(s1);
+        Assert.AreEqual(1, s1.SubscriptionCount);
+
+        var s1v = s1.Synchronize(qe.Scheduler);
+
+        s1v.OnNext(1);  // ignored
+
+        var s2 = MockObservable.Get<int>("o2");
+        Assert.IsNotNull(s2);
+        Assert.AreEqual(1, s2.SubscriptionCount);
+
+        var s2v = s2.Synchronize(qe.Scheduler);
+
+        s1v.OnNext(2);  // ignored
+        s1v.OnNext(3);
+        s2v.OnNext(99);  // throttle signal
+        s1v.OnNext(4);
+
+        Assert.AreEqual(1, s3.Values.Count);
+        Assert.AreEqual(3, s3.Values[0]);
+
+        s1v.OnCompleted();
+
+        Assert.AreEqual(2, s3.Values.Count);
+        Assert.AreEqual(4, s3.Values[1]);
+
+        sub1.Dispose();
+    }
+
+    [TestMethod]
+    public void Switch()
+    {
+        // Observables to the switch, test observables before the one that
+        // is currently subsribed to are ignored when they fire off an OnNext.
+
+        using var qe = CreateQueryEngine();
+
+        var ctx1 = GetQueryEngineReactiveService(qe);
+
+        var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+        var generator = ctx1.GetObservable<string, int>(MockObservableUri);
+        var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+
+        var sub1uri = new Uri("s:/s1");
+        var sub1 = o1
+            .Select(x => generator("o" + x))
+            .Switch()
+            .Subscribe(v1, sub1uri, null);
+
+        var out1 = GetMockObserver<int>("v1");
+        var in1 = GetObservable<int>("o1");
+
+        var in1s = in1.Synchronize(qe.Scheduler);
+
+        in1s.OnNext(2);  // generates observable identified as o2
+
+        var in2 = GetObservable<int>("o2");
+
+        var in2s = in2.Synchronize(qe.Scheduler);
+
+        in2s.OnNext(97);
+
+        in1s.OnNext(3);  // generates observable identified as o3
+        var in3 = GetObservable<int>("o3");
+
+        var in3s = in3.Synchronize(qe.Scheduler);
+
+        in2s.OnNext(98); // ignored
+        in3s.OnNext(99);
+
+        AssertResultSequence(out1, [97, 99]);
+    }
+
+    [TestMethod]
+    public void Switch_SimpleQeCrash()
+    {
+        InMemoryStateStore chkpt1;
+
+        var sub1uri = new Uri("s:/s1");
+
+        using (var qe1 = CreateQueryEngine())
         {
-            using var qe = CreateQueryEngine();
-
-            // NB: Have to use async here; the sync path uses the UriToReactiveBinder which does not
-            //     support foreign functions because it can't leave any parameter unbound.
-
-            var ctx = GetQueryEngineAsyncReactiveService(qe);
-
-            AssertObservableNotCreated<int>("o1");
-            AssertObserverNotCreated<int>("v1");
-
-            var sub =
-                ctx.GetObservable<string, int>(MockObservableUri)("o1")
-                .Select(i => Square(i))
-                .SubscribeAsync(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null, CancellationToken.None).Result;
-
-            var o1 = MockObservable.Get<int>("o1");
-            Assert.IsNotNull(o1);
-            Assert.AreEqual(1, o1.SubscriptionCount);
-
-            var o1s = o1.Synchronize(qe.Scheduler);
-
-            var v1 = GetMockObserver<int>("v1");
-            Assert.AreEqual(new Uri("s:/sub1"), v1.InstanceId);
-
-            for (int i = 0; i < 10; i++)
-            {
-                o1s.OnNext(i);
-            }
-
-            sub.DisposeAsync(CancellationToken.None)
-                .AsTask()
-                .Wait();
-
-            AssertResult(v1, 10, (i, v) => Assert.AreEqual(i * i, v));
-        }
-
-        [KnownResource("function://int/square")]
-        public static int Square(int x)
-        {
-            throw new NotImplementedException();
-        }
-
-        [TestMethod]
-        public void DistinctUntilQuery()
-        {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            var o1 = MockObservable.Get<int>("o1");
-            Assert.IsNull(o1);
-
-            var v1 = MockObserver.Get<int>("v1");
-            Assert.IsNull(v1);
-
-            var sub =
-                ctx.GetObservable<string, int>(MockObservableUri)("o1")
-                .DistinctUntilChanged(x => x)
-                .Take(10)
-                .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null);
-
-            o1 = MockObservable.Get<int>("o1");
-            Assert.IsNotNull(o1);
-            Assert.AreEqual(1, o1.SubscriptionCount);
-
-            v1 = MockObserver.Get<int>("v1");
-            Assert.IsNotNull(v1);
-            Assert.IsFalse(v1.Completed);
-            Assert.IsFalse(v1.Error);
-            Assert.AreEqual(0, v1.Values.Count);
-
-            var o1s = o1.Synchronize(qe.Scheduler);
-
-            for (int i = 0; i < 20; i++)
-            {
-                o1s.OnNext(i / 2);
-            }
-
-            Assert.IsTrue(v1.Completed);
-            Assert.IsFalse(v1.Error);
-
-            o1s.OnCompleted();
-
-            Assert.IsTrue(v1.Completed);
-            Assert.IsFalse(v1.Error);
-
-            sub.Dispose();
-
-            Assert.AreEqual(0, o1.SubscriptionCount);
-
-            Assert.AreEqual(10, v1.Values.Count);
-
-            for (int i = 0; i < 10; i++)
-            {
-                Assert.AreEqual(i, v1.Values[i]);
-            }
-        }
-
-        [TestMethod]
-        public void CreateDeleteStream()
-        {
-            using var qe = CreateQueryEngine();
-
-            Uri uri = new Uri("str:/s1");
-            var s1 = qe.ReactiveService.CreateStream<int>(uri);
-            Assert.IsNotNull(s1);
-            s1.Dispose();
-        }
-
-        [TestMethod]
-        public void StreamPassThrough()
-        {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            Uri str1 = new Uri("str:/s1");
-
-            var s1 = ctx.CreateStream<int>(str1);
-            Assert.IsNotNull(s1);
-
-            var s1o = ctx.GetObservable<int>(str1);
-            Assert.IsNotNull(s1o);
-
-            AssertObserverNotCreated<int>("v1");
-
-            var sub = s1o
-                .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), new Uri("s:/sub1"), null);
-
-            var v1 = GetMockObserver<int>("v1");
-
-            var s1v = qe.ReactiveService.GetObserver<int>(str1);
-            Assert.IsNotNull(s1v);
-
-            var s1vs = s1v.Synchronize(qe.Scheduler);
-
-            for (int i = 0; i < 5; i++)
-            {
-                s1vs.OnNext(i);
-            }
-
-            sub.Dispose();
-            s1.Dispose();
-
-            AssertResult(v1, 5, (i, v) => Assert.AreEqual(i, v));
-        }
-
-        [TestMethod]
-        public void TimerQuery()
-        {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            ctx.DefineObservable(new Uri("qe:/engine1/timer"), ctx.Timer(DateTime.Now), null);
-            var o1 = ctx.GetObservable<long>(new Uri("qe:/engine1/timer"));
-
-            _ = o1.Subscribe(ctx.GetObserver<string, long>(MockObserverUri)("result"), new Uri("s:/sub1"), null);
-
-            var res = MockObserver.Get<long>("result");
-            Assert.IsNotNull(res);
-
-            Assert.IsTrue(res.WaitForCompleted(Timeout));
-
-            Assert.IsTrue(res.Completed);
-            Assert.IsFalse(res.Error);
-            Assert.AreEqual(1, res.Values.Count);
-        }
-
-        [TestMethod]
-        public void PeriodicTimerQuery()
-        {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            ctx.DefineObservable(new Uri("qe:/engine1/timer"), ctx.Timer(DateTime.Now, TimeSpan.FromMinutes(5)), null);
-            var o1 = ctx.GetObservable<long>(new Uri("qe:/engine1/timer"));
-
-            ctx.DefineObservable(new Uri("qe:/engine2/o2"), o1.Take(2), null);
-            var o2 = ctx.GetObservable<long>(new Uri("qe:/engine2/o2"));
-
-            _ = o2.Subscribe(ctx.GetObserver<string, long>(MockObserverUri)("result"), new Uri("s:/sub1"), null);
-
-            var res = MockObserver.Get<long>("result");
-            Assert.IsNotNull(res);
-
-            Assert.IsTrue(res.WaitForCount(1, Timeout));
-
-            Assert.IsFalse(res.Completed);
-            Assert.IsFalse(res.Error);
-            Assert.AreEqual(1, res.Values.Count);
-        }
-
-        [TestMethod]
-        public void SelectMany()
-        {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            var o1 = ctx.GetObservable<string, int>(MockObservableUri)("o1");
-            var o2 = ctx.GetObservable<string, int>(MockObservableUri)("o2");
-
-            var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
-
-            var sub1 = o1.SelectMany(x => o2.Where(y => x < y), (x, y) => x + y).Subscribe(v1, new Uri("s:/s1"), null);
-
-            var s3 = GetMockObserver<int>("v1");
-
-            var s1 = MockObservable.Get<int>("o1");
-            Assert.IsNotNull(s1);
-            Assert.AreEqual(1, s1.SubscriptionCount);
-
-            var s1s = s1.Synchronize(qe.Scheduler);
-
-            s1s.OnNext(3);
-
-            var s2 = MockObservable.Get<int>("o2");
-            Assert.IsNotNull(s2);
-            Assert.AreEqual(1, s2.SubscriptionCount);
-
-            var s2s = s2.Synchronize(qe.Scheduler);
-
-            s2s.OnNext(4);
-
-            var res = s3.Values;
-            Assert.AreEqual(1, res.Count);
-            Assert.AreEqual(7, res[0]);
-
-            sub1.Dispose();
-        }
-
-        [TestMethod]
-        public void Throttle()
-        {
-            // Throttles (i.e., ignores) two observations from the main stream. Testing that
-            // resources are persisted through the QE's reactive service context (there are
-            // comprehensive one-machine tests elsewhere)
-
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
-
-            var o1 = ctx.GetObservable<string, int>(MockObservableUri)("o1");
-            var o2 = ctx.GetObservable<string, int>(MockObservableUri)("o2");
-            var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
-
-            var sub1 = o1.Throttle<int, int>((_) => o2).Subscribe(v1, new Uri("s:/s1"), null);
-
-            var s3 = GetMockObserver<int>("v1");
-
-            var s1 = MockObservable.Get<int>("o1");
-            Assert.IsNotNull(s1);
-            Assert.AreEqual(1, s1.SubscriptionCount);
-
-            var s1v = s1.Synchronize(qe.Scheduler);
-
-            s1v.OnNext(1);  // ignored
-
-            var s2 = MockObservable.Get<int>("o2");
-            Assert.IsNotNull(s2);
-            Assert.AreEqual(1, s2.SubscriptionCount);
-
-            var s2v = s2.Synchronize(qe.Scheduler);
-
-            s1v.OnNext(2);  // ignored
-            s1v.OnNext(3);
-            s2v.OnNext(99);  // throttle signal
-            s1v.OnNext(4);
-
-            Assert.AreEqual(1, s3.Values.Count);
-            Assert.AreEqual(3, s3.Values[0]);
-
-            s1v.OnCompleted();
-
-            Assert.AreEqual(2, s3.Values.Count);
-            Assert.AreEqual(4, s3.Values[1]);
-
-            sub1.Dispose();
-        }
-
-        [TestMethod]
-        public void Switch()
-        {
-            // Observables to the switch, test observables before the one that
-            // is currently subsribed to are ignored when they fire off an OnNext.
-
-            using var qe = CreateQueryEngine();
-
-            var ctx1 = GetQueryEngineReactiveService(qe);
+            var ctx1 = GetQueryEngineReactiveService(qe1);
 
             var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
             var generator = ctx1.GetObservable<string, int>(MockObservableUri);
             var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
 
-            var sub1uri = new Uri("s:/s1");
             var sub1 = o1
                 .Select(x => generator("o" + x))
                 .Switch()
@@ -800,544 +844,633 @@ namespace Tests.Reaqtor.QueryEngine
             var out1 = GetMockObserver<int>("v1");
             var in1 = GetObservable<int>("o1");
 
-            var in1s = in1.Synchronize(qe.Scheduler);
+            var in1s = in1.Synchronize(qe1.Scheduler);
 
             in1s.OnNext(2);  // generates observable identified as o2
 
             var in2 = GetObservable<int>("o2");
 
-            var in2s = in2.Synchronize(qe.Scheduler);
+            var in2s = in2.Synchronize(qe1.Scheduler);
 
             in2s.OnNext(97);
 
             in1s.OnNext(3);  // generates observable identified as o3
             var in3 = GetObservable<int>("o3");
 
-            var in3s = in3.Synchronize(qe.Scheduler);
+            var in3s = in3.Synchronize(qe1.Scheduler);
 
             in2s.OnNext(98); // ignored
             in3s.OnNext(99);
 
             AssertResultSequence(out1, [97, 99]);
+
+            // Checkpoint -------------------------------------------------------------
+
+            chkpt1 = Checkpoint(qe1);
+
+            // Clear state ------------------------------------------------------------
+
+            Crash();
         }
 
-        [TestMethod]
-        public void Switch_SimpleQeCrash()
+        using (var qe2 = CreateQueryEngine())
         {
-            InMemoryStateStore chkpt1;
+            var ctx2 = GetQueryEngineReactiveService(qe2);
 
-            var sub1uri = new Uri("s:/s1");
+            // Recover ----------------------------------------------------------------
 
-            using (var qe1 = CreateQueryEngine())
+            Recover(qe2, chkpt1);
+
+            // Validate ---------------------------------------------------------------
+
+            var sub1_validation = ctx2.GetSubscription(sub1uri);
+            Assert.IsNotNull(sub1_validation);
+
+            var o1_validation = MockObservable.Get<int>("o1");
+            Assert.AreEqual(1, o1_validation.SubscriptionCount);
+
+            var v1_validation = GetMockObserver<int>("v1");
+        }
+    }
+
+    [TestMethod]
+    public void Metadata()
+    {
+        var defaultVersion = BridgeVersion.Version;
+        BridgeVersion.Version = Versioning.v1;
+
+        var ivUri = new Uri("iv:/o1");
+        var subUri = new Uri("s:/sub1");
+        var sub2Uri = new Uri("s:/sub2");
+        var testIvUri = new Uri("iv:/test");
+
+        var state = "foo";
+        var state2 = "bar";
+        var testIvState = "qux";
+
+        var testIvExpr = Expression.Parameter(typeof(IReactiveQbserver<int>), "rx://observer/nop");
+
+        InMemoryStateStore chkpt1;
+
+        var res = default(IEnumerable<string>);
+
+        void assertMetadata(CheckpointingQueryEngine qe)
+        {
+            var se = qe.ReactiveService.Subscriptions[subUri];
+
+            Assert.AreEqual(subUri, se.Uri);
+            Assert.AreEqual(state, se.State);
+
+            var fvs = FreeVariableScanner.Scan(se.Expression).OrderBy(p => p.Name).Select(p => p.Name).ToList();
+
+            if (res != null)
             {
-                var ctx1 = GetQueryEngineReactiveService(qe1);
+                Assert.IsTrue(fvs.SequenceEqual(res), "[" + string.Join(", ", res) + "] != [" + string.Join(", ", fvs) + "]");
+            }
+            else
+            {
+                res = fvs;
+            }
 
-                var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                var generator = ctx1.GetObservable<string, int>(MockObservableUri);
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+            se = null;
 
+            Assert.IsTrue(qe.ReactiveService.Subscriptions.TryGetValue(subUri, out se));
+            Assert.AreEqual(subUri, se.Uri);
+            Assert.AreEqual(state, se.State);
+
+            var keys = qe.ReactiveService.Subscriptions.Keys.ToList();
+
+            Assert.IsTrue(keys.Contains(subUri) && keys.Contains(sub2Uri));
+
+            var vals = qe.ReactiveService.Subscriptions.Values.ToList();
+            vals = [.. vals.Where(val => !val.Uri.ToCanonicalString().StartsWith("mgmt://"))];
+
+            Assert.AreEqual(state, vals.Single(v => v.Uri == subUri).State);
+            Assert.AreEqual(state2, vals.Single(v => v.Uri == sub2Uri).State);
+
+            var subs = qe.ReactiveService.Subscriptions.ToList();
+            subs = [.. subs.Where(kv => !kv.Key.ToCanonicalString().StartsWith("mgmt://"))];
+
+            Assert.AreEqual(state, subs.Single(s => s.Value.Uri == subUri).Value.State);
+            Assert.AreEqual(state2, subs.Single(s => s.Value.Uri == sub2Uri).Value.State);
+
+            var ios = qe.ReactiveService.Observables.ToList();
+            var upstreamObservables = ios.Where(io => io.Value.Uri.ToCanonicalString().StartsWith("rx://bridge")).ToList();
+            Assert.AreEqual(1, upstreamObservables.Count);
+            var upstreamSubscriptions = subs.Where(s => s.Value.Uri.ToCanonicalString().StartsWith("rx://bridge")).ToList();
+            Assert.AreEqual(1, upstreamSubscriptions.Count);
+            var streams = qe.ReactiveService.Streams.ToList();
+            var bridges = streams.Where(s => s.Value.Uri.ToCanonicalString().StartsWith("rx://bridge")).ToList();
+            Assert.AreEqual(1, bridges.Count);
+            var ivs = qe.ReactiveService.Observers.ToList();
+            var testObserver = ivs.Where(kv => kv.Value.Uri == testIvUri).Select(kv => kv.Value).SingleOrDefault();
+            Assert.IsNotNull(testObserver);
+            Assert.AreEqual(testIvExpr.Name, ((ParameterExpression)testObserver.Expression).Name);
+        }
+
+        using (var qe1 = CreateQueryEngine())
+        {
+            var ctx = GetQueryEngineReactiveService(qe1);
+
+            AssertObservableNotCreated<int>("o1");
+            AssertObserverNotCreated<int>("v1");
+
+            var sub =
+                ctx.GetObservable<string, int>(MockObservableUri)("o1")
+                .Where(x => x % 2 == 0)
+                .Take(5)
+                .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), subUri, state);
+
+            var l = LockManager.NewAutoReset();
+            var sub2 = ctx.Never<int>()
+                .StartWith(1)
+                .SelectMany(x => ctx.Never<int>().StartWith(x), (_, c) => c)
+                .AwaitDo(l)
+                .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v2"), sub2Uri, state2);
+
+            ctx.DefineObserver<int>(testIvUri, ctx.Provider.CreateQbserver<int>(testIvExpr), testIvState);
+
+            // Note: the edges of the subscription above don't show up in the expression revealed by the QE due
+            // to aggressive inlining. As such, the expression for the expression in the QE isn't a good object
+            // for analysis purposes.
+
+            LockManager.Wait(l);
+
+            assertMetadata(qe1);
+
+            // Checkpoint -------------------------------------------------------------
+
+            chkpt1 = Checkpoint(qe1);
+
+            // Clear state ------------------------------------------------------------
+
+            Crash();
+        }
+
+        using (var qe2 = CreateQueryEngine())
+        {
+            var ctx2 = GetQueryEngineReactiveService(qe2);
+
+            // Recover ----------------------------------------------------------------
+
+            Recover(qe2, chkpt1);
+
+            // Validate ---------------------------------------------------------------
+
+            assertMetadata(qe2);
+        }
+
+        BridgeVersion.Version = defaultVersion;
+    }
+
+    [TestMethod]
+    public void CheckpointDuringStart()
+    {
+        InMemoryStateStore chkpt1, chkpt2;
+
+        var sub1uri = new Uri("s:/s1");
+
+        using (var qe1 = CreateQueryEngine())
+        {
+            var ctx1 = GetQueryEngineReactiveService(qe1);
+
+            var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+
+            var l1 = LockManager.NewManualReset();
+            var l2 = LockManager.NewManualReset();
+
+            var subTask = Task.Run(() =>
+            {
                 var sub1 = o1
-                    .Select(x => generator("o" + x))
-                    .Switch()
+                    .BlockSubscribe(l1)
+                    .AwaitSubscribe(l2)
                     .Subscribe(v1, sub1uri, null);
+            });
 
-                var out1 = GetMockObserver<int>("v1");
-                var in1 = GetObservable<int>("o1");
+            // Checkpoint -------------------------------------------------------------
 
-                var in1s = in1.Synchronize(qe1.Scheduler);
+            LockManager.Wait(l2);
 
-                in1s.OnNext(2);  // generates observable identified as o2
+            chkpt1 = Checkpoint(qe1);
 
-                var in2 = GetObservable<int>("o2");
+            LockManager.Signal(l1);
+            subTask.Wait();
 
-                var in2s = in2.Synchronize(qe1.Scheduler);
+            chkpt2 = Checkpoint(qe1);
 
-                in2s.OnNext(97);
+            // Clear state ------------------------------------------------------------
 
-                in1s.OnNext(3);  // generates observable identified as o3
-                var in3 = GetObservable<int>("o3");
-
-                var in3s = in3.Synchronize(qe1.Scheduler);
-
-                in2s.OnNext(98); // ignored
-                in3s.OnNext(99);
-
-                AssertResultSequence(out1, [97, 99]);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt1 = Checkpoint(qe1);
-
-                // Clear state ------------------------------------------------------------
-
-                Crash();
-            }
-
-            using (var qe2 = CreateQueryEngine())
-            {
-                var ctx2 = GetQueryEngineReactiveService(qe2);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe2, chkpt1);
-
-                // Validate ---------------------------------------------------------------
-
-                var sub1_validation = ctx2.GetSubscription(sub1uri);
-                Assert.IsNotNull(sub1_validation);
-
-                var o1_validation = MockObservable.Get<int>("o1");
-                Assert.AreEqual(1, o1_validation.SubscriptionCount);
-
-                var v1_validation = GetMockObserver<int>("v1");
-            }
+            Crash();
         }
 
-        [TestMethod]
-        public void Metadata()
+        using (var qe2 = CreateQueryEngine())
         {
-            var defaultVersion = BridgeVersion.Version;
-            BridgeVersion.Version = Versioning.v1;
+            var ctx2 = GetQueryEngineReactiveService(qe2);
 
-            var ivUri = new Uri("iv:/o1");
-            var subUri = new Uri("s:/sub1");
-            var sub2Uri = new Uri("s:/sub2");
-            var testIvUri = new Uri("iv:/test");
+            // Recover ----------------------------------------------------------------
 
-            var state = "foo";
-            var state2 = "bar";
-            var testIvState = "qux";
+            Recover(qe2, chkpt1);
 
-            var testIvExpr = Expression.Parameter(typeof(IReactiveQbserver<int>), "rx://observer/nop");
+            Assert.IsFalse(ctx2.Subscriptions.ContainsKey(sub1uri));
 
-            InMemoryStateStore chkpt1;
+            var qe3 = CreateQueryEngine();
+            var ctx3 = GetQueryEngineReactiveService(qe3);
 
-            var res = default(IEnumerable<string>);
+            Recover(qe3, chkpt2);
 
-            void assertMetadata(CheckpointingQueryEngine qe)
-            {
-                var se = qe.ReactiveService.Subscriptions[subUri];
+            Assert.IsTrue(ctx3.Subscriptions.ContainsKey(sub1uri));
+        }
+    }
 
-                Assert.AreEqual(subUri, se.Uri);
-                Assert.AreEqual(state, se.State);
+    [TestMethod]
+    public async Task RecoverFromTransactionLogAsync()
+    {
+        var kvs = new InMemoryKeyValueStore();
 
-                var fvs = FreeVariableScanner.Scan(se.Expression).OrderBy(p => p.Name).Select(p => p.Name).ToList();
+        await
+        using (var qe1 = CreateQueryEngine(kvs))
+        {
+            var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
 
-                if (res != null)
-                {
-                    Assert.IsTrue(fvs.SequenceEqual(res), "[" + string.Join(", ", res) + "] != [" + string.Join(", ", fvs) + "]");
-                }
-                else
-                {
-                    res = fvs;
-                }
+            var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
 
-                se = null;
+            await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
 
-                Assert.IsTrue(qe.ReactiveService.Subscriptions.TryGetValue(subUri, out se));
-                Assert.AreEqual(subUri, se.Uri);
-                Assert.AreEqual(state, se.State);
-
-                var keys = qe.ReactiveService.Subscriptions.Keys.ToList();
-
-                Assert.IsTrue(keys.Contains(subUri) && keys.Contains(sub2Uri));
-
-                var vals = qe.ReactiveService.Subscriptions.Values.ToList();
-                vals = [.. vals.Where(val => !val.Uri.ToCanonicalString().StartsWith("mgmt://"))];
-
-                Assert.AreEqual(state, vals.Single(v => v.Uri == subUri).State);
-                Assert.AreEqual(state2, vals.Single(v => v.Uri == sub2Uri).State);
-
-                var subs = qe.ReactiveService.Subscriptions.ToList();
-                subs = [.. subs.Where(kv => !kv.Key.ToCanonicalString().StartsWith("mgmt://"))];
-
-                Assert.AreEqual(state, subs.Single(s => s.Value.Uri == subUri).Value.State);
-                Assert.AreEqual(state2, subs.Single(s => s.Value.Uri == sub2Uri).Value.State);
-
-                var ios = qe.ReactiveService.Observables.ToList();
-                var upstreamObservables = ios.Where(io => io.Value.Uri.ToCanonicalString().StartsWith("rx://bridge")).ToList();
-                Assert.AreEqual(1, upstreamObservables.Count);
-                var upstreamSubscriptions = subs.Where(s => s.Value.Uri.ToCanonicalString().StartsWith("rx://bridge")).ToList();
-                Assert.AreEqual(1, upstreamSubscriptions.Count);
-                var streams = qe.ReactiveService.Streams.ToList();
-                var bridges = streams.Where(s => s.Value.Uri.ToCanonicalString().StartsWith("rx://bridge")).ToList();
-                Assert.AreEqual(1, bridges.Count);
-                var ivs = qe.ReactiveService.Observers.ToList();
-                var testObserver = ivs.Where(kv => kv.Value.Uri == testIvUri).Select(kv => kv.Value).SingleOrDefault();
-                Assert.IsNotNull(testObserver);
-                Assert.AreEqual(testIvExpr.Name, ((ParameterExpression)testObserver.Expression).Name);
-            }
-
-            using (var qe1 = CreateQueryEngine())
-            {
-                var ctx = GetQueryEngineReactiveService(qe1);
-
-                AssertObservableNotCreated<int>("o1");
-                AssertObserverNotCreated<int>("v1");
-
-                var sub =
-                    ctx.GetObservable<string, int>(MockObservableUri)("o1")
-                    .Where(x => x % 2 == 0)
-                    .Take(5)
-                    .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v1"), subUri, state);
-
-                var l = LockManager.NewAutoReset();
-                var sub2 = ctx.Never<int>()
-                    .StartWith(1)
-                    .SelectMany(x => ctx.Never<int>().StartWith(x), (_, c) => c)
-                    .AwaitDo(l)
-                    .Subscribe(ctx.GetObserver<string, int>(MockObserverUri)("v2"), sub2Uri, state2);
-
-                ctx.DefineObserver<int>(testIvUri, ctx.Provider.CreateQbserver<int>(testIvExpr), testIvState);
-
-                // Note: the edges of the subscription above don't show up in the expression revealed by the QE due
-                // to aggressive inlining. As such, the expression for the expression in the QE isn't a good object
-                // for analysis purposes.
-
-                LockManager.Wait(l);
-
-                assertMetadata(qe1);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt1 = Checkpoint(qe1);
-
-                // Clear state ------------------------------------------------------------
-
-                Crash();
-            }
-
-            using (var qe2 = CreateQueryEngine())
-            {
-                var ctx2 = GetQueryEngineReactiveService(qe2);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe2, chkpt1);
-
-                // Validate ---------------------------------------------------------------
-
-                assertMetadata(qe2);
-            }
-
-            BridgeVersion.Version = defaultVersion;
+            Crash();
         }
 
-        [TestMethod]
-        public void CheckpointDuringStart()
+        await
+        using (var qe2 = CreateQueryEngine(kvs))
         {
-            InMemoryStateStore chkpt1, chkpt2;
+            var ctx2 = GetQueryEngineReactiveService(qe2);
 
-            var sub1uri = new Uri("s:/s1");
+            Recover(qe2, new InMemoryStateStore("foo"));
 
-            using (var qe1 = CreateQueryEngine())
-            {
-                var ctx1 = GetQueryEngineReactiveService(qe1);
+            ctx2.Subscriptions[new Uri("test://sub1")].Dispose();
+        }
+    }
 
-                var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+    [TestMethod]
+    public async Task RecoverFromTransactionLog2Async()
+    {
+        var kvs = new InMemoryKeyValueStore();
 
-                var l1 = LockManager.NewManualReset();
-                var l2 = LockManager.NewManualReset();
+        InMemoryStateStore state;
 
-                var subTask = Task.Run(() =>
-                {
-                    var sub1 = o1
-                        .BlockSubscribe(l1)
-                        .AwaitSubscribe(l2)
-                        .Subscribe(v1, sub1uri, null);
-                });
+        await
+        using (var qe1 = CreateQueryEngine(kvs))
+        {
+            var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
 
-                // Checkpoint -------------------------------------------------------------
+            var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
 
-                LockManager.Wait(l2);
+            var sub = await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
 
-                chkpt1 = Checkpoint(qe1);
+            state = Checkpoint(qe1);
 
-                LockManager.Signal(l1);
-                subTask.Wait();
+            await sub.DisposeAsync(CancellationToken.None);
 
-                chkpt2 = Checkpoint(qe1);
-
-                // Clear state ------------------------------------------------------------
-
-                Crash();
-            }
-
-            using (var qe2 = CreateQueryEngine())
-            {
-                var ctx2 = GetQueryEngineReactiveService(qe2);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe2, chkpt1);
-
-                Assert.IsFalse(ctx2.Subscriptions.ContainsKey(sub1uri));
-
-                var qe3 = CreateQueryEngine();
-                var ctx3 = GetQueryEngineReactiveService(qe3);
-
-                Recover(qe3, chkpt2);
-
-                Assert.IsTrue(ctx3.Subscriptions.ContainsKey(sub1uri));
-            }
+            Crash();
         }
 
-        [TestMethod]
-        public async Task RecoverFromTransactionLogAsync()
+        await
+        using (var qe2 = CreateQueryEngine(kvs))
         {
-            var kvs = new InMemoryKeyValueStore();
+            var ctx2 = GetQueryEngineReactiveService(qe2);
 
-            await
-            using (var qe1 = CreateQueryEngine(kvs))
-            {
-                var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
+            Recover(qe2, state);
 
-                var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+            Assert.ThrowsExactly<KeyNotFoundException>(() => ctx2.Subscriptions[new Uri("test://sub1")].Dispose());
+        }
+    }
 
-                await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
+    [TestMethod]
+    public async Task RecoverFromTransactionLog3Async()
+    {
+        var kvs = new InMemoryKeyValueStore();
 
-                Crash();
-            }
+        await
+        using (var qe1 = CreateQueryEngine(kvs))
+        {
+            var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
 
-            await
-            using (var qe2 = CreateQueryEngine(kvs))
-            {
-                var ctx2 = GetQueryEngineReactiveService(qe2);
+            var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
 
-                Recover(qe2, new InMemoryStateStore("foo"));
+            var sub = await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
 
-                ctx2.Subscriptions[new Uri("test://sub1")].Dispose();
-            }
+            Crash();
         }
 
-        [TestMethod]
-        public async Task RecoverFromTransactionLog2Async()
+        await
+        using (var qe2 = CreateQueryEngine(kvs))
         {
-            var kvs = new InMemoryKeyValueStore();
+            var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
 
+            Recover(qe2, new InMemoryStateStore("foo"));
+
+            await ctx2.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
+
+            Crash();
+        }
+
+        await
+        using (var qe3 = CreateQueryEngine(kvs))
+        {
+            var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
+
+            Recover(qe3, new InMemoryStateStore("foo"));
+
+            await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() =>
+                ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None)
+                    .AsTask()
+            );
+        }
+    }
+
+    [TestMethod]
+    public async Task RecoverFromTransactionLog4Async()
+    {
+        var kvs = new InMemoryKeyValueStore();
+
+        await
+        using (var qe1 = CreateQueryEngine(kvs))
+        {
+            var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
+
+            var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+
+            var sub = await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
+
+            Crash();
+        }
+
+        await
+        using (var qe2 = CreateQueryEngine(kvs))
+        {
+            var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
+
+            Recover(qe2, new InMemoryStateStore("foo"));
+
+            var o1 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
+
+            await ctx2.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
+            await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
+
+            Crash();
+        }
+
+        await
+        using (var qe3 = CreateQueryEngine(kvs))
+        {
+            var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
+
+            Recover(qe3, new InMemoryStateStore("foo"));
+
+            await ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
+        }
+    }
+
+    [TestMethod]
+    public async Task RecoverFromTransactionLog5Async()
+    {
+        var kvs = new InMemoryKeyValueStore();
+
+        InMemoryStateStore state;
+
+        await
+        using (var qe1 = CreateQueryEngine(kvs))
+        {
+            var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
+
+            var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+
+            var sub = await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
+
+            state = Checkpoint(qe1);
+
+            Crash();
+        }
+
+        await
+        using (var qe2 = CreateQueryEngine(kvs))
+        {
+            var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
+
+            Recover(qe2, state);
+
+            var o1 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
+
+            await ctx2.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
+            await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
+
+            Crash();
+        }
+
+        await
+        using (var qe3 = CreateQueryEngine(kvs))
+        {
+            var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
+
+            Recover(qe3, state);
+
+            await ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
+        }
+    }
+
+    [TestMethod]
+    public async Task RecoverFromTransactionLogCoalesceTestAsync()
+    {
+        var kvs = new InMemoryKeyValueStore();
+
+        InMemoryStateStore state;
+
+        var create_delete_id = new Uri("test://sub1");
+        var create_deleteCreate_id = new Uri("test://sub2");
+        var delete_create_id = new Uri("test://sub3");
+        var deleteCreate_delete_id = new Uri("test://sub4");
+        var deleteCreate_deleteCreate_id = new Uri("test://sub5");
+
+        await
+        using (var qe1 = CreateQueryEngine(kvs))
+        {
+            var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
+
+            var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+
+            // Setup existing subs
+
+            var delete_create = await o1.SubscribeAsync(v1, delete_create_id, null, CancellationToken.None);
+
+            var deleteCreate_delete = await o1.SubscribeAsync(v1, deleteCreate_delete_id, null, CancellationToken.None);
+
+            var deleteCreate_deleteCreate = await o1.SubscribeAsync(v1, deleteCreate_deleteCreate_id, null, CancellationToken.None);
+
+            var testId = new Uri("test://test");
+            var test = await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
+
+            state = Checkpoint(qe1);
+
+            await test.DisposeAsync(CancellationToken.None);
+            test = await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
+            await test.DisposeAsync(CancellationToken.None);
+
+            // Creates
+            var create_delete = await o1.SubscribeAsync(v1, create_delete_id, null, CancellationToken.None);
+            var create_deleteCreate = await o1.SubscribeAsync(v1, create_deleteCreate_id, null, CancellationToken.None);
+
+            // Deletes
+            await delete_create.DisposeAsync(CancellationToken.None);
+
+            // Delete+Create
+            await deleteCreate_delete.DisposeAsync(CancellationToken.None);
+            deleteCreate_delete = await o1.SubscribeAsync(v1, deleteCreate_delete_id, null, CancellationToken.None);
+
+            await deleteCreate_deleteCreate.DisposeAsync(CancellationToken.None);
+            deleteCreate_deleteCreate = await o1.SubscribeAsync(v1, deleteCreate_deleteCreate_id, null, CancellationToken.None);
+
+            Crash();
+        }
+
+        await
+        using (var qe2 = CreateQueryEngine(kvs))
+        {
+            var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
+
+            Recover(qe2, state);
+
+            var o1 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
+
+            // Creates
+            await o1.SubscribeAsync(v1, delete_create_id, null, CancellationToken.None);
+
+            // Deletes
+            await ctx2.GetSubscription(deleteCreate_delete_id).DisposeAsync(CancellationToken.None);
+
+            await ctx2.GetSubscription(create_delete_id).DisposeAsync(CancellationToken.None);
+
+            // Delete+Create
+            await ctx2.GetSubscription(deleteCreate_deleteCreate_id).DisposeAsync(CancellationToken.None);
+            _ = await o1.SubscribeAsync(v1, deleteCreate_deleteCreate_id, null, CancellationToken.None);
+
+            await ctx2.GetSubscription(create_deleteCreate_id).DisposeAsync(CancellationToken.None);
+            _ = await o1.SubscribeAsync(v1, create_deleteCreate_id, null, CancellationToken.None);
+
+            Crash();
+        }
+
+        await
+        using (var qe3 = CreateQueryEngine(kvs))
+        {
+            _ = new TupletizingClientContext(qe3.ServiceProvider);
+
+            Recover(qe3, state);
+        }
+    }
+
+    [TestMethod]
+    public async Task RecoverFromTransactionLogCorruptionTestAsync()
+    {
+        var testId = new Uri("test://test");
+
+        // Inconsistency between state store and tx
+        {
             InMemoryStateStore state;
 
+            // First create an engine persist a subscription creation in the state store
+            var kvs1 = new InMemoryKeyValueStore();
+
             await
-            using (var qe1 = CreateQueryEngine(kvs))
+            using (var qe1 = CreateQueryEngine(kvs1))
             {
                 var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
 
                 var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
                 var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
 
-                var sub = await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
-
-                state = Checkpoint(qe1);
-
-                await sub.DisposeAsync(CancellationToken.None);
-
-                Crash();
-            }
-
-            await
-            using (var qe2 = CreateQueryEngine(kvs))
-            {
-                var ctx2 = GetQueryEngineReactiveService(qe2);
-
-                Recover(qe2, state);
-
-                Assert.ThrowsExactly<KeyNotFoundException>(() => ctx2.Subscriptions[new Uri("test://sub1")].Dispose());
-            }
-        }
-
-        [TestMethod]
-        public async Task RecoverFromTransactionLog3Async()
-        {
-            var kvs = new InMemoryKeyValueStore();
-
-            await
-            using (var qe1 = CreateQueryEngine(kvs))
-            {
-                var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
-
-                var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
-
-                var sub = await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
-
-                Crash();
-            }
-
-            await
-            using (var qe2 = CreateQueryEngine(kvs))
-            {
-                var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
-
-                Recover(qe2, new InMemoryStateStore("foo"));
-
-                await ctx2.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
-
-                Crash();
-            }
-
-            await
-            using (var qe3 = CreateQueryEngine(kvs))
-            {
-                var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
-
-                Recover(qe3, new InMemoryStateStore("foo"));
-
-                await Assert.ThrowsExactlyAsync<EntityNotFoundException>(() =>
-                    ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None)
-                        .AsTask()
-                );
-            }
-        }
-
-        [TestMethod]
-        public async Task RecoverFromTransactionLog4Async()
-        {
-            var kvs = new InMemoryKeyValueStore();
-
-            await
-            using (var qe1 = CreateQueryEngine(kvs))
-            {
-                var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
-
-                var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
-
-                var sub = await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
-
-                Crash();
-            }
-
-            await
-            using (var qe2 = CreateQueryEngine(kvs))
-            {
-                var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
-
-                Recover(qe2, new InMemoryStateStore("foo"));
-
-                var o1 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
-
-                await ctx2.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
-                await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
-
-                Crash();
-            }
-
-            await
-            using (var qe3 = CreateQueryEngine(kvs))
-            {
-                var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
-
-                Recover(qe3, new InMemoryStateStore("foo"));
-
-                await ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
-            }
-        }
-
-        [TestMethod]
-        public async Task RecoverFromTransactionLog5Async()
-        {
-            var kvs = new InMemoryKeyValueStore();
-
-            InMemoryStateStore state;
-
-            await
-            using (var qe1 = CreateQueryEngine(kvs))
-            {
-                var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
-
-                var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
-
-                var sub = await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
-
-                state = Checkpoint(qe1);
-
-                Crash();
-            }
-
-            await
-            using (var qe2 = CreateQueryEngine(kvs))
-            {
-                var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
-
-                Recover(qe2, state);
-
-                var o1 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
-
-                await ctx2.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
-                await o1.SubscribeAsync(v1, new Uri("test://sub1"), null, CancellationToken.None);
-
-                Crash();
-            }
-
-            await
-            using (var qe3 = CreateQueryEngine(kvs))
-            {
-                var ctx3 = new TupletizingClientContext(qe3.ServiceProvider);
-
-                Recover(qe3, state);
-
-                await ctx3.GetSubscription(new Uri("test://sub1")).DisposeAsync(CancellationToken.None);
-            }
-        }
-
-        [TestMethod]
-        public async Task RecoverFromTransactionLogCoalesceTestAsync()
-        {
-            var kvs = new InMemoryKeyValueStore();
-
-            InMemoryStateStore state;
-
-            var create_delete_id = new Uri("test://sub1");
-            var create_deleteCreate_id = new Uri("test://sub2");
-            var delete_create_id = new Uri("test://sub3");
-            var deleteCreate_delete_id = new Uri("test://sub4");
-            var deleteCreate_deleteCreate_id = new Uri("test://sub5");
-
-            await
-            using (var qe1 = CreateQueryEngine(kvs))
-            {
-                var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
-
-                var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
-
-                // Setup existing subs
-
-                var delete_create = await o1.SubscribeAsync(v1, delete_create_id, null, CancellationToken.None);
-
-                var deleteCreate_delete = await o1.SubscribeAsync(v1, deleteCreate_delete_id, null, CancellationToken.None);
-
-                var deleteCreate_deleteCreate = await o1.SubscribeAsync(v1, deleteCreate_deleteCreate_id, null, CancellationToken.None);
-
-                var testId = new Uri("test://test");
                 var test = await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
 
                 state = Checkpoint(qe1);
 
-                await test.DisposeAsync(CancellationToken.None);
-                test = await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
-                await test.DisposeAsync(CancellationToken.None);
+                Crash();
+            }
 
-                // Creates
-                var create_delete = await o1.SubscribeAsync(v1, create_delete_id, null, CancellationToken.None);
-                var create_deleteCreate = await o1.SubscribeAsync(v1, create_deleteCreate_id, null, CancellationToken.None);
+            // Then create an engine and persist subscription creation only in kvs
 
-                // Deletes
-                await delete_create.DisposeAsync(CancellationToken.None);
+            var kvs2 = new InMemoryKeyValueStore();
 
-                // Delete+Create
-                await deleteCreate_delete.DisposeAsync(CancellationToken.None);
-                deleteCreate_delete = await o1.SubscribeAsync(v1, deleteCreate_delete_id, null, CancellationToken.None);
+            await
+            using (var qe2 = CreateQueryEngine(kvs2))
+            {
+                var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
 
-                await deleteCreate_deleteCreate.DisposeAsync(CancellationToken.None);
-                deleteCreate_deleteCreate = await o1.SubscribeAsync(v1, deleteCreate_deleteCreate_id, null, CancellationToken.None);
+                var o2 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
+                var v2 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
+
+                await o2.SubscribeAsync(v2, testId, null, CancellationToken.None);
 
                 Crash();
+            }
+
+            // Now create engine with first state store (the one that has sub) and second kvs (also has sub)
+
+            await
+            using (var qe3 = CreateQueryEngine(kvs2))
+            {
+                var ex = Assert.ThrowsExactly<AggregateException>(() => Recover(qe3, state));
+                var flattened = ex.Flatten();
+
+                if (flattened.InnerException is not EntityAlreadyExistsException)
+                    Assert.Fail();
+            }
+
+            // Do it again but handle the exception
+
+            await
+            using (var qe4 = CreateQueryEngine(kvs2))
+            {
+                var handled = false;
+                qe4.EntityReplayFailed += (sender, e) =>
+                {
+                    if (e.Uri == testId)
+                    {
+                        e.Handled = true;
+                        handled = true;
+                    }
+                    else
+                        Assert.Fail();
+                };
+
+                Recover(qe4, state);
+                Assert.IsTrue(handled);
+            }
+        }
+
+        // internal tx inconsistency
+        {
+            InMemoryStateStore state;
+
+            var kvs = new InMemoryKeyValueStore();
+
+            await
+            using (var qe1 = CreateQueryEngine(kvs))
+            {
+                var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
+                state = Checkpoint(qe1);
+
+                var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+
+                await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
             }
 
             await
@@ -1345,996 +1478,904 @@ namespace Tests.Reaqtor.QueryEngine
             {
                 var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
 
-                Recover(qe2, state);
+                var o2 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
+                var v2 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
 
-                var o1 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
-
-                // Creates
-                await o1.SubscribeAsync(v1, delete_create_id, null, CancellationToken.None);
-
-                // Deletes
-                await ctx2.GetSubscription(deleteCreate_delete_id).DisposeAsync(CancellationToken.None);
-
-                await ctx2.GetSubscription(create_delete_id).DisposeAsync(CancellationToken.None);
-
-                // Delete+Create
-                await ctx2.GetSubscription(deleteCreate_deleteCreate_id).DisposeAsync(CancellationToken.None);
-                _ = await o1.SubscribeAsync(v1, deleteCreate_deleteCreate_id, null, CancellationToken.None);
-
-                await ctx2.GetSubscription(create_deleteCreate_id).DisposeAsync(CancellationToken.None);
-                _ = await o1.SubscribeAsync(v1, create_deleteCreate_id, null, CancellationToken.None);
-
-                Crash();
+                await o2.SubscribeAsync(v2, testId, null, CancellationToken.None);
             }
+
+            // Unhandled
 
             await
             using (var qe3 = CreateQueryEngine(kvs))
             {
-                _ = new TupletizingClientContext(qe3.ServiceProvider);
+                var ex2 = Assert.ThrowsExactly<AggregateException>(() => Recover(qe3, state));
+                var flattened = ex2.Flatten();
 
-                Recover(qe3, state);
+                if (flattened.InnerException.Message != "Create, Create")
+                    Assert.Fail();
+            }
+
+            // Handled
+
+            await
+            using (var qe4 = CreateQueryEngine(kvs))
+            {
+                var handled = false;
+                qe4.EntityReplayFailed += (sender, e) =>
+                {
+                    if (e.Uri == testId)
+                    {
+                        e.Handled = true;
+                        handled = true;
+                    }
+                    else
+                        Assert.Fail();
+                };
+
+                Recover(qe4, state);
+                Assert.IsTrue(handled);
             }
         }
+    }
 
-        [TestMethod]
-        public async Task RecoverFromTransactionLogCorruptionTestAsync()
+    [TestMethod]
+    public async Task TransactionLogGarbageCollectionFailure()
+    {
+        var id = new Uri("test://sub1");
+
+        var kvs = new InMemoryKeyValueStore();
+
+        InMemoryStateStore state;
+
+        await
+        using (var qe1 = CreateQueryEngine(kvs))
         {
+            var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
+
+            var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+
+            var sub = await o1.SubscribeAsync(v1, id, null, CancellationToken.None);
+
+            var ex = new Exception();
+            kvs.StartingOperation += (e, op) => { if (op.OperationType == OperationType.Remove) { throw ex; } };
+
+            state = Checkpoint(qe1);
+
+            await sub.DisposeAsync(CancellationToken.None);
+
+            Crash();
+        }
+
+        await
+        using (var qe2 = CreateQueryEngine(kvs))
+        {
+            var ctx2 = GetQueryEngineReactiveService(qe2);
+
+            Recover(qe2, state);
+
+            Assert.IsFalse(qe2.ReactiveService.Subscriptions.ContainsKey(id));
+        }
+    }
+
+    [TestMethod]
+    public async Task DeleteFailureCleanupTestAsync()
+    {
+        var kvs = new InMemoryKeyValueStore();
+
+        await
+        using (var qe = CreateQueryEngine(kvs))
+        {
+            var ctx = new TupletizingClientContext(qe.ServiceProvider);
+
+            var obs = ctx.GetObservable<string, int>(MockObservableUri)("obs");
+            var obv = ctx.GetObserver<string, int>(MockObserverUri)("obv");
+
             var testId = new Uri("test://test");
+            var test = await obs.SubscribeAsync(obv, testId, null, CancellationToken.None);
 
-            // Inconsistency between state store and tx
-            {
-                InMemoryStateStore state;
+            var ex = new MyException();
+            void fail(object sender, ReifiedOperation<string, byte[]> operation) { throw ex; }
 
-                // First create an engine persist a subscription creation in the state store
-                var kvs1 = new InMemoryKeyValueStore();
+            kvs.StartingOperation += fail;
+            var e = await Assert.ThrowsExactlyAsync<MyException>(() =>
+                test.DisposeAsync(CancellationToken.None)
+                    .AsTask());
+            Assert.AreSame(ex, e);
 
-                await
-                using (var qe1 = CreateQueryEngine(kvs1))
-                {
-                    var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
-
-                    var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                    var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
-
-                    var test = await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
-
-                    state = Checkpoint(qe1);
-
-                    Crash();
-                }
-
-                // Then create an engine and persist subscription creation only in kvs
-
-                var kvs2 = new InMemoryKeyValueStore();
-
-                await
-                using (var qe2 = CreateQueryEngine(kvs2))
-                {
-                    var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
-
-                    var o2 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
-                    var v2 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
-
-                    await o2.SubscribeAsync(v2, testId, null, CancellationToken.None);
-
-                    Crash();
-                }
-
-                // Now create engine with first state store (the one that has sub) and second kvs (also has sub)
-
-                await
-                using (var qe3 = CreateQueryEngine(kvs2))
-                {
-                    var ex = Assert.ThrowsExactly<AggregateException>(() => Recover(qe3, state));
-                    var flattened = ex.Flatten();
-
-                    if (flattened.InnerException is not EntityAlreadyExistsException)
-                        Assert.Fail();
-                }
-
-                // Do it again but handle the exception
-
-                await
-                using (var qe4 = CreateQueryEngine(kvs2))
-                {
-                    var handled = false;
-                    qe4.EntityReplayFailed += (sender, e) =>
-                    {
-                        if (e.Uri == testId)
-                        {
-                            e.Handled = true;
-                            handled = true;
-                        }
-                        else
-                            Assert.Fail();
-                    };
-
-                    Recover(qe4, state);
-                    Assert.IsTrue(handled);
-                }
-            }
-
-            // internal tx inconsistency
-            {
-                InMemoryStateStore state;
-
-                var kvs = new InMemoryKeyValueStore();
-
-                await
-                using (var qe1 = CreateQueryEngine(kvs))
-                {
-                    var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
-                    state = Checkpoint(qe1);
-
-                    var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                    var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
-
-                    await o1.SubscribeAsync(v1, testId, null, CancellationToken.None);
-                }
-
-                await
-                using (var qe2 = CreateQueryEngine(kvs))
-                {
-                    var ctx2 = new TupletizingClientContext(qe2.ServiceProvider);
-
-                    var o2 = ctx2.GetObservable<string, int>(MockObservableUri)("o1");
-                    var v2 = ctx2.GetObserver<string, int>(MockObserverUri)("v1");
-
-                    await o2.SubscribeAsync(v2, testId, null, CancellationToken.None);
-                }
-
-                // Unhandled
-
-                await
-                using (var qe3 = CreateQueryEngine(kvs))
-                {
-                    var ex2 = Assert.ThrowsExactly<AggregateException>(() => Recover(qe3, state));
-                    var flattened = ex2.Flatten();
-
-                    if (flattened.InnerException.Message != "Create, Create")
-                        Assert.Fail();
-                }
-
-                // Handled
-
-                await
-                using (var qe4 = CreateQueryEngine(kvs))
-                {
-                    var handled = false;
-                    qe4.EntityReplayFailed += (sender, e) =>
-                    {
-                        if (e.Uri == testId)
-                        {
-                            e.Handled = true;
-                            handled = true;
-                        }
-                        else
-                            Assert.Fail();
-                    };
-
-                    Recover(qe4, state);
-                    Assert.IsTrue(handled);
-                }
-            }
+            kvs.StartingOperation -= fail;
+            await test.DisposeAsync(CancellationToken.None);
         }
+    }
 
-        [TestMethod]
-        public async Task TransactionLogGarbageCollectionFailure()
+    private sealed class MyException : Exception
+    {
+    }
+
+    [TestMethod]
+    public void CheckpointReliableSubscription()
+    {
+        var relId = Guid.NewGuid().ToString();
+
+        void AssertActions(ReliableEvent[] events) => AssertEx.AreSequenceEqual(events, ReliableObservableManager.Actions[relId]);
+
+        InMemoryStateStore chkpt1, chkpt2, chkpt3, chkpt4;
+
+        using (var qe1 = CreateQueryEngine())
         {
-            var id = new Uri("test://sub1");
-
-            var kvs = new InMemoryKeyValueStore();
-
-            InMemoryStateStore state;
-
-            await
-            using (var qe1 = CreateQueryEngine(kvs))
-            {
-                var ctx1 = new TupletizingClientContext(qe1.ServiceProvider);
-
-                var o1 = ctx1.GetObservable<string, int>(MockObservableUri)("o1");
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
-
-                var sub = await o1.SubscribeAsync(v1, id, null, CancellationToken.None);
-
-                var ex = new Exception();
-                kvs.StartingOperation += (e, op) => { if (op.OperationType == OperationType.Remove) { throw ex; } };
-
-                state = Checkpoint(qe1);
-
-                await sub.DisposeAsync(CancellationToken.None);
-
-                Crash();
-            }
-
-            await
-            using (var qe2 = CreateQueryEngine(kvs))
-            {
-                var ctx2 = GetQueryEngineReactiveService(qe2);
-
-                Recover(qe2, state);
-
-                Assert.IsFalse(qe2.ReactiveService.Subscriptions.ContainsKey(id));
-            }
-        }
-
-        [TestMethod]
-        public async Task DeleteFailureCleanupTestAsync()
-        {
-            var kvs = new InMemoryKeyValueStore();
-
-            await
-            using (var qe = CreateQueryEngine(kvs))
-            {
-                var ctx = new TupletizingClientContext(qe.ServiceProvider);
-
-                var obs = ctx.GetObservable<string, int>(MockObservableUri)("obs");
-                var obv = ctx.GetObserver<string, int>(MockObserverUri)("obv");
-
-                var testId = new Uri("test://test");
-                var test = await obs.SubscribeAsync(obv, testId, null, CancellationToken.None);
-
-                var ex = new MyException();
-                void fail(object sender, ReifiedOperation<string, byte[]> operation) { throw ex; }
-
-                kvs.StartingOperation += fail;
-                var e = await Assert.ThrowsExactlyAsync<MyException>(() =>
-                    test.DisposeAsync(CancellationToken.None)
-                        .AsTask());
-                Assert.AreSame(ex, e);
-
-                kvs.StartingOperation -= fail;
-                await test.DisposeAsync(CancellationToken.None);
-            }
-        }
-
-        private sealed class MyException : Exception
-        {
-        }
-
-        [TestMethod]
-        public void CheckpointReliableSubscription()
-        {
-            var relId = Guid.NewGuid().ToString();
-
-            void AssertActions(ReliableEvent[] events) => AssertEx.AreSequenceEqual(events, ReliableObservableManager.Actions[relId]);
-
-            InMemoryStateStore chkpt1, chkpt2, chkpt3, chkpt4;
-
-            using (var qe1 = CreateQueryEngine())
-            {
-                var ctx1 = GetQueryEngineReactiveService(qe1);
-
-                var relObsUri = new Uri("test://rel/obs");
-
-                ctx1.DefineObservable<string, int>(
-                    relObsUri,
-                    s => new MyReliableObservable<int>(s).ToSubscribable().AsQbservable(),
-                    null
-                );
-
-                var o1 = ctx1.GetObservable<string, int>(relObsUri)(relId);
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
-
-                o1.Take(2).Subscribe(v1, new Uri("s:/s1"), null);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(0),
-                ]);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt1 = Checkpoint(qe1);
-
-                // Clear state ------------------------------------------------------------
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(0),
-                    ReliableEvent.AcknowledgeRange(-1),
-                ]);
-
-                ReliableObservableManager.Clear(relId);
-                Crash();
-            }
-
-            using (var qe2 = CreateQueryEngine())
-            {
-                var ctx2 = GetQueryEngineReactiveService(qe2);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe2, chkpt1);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(0),
-                ]);
-
-                var obs2 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe2.Scheduler);
-                obs2.OnNext(42, 17);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt2 = Checkpoint(qe2);
-
-                // Clear state ------------------------------------------------------------
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(0),
-                    ReliableEvent.AcknowledgeRange(17),
-                ]);
-
-                ReliableObservableManager.Clear(relId);
-                Crash();
-            }
-
-            using (var qe3 = CreateQueryEngine())
-            {
-                var ctx3 = GetQueryEngineReactiveService(qe3);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe3, chkpt2);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(18),
-                ]);
-
-                var obs3 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe3.Scheduler);
-                obs3.OnNext(43, 25);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(18),
-                    ReliableEvent.Stop(),
-                ]);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt3 = Checkpoint(qe3);
-
-                // Clear state ------------------------------------------------------------
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(18),
-                    ReliableEvent.Stop(),
-                    ReliableEvent.AcknowledgeRange(25),
-                    ReliableEvent.Dispose(),
-                ]);
-
-                ReliableObservableManager.Clear(relId);
-                Crash();
-            }
-
-            using (var qe4 = CreateQueryEngine())
-            {
-                var ctx4 = GetQueryEngineReactiveService(qe4);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe4, chkpt3);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Dispose(),
-                ]);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt4 = Checkpoint(qe4);
-
-                // Clear state ------------------------------------------------------------
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Dispose(),
-                ]);
-
-                ReliableObservableManager.Clear(relId);
-                Crash();
-            }
-
-            using (var qe5 = CreateQueryEngine())
-            {
-                var ctx5 = GetQueryEngineReactiveService(qe5);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe5, chkpt4);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Dispose(),
-                ]);
-            }
-        }
-
-        [TestMethod]
-        public void CheckpointReliableSubscription_ContextSwitched()
-        {
-            var relId = Guid.NewGuid().ToString();
-
-            void AssertActions(ReliableEvent[] events) => AssertEx.AreSequenceEqual(events, ReliableObservableManager.Actions[relId]);
-
-            var l1 = LockManager.NewAutoReset();
-
-            InMemoryStateStore chkpt1, chkpt2, chkpt3, chkpt4;
-
-            using (var qe1 = CreateQueryEngine())
-            {
-                var ctx1 = GetQueryEngineReactiveService(qe1);
-
-                var relObsUri = new Uri("test://rel/obs");
-
-                ctx1.DefineObservable<string, int>(
-                    relObsUri,
-                    s => new MyReliableObservable<int>(s).ToSubscribable(true).AsQbservable(),
-                    null
-                );
-
-                var o1 = ctx1.GetObservable<string, int>(relObsUri)(relId);
-                var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
-
-                o1.AwaitDispose(l1).Take(2).Subscribe(v1, new Uri("s:/s1"), null);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(0),
-                ]);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt1 = Checkpoint(qe1);
-
-                // Clear state ------------------------------------------------------------
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(0),
-                    ReliableEvent.AcknowledgeRange(-1),
-                ]);
-
-                ReliableObservableManager.Clear(relId);
-                Crash();
-            }
-
-            using (var qe2 = CreateQueryEngine())
-            {
-                var ctx2 = GetQueryEngineReactiveService(qe2);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe2, chkpt1);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(0),
-                ]);
-
-                var obs2 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe2.Scheduler);
-                obs2.OnNext(42, 17);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt2 = Checkpoint(qe2);
-
-                // Clear state ------------------------------------------------------------
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(0),
-                    ReliableEvent.AcknowledgeRange(17),
-                ]);
-
-                ReliableObservableManager.Clear(relId);
-                Crash();
-            }
-
-            using (var qe3 = CreateQueryEngine())
-            {
-                var ctx3 = GetQueryEngineReactiveService(qe3);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe3, chkpt2);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(18),
-                ]);
-
-                var obs3 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe3.Scheduler);
-                obs3.OnNext(43, 25);
-                LockManager.Wait(l1);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(18),
-                    ReliableEvent.Stop(),
-                ]);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt3 = Checkpoint(qe3);
-
-                // Clear state ------------------------------------------------------------
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Start(18),
-                    ReliableEvent.Stop(),
-                    ReliableEvent.AcknowledgeRange(25),
-                    ReliableEvent.Dispose(),
-                ]);
-
-                ReliableObservableManager.Clear(relId);
-                Crash();
-            }
-
-            using (var qe4 = CreateQueryEngine())
-            {
-                var ctx4 = GetQueryEngineReactiveService(qe4);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe4, chkpt3);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Dispose(),
-                ]);
-
-                // Checkpoint -------------------------------------------------------------
-
-                chkpt4 = Checkpoint(qe4);
-
-                // Clear state ------------------------------------------------------------
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Dispose(),
-                ]);
-
-                ReliableObservableManager.Clear(relId);
-                Crash();
-            }
-
-            using (var qe5 = CreateQueryEngine())
-            {
-                var ctx5 = GetQueryEngineReactiveService(qe5);
-
-                // Recover ----------------------------------------------------------------
-
-                Recover(qe5, chkpt4);
-
-                AssertActions(
-                [
-                    ReliableEvent.Subscribe(),
-                    ReliableEvent.Dispose(),
-                ]);
-            }
-        }
-
-        [TestMethod]
-        public void ReliableSubscriptionInput_ContextSwitched_OnError()
-        {
-            using var qe = CreateQueryEngine();
-
-            var ctx = GetQueryEngineReactiveService(qe);
+            var ctx1 = GetQueryEngineReactiveService(qe1);
 
             var relObsUri = new Uri("test://rel/obs");
 
-            ctx.DefineObservable<string, int>(
+            ctx1.DefineObservable<string, int>(
+                relObsUri,
+                s => new MyReliableObservable<int>(s).ToSubscribable().AsQbservable(),
+                null
+            );
+
+            var o1 = ctx1.GetObservable<string, int>(relObsUri)(relId);
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
+
+            o1.Take(2).Subscribe(v1, new Uri("s:/s1"), null);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(0),
+            ]);
+
+            // Checkpoint -------------------------------------------------------------
+
+            chkpt1 = Checkpoint(qe1);
+
+            // Clear state ------------------------------------------------------------
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(0),
+                ReliableEvent.AcknowledgeRange(-1),
+            ]);
+
+            ReliableObservableManager.Clear(relId);
+            Crash();
+        }
+
+        using (var qe2 = CreateQueryEngine())
+        {
+            var ctx2 = GetQueryEngineReactiveService(qe2);
+
+            // Recover ----------------------------------------------------------------
+
+            Recover(qe2, chkpt1);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(0),
+            ]);
+
+            var obs2 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe2.Scheduler);
+            obs2.OnNext(42, 17);
+
+            // Checkpoint -------------------------------------------------------------
+
+            chkpt2 = Checkpoint(qe2);
+
+            // Clear state ------------------------------------------------------------
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(0),
+                ReliableEvent.AcknowledgeRange(17),
+            ]);
+
+            ReliableObservableManager.Clear(relId);
+            Crash();
+        }
+
+        using (var qe3 = CreateQueryEngine())
+        {
+            var ctx3 = GetQueryEngineReactiveService(qe3);
+
+            // Recover ----------------------------------------------------------------
+
+            Recover(qe3, chkpt2);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(18),
+            ]);
+
+            var obs3 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe3.Scheduler);
+            obs3.OnNext(43, 25);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(18),
+                ReliableEvent.Stop(),
+            ]);
+
+            // Checkpoint -------------------------------------------------------------
+
+            chkpt3 = Checkpoint(qe3);
+
+            // Clear state ------------------------------------------------------------
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(18),
+                ReliableEvent.Stop(),
+                ReliableEvent.AcknowledgeRange(25),
+                ReliableEvent.Dispose(),
+            ]);
+
+            ReliableObservableManager.Clear(relId);
+            Crash();
+        }
+
+        using (var qe4 = CreateQueryEngine())
+        {
+            var ctx4 = GetQueryEngineReactiveService(qe4);
+
+            // Recover ----------------------------------------------------------------
+
+            Recover(qe4, chkpt3);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Dispose(),
+            ]);
+
+            // Checkpoint -------------------------------------------------------------
+
+            chkpt4 = Checkpoint(qe4);
+
+            // Clear state ------------------------------------------------------------
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Dispose(),
+            ]);
+
+            ReliableObservableManager.Clear(relId);
+            Crash();
+        }
+
+        using (var qe5 = CreateQueryEngine())
+        {
+            var ctx5 = GetQueryEngineReactiveService(qe5);
+
+            // Recover ----------------------------------------------------------------
+
+            Recover(qe5, chkpt4);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Dispose(),
+            ]);
+        }
+    }
+
+    [TestMethod]
+    public void CheckpointReliableSubscription_ContextSwitched()
+    {
+        var relId = Guid.NewGuid().ToString();
+
+        void AssertActions(ReliableEvent[] events) => AssertEx.AreSequenceEqual(events, ReliableObservableManager.Actions[relId]);
+
+        var l1 = LockManager.NewAutoReset();
+
+        InMemoryStateStore chkpt1, chkpt2, chkpt3, chkpt4;
+
+        using (var qe1 = CreateQueryEngine())
+        {
+            var ctx1 = GetQueryEngineReactiveService(qe1);
+
+            var relObsUri = new Uri("test://rel/obs");
+
+            ctx1.DefineObservable<string, int>(
                 relObsUri,
                 s => new MyReliableObservable<int>(s).ToSubscribable(true).AsQbservable(),
                 null
             );
 
-            var relId = Guid.NewGuid().ToString();
+            var o1 = ctx1.GetObservable<string, int>(relObsUri)(relId);
+            var v1 = ctx1.GetObserver<string, int>(MockObserverUri)("v1");
 
-            var o1 = ctx.GetObservable<string, int>(relObsUri)(relId);
-            var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+            o1.AwaitDispose(l1).Take(2).Subscribe(v1, new Uri("s:/s1"), null);
 
-            var l1 = LockManager.NewManualReset();
-            o1.AwaitDo(null, l1).Subscribe(v1, new Uri("s:/s1"), null);
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(0),
+            ]);
 
-            var obs = ReliableObservableManager.GetObserver<int>(relId);
-            obs.OnError(new Exception());
+            // Checkpoint -------------------------------------------------------------
 
+            chkpt1 = Checkpoint(qe1);
+
+            // Clear state ------------------------------------------------------------
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(0),
+                ReliableEvent.AcknowledgeRange(-1),
+            ]);
+
+            ReliableObservableManager.Clear(relId);
+            Crash();
+        }
+
+        using (var qe2 = CreateQueryEngine())
+        {
+            var ctx2 = GetQueryEngineReactiveService(qe2);
+
+            // Recover ----------------------------------------------------------------
+
+            Recover(qe2, chkpt1);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(0),
+            ]);
+
+            var obs2 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe2.Scheduler);
+            obs2.OnNext(42, 17);
+
+            // Checkpoint -------------------------------------------------------------
+
+            chkpt2 = Checkpoint(qe2);
+
+            // Clear state ------------------------------------------------------------
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(0),
+                ReliableEvent.AcknowledgeRange(17),
+            ]);
+
+            ReliableObservableManager.Clear(relId);
+            Crash();
+        }
+
+        using (var qe3 = CreateQueryEngine())
+        {
+            var ctx3 = GetQueryEngineReactiveService(qe3);
+
+            // Recover ----------------------------------------------------------------
+
+            Recover(qe3, chkpt2);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(18),
+            ]);
+
+            var obs3 = ReliableObservableManager.GetObserver<int>(relId).Synchronize(qe3.Scheduler);
+            obs3.OnNext(43, 25);
             LockManager.Wait(l1);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(18),
+                ReliableEvent.Stop(),
+            ]);
+
+            // Checkpoint -------------------------------------------------------------
+
+            chkpt3 = Checkpoint(qe3);
+
+            // Clear state ------------------------------------------------------------
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Start(18),
+                ReliableEvent.Stop(),
+                ReliableEvent.AcknowledgeRange(25),
+                ReliableEvent.Dispose(),
+            ]);
+
+            ReliableObservableManager.Clear(relId);
+            Crash();
         }
 
-        [TestMethod]
-        public void ReliableSubscriptionInput_ContextSwitched_OnCompleted()
+        using (var qe4 = CreateQueryEngine())
         {
-            using var qe = CreateQueryEngine();
+            var ctx4 = GetQueryEngineReactiveService(qe4);
 
-            var ctx = GetQueryEngineReactiveService(qe);
+            // Recover ----------------------------------------------------------------
 
-            var relObsUri = new Uri("test://rel/obs");
+            Recover(qe4, chkpt3);
 
-            ctx.DefineObservable<string, int>(
-                relObsUri,
-                s => new MyReliableObservable<int>(s).ToSubscribable(true).AsQbservable(),
-                null
-            );
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Dispose(),
+            ]);
 
-            var relId = Guid.NewGuid().ToString();
+            // Checkpoint -------------------------------------------------------------
 
-            var o1 = ctx.GetObservable<string, int>(relObsUri)(relId);
-            var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+            chkpt4 = Checkpoint(qe4);
 
-            var l1 = LockManager.NewManualReset();
-            o1.AwaitDo(null, null, l1).Subscribe(v1, new Uri("s:/s1"), null);
+            // Clear state ------------------------------------------------------------
 
-            var obs = ReliableObservableManager.GetObserver<int>(relId);
-            obs.OnCompleted();
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Dispose(),
+            ]);
 
-            LockManager.Wait(l1);
+            ReliableObservableManager.Clear(relId);
+            Crash();
         }
 
-        [TestMethod]
-        public async Task CheckpointingQueryEngine_Unload()
+        using (var qe5 = CreateQueryEngine())
         {
-            using var qe = CreateQueryEngine();
+            var ctx5 = GetQueryEngineReactiveService(qe5);
 
-            await qe.UnloadAsync();
+            // Recover ----------------------------------------------------------------
 
-            Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReactiveService.Empty<int>());
-            Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReliableReactiveService.GetObserver<int>(new Uri("test://iv")));
-            await Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.CheckpointAsync(new InMemoryStateWriter(new InMemoryStateStore("store"), CheckpointKind.Full)));
-            await Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.RecoverAsync(new InMemoryStateReader(new InMemoryStateStore("store"))));
+            Recover(qe5, chkpt4);
+
+            AssertActions(
+            [
+                ReliableEvent.Subscribe(),
+                ReliableEvent.Dispose(),
+            ]);
         }
+    }
 
-        [TestMethod]
-        public void CreateStreamFromMetadata_AsObservable()
-        {
-            using var qe = CreateQueryEngine();
+    [TestMethod]
+    public void ReliableSubscriptionInput_ContextSwitched_OnError()
+    {
+        using var qe = CreateQueryEngine();
 
-            var ctx = GetQueryEngineReactiveService(qe);
+        var ctx = GetQueryEngineReactiveService(qe);
 
-            var sfUri = new Uri("test://streamFactory");
-            var streamUri = new Uri("test://stream");
-            var upstreamUri = new Uri("test://upstream");
-            var downstreamUri = new Uri("test://downstream");
+        var relObsUri = new Uri("test://rel/obs");
+
+        ctx.DefineObservable<string, int>(
+            relObsUri,
+            s => new MyReliableObservable<int>(s).ToSubscribable(true).AsQbservable(),
+            null
+        );
+
+        var relId = Guid.NewGuid().ToString();
+
+        var o1 = ctx.GetObservable<string, int>(relObsUri)(relId);
+        var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+
+        var l1 = LockManager.NewManualReset();
+        o1.AwaitDo(null, l1).Subscribe(v1, new Uri("s:/s1"), null);
+
+        var obs = ReliableObservableManager.GetObserver<int>(relId);
+        obs.OnError(new Exception());
+
+        LockManager.Wait(l1);
+    }
+
+    [TestMethod]
+    public void ReliableSubscriptionInput_ContextSwitched_OnCompleted()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        var relObsUri = new Uri("test://rel/obs");
+
+        ctx.DefineObservable<string, int>(
+            relObsUri,
+            s => new MyReliableObservable<int>(s).ToSubscribable(true).AsQbservable(),
+            null
+        );
+
+        var relId = Guid.NewGuid().ToString();
+
+        var o1 = ctx.GetObservable<string, int>(relObsUri)(relId);
+        var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+
+        var l1 = LockManager.NewManualReset();
+        o1.AwaitDo(null, null, l1).Subscribe(v1, new Uri("s:/s1"), null);
+
+        var obs = ReliableObservableManager.GetObserver<int>(relId);
+        obs.OnCompleted();
+
+        LockManager.Wait(l1);
+    }
+
+    [TestMethod]
+    public async Task CheckpointingQueryEngine_Unload()
+    {
+        using var qe = CreateQueryEngine();
+
+        await qe.UnloadAsync();
+
+        Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReactiveService.Empty<int>());
+        Assert.ThrowsExactly<EngineUnloadedException>(() => qe.ReliableReactiveService.GetObserver<int>(new Uri("test://iv")));
+        await Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.CheckpointAsync(new InMemoryStateWriter(new InMemoryStateStore("store"), CheckpointKind.Full)));
+        await Assert.ThrowsExactlyAsync<EngineUnloadedException>(() => qe.RecoverAsync(new InMemoryStateReader(new InMemoryStateStore("store"))));
+    }
+
+    [TestMethod]
+    public void CreateStreamFromMetadata_AsObservable()
+    {
+        using var qe = CreateQueryEngine();
+
+        var ctx = GetQueryEngineReactiveService(qe);
+
+        var sfUri = new Uri("test://streamFactory");
+        var streamUri = new Uri("test://stream");
+        var upstreamUri = new Uri("test://upstream");
+        var downstreamUri = new Uri("test://downstream");
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-            var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+        var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
 #pragma warning restore IDE0004
-            Context.DefineStreamFactory<T, T>(sfUri, sf, null);
-            var stream = Context.GetStreamFactory<T, T>(sfUri).Create(streamUri, null);
+        Context.DefineStreamFactory<T, T>(sfUri, sf, null);
+        var stream = Context.GetStreamFactory<T, T>(sfUri).Create(streamUri, null);
 
-            var l = LockManager.NewAutoReset();
-            var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+        var l = LockManager.NewAutoReset();
+        var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
 
-            // Unfortunately, the context held by the stream is not the engine's context
-            // so we have to use the IReactiveClient.GetObservable<T> interface here.
-            ctx.GetObservable<int>(streamUri).AwaitDo(l).Subscribe(v1, downstreamUri, null);
-            ctx.Return(42).Subscribe(ctx.GetObserver<int>(streamUri), upstreamUri, null);
+        // Unfortunately, the context held by the stream is not the engine's context
+        // so we have to use the IReactiveClient.GetObservable<T> interface here.
+        ctx.GetObservable<int>(streamUri).AwaitDo(l).Subscribe(v1, downstreamUri, null);
+        ctx.Return(42).Subscribe(ctx.GetObserver<int>(streamUri), upstreamUri, null);
 
-            LockManager.Wait(l);
-        }
+        LockManager.Wait(l);
+    }
 
-        [TestMethod]
-        public void CreateStreamFromMetadata_AsObserver()
-        {
-            using var qe = CreateQueryEngine();
+    [TestMethod]
+    public void CreateStreamFromMetadata_AsObserver()
+    {
+        using var qe = CreateQueryEngine();
 
-            var ctx = GetQueryEngineReactiveService(qe);
+        var ctx = GetQueryEngineReactiveService(qe);
 
-            var sfUri = new Uri("test://streamFactory");
-            var streamUri = new Uri("test://stream");
-            var upstreamUri = new Uri("test://upstream");
-            var downstreamUri = new Uri("test://downstream");
-            var dummyUri = new Uri("test://dummysub");
+        var sfUri = new Uri("test://streamFactory");
+        var streamUri = new Uri("test://stream");
+        var upstreamUri = new Uri("test://upstream");
+        var downstreamUri = new Uri("test://downstream");
+        var dummyUri = new Uri("test://dummysub");
 
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-            var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+        var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
 #pragma warning restore IDE0004
-            Context.DefineStreamFactory<T, T>(sfUri, sf, null);
-            var stream = Context.GetStreamFactory<T, T>(sfUri).Create(streamUri, null);
+        Context.DefineStreamFactory<T, T>(sfUri, sf, null);
+        var stream = Context.GetStreamFactory<T, T>(sfUri).Create(streamUri, null);
 
-            var l = LockManager.NewAutoReset();
-            var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+        var l = LockManager.NewAutoReset();
+        var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
 
-            // Unfortunately, the context held by the stream is not the engine's context
-            // so we have to use the IReactiveClient.GetObservable<T> interface here.
-            ctx.Never<int>().Subscribe(ctx.GetObserver<int>(streamUri), dummyUri, null);
-            ctx.GetObservable<int>(streamUri).AwaitDo(l).Subscribe(v1, downstreamUri, null);
-            ctx.Return(42).Subscribe(ctx.GetObserver<int>(streamUri), upstreamUri, null);
+        // Unfortunately, the context held by the stream is not the engine's context
+        // so we have to use the IReactiveClient.GetObservable<T> interface here.
+        ctx.Never<int>().Subscribe(ctx.GetObserver<int>(streamUri), dummyUri, null);
+        ctx.GetObservable<int>(streamUri).AwaitDo(l).Subscribe(v1, downstreamUri, null);
+        ctx.Return(42).Subscribe(ctx.GetObserver<int>(streamUri), upstreamUri, null);
 
-            LockManager.Wait(l);
-        }
+        LockManager.Wait(l);
+    }
 
-        [TestMethod]
-        public void CreateStreamFromMetadata_SpecificType()
-        {
-            using var qe = CreateQueryEngine();
+    [TestMethod]
+    public void CreateStreamFromMetadata_SpecificType()
+    {
+        using var qe = CreateQueryEngine();
 
-            var ctx = GetQueryEngineReactiveService(qe);
+        var ctx = GetQueryEngineReactiveService(qe);
 
-            var sfUri = new Uri("test://streamFactory");
-            var streamUri = new Uri("test://stream");
-            var upstreamUri = new Uri("test://upstream");
-            var downstreamUri = new Uri("test://downstream");
-            var dummyUri = new Uri("test://dummysub");
+        var sfUri = new Uri("test://streamFactory");
+        var streamUri = new Uri("test://stream");
+        var upstreamUri = new Uri("test://upstream");
+        var downstreamUri = new Uri("test://downstream");
+        var dummyUri = new Uri("test://dummysub");
 
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-            var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+        var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
 #pragma warning restore IDE0004
-            Context.DefineStreamFactory<T, T>(sfUri, sf, null);
-            var stream = Context.GetStreamFactory<int, int>(sfUri).Create(streamUri, null);
+        Context.DefineStreamFactory<T, T>(sfUri, sf, null);
+        var stream = Context.GetStreamFactory<int, int>(sfUri).Create(streamUri, null);
 
-            var l = LockManager.NewAutoReset();
-            var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+        var l = LockManager.NewAutoReset();
+        var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
 
-            // Unfortunately, the context held by the stream is not the engine's context
-            // so we have to use the IReactiveClient.GetObservable<T> interface here.
-            ctx.Never<int>().Subscribe(stream, dummyUri, null);
-            ctx.GetObservable<int>(streamUri).AwaitDo(l).Subscribe(v1, downstreamUri, null);
-            ctx.Return(42).Subscribe(stream, upstreamUri, null);
+        // Unfortunately, the context held by the stream is not the engine's context
+        // so we have to use the IReactiveClient.GetObservable<T> interface here.
+        ctx.Never<int>().Subscribe(stream, dummyUri, null);
+        ctx.GetObservable<int>(streamUri).AwaitDo(l).Subscribe(v1, downstreamUri, null);
+        ctx.Return(42).Subscribe(stream, upstreamUri, null);
 
-            LockManager.Wait(l);
-        }
+        LockManager.Wait(l);
+    }
 
-        [TestMethod]
-        public void CreateStreamFromMetadata_SpecificType_SubscribedWithMismatchType_Success()
-        {
-            using var qe = CreateQueryEngine();
+    [TestMethod]
+    public void CreateStreamFromMetadata_SpecificType_SubscribedWithMismatchType_Success()
+    {
+        using var qe = CreateQueryEngine();
 
-            var ctx = GetQueryEngineReactiveService(qe);
+        var ctx = GetQueryEngineReactiveService(qe);
 
-            var sfUri = new Uri("test://streamFactory");
-            var streamUri = new Uri("test://stream");
-            var upstreamUri = new Uri("test://upstream");
-            var downstreamUri = new Uri("test://downstream");
-            var dummyUri = new Uri("test://dummysub");
+        var sfUri = new Uri("test://streamFactory");
+        var streamUri = new Uri("test://stream");
+        var upstreamUri = new Uri("test://upstream");
+        var downstreamUri = new Uri("test://downstream");
+        var dummyUri = new Uri("test://dummysub");
 
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-            var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+        var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
 #pragma warning restore IDE0004
-            Context.DefineStreamFactory<T, T>(sfUri, sf, null);
+        Context.DefineStreamFactory<T, T>(sfUri, sf, null);
 
-            // Note that the stream is defined over strings, but later subscribed to using int.
-            var stream = Context.GetStreamFactory<string, string>(sfUri).Create(streamUri, null);
+        // Note that the stream is defined over strings, but later subscribed to using int.
+        var stream = Context.GetStreamFactory<string, string>(sfUri).Create(streamUri, null);
 
-            var l = LockManager.NewAutoReset();
-            var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
+        var l = LockManager.NewAutoReset();
+        var v1 = ctx.GetObserver<string, int>(MockObserverUri)("v1");
 
-            // Unfortunately, the context held by the stream is not the engine's context
-            // so we have to use the IReactiveClient.GetObservable<T> interface here.
-            ctx.Never<int>().Subscribe(ctx.GetObserver<int>(streamUri), dummyUri, null);
-            ctx.GetObservable<int>(streamUri).AwaitDo(l).Subscribe(v1, downstreamUri, null);
-            ctx.Return(42).Subscribe(ctx.GetObserver<int>(streamUri), upstreamUri, null);
+        // Unfortunately, the context held by the stream is not the engine's context
+        // so we have to use the IReactiveClient.GetObservable<T> interface here.
+        ctx.Never<int>().Subscribe(ctx.GetObserver<int>(streamUri), dummyUri, null);
+        ctx.GetObservable<int>(streamUri).AwaitDo(l).Subscribe(v1, downstreamUri, null);
+        ctx.Return(42).Subscribe(ctx.GetObserver<int>(streamUri), upstreamUri, null);
 
-            LockManager.Wait(l);
-        }
+        LockManager.Wait(l);
+    }
 
-        [TestMethod]
-        public void CreateStreamFromMetadata_Delete()
-        {
-            using var qe = CreateQueryEngine();
+    [TestMethod]
+    public void CreateStreamFromMetadata_Delete()
+    {
+        using var qe = CreateQueryEngine();
 
-            var actx = GetQueryEngineAsyncReactiveService(qe);
+        var actx = GetQueryEngineAsyncReactiveService(qe);
 
-            var sfUri = new Uri("test://streamFactory");
-            var streamUri = new Uri("test://stream");
-            var dummyUri = new Uri("test://dummysub");
+        var sfUri = new Uri("test://streamFactory");
+        var streamUri = new Uri("test://stream");
+        var dummyUri = new Uri("test://dummysub");
 
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-            var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
+        var sf = Context.Provider.CreateQubjectFactory<T, T>((Expression<Func<IReactiveQubject>>)(() => (IReactiveQubject)new SimpleSubject()));
 #pragma warning restore IDE0004
-            Context.DefineStreamFactory<T, T>(sfUri, sf, null);
+        Context.DefineStreamFactory<T, T>(sfUri, sf, null);
 
-            var stream = Context.GetStreamFactory<string, string>(sfUri).Create(streamUri, null);
+        var stream = Context.GetStreamFactory<string, string>(sfUri).Create(streamUri, null);
 
-            Assert.IsFalse(actx.Streams.TryGetValue(streamUri, out var p));
+        Assert.IsFalse(actx.Streams.TryGetValue(streamUri, out var p));
 
-            var sub = actx.Never<int>().SubscribeAsync(actx.GetObserver<int>(streamUri), dummyUri, null, CancellationToken.None).Result;
+        var sub = actx.Never<int>().SubscribeAsync(actx.GetObserver<int>(streamUri), dummyUri, null, CancellationToken.None).Result;
 
-            Assert.IsTrue(actx.Streams.TryGetValue(streamUri, out p));
+        Assert.IsTrue(actx.Streams.TryGetValue(streamUri, out p));
 
-            sub.DisposeAsync(CancellationToken.None)
-                .AsTask()
-                .Wait();
+        sub.DisposeAsync(CancellationToken.None)
+            .AsTask()
+            .Wait();
 
-            actx.GetStream<string, string>(streamUri).DisposeAsync(CancellationToken.None)
-                .AsTask()
-                .Wait();
+        actx.GetStream<string, string>(streamUri).DisposeAsync(CancellationToken.None)
+            .AsTask()
+            .Wait();
 
-            Assert.IsFalse(actx.Streams.TryGetValue(streamUri, out p));
-        }
+        Assert.IsFalse(actx.Streams.TryGetValue(streamUri, out p));
+    }
 
-        [TestMethod]
-        public async Task Artifact_Creation()
+    [TestMethod]
+    public async Task Artifact_Creation()
+    {
+        var trueOrFalse = new object[] { true, false };
+        foreach (var choice in new DeterministicRandomizer([trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse]))
         {
-            var trueOrFalse = new object[] { true, false };
-            foreach (var choice in new DeterministicRandomizer([trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse]))
+            var kvs = new InMemoryKeyValueStore();
+            var qe = CreateQueryEngine(kvs);
+            var ctx = new TupletizingClientContext(qe.ServiceProvider);
+
+            var state = Checkpoint(qe);
+
+            Crash();
+
+            qe = CreateQueryEngine(kvs);
+            ctx = new TupletizingClientContext(qe.ServiceProvider);
+
+            Recover(qe, state);
+
+            var i = 0;
+
+            await ctx.DefineObservableAsync<T>(new Uri("custom:never"), ctx.Never<T>(), null, CancellationToken.None);
+
+            if ((bool)choice[i])
             {
-                var kvs = new InMemoryKeyValueStore();
-                var qe = CreateQueryEngine(kvs);
-                var ctx = new TupletizingClientContext(qe.ServiceProvider);
-
-                var state = Checkpoint(qe);
-
-                Crash();
-
-                qe = CreateQueryEngine(kvs);
+                qe = CrashAndRecreate(qe, kvs);
                 ctx = new TupletizingClientContext(qe.ServiceProvider);
-
-                Recover(qe, state);
-
-                var i = 0;
-
-                await ctx.DefineObservableAsync<T>(new Uri("custom:never"), ctx.Never<T>(), null, CancellationToken.None);
-
-                if ((bool)choice[i])
-                {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
-                }
-                i++;
-
-                await ctx.DefineObserverAsync<T>(new Uri("custom:nop"), ctx.Nop<T>(), null, CancellationToken.None);
-
-                if ((bool)choice[i])
-                {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
-                }
-                i++;
-
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IAsyncReactiveQubject<T, T>>>)(() => (IAsyncReactiveQubject<T, T>)new SimpleSubject<T>()));
-#pragma warning restore IDE0004
-                await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:sf"), sf, null, CancellationToken.None);
-
-                if ((bool)choice[i])
-                {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
-                }
-                i++;
-
-                await ctx.GetObservable<int>(new Uri("custom:never")).SubscribeAsync(ctx.GetObserver<int>(new Uri("custom:nop")), new Uri("custom:sub"), null, CancellationToken.None);
-
-                if ((bool)choice[i])
-                {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
-                }
-                i++;
-
-                await ctx.GetStreamFactory<int, int>(new Uri("custom:sf")).CreateAsync(new Uri("custom:stream"), null, CancellationToken.None);
-
-                if ((bool)choice[i])
-                {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
-                }
-                i++;
             }
-        }
+            i++;
 
-        [TestMethod]
-        public async Task Artifact_Deletion()
-        {
-            var trueOrFalse = new object[] { true, false };
-            foreach (var choice in new DeterministicRandomizer([trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse]))
+            await ctx.DefineObserverAsync<T>(new Uri("custom:nop"), ctx.Nop<T>(), null, CancellationToken.None);
+
+            if ((bool)choice[i])
             {
-                var kvs = new InMemoryKeyValueStore();
-                var qe = CreateQueryEngine(kvs);
-                var ctx = new TupletizingClientContext(qe.ServiceProvider);
-
-                await ctx.DefineObservableAsync<T>(new Uri("custom:never"), ctx.Never<T>(), null, CancellationToken.None);
-                await ctx.DefineObserverAsync<T>(new Uri("custom:nop"), ctx.Nop<T>(), null, CancellationToken.None);
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IAsyncReactiveQubject>>)(() => (IAsyncReactiveQubject)new SimpleSubject()));
-#pragma warning restore IDE0004
-                await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:sf"), sf, null, CancellationToken.None);
-                var sub = await ctx.GetObservable<int>(new Uri("custom:never")).SubscribeAsync(ctx.GetObserver<int>(new Uri("custom:nop")), new Uri("custom:sub"), null, CancellationToken.None);
-                var subj = await sf.CreateAsync(new Uri("custom:stream"), null, CancellationToken.None);
-
-                var state = Checkpoint(qe);
-
-                Crash();
-
-                qe = CreateQueryEngine(kvs);
+                qe = CrashAndRecreate(qe, kvs);
                 ctx = new TupletizingClientContext(qe.ServiceProvider);
+            }
+            i++;
 
-                Recover(qe, state);
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
+            var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IAsyncReactiveQubject<T, T>>>)(() => (IAsyncReactiveQubject<T, T>)new SimpleSubject<T>()));
+#pragma warning restore IDE0004
+            await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:sf"), sf, null, CancellationToken.None);
 
-                var i = 0;
+            if ((bool)choice[i])
+            {
+                qe = CrashAndRecreate(qe, kvs);
+                ctx = new TupletizingClientContext(qe.ServiceProvider);
+            }
+            i++;
 
-                await ctx.GetStream<int, int>(new Uri("custom:stream")).DisposeAsync(CancellationToken.None);
+            await ctx.GetObservable<int>(new Uri("custom:never")).SubscribeAsync(ctx.GetObserver<int>(new Uri("custom:nop")), new Uri("custom:sub"), null, CancellationToken.None);
 
-                if ((bool)choice[i])
+            if ((bool)choice[i])
+            {
+                qe = CrashAndRecreate(qe, kvs);
+                ctx = new TupletizingClientContext(qe.ServiceProvider);
+            }
+            i++;
+
+            await ctx.GetStreamFactory<int, int>(new Uri("custom:sf")).CreateAsync(new Uri("custom:stream"), null, CancellationToken.None);
+
+            if ((bool)choice[i])
+            {
+                qe = CrashAndRecreate(qe, kvs);
+                ctx = new TupletizingClientContext(qe.ServiceProvider);
+            }
+            i++;
+        }
+    }
+
+    [TestMethod]
+    public async Task Artifact_Deletion()
+    {
+        var trueOrFalse = new object[] { true, false };
+        foreach (var choice in new DeterministicRandomizer([trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse, trueOrFalse]))
+        {
+            var kvs = new InMemoryKeyValueStore();
+            var qe = CreateQueryEngine(kvs);
+            var ctx = new TupletizingClientContext(qe.ServiceProvider);
+
+            await ctx.DefineObservableAsync<T>(new Uri("custom:never"), ctx.Never<T>(), null, CancellationToken.None);
+            await ctx.DefineObserverAsync<T>(new Uri("custom:nop"), ctx.Nop<T>(), null, CancellationToken.None);
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
+            var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IAsyncReactiveQubject>>)(() => (IAsyncReactiveQubject)new SimpleSubject()));
+#pragma warning restore IDE0004
+            await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:sf"), sf, null, CancellationToken.None);
+            var sub = await ctx.GetObservable<int>(new Uri("custom:never")).SubscribeAsync(ctx.GetObserver<int>(new Uri("custom:nop")), new Uri("custom:sub"), null, CancellationToken.None);
+            var subj = await sf.CreateAsync(new Uri("custom:stream"), null, CancellationToken.None);
+
+            var state = Checkpoint(qe);
+
+            Crash();
+
+            qe = CreateQueryEngine(kvs);
+            ctx = new TupletizingClientContext(qe.ServiceProvider);
+
+            Recover(qe, state);
+
+            var i = 0;
+
+            await ctx.GetStream<int, int>(new Uri("custom:stream")).DisposeAsync(CancellationToken.None);
+
+            if ((bool)choice[i])
+            {
+                qe = CrashAndRecreate(qe, kvs);
+                ctx = new TupletizingClientContext(qe.ServiceProvider);
+            }
+            i++;
+
+            await ctx.GetSubscription(new Uri("custom:sub")).DisposeAsync(CancellationToken.None);
+
+            if ((bool)choice[i])
+            {
+                qe = CrashAndRecreate(qe, kvs);
+                ctx = new TupletizingClientContext(qe.ServiceProvider);
+            }
+            i++;
+
+            await ctx.UndefineStreamFactoryAsync(new Uri("custom:sf"), CancellationToken.None);
+
+            if ((bool)choice[i])
+            {
+                qe = CrashAndRecreate(qe, kvs);
+                ctx = new TupletizingClientContext(qe.ServiceProvider);
+            }
+            i++;
+
+            await ctx.UndefineObserverAsync(new Uri("custom:nop"), CancellationToken.None);
+
+            if ((bool)choice[i])
+            {
+                qe = CrashAndRecreate(qe, kvs);
+                ctx = new TupletizingClientContext(qe.ServiceProvider);
+            }
+            i++;
+
+            await ctx.UndefineObservableAsync(new Uri("custom:never"), CancellationToken.None);
+
+            if ((bool)choice[i])
+            {
+                qe = CrashAndRecreate(qe, kvs);
+                ctx = new TupletizingClientContext(qe.ServiceProvider);
+            }
+            i++;
+        }
+    }
+
+    private sealed class DeterministicRandomizer : IEnumerable<IList<object>> // can be tuple based for stricter typing/avoiding boxing
+    {
+        private readonly IList<IList<object>> _ranges;
+
+        private readonly int[] _current;
+
+        public DeterministicRandomizer(IList<IList<object>> ranges)
+        {
+            foreach (var range in ranges)
+                if (range.Count == 0)
+                    throw new ArgumentException("Ranges should not be empty.", nameof(ranges));
+
+            _ranges = ranges;
+            _current = new int[ranges.Count];
+        }
+
+        public bool MoveNext()
+        {
+            var carry = true;
+            for (var i = 0; carry && i < _ranges.Count; i++)
+            {
+                var curr = _current[i];
+                curr++;
+                if (curr >= _ranges[i].Count)
                 {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
+                    curr = 0;
+                    carry = true;
                 }
-                i++;
+                else
+                    carry = false;
 
-                await ctx.GetSubscription(new Uri("custom:sub")).DisposeAsync(CancellationToken.None);
+                _current[i] = curr;
+            }
 
-                if ((bool)choice[i])
-                {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
-                }
-                i++;
+            return !carry;
+        }
 
-                await ctx.UndefineStreamFactoryAsync(new Uri("custom:sf"), CancellationToken.None);
-
-                if ((bool)choice[i])
-                {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
-                }
-                i++;
-
-                await ctx.UndefineObserverAsync(new Uri("custom:nop"), CancellationToken.None);
-
-                if ((bool)choice[i])
-                {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
-                }
-                i++;
-
-                await ctx.UndefineObservableAsync(new Uri("custom:never"), CancellationToken.None);
-
-                if ((bool)choice[i])
-                {
-                    qe = CrashAndRecreate(qe, kvs);
-                    ctx = new TupletizingClientContext(qe.ServiceProvider);
-                }
-                i++;
+        public IList<object> Current
+        {
+            get
+            {
+                var ret = new object[_current.Length];
+                for (var i = 0; i < ret.Length; i++)
+                    ret[i] = _ranges[i][_current[i]];
+                return ret;
             }
         }
 
-        private sealed class DeterministicRandomizer : IEnumerable<IList<object>> // can be tuple based for stricter typing/avoiding boxing
+        public IEnumerator<IList<object>> GetEnumerator()
         {
-            private readonly IList<IList<object>> _ranges;
-
-            private readonly int[] _current;
-
-            public DeterministicRandomizer(IList<IList<object>> ranges)
+            var done = false;
+            while (!done)
             {
-                foreach (var range in ranges)
-                    if (range.Count == 0)
-                        throw new ArgumentException("Ranges should not be empty.", nameof(ranges));
+                var ret = new object[_current.Length];
+                for (var i = 0; i < ret.Length; i++)
+                    ret[i] = _ranges[i][_current[i]];
 
-                _ranges = ranges;
-                _current = new int[ranges.Count];
-            }
+                yield return ret;
 
-            public bool MoveNext()
-            {
                 var carry = true;
                 for (var i = 0; carry && i < _ranges.Count; i++)
                 {
@@ -2351,413 +2392,371 @@ namespace Tests.Reaqtor.QueryEngine
                     _current[i] = curr;
                 }
 
-                return !carry;
-            }
-
-            public IList<object> Current
-            {
-                get
-                {
-                    var ret = new object[_current.Length];
-                    for (var i = 0; i < ret.Length; i++)
-                        ret[i] = _ranges[i][_current[i]];
-                    return ret;
-                }
-            }
-
-            public IEnumerator<IList<object>> GetEnumerator()
-            {
-                var done = false;
-                while (!done)
-                {
-                    var ret = new object[_current.Length];
-                    for (var i = 0; i < ret.Length; i++)
-                        ret[i] = _ranges[i][_current[i]];
-
-                    yield return ret;
-
-                    var carry = true;
-                    for (var i = 0; carry && i < _ranges.Count; i++)
-                    {
-                        var curr = _current[i];
-                        curr++;
-                        if (curr >= _ranges[i].Count)
-                        {
-                            curr = 0;
-                            carry = true;
-                        }
-                        else
-                            carry = false;
-
-                        _current[i] = curr;
-                    }
-
-                    done = carry;
-                }
-            }
-
-            System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
-            {
-                return GetEnumerator();
+                done = carry;
             }
         }
 
-        [TestMethod]
-        public async Task Metadata_AsyncProvider()
+        System.Collections.IEnumerator System.Collections.IEnumerable.GetEnumerator()
         {
-            var kvs = new InMemoryKeyValueStore();
+            return GetEnumerator();
+        }
+    }
 
-            await
-            using var qe = CreateQueryEngine(kvs);
+    [TestMethod]
+    public async Task Metadata_AsyncProvider()
+    {
+        var kvs = new InMemoryKeyValueStore();
 
-            var ctx = new TupletizingClientContext(qe.ServiceProvider);
-            var syncCtx = GetQueryEngineReactiveService(qe);
+        await
+        using var qe = CreateQueryEngine(kvs);
 
-            await ctx.DefineObservableAsync<T>(new Uri("custom:never"), ctx.Never<T>(), null, CancellationToken.None);
-            await ctx.DefineObserverAsync<T>(new Uri("custom:nop"), ctx.Nop<T>(), null, CancellationToken.None);
+        var ctx = new TupletizingClientContext(qe.ServiceProvider);
+        var syncCtx = GetQueryEngineReactiveService(qe);
+
+        await ctx.DefineObservableAsync<T>(new Uri("custom:never"), ctx.Never<T>(), null, CancellationToken.None);
+        await ctx.DefineObserverAsync<T>(new Uri("custom:nop"), ctx.Nop<T>(), null, CancellationToken.None);
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-            var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IAsyncReactiveQubject>>)(() => (IAsyncReactiveQubject)new SimpleSubject()));
+        var sf = ctx.Provider.CreateQubjectFactory<T, T>((Expression<Func<IAsyncReactiveQubject>>)(() => (IAsyncReactiveQubject)new SimpleSubject()));
 #pragma warning restore IDE0004
-            await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:sf"), sf, null, CancellationToken.None);
-            await ctx.GetObservable<int>(new Uri("custom:never")).SubscribeAsync(ctx.GetObserver<int>(new Uri("custom:nop")), new Uri("custom:sub"), null, CancellationToken.None);
-            await sf.CreateAsync(new Uri("custom:stream"), null, CancellationToken.None);
+        await ctx.DefineStreamFactoryAsync<T, T>(new Uri("custom:sf"), sf, null, CancellationToken.None);
+        await ctx.GetObservable<int>(new Uri("custom:never")).SubscribeAsync(ctx.GetObserver<int>(new Uri("custom:nop")), new Uri("custom:sub"), null, CancellationToken.None);
+        await sf.CreateAsync(new Uri("custom:stream"), null, CancellationToken.None);
 
-            Assert.AreSame(ctx.Observables[new Uri("custom:never")].Expression, syncCtx.Observables[new Uri("custom:never")].Expression);
-            Assert.AreSame(ctx.Observers[new Uri("custom:nop")].Expression, syncCtx.Observers[new Uri("custom:nop")].Expression);
-            Assert.AreSame(ctx.StreamFactories[new Uri("custom:sf")].Expression, syncCtx.StreamFactories[new Uri("custom:sf")].Expression);
-            Assert.AreSame(ctx.Subscriptions[new Uri("custom:sub")].Expression, syncCtx.Subscriptions[new Uri("custom:sub")].Expression);
-            Assert.AreSame(ctx.Streams[new Uri("custom:stream")].Expression, syncCtx.Streams[new Uri("custom:stream")].Expression);
+        Assert.AreSame(ctx.Observables[new Uri("custom:never")].Expression, syncCtx.Observables[new Uri("custom:never")].Expression);
+        Assert.AreSame(ctx.Observers[new Uri("custom:nop")].Expression, syncCtx.Observers[new Uri("custom:nop")].Expression);
+        Assert.AreSame(ctx.StreamFactories[new Uri("custom:sf")].Expression, syncCtx.StreamFactories[new Uri("custom:sf")].Expression);
+        Assert.AreSame(ctx.Subscriptions[new Uri("custom:sub")].Expression, syncCtx.Subscriptions[new Uri("custom:sub")].Expression);
+        Assert.AreSame(ctx.Streams[new Uri("custom:stream")].Expression, syncCtx.Streams[new Uri("custom:stream")].Expression);
 
-            // Not implemented yet
-            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T>());
-            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T1, T>());
-            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T>());
-            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T1, T>());
-            Assert.ThrowsExactly<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T, R>());
-            Assert.ThrowsExactly<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T1, T, R>());
-            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Subscriptions[new Uri("custom:sub")].ToSubscription());
-            Assert.ThrowsExactly<NotImplementedException>(() => ctx.Streams[new Uri("custom:stream")].ToStream<T, R>());
+        // Not implemented yet
+        Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T>());
+        Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observables[new Uri("custom:never")].ToObservable<T1, T>());
+        Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T>());
+        Assert.ThrowsExactly<NotImplementedException>(() => ctx.Observers[new Uri("custom:nop")].ToObserver<T1, T>());
+        Assert.ThrowsExactly<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T, R>());
+        Assert.ThrowsExactly<NotImplementedException>(() => ctx.StreamFactories[new Uri("custom:sf")].ToStreamFactory<T1, T, R>());
+        Assert.ThrowsExactly<NotImplementedException>(() => ctx.Subscriptions[new Uri("custom:sub")].ToSubscription());
+        Assert.ThrowsExactly<NotImplementedException>(() => ctx.Streams[new Uri("custom:stream")].ToStream<T, R>());
 
-            var l = syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList();
-            CollectionAssert.AreEquivalent(ctx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList());
-            CollectionAssert.AreEquivalent(ctx.Observers.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Observers.AsEnumerable().Select(kvp => kvp.Key).ToList());
-            CollectionAssert.AreEquivalent(ctx.StreamFactories.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.StreamFactories.AsEnumerable().Select(kvp => kvp.Key).ToList());
-            CollectionAssert.AreEquivalent(ctx.Subscriptions.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Subscriptions.AsEnumerable().Select(kvp => kvp.Key).ToList());
-            CollectionAssert.AreEquivalent(ctx.Streams.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Streams.AsEnumerable().Select(kvp => kvp.Key).ToList());
-        }
+        var l = syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList();
+        CollectionAssert.AreEquivalent(ctx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Observables.AsEnumerable().Select(kvp => kvp.Key).ToList());
+        CollectionAssert.AreEquivalent(ctx.Observers.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Observers.AsEnumerable().Select(kvp => kvp.Key).ToList());
+        CollectionAssert.AreEquivalent(ctx.StreamFactories.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.StreamFactories.AsEnumerable().Select(kvp => kvp.Key).ToList());
+        CollectionAssert.AreEquivalent(ctx.Subscriptions.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Subscriptions.AsEnumerable().Select(kvp => kvp.Key).ToList());
+        CollectionAssert.AreEquivalent(ctx.Streams.AsEnumerable().Select(kvp => kvp.Key).ToList(), syncCtx.Streams.AsEnumerable().Select(kvp => kvp.Key).ToList());
+    }
 
-        private CheckpointingQueryEngine CrashAndRecreate(CheckpointingQueryEngine qe, IKeyValueStore keyValueStore)
+    private CheckpointingQueryEngine CrashAndRecreate(CheckpointingQueryEngine qe, IKeyValueStore keyValueStore)
+    {
+        InMemoryStateStore state;
+        List<Uri>[] artifacts;
+
+        using (qe)
         {
-            InMemoryStateStore state;
-            List<Uri>[] artifacts;
+            state = Checkpoint(qe);
 
-            using (qe)
-            {
-                state = Checkpoint(qe);
+            artifacts =
+            [
+                [.. qe.ReactiveService.StreamFactories.Select(artifact => artifact.Key)],
+                [.. qe.ReactiveService.Observables.Select(artifact => artifact.Key)],
+                [.. qe.ReactiveService.Observers.Select(artifact => artifact.Key)],
+                [.. qe.ReactiveService.Streams.Select(artifact => artifact.Key)],
+                [.. qe.ReactiveService.Subscriptions.Select(artifact => artifact.Key)],
+            ];
 
-                artifacts =
-                [
-                    [.. qe.ReactiveService.StreamFactories.Select(artifact => artifact.Key)],
-                    [.. qe.ReactiveService.Observables.Select(artifact => artifact.Key)],
-                    [.. qe.ReactiveService.Observers.Select(artifact => artifact.Key)],
-                    [.. qe.ReactiveService.Streams.Select(artifact => artifact.Key)],
-                    [.. qe.ReactiveService.Subscriptions.Select(artifact => artifact.Key)],
-                ];
-
-                Crash();
-            }
-
-            var newQe = CreateQueryEngine(keyValueStore);
-
-            Recover(newQe, state);
-
-            var recoveredArtifacts = new List<Uri>[]
-            {
-                [.. newQe.ReactiveService.StreamFactories.Select(artifact => artifact.Key)],
-                [.. newQe.ReactiveService.Observables.Select(artifact => artifact.Key)],
-                [.. newQe.ReactiveService.Observers.Select(artifact => artifact.Key)],
-                [.. newQe.ReactiveService.Streams.Select(artifact => artifact.Key)],
-                [.. newQe.ReactiveService.Subscriptions.Select(artifact => artifact.Key)],
-            };
-
-            for (var i = 0; i < artifacts.Length; i++)
-                CollectionAssert.AreEquivalent(artifacts[i], recoveredArtifacts[i]);
-
-            return newQe;
+            Crash();
         }
+
+        var newQe = CreateQueryEngine(keyValueStore);
+
+        Recover(newQe, state);
+
+        var recoveredArtifacts = new List<Uri>[]
+        {
+            [.. newQe.ReactiveService.StreamFactories.Select(artifact => artifact.Key)],
+            [.. newQe.ReactiveService.Observables.Select(artifact => artifact.Key)],
+            [.. newQe.ReactiveService.Observers.Select(artifact => artifact.Key)],
+            [.. newQe.ReactiveService.Streams.Select(artifact => artifact.Key)],
+            [.. newQe.ReactiveService.Subscriptions.Select(artifact => artifact.Key)],
+        };
+
+        for (var i = 0; i < artifacts.Length; i++)
+            CollectionAssert.AreEquivalent(artifacts[i], recoveredArtifacts[i]);
+
+        return newQe;
+    }
 
 #pragma warning restore IDE0063 // 'using' statement can be simplified
 #pragma warning restore IDE0079 // Remove unnecessary suppression
 
-        private sealed class ExpressionComparator : ExpressionEqualityComparator
-        {
-            protected override bool EqualsGlobalParameter(ParameterExpression x, ParameterExpression y)
-            {
-                return x.Name == y.Name && x.Type == y.Type;
-            }
-        }
-
-        private static Expression Rewrite(Expression expr)
-        {
-            var rewrite = new SubstituteAndUnquoteRewriter(
-                new Dictionary<Type, Type>
-                {
-                    { typeof(IReactiveQubjectFactory<,>), typeof(IReliableSubjectFactory<,>) },
-                    { typeof(IReactiveSubjectFactory<,>), typeof(IReliableSubjectFactory<,>) },
-                    { typeof(IReactiveQubject),           typeof(IMultiSubject)              },
-                    { typeof(IReactiveQubject<,>),        typeof(IReliableMultiSubject<,>)   },
-                    { typeof(IReactiveSubject<,>),        typeof(IReliableMultiSubject<,>)   },
-                    { typeof(IReactiveQbservable<>),      typeof(ISubscribable<>)            },
-                    { typeof(IReactiveObservable<>),      typeof(ISubscribable<>)            },
-                    { typeof(IReactiveQbserver<>),        typeof(IObserver<>)                },
-                    { typeof(IReactiveObserver<>),        typeof(IObserver<>)                },
-                    { typeof(IReactiveQubscription),      typeof(ISubscription)              },
-                    { typeof(IReactiveSubscription),      typeof(ISubscription)              },
-                    { typeof(ReactiveQbservable),         typeof(Subscribable)               },
-                    { typeof(ReactiveQbserver),           typeof(Observer)                   },
-                    { typeof(ReactiveQubjectFactory),     typeof(ReliableSubjectFactory)     },
-                });
-
-            var asyncToSyncRewrite = new AsyncToSyncRewriter(new Dictionary<Type, Type>()).Rewrite(expr);
-            var idRewrite = new IdRewriter().Visit(asyncToSyncRewrite);
-            return rewrite.Apply(idRewrite);
-        }
-
-        private sealed class IdRewriter : ExpressionVisitor
-        {
-            private static readonly MethodInfo s_asQbserver = ((MethodInfo)ReflectionHelpers.InfoOf((IObserver<int> obv) => obv.AsQbserver())).GetGenericMethodDefinition();
-            private static readonly MethodInfo s_asQbservable = ((MethodInfo)ReflectionHelpers.InfoOf((IObservable<int> obs) => obs.AsQbservable())).GetGenericMethodDefinition();
-
-            protected override Expression VisitMethodCall(MethodCallExpression node)
-            {
-                if (node.Method.IsGenericMethod && node.Method.GetGenericMethodDefinition() == s_asQbserver)
-                {
-                    var f = typeof(Func<,>).MakeGenericType(typeof(IObserver<>).MakeGenericType(node.Method.GetGenericArguments()), typeof(IReactiveQbserver<>).MakeGenericType(node.Method.GetGenericArguments()));
-                    return Expression.Invoke(Expression.Parameter(f, "rx:/observer/id"), node.Arguments);
-                }
-
-                if (node.Method.IsGenericMethod && node.Method.GetGenericMethodDefinition() == s_asQbservable)
-                {
-                    var f = typeof(Func<,>).MakeGenericType(typeof(IObservable<>).MakeGenericType(node.Method.GetGenericArguments()), typeof(IReactiveQbservable<>).MakeGenericType(node.Method.GetGenericArguments()));
-                    return Expression.Invoke(Expression.Parameter(f, "rx:/observable/id"), node.Arguments);
-                }
-
-                return base.VisitMethodCall(node);
-            }
-        }
-
-        private class SimpleSubject : IMultiSubject
-        {
-            private readonly Lock _gate = new();
-
-            private object _singleton;
-
-            public IObserver<T> GetObserver<T>()
-            {
-                return GetSubject<T>();
-            }
-
-            public ISubscribable<T> GetObservable<T>()
-            {
-                return GetSubject<T>().ToSubscribable<T>();
-            }
-
-            private Subject<T> GetSubject<T>()
-            {
-                if (_singleton == null)
-                {
-                    lock (_gate)
-                    {
-                        _singleton ??= new Subject<T>();
-                    }
-                }
-
-                return (Subject<T>)_singleton;
-            }
-
-            public void Dispose()
-            {
-                if (_singleton != null)
-                {
-                    lock (_gate)
-                    {
-                        if (_singleton is IDisposable disposable)
-                        {
-                            disposable.Dispose();
-                        }
-
-                        _singleton = null;
-                    }
-                }
-            }
-        }
-
-        private class SimpleSubject<T> : IMultiSubject<T>, IReliableMultiSubject<T>
-        {
-            public IObserver<T> CreateObserver() => throw new NotImplementedException();
-
-            public void Dispose() => throw new NotImplementedException();
-
-            public ISubscription Subscribe(IObserver<T> observer) => throw new NotImplementedException();
-
-            public IReliableSubscription Subscribe(IReliableObserver<T> observer) => throw new NotImplementedException();
-
-            IReliableObserver<T> IReliableMultiSubject<T, T>.CreateObserver() => throw new NotImplementedException();
-
-            IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => throw new NotImplementedException();
-        }
-
-        private static class ReliableObservableManager
-        {
-            public static readonly Dictionary<string, List<ReliableEvent>> Actions = [];
-            public static readonly Dictionary<string, object> Observers = [];
-
-            public static IReliableObserver<T> GetObserver<T>(string s)
-            {
-                return (IReliableObserver<T>)Observers[s];
-            }
-
-            public static void Clear(string id)
-            {
-                Actions.Remove(id);
-                Observers.Remove(id);
-            }
-        }
-
-        private sealed class ReliableEvent
-        {
-            private ReliableEventType EventType
-            {
-                get;
-                set;
-            }
-
-            private long SequenceId
-            {
-                get;
-                set;
-            }
-
-            public static ReliableEvent AcknowledgeRange(long sequenceId)
-            {
-                return new ReliableEvent { EventType = ReliableEventType.AcknowledgeRange, SequenceId = sequenceId };
-            }
-
-            public static ReliableEvent Dispose()
-            {
-                return new ReliableEvent { EventType = ReliableEventType.Dispose };
-            }
-
-            public static ReliableEvent Start(long sequenceId)
-            {
-                return new ReliableEvent { EventType = ReliableEventType.Start, SequenceId = sequenceId };
-            }
-
-            public static ReliableEvent Stop()
-            {
-                return new ReliableEvent { EventType = ReliableEventType.Stop };
-            }
-
-            public static ReliableEvent Subscribe()
-            {
-                return new ReliableEvent { EventType = ReliableEventType.Subscribe };
-            }
-
-            public override bool Equals(object obj)
-            {
-                return obj is ReliableEvent other && other.EventType == EventType && other.SequenceId == SequenceId;
-            }
-
-            public override int GetHashCode()
-            {
-                unchecked
-                {
-                    return EventType.GetHashCode() * 17 + SequenceId.GetHashCode();
-                }
-            }
-
-            public override string ToString()
-            {
-                return EventType switch
-                {
-                    ReliableEventType.AcknowledgeRange => $"AcknowledgeRange({SequenceId})",
-                    ReliableEventType.Dispose => "Dispose()",
-                    ReliableEventType.Start => $"Start({SequenceId})",
-                    ReliableEventType.Stop => "Stop()",
-                    ReliableEventType.Subscribe => "Subscribe()",
-                    _ => base.ToString(),
-                };
-            }
-
-            private enum ReliableEventType
-            {
-                AcknowledgeRange,
-                Dispose,
-                Start,
-                Stop,
-                Subscribe,
-            }
-        }
-
-        private sealed class MyReliableObservable<T> : IReliableObservable<T>
-        {
-            private readonly string _s;
-            private readonly List<ReliableEvent> _actions;
-
-            public MyReliableObservable(string s)
-            {
-                _s = s;
-                _actions = [];
-
-                ReliableObservableManager.Actions.Add(s, _actions);
-            }
-
-            public IReliableSubscription Subscribe(IReliableObserver<T> observer)
-            {
-                _actions.Add(ReliableEvent.Subscribe());
-                ReliableObservableManager.Observers[_s] = observer;
-
-                return new Sub(this);
-            }
-
-            private sealed class Sub : ReliableSubscriptionBase
-            {
-                private readonly MyReliableObservable<T> _parent;
-
-                public Sub(MyReliableObservable<T> parent)
-                {
-                    _parent = parent;
-                }
-
-                public override Uri ResubscribeUri => throw new NotImplementedException();
-
-                public override void Start(long sequenceId)
-                {
-                    _parent._actions.Add(ReliableEvent.Start(sequenceId));
-                }
-
-                public override void AcknowledgeRange(long sequenceId)
-                {
-                    _parent._actions.Add(ReliableEvent.AcknowledgeRange(sequenceId));
-                }
-
-                protected override void Stop()
-                {
-                    base.Stop();
-
-                    _parent._actions.Add(ReliableEvent.Stop());
-                }
-
-                public override void DisposeCore()
-                {
-                    _parent._actions.Add(ReliableEvent.Dispose());
-                }
-            }
-        }
-    }
-
-    internal static class Helpers
+    private sealed class ExpressionComparator : ExpressionEqualityComparator
     {
-        public static Task AsTask(this Task t) => t;
+        protected override bool EqualsGlobalParameter(ParameterExpression x, ParameterExpression y)
+        {
+            return x.Name == y.Name && x.Type == y.Type;
+        }
     }
+
+    private static Expression Rewrite(Expression expr)
+    {
+        var rewrite = new SubstituteAndUnquoteRewriter(
+            new Dictionary<Type, Type>
+            {
+                { typeof(IReactiveQubjectFactory<,>), typeof(IReliableSubjectFactory<,>) },
+                { typeof(IReactiveSubjectFactory<,>), typeof(IReliableSubjectFactory<,>) },
+                { typeof(IReactiveQubject),           typeof(IMultiSubject)              },
+                { typeof(IReactiveQubject<,>),        typeof(IReliableMultiSubject<,>)   },
+                { typeof(IReactiveSubject<,>),        typeof(IReliableMultiSubject<,>)   },
+                { typeof(IReactiveQbservable<>),      typeof(ISubscribable<>)            },
+                { typeof(IReactiveObservable<>),      typeof(ISubscribable<>)            },
+                { typeof(IReactiveQbserver<>),        typeof(IObserver<>)                },
+                { typeof(IReactiveObserver<>),        typeof(IObserver<>)                },
+                { typeof(IReactiveQubscription),      typeof(ISubscription)              },
+                { typeof(IReactiveSubscription),      typeof(ISubscription)              },
+                { typeof(ReactiveQbservable),         typeof(Subscribable)               },
+                { typeof(ReactiveQbserver),           typeof(Observer)                   },
+                { typeof(ReactiveQubjectFactory),     typeof(ReliableSubjectFactory)     },
+            });
+
+        var asyncToSyncRewrite = new AsyncToSyncRewriter(new Dictionary<Type, Type>()).Rewrite(expr);
+        var idRewrite = new IdRewriter().Visit(asyncToSyncRewrite);
+        return rewrite.Apply(idRewrite);
+    }
+
+    private sealed class IdRewriter : ExpressionVisitor
+    {
+        private static readonly MethodInfo s_asQbserver = ((MethodInfo)ReflectionHelpers.InfoOf((IObserver<int> obv) => obv.AsQbserver())).GetGenericMethodDefinition();
+        private static readonly MethodInfo s_asQbservable = ((MethodInfo)ReflectionHelpers.InfoOf((IObservable<int> obs) => obs.AsQbservable())).GetGenericMethodDefinition();
+
+        protected override Expression VisitMethodCall(MethodCallExpression node)
+        {
+            if (node.Method.IsGenericMethod && node.Method.GetGenericMethodDefinition() == s_asQbserver)
+            {
+                var f = typeof(Func<,>).MakeGenericType(typeof(IObserver<>).MakeGenericType(node.Method.GetGenericArguments()), typeof(IReactiveQbserver<>).MakeGenericType(node.Method.GetGenericArguments()));
+                return Expression.Invoke(Expression.Parameter(f, "rx:/observer/id"), node.Arguments);
+            }
+
+            if (node.Method.IsGenericMethod && node.Method.GetGenericMethodDefinition() == s_asQbservable)
+            {
+                var f = typeof(Func<,>).MakeGenericType(typeof(IObservable<>).MakeGenericType(node.Method.GetGenericArguments()), typeof(IReactiveQbservable<>).MakeGenericType(node.Method.GetGenericArguments()));
+                return Expression.Invoke(Expression.Parameter(f, "rx:/observable/id"), node.Arguments);
+            }
+
+            return base.VisitMethodCall(node);
+        }
+    }
+
+    private class SimpleSubject : IMultiSubject
+    {
+        private readonly Lock _gate = new();
+
+        private object _singleton;
+
+        public IObserver<T> GetObserver<T>()
+        {
+            return GetSubject<T>();
+        }
+
+        public ISubscribable<T> GetObservable<T>()
+        {
+            return GetSubject<T>().ToSubscribable<T>();
+        }
+
+        private Subject<T> GetSubject<T>()
+        {
+            if (_singleton == null)
+            {
+                lock (_gate)
+                {
+                    _singleton ??= new Subject<T>();
+                }
+            }
+
+            return (Subject<T>)_singleton;
+        }
+
+        public void Dispose()
+        {
+            if (_singleton != null)
+            {
+                lock (_gate)
+                {
+                    if (_singleton is IDisposable disposable)
+                    {
+                        disposable.Dispose();
+                    }
+
+                    _singleton = null;
+                }
+            }
+        }
+    }
+
+    private class SimpleSubject<T> : IMultiSubject<T>, IReliableMultiSubject<T>
+    {
+        public IObserver<T> CreateObserver() => throw new NotImplementedException();
+
+        public void Dispose() => throw new NotImplementedException();
+
+        public ISubscription Subscribe(IObserver<T> observer) => throw new NotImplementedException();
+
+        public IReliableSubscription Subscribe(IReliableObserver<T> observer) => throw new NotImplementedException();
+
+        IReliableObserver<T> IReliableMultiSubject<T, T>.CreateObserver() => throw new NotImplementedException();
+
+        IDisposable IObservable<T>.Subscribe(IObserver<T> observer) => throw new NotImplementedException();
+    }
+
+    private static class ReliableObservableManager
+    {
+        public static readonly Dictionary<string, List<ReliableEvent>> Actions = [];
+        public static readonly Dictionary<string, object> Observers = [];
+
+        public static IReliableObserver<T> GetObserver<T>(string s)
+        {
+            return (IReliableObserver<T>)Observers[s];
+        }
+
+        public static void Clear(string id)
+        {
+            Actions.Remove(id);
+            Observers.Remove(id);
+        }
+    }
+
+    private sealed class ReliableEvent
+    {
+        private ReliableEventType EventType
+        {
+            get;
+            set;
+        }
+
+        private long SequenceId
+        {
+            get;
+            set;
+        }
+
+        public static ReliableEvent AcknowledgeRange(long sequenceId)
+        {
+            return new ReliableEvent { EventType = ReliableEventType.AcknowledgeRange, SequenceId = sequenceId };
+        }
+
+        public static ReliableEvent Dispose()
+        {
+            return new ReliableEvent { EventType = ReliableEventType.Dispose };
+        }
+
+        public static ReliableEvent Start(long sequenceId)
+        {
+            return new ReliableEvent { EventType = ReliableEventType.Start, SequenceId = sequenceId };
+        }
+
+        public static ReliableEvent Stop()
+        {
+            return new ReliableEvent { EventType = ReliableEventType.Stop };
+        }
+
+        public static ReliableEvent Subscribe()
+        {
+            return new ReliableEvent { EventType = ReliableEventType.Subscribe };
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is ReliableEvent other && other.EventType == EventType && other.SequenceId == SequenceId;
+        }
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                return EventType.GetHashCode() * 17 + SequenceId.GetHashCode();
+            }
+        }
+
+        public override string ToString()
+        {
+            return EventType switch
+            {
+                ReliableEventType.AcknowledgeRange => $"AcknowledgeRange({SequenceId})",
+                ReliableEventType.Dispose => "Dispose()",
+                ReliableEventType.Start => $"Start({SequenceId})",
+                ReliableEventType.Stop => "Stop()",
+                ReliableEventType.Subscribe => "Subscribe()",
+                _ => base.ToString(),
+            };
+        }
+
+        private enum ReliableEventType
+        {
+            AcknowledgeRange,
+            Dispose,
+            Start,
+            Stop,
+            Subscribe,
+        }
+    }
+
+    private sealed class MyReliableObservable<T> : IReliableObservable<T>
+    {
+        private readonly string _s;
+        private readonly List<ReliableEvent> _actions;
+
+        public MyReliableObservable(string s)
+        {
+            _s = s;
+            _actions = [];
+
+            ReliableObservableManager.Actions.Add(s, _actions);
+        }
+
+        public IReliableSubscription Subscribe(IReliableObserver<T> observer)
+        {
+            _actions.Add(ReliableEvent.Subscribe());
+            ReliableObservableManager.Observers[_s] = observer;
+
+            return new Sub(this);
+        }
+
+        private sealed class Sub : ReliableSubscriptionBase
+        {
+            private readonly MyReliableObservable<T> _parent;
+
+            public Sub(MyReliableObservable<T> parent)
+            {
+                _parent = parent;
+            }
+
+            public override Uri ResubscribeUri => throw new NotImplementedException();
+
+            public override void Start(long sequenceId)
+            {
+                _parent._actions.Add(ReliableEvent.Start(sequenceId));
+            }
+
+            public override void AcknowledgeRange(long sequenceId)
+            {
+                _parent._actions.Add(ReliableEvent.AcknowledgeRange(sequenceId));
+            }
+
+            protected override void Stop()
+            {
+                base.Stop();
+
+                _parent._actions.Add(ReliableEvent.Stop());
+            }
+
+            public override void DisposeCore()
+            {
+                _parent._actions.Add(ReliableEvent.Dispose());
+            }
+        }
+    }
+}
+
+internal static class Helpers
+{
+    public static Task AsTask(this Task t) => t;
 }

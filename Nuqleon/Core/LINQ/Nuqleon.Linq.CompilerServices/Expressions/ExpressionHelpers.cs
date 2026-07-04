@@ -10,43 +10,42 @@
 
 using System.Linq.Expressions;
 
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+
+/// <summary>
+/// Provides various utilities for expression trees.
+/// </summary>
+public static class ExpressionHelpers
 {
     /// <summary>
-    /// Provides various utilities for expression trees.
+    /// Strips top-level UnaryExpression expression tree nodes of type Quote from the given expression and returns the resulting LambdaExpression.
     /// </summary>
-    public static class ExpressionHelpers
+    /// <param name="expression">Expression to strip quotes from.</param>
+    /// <returns>Lambda expression after unquoting. An exception occurs if the specified expression was not a (quoted) LambdaExpression.</returns>
+    public static LambdaExpression Unquote(this Expression expression)
     {
-        /// <summary>
-        /// Strips top-level UnaryExpression expression tree nodes of type Quote from the given expression and returns the resulting LambdaExpression.
-        /// </summary>
-        /// <param name="expression">Expression to strip quotes from.</param>
-        /// <returns>Lambda expression after unquoting. An exception occurs if the specified expression was not a (quoted) LambdaExpression.</returns>
-        public static LambdaExpression Unquote(this Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
+        ArgumentNullException.ThrowIfNull(expression);
 
-            return (LambdaExpression)StripQuotesImpl(expression);
-        }
+        return (LambdaExpression)StripQuotesImpl(expression);
+    }
 
-        /// <summary>
-        /// Strips top-level UnaryExpression expression tree nodes of type Quote, if any, from the given expression.
-        /// </summary>
-        /// <param name="expression">Expression to strip quotes from.</param>
-        /// <returns>Expression after unquoting.</returns>
-        public static Expression StripQuotes(this Expression expression)
-        {
-            ArgumentNullException.ThrowIfNull(expression);
+    /// <summary>
+    /// Strips top-level UnaryExpression expression tree nodes of type Quote, if any, from the given expression.
+    /// </summary>
+    /// <param name="expression">Expression to strip quotes from.</param>
+    /// <returns>Expression after unquoting.</returns>
+    public static Expression StripQuotes(this Expression expression)
+    {
+        ArgumentNullException.ThrowIfNull(expression);
 
-            return StripQuotesImpl(expression);
-        }
+        return StripQuotesImpl(expression);
+    }
 
-        private static Expression StripQuotesImpl(Expression expression)
-        {
-            while (expression.NodeType == ExpressionType.Quote)
-                expression = ((UnaryExpression)expression).Operand;
+    private static Expression StripQuotesImpl(Expression expression)
+    {
+        while (expression.NodeType == ExpressionType.Quote)
+            expression = ((UnaryExpression)expression).Operand;
 
-            return expression;
-        }
+        return expression;
     }
 }

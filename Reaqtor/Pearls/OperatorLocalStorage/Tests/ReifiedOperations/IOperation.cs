@@ -8,15 +8,14 @@
 // BD - January 2018
 //
 
-namespace Tests.ReifiedOperations
-{
-    internal interface IOperation
-    {
-        string DebugView { get; }
-    }
+namespace Tests.ReifiedOperations;
 
-    internal interface IOperation<in TValue> : IOperation
-    {
-        void Accept(TValue value);
-    }
+internal interface IOperation
+{
+    string DebugView { get; }
+}
+
+internal interface IOperation<in TValue> : IOperation
+{
+    void Accept(TValue value);
 }

@@ -4,26 +4,25 @@
 
 using System;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Interface for query engine registries containing reactive entities.
+/// </summary>
+internal interface IQueryEngineRegistry : IDisposable
 {
-    /// <summary>
-    /// Interface for query engine registries containing reactive entities.
-    /// </summary>
-    internal interface IQueryEngineRegistry : IDisposable
-    {
-        IReactiveEntityCollection<string, ObservableDefinitionEntity> Observables { get; }
-        IReactiveEntityCollection<string, ObserverDefinitionEntity> Observers { get; }
-        IReactiveEntityCollection<string, StreamFactoryDefinitionEntity> SubjectFactories { get; }
-        IReactiveEntityCollection<string, SubscriptionFactoryDefinitionEntity> SubscriptionFactories { get; }
+    IReactiveEntityCollection<string, ObservableDefinitionEntity> Observables { get; }
+    IReactiveEntityCollection<string, ObserverDefinitionEntity> Observers { get; }
+    IReactiveEntityCollection<string, StreamFactoryDefinitionEntity> SubjectFactories { get; }
+    IReactiveEntityCollection<string, SubscriptionFactoryDefinitionEntity> SubscriptionFactories { get; }
 
-        IReactiveEntityCollection<string, DefinitionEntity> Other { get; }
-        IInvertedLookupReactiveEntityCollection<string, DefinitionEntity> Templates { get; }
+    IReactiveEntityCollection<string, DefinitionEntity> Other { get; }
+    IInvertedLookupReactiveEntityCollection<string, DefinitionEntity> Templates { get; }
 
-        IReactiveEntityCollection<string, SubscriptionEntity> Subscriptions { get; }
-        IReactiveEntityCollection<string, SubjectEntity> Subjects { get; }
+    IReactiveEntityCollection<string, SubscriptionEntity> Subscriptions { get; }
+    IReactiveEntityCollection<string, SubjectEntity> Subjects { get; }
 
-        IReactiveEntityCollection<string, ReliableSubscriptionEntity> ReliableSubscriptions { get; }
+    IReactiveEntityCollection<string, ReliableSubscriptionEntity> ReliableSubscriptions { get; }
 
-        void Clear();
-    }
+    void Clear();
 }

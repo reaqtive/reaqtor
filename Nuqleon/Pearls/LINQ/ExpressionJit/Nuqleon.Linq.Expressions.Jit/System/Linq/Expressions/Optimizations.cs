@@ -8,32 +8,31 @@
 // BD - May 2017 - Initial prototype of JIT.
 //
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+/// <summary>
+/// Flags to select optimizations to apply.
+/// </summary>
+[Flags]
+internal enum Optimizations
 {
     /// <summary>
-    /// Flags to select optimizations to apply.
+    /// No optimizations are applied.
     /// </summary>
-    [Flags]
-    internal enum Optimizations
-    {
-        /// <summary>
-        /// No optimizations are applied.
-        /// </summary>
-        None = 0,
+    None = 0,
 
-        /// <summary>
-        /// Flattens nested blocks in order to reduce the number of nested scopes.
-        /// </summary>
-        BlockFlattening = 1,
+    /// <summary>
+    /// Flattens nested blocks in order to reduce the number of nested scopes.
+    /// </summary>
+    BlockFlattening = 1,
 
-        /// <summary>
-        /// Inlines the invocation of a lambda expression.
-        /// </summary>
-        InvocationInlining = 2,
+    /// <summary>
+    /// Inlines the invocation of a lambda expression.
+    /// </summary>
+    InvocationInlining = 2,
 
-        /// <summary>
-        /// Enables all optimizations.
-        /// </summary>
-        All = BlockFlattening | InvocationInlining,
-    }
+    /// <summary>
+    /// Enables all optimizations.
+    /// </summary>
+    All = BlockFlattening | InvocationInlining,
 }

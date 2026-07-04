@@ -4,24 +4,23 @@
 
 using System;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// Represents an operator state writer.
+/// </summary>
+public interface IOperatorStateWriter : IDisposable
 {
     /// <summary>
-    /// Represents an operator state writer.
+    /// Stores the provided value.
     /// </summary>
-    public interface IOperatorStateWriter : IDisposable
-    {
-        /// <summary>
-        /// Stores the provided value.
-        /// </summary>
-        /// <typeparam name="T">The type of the value to store.</typeparam>
-        /// <param name="value">The value to store.</param>
-        void Write<T>(T value);
+    /// <typeparam name="T">The type of the value to store.</typeparam>
+    /// <param name="value">The value to store.</param>
+    void Write<T>(T value);
 
-        /// <summary>
-        /// Creates a child state writer.
-        /// </summary>
-        /// <returns>Child state writer.</returns>
-        IOperatorStateWriter CreateChild();
-    }
+    /// <summary>
+    /// Creates a child state writer.
+    /// </summary>
+    /// <returns>Child state writer.</returns>
+    IOperatorStateWriter CreateChild();
 }

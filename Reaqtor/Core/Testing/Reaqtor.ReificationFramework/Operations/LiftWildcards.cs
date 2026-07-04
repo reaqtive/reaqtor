@@ -4,22 +4,21 @@
 
 using System;
 
-namespace Reaqtor.ReificationFramework
-{
-    /// <summary>
-    /// Operation to lift the wildcards in a reified operation.
-    /// </summary>
-    public class LiftWildcards : OperationBase
-    {
-        internal LiftWildcards(ReifiedOperation operation, IWildcardGenerator generator)
-            : base(ReifiedOperationKind.LiftWildcards, operation)
-        {
-            Generator = generator ?? throw new ArgumentNullException(nameof(generator));
-        }
+namespace Reaqtor.ReificationFramework;
 
-        /// <summary>
-        /// The generator used to produce replacement IDs for wildcard occurrences.
-        /// </summary>
-        public IWildcardGenerator Generator { get; }
+/// <summary>
+/// Operation to lift the wildcards in a reified operation.
+/// </summary>
+public class LiftWildcards : OperationBase
+{
+    internal LiftWildcards(ReifiedOperation operation, IWildcardGenerator generator)
+        : base(ReifiedOperationKind.LiftWildcards, operation)
+    {
+        Generator = generator ?? throw new ArgumentNullException(nameof(generator));
     }
+
+    /// <summary>
+    /// The generator used to produce replacement IDs for wildcard occurrences.
+    /// </summary>
+    public IWildcardGenerator Generator { get; }
 }

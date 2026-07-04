@@ -10,23 +10,22 @@
 
 using System.Reflection;
 
-namespace System.Linq.CompilerServices.Reflection
+namespace System.Linq.CompilerServices.Reflection;
+
+internal static class MethodInfoExtensions
 {
-    internal static class MethodInfoExtensions
+    internal static string ToCSharpString(this MethodInfo method)
     {
-        internal static string ToCSharpString(this MethodInfo method)
+        // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
+
+        var name = method.Name;
+        if (method.IsGenericMethod)
         {
-            // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
-
-            var name = method.Name;
-            if (method.IsGenericMethod)
-            {
-                name = name + "<" + string.Join(", ", method.GetGenericArguments().Select(a => a.ToCSharpString())) + ">";
-            }
-
-            var dot = method.IsStatic ? "::" : ".";
-
-            return method.ReturnType.ToCSharpString() + " " + method.DeclaringType.ToCSharpString() + dot + name + "(" + string.Join(", ", method.GetParameters().Select(p => p.ParameterType.ToCSharpString() + " " + p.Name)) + ")";
+            name = name + "<" + string.Join(", ", method.GetGenericArguments().Select(a => a.ToCSharpString())) + ">";
         }
+
+        var dot = method.IsStatic ? "::" : ".";
+
+        return method.ReturnType.ToCSharpString() + " " + method.DeclaringType.ToCSharpString() + dot + name + "(" + string.Join(", ", method.GetParameters().Select(p => p.ParameterType.ToCSharpString() + " " + p.Name)) + ")";
     }
 }

@@ -10,23 +10,22 @@
 
 using System;
 
-namespace Nuqleon.DataModel
+namespace Nuqleon.DataModel;
+
+/// <summary>
+/// Attribute to associate a URI-based identity with a target it is applied to.
+/// </summary>
+[AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
+public sealed class MappingAttribute : Attribute
 {
     /// <summary>
-    /// Attribute to associate a URI-based identity with a target it is applied to.
+    /// Creates a new mapping attribute to annotate a target with a URI identifying it.
     /// </summary>
-    [AttributeUsage(AttributeTargets.Property | AttributeTargets.Field | AttributeTargets.Parameter, AllowMultiple = false)]
-    public sealed class MappingAttribute : Attribute
-    {
-        /// <summary>
-        /// Creates a new mapping attribute to annotate a target with a URI identifying it.
-        /// </summary>
-        /// <param name="uri">URI to identify the target the attribute is applied to.</param>
-        public MappingAttribute(string uri) => Uri = uri;
+    /// <param name="uri">URI to identify the target the attribute is applied to.</param>
+    public MappingAttribute(string uri) => Uri = uri;
 
-        /// <summary>
-        /// Gets the URI identifying the target.
-        /// </summary>
-        public string Uri { get; }
-    }
+    /// <summary>
+    /// Gets the URI identifying the target.
+    /// </summary>
+    public string Uri { get; }
 }

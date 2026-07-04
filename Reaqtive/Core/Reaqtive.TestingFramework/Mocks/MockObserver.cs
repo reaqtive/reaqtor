@@ -7,32 +7,31 @@ using System.Collections.Generic;
 
 using Reaqtive.Testing;
 
-namespace Reaqtive.TestingFramework.Mocks
+namespace Reaqtive.TestingFramework.Mocks;
+
+public class MockObserver<T> : ITestableObserver<T>
 {
-    public class MockObserver<T> : ITestableObserver<T>
+    private readonly TestScheduler _scheduler;
+
+    public MockObserver(TestScheduler scheduler)
     {
-        private readonly TestScheduler _scheduler;
-
-        public MockObserver(TestScheduler scheduler)
-        {
-            _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
-        }
-
-        public void OnNext(T value)
-        {
-            Messages.Add(new Recorded<Notification<T>>(_scheduler.Clock, Notification.CreateOnNext<T>(value)));
-        }
-
-        public void OnError(Exception error)
-        {
-            Messages.Add(new Recorded<Notification<T>>(_scheduler.Clock, Notification.CreateOnError<T>(error)));
-        }
-
-        public void OnCompleted()
-        {
-            Messages.Add(new Recorded<Notification<T>>(_scheduler.Clock, Notification.CreateOnCompleted<T>()));
-        }
-
-        public IList<Recorded<Notification<T>>> Messages { get; } = [];
+        _scheduler = scheduler ?? throw new ArgumentNullException(nameof(scheduler));
     }
+
+    public void OnNext(T value)
+    {
+        Messages.Add(new Recorded<Notification<T>>(_scheduler.Clock, Notification.CreateOnNext<T>(value)));
+    }
+
+    public void OnError(Exception error)
+    {
+        Messages.Add(new Recorded<Notification<T>>(_scheduler.Clock, Notification.CreateOnError<T>(error)));
+    }
+
+    public void OnCompleted()
+    {
+        Messages.Add(new Recorded<Notification<T>>(_scheduler.Clock, Notification.CreateOnCompleted<T>()));
+    }
+
+    public IList<Recorded<Notification<T>>> Messages { get; } = [];
 }

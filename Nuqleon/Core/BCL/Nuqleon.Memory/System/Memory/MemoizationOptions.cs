@@ -8,22 +8,21 @@
 //   BD - 07/29/2015 - Initial work on memoization support.
 //
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Options to control memoization behavior.
+/// </summary>
+[Flags]
+public enum MemoizationOptions
 {
     /// <summary>
-    /// Options to control memoization behavior.
+    /// Default memoization behavior.
     /// </summary>
-    [Flags]
-    public enum MemoizationOptions
-    {
-        /// <summary>
-        /// Default memoization behavior.
-        /// </summary>
-        None = 0,
+    None = 0,
 
-        /// <summary>
-        /// Cache exceptional function evaluation outcome rather than invoking the function each time.
-        /// </summary>
-        CacheException = 1,
-    }
+    /// <summary>
+    /// Cache exceptional function evaluation outcome rather than invoking the function each time.
+    /// </summary>
+    CacheException = 1,
 }

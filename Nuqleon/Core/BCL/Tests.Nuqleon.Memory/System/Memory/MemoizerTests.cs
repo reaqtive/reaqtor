@@ -14,74 +14,73 @@ using System.Memory;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class MemoizerTests
 {
-    [TestClass]
-    public class MemoizerTests
+    [TestMethod]
+    public void Memoizer_Create_ArgumentChecking()
     {
-        [TestMethod]
-        public void Memoizer_Create_ArgumentChecking()
+        Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.Create(factory: null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.Create(new MyCacheFactory()).Memoize(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.CreateWeak(factory: null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.CreateWeak(new MyWeakCacheFactory()).MemoizeWeak(default(Func<string, string>), MemoizationOptions.None));
+    }
+
+    [TestMethod]
+    public void Memoizer_Create()
+    {
+        var res = Memoizer.Create(new MyCacheFactory()).Memoize<string, int>(s => s.Length, MemoizationOptions.None, EqualityComparer<string>.Default);
+
+        Assert.IsNotNull(res);
+
+        Assert.IsNotNull(res.Delegate);
+        Assert.IsNotNull(res.Cache);
+
+        Assert.IsTrue(res.Cache is MyCache<string, int>);
+    }
+
+    [TestMethod]
+    public void Memoizer_CreateWeak()
+    {
+        var res = Memoizer.CreateWeak(new MyWeakCacheFactory()).MemoizeWeak<string, int>(s => s.Length, MemoizationOptions.None);
+
+        Assert.IsNotNull(res);
+
+        Assert.IsNotNull(res.Delegate);
+        Assert.IsNotNull(res.Cache);
+
+        Assert.IsTrue(res.Cache is MyCache<string, int>);
+    }
+
+    private sealed class MyCacheFactory : IMemoizationCacheFactory
+    {
+        public IMemoizationCache<T, TResult> Create<T, TResult>(Func<T, TResult> function, MemoizationOptions options, IEqualityComparer<T> comparer)
         {
-            Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.Create(factory: null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.Create(new MyCacheFactory()).Memoize(default(Func<int, int>), MemoizationOptions.None, EqualityComparer<int>.Default));
-
-            Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.CreateWeak(factory: null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => Memoizer.CreateWeak(new MyWeakCacheFactory()).MemoizeWeak(default(Func<string, string>), MemoizationOptions.None));
+            return new MyCache<T, TResult>();
         }
+    }
 
-        [TestMethod]
-        public void Memoizer_Create()
+    private sealed class MyWeakCacheFactory : IWeakMemoizationCacheFactory
+    {
+        public IMemoizationCache<T, TResult> Create<T, TResult>(Func<T, TResult> function, MemoizationOptions options) where T : class
         {
-            var res = Memoizer.Create(new MyCacheFactory()).Memoize<string, int>(s => s.Length, MemoizationOptions.None, EqualityComparer<string>.Default);
-
-            Assert.IsNotNull(res);
-
-            Assert.IsNotNull(res.Delegate);
-            Assert.IsNotNull(res.Cache);
-
-            Assert.IsTrue(res.Cache is MyCache<string, int>);
+            return new MyCache<T, TResult>();
         }
+    }
 
-        [TestMethod]
-        public void Memoizer_CreateWeak()
-        {
-            var res = Memoizer.CreateWeak(new MyWeakCacheFactory()).MemoizeWeak<string, int>(s => s.Length, MemoizationOptions.None);
+    private sealed class MyCache<T, R> : IMemoizationCache<T, R>
+    {
+        public R GetOrAdd(T argument) => throw new NotImplementedException();
 
-            Assert.IsNotNull(res);
+        public string DebugView => throw new NotImplementedException();
 
-            Assert.IsNotNull(res.Delegate);
-            Assert.IsNotNull(res.Cache);
+        public int Count => throw new NotImplementedException();
 
-            Assert.IsTrue(res.Cache is MyCache<string, int>);
-        }
+        public void Clear() => throw new NotImplementedException();
 
-        private sealed class MyCacheFactory : IMemoizationCacheFactory
-        {
-            public IMemoizationCache<T, TResult> Create<T, TResult>(Func<T, TResult> function, MemoizationOptions options, IEqualityComparer<T> comparer)
-            {
-                return new MyCache<T, TResult>();
-            }
-        }
-
-        private sealed class MyWeakCacheFactory : IWeakMemoizationCacheFactory
-        {
-            public IMemoizationCache<T, TResult> Create<T, TResult>(Func<T, TResult> function, MemoizationOptions options) where T : class
-            {
-                return new MyCache<T, TResult>();
-            }
-        }
-
-        private sealed class MyCache<T, R> : IMemoizationCache<T, R>
-        {
-            public R GetOrAdd(T argument) => throw new NotImplementedException();
-
-            public string DebugView => throw new NotImplementedException();
-
-            public int Count => throw new NotImplementedException();
-
-            public void Clear() => throw new NotImplementedException();
-
-            public void Dispose() => throw new NotImplementedException();
-        }
+        public void Dispose() => throw new NotImplementedException();
     }
 }

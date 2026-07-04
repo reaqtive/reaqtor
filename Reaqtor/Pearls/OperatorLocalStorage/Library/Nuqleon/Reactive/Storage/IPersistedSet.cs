@@ -10,17 +10,16 @@
 
 using System.Collections.Generic;
 
-namespace Reaqtive.Storage
+namespace Reaqtive.Storage;
+
+/// <summary>
+/// Interface representing a persisted set.
+/// </summary>
+/// <typeparam name="T">The type of the elements in the persisted set.</typeparam>
+public interface IPersistedSet<T> : ISet<T>, IReadOnlyCollection<T>, IPersisted
 {
     /// <summary>
-    /// Interface representing a persisted set.
+    /// Gets the number of elements in the set.
     /// </summary>
-    /// <typeparam name="T">The type of the elements in the persisted set.</typeparam>
-    public interface IPersistedSet<T> : ISet<T>, IReadOnlyCollection<T>, IPersisted
-    {
-        /// <summary>
-        /// Gets the number of elements in the set.
-        /// </summary>
-        new int Count { get; }
-    }
+    new int Count { get; }
 }

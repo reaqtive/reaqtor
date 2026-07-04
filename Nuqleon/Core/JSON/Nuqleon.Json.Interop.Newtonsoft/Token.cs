@@ -12,12 +12,11 @@ using Newtonsoft.Json;
 
 using Nuqleon.Json.Expressions;
 
-namespace Nuqleon.Json.Interop.Newtonsoft
+namespace Nuqleon.Json.Interop.Newtonsoft;
+
+internal struct Token
 {
-    internal struct Token
-    {
-        public string Property;
-        public Expression Expression;
-        public JsonToken JsonToken;
-    }
+    public string Property;
+    public Expression Expression;
+    public JsonToken JsonToken;
 }

@@ -10,35 +10,34 @@
 
 using Reaqtive.Storage;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal interface IPersistedQueueOperationFactory<T> : IQueueOperationFactory<T>, IPersistedOperationFactory<IPersistedQueue<T>>
 {
-    internal interface IPersistedQueueOperationFactory<T> : IQueueOperationFactory<T>, IPersistedOperationFactory<IPersistedQueue<T>>
+}
+
+internal static class PersistedQueueOperation
+{
+    public static IPersistedQueueOperationFactory<T> WithType<T>() => new PersistedQueueOperationFactory<T>();
+
+    private sealed class PersistedQueueOperationFactory<T> : IPersistedQueueOperationFactory<T>
     {
-    }
+        public CountReadOnlyCollectionOperation<T> Count() => QueueOperation.Count<T>();
 
-    internal static class PersistedQueueOperation
-    {
-        public static IPersistedQueueOperationFactory<T> WithType<T>() => new PersistedQueueOperationFactory<T>();
+        public DequeueQueueOperation<T> Dequeue() => QueueOperation.Dequeue<T>();
 
-        private sealed class PersistedQueueOperationFactory<T> : IPersistedQueueOperationFactory<T>
-        {
-            public CountReadOnlyCollectionOperation<T> Count() => QueueOperation.Count<T>();
+        public EnqueueQueueOperation<T> Enqueue(T value) => QueueOperation.Enqueue(value);
 
-            public DequeueQueueOperation<T> Dequeue() => QueueOperation.Dequeue<T>();
+        public EnumerateEnumerableOperation<T> Enumerate() => QueueOperation.Enumerate<T>();
 
-            public EnqueueQueueOperation<T> Enqueue(T value) => QueueOperation.Enqueue(value);
+        public GetIdPersistedOperation<IPersistedQueue<T>> GetId() => GetId<IPersistedQueue<T>>();
 
-            public EnumerateEnumerableOperation<T> Enumerate() => QueueOperation.Enumerate<T>();
+        public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
 
-            public GetIdPersistedOperation<IPersistedQueue<T>> GetId() => GetId<IPersistedQueue<T>>();
+        public PeekQueueOperation<T> Peek() => QueueOperation.Peek<T>();
 
-            public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
+        public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
 
-            public PeekQueueOperation<T> Peek() => QueueOperation.Peek<T>();
-
-            public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
-
-            public ThisResultOperation<IPersistedQueue<T>> This() => This<IPersistedQueue<T>>();
-        }
+        public ThisResultOperation<IPersistedQueue<T>> This() => This<IPersistedQueue<T>>();
     }
 }

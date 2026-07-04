@@ -10,66 +10,65 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class AsyncReactiveObservableBaseTests
 {
-    [TestClass]
-    public class AsyncReactiveObservableBaseTests
+    [TestMethod]
+    public void AsyncReactiveObservableBase_Subscribe_ArgumentChecking()
     {
-        [TestMethod]
-        public void AsyncReactiveObservableBase_Subscribe_ArgumentChecking()
+        var s = new MyAsyncReactiveObservable<int>();
+
+        var iv = new MyObserver<int>();
+        var uri = new Uri("foo://bar");
+        var state = "qux";
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => s.SubscribeAsync(null, uri, state).Wait());
+        Assert.ThrowsExactly<ArgumentNullException>(() => s.SubscribeAsync(iv, null, state).Wait());
+    }
+
+    [TestMethod]
+    public void AsyncReactiveObservableBase_Subscribe()
+    {
+        var s = new MyAsyncReactiveObservable<int>();
+
+        var iv2 = default(IAsyncReactiveObserver<int>);
+        var uri2 = default(Uri);
+        var state2 = default(object);
+        s.SubscribeAsyncImpl = (o, u, x, token) =>
         {
-            var s = new MyAsyncReactiveObservable<int>();
+            iv2 = o;
+            uri2 = u;
+            state2 = x;
 
-            var iv = new MyObserver<int>();
-            var uri = new Uri("foo://bar");
-            var state = "qux";
+            return Task.FromResult<IAsyncReactiveSubscription>(null);
+        };
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => s.SubscribeAsync(null, uri, state).Wait());
-            Assert.ThrowsExactly<ArgumentNullException>(() => s.SubscribeAsync(iv, null, state).Wait());
-        }
+        var iv = new MyObserver<int>();
+        var uri = new Uri("foo://bar");
+        var state = "qux";
+        _ = s.SubscribeAsync(iv, uri, state).Result;
 
-        [TestMethod]
-        public void AsyncReactiveObservableBase_Subscribe()
+        Assert.AreSame(iv, iv2);
+        Assert.AreSame(uri, uri2);
+        Assert.AreSame(state, state2);
+    }
+
+    private sealed class MyAsyncReactiveObservable<T> : AsyncReactiveObservableBase<T>
+    {
+        public Func<IAsyncReactiveObserver<T>, Uri, object, CancellationToken, Task<IAsyncReactiveSubscription>> SubscribeAsyncImpl;
+
+        protected override Task<IAsyncReactiveSubscription> SubscribeAsyncCore(IAsyncReactiveObserver<T> observer, Uri subscriptionUri, object state, CancellationToken token)
         {
-            var s = new MyAsyncReactiveObservable<int>();
-
-            var iv2 = default(IAsyncReactiveObserver<int>);
-            var uri2 = default(Uri);
-            var state2 = default(object);
-            s.SubscribeAsyncImpl = (o, u, x, token) =>
-            {
-                iv2 = o;
-                uri2 = u;
-                state2 = x;
-
-                return Task.FromResult<IAsyncReactiveSubscription>(null);
-            };
-
-            var iv = new MyObserver<int>();
-            var uri = new Uri("foo://bar");
-            var state = "qux";
-            _ = s.SubscribeAsync(iv, uri, state).Result;
-
-            Assert.AreSame(iv, iv2);
-            Assert.AreSame(uri, uri2);
-            Assert.AreSame(state, state2);
+            return SubscribeAsyncImpl(observer, subscriptionUri, state, token);
         }
+    }
 
-        private sealed class MyAsyncReactiveObservable<T> : AsyncReactiveObservableBase<T>
-        {
-            public Func<IAsyncReactiveObserver<T>, Uri, object, CancellationToken, Task<IAsyncReactiveSubscription>> SubscribeAsyncImpl;
-
-            protected override Task<IAsyncReactiveSubscription> SubscribeAsyncCore(IAsyncReactiveObserver<T> observer, Uri subscriptionUri, object state, CancellationToken token)
-            {
-                return SubscribeAsyncImpl(observer, subscriptionUri, state, token);
-            }
-        }
-
-        private sealed class MyObserver<T> : AsyncReactiveObserverBase<T>
-        {
-            protected override Task OnCompletedAsyncCore(CancellationToken token) => throw new NotImplementedException();
-            protected override Task OnErrorAsyncCore(Exception error, CancellationToken token) => throw new NotImplementedException();
-            protected override Task OnNextAsyncCore(T value, CancellationToken token) => throw new NotImplementedException();
-        }
+    private sealed class MyObserver<T> : AsyncReactiveObserverBase<T>
+    {
+        protected override Task OnCompletedAsyncCore(CancellationToken token) => throw new NotImplementedException();
+        protected override Task OnErrorAsyncCore(Exception error, CancellationToken token) => throw new NotImplementedException();
+        protected override Task OnNextAsyncCore(T value, CancellationToken token) => throw new NotImplementedException();
     }
 }

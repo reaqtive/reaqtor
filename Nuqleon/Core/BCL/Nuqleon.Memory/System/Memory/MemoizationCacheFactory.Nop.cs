@@ -10,46 +10,45 @@
 
 using System.Collections.Generic;
 
-namespace System.Memory
+namespace System.Memory;
+
+public partial class MemoizationCacheFactory
 {
-    public partial class MemoizationCacheFactory
+    /// <summary>
+    /// Implementation of a factory for memoization caches without storage.
+    /// </summary>
+    internal sealed class NopImpl : IMemoizationCacheFactory
     {
         /// <summary>
-        /// Implementation of a factory for memoization caches without storage.
+        /// Creates a memoization cache for the specified <paramref name="function"/> using the specified <paramref name="comparer"/> to compare cache entries.
         /// </summary>
-        internal sealed class NopImpl : IMemoizationCacheFactory
+        /// <typeparam name="T">Type of the memoization cache entry keys.</typeparam>
+        /// <typeparam name="TResult">Type of the memoization cache entry values.</typeparam>
+        /// <param name="function">The function to memoize.</param>
+        /// <param name="options">Flags to influence the memoization behavior.</param>
+        /// <param name="comparer">Comparer to compare the key during lookup in the memoization cache.</param>
+        /// <returns>An empty memoization cache instance.</returns>
+        public IMemoizationCache<T, TResult> Create<T, TResult>(Func<T, TResult> function, MemoizationOptions options, IEqualityComparer<T> comparer)
         {
-            /// <summary>
-            /// Creates a memoization cache for the specified <paramref name="function"/> using the specified <paramref name="comparer"/> to compare cache entries.
-            /// </summary>
-            /// <typeparam name="T">Type of the memoization cache entry keys.</typeparam>
-            /// <typeparam name="TResult">Type of the memoization cache entry values.</typeparam>
-            /// <param name="function">The function to memoize.</param>
-            /// <param name="options">Flags to influence the memoization behavior.</param>
-            /// <param name="comparer">Comparer to compare the key during lookup in the memoization cache.</param>
-            /// <returns>An empty memoization cache instance.</returns>
-            public IMemoizationCache<T, TResult> Create<T, TResult>(Func<T, TResult> function, MemoizationOptions options, IEqualityComparer<T> comparer)
+            ArgumentNullException.ThrowIfNull(function);
+
+            return new Cache<T, TResult>(function);
+        }
+
+        internal sealed class Cache<T, R> : MemoizationCacheBase<T, R>
+        {
+            private readonly Func<T, R> _function;
+
+            public Cache(Func<T, R> function) => _function = function;
+
+            protected override R GetOrAddCore(T argument) => _function(argument);
+
+            protected override int CountCore => 0;
+
+            protected override string DebugViewCore => "";
+
+            protected override void ClearCore(bool disposing)
             {
-                ArgumentNullException.ThrowIfNull(function);
-
-                return new Cache<T, TResult>(function);
-            }
-
-            internal sealed class Cache<T, R> : MemoizationCacheBase<T, R>
-            {
-                private readonly Func<T, R> _function;
-
-                public Cache(Func<T, R> function) => _function = function;
-
-                protected override R GetOrAddCore(T argument) => _function(argument);
-
-                protected override int CountCore => 0;
-
-                protected override string DebugViewCore => "";
-
-                protected override void ClearCore(bool disposing)
-                {
-                }
             }
         }
     }

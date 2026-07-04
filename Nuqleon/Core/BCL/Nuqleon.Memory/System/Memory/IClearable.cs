@@ -8,26 +8,25 @@
 //   BD - 07/02/2014 - Created this type.
 //
 
-namespace System.Memory
-{
-    //=====================================================\\
-    //   _____ _____ _                      _     _        \\
-    //  |_   _/ ____| |                    | |   | |       \\
-    //    | || |    | | ___  __ _ _ __ __ _| |__ | | ___   \\
-    //    | || |    | |/ _ \/ _` | '__/ _` | '_ \| |/ _ \  \\
-    //   _| || |____| |  __/ (_| | | | (_| | |_) | |  __/  \\
-    //  |_____\_____|_|\___|\__,_|_|  \__,_|_.__/|_|\___|  \\
-    //                                                     \\
-    //=====================================================\\
+namespace System.Memory;
 
+//=====================================================\\
+//   _____ _____ _                      _     _        \\
+//  |_   _/ ____| |                    | |   | |       \\
+//    | || |    | | ___  __ _ _ __ __ _| |__ | | ___   \\
+//    | || |    | |/ _ \/ _` | '__/ _` | '_ \| |/ _ \  \\
+//   _| || |____| |  __/ (_| | | | (_| | |_) | |  __/  \\
+//  |_____\_____|_|\___|\__,_|_|  \__,_|_.__/|_|\___|  \\
+//                                                     \\
+//=====================================================\\
+
+/// <summary>
+/// Represents an object that can be cleared.
+/// </summary>
+public interface IClearable
+{
     /// <summary>
-    /// Represents an object that can be cleared.
+    /// Clears the object. This operation typically wipes out the object's contents.
     /// </summary>
-    public interface IClearable
-    {
-        /// <summary>
-        /// Clears the object. This operation typically wipes out the object's contents.
-        /// </summary>
-        void Clear();
-    }
+    void Clear();
 }

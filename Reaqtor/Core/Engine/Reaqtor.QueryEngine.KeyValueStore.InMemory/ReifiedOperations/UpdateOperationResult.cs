@@ -5,20 +5,19 @@
 using System;
 using System.Collections.Generic;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+public class UpdateOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
 {
-    public class UpdateOperationResult<TKey, TValue> : OperationResult<TKey, TValue>
-    {
-        private readonly bool _keyNotFound;
+    private readonly bool _keyNotFound;
 
-        public UpdateOperationResult(bool keyNotFound) => _keyNotFound = keyNotFound;
+    public UpdateOperationResult(bool keyNotFound) => _keyNotFound = keyNotFound;
 
-        public override Exception Exception => _keyNotFound ? new KeyNotFoundException() : null;
+    public override Exception Exception => _keyNotFound ? new KeyNotFoundException() : null;
 
-        public override object Result => throw new NotSupportedException();
+    public override object Result => throw new NotSupportedException();
 
-        public override bool Equals(object obj) => obj is UpdateOperationResult<TKey, TValue> state && _keyNotFound == state._keyNotFound;
+    public override bool Equals(object obj) => obj is UpdateOperationResult<TKey, TValue> state && _keyNotFound == state._keyNotFound;
 
-        public override int GetHashCode() => _keyNotFound.GetHashCode();
-    }
+    public override int GetHashCode() => _keyNotFound.GetHashCode();
 }

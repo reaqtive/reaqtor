@@ -11,53 +11,52 @@
 using System;
 using System.Reflection;
 
-namespace Nuqleon.Json.Serialization
+namespace Nuqleon.Json.Serialization;
+
+/// <summary>
+/// Default name provider using reflection to provide names for fields and properties.
+/// </summary>
+public class DefaultNameProvider : INameProvider
 {
     /// <summary>
-    /// Default name provider using reflection to provide names for fields and properties.
+    /// Gets the singleton instance of the default name provider.
     /// </summary>
-    public class DefaultNameProvider : INameProvider
+    public static INameProvider Instance { get; } = new DefaultNameProvider();
+
+    /// <summary>
+    /// Creates a new default name provider.
+    /// </summary>
+    protected DefaultNameProvider()
     {
-        /// <summary>
-        /// Gets the singleton instance of the default name provider.
-        /// </summary>
-        public static INameProvider Instance { get; } = new DefaultNameProvider();
+    }
 
-        /// <summary>
-        /// Creates a new default name provider.
-        /// </summary>
-        protected DefaultNameProvider()
-        {
-        }
+    /// <summary>
+    /// Gets a JSON property name for the specified CLR field.
+    /// </summary>
+    /// <param name="field">The field for which to get JSON a property name.</param>
+    /// <returns>A JSON property name to use when serializing the specified CLR field.</returns>
+    public virtual string GetName(FieldInfo field)
+    {
+        ArgumentNullException.ThrowIfNull(field);
 
-        /// <summary>
-        /// Gets a JSON property name for the specified CLR field.
-        /// </summary>
-        /// <param name="field">The field for which to get JSON a property name.</param>
-        /// <returns>A JSON property name to use when serializing the specified CLR field.</returns>
-        public virtual string GetName(FieldInfo field)
-        {
-            ArgumentNullException.ThrowIfNull(field);
-
-            return field.Name;
-        }
+        return field.Name;
+    }
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1716 // Conflict with reserved language keyword 'Property'.
 
-        /// <summary>
-        /// Gets a JSON property name for the specified CLR property.
-        /// </summary>
-        /// <param name="property">The property for which to get a JSON property name.</param>
-        /// <returns>A JSON property name to use when serializing the specified CLR property.</returns>
-        public virtual string GetName(PropertyInfo property)
-        {
-            ArgumentNullException.ThrowIfNull(property);
+    /// <summary>
+    /// Gets a JSON property name for the specified CLR property.
+    /// </summary>
+    /// <param name="property">The property for which to get a JSON property name.</param>
+    /// <returns>A JSON property name to use when serializing the specified CLR property.</returns>
+    public virtual string GetName(PropertyInfo property)
+    {
+        ArgumentNullException.ThrowIfNull(property);
 
-            return property.Name;
-        }
+        return property.Name;
+    }
 
 #pragma warning restore CA1716
 #pragma warning restore IDE0079
-    }
 }

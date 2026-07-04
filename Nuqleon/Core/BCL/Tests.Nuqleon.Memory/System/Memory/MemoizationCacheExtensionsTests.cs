@@ -14,117 +14,116 @@ using System.Memory;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
-{
-    [TestClass]
-    public class MemoizationCacheExtensionsTests
-    {
-#pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
-        [TestMethod]
-        public void MemoizationCacheExtensions_AsTrimmable_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByMetrics(default(IMemoizationCache)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache<int, int>)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache<int, int>)));
-        }
+namespace Tests;
 
-        [TestMethod]
-        public void MemoizationCacheExtensions_ToTrimmable_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByMetrics(default(IMemoizationCache)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache<int, int>)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache<int, int>)));
-        }
+[TestClass]
+public class MemoizationCacheExtensionsTests
+{
+#pragma warning disable IDE0034 // Simplify 'default' expression (illustrative of method signature)
+    [TestMethod]
+    public void MemoizationCacheExtensions_AsTrimmable_ArgumentChecking()
+    {
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByMetrics(default(IMemoizationCache)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache<int, int>)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache<int, int>)));
+    }
+
+    [TestMethod]
+    public void MemoizationCacheExtensions_ToTrimmable_ArgumentChecking()
+    {
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByMetrics(default(IMemoizationCache)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(default(IMemoizationCache<int, int>)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(default(IMemoizationCache<int, int>)));
+    }
 #pragma warning restore IDE0034 // Simplify 'default' expression
 
-        [TestMethod]
-        public void MemoizationCacheExtensions_AsTrimmable_HasService()
+    [TestMethod]
+    public void MemoizationCacheExtensions_AsTrimmable_HasService()
+    {
+        var c = new MyCache<int, int>(hasServices: true);
+
+        Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByMetrics(c));
+        Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(c));
+        Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
+        Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(c));
+        Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
+    }
+
+    [TestMethod]
+    public void MemoizationCacheExtensions_ToTrimmable_HasService()
+    {
+        var c = new MyCache<int, int>(hasServices: true);
+
+        Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByMetrics(c));
+        Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(c));
+        Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
+        Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(c));
+        Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
+    }
+
+    [TestMethod]
+    public void MemoizationCacheExtensions_AsTrimmable_HasNoService()
+    {
+        var c = new MyCache<int, int>(false);
+
+        Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByMetrics(c));
+        Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(c));
+        Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
+        Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(c));
+        Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
+    }
+
+    [TestMethod]
+    public void MemoizationCacheExtensions_ToTrimmable_HasNoService()
+    {
+        var c = new MyCache<int, int>(false);
+
+        Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByMetrics(c));
+        Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(c));
+        Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
+        Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(c));
+        Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
+    }
+
+    private sealed class MyCache<T, R> : IMemoizationCache<T, R>, IServiceProvider
+    {
+        private readonly bool _hasServices;
+
+        public MyCache(bool hasServices = false) => _hasServices = hasServices;
+
+        public R GetOrAdd(T argument) => throw new NotImplementedException();
+
+        public string DebugView => throw new NotImplementedException();
+
+        public int Count => throw new NotImplementedException();
+
+        public void Clear() => throw new NotImplementedException();
+
+        public void Dispose() => throw new NotImplementedException();
+
+        public object GetService(Type serviceType)
         {
-            var c = new MyCache<int, int>(hasServices: true);
-
-            Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByMetrics(c));
-            Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(c));
-            Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
-            Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(c));
-            Assert.IsNotNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
-        }
-
-        [TestMethod]
-        public void MemoizationCacheExtensions_ToTrimmable_HasService()
-        {
-            var c = new MyCache<int, int>(hasServices: true);
-
-            Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByMetrics(c));
-            Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(c));
-            Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
-            Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(c));
-            Assert.IsNotNull(MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
-        }
-
-        [TestMethod]
-        public void MemoizationCacheExtensions_AsTrimmable_HasNoService()
-        {
-            var c = new MyCache<int, int>(false);
-
-            Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByMetrics(c));
-            Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>(c));
-            Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
-            Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>(c));
-            Assert.IsNull(MemoizationCacheExtensions.AsTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
-        }
-
-        [TestMethod]
-        public void MemoizationCacheExtensions_ToTrimmable_HasNoService()
-        {
-            var c = new MyCache<int, int>(false);
-
-            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByMetrics(c));
-            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>(c));
-            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResult<int, int>((IMemoizationCache)c));
-            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>(c));
-            Assert.ThrowsExactly<InvalidOperationException>(() => MemoizationCacheExtensions.ToTrimmableByArgumentAndResultOrError<int, int>((IMemoizationCache)c));
-        }
-
-        private sealed class MyCache<T, R> : IMemoizationCache<T, R>, IServiceProvider
-        {
-            private readonly bool _hasServices;
-
-            public MyCache(bool hasServices = false) => _hasServices = hasServices;
-
-            public R GetOrAdd(T argument) => throw new NotImplementedException();
-
-            public string DebugView => throw new NotImplementedException();
-
-            public int Count => throw new NotImplementedException();
-
-            public void Clear() => throw new NotImplementedException();
-
-            public void Dispose() => throw new NotImplementedException();
-
-            public object GetService(Type serviceType)
+            if (_hasServices)
             {
-                if (_hasServices)
+                if (serviceType == typeof(ITrimmable<KeyValuePair<T, R>>))
                 {
-                    if (serviceType == typeof(ITrimmable<KeyValuePair<T, R>>))
-                    {
-                        return Trimmable.Create<KeyValuePair<T, R>>(_ => 0);
-                    }
-                    else if (serviceType == typeof(ITrimmable<KeyValuePair<T, IValueOrError<R>>>))
-                    {
-                        return Trimmable.Create<KeyValuePair<T, IValueOrError<R>>>(_ => 0);
-                    }
-                    else if (serviceType == typeof(ITrimmable<IMemoizationCacheEntryMetrics>))
-                    {
-                        return Trimmable.Create<IMemoizationCacheEntryMetrics>(_ => 0);
-                    }
+                    return Trimmable.Create<KeyValuePair<T, R>>(_ => 0);
                 }
-
-                return null;
+                else if (serviceType == typeof(ITrimmable<KeyValuePair<T, IValueOrError<R>>>))
+                {
+                    return Trimmable.Create<KeyValuePair<T, IValueOrError<R>>>(_ => 0);
+                }
+                else if (serviceType == typeof(ITrimmable<IMemoizationCacheEntryMetrics>))
+                {
+                    return Trimmable.Create<IMemoizationCacheEntryMetrics>(_ => 0);
+                }
             }
+
+            return null;
         }
     }
 }

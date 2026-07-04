@@ -11,102 +11,101 @@ using Reaqtive;
 
 using Reaqtor.QueryEngine;
 
-namespace Tests.Reaqtor.QueryEngine
+namespace Tests.Reaqtor.QueryEngine;
+
+[TestClass]
+public class MultiObserverTests
 {
-    [TestClass]
-    public class MultiObserverTests
+    [TestMethod]
+    public void Engine_MultiObserver_Empty()
     {
-        [TestMethod]
-        public void Engine_MultiObserver_Empty()
+        var actions = new Action<IObserver<int>>[]
         {
-            var actions = new Action<IObserver<int>>[]
-            {
-                o => o.OnNext(42),
-                o => o.OnError(new Exception()),
-                o => o.OnCompleted(),
-            };
+            o => o.OnNext(42),
+            o => o.OnError(new Exception()),
+            o => o.OnCompleted(),
+        };
 
-            foreach (var action in actions)
-            {
-                var observers = Array.Empty<IObserver<int>>();
-                var m = new MultiObserver<int>(observers);
+        foreach (var action in actions)
+        {
+            var observers = Array.Empty<IObserver<int>>();
+            var m = new MultiObserver<int>(observers);
 
-                action(m);
-            }
-
-            // just happy nothing bad happened
+            action(m);
         }
 
-        [TestMethod]
-        public void Engine_MultiObserver_One()
+        // just happy nothing bad happened
+    }
+
+    [TestMethod]
+    public void Engine_MultiObserver_One()
+    {
+        MultiObserver_Multi_Core(1);
+    }
+
+    [TestMethod]
+    public void Engine_MultiObserver_Multi()
+    {
+        for (var i = 2; i < 8; i++)
         {
             MultiObserver_Multi_Core(1);
         }
+    }
 
-        [TestMethod]
-        public void Engine_MultiObserver_Multi()
+    private static void MultiObserver_Multi_Core(int count)
+    {
+        var err = new Exception();
+
+        var actions = new[]
         {
-            for (var i = 2; i < 8; i++)
-            {
-                MultiObserver_Multi_Core(1);
-            }
-        }
+            (
+                Action : new Action<IObserver<int>>(o => o.OnNext(42)),
+                OnNext : new Action<int>(x => Assert.AreEqual(42, x)),
+                OnError : new Action<Exception>(ex => Assert.Fail()),
+                OnCompleted : new Action(() => Assert.Fail())
+            ),
+            (
+                Action : new Action<IObserver<int>>(o => o.OnError(err)),
+                OnNext : new Action<int>(x => Assert.Fail()),
+                OnError : new Action<Exception>(ex => Assert.AreSame(err, ex)),
+                OnCompleted : new Action(() => Assert.Fail())
+            ),
+            (
+                Action : new Action<IObserver<int>>(o => o.OnCompleted()),
+                OnNext : new Action<int>(x => Assert.Fail()),
+                OnError : new Action<Exception>(ex => Assert.Fail()),
+                OnCompleted : new Action(() => { /* expected */ })
+            ),
+        };
 
-        private static void MultiObserver_Multi_Core(int count)
+        foreach (var action in actions)
         {
-            var err = new Exception();
+            var i = 0;
 
-            var actions = new[]
+            var onNext = new Action<int>(x =>
             {
-                (
-                    Action : new Action<IObserver<int>>(o => o.OnNext(42)),
-                    OnNext : new Action<int>(x => Assert.AreEqual(42, x)),
-                    OnError : new Action<Exception>(ex => Assert.Fail()),
-                    OnCompleted : new Action(() => Assert.Fail())
-                ),
-                (
-                    Action : new Action<IObserver<int>>(o => o.OnError(err)),
-                    OnNext : new Action<int>(x => Assert.Fail()),
-                    OnError : new Action<Exception>(ex => Assert.AreSame(err, ex)),
-                    OnCompleted : new Action(() => Assert.Fail())
-                ),
-                (
-                    Action : new Action<IObserver<int>>(o => o.OnCompleted()),
-                    OnNext : new Action<int>(x => Assert.Fail()),
-                    OnError : new Action<Exception>(ex => Assert.Fail()),
-                    OnCompleted : new Action(() => { /* expected */ })
-                ),
-            };
+                i++;
+                action.OnNext(x);
+            });
 
-            foreach (var action in actions)
+            var onError = new Action<Exception>(ex =>
             {
-                var i = 0;
+                i++;
+                action.OnError(ex);
+            });
 
-                var onNext = new Action<int>(x =>
-                {
-                    i++;
-                    action.OnNext(x);
-                });
+            var onCompleted = new Action(() =>
+            {
+                i++;
+                action.OnCompleted();
+            });
 
-                var onError = new Action<Exception>(ex =>
-                {
-                    i++;
-                    action.OnError(ex);
-                });
+            var observers = Enumerable.Range(0, count).Select(_ => Observer.Create<int>(onNext, onError, onCompleted)).ToArray();
+            var m = new MultiObserver<int>(observers);
 
-                var onCompleted = new Action(() =>
-                {
-                    i++;
-                    action.OnCompleted();
-                });
+            action.Action(m);
 
-                var observers = Enumerable.Range(0, count).Select(_ => Observer.Create<int>(onNext, onError, onCompleted)).ToArray();
-                var m = new MultiObserver<int>(observers);
-
-                action.Action(m);
-
-                Assert.AreEqual(1, i);
-            }
+            Assert.AreEqual(1, i);
         }
     }
 }

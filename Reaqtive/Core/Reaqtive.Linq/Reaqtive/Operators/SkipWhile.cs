@@ -5,187 +5,186 @@
 using System;
 using System.Diagnostics;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class SkipWhile<TSource> : SubscribableBase<TSource>
 {
-    internal sealed class SkipWhile<TSource> : SubscribableBase<TSource>
+    private readonly ISubscribable<TSource> _source;
+    private readonly Func<TSource, bool> _predicate;
+
+    public SkipWhile(ISubscribable<TSource> source, Func<TSource, bool> predicate)
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, bool> _predicate;
+        Debug.Assert(source != null);
+        Debug.Assert(predicate != null);
 
-        public SkipWhile(ISubscribable<TSource> source, Func<TSource, bool> predicate)
+        _source = source;
+        _predicate = predicate;
+    }
+
+    protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<SkipWhile<TSource>, TSource>, IObserver<TSource>
+    {
+        private bool _running;
+
+        public _(SkipWhile<TSource> source, IObserver<TSource> observer)
+            : base(source, observer)
         {
-            Debug.Assert(source != null);
-            Debug.Assert(predicate != null);
-
-            _source = source;
-            _predicate = predicate;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+        public override string Name => "rc:SkipWhile";
+
+        public override Version Version => Versioning.v1;
+
+        protected override ISubscription OnSubscribe()
         {
-            return new _(this, observer);
+            return Params._source.Subscribe(this);
         }
 
-        private sealed class _ : StatefulUnaryOperator<SkipWhile<TSource>, TSource>, IObserver<TSource>
+        protected override void LoadStateCore(IOperatorStateReader reader)
         {
-            private bool _running;
+            base.LoadStateCore(reader);
 
-            public _(SkipWhile<TSource> source, IObserver<TSource> observer)
-                : base(source, observer)
+            _running = reader.Read<bool>();
+        }
+
+        protected override void SaveStateCore(IOperatorStateWriter writer)
+        {
+            base.SaveStateCore(writer);
+
+            writer.Write(_running);
+        }
+
+        public void OnCompleted()
+        {
+            Output.OnCompleted();
+            Dispose();
+        }
+
+        public void OnError(Exception error)
+        {
+            Output.OnError(error);
+            Dispose();
+        }
+
+        public void OnNext(TSource value)
+        {
+            if (!_running)
             {
-            }
-
-            public override string Name => "rc:SkipWhile";
-
-            public override Version Version => Versioning.v1;
-
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(this);
-            }
-
-            protected override void LoadStateCore(IOperatorStateReader reader)
-            {
-                base.LoadStateCore(reader);
-
-                _running = reader.Read<bool>();
-            }
-
-            protected override void SaveStateCore(IOperatorStateWriter writer)
-            {
-                base.SaveStateCore(writer);
-
-                writer.Write(_running);
-            }
-
-            public void OnCompleted()
-            {
-                Output.OnCompleted();
-                Dispose();
-            }
-
-            public void OnError(Exception error)
-            {
-                Output.OnError(error);
-                Dispose();
-            }
-
-            public void OnNext(TSource value)
-            {
-                if (!_running)
+                try
                 {
-                    try
+                    if (!Params._predicate(value))
                     {
-                        if (!Params._predicate(value))
-                        {
-                            StateChanged = true;
-                            _running = true;
-                        }
-                    }
-                    catch (Exception ex)
-                    {
-                        Output.OnError(ex);
-                        Dispose();
-                        return;
+                        StateChanged = true;
+                        _running = true;
                     }
                 }
-
-                if (_running)
+                catch (Exception ex)
                 {
-                    Output.OnNext(value);
+                    Output.OnError(ex);
+                    Dispose();
+                    return;
                 }
+            }
+
+            if (_running)
+            {
+                Output.OnNext(value);
             }
         }
     }
+}
 
-    internal sealed class SkipWhileIndexed<TSource> : SubscribableBase<TSource>
+internal sealed class SkipWhileIndexed<TSource> : SubscribableBase<TSource>
+{
+    private readonly ISubscribable<TSource> _source;
+    private readonly Func<TSource, int, bool> _indexPredicate;
+
+    public SkipWhileIndexed(ISubscribable<TSource> source, Func<TSource, int, bool> indexPredicate)
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, int, bool> _indexPredicate;
+        Debug.Assert(source != null);
+        Debug.Assert(indexPredicate != null);
 
-        public SkipWhileIndexed(ISubscribable<TSource> source, Func<TSource, int, bool> indexPredicate)
+        _source = source;
+        _indexPredicate = indexPredicate;
+    }
+
+    protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<SkipWhileIndexed<TSource>, TSource>, IObserver<TSource>
+    {
+        private bool _running;
+        private int _currentIndex;
+
+        public _(SkipWhileIndexed<TSource> source, IObserver<TSource> observer)
+            : base(source, observer)
         {
-            Debug.Assert(source != null);
-            Debug.Assert(indexPredicate != null);
-
-            _source = source;
-            _indexPredicate = indexPredicate;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+        public override string Name => "rc:SkipWhile+Index";
+
+        public override Version Version => Versioning.v1;
+
+        protected override ISubscription OnSubscribe()
         {
-            return new _(this, observer);
+            return Params._source.Subscribe(this);
         }
 
-        private sealed class _ : StatefulUnaryOperator<SkipWhileIndexed<TSource>, TSource>, IObserver<TSource>
+        protected override void LoadStateCore(IOperatorStateReader reader)
         {
-            private bool _running;
-            private int _currentIndex;
+            base.LoadStateCore(reader);
 
-            public _(SkipWhileIndexed<TSource> source, IObserver<TSource> observer)
-                : base(source, observer)
+            _running = reader.Read<bool>();
+            _currentIndex = reader.Read<int>();
+        }
+
+        protected override void SaveStateCore(IOperatorStateWriter writer)
+        {
+            base.SaveStateCore(writer);
+
+            writer.Write(_running);
+            writer.Write(_currentIndex);
+        }
+
+        public void OnCompleted()
+        {
+            Output.OnCompleted();
+            Dispose();
+        }
+
+        public void OnError(Exception error)
+        {
+            Output.OnError(error);
+            Dispose();
+        }
+
+        public void OnNext(TSource value)
+        {
+            if (!_running)
             {
-            }
+                StateChanged = true;
 
-            public override string Name => "rc:SkipWhile+Index";
-
-            public override Version Version => Versioning.v1;
-
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(this);
-            }
-
-            protected override void LoadStateCore(IOperatorStateReader reader)
-            {
-                base.LoadStateCore(reader);
-
-                _running = reader.Read<bool>();
-                _currentIndex = reader.Read<int>();
-            }
-
-            protected override void SaveStateCore(IOperatorStateWriter writer)
-            {
-                base.SaveStateCore(writer);
-
-                writer.Write(_running);
-                writer.Write(_currentIndex);
-            }
-
-            public void OnCompleted()
-            {
-                Output.OnCompleted();
-                Dispose();
-            }
-
-            public void OnError(Exception error)
-            {
-                Output.OnError(error);
-                Dispose();
-            }
-
-            public void OnNext(TSource value)
-            {
-                if (!_running)
+                try
                 {
-                    StateChanged = true;
-
-                    try
-                    {
-                        _running = !Params._indexPredicate(value, checked(_currentIndex++));
-                    }
-                    catch (Exception ex)
-                    {
-                        Output.OnError(ex);
-                        Dispose();
-                        return;
-                    }
+                    _running = !Params._indexPredicate(value, checked(_currentIndex++));
                 }
-
-                if (_running)
+                catch (Exception ex)
                 {
-                    Output.OnNext(value);
+                    Output.OnError(ex);
+                    Dispose();
+                    return;
                 }
+            }
+
+            if (_running)
+            {
+                Output.OnNext(value);
             }
         }
     }

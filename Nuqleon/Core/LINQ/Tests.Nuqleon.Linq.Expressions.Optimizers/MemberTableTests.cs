@@ -14,372 +14,371 @@ using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.Expressions.Optimizers
+namespace Tests.System.Linq.Expressions.Optimizers;
+
+[TestClass]
+public partial class MemberTableTests
 {
-    [TestClass]
-    public partial class MemberTableTests
+    [TestMethod]
+    public void MemberTable_Add_ArgumentChecking()
     {
-        [TestMethod]
-        public void MemberTable_Add_ArgumentChecking()
-        {
-            var mt = new MemberTable();
+        var mt = new MemberTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(LambdaExpression)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(MemberTable)));
-            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(MemberInfo)));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(LambdaExpression)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(MemberTable)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(MemberInfo)));
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_Expression_Unary()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_Expression_Unary()
+    {
+        var mt = new MemberTable();
 
-            var method = typeof(decimal).GetMethod("op_UnaryNegation", [typeof(decimal)]);
+        var method = typeof(decimal).GetMethod("op_UnaryNegation", [typeof(decimal)]);
 
-            mt.Add((decimal a) => -a);
+        mt.Add((decimal a) => -a);
 
-            AssertHasMember(mt, method);
-        }
+        AssertHasMember(mt, method);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_Expression_Binary()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_Expression_Binary()
+    {
+        var mt = new MemberTable();
 
-            var method = typeof(decimal).GetMethod("op_Addition", [typeof(decimal), typeof(decimal)]);
+        var method = typeof(decimal).GetMethod("op_Addition", [typeof(decimal), typeof(decimal)]);
 
-            mt.Add((decimal a, decimal b) => a + b);
+        mt.Add((decimal a, decimal b) => a + b);
 
-            AssertHasMember(mt, method);
-        }
+        AssertHasMember(mt, method);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_FieldInfo_ArgumentChecking()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_FieldInfo_ArgumentChecking()
+    {
+        var mt = new MemberTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(FieldInfo)));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(FieldInfo)));
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_FieldInfo_Static()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_FieldInfo_Static()
+    {
+        var mt = new MemberTable();
 
-            var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
+        var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
 
-            mt.Add((MemberInfo)field);
+        mt.Add((MemberInfo)field);
 
-            AssertHasMember(mt, field);
-        }
+        AssertHasMember(mt, field);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_Expression_FieldInfo_Static()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_Expression_FieldInfo_Static()
+    {
+        var mt = new MemberTable();
 
-            var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
+        var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
 
-            mt.Add(() => Stuff.StaticField);
+        mt.Add(() => Stuff.StaticField);
 
-            AssertHasMember(mt, field);
-        }
+        AssertHasMember(mt, field);
+    }
 
-        [TestMethod]
-        public void MemberTable_Evaluator_FieldInfo_Static()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Evaluator_FieldInfo_Static()
+    {
+        var mt = new MemberTable();
 
-            var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
+        var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
 
-            mt.Add(field);
+        mt.Add(field);
 
-            var eval = GetEvaluator(mt, field);
+        var eval = GetEvaluator(mt, field);
 
-            var expected = field.GetValue(obj: null);
-            var actual = eval.DynamicInvoke();
+        var expected = field.GetValue(obj: null);
+        var actual = eval.DynamicInvoke();
 
-            Assert.AreEqual(expected, actual);
-        }
+        Assert.AreEqual(expected, actual);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_FieldInfo_Instance()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_FieldInfo_Instance()
+    {
+        var mt = new MemberTable();
 
-            var field = typeof(Stuff).GetField(nameof(Stuff.InstanceField));
+        var field = typeof(Stuff).GetField(nameof(Stuff.InstanceField));
 
-            mt.Add(field);
+        mt.Add(field);
 
-            AssertHasMember(mt, field);
-        }
+        AssertHasMember(mt, field);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_Expression_FieldInfo_Instance()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_Expression_FieldInfo_Instance()
+    {
+        var mt = new MemberTable();
 
-            var field = typeof(Stuff).GetField(nameof(Stuff.InstanceField));
+        var field = typeof(Stuff).GetField(nameof(Stuff.InstanceField));
 
-            mt.Add((Stuff s) => s.InstanceField);
+        mt.Add((Stuff s) => s.InstanceField);
 
-            AssertHasMember(mt, field);
-        }
+        AssertHasMember(mt, field);
+    }
 
-        [TestMethod]
-        public void MemberTable_Evaluator_FieldInfo_Instance()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Evaluator_FieldInfo_Instance()
+    {
+        var mt = new MemberTable();
 
-            var field = typeof(Stuff).GetField(nameof(Stuff.InstanceField));
+        var field = typeof(Stuff).GetField(nameof(Stuff.InstanceField));
 
-            mt.Add(field);
+        mt.Add(field);
 
-            var eval = GetEvaluator(mt, field);
+        var eval = GetEvaluator(mt, field);
 
-            var stuff = new Stuff { InstanceField = 42 };
+        var stuff = new Stuff { InstanceField = 42 };
 
-            var expected = field.GetValue(stuff);
-            var actual = eval.DynamicInvoke(stuff);
+        var expected = field.GetValue(stuff);
+        var actual = eval.DynamicInvoke(stuff);
 
-            Assert.AreEqual(expected, actual);
-        }
+        Assert.AreEqual(expected, actual);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_PropertyInfo_ArgumentChecking()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_PropertyInfo_ArgumentChecking()
+    {
+        var mt = new MemberTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(PropertyInfo)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(PropertyInfo)));
 
-            var property = typeof(Stuff).GetProperty(nameof(Stuff.InstancePropertySetOnly));
+        var property = typeof(Stuff).GetProperty(nameof(Stuff.InstancePropertySetOnly));
 
-            Assert.ThrowsExactly<ArgumentException>(() => mt.Add(property));
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => mt.Add(property));
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_PropertyInfo_Static()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_PropertyInfo_Static()
+    {
+        var mt = new MemberTable();
 
-            var property = typeof(Stuff).GetProperty(nameof(Stuff.StaticProperty));
+        var property = typeof(Stuff).GetProperty(nameof(Stuff.StaticProperty));
 
-            mt.Add((MemberInfo)property);
+        mt.Add((MemberInfo)property);
 
-            AssertHasMember(mt, property);
-        }
+        AssertHasMember(mt, property);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_Expression_PropertyInfo_Static()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_Expression_PropertyInfo_Static()
+    {
+        var mt = new MemberTable();
 
-            var property = typeof(Stuff).GetProperty(nameof(Stuff.StaticProperty));
+        var property = typeof(Stuff).GetProperty(nameof(Stuff.StaticProperty));
 
-            mt.Add(() => Stuff.StaticProperty);
+        mt.Add(() => Stuff.StaticProperty);
 
-            AssertHasMember(mt, property);
-        }
+        AssertHasMember(mt, property);
+    }
 
-        [TestMethod]
-        public void MemberTable_Evaluator_PropertyInfo_Static()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Evaluator_PropertyInfo_Static()
+    {
+        var mt = new MemberTable();
 
-            var property = typeof(Stuff).GetProperty(nameof(Stuff.StaticProperty));
+        var property = typeof(Stuff).GetProperty(nameof(Stuff.StaticProperty));
 
-            mt.Add(property);
+        mt.Add(property);
 
-            var eval = GetEvaluator(mt, property);
+        var eval = GetEvaluator(mt, property);
 
-            var expected = property.GetValue(obj: null);
-            var actual = eval.DynamicInvoke();
+        var expected = property.GetValue(obj: null);
+        var actual = eval.DynamicInvoke();
 
-            Assert.AreEqual(expected, actual);
-        }
+        Assert.AreEqual(expected, actual);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_PropertyInfo_Instance()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_PropertyInfo_Instance()
+    {
+        var mt = new MemberTable();
 
-            var property = typeof(Stuff).GetProperty(nameof(Stuff.InstanceProperty));
+        var property = typeof(Stuff).GetProperty(nameof(Stuff.InstanceProperty));
 
-            mt.Add(property);
+        mt.Add(property);
 
-            AssertHasMember(mt, property);
-        }
+        AssertHasMember(mt, property);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_Expression_PropertyInfo_Instance()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_Expression_PropertyInfo_Instance()
+    {
+        var mt = new MemberTable();
 
-            var property = typeof(Stuff).GetProperty(nameof(Stuff.InstanceProperty));
+        var property = typeof(Stuff).GetProperty(nameof(Stuff.InstanceProperty));
 
-            mt.Add((Stuff s) => s.InstanceProperty);
+        mt.Add((Stuff s) => s.InstanceProperty);
 
-            AssertHasMember(mt, property);
-        }
+        AssertHasMember(mt, property);
+    }
 
-        [TestMethod]
-        public void MemberTable_Evaluator_PropertyInfo_Instance()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Evaluator_PropertyInfo_Instance()
+    {
+        var mt = new MemberTable();
 
-            var property = typeof(Stuff).GetProperty(nameof(Stuff.InstanceProperty));
+        var property = typeof(Stuff).GetProperty(nameof(Stuff.InstanceProperty));
 
-            mt.Add(property);
+        mt.Add(property);
 
-            var eval = GetEvaluator(mt, property);
+        var eval = GetEvaluator(mt, property);
 
-            var stuff = new Stuff { InstanceProperty = 42 };
+        var stuff = new Stuff { InstanceProperty = 42 };
 
-            var expected = property.GetValue(stuff);
-            var actual = eval.DynamicInvoke(stuff);
+        var expected = property.GetValue(stuff);
+        var actual = eval.DynamicInvoke(stuff);
 
-            Assert.AreEqual(expected, actual);
-        }
+        Assert.AreEqual(expected, actual);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_MethodInfo_ArgumentChecking()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_MethodInfo_ArgumentChecking()
+    {
+        var mt = new MemberTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(MethodInfo)));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(MethodInfo)));
+    }
 
-        [TestMethod]
-        public void MemberTable_Evaluator_MethodInfo_Instance()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Evaluator_MethodInfo_Instance()
+    {
+        var mt = new MemberTable();
 
-            var method = typeof(string).GetMethod(nameof(string.ToUpper), Type.EmptyTypes);
+        var method = typeof(string).GetMethod(nameof(string.ToUpper), Type.EmptyTypes);
 
-            mt.Add((MemberInfo)method);
+        mt.Add((MemberInfo)method);
 
-            var eval = GetEvaluator(mt, method);
+        var eval = GetEvaluator(mt, method);
 
-            var expected = "BAR";
-            var actual = eval.DynamicInvoke("bar");
+        var expected = "BAR";
+        var actual = eval.DynamicInvoke("bar");
 
-            Assert.AreEqual(expected, actual);
-        }
+        Assert.AreEqual(expected, actual);
+    }
 
-        [TestMethod]
-        public void MemberTable_Evaluator_MethodInfo_Static()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Evaluator_MethodInfo_Static()
+    {
+        var mt = new MemberTable();
 
-            var method = typeof(int).GetMethod(nameof(int.Parse), [typeof(string)]);
+        var method = typeof(int).GetMethod(nameof(int.Parse), [typeof(string)]);
 
-            mt.Add(method);
+        mt.Add(method);
 
-            var eval = GetEvaluator(mt, method);
+        var eval = GetEvaluator(mt, method);
 
-            var expected = 42;
-            var actual = eval.DynamicInvoke("42");
+        var expected = 42;
+        var actual = eval.DynamicInvoke("42");
 
-            Assert.AreEqual(expected, actual);
-        }
+        Assert.AreEqual(expected, actual);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_ConstructorInfo_ArgumentChecking()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_ConstructorInfo_ArgumentChecking()
+    {
+        var mt = new MemberTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(ConstructorInfo)));
+        Assert.ThrowsExactly<ArgumentNullException>(() => mt.Add(default(ConstructorInfo)));
 
-            var ctor = typeof(StaticCtor).GetConstructor(BindingFlags.Static | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
+        var ctor = typeof(StaticCtor).GetConstructor(BindingFlags.Static | BindingFlags.NonPublic, null, Type.EmptyTypes, null);
 
-            Assert.ThrowsExactly<ArgumentException>(() => mt.Add(ctor));
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => mt.Add(ctor));
+    }
 
-        [TestMethod]
-        public void MemberTable_Evaluator_ConstructorInfo_Instance()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Evaluator_ConstructorInfo_Instance()
+    {
+        var mt = new MemberTable();
 
-            var ctor = typeof(string).GetConstructor([typeof(char), typeof(int)]);
+        var ctor = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
-            mt.Add((MemberInfo)ctor);
+        mt.Add((MemberInfo)ctor);
 
-            var eval = GetEvaluator(mt, ctor);
+        var eval = GetEvaluator(mt, ctor);
 
-            var expected = "***";
-            var actual = eval.DynamicInvoke('*', 3);
+        var expected = "***";
+        var actual = eval.DynamicInvoke('*', 3);
 
-            Assert.AreEqual(expected, actual);
-        }
+        Assert.AreEqual(expected, actual);
+    }
 
-        [TestMethod]
-        public void MemberTable_Add_EventInfo_ArgumentChecking()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Add_EventInfo_ArgumentChecking()
+    {
+        var mt = new MemberTable();
 
-            Assert.ThrowsExactly<ArgumentException>(() => mt.Add(typeof(Console).GetEvent(nameof(Console.CancelKeyPress))));
-        }
+        Assert.ThrowsExactly<ArgumentException>(() => mt.Add(typeof(Console).GetEvent(nameof(Console.CancelKeyPress))));
+    }
 
-        [TestMethod]
-        public void MemberTable_Contains_ArgumentChecking()
-        {
-            var mt = new MemberTable();
+    [TestMethod]
+    public void MemberTable_Contains_ArgumentChecking()
+    {
+        var mt = new MemberTable();
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => mt.Contains(default));
-        }
+        Assert.ThrowsExactly<ArgumentNullException>(() => mt.Contains(default));
+    }
 
-        [TestMethod]
-        public void MemberTable_ReadOnly()
-        {
-            var mt = new MemberTable();
-            var rmt = mt.ToReadOnly();
+    [TestMethod]
+    public void MemberTable_ReadOnly()
+    {
+        var mt = new MemberTable();
+        var rmt = mt.ToReadOnly();
 
-            var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
-            var property = typeof(Stuff).GetProperty(nameof(Stuff.InstancePropertySetOnly));
-            var ctor = typeof(string).GetConstructor([typeof(char), typeof(int)]);
+        var field = typeof(Stuff).GetField(nameof(Stuff.StaticField));
+        var property = typeof(Stuff).GetProperty(nameof(Stuff.InstancePropertySetOnly));
+        var ctor = typeof(string).GetConstructor([typeof(char), typeof(int)]);
 
-            Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add((MemberInfo)field));
-            Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add(field));
-            Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add(property));
-            Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add(ctor));
-        }
+        Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add((MemberInfo)field));
+        Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add(field));
+        Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add(property));
+        Assert.ThrowsExactly<InvalidOperationException>(() => rmt.Add(ctor));
+    }
 
-        private static void AssertHasMember(MemberTable mt, MemberInfo member)
-        {
-            Assert.IsTrue(mt.Contains(member));
-        }
+    private static void AssertHasMember(MemberTable mt, MemberInfo member)
+    {
+        Assert.IsTrue(mt.Contains(member));
+    }
 
-        private static Delegate GetEvaluator(MemberTable mt, MemberInfo member)
-        {
-            Assert.IsTrue(mt.Contains(member));
+    private static Delegate GetEvaluator(MemberTable mt, MemberInfo member)
+    {
+        Assert.IsTrue(mt.Contains(member));
 
-            var res = GetEvaluatorFactory().GetEvaluator(member);
-            return res;
-        }
+        var res = GetEvaluatorFactory().GetEvaluator(member);
+        return res;
+    }
 
-        private static IEvaluatorFactory GetEvaluatorFactory() => new DefaultEvaluatorFactory();
+    private static IEvaluatorFactory GetEvaluatorFactory() => new DefaultEvaluatorFactory();
 
 #pragma warning disable CA1822 // Mark static
-        private partial class Stuff
-        {
-            public static readonly object StaticWriteLock = new();
+    private partial class Stuff
+    {
+        public static readonly object StaticWriteLock = new();
 
-            public static int StaticField = 42;
-            public int InstanceField;
+        public static int StaticField = 42;
+        public int InstanceField;
 
-            public static int StaticProperty { get; } = 42;
-            public int InstanceProperty { get; set; }
-            public int InstancePropertySetOnly { set { } }
+        public static int StaticProperty { get; } = 42;
+        public int InstanceProperty { get; set; }
+        public int InstancePropertySetOnly { set { } }
 
-            public int this[int x] => 42 * x;
-        }
+        public int this[int x] => 42 * x;
+    }
 #pragma warning restore CA1822
 
-        private class StaticCtor
+    private class StaticCtor
+    {
+        static StaticCtor()
         {
-            static StaticCtor()
-            {
-            }
         }
     }
 }

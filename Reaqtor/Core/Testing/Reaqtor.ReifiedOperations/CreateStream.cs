@@ -14,18 +14,17 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
-{
-    public class CreateStream : CreateServiceOperation
-    {
-        public CreateStream(Uri streamUri)
-            : this(streamUri, stream: null, state: null)
-        {
-        }
+namespace Reaqtor.TestingFramework;
 
-        public CreateStream(Uri streamUri, Expression stream, object state)
-            : base(ServiceOperationKind.CreateStream, streamUri, stream, state)
-        {
-        }
+public class CreateStream : CreateServiceOperation
+{
+    public CreateStream(Uri streamUri)
+        : this(streamUri, stream: null, state: null)
+    {
+    }
+
+    public CreateStream(Uri streamUri, Expression stream, object state)
+        : base(ServiceOperationKind.CreateStream, streamUri, stream, state)
+    {
     }
 }

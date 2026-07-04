@@ -5,28 +5,27 @@
 using System;
 using System.Collections.Immutable;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+public class RemoveOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
 {
-    public class RemoveOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
+    public RemoveOperation(TKey key) => Key = key;
+
+    public override OperationType OperationType => OperationType.Remove;
+
+    public TKey Key { get; }
+
+    public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
     {
-        public RemoveOperation(TKey key) => Key = key;
+        ArgumentNullException.ThrowIfNull(dictionary);
 
-        public override OperationType OperationType => OperationType.Remove;
-
-        public TKey Key { get; }
-
-        public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
+        if (dictionary.ContainsKey(Key))
         {
-            ArgumentNullException.ThrowIfNull(dictionary);
+            dictionary = dictionary.Remove(Key);
 
-            if (dictionary.ContainsKey(Key))
-            {
-                dictionary = dictionary.Remove(Key);
-
-                return new RemoveOperationResult<TKey, TValue>(keyDoesNotExist: false);
-            }
-
-            return new RemoveOperationResult<TKey, TValue>(keyDoesNotExist: true);
+            return new RemoveOperationResult<TKey, TValue>(keyDoesNotExist: false);
         }
+
+        return new RemoveOperationResult<TKey, TValue>(keyDoesNotExist: true);
     }
 }

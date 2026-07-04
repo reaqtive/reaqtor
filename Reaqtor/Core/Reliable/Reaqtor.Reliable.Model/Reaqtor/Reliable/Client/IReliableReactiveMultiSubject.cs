@@ -4,10 +4,9 @@
 
 using System;
 
-namespace Reaqtor.Reliable.Client
+namespace Reaqtor.Reliable.Client;
+
+public interface IReliableReactiveMultiSubject<in TInput, out TOutput> : IReliableReactiveObservable<TOutput>, IDisposable
 {
-    public interface IReliableReactiveMultiSubject<in TInput, out TOutput> : IReliableReactiveObservable<TOutput>, IDisposable
-    {
-        IReliableReactiveObserver<TInput> CreateObserver();
-    }
+    IReliableReactiveObserver<TInput> CreateObserver();
 }

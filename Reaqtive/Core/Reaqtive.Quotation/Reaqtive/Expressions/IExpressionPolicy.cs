@@ -4,17 +4,16 @@
 
 using System.ComponentModel;
 
-namespace Reaqtive.Expressions
+namespace Reaqtive.Expressions;
+
+/// <summary>
+/// Interface for policies related to evaluation and storage of expressions.
+/// </summary>
+/// <remarks>
+/// This interface is intended to be used as infrastructure for a query engine
+/// implementation, there are no guarantees about version compatibility.
+/// </remarks>
+[EditorBrowsable(EditorBrowsableState.Never)]
+public interface IExpressionPolicy : IExpressionEvaluationPolicy, IExpressionSerializationPolicy
 {
-    /// <summary>
-    /// Interface for policies related to evaluation and storage of expressions.
-    /// </summary>
-    /// <remarks>
-    /// This interface is intended to be used as infrastructure for a query engine
-    /// implementation, there are no guarantees about version compatibility.
-    /// </remarks>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public interface IExpressionPolicy : IExpressionEvaluationPolicy, IExpressionSerializationPolicy
-    {
-    }
 }

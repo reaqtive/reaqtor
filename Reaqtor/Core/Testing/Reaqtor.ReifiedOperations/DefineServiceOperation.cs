@@ -11,19 +11,18 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
+namespace Reaqtor.TestingFramework;
+
+public class DefineServiceOperation : ServiceOperation
 {
-    public class DefineServiceOperation : ServiceOperation
+    public DefineServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, Expression expression, object state)
+        : base(kind, targetObjectUri, state)
     {
-        public DefineServiceOperation(ServiceOperationKind kind, Uri targetObjectUri, Expression expression, object state)
-            : base(kind, targetObjectUri, state)
-        {
-            Expression = expression;
-        }
-
-        [field: NonSerialized]
-        public Expression Expression { get; }
-
-        public override string ToString() => base.ToString() + " - " + Expression;
+        Expression = expression;
     }
+
+    [field: NonSerialized]
+    public Expression Expression { get; }
+
+    public override string ToString() => base.ToString() + " - " + Expression;
 }

@@ -10,19 +10,18 @@
 
 using System.Linq;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for metadata discovery operations of a reactive processing service.
+/// </summary>
+public interface IReactiveMetadataServiceProvider
 {
     /// <summary>
-    /// Interface for metadata discovery operations of a reactive processing service.
+    /// Gets the query provider that will be used to execute metadata queries.
     /// </summary>
-    public interface IReactiveMetadataServiceProvider
+    IQueryProvider Provider
     {
-        /// <summary>
-        /// Gets the query provider that will be used to execute metadata queries.
-        /// </summary>
-        IQueryProvider Provider
-        {
-            get;
-        }
+        get;
     }
 }

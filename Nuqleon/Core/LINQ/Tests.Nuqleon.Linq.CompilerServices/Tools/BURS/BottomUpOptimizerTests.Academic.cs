@@ -15,112 +15,111 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using SampleTrees.Logic;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+public partial class BottomUpOptimizerTests
 {
-    public partial class BottomUpOptimizerTests
+    [TestMethod]
+    public void BottomUpOptimizer_Logic1()
     {
-        [TestMethod]
-        public void BottomUpOptimizer_Logic1()
+        var logger = new StringWriter();
+
+        var burw = new BottomUpOptimizer<LogicExpr, LogicNodeType, LogicWildcardFactory>
         {
-            var logger = new StringWriter();
-
-            var burw = new BottomUpOptimizer<LogicExpr, LogicNodeType, LogicWildcardFactory>
+            // Leaf nodes
+            Leaves =
             {
-                // Leaf nodes
-                Leaves =
-                {
-                    { (BoolConst b) => b, 1 },
-                },
+                { (BoolConst b) => b, 1 },
+            },
 
-                Rules =
-                {
-                    // Tree patterns
-                    { () => !BoolConst.True, () => BoolConst.False, 1 },
-                    { () => !BoolConst.False, () => BoolConst.True, 1 },
-                    { p => !!p, p => p, 2 },
+            Rules =
+            {
+                // Tree patterns
+                { () => !BoolConst.True, () => BoolConst.False, 1 },
+                { () => !BoolConst.False, () => BoolConst.True, 1 },
+                { p => !!p, p => p, 2 },
 
-                    { p => p & BoolConst.True, p => p, 2 },
-                    { p => p & BoolConst.False, p => BoolConst.False, 2 },
-                    { p => BoolConst.True & p, p => p, 2 },
-                    { p => BoolConst.False & p, p => BoolConst.False, 2 },
+                { p => p & BoolConst.True, p => p, 2 },
+                { p => p & BoolConst.False, p => BoolConst.False, 2 },
+                { p => BoolConst.True & p, p => p, 2 },
+                { p => BoolConst.False & p, p => BoolConst.False, 2 },
 
-                    /*
-                     * With those rules commented out, we got a partial tree rewrite using Update
-                     * method calls on the tree nodes.
-                     *
-                    { p => p | BoolConst.True, p => BoolConst.True, 2 },
-                    { p => p | BoolConst.False, p => p, 2 },
-                    { p => BoolConst.True | p, p => BoolConst.True, 2 },
-                    { p => BoolConst.False | p, p => p, 2 },
-                     *
-                     */
+                /*
+                 * With those rules commented out, we got a partial tree rewrite using Update
+                 * method calls on the tree nodes.
+                 *
+                { p => p | BoolConst.True, p => BoolConst.True, 2 },
+                { p => p | BoolConst.False, p => p, 2 },
+                { p => BoolConst.True | p, p => BoolConst.True, 2 },
+                { p => BoolConst.False | p, p => p, 2 },
+                 *
+                 */
 
-                    { (p, q) => !(!p & !q), (p, q) => p | q, 1 },
-                    { (p, q) => !(!p | !q), (p, q) => p & q, 1 },
-                },
+                { (p, q) => !(!p & !q), (p, q) => p | q, 1 },
+                { (p, q) => !(!p | !q), (p, q) => p & q, 1 },
+            },
 
-                Log = logger
-            };
+            Log = logger
+        };
 
-            // Internal tables
-            var debugView = burw.DebugView;
-            Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        // Internal tables
+        var debugView = burw.DebugView;
+        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
 
-            var e = !(!BoolConst.True & !BoolConst.False);
+        var e = !(!BoolConst.True & !BoolConst.False);
 
-            var res = burw.Optimize(e);
+        var res = burw.Optimize(e);
 
-            Assert.AreEqual("Or(True, False)", res.ToString());
-            Assert.AreEqual(e.Eval(), res.Eval());
-        }
+        Assert.AreEqual("Or(True, False)", res.ToString());
+        Assert.AreEqual(e.Eval(), res.Eval());
+    }
 
-        [TestMethod]
-        public void BottomUpOptimizer_Logic2()
+    [TestMethod]
+    public void BottomUpOptimizer_Logic2()
+    {
+        var logger = new StringWriter();
+
+        var burw = new BottomUpOptimizer<LogicExpr, LogicNodeType, LogicWildcardFactory>
         {
-            var logger = new StringWriter();
-
-            var burw = new BottomUpOptimizer<LogicExpr, LogicNodeType, LogicWildcardFactory>
+            // Leaf nodes
+            Leaves =
             {
-                // Leaf nodes
-                Leaves =
-                {
-                    { (BoolConst b) => b, 1 },
-                },
+                { (BoolConst b) => b, 1 },
+            },
 
-                Rules =
-                {
-                    // Tree patterns
-                    { () => !BoolConst.True, () => BoolConst.False, 1 },
-                    { () => !BoolConst.False, () => BoolConst.True, 1 },
-                    { p => !!p, p => p, 2 },
+            Rules =
+            {
+                // Tree patterns
+                { () => !BoolConst.True, () => BoolConst.False, 1 },
+                { () => !BoolConst.False, () => BoolConst.True, 1 },
+                { p => !!p, p => p, 2 },
 
-                    { p => p & BoolConst.True, p => p, 2 },
-                    { p => p & BoolConst.False, p => BoolConst.False, 2 },
-                    { p => BoolConst.True & p, p => p, 2 },
-                    { p => BoolConst.False & p, p => BoolConst.False, 2 },
+                { p => p & BoolConst.True, p => p, 2 },
+                { p => p & BoolConst.False, p => BoolConst.False, 2 },
+                { p => BoolConst.True & p, p => p, 2 },
+                { p => BoolConst.False & p, p => BoolConst.False, 2 },
 
-                    { p => p | BoolConst.True, p => BoolConst.True, 2 },
-                    { p => p | BoolConst.False, p => p, 2 },
-                    { p => BoolConst.True | p, p => BoolConst.True, 2 },
-                    { p => BoolConst.False | p, p => p, 2 },
+                { p => p | BoolConst.True, p => BoolConst.True, 2 },
+                { p => p | BoolConst.False, p => p, 2 },
+                { p => BoolConst.True | p, p => BoolConst.True, 2 },
+                { p => BoolConst.False | p, p => p, 2 },
 
-                    { (p, q) => !(!p & !q), (p, q) => p | q, 1 },
-                    { (p, q) => !(!p | !q), (p, q) => p & q, 1 },
-                },
+                { (p, q) => !(!p & !q), (p, q) => p | q, 1 },
+                { (p, q) => !(!p | !q), (p, q) => p & q, 1 },
+            },
 
-                Log = logger
-            };
+            Log = logger
+        };
 
-            // Internal tables
-            var debugView = burw.DebugView;
-            Assert.IsTrue(!string.IsNullOrEmpty(debugView));
+        // Internal tables
+        var debugView = burw.DebugView;
+        Assert.IsTrue(!string.IsNullOrEmpty(debugView));
 
-            var e = !(!BoolConst.True & !BoolConst.False);
+        var e = !(!BoolConst.True & !BoolConst.False);
 
-            var res = burw.Optimize(e);
+        var res = burw.Optimize(e);
 
-            Assert.AreEqual("True", res.ToString());
-            Assert.AreEqual(e.Eval(), res.Eval());
-        }
+        Assert.AreEqual("True", res.ToString());
+        Assert.AreEqual(e.Eval(), res.Eval());
     }
 }

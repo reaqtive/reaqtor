@@ -11,18 +11,17 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor.TestingFramework
-{
-    public class DefineObservable : DefineServiceOperation
-    {
-        public DefineObservable(Uri observableUri)
-            : this(observableUri, observable: null, state: null)
-        {
-        }
+namespace Reaqtor.TestingFramework;
 
-        public DefineObservable(Uri observableUri, Expression observable, object state)
-            : base(ServiceOperationKind.DefineObservable, observableUri, observable, state)
-        {
-        }
+public class DefineObservable : DefineServiceOperation
+{
+    public DefineObservable(Uri observableUri)
+        : this(observableUri, observable: null, state: null)
+    {
+    }
+
+    public DefineObservable(Uri observableUri, Expression observable, object state)
+        : base(ServiceOperationKind.DefineObservable, observableUri, observable, state)
+    {
     }
 }

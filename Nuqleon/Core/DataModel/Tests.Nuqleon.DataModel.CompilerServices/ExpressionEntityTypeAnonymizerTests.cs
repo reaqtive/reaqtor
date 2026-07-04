@@ -24,422 +24,421 @@ using Nuqleon.DataModel;
 using Nuqleon.DataModel.CompilerServices;
 using Nuqleon.DataModel.TypeSystem;
 
-namespace Tests.Nuqleon.DataModel.CompilerServices
+namespace Tests.Nuqleon.DataModel.CompilerServices;
+
+[TestClass]
+public class ExpressionEntityTypeAnonymizerTests
 {
-    [TestClass]
-    public class ExpressionEntityTypeAnonymizerTests
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_ArgumentChecking()
     {
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_ArgumentChecking()
+        var eta = new ExpressionEntityTypeAnonymizer();
+
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => eta.Apply(expression: null));
+        Assert.AreEqual("expression", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Simple()
+    {
+        var netrc = new NoEntityTypesRemainingChecker();
+
+        foreach (var e in new Expression[]
+        {
+            (Expression<Func<Qux, int>>)(q => q.Baz),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
+            (Expression<Func<Qux>>)(() => new Qux()),
+            (Expression<Func<Qux>>)(() => new Qux() { Baz = 1 }),
+            (Expression<Func<Qux>>)(() => new Qux(1) { Foo = "bar" }),
+            (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new() { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
+            (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new(1) { Foo = "bar" } })),
+            (Expression<Func<IQueryable<Bar>, IQueryable<Foo>>>)(xs => from x in xs from y in x.Foos select y),
+            (Expression<Func<Qux>>)(() => Activator.CreateInstance<Qux>()),
+            (Expression<Action>)(() => FooIt<Qux>()),
+            (Expression<Func<Qux[]>>)(() => new Qux[1]),
+            (Expression<Func<Qux[]>>)(() => new Qux[] { new(1), new() { Baz = 1 } }),
+            (Expression<Func<Tuple<Qux, int>>>)(() => new Tuple<Qux, int>(new Qux(1), 2)),
+            (Expression<Func<Holder<Qux>>>)(() => new Holder<Qux> { Value = new Qux(42) }),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
+        })
         {
             var eta = new ExpressionEntityTypeAnonymizer();
 
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => eta.Apply(expression: null));
-            Assert.AreEqual("expression", ex.ParamName);
+            var res = eta.Apply(e);
+
+            netrc.Visit(res); // TODO: semantic equivalence checks
         }
-
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Simple()
-        {
-            var netrc = new NoEntityTypesRemainingChecker();
-
-            foreach (var e in new Expression[]
-            {
-                (Expression<Func<Qux, int>>)(q => q.Baz),
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<Qux>>)(() => new Qux()),
-                (Expression<Func<Qux>>)(() => new Qux() { Baz = 1 }),
-                (Expression<Func<Qux>>)(() => new Qux(1) { Foo = "bar" }),
-                (Expression<Func<Bar>>)(() => new Bar { Foos = new Foo[] { new() { Qux = new Tuple<Func<List<Qux>, long>, bool>(t => t.Count, false) } } }),
-                (Expression<Func<IQueryable<Bar>, IQueryable<long>>>)(xs => from x in xs from y in x.Foos where y.Qux.Item2 select y.Qux.Item1(new List<Qux> { new(1) { Foo = "bar" } })),
-                (Expression<Func<IQueryable<Bar>, IQueryable<Foo>>>)(xs => from x in xs from y in x.Foos select y),
-                (Expression<Func<Qux>>)(() => Activator.CreateInstance<Qux>()),
-                (Expression<Action>)(() => FooIt<Qux>()),
-                (Expression<Func<Qux[]>>)(() => new Qux[1]),
-                (Expression<Func<Qux[]>>)(() => new Qux[] { new(1), new() { Baz = 1 } }),
-                (Expression<Func<Tuple<Qux, int>>>)(() => new Tuple<Qux, int>(new Qux(1), 2)),
-                (Expression<Func<Holder<Qux>>>)(() => new Holder<Qux> { Value = new Qux(42) }),
-#pragma warning restore IDE0004 // Remove Unnecessary Cast
-            })
-            {
-                var eta = new ExpressionEntityTypeAnonymizer();
-
-                var res = eta.Apply(e);
-
-                netrc.Visit(res); // TODO: semantic equivalence checks
-            }
-        }
+    }
 
 #pragma warning disable CA1822 // Mark static. (Used in expression tree)
-        private void FooIt<T>()
-        {
-        }
+    private void FooIt<T>()
+    {
+    }
 #pragma warning restore CA1822
 
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Errors()
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Errors()
+    {
+        foreach (var e in new Expression[]
         {
-            foreach (var e in new Expression[]
-            {
 #pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<Qux>>)(() => new Qux(1) { Baz = 1 }),
-                (Expression<Func<MissingMapping>>)(() => new MissingMapping(1)),
-                (Expression<Func<NonMatchingMapping>>)(() => new NonMatchingMapping(1)),
-                (Expression<Func<DuplicateMapping>>)(() => new DuplicateMapping(1, 2)),
+            (Expression<Func<Qux>>)(() => new Qux(1) { Baz = 1 }),
+            (Expression<Func<MissingMapping>>)(() => new MissingMapping(1)),
+            (Expression<Func<NonMatchingMapping>>)(() => new NonMatchingMapping(1)),
+            (Expression<Func<DuplicateMapping>>)(() => new DuplicateMapping(1, 2)),
 #pragma warning restore IDE0004 // Remove Unnecessary Cast
-            })
-            {
-                var eta = new ExpressionEntityTypeAnonymizer();
-
-                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(e));
-            }
-        }
-
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Constants_Simple()
-        {
-            var recType = RuntimeCompiler.CreateRecordType([
-                new KeyValuePair<string, Type>("a", typeof(int)),
-                new KeyValuePair<string, Type>("b", typeof(Qux))
-            ], valueEquality: true);
-
-            var rec = Activator.CreateInstance(recType);
-            recType.GetProperty("a").SetValue(rec, 42);
-            recType.GetProperty("b").SetValue(rec, new Qux(43));
-
-            foreach (var o in new object[]
-            {
-                new Qux(),
-                new Qux(1),
-                new Qux(1) { Foo = "bar" },
-                new Qux[1],
-                new Qux[] { new(1), new(2) },
-                new List<Qux> { new(1), new(2) },
-                new Func<int, int>(x => x),
-                42,
-                "bar",
-                (Expression<Func<Qux, Qux>>)(x => x),
-#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
-                (Expression<Func<Qux[]>>)(() => new Qux[] { new(123) }),
-#pragma warning restore IDE0004 // Remove Unnecessary Cast
-                new Tuple<Qux, int>(new Qux(), 42),
-                new { a = 1, b = new Qux(42), c = "bar" },
-                rec,
-            })
-            {
-                var eta = new ExpressionEntityTypeAnonymizer();
-
-                var res = eta.Apply(Expression.Constant(o));
-
-                Assert.IsNotNull(res); // TODO: semantic equivalence checks
-            }
-        }
-
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Constants_Null()
+        })
         {
             var eta = new ExpressionEntityTypeAnonymizer();
 
-            var res = eta.Apply(Expression.Constant(value: null, typeof(Qux)));
+            Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(e));
+        }
+    }
+
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Constants_Simple()
+    {
+        var recType = RuntimeCompiler.CreateRecordType([
+            new KeyValuePair<string, Type>("a", typeof(int)),
+            new KeyValuePair<string, Type>("b", typeof(Qux))
+        ], valueEquality: true);
+
+        var rec = Activator.CreateInstance(recType);
+        recType.GetProperty("a").SetValue(rec, 42);
+        recType.GetProperty("b").SetValue(rec, new Qux(43));
+
+        foreach (var o in new object[]
+        {
+            new Qux(),
+            new Qux(1),
+            new Qux(1) { Foo = "bar" },
+            new Qux[1],
+            new Qux[] { new(1), new(2) },
+            new List<Qux> { new(1), new(2) },
+            new Func<int, int>(x => x),
+            42,
+            "bar",
+            (Expression<Func<Qux, Qux>>)(x => x),
+#pragma warning disable IDE0004 // Remove Unnecessary Cast. (Only unnecessary on C# 10 or later.)
+            (Expression<Func<Qux[]>>)(() => new Qux[] { new(123) }),
+#pragma warning restore IDE0004 // Remove Unnecessary Cast
+            new Tuple<Qux, int>(new Qux(), 42),
+            new { a = 1, b = new Qux(42), c = "bar" },
+            rec,
+        })
+        {
+            var eta = new ExpressionEntityTypeAnonymizer();
+
+            var res = eta.Apply(Expression.Constant(o));
 
             Assert.IsNotNull(res); // TODO: semantic equivalence checks
-            Assert.IsTrue(res is ConstantExpression);
-            Assert.IsNull(((ConstantExpression)res).Value);
         }
+    }
 
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Constants_ManOrBoy1()
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Constants_Null()
+    {
+        var eta = new ExpressionEntityTypeAnonymizer();
+
+        var res = eta.Apply(Expression.Constant(value: null, typeof(Qux)));
+
+        Assert.IsNotNull(res); // TODO: semantic equivalence checks
+        Assert.IsTrue(res is ConstantExpression);
+        Assert.IsNull(((ConstantExpression)res).Value);
+    }
+
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Constants_ManOrBoy1()
+    {
+        var c = Expression.Constant(new A { B = new B { Cs = [new C { D = 42 }] } });
+
+        var eta = new ExpressionEntityTypeAnonymizer();
+
+        var res = eta.Apply(c);
+
+        Assert.AreNotEqual(res.Type, c.Type);
+
+        dynamic d = ((ConstantExpression)res).Value;
+
+        int x = d.b.cs[0].d;
+
+        Assert.AreEqual(42, x);
+    }
+
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Constants_ManOrBoy2()
+    {
+        Expression<Func<IEnumerable<A>, IEnumerable<int>>> f = xs => from x in xs
+                                                                     let b = x.B
+                                                                     from c in b.Cs
+                                                                     let d = c.D
+                                                                     where d > 0
+                                                                     let e = new A { B = new B { Cs = new C[] { c, new() { D = d + 1 } } } }
+                                                                     select 7 * e.B.Cs.Sum(y => y.D);
+
+        var g = f.Compile();
+
+        var res = g([
+            new A { B = new B { Cs = [new C { D = 23 }] } },
+            new A { B = new B { Cs = [new C { D = -1 }] } },
+            new A { B = new B { Cs = [new C { D = 87 }] } },
+        ]);
+
+        var eta = new ExpressionEntityTypeAnonymizer();
+
+        var h = (LambdaExpression)eta.Apply(f);
+
+        var anonA = h.Parameters[0].Type.GetGenericArguments()[0];
+        var anonB = anonA.GetProperty("b").PropertyType;
+        var anonC = anonB.GetProperty("cs").PropertyType.GetElementType();
+
+        var c23 = Activator.CreateInstance(anonC, 23);
+        var cm1 = Activator.CreateInstance(anonC, -1);
+        var c87 = Activator.CreateInstance(anonC, 87);
+
+        var cs23 = (IList)Array.CreateInstance(anonC, 1);
+        cs23[0] = c23;
+        var csm1 = (IList)Array.CreateInstance(anonC, 1);
+        csm1[0] = cm1;
+        var cs87 = (IList)Array.CreateInstance(anonC, 1);
+        cs87[0] = c87;
+
+        var b23 = Activator.CreateInstance(anonB, cs23);
+        var bm1 = Activator.CreateInstance(anonB, csm1);
+        var b87 = Activator.CreateInstance(anonB, cs87);
+
+        var a23 = Activator.CreateInstance(anonA, b23);
+        var am1 = Activator.CreateInstance(anonA, bm1);
+        var a87 = Activator.CreateInstance(anonA, b87);
+
+        var inp = (IList)Array.CreateInstance(anonA, 3);
+        inp[0] = a23;
+        inp[1] = am1;
+        inp[2] = a87;
+
+        var output = (IEnumerable<int>)h.Compile().DynamicInvoke([inp]);
+
+        Assert.IsTrue(res.SequenceEqual(output));
+    }
+
+    private class A
+    {
+        [Mapping("b")]
+        public B B { get; set; }
+    }
+
+    private class B
+    {
+        [Mapping("cs")]
+        public C[] Cs { get; set; }
+    }
+
+    private class C
+    {
+        [Mapping("d")]
+        public int D { get; set; }
+    }
+
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Constants_ReferenceEquality()
+    {
+        var q = new Qux { Baz = 42 };
+        var t = new Tuple<Qux, Qux>(q, q);
+
+        var eta = new ExpressionEntityTypeAnonymizer();
+
+        var res = eta.Apply(Expression.Constant(t));
+
+        Assert.IsNotNull(res);
+        Assert.IsTrue(res.Type.IsGenericType);
+        Assert.AreEqual(typeof(Tuple<,>), res.Type.GetGenericTypeDefinition());
+
+        var a1 = res.Type.GetGenericArguments()[0];
+        var a2 = res.Type.GetGenericArguments()[1];
+        Assert.AreEqual(a1, a2);
+
+        Assert.AreEqual(ExpressionType.Constant, res.NodeType);
+        var c = (ConstantExpression)res;
+        var o = c.Value;
+
+        var t1 = res.Type.GetProperty("Item1").GetValue(o);
+        var t2 = res.Type.GetProperty("Item2").GetValue(o);
+
+        Assert.AreSame(t1, t2);
+
+        Assert.AreEqual(42, t1.GetType().GetProperty("baz").GetValue(t1));
+    }
+
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Constants_Errors1()
+    {
+        foreach (var o in new object[]
         {
-            var c = Expression.Constant(new A { B = new B { Cs = [new C { D = 42 }] } });
-
+            new Func<Qux, Qux>(x => x),
+        })
+        {
             var eta = new ExpressionEntityTypeAnonymizer();
 
-            var res = eta.Apply(c);
+            Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(Expression.Constant(o)));
+        }
+    }
 
-            Assert.AreNotEqual(res.Type, c.Type);
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Constants_Errors2()
+    {
+        var mur = new MessedUpRewriter();
+        mur.Test();
+    }
 
-            dynamic d = ((ConstantExpression)res).Value;
+    [TestMethod]
+    public void ExpressionEntityTypeAnonymizer_Unchanged()
+    {
+        var eta = new ExpressionEntityTypeAnonymizer();
 
-            int x = d.b.cs[0].d;
+        var exp = (Expression<Func<D>>)(() => new D { X = 1, E = { Y = 2 }, Ys = { 3, 4, 5 } });
 
-            Assert.AreEqual(42, x);
+        var res = eta.Apply(exp);
+
+        Assert.AreSame(res, exp);
+    }
+
+    private class MessedUpRewriter : EntityTypeSubstitutor
+    {
+        public MessedUpRewriter()
+            : base(new Dictionary<Type, Type>())
+        {
         }
 
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Constants_ManOrBoy2()
+        protected override Expression CreateNewExpression(Type type, IDictionary<MemberInfo, Expression> memberAssignments)
         {
-            Expression<Func<IEnumerable<A>, IEnumerable<int>>> f = xs => from x in xs
-                                                                         let b = x.B
-                                                                         from c in b.Cs
-                                                                         let d = c.D
-                                                                         where d > 0
-                                                                         let e = new A { B = new B { Cs = new C[] { c, new() { D = d + 1 } } } }
-                                                                         select 7 * e.B.Cs.Sum(y => y.D);
-
-            var g = f.Compile();
-
-            var res = g([
-                new A { B = new B { Cs = [new C { D = 23 }] } },
-                new A { B = new B { Cs = [new C { D = -1 }] } },
-                new A { B = new B { Cs = [new C { D = 87 }] } },
-            ]);
-
-            var eta = new ExpressionEntityTypeAnonymizer();
-
-            var h = (LambdaExpression)eta.Apply(f);
-
-            var anonA = h.Parameters[0].Type.GetGenericArguments()[0];
-            var anonB = anonA.GetProperty("b").PropertyType;
-            var anonC = anonB.GetProperty("cs").PropertyType.GetElementType();
-
-            var c23 = Activator.CreateInstance(anonC, 23);
-            var cm1 = Activator.CreateInstance(anonC, -1);
-            var c87 = Activator.CreateInstance(anonC, 87);
-
-            var cs23 = (IList)Array.CreateInstance(anonC, 1);
-            cs23[0] = c23;
-            var csm1 = (IList)Array.CreateInstance(anonC, 1);
-            csm1[0] = cm1;
-            var cs87 = (IList)Array.CreateInstance(anonC, 1);
-            cs87[0] = c87;
-
-            var b23 = Activator.CreateInstance(anonB, cs23);
-            var bm1 = Activator.CreateInstance(anonB, csm1);
-            var b87 = Activator.CreateInstance(anonB, cs87);
-
-            var a23 = Activator.CreateInstance(anonA, b23);
-            var am1 = Activator.CreateInstance(anonA, bm1);
-            var a87 = Activator.CreateInstance(anonA, b87);
-
-            var inp = (IList)Array.CreateInstance(anonA, 3);
-            inp[0] = a23;
-            inp[1] = am1;
-            inp[2] = a87;
-
-            var output = (IEnumerable<int>)h.Compile().DynamicInvoke([inp]);
-
-            Assert.IsTrue(res.SequenceEqual(output));
+            throw new NotImplementedException();
         }
 
-        private class A
+        protected override object ConvertConstantStructuralCore(object originalValue, StructuralDataType oldDataType, StructuralDataType newDataType)
         {
-            [Mapping("b")]
-            public B B { get; set; }
+            throw new NotImplementedException();
         }
 
-        private class B
+        public void Test()
         {
-            [Mapping("cs")]
-            public C[] Cs { get; set; }
+            Assert.ThrowsExactly<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(int[]))));
+            Assert.ThrowsExactly<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(long))));
+            Assert.ThrowsExactly<NotImplementedException>(() => ConvertConstant(1, new MyDataType(), new MyDataType()));
+            Assert.ThrowsExactly<NotSupportedException>(() => ConvertConstant(1, new InvalidDataType(), new InvalidDataType()));
         }
 
-        private class C
+        private class MyDataType : DataType
         {
-            [Mapping("d")]
-            public int D { get; set; }
-        }
-
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Constants_ReferenceEquality()
-        {
-            var q = new Qux { Baz = 42 };
-            var t = new Tuple<Qux, Qux>(q, q);
-
-            var eta = new ExpressionEntityTypeAnonymizer();
-
-            var res = eta.Apply(Expression.Constant(t));
-
-            Assert.IsNotNull(res);
-            Assert.IsTrue(res.Type.IsGenericType);
-            Assert.AreEqual(typeof(Tuple<,>), res.Type.GetGenericTypeDefinition());
-
-            var a1 = res.Type.GetGenericArguments()[0];
-            var a2 = res.Type.GetGenericArguments()[1];
-            Assert.AreEqual(a1, a2);
-
-            Assert.AreEqual(ExpressionType.Constant, res.NodeType);
-            var c = (ConstantExpression)res;
-            var o = c.Value;
-
-            var t1 = res.Type.GetProperty("Item1").GetValue(o);
-            var t2 = res.Type.GetProperty("Item2").GetValue(o);
-
-            Assert.AreSame(t1, t2);
-
-            Assert.AreEqual(42, t1.GetType().GetProperty("baz").GetValue(t1));
-        }
-
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Constants_Errors1()
-        {
-            foreach (var o in new object[]
+            public MyDataType()
+                : base(typeof(int))
             {
-                new Func<Qux, Qux>(x => x),
-            })
-            {
-                var eta = new ExpressionEntityTypeAnonymizer();
-
-                Assert.ThrowsExactly<InvalidOperationException>(() => eta.Apply(Expression.Constant(o)));
             }
-        }
 
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Constants_Errors2()
-        {
-            var mur = new MessedUpRewriter();
-            mur.Test();
-        }
+            public override DataTypeKinds Kind => DataTypeKinds.Custom;
 
-        [TestMethod]
-        public void ExpressionEntityTypeAnonymizer_Unchanged()
-        {
-            var eta = new ExpressionEntityTypeAnonymizer();
-
-            var exp = (Expression<Func<D>>)(() => new D { X = 1, E = { Y = 2 }, Ys = { 3, 4, 5 } });
-
-            var res = eta.Apply(exp);
-
-            Assert.AreSame(res, exp);
-        }
-
-        private class MessedUpRewriter : EntityTypeSubstitutor
-        {
-            public MessedUpRewriter()
-                : base(new Dictionary<Type, Type>())
-            {
-            }
-
-            protected override Expression CreateNewExpression(Type type, IDictionary<MemberInfo, Expression> memberAssignments)
+            public override object CreateInstance(params object[] arguments)
             {
                 throw new NotImplementedException();
             }
+        }
 
-            protected override object ConvertConstantStructuralCore(object originalValue, StructuralDataType oldDataType, StructuralDataType newDataType)
+        private class InvalidDataType : DataType
+        {
+            public InvalidDataType()
+                : base(typeof(int))
+            {
+            }
+
+            public override DataTypeKinds Kind => (DataTypeKinds)123;
+
+            public override object CreateInstance(params object[] arguments)
             {
                 throw new NotImplementedException();
             }
-
-            public void Test()
-            {
-                Assert.ThrowsExactly<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(int[]))));
-                Assert.ThrowsExactly<InvalidOperationException>(() => ConvertConstant(1, DataType.FromType(typeof(int)), DataType.FromType(typeof(long))));
-                Assert.ThrowsExactly<NotImplementedException>(() => ConvertConstant(1, new MyDataType(), new MyDataType()));
-                Assert.ThrowsExactly<NotSupportedException>(() => ConvertConstant(1, new InvalidDataType(), new InvalidDataType()));
-            }
-
-            private class MyDataType : DataType
-            {
-                public MyDataType()
-                    : base(typeof(int))
-                {
-                }
-
-                public override DataTypeKinds Kind => DataTypeKinds.Custom;
-
-                public override object CreateInstance(params object[] arguments)
-                {
-                    throw new NotImplementedException();
-                }
-            }
-
-            private class InvalidDataType : DataType
-            {
-                public InvalidDataType()
-                    : base(typeof(int))
-                {
-                }
-
-                public override DataTypeKinds Kind => (DataTypeKinds)123;
-
-                public override object CreateInstance(params object[] arguments)
-                {
-                    throw new NotImplementedException();
-                }
-            }
         }
+    }
 
-        private class Bar
-        {
-            [Mapping("foos")]
-            public Foo[] Foos { get; set; }
-        }
+    private class Bar
+    {
+        [Mapping("foos")]
+        public Foo[] Foos { get; set; }
+    }
 
-        private class Foo
-        {
-            [Mapping("qux")]
-            public Tuple<Func<List<Qux>, long>, bool> Qux { get; set; }
-        }
+    private class Foo
+    {
+        [Mapping("qux")]
+        public Tuple<Func<List<Qux>, long>, bool> Qux { get; set; }
+    }
 
 #pragma warning disable IDE0060 // Remove unused parameter (test code)
-        public class Qux
+    public class Qux
+    {
+        public Qux()
         {
-            public Qux()
-            {
-            }
-
-            public Qux([Mapping("baz")] int myBaz)
-            {
-            }
-
-            [Mapping("baz")]
-            public int Baz { get; set; }
-
-            [Mapping("foo")]
-            public string Foo { get; set; }
         }
 
-        private class MissingMapping
+        public Qux([Mapping("baz")] int myBaz)
         {
-            public MissingMapping(int x)
-            {
-            }
-
-            [Mapping("foo")]
-            public int X { get; set; }
         }
 
-        private class NonMatchingMapping
-        {
-            public NonMatchingMapping([Mapping("bar")] int x)
-            {
-            }
+        [Mapping("baz")]
+        public int Baz { get; set; }
 
-            [Mapping("foo")]
-            public int X { get; set; }
+        [Mapping("foo")]
+        public string Foo { get; set; }
+    }
+
+    private class MissingMapping
+    {
+        public MissingMapping(int x)
+        {
         }
 
-        private class DuplicateMapping
-        {
-            public DuplicateMapping([Mapping("foo")] int x, [Mapping("foo")] int y)
-            {
-            }
+        [Mapping("foo")]
+        public int X { get; set; }
+    }
 
-            [Mapping("foo")]
-            public int X { get; set; }
+    private class NonMatchingMapping
+    {
+        public NonMatchingMapping([Mapping("bar")] int x)
+        {
         }
+
+        [Mapping("foo")]
+        public int X { get; set; }
+    }
+
+    private class DuplicateMapping
+    {
+        public DuplicateMapping([Mapping("foo")] int x, [Mapping("foo")] int y)
+        {
+        }
+
+        [Mapping("foo")]
+        public int X { get; set; }
+    }
 #pragma warning restore IDE0060 // Remove unused parameter
 
-        private class Holder<T>
+    private class Holder<T>
+    {
+        public T Value { get; set; }
+    }
+
+    private class D
+    {
+        public D()
         {
-            public T Value { get; set; }
+            E = new E();
+            Ys = [];
         }
 
-        private class D
-        {
-            public D()
-            {
-                E = new E();
-                Ys = [];
-            }
+        public int X { get; set; }
+        public E E { get; private set; }
+        public List<int> Ys { get; private set; }
+    }
 
-            public int X { get; set; }
-            public E E { get; private set; }
-            public List<int> Ys { get; private set; }
-        }
-
-        private class E
-        {
-            public int Y { get; set; }
-        }
+    private class E
+    {
+        public int Y { get; set; }
     }
 }

@@ -9,30 +9,29 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.DataModel.Serialization.Binary;
 
-namespace Tests.Nuqleon.DataModel.Serialization.Binary
+namespace Tests.Nuqleon.DataModel.Serialization.Binary;
+
+[TestClass]
+public class ArrayPoolTests
 {
-    [TestClass]
-    public class ArrayPoolTests
+    [TestMethod]
+    public void ArrayPool_Concurrency()
     {
-        [TestMethod]
-        public void ArrayPool_Concurrency()
-        {
-            var pool = new ArrayPool<int>(1);
-            Parallel.ForEach(
-                Enumerable.Range(0, 1000),
-                _ =>
+        var pool = new ArrayPool<int>(1);
+        Parallel.ForEach(
+            Enumerable.Range(0, 1000),
+            _ =>
+            {
+                var arr = pool.Get();
+                try
                 {
-                    var arr = pool.Get();
-                    try
-                    {
-                        Assert.IsNotNull(arr);
-                    }
-                    finally
-                    {
-                        pool.Release(arr);
-                    }
+                    Assert.IsNotNull(arr);
                 }
-            );
-        }
+                finally
+                {
+                    pool.Release(arr);
+                }
+            }
+        );
     }
 }

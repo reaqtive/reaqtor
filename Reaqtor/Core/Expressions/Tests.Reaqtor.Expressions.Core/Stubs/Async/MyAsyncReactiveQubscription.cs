@@ -15,26 +15,25 @@ using System.Threading.Tasks;
 
 using Reaqtor;
 
-namespace Tests.Reaqtor.Expressions.Core
+namespace Tests.Reaqtor.Expressions.Core;
+
+public sealed class MyAsyncReactiveQubscription : AsyncReactiveQubscriptionBase
 {
-    public sealed class MyAsyncReactiveQubscription : AsyncReactiveQubscriptionBase
+    private readonly Expression _expression;
+
+    public MyAsyncReactiveQubscription(IAsyncReactiveQueryProvider provider)
+        : base(provider)
     {
-        private readonly Expression _expression;
-
-        public MyAsyncReactiveQubscription(IAsyncReactiveQueryProvider provider)
-            : base(provider)
-        {
-            _expression = Expression.Constant(this);
-        }
-
-        public MyAsyncReactiveQubscription(IAsyncReactiveQueryProvider provider, Expression expression)
-            : base(provider)
-        {
-            _expression = expression;
-        }
-
-        public override Expression Expression => _expression;
-
-        protected override Task DisposeAsyncCore(CancellationToken token) => throw new NotImplementedException();
+        _expression = Expression.Constant(this);
     }
+
+    public MyAsyncReactiveQubscription(IAsyncReactiveQueryProvider provider, Expression expression)
+        : base(provider)
+    {
+        _expression = expression;
+    }
+
+    public override Expression Expression => _expression;
+
+    protected override Task DisposeAsyncCore(CancellationToken token) => throw new NotImplementedException();
 }

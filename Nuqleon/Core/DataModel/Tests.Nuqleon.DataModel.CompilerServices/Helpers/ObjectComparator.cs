@@ -12,28 +12,27 @@ using System.Linq.Expressions;
 
 using Nuqleon.DataModel.TypeSystem;
 
-namespace Tests.Nuqleon.DataModel.CompilerServices
+namespace Tests.Nuqleon.DataModel.CompilerServices;
+
+internal class ObjectComparator : DataTypeObjectEqualityComparator
 {
-    internal class ObjectComparator : DataTypeObjectEqualityComparator
+    public static ObjectComparator CreateInstance()
     {
-        public static ObjectComparator CreateInstance()
-        {
-            var objectComparator = new ObjectComparator();
-            var typeComparator = new TypeComparator();
-            var expressionComparator = new ExpressionComparator(typeComparator, objectComparator);
-            objectComparator.ExpressionComparator = expressionComparator;
-            return objectComparator;
-        }
+        var objectComparator = new ObjectComparator();
+        var typeComparator = new TypeComparator();
+        var expressionComparator = new ExpressionComparator(typeComparator, objectComparator);
+        objectComparator.ExpressionComparator = expressionComparator;
+        return objectComparator;
+    }
 
-        public ExpressionComparator ExpressionComparator
-        {
-            get;
-            set;
-        }
+    public ExpressionComparator ExpressionComparator
+    {
+        get;
+        set;
+    }
 
-        protected override bool EqualsQuotation(object expected, object actual, QuotationDataType expectedDataType, QuotationDataType actualDataType)
-        {
-            return ExpressionComparator.Equals((Expression)expected, (Expression)actual);
-        }
+    protected override bool EqualsQuotation(object expected, object actual, QuotationDataType expectedDataType, QuotationDataType actualDataType)
+    {
+        return ExpressionComparator.Equals((Expression)expected, (Expression)actual);
     }
 }

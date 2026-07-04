@@ -13,40 +13,39 @@ using System.Reflection;
 
 using Json = Nuqleon.Json.Expressions;
 
-namespace System.Linq.Expressions.Bonsai.Serialization
+namespace System.Linq.Expressions.Bonsai.Serialization;
+
+internal sealed class SimpleMethodDef : MethodDef
 {
-    internal sealed class SimpleMethodDef : MethodDef
+    #region Constructors
+
+    public SimpleMethodDef(TypeRef declaringType, SimpleMethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters)
+        : base(declaringType, method, returnType, parameters)
     {
-        #region Constructors
-
-        public SimpleMethodDef(TypeRef declaringType, SimpleMethodInfoSlim method, TypeRef returnType, params TypeRef[] parameters)
-            : base(declaringType, method, returnType, parameters)
-        {
-        }
-
-        #endregion
-
-        #region Methods
-
-        public override Json.Expression ToJson(SerializationDomain domain)
-        {
-            var count = Parameters.Length;
-
-            var parameters = new Json.Expression[count];
-            for (var i = 0; i < count; i++)
-            {
-                parameters[i] = Parameters[i].ToJson();
-            }
-
-            return Json.Expression.Array(
-                Discriminators.MemberInfo.SimpleMethodDiscriminator,
-                DeclaringType.ToJson(),
-                Json.Expression.String(((SimpleMethodInfoSlim)Method).Name),
-                Json.Expression.Array(parameters),
-                ReturnType.ToJson()
-            );
-        }
-
-        #endregion
     }
+
+    #endregion
+
+    #region Methods
+
+    public override Json.Expression ToJson(SerializationDomain domain)
+    {
+        var count = Parameters.Length;
+
+        var parameters = new Json.Expression[count];
+        for (var i = 0; i < count; i++)
+        {
+            parameters[i] = Parameters[i].ToJson();
+        }
+
+        return Json.Expression.Array(
+            Discriminators.MemberInfo.SimpleMethodDiscriminator,
+            DeclaringType.ToJson(),
+            Json.Expression.String(((SimpleMethodInfoSlim)Method).Name),
+            Json.Expression.Array(parameters),
+            ReturnType.ToJson()
+        );
+    }
+
+    #endregion
 }

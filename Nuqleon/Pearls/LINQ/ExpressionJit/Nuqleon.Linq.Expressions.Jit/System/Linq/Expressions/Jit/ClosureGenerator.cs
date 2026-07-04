@@ -12,71 +12,70 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
 
-namespace System.Linq.Expressions.Jit
+namespace System.Linq.Expressions.Jit;
+
+/// <summary>
+/// Utility to create closures for hoisted local storage and to emit storage operation expressions.
+/// </summary>
+internal static class ClosureGenerator
 {
     /// <summary>
-    /// Utility to create closures for hoisted local storage and to emit storage operation expressions.
+    /// Prepares a closure for the the specified variables.
     /// </summary>
-    internal static class ClosureGenerator
+    /// <param name="variables">The variables with their required storage kind in the resulting closure.</param>
+    /// <returns>An object containing information about the closure, usable to emit variable storage operations.</returns>
+    public static ClosureInfo Create(IList<KeyValuePair<ParameterExpression, StorageKind>> variables)
     {
-        /// <summary>
-        /// Prepares a closure for the the specified variables.
-        /// </summary>
-        /// <param name="variables">The variables with their required storage kind in the resulting closure.</param>
-        /// <returns>An object containing information about the closure, usable to emit variable storage operations.</returns>
-        public static ClosureInfo Create(IList<KeyValuePair<ParameterExpression, StorageKind>> variables)
+        var count = variables.Count;
+
+        //
+        // First, create an array of types for the locals that need to be stored in
+        // the closure. Boxed locals will be wrapped in a StrongBox<T>.
+        //
+        var types = new Type[count];
+
+        for (var i = 0; i < count; i++)
         {
-            var count = variables.Count;
+            var variable = variables[i];
+            var type = variable.Key.Type;
 
-            //
-            // First, create an array of types for the locals that need to be stored in
-            // the closure. Boxed locals will be wrapped in a StrongBox<T>.
-            //
-            var types = new Type[count];
-
-            for (var i = 0; i < count; i++)
+            if ((variable.Value & StorageKind.Boxed) != 0)
             {
-                var variable = variables[i];
-                var type = variable.Key.Type;
-
-                if ((variable.Value & StorageKind.Boxed) != 0)
-                {
-                    types[i] = typeof(StrongBox<>).MakeGenericType(type);
-                }
-                else
-                {
-                    Debug.Assert(variable.Value != StorageKind.Local, "Only expected hoisted locals.");
-                    types[i] = type;
-                }
+                types[i] = typeof(StrongBox<>).MakeGenericType(type);
             }
-
-            //
-            // Next, create a map to associate the original hoisted locals to their
-            // closure field storage.
-            //
-            var closureType = ClosureFactory.GetClosureType(types);
-            var fieldMap = new Dictionary<ParameterExpression, ClosureFieldInfo>(count);
-
-            for (var i = 0; i < count; i++)
+            else
             {
-                var variable = variables[i];
-
-                var field = closureType.GetField("Item" + (i + 1));
-
-                var info = new ClosureFieldInfo
-                {
-                    Field = field,
-                    Kind = variable.Value,
-                };
-
-                fieldMap.Add(variable.Key, info);
+                Debug.Assert(variable.Value != StorageKind.Local, "Only expected hoisted locals.");
+                types[i] = type;
             }
-
-            //
-            // Return an object holding the gathered information, providing means to
-            // emit variable storage operations for the hoisted locals provided.
-            //
-            return new ClosureInfo(closureType, fieldMap);
         }
+
+        //
+        // Next, create a map to associate the original hoisted locals to their
+        // closure field storage.
+        //
+        var closureType = ClosureFactory.GetClosureType(types);
+        var fieldMap = new Dictionary<ParameterExpression, ClosureFieldInfo>(count);
+
+        for (var i = 0; i < count; i++)
+        {
+            var variable = variables[i];
+
+            var field = closureType.GetField("Item" + (i + 1));
+
+            var info = new ClosureFieldInfo
+            {
+                Field = field,
+                Kind = variable.Value,
+            };
+
+            fieldMap.Add(variable.Key, info);
+        }
+
+        //
+        // Return an object holding the gathered information, providing means to
+        // emit variable storage operations for the hoisted locals provided.
+        //
+        return new ClosureInfo(closureType, fieldMap);
     }
 }

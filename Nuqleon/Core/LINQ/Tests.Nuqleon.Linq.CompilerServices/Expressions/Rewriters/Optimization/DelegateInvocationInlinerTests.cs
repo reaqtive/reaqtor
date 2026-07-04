@@ -14,86 +14,85 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class DelegateInvocationInlinerTests
 {
-    [TestClass]
-    public class DelegateInvocationInlinerTests
+    [TestMethod]
+    public void DelegateInvocationInliner_ArgumentChecking()
     {
-        [TestMethod]
-        public void DelegateInvocationInliner_ArgumentChecking()
-        {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DelegateInvocationInliner.Apply(expression: null, inlineNonPublicMethods: true));
-            Assert.AreEqual("expression", ex.ParamName);
-        }
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => DelegateInvocationInliner.Apply(expression: null, inlineNonPublicMethods: true));
+        Assert.AreEqual("expression", ex.ParamName);
+    }
 
-        [TestMethod]
-        public void DelegateInvocationInliner_NoDelegate()
-        {
-            var f = (Expression<Func<int, int>>)(x => x * 2);
-            var i = Expression.Invoke(f, Expression.Constant(1));
+    [TestMethod]
+    public void DelegateInvocationInliner_NoDelegate()
+    {
+        var f = (Expression<Func<int, int>>)(x => x * 2);
+        var i = Expression.Invoke(f, Expression.Constant(1));
 
-            var a = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: true);
+        var a = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: true);
 
-            Assert.AreSame(i, a);
-        }
+        Assert.AreSame(i, a);
+    }
 
-        [TestMethod]
-        public void DelegateInvocationInliner_Static()
-        {
-            var f = new Func<int, int>(x => x * 2);
-            var d = Expression.Constant(f);
-            var i = Expression.Invoke(d, Expression.Constant(1));
+    [TestMethod]
+    public void DelegateInvocationInliner_Static()
+    {
+        var f = new Func<int, int>(x => x * 2);
+        var d = Expression.Constant(f);
+        var i = Expression.Invoke(d, Expression.Constant(1));
 
-            var a = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: true);
-            var b = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: false);
+        var a = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: true);
+        var b = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: false);
 
-            Assert.AreNotSame(i, a);
-            Assert.AreSame(i, b);
+        Assert.AreNotSame(i, a);
+        Assert.AreSame(i, b);
 
-            var m = a as MethodCallExpression;
-            Assert.IsNotNull(m);
-            Assert.AreEqual(f.Method, m.Method);
+        var m = a as MethodCallExpression;
+        Assert.IsNotNull(m);
+        Assert.AreEqual(f.Method, m.Method);
 
-            Assert.AreEqual(f(1), a.Evaluate<int>());
-        }
+        Assert.AreEqual(f(1), a.Evaluate<int>());
+    }
 
-        [TestMethod]
-        public void DelegateInvocationInliner_Instance()
-        {
-            var c = new Bar();
-            var f = new Func<int, int>(c.Twice);
-            var d = Expression.Constant(f);
-            var i = Expression.Invoke(d, Expression.Constant(1));
+    [TestMethod]
+    public void DelegateInvocationInliner_Instance()
+    {
+        var c = new Bar();
+        var f = new Func<int, int>(c.Twice);
+        var d = Expression.Constant(f);
+        var i = Expression.Invoke(d, Expression.Constant(1));
 
-            var a = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: true);
+        var a = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: true);
 
-            Assert.AreNotSame(i, a);
+        Assert.AreNotSame(i, a);
 
-            var m = a as MethodCallExpression;
-            Assert.IsNotNull(m);
-            Assert.AreEqual(f.Method, m.Method);
+        var m = a as MethodCallExpression;
+        Assert.IsNotNull(m);
+        Assert.AreEqual(f.Method, m.Method);
 
-            Assert.AreEqual(f(1), a.Evaluate<int>());
-        }
+        Assert.AreEqual(f(1), a.Evaluate<int>());
+    }
 
-        [TestMethod]
-        public void DelegateInvocationInliner_Multicast()
-        {
-            var f = new Func<int, int>(x => x * x);
-            var g = new Func<int, int>(x => x + x);
-            var d = Expression.Constant(f + g);
-            var i = Expression.Invoke(d, Expression.Constant(1));
+    [TestMethod]
+    public void DelegateInvocationInliner_Multicast()
+    {
+        var f = new Func<int, int>(x => x * x);
+        var g = new Func<int, int>(x => x + x);
+        var d = Expression.Constant(f + g);
+        var i = Expression.Invoke(d, Expression.Constant(1));
 
-            var a = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: true);
+        var a = DelegateInvocationInliner.Apply(i, inlineNonPublicMethods: true);
 
-            Assert.AreSame(i, a);
-        }
+        Assert.AreSame(i, a);
+    }
 
 #pragma warning disable CA1822 // Mark static
-        private sealed class Bar
-        {
-            public int Twice(int x) => x * 2;
-        }
-#pragma warning restore CA1822
+    private sealed class Bar
+    {
+        public int Twice(int x) => x * 2;
     }
+#pragma warning restore CA1822
 }

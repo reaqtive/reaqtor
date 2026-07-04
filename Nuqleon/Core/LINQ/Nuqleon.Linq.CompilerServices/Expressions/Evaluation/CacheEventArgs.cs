@@ -8,32 +8,31 @@
 // BD - December 2013 - Created this file.
 //
 
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
+
+/// <summary>
+/// Event arguments for a cache event.
+/// </summary>
+public class CacheEventArgs : EventArgs
 {
     /// <summary>
-    /// Event arguments for a cache event.
+    /// Creates a new event argument associated with the specified cache entry.
     /// </summary>
-    public class CacheEventArgs : EventArgs
+    /// <param name="expression">Lambda expression used as the key of the cache entry.</param>
+    /// <param name="delegate">Delegate used as the value of the cache entry.</param>
+    public CacheEventArgs(LambdaExpression expression, Delegate @delegate)
     {
-        /// <summary>
-        /// Creates a new event argument associated with the specified cache entry.
-        /// </summary>
-        /// <param name="expression">Lambda expression used as the key of the cache entry.</param>
-        /// <param name="delegate">Delegate used as the value of the cache entry.</param>
-        public CacheEventArgs(LambdaExpression expression, Delegate @delegate)
-        {
-            Lambda = expression;
-            Delegate = @delegate;
-        }
-
-        /// <summary>
-        /// Gets the lambda expression used as the key of the cache entry.
-        /// </summary>
-        public LambdaExpression Lambda { get; }
-
-        /// <summary>
-        /// Gets the delegate used as the value of the cache entry.
-        /// </summary>
-        public Delegate Delegate { get; }
+        Lambda = expression;
+        Delegate = @delegate;
     }
+
+    /// <summary>
+    /// Gets the lambda expression used as the key of the cache entry.
+    /// </summary>
+    public LambdaExpression Lambda { get; }
+
+    /// <summary>
+    /// Gets the delegate used as the value of the cache entry.
+    /// </summary>
+    public Delegate Delegate { get; }
 }

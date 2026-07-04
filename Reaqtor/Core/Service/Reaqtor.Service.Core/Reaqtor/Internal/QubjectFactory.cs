@@ -11,37 +11,36 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal class QubjectFactory<TInput, TOutput> : ReactiveQubjectFactoryBase<TInput, TOutput>
 {
-    internal class QubjectFactory<TInput, TOutput> : ReactiveQubjectFactoryBase<TInput, TOutput>
+    public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+        : base(provider)
     {
-        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
-
-        public override Expression Expression { get; }
-
-        protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, object state)
-        {
-            return ((ReactiveQueryProviderBase)base.Provider).CreateStream(this, streamUri, state);
-        }
+        Expression = expression;
     }
 
-    internal class QubjectFactory<TInput, TOutput, TArg> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg>
+    public override Expression Expression { get; }
+
+    protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, object state)
     {
-        public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        return ((ReactiveQueryProviderBase)base.Provider).CreateStream(this, streamUri, state);
+    }
+}
 
-        public override Expression Expression { get; }
+internal class QubjectFactory<TInput, TOutput, TArg> : ReactiveQubjectFactoryBase<TInput, TOutput, TArg>
+{
+    public QubjectFactory(Expression expression, IReactiveQueryProvider provider)
+        : base(provider)
+    {
+        Expression = expression;
+    }
 
-        protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg argument, object state)
-        {
-            return ((ReactiveQueryProviderBase)base.Provider).CreateStream(this, argument, streamUri, state);
-        }
+    public override Expression Expression { get; }
+
+    protected override IReactiveQubject<TInput, TOutput> CreateCore(Uri streamUri, TArg argument, object state)
+    {
+        return ((ReactiveQueryProviderBase)base.Provider).CreateStream(this, argument, streamUri, state);
     }
 }

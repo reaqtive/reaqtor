@@ -11,28 +11,27 @@
 #pragma warning disable CA1711 // Rename type so it doesn't end with Delegate. (Use of Delegate is appropriate here.)
 #pragma warning disable CA1716 // Identifiers should not match keywords. (Use of Delegate is appropriate here.)
 
-namespace System.Memory
+namespace System.Memory;
+
+/// <summary>
+/// Representation of a memoized delegate including a reference to the memoization cache.
+/// </summary>
+/// <typeparam name="TDelegate">Type of the delegate.</typeparam>
+public interface IMemoizedDelegate<out TDelegate>
 {
     /// <summary>
-    /// Representation of a memoized delegate including a reference to the memoization cache.
+    /// Gets the memoization cache.
     /// </summary>
-    /// <typeparam name="TDelegate">Type of the delegate.</typeparam>
-    public interface IMemoizedDelegate<out TDelegate>
+    IMemoizationCache Cache
     {
-        /// <summary>
-        /// Gets the memoization cache.
-        /// </summary>
-        IMemoizationCache Cache
-        {
-            get;
-        }
+        get;
+    }
 
-        /// <summary>
-        /// Gets the memoized delegate.
-        /// </summary>
-        TDelegate Delegate
-        {
-            get;
-        }
+    /// <summary>
+    /// Gets the memoized delegate.
+    /// </summary>
+    TDelegate Delegate
+    {
+        get;
     }
 }

@@ -8,22 +8,21 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor;
 
-namespace Tests.Reaqtor.Shared.Core.Reaqtor
-{
-    [TestClass]
-    public class UriHelperTests
-    {
-        [TestMethod]
-        public void UriHelper_ArgumentChecking()
-        {
-            Assert.ThrowsExactly<ArgumentNullException>(() => UriHelper.ToCanonicalString(null));
-        }
+namespace Tests.Reaqtor.Shared.Core.Reaqtor;
 
-        [TestMethod]
-        public void UriHelper_Simple()
-        {
-            var uri = new Uri("eg:/foo");
-            Assert.AreEqual(uri.AbsoluteUri, uri.ToCanonicalString());
-        }
+[TestClass]
+public class UriHelperTests
+{
+    [TestMethod]
+    public void UriHelper_ArgumentChecking()
+    {
+        Assert.ThrowsExactly<ArgumentNullException>(() => UriHelper.ToCanonicalString(null));
+    }
+
+    [TestMethod]
+    public void UriHelper_Simple()
+    {
+        var uri = new Uri("eg:/foo");
+        Assert.AreEqual(uri.AbsoluteUri, uri.ToCanonicalString());
     }
 }

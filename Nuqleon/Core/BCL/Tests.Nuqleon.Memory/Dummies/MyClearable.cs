@@ -11,24 +11,23 @@
 
 using System.Memory;
 
-namespace Tests
+namespace Tests;
+
+internal class MyClearable : IClearable
 {
-    internal class MyClearable : IClearable
+    public MyClearable()
     {
-        public MyClearable()
-        {
-        }
+    }
 
-        public bool used;
+    public bool used;
 
-        public void Use()
-        {
-            used = true;
-        }
+    public void Use()
+    {
+        used = true;
+    }
 
-        public void Clear()
-        {
-            used = false;
-        }
+    public void Clear()
+    {
+        used = false;
     }
 }

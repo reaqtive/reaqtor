@@ -4,15 +4,14 @@
 
 using System;
 
-namespace Reaqtive.TestingFramework.TestRunner
-{
-    public static class TestRunnerExtensions
-    {
-        public static void Run(this TestAssemblyRunner runner)
-        {
-            ArgumentNullException.ThrowIfNull(runner);
+namespace Reaqtive.TestingFramework.TestRunner;
 
-            runner.Run(1);
-        }
+public static class TestRunnerExtensions
+{
+    public static void Run(this TestAssemblyRunner runner)
+    {
+        ArgumentNullException.ThrowIfNull(runner);
+
+        runner.Run(1);
     }
 }

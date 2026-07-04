@@ -7,31 +7,30 @@ using System.Linq.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class InvariantTests
 {
-    [TestClass]
-    public class InvariantTests
+    [TestMethod]
+    public void Invariant_Assert()
     {
-        [TestMethod]
-        public void Invariant_Assert()
-        {
-            Invariant.Assert(true, "Okay!");
+        Invariant.Assert(true, "Okay!");
 
 #if !DEBUG
-            Assert.ThrowsExactly<InvalidOperationException>(() => Invariant.Assert(false, "Oops!"));
+        Assert.ThrowsExactly<InvalidOperationException>(() => Invariant.Assert(false, "Oops!"));
 #endif
-        }
+    }
 
-        [TestMethod]
-        public void Invariant_Unreachable()
-        {
-            var ex1 = Invariant.Unreachable;
-            var ex2 = Invariant.Unreachable;
+    [TestMethod]
+    public void Invariant_Unreachable()
+    {
+        var ex1 = Invariant.Unreachable;
+        var ex2 = Invariant.Unreachable;
 
-            Assert.IsInstanceOfType(ex1, typeof(InvalidOperationException));
-            Assert.IsInstanceOfType(ex2, typeof(InvalidOperationException));
+        Assert.IsInstanceOfType(ex1, typeof(InvalidOperationException));
+        Assert.IsInstanceOfType(ex2, typeof(InvalidOperationException));
 
-            Assert.AreNotSame(ex1, ex2);
-        }
+        Assert.AreNotSame(ex1, ex2);
     }
 }

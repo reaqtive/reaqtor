@@ -11,21 +11,20 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+internal class Qbservable<T> : ReactiveQbservableBase<T>
 {
-    internal class Qbservable<T> : ReactiveQbservableBase<T>
+    public Qbservable(Expression expression, IReactiveQueryProvider provider)
+        : base(provider)
     {
-        public Qbservable(Expression expression, IReactiveQueryProvider provider)
-            : base(provider)
-        {
-            Expression = expression;
-        }
+        Expression = expression;
+    }
 
-        public override Expression Expression { get; }
+    public override Expression Expression { get; }
 
-        protected override IReactiveQubscription SubscribeCore(IReactiveQbserver<T> observer, Uri subscriptionUri, object state)
-        {
-            return ((ReactiveQueryProviderBase)base.Provider).Subscribe<T>(this, observer, subscriptionUri, state);
-        }
+    protected override IReactiveQubscription SubscribeCore(IReactiveQbserver<T> observer, Uri subscriptionUri, object state)
+    {
+        return ((ReactiveQueryProviderBase)base.Provider).Subscribe<T>(this, observer, subscriptionUri, state);
     }
 }

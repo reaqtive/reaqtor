@@ -6,47 +6,46 @@ using System;
 
 using Reaqtive.Tasks;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class Empty<TResult> : SubscribableBase<TResult>
 {
-    internal sealed class Empty<TResult> : SubscribableBase<TResult>
+    protected override ISubscription SubscribeCore(IObserver<TResult> observer)
     {
-        protected override ISubscription SubscribeCore(IObserver<TResult> observer)
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<Empty<TResult>, TResult>
+    {
+        private IOperatorContext _context;
+
+        public _(Empty<TResult> parent, IObserver<TResult> observer)
+            : base(parent, observer)
         {
-            return new _(this, observer);
         }
 
-        private sealed class _ : StatefulUnaryOperator<Empty<TResult>, TResult>
+        public override string Name => "rc:Empty";
+
+        public override Version Version => Versioning.v1;
+
+        public override void SetContext(IOperatorContext context)
         {
-            private IOperatorContext _context;
+            base.SetContext(context);
 
-            public _(Empty<TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
+            _context = context;
+        }
+
+        protected override void OnStart()
+        {
+            _context.Scheduler.Schedule(new ActionTask(() =>
             {
-            }
+                _context.TraceSource.Empty_Processing(_context.InstanceId);
 
-            public override string Name => "rc:Empty";
+                Output.OnCompleted();
+                Dispose();
+            }));
 
-            public override Version Version => Versioning.v1;
-
-            public override void SetContext(IOperatorContext context)
-            {
-                base.SetContext(context);
-
-                _context = context;
-            }
-
-            protected override void OnStart()
-            {
-                _context.Scheduler.Schedule(new ActionTask(() =>
-                {
-                    _context.TraceSource.Empty_Processing(_context.InstanceId);
-
-                    Output.OnCompleted();
-                    Dispose();
-                }));
-
-                _context.TraceSource.Empty_Scheduling(_context.InstanceId);
-            }
+            _context.TraceSource.Empty_Scheduling(_context.InstanceId);
         }
     }
 }

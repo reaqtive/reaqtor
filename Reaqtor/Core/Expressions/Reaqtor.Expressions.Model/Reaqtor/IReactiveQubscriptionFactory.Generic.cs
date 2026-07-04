@@ -10,35 +10,34 @@
 
 using System;
 
-namespace Reaqtor
+namespace Reaqtor;
+
+/// <summary>
+/// Interface for a subscription factory.
+/// </summary>
+public interface IReactiveQubscriptionFactory : IReactiveSubscriptionFactory, IReactiveExpressible
 {
     /// <summary>
-    /// Interface for a subscription factory.
+    /// Creates a new subscription with the specified subscription URI.
     /// </summary>
-    public interface IReactiveQubscriptionFactory : IReactiveSubscriptionFactory, IReactiveExpressible
-    {
-        /// <summary>
-        /// Creates a new subscription with the specified subscription URI.
-        /// </summary>
-        /// <param name="subscriptionUri">URI identifying the subscription.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
-        new IReactiveQubscription Create(Uri subscriptionUri, object state = null);
-    }
+    /// <param name="subscriptionUri">URI identifying the subscription.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+    new IReactiveQubscription Create(Uri subscriptionUri, object state = null);
+}
 
+/// <summary>
+/// Interface for a parameterized subscription factory.
+/// </summary>
+/// <typeparam name="TArgs">Type of the parameter passed to the subscription factory.</typeparam>
+public interface IReactiveQubscriptionFactory<TArgs> : IReactiveSubscriptionFactory<TArgs>, IReactiveExpressible
+{
     /// <summary>
-    /// Interface for a parameterized subscription factory.
+    /// Creates a new subscription with the specified subscription URI.
     /// </summary>
-    /// <typeparam name="TArgs">Type of the parameter passed to the subscription factory.</typeparam>
-    public interface IReactiveQubscriptionFactory<TArgs> : IReactiveSubscriptionFactory<TArgs>, IReactiveExpressible
-    {
-        /// <summary>
-        /// Creates a new subscription with the specified subscription URI.
-        /// </summary>
-        /// <param name="subscriptionUri">URI identifying the subscription.</param>
-        /// <param name="argument">Parameter to pass to the subscription factory.</param>
-        /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
-        /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
-        new IReactiveQubscription Create(Uri subscriptionUri, TArgs argument, object state = null);
-    }
+    /// <param name="subscriptionUri">URI identifying the subscription.</param>
+    /// <param name="argument">Parameter to pass to the subscription factory.</param>
+    /// <param name="state">Additional metadata to associate with the artifact. Implementations can interpret this value, or ignore it.</param>
+    /// <returns>A subscription object, or an exception if the creation request was unsuccessful.</returns>
+    new IReactiveQubscription Create(Uri subscriptionUri, TArgs argument, object state = null);
 }

@@ -4,84 +4,83 @@
 
 using System;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class Count<TSource> : SubscribableBase<int>
 {
-    internal sealed class Count<TSource> : SubscribableBase<int>
+    private readonly ISubscribable<TSource> _source;
+
+    public Count(ISubscribable<TSource> source)
     {
-        private readonly ISubscribable<TSource> _source;
+        _source = source;
+    }
 
-        public Count(ISubscribable<TSource> source)
+    protected override ISubscription SubscribeCore(IObserver<int> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<Count<TSource>, int>, IObserver<TSource>
+    {
+        private int _count;
+
+        public _(Count<TSource> parent, IObserver<int> observer)
+            : base(parent, observer)
         {
-            _source = source;
+            _count = 0;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<int> observer)
+        public override string Name => "rc:Count";
+
+        public override Version Version => Versioning.v1;
+
+        public void OnCompleted()
         {
-            return new _(this, observer);
+            Output.OnNext(_count);
+            Output.OnCompleted();
+            Dispose();
         }
 
-        private sealed class _ : StatefulUnaryOperator<Count<TSource>, int>, IObserver<TSource>
+        public void OnError(Exception error)
         {
-            private int _count;
+            Output.OnError(error);
+            Dispose();
+        }
 
-            public _(Count<TSource> parent, IObserver<int> observer)
-                : base(parent, observer)
+        public void OnNext(TSource value)
+        {
+            try
             {
-                _count = 0;
-            }
-
-            public override string Name => "rc:Count";
-
-            public override Version Version => Versioning.v1;
-
-            public void OnCompleted()
-            {
-                Output.OnNext(_count);
-                Output.OnCompleted();
-                Dispose();
-            }
-
-            public void OnError(Exception error)
-            {
-                Output.OnError(error);
-                Dispose();
-            }
-
-            public void OnNext(TSource value)
-            {
-                try
+                checked
                 {
-                    checked
-                    {
-                        StateChanged = true;
-                        _count++;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    Output.OnError(ex);
-                    Dispose();
+                    StateChanged = true;
+                    _count++;
                 }
             }
-
-            protected override ISubscription OnSubscribe()
+            catch (Exception ex)
             {
-                return Params._source.Subscribe(this);
+                Output.OnError(ex);
+                Dispose();
             }
+        }
 
-            protected override void LoadStateCore(IOperatorStateReader reader)
-            {
-                base.LoadStateCore(reader);
+        protected override ISubscription OnSubscribe()
+        {
+            return Params._source.Subscribe(this);
+        }
 
-                _count = reader.Read<int>();
-            }
+        protected override void LoadStateCore(IOperatorStateReader reader)
+        {
+            base.LoadStateCore(reader);
 
-            protected override void SaveStateCore(IOperatorStateWriter writer)
-            {
-                base.SaveStateCore(writer);
+            _count = reader.Read<int>();
+        }
 
-                writer.Write<int>(_count);
-            }
+        protected override void SaveStateCore(IOperatorStateWriter writer)
+        {
+            base.SaveStateCore(writer);
+
+            writer.Write<int>(_count);
         }
     }
 }

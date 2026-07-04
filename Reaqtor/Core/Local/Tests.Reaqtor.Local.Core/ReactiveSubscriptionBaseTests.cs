@@ -8,32 +8,31 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtor;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class ReactiveSubscriptionBaseTests
 {
-    [TestClass]
-    public class ReactiveSubscriptionBaseTests
+    [TestMethod]
+    public void ReactiveSubscriptionBase_Dispose()
     {
-        [TestMethod]
-        public void ReactiveSubscriptionBase_Dispose()
+        var s = new MyReactiveSubscription();
+
+        var disposed = false;
+        s.DisposeImpl = () => { disposed = true; };
+
+        s.Dispose();
+
+        Assert.IsTrue(disposed);
+    }
+
+    private sealed class MyReactiveSubscription : ReactiveSubscriptionBase
+    {
+        public Action DisposeImpl;
+
+        protected override void DisposeCore()
         {
-            var s = new MyReactiveSubscription();
-
-            var disposed = false;
-            s.DisposeImpl = () => { disposed = true; };
-
-            s.Dispose();
-
-            Assert.IsTrue(disposed);
-        }
-
-        private sealed class MyReactiveSubscription : ReactiveSubscriptionBase
-        {
-            public Action DisposeImpl;
-
-            protected override void DisposeCore()
-            {
-                DisposeImpl();
-            }
+            DisposeImpl();
         }
     }
 }

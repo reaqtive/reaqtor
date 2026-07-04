@@ -10,13 +10,12 @@
 
 using System;
 
-namespace Reaqtive.Storage
+namespace Reaqtive.Storage;
+
+/// <summary>
+/// Interface representing a persisted value.
+/// </summary>
+/// <typeparam name="T">The type of the persisted value.</typeparam>
+public interface IPersistedValue<T> : IValue<T>, IPersisted
 {
-    /// <summary>
-    /// Interface representing a persisted value.
-    /// </summary>
-    /// <typeparam name="T">The type of the persisted value.</typeparam>
-    public interface IPersistedValue<T> : IValue<T>, IPersisted
-    {
-    }
 }

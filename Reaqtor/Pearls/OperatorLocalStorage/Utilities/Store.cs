@@ -10,16 +10,15 @@
 
 using System.Collections.Generic;
 
-namespace Utilities
+namespace Utilities;
+
+/// <summary>
+/// Key/value store implementation using in-memory dictionaries.
+/// </summary>
+public sealed class Store
 {
     /// <summary>
-    /// Key/value store implementation using in-memory dictionaries.
+    /// Gets the dictionary underneath the key/value store implementation. The keys represent categories, the values represent the key/value stores for each category.
     /// </summary>
-    public sealed class Store
-    {
-        /// <summary>
-        /// Gets the dictionary underneath the key/value store implementation. The keys represent categories, the values represent the key/value stores for each category.
-        /// </summary>
-        public Dictionary<string, Dictionary<string, byte[]>> Data { get; } = [];
-    }
+    public Dictionary<string, Dictionary<string, byte[]>> Data { get; } = [];
 }

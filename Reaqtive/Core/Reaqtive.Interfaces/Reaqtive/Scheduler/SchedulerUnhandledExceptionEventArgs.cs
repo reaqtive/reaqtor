@@ -4,37 +4,36 @@
 
 using System;
 
-namespace Reaqtive.Scheduler
+namespace Reaqtive.Scheduler;
+
+/// <summary>
+/// Provides data for the UnhandledException event on IScheduler.
+/// </summary>
+public sealed class SchedulerUnhandledExceptionEventArgs : EventArgs
 {
     /// <summary>
-    /// Provides data for the UnhandledException event on IScheduler.
+    /// Creates a new scheduler unhandled exception event argument object using the specified scheduler and exception.
     /// </summary>
-    public sealed class SchedulerUnhandledExceptionEventArgs : EventArgs
+    /// <param name="scheduler">Scheduler associated with this event.</param>
+    /// <param name="exception">Exception that was raised when executing code on the scheduler.</param>
+    public SchedulerUnhandledExceptionEventArgs(IScheduler scheduler, Exception exception)
     {
-        /// <summary>
-        /// Creates a new scheduler unhandled exception event argument object using the specified scheduler and exception.
-        /// </summary>
-        /// <param name="scheduler">Scheduler associated with this event.</param>
-        /// <param name="exception">Exception that was raised when executing code on the scheduler.</param>
-        public SchedulerUnhandledExceptionEventArgs(IScheduler scheduler, Exception exception)
-        {
-            Scheduler = scheduler;
-            Exception = exception;
-        }
-
-        /// <summary>
-        /// Gets the scheduler associated with this event.
-        /// </summary>
-        public IScheduler Scheduler { get; }
-
-        /// <summary>
-        /// Gets the exception that was raised when executing code on the scheduler.
-        /// </summary>
-        public Exception Exception { get; }
-
-        /// <summary>
-        /// Gets or sets whether the exception event has been handled.
-        /// </summary>
-        public bool Handled { get; set; }
+        Scheduler = scheduler;
+        Exception = exception;
     }
+
+    /// <summary>
+    /// Gets the scheduler associated with this event.
+    /// </summary>
+    public IScheduler Scheduler { get; }
+
+    /// <summary>
+    /// Gets the exception that was raised when executing code on the scheduler.
+    /// </summary>
+    public Exception Exception { get; }
+
+    /// <summary>
+    /// Gets or sets whether the exception event has been handled.
+    /// </summary>
+    public bool Handled { get; set; }
 }

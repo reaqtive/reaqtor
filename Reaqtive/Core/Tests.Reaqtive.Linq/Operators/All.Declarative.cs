@@ -15,144 +15,143 @@ using Reaqtor.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public partial class All : OperatorTestBase
 {
-    public partial class All : OperatorTestBase
+    [TestMethod]
+    public void All_Simple_True()
     {
-        [TestMethod]
-        public void All_Simple_True()
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 3),
-                    OnNext<int>(30, 5),
-                    OnNext<int>(40, 7),
-                    OnCompleted<int>(50)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 3),
+                OnNext<int>(30, 5),
+                OnNext<int>(40, 7),
+                OnCompleted<int>(50)
+            );
 
-                var res = client.Start(() =>
-                    xs.All(x => x < 10)
-                );
+            var res = client.Start(() =>
+                xs.All(x => x < 10)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext<bool>(250, true),
-                    OnCompleted<bool>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext<bool>(250, true),
+                OnCompleted<bool>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void All_Simple_False()
+    [TestMethod]
+    public void All_Simple_False()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 3),
-                    OnNext<int>(30, 5),
-                    OnNext<int>(40, 7),
-                    OnCompleted<int>(50)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 3),
+                OnNext<int>(30, 5),
+                OnNext<int>(40, 7),
+                OnCompleted<int>(50)
+            );
 
-                var res = client.Start(() =>
-                    xs.All(x => x % 5 != 0)
-                );
+            var res = client.Start(() =>
+                xs.All(x => x % 5 != 0)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext<bool>(230, false),
-                    OnCompleted<bool>(230)
-                );
+            res.Messages.AssertEqual(
+                OnNext<bool>(230, false),
+                OnCompleted<bool>(230)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 230)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 230)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void All_Empty()
+    [TestMethod]
+    public void All_Empty()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnCompleted<int>(50)
-                );
+            var xs = client.CreateColdObservable(
+                OnCompleted<int>(50)
+            );
 
-                var res = client.Start(() =>
-                    xs.All(x => x < 10)
-                );
+            var res = client.Start(() =>
+                xs.All(x => x < 10)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext<bool>(250, true),
-                    OnCompleted<bool>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext<bool>(250, true),
+                OnCompleted<bool>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void All_Throw()
+    [TestMethod]
+    public void All_Throw()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
+            var ex = new Exception();
 
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 3),
-                    OnNext<int>(30, 5),
-                    OnNext<int>(40, 7),
-                    OnError<int>(50, ex)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 3),
+                OnNext<int>(30, 5),
+                OnNext<int>(40, 7),
+                OnError<int>(50, ex)
+            );
 
-                var res = client.Start(() =>
-                    xs.All(x => x < 10)
-                );
+            var res = client.Start(() =>
+                xs.All(x => x < 10)
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<bool>(250, ex)
-                );
+            res.Messages.AssertEqual(
+                OnError<bool>(250, ex)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void All_PredicateThrows()
+    [TestMethod]
+    public void All_PredicateThrows()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateColdObservable(
-                    OnNext<int>(10, 2),
-                    OnNext<int>(20, 3),
-                    OnNext<int>(30, 0),
-                    OnNext<int>(40, 7),
-                    OnCompleted<int>(50)
-                );
+            var xs = client.CreateColdObservable(
+                OnNext<int>(10, 2),
+                OnNext<int>(20, 3),
+                OnNext<int>(30, 0),
+                OnNext<int>(40, 7),
+                OnCompleted<int>(50)
+            );
 
-                var res = client.Start(() =>
-                    xs.All(x => 100 / x > 0)
-                );
+            var res = client.Start(() =>
+                xs.All(x => 100 / x > 0)
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<bool>(230, ex => ex is DivideByZeroException)
-                );
+            res.Messages.AssertEqual(
+                OnError<bool>(230, ex => ex is DivideByZeroException)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 230)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 230)
+            );
+        });
     }
 }

@@ -5,155 +5,154 @@
 using System;
 using System.Diagnostics;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class Select<TSource, TResult> : SubscribableBase<TResult>
 {
-    internal sealed class Select<TSource, TResult> : SubscribableBase<TResult>
+    private readonly ISubscribable<TSource> _source;
+    private readonly Func<TSource, TResult> _selector;
+
+    public Select(ISubscribable<TSource> source, Func<TSource, TResult> selector)
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, TResult> _selector;
+        Debug.Assert(source != null);
+        Debug.Assert(selector != null);
 
-        public Select(ISubscribable<TSource> source, Func<TSource, TResult> selector)
-        {
-            Debug.Assert(source != null);
-            Debug.Assert(selector != null);
-
-            _source = source;
-            _selector = selector;
-        }
-
-        protected override ISubscription SubscribeCore(IObserver<TResult> observer)
-        {
-            return new _(this, observer);
-        }
-
-        private sealed class _ : StatefulUnaryOperator<Select<TSource, TResult>, TResult>, IObserver<TSource>
-        {
-            public _(Select<TSource, TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
-            {
-            }
-
-            public override string Name => "rc:Select";
-
-            public override Version Version => Versioning.v1;
-
-            public void OnCompleted()
-            {
-                Output.OnCompleted();
-                Dispose();
-            }
-
-            public void OnError(Exception error)
-            {
-                Output.OnError(error);
-                Dispose();
-            }
-
-            public void OnNext(TSource value)
-            {
-                TResult result;
-                try
-                {
-                    result = Params._selector(value);
-                }
-                catch (Exception exception)
-                {
-                    Output.OnError(exception);
-                    Dispose();
-                    return;
-                }
-
-                Output.OnNext(result);
-            }
-
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(this);
-            }
-        }
+        _source = source;
+        _selector = selector;
     }
 
-    internal sealed class SelectIndexed<TSource, TResult> : SubscribableBase<TResult>
+    protected override ISubscription SubscribeCore(IObserver<TResult> observer)
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, int, TResult> _indexSelector;
+        return new _(this, observer);
+    }
 
-        public SelectIndexed(ISubscribable<TSource> source, Func<TSource, int, TResult> selector)
+    private sealed class _ : StatefulUnaryOperator<Select<TSource, TResult>, TResult>, IObserver<TSource>
+    {
+        public _(Select<TSource, TResult> parent, IObserver<TResult> observer)
+            : base(parent, observer)
         {
-            Debug.Assert(source != null);
-            Debug.Assert(selector != null);
-
-            _source = source;
-            _indexSelector = selector;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<TResult> observer)
+        public override string Name => "rc:Select";
+
+        public override Version Version => Versioning.v1;
+
+        public void OnCompleted()
         {
-            return new _(this, observer);
+            Output.OnCompleted();
+            Dispose();
         }
 
-        private sealed class _ : StatefulUnaryOperator<SelectIndexed<TSource, TResult>, TResult>, IObserver<TSource>
+        public void OnError(Exception error)
         {
-            private int _currentIndex;
+            Output.OnError(error);
+            Dispose();
+        }
 
-            public _(SelectIndexed<TSource, TResult> parent, IObserver<TResult> observer)
-                : base(parent, observer)
+        public void OnNext(TSource value)
+        {
+            TResult result;
+            try
             {
+                result = Params._selector(value);
             }
-
-            public override string Name => "rc:Select+Index";
-
-            public override Version Version => Versioning.v1;
-
-            public void OnCompleted()
+            catch (Exception exception)
             {
-                Output.OnCompleted();
+                Output.OnError(exception);
                 Dispose();
+                return;
             }
 
-            public void OnError(Exception error)
+            Output.OnNext(result);
+        }
+
+        protected override ISubscription OnSubscribe()
+        {
+            return Params._source.Subscribe(this);
+        }
+    }
+}
+
+internal sealed class SelectIndexed<TSource, TResult> : SubscribableBase<TResult>
+{
+    private readonly ISubscribable<TSource> _source;
+    private readonly Func<TSource, int, TResult> _indexSelector;
+
+    public SelectIndexed(ISubscribable<TSource> source, Func<TSource, int, TResult> selector)
+    {
+        Debug.Assert(source != null);
+        Debug.Assert(selector != null);
+
+        _source = source;
+        _indexSelector = selector;
+    }
+
+    protected override ISubscription SubscribeCore(IObserver<TResult> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<SelectIndexed<TSource, TResult>, TResult>, IObserver<TSource>
+    {
+        private int _currentIndex;
+
+        public _(SelectIndexed<TSource, TResult> parent, IObserver<TResult> observer)
+            : base(parent, observer)
+        {
+        }
+
+        public override string Name => "rc:Select+Index";
+
+        public override Version Version => Versioning.v1;
+
+        public void OnCompleted()
+        {
+            Output.OnCompleted();
+            Dispose();
+        }
+
+        public void OnError(Exception error)
+        {
+            Output.OnError(error);
+            Dispose();
+        }
+
+        public void OnNext(TSource value)
+        {
+            StateChanged = true;
+
+            TResult result;
+            try
             {
-                Output.OnError(error);
+                result = Params._indexSelector(value, checked(_currentIndex++));
+            }
+            catch (Exception exception)
+            {
+                Output.OnError(exception);
                 Dispose();
+                return;
             }
 
-            public void OnNext(TSource value)
-            {
-                StateChanged = true;
+            Output.OnNext(result);
+        }
 
-                TResult result;
-                try
-                {
-                    result = Params._indexSelector(value, checked(_currentIndex++));
-                }
-                catch (Exception exception)
-                {
-                    Output.OnError(exception);
-                    Dispose();
-                    return;
-                }
+        protected override void LoadStateCore(IOperatorStateReader reader)
+        {
+            base.LoadStateCore(reader);
 
-                Output.OnNext(result);
-            }
+            _currentIndex = reader.Read<int>();
+        }
 
-            protected override void LoadStateCore(IOperatorStateReader reader)
-            {
-                base.LoadStateCore(reader);
+        protected override void SaveStateCore(IOperatorStateWriter writer)
+        {
+            base.SaveStateCore(writer);
 
-                _currentIndex = reader.Read<int>();
-            }
+            writer.Write(_currentIndex);
+        }
 
-            protected override void SaveStateCore(IOperatorStateWriter writer)
-            {
-                base.SaveStateCore(writer);
-
-                writer.Write(_currentIndex);
-            }
-
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(this);
-            }
+        protected override ISubscription OnSubscribe()
+        {
+            return Params._source.Subscribe(this);
         }
     }
 }

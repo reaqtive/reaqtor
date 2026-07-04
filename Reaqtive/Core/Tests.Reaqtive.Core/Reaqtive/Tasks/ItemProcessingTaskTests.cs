@@ -10,69 +10,68 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Reaqtive.Scheduler;
 using Reaqtive.Tasks;
 
-namespace Test.Reaqtive
+namespace Test.Reaqtive;
+
+[TestClass]
+public class ItemProcessingTaskTests
 {
-    [TestClass]
-    public class ItemProcessingTaskTests
+    [TestMethod]
+    public void ItemProcessingTask_ArgumentChecking()
     {
-        [TestMethod]
-        public void ItemProcessingTask_ArgumentChecking()
+        Assert.ThrowsExactly<ArgumentNullException>(() => new ItemProcessingTask(null));
+    }
+
+    [TestMethod]
+    public void ItemProcessingTask_Simple()
+    {
+        const int IterationCount = 1; // NB: Increase this to debug subtle issues.
+
+        for (var i = 0; i < IterationCount; i++)
         {
-            Assert.ThrowsExactly<ArgumentNullException>(() => new ItemProcessingTask(null));
+            ItemProcessingTask_Simple_Core();
         }
+    }
 
-        [TestMethod]
-        public void ItemProcessingTask_Simple()
+    private static void ItemProcessingTask_Simple_Core()
+    {
+        var proc = new ItemProcessor();
+        var task = new ItemProcessingTask(proc);
+
+        Assert.AreEqual(2, task.Priority);
+        Assert.IsFalse(task.IsRunnable);
+
+        task.RecalculatePriority();
+
+        Assert.IsFalse(task.IsRunnable);
+
+        proc.Add();
+
+        Assert.IsTrue(task.IsRunnable);
+
+        using var s = PhysicalScheduler.Create();
+        using var l = new LogicalScheduler(s);
+
+        l.Schedule(task);
+        proc.Events[0].WaitOne();
+
+        proc.Add();
+        l.RecalculatePriority();
+        proc.Events[1].WaitOne();
+    }
+
+    private sealed class ItemProcessor : IItemProcessor
+    {
+        public void Add() => ItemCount++;
+
+        public int ItemCount { get; private set; }
+
+        private int _index;
+        public ManualResetEvent[] Events = [new ManualResetEvent(false), new ManualResetEvent(false)];
+
+        public void Process(int batchSize)
         {
-            const int IterationCount = 1; // NB: Increase this to debug subtle issues.
-
-            for (var i = 0; i < IterationCount; i++)
-            {
-                ItemProcessingTask_Simple_Core();
-            }
-        }
-
-        private static void ItemProcessingTask_Simple_Core()
-        {
-            var proc = new ItemProcessor();
-            var task = new ItemProcessingTask(proc);
-
-            Assert.AreEqual(2, task.Priority);
-            Assert.IsFalse(task.IsRunnable);
-
-            task.RecalculatePriority();
-
-            Assert.IsFalse(task.IsRunnable);
-
-            proc.Add();
-
-            Assert.IsTrue(task.IsRunnable);
-
-            using var s = PhysicalScheduler.Create();
-            using var l = new LogicalScheduler(s);
-
-            l.Schedule(task);
-            proc.Events[0].WaitOne();
-
-            proc.Add();
-            l.RecalculatePriority();
-            proc.Events[1].WaitOne();
-        }
-
-        private sealed class ItemProcessor : IItemProcessor
-        {
-            public void Add() => ItemCount++;
-
-            public int ItemCount { get; private set; }
-
-            private int _index;
-            public ManualResetEvent[] Events = [new ManualResetEvent(false), new ManualResetEvent(false)];
-
-            public void Process(int batchSize)
-            {
-                ItemCount--;
-                Events[_index++].Set();
-            }
+            ItemCount--;
+            Events[_index++].Set();
         }
     }
 }

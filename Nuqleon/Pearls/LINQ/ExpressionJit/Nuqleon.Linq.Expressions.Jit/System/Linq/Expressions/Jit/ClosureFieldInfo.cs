@@ -10,21 +10,20 @@
 
 using System.Reflection;
 
-namespace System.Linq.Expressions.Jit
+namespace System.Linq.Expressions.Jit;
+
+/// <summary>
+/// Represents information about the closure field storage for a hoisted local.
+/// </summary>
+internal struct ClosureFieldInfo
 {
     /// <summary>
-    /// Represents information about the closure field storage for a hoisted local.
+    /// The field in the closure holding the hoisted local.
     /// </summary>
-    internal struct ClosureFieldInfo
-    {
-        /// <summary>
-        /// The field in the closure holding the hoisted local.
-        /// </summary>
-        public FieldInfo Field;
+    public FieldInfo Field;
 
-        /// <summary>
-        /// The storage kind of the hoisted local.
-        /// </summary>
-        public StorageKind Kind;
-    }
+    /// <summary>
+    /// The storage kind of the hoisted local.
+    /// </summary>
+    public StorageKind Kind;
 }

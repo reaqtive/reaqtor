@@ -9,64 +9,63 @@
 // ER - July 2013 - Small tweaks.
 //
 
-namespace System.Reflection
+namespace System.Reflection;
+
+/// <summary>
+/// Lightweight representation of a simple type.
+/// </summary>
+public abstract class SimpleTypeSlimBase : TypeSlim
 {
     /// <summary>
-    /// Lightweight representation of a simple type.
+    /// Creates a new generic type definition representation object.
     /// </summary>
-    public abstract class SimpleTypeSlimBase : TypeSlim
+    /// <param name="assembly">Assembly defining the type.</param>
+    /// <param name="name">Name of the type.</param>
+    protected SimpleTypeSlimBase(AssemblySlim assembly, string name)
     {
-        /// <summary>
-        /// Creates a new generic type definition representation object.
-        /// </summary>
-        /// <param name="assembly">Assembly defining the type.</param>
-        /// <param name="name">Name of the type.</param>
-        protected SimpleTypeSlimBase(AssemblySlim assembly, string name)
+        Assembly = assembly;
+        Name = name;
+    }
+
+    /// <summary>
+    /// Gets the assembly defining the type.
+    /// </summary>
+    public AssemblySlim Assembly { get; }
+
+    /// <summary>
+    /// Gets the name of the type.
+    /// </summary>
+    public string Name { get; }
+
+    /// <summary>
+    /// The equals method for comparing against other class instances.
+    /// </summary>
+    /// <param name="other">The other instance.</param>
+    /// <returns><b>true</b> if the given instance equals this instance, <b>false</b> otherwise.</returns>
+    public override bool Equals(TypeSlim other)
+    {
+        if (other is SimpleTypeSlimBase s)
         {
-            Assembly = assembly;
-            Name = name;
+            return Kind == s.Kind
+                && Name == s.Name
+                && Assembly?.Name == s.Assembly?.Name;
         }
 
-        /// <summary>
-        /// Gets the assembly defining the type.
-        /// </summary>
-        public AssemblySlim Assembly { get; }
+        return false;
+    }
 
-        /// <summary>
-        /// Gets the name of the type.
-        /// </summary>
-        public string Name { get; }
-
-        /// <summary>
-        /// The equals method for comparing against other class instances.
-        /// </summary>
-        /// <param name="other">The other instance.</param>
-        /// <returns><b>true</b> if the given instance equals this instance, <b>false</b> otherwise.</returns>
-        public override bool Equals(TypeSlim other)
+    /// <summary>
+    /// Returns a hash code for this object.
+    /// </summary>
+    /// <returns>The hash code.</returns>
+    public override int GetHashCode()
+    {
+        if (_hashCode == 0)
         {
-            if (other is SimpleTypeSlimBase s)
-            {
-                return Kind == s.Kind
-                    && Name == s.Name
-                    && Assembly?.Name == s.Assembly?.Name;
-            }
-
-            return false;
+            var hash = Assembly?.Name?.GetHashCode(StringComparison.Ordinal) ?? 0;
+            _hashCode = (int)(hash * TypeSlimEqualityComparator.Prime) + Name.GetHashCode(StringComparison.Ordinal);
         }
 
-        /// <summary>
-        /// Returns a hash code for this object.
-        /// </summary>
-        /// <returns>The hash code.</returns>
-        public override int GetHashCode()
-        {
-            if (_hashCode == 0)
-            {
-                var hash = Assembly?.Name?.GetHashCode(StringComparison.Ordinal) ?? 0;
-                _hashCode = (int)(hash * TypeSlimEqualityComparator.Prime) + Name.GetHashCode(StringComparison.Ordinal);
-            }
-
-            return _hashCode;
-        }
+        return _hashCode;
     }
 }

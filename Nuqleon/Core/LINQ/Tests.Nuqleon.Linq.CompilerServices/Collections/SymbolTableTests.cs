@@ -16,88 +16,87 @@ using System.Linq.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class SymbolTableTests
 {
-    [TestClass]
-    public class SymbolTableTests
+    [TestMethod]
+    public void SymbolTable_ArgumentChecking()
     {
-        [TestMethod]
-        public void SymbolTable_ArgumentChecking()
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new SymbolTable<string, string>(parent: null, symbolComparer: null));
+        Assert.AreEqual("symbolComparer", ex.ParamName);
+    }
+
+    [TestMethod]
+    public void SymbolTable_Basics()
+    {
+        var st = new SymbolTable<string, string>(parent: null)
         {
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => new SymbolTable<string, string>(parent: null, symbolComparer: null));
-            Assert.AreEqual("symbolComparer", ex.ParamName);
-        }
+            { "bar", "foo" },
+            { "baz", "qux" },
+        };
 
-        [TestMethod]
-        public void SymbolTable_Basics()
+        Assert.IsNull(st.Parent);
+
+        Assert.ThrowsExactly<InvalidOperationException>(() => st.Add("bar", "qux"));
+
+        Assert.IsTrue(st.TryGetValue("bar", out Indexed<string> foo));
+        Assert.AreEqual("foo", foo.Value);
+        Assert.AreEqual(0, foo.Index);
+        Assert.AreEqual(foo, st["bar"]);
+
+        Assert.IsTrue(st.TryGetValue("baz", out Indexed<string> qux));
+        Assert.AreEqual("qux", qux.Value);
+        Assert.AreEqual(1, qux.Index);
+
+        Assert.IsFalse(st.TryGetValue("foo", out Indexed<string> unk));
+
+        Assert.IsTrue(st.ToArray().SequenceEqual([
+            new Indexed<KeyValuePair<string, string>>(new KeyValuePair<string, string>("bar", "foo"), 0),
+            new Indexed<KeyValuePair<string, string>>(new KeyValuePair<string, string>("baz", "qux"), 1)
+        ]));
+
+        Assert.IsNotNull(((IEnumerable)st).GetEnumerator());
+
+        CollectionAssert.AreEqual(new[] { "bar", "baz" }, st.Symbols.ToArray());
+    }
+
+    [TestMethod]
+    public void SymbolTable_Nested()
+    {
+        var st1 = new SymbolTable<string, string>(parent: null)
         {
-            var st = new SymbolTable<string, string>(parent: null)
-            {
-                { "bar", "foo" },
-                { "baz", "qux" },
-            };
+            { "bar", "foo" },
+            { "baz", "xuq" },
+        };
 
-            Assert.IsNull(st.Parent);
-
-            Assert.ThrowsExactly<InvalidOperationException>(() => st.Add("bar", "qux"));
-
-            Assert.IsTrue(st.TryGetValue("bar", out Indexed<string> foo));
-            Assert.AreEqual("foo", foo.Value);
-            Assert.AreEqual(0, foo.Index);
-            Assert.AreEqual(foo, st["bar"]);
-
-            Assert.IsTrue(st.TryGetValue("baz", out Indexed<string> qux));
-            Assert.AreEqual("qux", qux.Value);
-            Assert.AreEqual(1, qux.Index);
-
-            Assert.IsFalse(st.TryGetValue("foo", out Indexed<string> unk));
-
-            Assert.IsTrue(st.ToArray().SequenceEqual([
-                new Indexed<KeyValuePair<string, string>>(new KeyValuePair<string, string>("bar", "foo"), 0),
-                new Indexed<KeyValuePair<string, string>>(new KeyValuePair<string, string>("baz", "qux"), 1)
-            ]));
-
-            Assert.IsNotNull(((IEnumerable)st).GetEnumerator());
-
-            CollectionAssert.AreEqual(new[] { "bar", "baz" }, st.Symbols.ToArray());
-        }
-
-        [TestMethod]
-        public void SymbolTable_Nested()
+        var st2 = new SymbolTable<string, string>(st1)
         {
-            var st1 = new SymbolTable<string, string>(parent: null)
-            {
-                { "bar", "foo" },
-                { "baz", "xuq" },
-            };
+            { "foo", "bar" },
+            { "bar", "qux" },
+        };
 
-            var st2 = new SymbolTable<string, string>(st1)
-            {
-                { "foo", "bar" },
-                { "bar", "qux" },
-            };
+        var st3 = new SymbolTable<string, string>(st2)
+        {
+            { "qux", "baz" },
+        };
 
-            var st3 = new SymbolTable<string, string>(st2)
-            {
-                { "qux", "baz" },
-            };
+        Assert.IsFalse(st3.TryLookup("nop", out _));
 
-            Assert.IsFalse(st3.TryLookup("nop", out _));
+        Assert.IsTrue(st3.TryLookup("qux", out Indexed<Indexed<string>> res2));
+        Assert.AreEqual(0, res2.Index);
+        Assert.AreEqual(0, res2.Value.Index);
+        Assert.AreEqual("baz", res2.Value.Value);
 
-            Assert.IsTrue(st3.TryLookup("qux", out Indexed<Indexed<string>> res2));
-            Assert.AreEqual(0, res2.Index);
-            Assert.AreEqual(0, res2.Value.Index);
-            Assert.AreEqual("baz", res2.Value.Value);
+        Assert.IsTrue(st3.TryLookup("bar", out Indexed<Indexed<string>> res3));
+        Assert.AreEqual(1, res3.Index);
+        Assert.AreEqual(1, res3.Value.Index);
+        Assert.AreEqual("qux", res3.Value.Value);
 
-            Assert.IsTrue(st3.TryLookup("bar", out Indexed<Indexed<string>> res3));
-            Assert.AreEqual(1, res3.Index);
-            Assert.AreEqual(1, res3.Value.Index);
-            Assert.AreEqual("qux", res3.Value.Value);
-
-            Assert.IsTrue(st3.TryLookup("baz", out Indexed<Indexed<string>> res4));
-            Assert.AreEqual(2, res4.Index);
-            Assert.AreEqual(1, res4.Value.Index);
-            Assert.AreEqual("xuq", res4.Value.Value);
-        }
+        Assert.IsTrue(st3.TryLookup("baz", out Indexed<Indexed<string>> res4));
+        Assert.AreEqual(2, res4.Index);
+        Assert.AreEqual(1, res4.Value.Index);
+        Assert.AreEqual("xuq", res4.Value.Value);
     }
 }

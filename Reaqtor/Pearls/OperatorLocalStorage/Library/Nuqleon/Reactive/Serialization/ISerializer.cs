@@ -11,20 +11,19 @@
 using System;
 using System.IO;
 
-namespace Reaqtive.Serialization
+namespace Reaqtive.Serialization;
+
+/// <summary>
+/// Interface representing a serializer for objects of type <typeparamref name="T"/>.
+/// </summary>
+/// <typeparam name="T">The type of the objects to serialize.</typeparam>
+public interface ISerializer<in T>
 {
     /// <summary>
-    /// Interface representing a serializer for objects of type <typeparamref name="T"/>.
+    /// Serializes the specified <paramref name="value"/> into the specified <paramref name="stream"/>.
     /// </summary>
-    /// <typeparam name="T">The type of the objects to serialize.</typeparam>
-    public interface ISerializer<in T>
-    {
-        /// <summary>
-        /// Serializes the specified <paramref name="value"/> into the specified <paramref name="stream"/>.
-        /// </summary>
-        /// <param name="value">The value to serialize.</param>
-        /// <param name="stream">The stream to serialize the value to.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <c>null</c>.</exception>
-        void Serialize(T value, Stream stream);
-    }
+    /// <param name="value">The value to serialize.</param>
+    /// <param name="stream">The stream to serialize the value to.</param>
+    /// <exception cref="ArgumentNullException"><paramref name="stream"/> is <c>null</c>.</exception>
+    void Serialize(T value, Stream stream);
 }

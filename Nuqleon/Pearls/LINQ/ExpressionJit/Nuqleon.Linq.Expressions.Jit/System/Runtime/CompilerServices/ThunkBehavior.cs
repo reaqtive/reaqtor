@@ -8,27 +8,26 @@
 // BD - May 2017 - Initial prototype of JIT.
 //
 
-namespace System.Runtime.CompilerServices
+namespace System.Runtime.CompilerServices;
+
+/// <summary>
+/// Specifies the behavior of thunk types.
+/// </summary>
+internal enum ThunkBehavior
 {
     /// <summary>
-    /// Specifies the behavior of thunk types.
+    /// Compile expression trees using dynamic IL code generation.
     /// </summary>
-    internal enum ThunkBehavior
-    {
-        /// <summary>
-        /// Compile expression trees using dynamic IL code generation.
-        /// </summary>
-        Compiling,
+    Compiling,
 
-        /// <summary>
-        /// Compile expression trees using an interpreter execution target.
-        /// </summary>
-        Interpreting,
+    /// <summary>
+    /// Compile expression trees using an interpreter execution target.
+    /// </summary>
+    Interpreting,
 
-        /// <summary>
-        /// Compile expression trees using an interpreter execution target, and recompile using dynamic IL code
-        /// generation if sufficient invocations are made.
-        /// </summary>
-        TieredCompilation,
-    }
+    /// <summary>
+    /// Compile expression trees using an interpreter execution target, and recompile using dynamic IL code
+    /// generation if sufficient invocations are made.
+    /// </summary>
+    TieredCompilation,
 }

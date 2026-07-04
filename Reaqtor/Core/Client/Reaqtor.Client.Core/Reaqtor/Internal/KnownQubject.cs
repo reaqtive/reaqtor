@@ -11,16 +11,15 @@
 using System;
 using System.Linq.Expressions;
 
-namespace Reaqtor
-{
-    internal sealed class KnownQubject<TInput, TOuput> : Qubject<TInput, TOuput>, IKnownResource
-    {
-        public KnownQubject(Expression expression, Uri streamUri, IAsyncReactiveQueryProvider provider)
-            : base(expression, provider)
-        {
-            Uri = streamUri;
-        }
+namespace Reaqtor;
 
-        public Uri Uri { get; }
+internal sealed class KnownQubject<TInput, TOuput> : Qubject<TInput, TOuput>, IKnownResource
+{
+    public KnownQubject(Expression expression, Uri streamUri, IAsyncReactiveQueryProvider provider)
+        : base(expression, provider)
+    {
+        Uri = streamUri;
     }
+
+    public Uri Uri { get; }
 }

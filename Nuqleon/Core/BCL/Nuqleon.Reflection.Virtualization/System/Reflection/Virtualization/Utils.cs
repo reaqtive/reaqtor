@@ -2,47 +2,46 @@
 // The .NET Foundation licenses this file to you under the MIT License.
 // See the LICENSE file in the project root for more information.
 
-namespace System
+namespace System;
+
+internal static class Utils
 {
-    internal static class Utils
+    public static bool SequenceEqual(Type[] left, Type[] right)
     {
-        public static bool SequenceEqual(Type[] left, Type[] right)
+        if (left == right)
         {
-            if (left == right)
-            {
-                return true;
-            }
-
-            var count = left.Length;
-
-            if (right.Length != count)
-            {
-                return false;
-            }
-
-            for (var i = 0; i < count; i++)
-            {
-                if (left[i] != right[i])
-                {
-                    return false;
-                }
-            }
-
             return true;
         }
 
-        public static int GetHashCode<TDefinition>(TDefinition def, Type[] args)
+        var count = left.Length;
+
+        if (right.Length != count)
         {
-            HashCode h = new();
-
-            h.Add(def);
-
-            foreach (var arg in args)
-            {
-                h.Add(arg);
-            }
-
-            return h.ToHashCode();
+            return false;
         }
+
+        for (var i = 0; i < count; i++)
+        {
+            if (left[i] != right[i])
+            {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public static int GetHashCode<TDefinition>(TDefinition def, Type[] args)
+    {
+        HashCode h = new();
+
+        h.Add(def);
+
+        foreach (var arg in args)
+        {
+            h.Add(arg);
+        }
+
+        return h.ToHashCode();
     }
 }

@@ -16,152 +16,151 @@ using System.Linq.Expressions;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class ExpressionVisitorNarrowGenericTests
 {
-    [TestClass]
-    public class ExpressionVisitorNarrowGenericTests
+    [TestMethod]
+    public void ExpressionVisitorNarrow_NotSupported()
     {
-        [TestMethod]
-        public void ExpressionVisitorNarrow_NotSupported()
+        new MyVisitor1().Test();
+        new MyVisitor2().Test();
+    }
+
+    private class MyExt : Expression
+    {
+        public override ExpressionType NodeType => ExpressionType.Extension;
+    }
+
+    private class MyVisitor1 : ExpressionVisitorNarrow<string>
+    {
+        public void Test()
         {
-            new MyVisitor1().Test();
-            new MyVisitor2().Test();
+            var block = Expression.Block(Expression.Constant(1));
+
+            var add = Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(
+                Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
+                ExpressionType.Add,
+                typeof(ExpressionEqualityComparerTests),
+                [
+                    Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
+                    Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
+                ]
+            );
+
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitBlock(block));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitDebugInfo(Expression.DebugInfo(Expression.SymbolDocument("foo.txt"), 1, 1, 1, 1)));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2))));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitExtension(new MyExt()));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitGoto(Expression.Return(Expression.Label(""))));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)])));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitLabel(Expression.Label(Expression.Label(""))));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitLoop(Expression.Loop(block)));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitRuntimeVariables(Expression.RuntimeVariables()));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitSwitch(Expression.Switch(Expression.Constant(1), Expression.Constant(1), Expression.SwitchCase(block, Expression.Constant(1)))));
+            Assert.ThrowsExactly<NotSupportedException>(() => VisitTry(Expression.TryFinally(block, block)));
         }
 
-        private class MyExt : Expression
+        protected override string VisitBinary(BinaryExpression node) => throw new NotImplementedException();
+
+        protected override string VisitMethodCall(MethodCallExpression node) => throw new NotImplementedException();
+
+        protected override string VisitConditional(ConditionalExpression node) => throw new NotImplementedException();
+
+        protected override string VisitConstant(ConstantExpression node) => throw new NotImplementedException();
+
+        protected override string VisitDefault(DefaultExpression node) => throw new NotImplementedException();
+
+        protected override string VisitInvocation(InvocationExpression node) => throw new NotImplementedException();
+
+        protected override string VisitLambda<T>(Expression<T> node) => throw new NotImplementedException();
+
+        protected override string VisitListInit(ListInitExpression node) => throw new NotImplementedException();
+
+        protected override string VisitMember(MemberExpression node) => throw new NotImplementedException();
+
+        protected override string VisitMemberInit(MemberInitExpression node) => throw new NotImplementedException();
+
+        protected override string VisitNew(NewExpression node) => throw new NotImplementedException();
+
+        protected override string VisitNewArray(NewArrayExpression node) => throw new NotImplementedException();
+
+        protected override string VisitParameter(ParameterExpression node) => throw new NotImplementedException();
+
+        protected override string VisitTypeBinary(TypeBinaryExpression node) => throw new NotImplementedException();
+
+        protected override string VisitUnary(UnaryExpression node) => throw new NotImplementedException();
+    }
+
+    private class MyVisitor2 : ExpressionVisitorNarrow<Expression, LambdaExpression, ParameterExpression, NewExpression, ElementInit, MemberBinding, MemberAssignment, MemberListBinding, MemberMemberBinding>
+    {
+        public void Test()
         {
-            public override ExpressionType NodeType => ExpressionType.Extension;
+            var block = Expression.Block(Expression.Constant(1));
+
+            var add = Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(
+                Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
+                ExpressionType.Add,
+                typeof(ExpressionEqualityComparerTests),
+                [
+                    Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
+                    Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
+                ]
+            );
+
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeBlock(block, variables: null, expressions: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeDebugInfo(Expression.DebugInfo(Expression.SymbolDocument("foo.txt"), 1, 1, 1, 1)));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2)), arguments: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeGoto(Expression.Return(Expression.Label("")), target: null, value: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)]), @object: null, arguments: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeLabel(Expression.Label(Expression.Label("")), target: null, defaultValue: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeLoop(Expression.Loop(block), body: null, breakLabel: null, continueLabel: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeRuntimeVariables(Expression.RuntimeVariables(), variables: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeSwitch(Expression.Switch(Expression.Constant(1), Expression.Constant(1), Expression.SwitchCase(block, Expression.Constant(1))), switchValue: null, defaultBody: null, cases: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeTry(Expression.TryFinally(block, block), body: null, @finally: null, fault: null, handlers: null));
+
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeCatchBlock(Expression.MakeCatchBlock(typeof(Exception), Expression.Parameter(typeof(Exception)), block, filter: null), variable: null, body: null, filter: null));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeLabelTarget(Expression.Label("")));
+            Assert.ThrowsExactly<NotSupportedException>(() => MakeSwitchCase(Expression.SwitchCase(block, Expression.Constant(1)), body: null, testValues: null));
         }
 
-        private class MyVisitor1 : ExpressionVisitorNarrow<string>
-        {
-            public void Test()
-            {
-                var block = Expression.Block(Expression.Constant(1));
+        protected override Expression MakeBinary(BinaryExpression node, Expression left, LambdaExpression conversion, Expression right) => throw new NotImplementedException();
 
-                var add = Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(
-                    Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
-                    ExpressionType.Add,
-                    typeof(ExpressionEqualityComparerTests),
-                    [
-                        Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
-                        Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                    ]
-                );
+        protected override Expression MakeConditional(ConditionalExpression node, Expression test, Expression ifTrue, Expression ifFalse) => throw new NotImplementedException();
 
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitBlock(block));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitDebugInfo(Expression.DebugInfo(Expression.SymbolDocument("foo.txt"), 1, 1, 1, 1)));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2))));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitExtension(new MyExt()));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitGoto(Expression.Return(Expression.Label(""))));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)])));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitLabel(Expression.Label(Expression.Label(""))));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitLoop(Expression.Loop(block)));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitRuntimeVariables(Expression.RuntimeVariables()));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitSwitch(Expression.Switch(Expression.Constant(1), Expression.Constant(1), Expression.SwitchCase(block, Expression.Constant(1)))));
-                Assert.ThrowsExactly<NotSupportedException>(() => VisitTry(Expression.TryFinally(block, block)));
-            }
+        protected override Expression MakeConstant(ConstantExpression node) => throw new NotImplementedException();
 
-            protected override string VisitBinary(BinaryExpression node) => throw new NotImplementedException();
+        protected override Expression MakeDefault(DefaultExpression node) => throw new NotImplementedException();
 
-            protected override string VisitMethodCall(MethodCallExpression node) => throw new NotImplementedException();
+        protected override ElementInit MakeElementInit(ElementInit node, ReadOnlyCollection<Expression> arguments) => throw new NotImplementedException();
 
-            protected override string VisitConditional(ConditionalExpression node) => throw new NotImplementedException();
+        protected override Expression MakeInvocation(InvocationExpression node, Expression expression, ReadOnlyCollection<Expression> arguments) => throw new NotImplementedException();
 
-            protected override string VisitConstant(ConstantExpression node) => throw new NotImplementedException();
+        protected override LambdaExpression MakeLambda<T>(Expression<T> node, Expression body, ReadOnlyCollection<ParameterExpression> parameters) => throw new NotImplementedException();
 
-            protected override string VisitDefault(DefaultExpression node) => throw new NotImplementedException();
+        protected override Expression MakeListInit(ListInitExpression node, NewExpression newExpression, ReadOnlyCollection<ElementInit> initializers) => throw new NotImplementedException();
 
-            protected override string VisitInvocation(InvocationExpression node) => throw new NotImplementedException();
+        protected override Expression MakeMember(MemberExpression node, Expression expression) => throw new NotImplementedException();
 
-            protected override string VisitLambda<T>(Expression<T> node) => throw new NotImplementedException();
+        protected override MemberAssignment MakeMemberAssignment(MemberAssignment node, Expression expression) => throw new NotImplementedException();
 
-            protected override string VisitListInit(ListInitExpression node) => throw new NotImplementedException();
+        protected override Expression MakeMemberInit(MemberInitExpression node, NewExpression newExpression, ReadOnlyCollection<MemberBinding> bindings) => throw new NotImplementedException();
 
-            protected override string VisitMember(MemberExpression node) => throw new NotImplementedException();
+        protected override MemberListBinding MakeMemberListBinding(MemberListBinding node, ReadOnlyCollection<ElementInit> initializers) => throw new NotImplementedException();
 
-            protected override string VisitMemberInit(MemberInitExpression node) => throw new NotImplementedException();
+        protected override MemberMemberBinding MakeMemberMemberBinding(MemberMemberBinding node, ReadOnlyCollection<MemberBinding> bindings) => throw new NotImplementedException();
 
-            protected override string VisitNew(NewExpression node) => throw new NotImplementedException();
+        protected override Expression MakeMethodCall(MethodCallExpression node, Expression @object, ReadOnlyCollection<Expression> arguments) => throw new NotImplementedException();
 
-            protected override string VisitNewArray(NewArrayExpression node) => throw new NotImplementedException();
+        protected override Expression MakeNew(NewExpression node, ReadOnlyCollection<Expression> arguments) => throw new NotImplementedException();
 
-            protected override string VisitParameter(ParameterExpression node) => throw new NotImplementedException();
+        protected override Expression MakeNewArray(NewArrayExpression node, ReadOnlyCollection<Expression> expressions) => throw new NotImplementedException();
 
-            protected override string VisitTypeBinary(TypeBinaryExpression node) => throw new NotImplementedException();
+        protected override ParameterExpression MakeParameter(ParameterExpression node) => throw new NotImplementedException();
 
-            protected override string VisitUnary(UnaryExpression node) => throw new NotImplementedException();
-        }
+        protected override Expression MakeTypeBinary(TypeBinaryExpression node, Expression expression) => throw new NotImplementedException();
 
-        private class MyVisitor2 : ExpressionVisitorNarrow<Expression, LambdaExpression, ParameterExpression, NewExpression, ElementInit, MemberBinding, MemberAssignment, MemberListBinding, MemberMemberBinding>
-        {
-            public void Test()
-            {
-                var block = Expression.Block(Expression.Constant(1));
-
-                var add = Microsoft.CSharp.RuntimeBinder.Binder.BinaryOperation(
-                    Microsoft.CSharp.RuntimeBinder.CSharpBinderFlags.None,
-                    ExpressionType.Add,
-                    typeof(ExpressionEqualityComparerTests),
-                    [
-                        Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null),
-                        Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfo.Create(Microsoft.CSharp.RuntimeBinder.CSharpArgumentInfoFlags.None, name: null)
-                    ]
-                );
-
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeBlock(block, variables: null, expressions: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeDebugInfo(Expression.DebugInfo(Expression.SymbolDocument("foo.txt"), 1, 1, 1, 1)));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeDynamic(Expression.Dynamic(add, typeof(object), Expression.Constant(1), Expression.Constant(2)), arguments: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeGoto(Expression.Return(Expression.Label("")), target: null, value: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeIndex(Expression.MakeIndex(Expression.Constant(new List<int>()), typeof(List<int>).GetProperty("Item"), [Expression.Constant(1)]), @object: null, arguments: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeLabel(Expression.Label(Expression.Label("")), target: null, defaultValue: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeLoop(Expression.Loop(block), body: null, breakLabel: null, continueLabel: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeRuntimeVariables(Expression.RuntimeVariables(), variables: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeSwitch(Expression.Switch(Expression.Constant(1), Expression.Constant(1), Expression.SwitchCase(block, Expression.Constant(1))), switchValue: null, defaultBody: null, cases: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeTry(Expression.TryFinally(block, block), body: null, @finally: null, fault: null, handlers: null));
-
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeCatchBlock(Expression.MakeCatchBlock(typeof(Exception), Expression.Parameter(typeof(Exception)), block, filter: null), variable: null, body: null, filter: null));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeLabelTarget(Expression.Label("")));
-                Assert.ThrowsExactly<NotSupportedException>(() => MakeSwitchCase(Expression.SwitchCase(block, Expression.Constant(1)), body: null, testValues: null));
-            }
-
-            protected override Expression MakeBinary(BinaryExpression node, Expression left, LambdaExpression conversion, Expression right) => throw new NotImplementedException();
-
-            protected override Expression MakeConditional(ConditionalExpression node, Expression test, Expression ifTrue, Expression ifFalse) => throw new NotImplementedException();
-
-            protected override Expression MakeConstant(ConstantExpression node) => throw new NotImplementedException();
-
-            protected override Expression MakeDefault(DefaultExpression node) => throw new NotImplementedException();
-
-            protected override ElementInit MakeElementInit(ElementInit node, ReadOnlyCollection<Expression> arguments) => throw new NotImplementedException();
-
-            protected override Expression MakeInvocation(InvocationExpression node, Expression expression, ReadOnlyCollection<Expression> arguments) => throw new NotImplementedException();
-
-            protected override LambdaExpression MakeLambda<T>(Expression<T> node, Expression body, ReadOnlyCollection<ParameterExpression> parameters) => throw new NotImplementedException();
-
-            protected override Expression MakeListInit(ListInitExpression node, NewExpression newExpression, ReadOnlyCollection<ElementInit> initializers) => throw new NotImplementedException();
-
-            protected override Expression MakeMember(MemberExpression node, Expression expression) => throw new NotImplementedException();
-
-            protected override MemberAssignment MakeMemberAssignment(MemberAssignment node, Expression expression) => throw new NotImplementedException();
-
-            protected override Expression MakeMemberInit(MemberInitExpression node, NewExpression newExpression, ReadOnlyCollection<MemberBinding> bindings) => throw new NotImplementedException();
-
-            protected override MemberListBinding MakeMemberListBinding(MemberListBinding node, ReadOnlyCollection<ElementInit> initializers) => throw new NotImplementedException();
-
-            protected override MemberMemberBinding MakeMemberMemberBinding(MemberMemberBinding node, ReadOnlyCollection<MemberBinding> bindings) => throw new NotImplementedException();
-
-            protected override Expression MakeMethodCall(MethodCallExpression node, Expression @object, ReadOnlyCollection<Expression> arguments) => throw new NotImplementedException();
-
-            protected override Expression MakeNew(NewExpression node, ReadOnlyCollection<Expression> arguments) => throw new NotImplementedException();
-
-            protected override Expression MakeNewArray(NewArrayExpression node, ReadOnlyCollection<Expression> expressions) => throw new NotImplementedException();
-
-            protected override ParameterExpression MakeParameter(ParameterExpression node) => throw new NotImplementedException();
-
-            protected override Expression MakeTypeBinary(TypeBinaryExpression node, Expression expression) => throw new NotImplementedException();
-
-            protected override Expression MakeUnary(UnaryExpression node, Expression operand) => throw new NotImplementedException();
-        }
+        protected override Expression MakeUnary(UnaryExpression node, Expression operand) => throw new NotImplementedException();
     }
 }

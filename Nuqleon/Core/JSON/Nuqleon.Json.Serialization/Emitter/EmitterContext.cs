@@ -11,44 +11,43 @@
 
 using System.Memory;
 
-namespace Nuqleon.Json.Serialization
+namespace Nuqleon.Json.Serialization;
+
+/// <summary>
+/// Provides a context for the emitter which can be used to access resources and settings.
+/// </summary>
+internal partial class EmitterContext : IClearable
 {
-    /// <summary>
-    /// Provides a context for the emitter which can be used to access resources and settings.
-    /// </summary>
-    internal partial class EmitterContext : IClearable
-    {
 #if !NO_IO
-        private readonly FastJsonSerializerFactory.EmitterStringBuilder _builderString;
-        private readonly FastJsonSerializerFactory.EmitterWriterBuilder _builderWriter;
+    private readonly FastJsonSerializerFactory.EmitterStringBuilder _builderString;
+    private readonly FastJsonSerializerFactory.EmitterWriterBuilder _builderWriter;
 
-        public EmitterContext(FastJsonSerializerFactory.EmitterStringBuilder builderString, FastJsonSerializerFactory.EmitterWriterBuilder builderWriter)
-        {
-            _builderString = builderString;
-            _builderWriter = builderWriter;
-        }
+    public EmitterContext(FastJsonSerializerFactory.EmitterStringBuilder builderString, FastJsonSerializerFactory.EmitterWriterBuilder builderWriter)
+    {
+        _builderString = builderString;
+        _builderWriter = builderWriter;
+    }
 #else
-        private readonly FastJsonSerializerFactory.EmitterStringBuilder _builderString;
+    private readonly FastJsonSerializerFactory.EmitterStringBuilder _builderString;
 
-        public EmitterContext(FastJsonSerializerFactory.EmitterStringBuilder builderString)
-        {
-            _builderString = builderString;
-        }
+    public EmitterContext(FastJsonSerializerFactory.EmitterStringBuilder builderString)
+    {
+        _builderString = builderString;
+    }
 #endif
 
 #if !(ALLOW_UNSAFE && HAS_APPEND_CHARSTAR) || !NO_IO
 
-        //
-        // NB: Just enough to hold the digits of ulong.MaxValue
-        //
+    //
+    // NB: Just enough to hold the digits of ulong.MaxValue
+    //
 
-        public readonly char[] IntegerDigitBuffer = new char[20];
+    public readonly char[] IntegerDigitBuffer = new char[20];
 
 #endif
 
-        /// <summary>
-        /// Clears the state in the context in order to allow for reuse.
-        /// </summary>
-        public void Clear() => ClearCycles();
-    }
+    /// <summary>
+    /// Clears the state in the context in order to allow for reuse.
+    /// </summary>
+    public void Clear() => ClearCycles();
 }

@@ -10,35 +10,34 @@
 
 using Reaqtive.Storage;
 
-namespace Tests.ReifiedOperations
+namespace Tests.ReifiedOperations;
+
+internal interface IPersistedArrayOperationFactory<T> : IArrayOperationFactory<T>, IPersistedOperationFactory<IPersistedArray<T>>
 {
-    internal interface IPersistedArrayOperationFactory<T> : IArrayOperationFactory<T>, IPersistedOperationFactory<IPersistedArray<T>>
+}
+
+internal static class PersistedArrayOperation
+{
+    public static IPersistedArrayOperationFactory<T> WithType<T>() => new PersistedArrayOperationFactory<T>();
+
+    private sealed class PersistedArrayOperationFactory<T> : IPersistedArrayOperationFactory<T>
     {
-    }
+        public CountReadOnlyCollectionOperation<T> Count() => ArrayOperation.Count<T>();
 
-    internal static class PersistedArrayOperation
-    {
-        public static IPersistedArrayOperationFactory<T> WithType<T>() => new PersistedArrayOperationFactory<T>();
+        public EnumerateEnumerableOperation<T> Enumerate() => ArrayOperation.Enumerate<T>();
 
-        private sealed class PersistedArrayOperationFactory<T> : IPersistedArrayOperationFactory<T>
-        {
-            public CountReadOnlyCollectionOperation<T> Count() => ArrayOperation.Count<T>();
+        public GetReadOnlyListOperation<T> Get(int index) => ArrayOperation.Get<T>(index);
 
-            public EnumerateEnumerableOperation<T> Enumerate() => ArrayOperation.Enumerate<T>();
+        public GetIdPersistedOperation<IPersistedArray<T>> GetId() => GetId<IPersistedArray<T>>();
 
-            public GetReadOnlyListOperation<T> Get(int index) => ArrayOperation.Get<T>(index);
+        public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
 
-            public GetIdPersistedOperation<IPersistedArray<T>> GetId() => GetId<IPersistedArray<T>>();
+        public LengthArrayOperation<T> Length() => ArrayOperation.Length<T>();
 
-            public GetIdPersistedOperation<TPersisted> GetId<TPersisted>() where TPersisted : IPersisted => PersistedOperation.GetId<TPersisted>();
+        public SetArrayOperation<T> Set(int index, T value) => ArrayOperation.Set(index, value);
 
-            public LengthArrayOperation<T> Length() => ArrayOperation.Length<T>();
+        public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
 
-            public SetArrayOperation<T> Set(int index, T value) => ArrayOperation.Set(index, value);
-
-            public ThisResultOperation<TValue> This<TValue>() => Operation.This<TValue>();
-
-            public ThisResultOperation<IPersistedArray<T>> This() => This<IPersistedArray<T>>();
-        }
+        public ThisResultOperation<IPersistedArray<T>> This() => This<IPersistedArray<T>>();
     }
 }

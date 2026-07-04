@@ -5,38 +5,37 @@
 using System;
 using System.Diagnostics;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+internal class SimpleObserver<TSource> : ObserverBase<TSource>
 {
-    internal class SimpleObserver<TSource> : ObserverBase<TSource>
+    private readonly Action<TSource> _onNext;
+    private readonly Action<Exception> _onError;
+    private readonly Action _onCompleted;
+
+    public SimpleObserver(Action<TSource> onNext, Action<Exception> onError, Action onCompleted)
     {
-        private readonly Action<TSource> _onNext;
-        private readonly Action<Exception> _onError;
-        private readonly Action _onCompleted;
+        Debug.Assert(onNext != null);
+        Debug.Assert(onError != null);
+        Debug.Assert(onCompleted != null);
 
-        public SimpleObserver(Action<TSource> onNext, Action<Exception> onError, Action onCompleted)
-        {
-            Debug.Assert(onNext != null);
-            Debug.Assert(onError != null);
-            Debug.Assert(onCompleted != null);
+        _onNext = onNext;
+        _onError = onError;
+        _onCompleted = onCompleted;
+    }
 
-            _onNext = onNext;
-            _onError = onError;
-            _onCompleted = onCompleted;
-        }
+    protected override void OnCompletedCore()
+    {
+        _onCompleted();
+    }
 
-        protected override void OnCompletedCore()
-        {
-            _onCompleted();
-        }
+    protected override void OnErrorCore(Exception error)
+    {
+        _onError(error);
+    }
 
-        protected override void OnErrorCore(Exception error)
-        {
-            _onError(error);
-        }
-
-        protected override void OnNextCore(TSource value)
-        {
-            _onNext(value);
-        }
+    protected override void OnNextCore(TSource value)
+    {
+        _onNext(value);
     }
 }

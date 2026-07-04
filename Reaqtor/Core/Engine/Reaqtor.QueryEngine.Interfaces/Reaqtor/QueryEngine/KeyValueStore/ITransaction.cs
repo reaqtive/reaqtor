@@ -6,23 +6,22 @@ using System;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+/// <summary>
+/// Represents a series of operations that are all applied or all not applied (in the case of errors).
+/// </summary>
+public interface ITransaction : IDisposable
 {
     /// <summary>
-    /// Represents a series of operations that are all applied or all not applied (in the case of errors).
+    /// Commits the transaction.
     /// </summary>
-    public interface ITransaction : IDisposable
-    {
-        /// <summary>
-        /// Commits the transaction.
-        /// </summary>
-        /// <param name="token">The token to commit operation.</param>
-        /// <returns>A task representing the eventual completion of the commit.</returns>
-        Task CommitAsync(CancellationToken token);
+    /// <param name="token">The token to commit operation.</param>
+    /// <returns>A task representing the eventual completion of the commit.</returns>
+    Task CommitAsync(CancellationToken token);
 
-        /// <summary>
-        /// Cleans up intermediate state and partially committed data.
-        /// </summary>
-        void Rollback();
-    }
+    /// <summary>
+    /// Cleans up intermediate state and partially committed data.
+    /// </summary>
+    void Rollback();
 }

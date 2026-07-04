@@ -4,75 +4,74 @@
 
 using System;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class All<TSource> : SubscribableBase<bool>
 {
-    internal sealed class All<TSource> : SubscribableBase<bool>
+    private readonly ISubscribable<TSource> _source;
+    private readonly Func<TSource, bool> _predicate;
+
+    public All(ISubscribable<TSource> source, Func<TSource, bool> predicate)
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly Func<TSource, bool> _predicate;
+        _source = source;
+        _predicate = predicate;
+    }
 
-        public All(ISubscribable<TSource> source, Func<TSource, bool> predicate)
+    protected override ISubscription SubscribeCore(IObserver<bool> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<All<TSource>, bool>, IObserver<TSource>
+    {
+        public _(All<TSource> parent, IObserver<bool> observer)
+            : base(parent, observer)
         {
-            _source = source;
-            _predicate = predicate;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<bool> observer)
+        public override string Name => "rc:All";
+
+        public override Version Version => Versioning.v1;
+
+        public void OnCompleted()
         {
-            return new _(this, observer);
+            Output.OnNext(true);
+            Output.OnCompleted();
+            Dispose();
         }
 
-        private sealed class _ : StatefulUnaryOperator<All<TSource>, bool>, IObserver<TSource>
+        public void OnError(Exception error)
         {
-            public _(All<TSource> parent, IObserver<bool> observer)
-                : base(parent, observer)
+            Output.OnError(error);
+            Dispose();
+        }
+
+        public void OnNext(TSource value)
+        {
+            bool res;
+
+            try
             {
+                res = Params._predicate(value);
+            }
+            catch (Exception ex)
+            {
+                Output.OnError(ex);
+                Dispose();
+                return;
             }
 
-            public override string Name => "rc:All";
-
-            public override Version Version => Versioning.v1;
-
-            public void OnCompleted()
+            if (!res)
             {
-                Output.OnNext(true);
+                Output.OnNext(false);
                 Output.OnCompleted();
                 Dispose();
             }
+        }
 
-            public void OnError(Exception error)
-            {
-                Output.OnError(error);
-                Dispose();
-            }
-
-            public void OnNext(TSource value)
-            {
-                bool res;
-
-                try
-                {
-                    res = Params._predicate(value);
-                }
-                catch (Exception ex)
-                {
-                    Output.OnError(ex);
-                    Dispose();
-                    return;
-                }
-
-                if (!res)
-                {
-                    Output.OnNext(false);
-                    Output.OnCompleted();
-                    Dispose();
-                }
-            }
-
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(this);
-            }
+        protected override ISubscription OnSubscribe()
+        {
+            return Params._source.Subscribe(this);
         }
     }
 }

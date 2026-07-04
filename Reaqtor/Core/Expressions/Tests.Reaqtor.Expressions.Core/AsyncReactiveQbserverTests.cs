@@ -10,16 +10,15 @@
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.Reaqtor.Expressions.Core
+namespace Tests.Reaqtor.Expressions.Core;
+
+[TestClass]
+public class AsyncReactiveQbserverTests
 {
-    [TestClass]
-    public class AsyncReactiveQbserverTests
+    [TestMethod]
+    public void AsyncReactiveQbserver_ElementType()
     {
-        [TestMethod]
-        public void AsyncReactiveQbserver_ElementType()
-        {
-            var q = new MyAsyncReactiveQbserver<int>(null);
-            Assert.AreEqual(typeof(int), q.ElementType);
-        }
+        var q = new MyAsyncReactiveQbserver<int>(null);
+        Assert.AreEqual(typeof(int), q.ElementType);
     }
 }

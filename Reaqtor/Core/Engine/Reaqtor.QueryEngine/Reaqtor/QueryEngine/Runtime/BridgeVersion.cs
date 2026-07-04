@@ -4,10 +4,9 @@
 
 using System;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+internal static class BridgeVersion
 {
-    internal static class BridgeVersion
-    {
-        public static /* assigned to by tests */ Version Version = Versioning.v1;
-    }
+    public static /* assigned to by tests */ Version Version = Versioning.v1;
 }

@@ -8,16 +8,15 @@
 //   BD - 07/29/2015 - Created this type.
 //
 
-namespace System.Time
+namespace System.Time;
+
+/// <summary>
+/// Interface for clocks.
+/// </summary>
+public interface IClock
 {
     /// <summary>
-    /// Interface for clocks.
+    /// Gets the current time in ticks.
     /// </summary>
-    public interface IClock
-    {
-        /// <summary>
-        /// Gets the current time in ticks.
-        /// </summary>
-        long Now { get; }
-    }
+    long Now { get; }
 }

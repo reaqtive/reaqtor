@@ -15,224 +15,223 @@ using Reaqtor.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public partial class Distinct : OperatorTestBase
 {
-    public partial class Distinct : OperatorTestBase
+    [TestMethod]
+    public void Distinct_Never()
     {
-        [TestMethod]
-        public void Distinct_Never()
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable<int>();
+            var xs = client.CreateHotObservable<int>();
 
-                var res = client.Start(() =>
-                    xs.Distinct()
-                );
+            var res = client.Start(() =>
+                xs.Distinct()
+            );
 
-                res.Messages.AssertEqual(
-                );
-            });
-        }
+            res.Messages.AssertEqual(
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Distinct_Empty()
+    [TestMethod]
+    public void Distinct_Empty()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.Distinct()
-                );
+            var res = client.Start(() =>
+                xs.Distinct()
+            );
 
-                res.Messages.AssertEqual(
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Distinct_Return()
+    [TestMethod]
+    public void Distinct_Return()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(220, 2),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(220, 2),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.Distinct()
-                );
+            var res = client.Start(() =>
+                xs.Distinct()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(220, 2),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(220, 2),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Distinct_Throw()
+    [TestMethod]
+    public void Distinct_Throw()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnError<int>(250, ex)
-                );
+            var ex = new Exception();
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnError<int>(250, ex)
+            );
 
-                var res = client.Start(() =>
-                    xs.Distinct()
-                );
+            var res = client.Start(() =>
+                xs.Distinct()
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<int>(250, ex)
-                );
+            res.Messages.AssertEqual(
+                OnError<int>(250, ex)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Distinct_AllChanges()
+    [TestMethod]
+    public void Distinct_AllChanges()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2),
-                    OnNext(220, 3),
-                    OnNext(230, 4),
-                    OnNext(240, 5),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2),
+                OnNext(220, 3),
+                OnNext(230, 4),
+                OnNext(240, 5),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.Distinct()
-                );
+            var res = client.Start(() =>
+                xs.Distinct()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(210, 2),
-                    OnNext(220, 3),
-                    OnNext(230, 4),
-                    OnNext(240, 5),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(210, 2),
+                OnNext(220, 3),
+                OnNext(230, 4),
+                OnNext(240, 5),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Distinct_AllSame()
+    [TestMethod]
+    public void Distinct_AllSame()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2),
-                    OnNext(220, 2),
-                    OnNext(230, 2),
-                    OnNext(240, 2),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2),
+                OnNext(220, 2),
+                OnNext(230, 2),
+                OnNext(240, 2),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.Distinct()
-                );
+            var res = client.Start(() =>
+                xs.Distinct()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(210, 2),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(210, 2),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Distinct_SomeChanges()
+    [TestMethod]
+    public void Distinct_SomeChanges()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2), //*
-                    OnNext(215, 3), //*
-                    OnNext(220, 3),
-                    OnNext(225, 2),
-                    OnNext(230, 2),
-                    OnNext(235, 1), //*
-                    OnNext(240, 2),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2), //*
+                OnNext(215, 3), //*
+                OnNext(220, 3),
+                OnNext(225, 2),
+                OnNext(230, 2),
+                OnNext(235, 1), //*
+                OnNext(240, 2),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.Distinct()
-                );
+            var res = client.Start(() =>
+                xs.Distinct()
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(210, 2),
-                    OnNext(215, 3),
-                    OnNext(235, 1),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(210, 2),
+                OnNext(215, 3),
+                OnNext(235, 1),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
+    }
 
-        [TestMethod]
-        public void Distinct_KeySelector_Div2()
+    [TestMethod]
+    public void Distinct_KeySelector_Div2()
+    {
+        Run(client =>
         {
-            Run(client =>
-            {
-                var xs = client.CreateHotObservable(
-                    OnNext(150, 1),
-                    OnNext(210, 2), //*
-                    OnNext(220, 4),
-                    OnNext(230, 3), //*
-                    OnNext(240, 5),
-                    OnCompleted<int>(250)
-                );
+            var xs = client.CreateHotObservable(
+                OnNext(150, 1),
+                OnNext(210, 2), //*
+                OnNext(220, 4),
+                OnNext(230, 3), //*
+                OnNext(240, 5),
+                OnCompleted<int>(250)
+            );
 
-                var res = client.Start(() =>
-                    xs.Distinct(x => x % 2)
-                );
+            var res = client.Start(() =>
+                xs.Distinct(x => x % 2)
+            );
 
-                res.Messages.AssertEqual(
-                    OnNext(210, 2),
-                    OnNext(230, 3),
-                    OnCompleted<int>(250)
-                );
+            res.Messages.AssertEqual(
+                OnNext(210, 2),
+                OnNext(230, 3),
+                OnCompleted<int>(250)
+            );
 
-                xs.Subscriptions.AssertEqual(
-                    Subscribe(200, 250)
-                );
-            });
-        }
+            xs.Subscriptions.AssertEqual(
+                Subscribe(200, 250)
+            );
+        });
     }
 }

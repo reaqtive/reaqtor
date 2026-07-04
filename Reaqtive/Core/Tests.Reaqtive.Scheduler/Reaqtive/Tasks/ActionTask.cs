@@ -6,35 +6,34 @@ using System;
 
 using Reaqtive.Scheduler;
 
-namespace Test.Reaqtive.Scheduler.Tasks
+namespace Test.Reaqtive.Scheduler.Tasks;
+
+internal class ActionTask : ISchedulerTask
 {
-    internal class ActionTask : ISchedulerTask
+    private readonly Func<IScheduler, bool> _action;
+
+    public static ActionTask Create(Func<IScheduler, bool> action, long priority)
     {
-        private readonly Func<IScheduler, bool> _action;
+        return new ActionTask(action, priority);
+    }
 
-        public static ActionTask Create(Func<IScheduler, bool> action, long priority)
-        {
-            return new ActionTask(action, priority);
-        }
+    private ActionTask(Func<IScheduler, bool> action, long priority)
+    {
+        _action = action;
+        Priority = priority;
+        IsRunnable = true;
+    }
 
-        private ActionTask(Func<IScheduler, bool> action, long priority)
-        {
-            _action = action;
-            Priority = priority;
-            IsRunnable = true;
-        }
+    public long Priority { get; }
 
-        public long Priority { get; }
+    public bool IsRunnable { get; set; }
 
-        public bool IsRunnable { get; set; }
+    public bool Execute(IScheduler scheduler)
+    {
+        return _action(scheduler);
+    }
 
-        public bool Execute(IScheduler scheduler)
-        {
-            return _action(scheduler);
-        }
-
-        public void RecalculatePriority()
-        {
-        }
+    public void RecalculatePriority()
+    {
     }
 }

@@ -18,362 +18,361 @@ using Reaqtor.QueryEngine;
 using Reaqtor.QueryEngine.Mocks;
 using Reaqtor.Reliable;
 
-namespace Tests.Reaqtor.QueryEngine
+namespace Tests.Reaqtor.QueryEngine;
+
+[TestClass]
+public class RegistryQueryProviderTests
 {
-    [TestClass]
-    public class RegistryQueryProviderTests
+    private static readonly string[] Keys =
+    [
+        "test://key1",
+        "test://key2",
+        "test://key3",
+        "test://key4",
+        "test://key5",
+        "test://key6",
+    ];
+
+    private static readonly Expression[] Expressions =
+    [
+        Expression.New(typeof(DummySubject)),
+        Expression.Default(typeof(ISubscribable<int>)),
+        Expression.Default(typeof(IObserver<int>)),
+        Expression.Default(typeof(Func<IReliableMultiSubject<int>>)),
+        Expression.New(typeof(DummySubscription)),
+        Expression.Default(typeof(Func<ISubscription>)),
+    ];
+
+    [TestMethod]
+    public void RegistryQueryProvider_NotImplemented()
     {
-        private static readonly string[] Keys =
-        [
-            "test://key1",
-            "test://key2",
-            "test://key3",
-            "test://key4",
-            "test://key5",
-            "test://key6",
-        ];
+        var provider = CreateEngineProvider();
+        var tryGetValue = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.SingleOrDefault(r => r.Key == u));
+        var keys = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q.Select(r => r.Key));
+        var values = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q.Select(r => r.Value));
+        var enums = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q);
 
-        private static readonly Expression[] Expressions =
-        [
-            Expression.New(typeof(DummySubject)),
-            Expression.Default(typeof(ISubscribable<int>)),
-            Expression.Default(typeof(IObserver<int>)),
-            Expression.Default(typeof(Func<IReliableMultiSubject<int>>)),
-            Expression.New(typeof(DummySubscription)),
-            Expression.Default(typeof(Func<ISubscription>)),
-        ];
+        Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(tryGetValue));
+        Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(keys));
+        Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(values));
+        Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(enums));
+        Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.CreateQuery(null));
+        Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.CreateQuery<object>(null));
+    }
 
-        [TestMethod]
-        public void RegistryQueryProvider_NotImplemented()
-        {
-            var provider = CreateEngineProvider();
-            var tryGetValue = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.SingleOrDefault(r => r.Key == u));
-            var keys = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q.Select(r => r.Key));
-            var values = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q.Select(r => r.Value));
-            var enums = CreateQuery("foo", (IQueryable<KeyValuePair<Uri, IReactiveResource>> q) => q);
+    [TestMethod]
+    public void RegistryQueryProvider_NotSupported()
+    {
+        var provider = CreateEngineProvider();
 
-            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(tryGetValue));
-            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(keys));
-            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(values));
-            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.Execute<IReactiveResource>(enums));
-            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.CreateQuery(null));
-            Assert.ThrowsExactly<NotImplementedException>(() => provider.Provider.CreateQuery<object>(null));
-        }
+        var multipleMemberAccess = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.Select(r => r.Value.Expression));
+        var nonMemberAccess = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.Select(r => r.Value == null));
+        var notByKey = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.SingleOrDefault(r => r.Value == null));
 
-        [TestMethod]
-        public void RegistryQueryProvider_NotSupported()
-        {
-            var provider = CreateEngineProvider();
+        Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(multipleMemberAccess));
+        Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(nonMemberAccess));
+        Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(notByKey));
+    }
 
-            var multipleMemberAccess = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.Select(r => r.Value.Expression));
-            var nonMemberAccess = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.Select(r => r.Value == null));
-            var notByKey = CreateQuery("foo", Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.SingleOrDefault(r => r.Value == null));
+    [TestMethod]
+    public void RegistryQueryProvider_NonGenericExecute()
+    {
+        var provider = CreateEngineProvider();
+        var metadata = CreateMetadata(provider);
+        var streamsTable = ((ParameterExpression)metadata.Streams.Expression).Name;
 
-            Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(multipleMemberAccess));
-            Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(nonMemberAccess));
-            Assert.ThrowsExactly<NotSupportedException>(() => provider.Provider.Execute<IReactiveResource>(notByKey));
-        }
+        var lookup = CreateQuery(streamsTable, Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.SingleOrDefault(r => r.Key == u));
+        var nullResult = provider.Provider.Execute(lookup);
+        Assert.IsNull(nullResult);
+    }
 
-        [TestMethod]
-        public void RegistryQueryProvider_NonGenericExecute()
-        {
-            var provider = CreateEngineProvider();
-            var metadata = CreateMetadata(provider);
-            var streamsTable = ((ParameterExpression)metadata.Streams.Expression).Name;
+    [TestMethod]
+    public void RegistryQueryProvider_Keys()
+    {
+        var provider = CreateEngineProvider();
+        var metadata = CreateMetadata(provider);
 
-            var lookup = CreateQuery(streamsTable, Keys[0], (IQueryable<KeyValuePair<Uri, IReactiveResource>> q, Uri u) => q.SingleOrDefault(r => r.Key == u));
-            var nullResult = provider.Provider.Execute(lookup);
-            Assert.IsNull(nullResult);
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_Keys()
-        {
-            var provider = CreateEngineProvider();
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.Keys.ToList().SequenceEqual([new Uri(Keys[0])]));
+        Assert.IsTrue(metadata.Observables.Keys.ToList().SequenceEqual([new Uri(Keys[1])]));
+        Assert.IsTrue(metadata.Observers.Keys.ToList().SequenceEqual([new Uri(Keys[2])]));
+        Assert.IsTrue(metadata.StreamFactories.Keys.ToList().SequenceEqual([new Uri(Keys[3])]));
+        Assert.IsTrue(metadata.Subscriptions.Keys.ToList().SequenceEqual([new Uri(Keys[4])]));
+        Assert.IsTrue(metadata.SubscriptionFactories.Keys.ToList().SequenceEqual([new Uri(Keys[5])]));
+    }
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+    [TestMethod]
+    public void RegistryQueryProvider_OperatorContxt_Keys()
+    {
+        var provider = CreateEngineProvider(operatorContext: true);
+        var metadata = CreateMetadata(provider);
 
-            Assert.IsTrue(metadata.Streams.Keys.ToList().SequenceEqual([new Uri(Keys[0])]));
-            Assert.IsTrue(metadata.Observables.Keys.ToList().SequenceEqual([new Uri(Keys[1])]));
-            Assert.IsTrue(metadata.Observers.Keys.ToList().SequenceEqual([new Uri(Keys[2])]));
-            Assert.IsTrue(metadata.StreamFactories.Keys.ToList().SequenceEqual([new Uri(Keys[3])]));
-            Assert.IsTrue(metadata.Subscriptions.Keys.ToList().SequenceEqual([new Uri(Keys[4])]));
-            Assert.IsTrue(metadata.SubscriptionFactories.Keys.ToList().SequenceEqual([new Uri(Keys[5])]));
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_OperatorContxt_Keys()
-        {
-            var provider = CreateEngineProvider(operatorContext: true);
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.Keys.ToList().SequenceEqual([new Uri(Keys[0])]));
+        Assert.IsTrue(metadata.Observables.Keys.ToList().SequenceEqual([new Uri(Keys[1])]));
+        Assert.IsTrue(metadata.Observers.Keys.ToList().SequenceEqual([new Uri(Keys[2])]));
+        Assert.IsTrue(metadata.StreamFactories.Keys.ToList().SequenceEqual([new Uri(Keys[3])]));
+        Assert.IsTrue(metadata.Subscriptions.Keys.ToList().SequenceEqual([new Uri(Keys[4])]));
+        Assert.IsTrue(metadata.SubscriptionFactories.Keys.ToList().SequenceEqual([new Uri(Keys[5])]));
+    }
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+    [TestMethod]
+    public void RegistryQueryProvider_Values()
+    {
+        var provider = CreateEngineProvider();
+        var metadata = CreateMetadata(provider);
 
-            Assert.IsTrue(metadata.Streams.Keys.ToList().SequenceEqual([new Uri(Keys[0])]));
-            Assert.IsTrue(metadata.Observables.Keys.ToList().SequenceEqual([new Uri(Keys[1])]));
-            Assert.IsTrue(metadata.Observers.Keys.ToList().SequenceEqual([new Uri(Keys[2])]));
-            Assert.IsTrue(metadata.StreamFactories.Keys.ToList().SequenceEqual([new Uri(Keys[3])]));
-            Assert.IsTrue(metadata.Subscriptions.Keys.ToList().SequenceEqual([new Uri(Keys[4])]));
-            Assert.IsTrue(metadata.SubscriptionFactories.Keys.ToList().SequenceEqual([new Uri(Keys[5])]));
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_Values()
-        {
-            var provider = CreateEngineProvider();
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[0]]));
+        Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[1]]));
+        Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[2]]));
+        Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[3]]));
+        Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[4]]));
+        Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[5]]));
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+        Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[0])]));
+        Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[1])]));
+        Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[2])]));
+        Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[3])]));
+        Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[4])]));
+        Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[5])]));
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[0]]));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[1]]));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[2]]));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[3]]));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[4]]));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[5]]));
+        Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+    }
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[0])]));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[1])]));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[2])]));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[3])]));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[4])]));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[5])]));
+    [TestMethod]
+    public void RegistryQueryProvider_OperatorContext_Values()
+    {
+        var provider = CreateEngineProvider(operatorContext: true);
+        var metadata = CreateMetadata(provider);
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_OperatorContext_Values()
-        {
-            var provider = CreateEngineProvider(operatorContext: true);
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[0]]));
+        Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[1]]));
+        Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[2]]));
+        Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[3]]));
+        Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[4]]));
+        Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[5]]));
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+        Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[0])]));
+        Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[1])]));
+        Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[2])]));
+        Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[3])]));
+        Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[4])]));
+        Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[5])]));
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[0]]));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[1]]));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[2]]));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[3]]));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[4]]));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Expression).SequenceEqual([Expressions[5]]));
+        Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+        Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
+    }
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[0])]));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[1])]));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[2])]));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[3])]));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[4])]));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.Uri).SequenceEqual([new Uri(Keys[5])]));
+    [TestMethod]
+    public void RegistryQueryProvider_Enumerations()
+    {
+        var provider = CreateEngineProvider();
+        var metadata = CreateMetadata(provider);
 
-            Assert.IsTrue(metadata.Streams.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.Observables.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.Observers.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.StreamFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.Subscriptions.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-            Assert.IsTrue(metadata.SubscriptionFactories.Values.ToList().Select(s => s.State).SequenceEqual([null]));
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_Enumerations()
-        {
-            var provider = CreateEngineProvider();
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[0]]));
+        Assert.IsTrue(metadata.Observables.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[1]]));
+        Assert.IsTrue(metadata.Observers.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[2]]));
+        Assert.IsTrue(metadata.StreamFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[3]]));
+        Assert.IsTrue(metadata.Subscriptions.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[4]]));
+        Assert.IsTrue(metadata.SubscriptionFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[5]]));
+    }
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+    [TestMethod]
+    public void RegistryQueryProvider_OperatorContext_Enumerations()
+    {
+        var provider = CreateEngineProvider(operatorContext: true);
+        var metadata = CreateMetadata(provider);
 
-            Assert.IsTrue(metadata.Streams.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[0]]));
-            Assert.IsTrue(metadata.Observables.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[1]]));
-            Assert.IsTrue(metadata.Observers.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[2]]));
-            Assert.IsTrue(metadata.StreamFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[3]]));
-            Assert.IsTrue(metadata.Subscriptions.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[4]]));
-            Assert.IsTrue(metadata.SubscriptionFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[5]]));
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_OperatorContext_Enumerations()
-        {
-            var provider = CreateEngineProvider(operatorContext: true);
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[0]]));
+        Assert.IsTrue(metadata.Observables.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[1]]));
+        Assert.IsTrue(metadata.Observers.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[2]]));
+        Assert.IsTrue(metadata.StreamFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[3]]));
+        Assert.IsTrue(metadata.Subscriptions.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[4]]));
+        Assert.IsTrue(metadata.SubscriptionFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[5]]));
+    }
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+    [TestMethod]
+    public void RegistryQueryProvider_ContainsKey()
+    {
+        var provider = CreateEngineProvider();
+        var metadata = CreateMetadata(provider);
 
-            Assert.IsTrue(metadata.Streams.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[0]]));
-            Assert.IsTrue(metadata.Observables.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[1]]));
-            Assert.IsTrue(metadata.Observers.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[2]]));
-            Assert.IsTrue(metadata.StreamFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[3]]));
-            Assert.IsTrue(metadata.Subscriptions.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[4]]));
-            Assert.IsTrue(metadata.SubscriptionFactories.ToList().Select(s => s.Value.Expression).SequenceEqual([Expressions[5]]));
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_ContainsKey()
-        {
-            var provider = CreateEngineProvider();
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.ContainsKey(new Uri(Keys[0])));
+        Assert.IsTrue(metadata.Observables.ContainsKey(new Uri(Keys[1])));
+        Assert.IsTrue(metadata.Observers.ContainsKey(new Uri(Keys[2])));
+        Assert.IsTrue(metadata.StreamFactories.ContainsKey(new Uri(Keys[3])));
+        Assert.IsTrue(metadata.Subscriptions.ContainsKey(new Uri(Keys[4])));
+        Assert.IsTrue(metadata.SubscriptionFactories.ContainsKey(new Uri(Keys[5])));
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+        Assert.IsFalse(metadata.Streams.ContainsKey(new Uri(Keys[1])));
+    }
 
-            Assert.IsTrue(metadata.Streams.ContainsKey(new Uri(Keys[0])));
-            Assert.IsTrue(metadata.Observables.ContainsKey(new Uri(Keys[1])));
-            Assert.IsTrue(metadata.Observers.ContainsKey(new Uri(Keys[2])));
-            Assert.IsTrue(metadata.StreamFactories.ContainsKey(new Uri(Keys[3])));
-            Assert.IsTrue(metadata.Subscriptions.ContainsKey(new Uri(Keys[4])));
-            Assert.IsTrue(metadata.SubscriptionFactories.ContainsKey(new Uri(Keys[5])));
+    [TestMethod]
+    public void RegistryQueryProvider_OperatorContext_ContainsKey()
+    {
+        var provider = CreateEngineProvider(operatorContext: true);
+        var metadata = CreateMetadata(provider);
 
-            Assert.IsFalse(metadata.Streams.ContainsKey(new Uri(Keys[1])));
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_OperatorContext_ContainsKey()
-        {
-            var provider = CreateEngineProvider(operatorContext: true);
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.ContainsKey(new Uri(Keys[0])));
+        Assert.IsTrue(metadata.Observables.ContainsKey(new Uri(Keys[1])));
+        Assert.IsTrue(metadata.Observers.ContainsKey(new Uri(Keys[2])));
+        Assert.IsTrue(metadata.StreamFactories.ContainsKey(new Uri(Keys[3])));
+        Assert.IsTrue(metadata.Subscriptions.ContainsKey(new Uri(Keys[4])));
+        Assert.IsTrue(metadata.SubscriptionFactories.ContainsKey(new Uri(Keys[5])));
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+        Assert.IsFalse(metadata.Streams.ContainsKey(new Uri(Keys[1])));
+    }
 
-            Assert.IsTrue(metadata.Streams.ContainsKey(new Uri(Keys[0])));
-            Assert.IsTrue(metadata.Observables.ContainsKey(new Uri(Keys[1])));
-            Assert.IsTrue(metadata.Observers.ContainsKey(new Uri(Keys[2])));
-            Assert.IsTrue(metadata.StreamFactories.ContainsKey(new Uri(Keys[3])));
-            Assert.IsTrue(metadata.Subscriptions.ContainsKey(new Uri(Keys[4])));
-            Assert.IsTrue(metadata.SubscriptionFactories.ContainsKey(new Uri(Keys[5])));
+    [TestMethod]
+    public void RegistryQueryProvider_TryGetValue()
+    {
+        var provider = CreateEngineProvider();
+        var metadata = CreateMetadata(provider);
 
-            Assert.IsFalse(metadata.Streams.ContainsKey(new Uri(Keys[1])));
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_TryGetValue()
-        {
-            var provider = CreateEngineProvider();
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.TryGetValue(new Uri(Keys[0]), out var stream));
+        Assert.IsTrue(metadata.Observables.TryGetValue(new Uri(Keys[1]), out var observable));
+        Assert.IsTrue(metadata.Observers.TryGetValue(new Uri(Keys[2]), out var observer));
+        Assert.IsTrue(metadata.StreamFactories.TryGetValue(new Uri(Keys[3]), out var streamFactory));
+        Assert.IsTrue(metadata.Subscriptions.TryGetValue(new Uri(Keys[4]), out var subscription));
+        Assert.IsTrue(metadata.SubscriptionFactories.TryGetValue(new Uri(Keys[5]), out var subscriptionFactory));
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+        Assert.AreSame(metadata.Streams[new Uri(Keys[0])], stream);
+        Assert.AreSame(metadata.Observables[new Uri(Keys[1])], observable);
+        Assert.AreSame(metadata.Observers[new Uri(Keys[2])], observer);
+        Assert.AreSame(metadata.StreamFactories[new Uri(Keys[3])], streamFactory);
+        Assert.AreSame(metadata.Subscriptions[new Uri(Keys[4])], subscription);
+        Assert.AreSame(metadata.SubscriptionFactories[new Uri(Keys[5])], subscriptionFactory);
 
-            Assert.IsTrue(metadata.Streams.TryGetValue(new Uri(Keys[0]), out var stream));
-            Assert.IsTrue(metadata.Observables.TryGetValue(new Uri(Keys[1]), out var observable));
-            Assert.IsTrue(metadata.Observers.TryGetValue(new Uri(Keys[2]), out var observer));
-            Assert.IsTrue(metadata.StreamFactories.TryGetValue(new Uri(Keys[3]), out var streamFactory));
-            Assert.IsTrue(metadata.Subscriptions.TryGetValue(new Uri(Keys[4]), out var subscription));
-            Assert.IsTrue(metadata.SubscriptionFactories.TryGetValue(new Uri(Keys[5]), out var subscriptionFactory));
+        Assert.IsFalse(metadata.Streams.TryGetValue(new Uri(Keys[1]), out _));
+    }
 
-            Assert.AreSame(metadata.Streams[new Uri(Keys[0])], stream);
-            Assert.AreSame(metadata.Observables[new Uri(Keys[1])], observable);
-            Assert.AreSame(metadata.Observers[new Uri(Keys[2])], observer);
-            Assert.AreSame(metadata.StreamFactories[new Uri(Keys[3])], streamFactory);
-            Assert.AreSame(metadata.Subscriptions[new Uri(Keys[4])], subscription);
-            Assert.AreSame(metadata.SubscriptionFactories[new Uri(Keys[5])], subscriptionFactory);
+    [TestMethod]
+    public void RegistryQueryProvider_OperatorContext_TryGetValue()
+    {
+        var provider = CreateEngineProvider(operatorContext: true);
+        var metadata = CreateMetadata(provider);
 
-            Assert.IsFalse(metadata.Streams.TryGetValue(new Uri(Keys[1]), out _));
-        }
+        provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
+        provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
+        provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
+        provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
+        provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
+        provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
 
-        [TestMethod]
-        public void RegistryQueryProvider_OperatorContext_TryGetValue()
-        {
-            var provider = CreateEngineProvider(operatorContext: true);
-            var metadata = CreateMetadata(provider);
+        Assert.IsTrue(metadata.Streams.TryGetValue(new Uri(Keys[0]), out _));
+        Assert.IsTrue(metadata.Observables.TryGetValue(new Uri(Keys[1]), out _));
+        Assert.IsTrue(metadata.Observers.TryGetValue(new Uri(Keys[2]), out _));
+        Assert.IsTrue(metadata.StreamFactories.TryGetValue(new Uri(Keys[3]), out _));
+        Assert.IsTrue(metadata.Subscriptions.TryGetValue(new Uri(Keys[4]), out _));
+        Assert.IsTrue(metadata.SubscriptionFactories.TryGetValue(new Uri(Keys[5]), out _));
 
-            provider.CreateStream(new Uri(Keys[0]), Expressions[0], null);
-            provider.DefineObservable(new Uri(Keys[1]), Expressions[1], null);
-            provider.DefineObserver(new Uri(Keys[2]), Expressions[2], null);
-            provider.DefineStreamFactory(new Uri(Keys[3]), Expressions[3], null);
-            provider.CreateSubscription(new Uri(Keys[4]), Expressions[4], null);
-            provider.DefineSubscriptionFactory(new Uri(Keys[5]), Expressions[5], null);
+        Assert.IsFalse(metadata.Streams.TryGetValue(new Uri(Keys[1]), out _));
+    }
 
-            Assert.IsTrue(metadata.Streams.TryGetValue(new Uri(Keys[0]), out _));
-            Assert.IsTrue(metadata.Observables.TryGetValue(new Uri(Keys[1]), out _));
-            Assert.IsTrue(metadata.Observers.TryGetValue(new Uri(Keys[2]), out _));
-            Assert.IsTrue(metadata.StreamFactories.TryGetValue(new Uri(Keys[3]), out _));
-            Assert.IsTrue(metadata.Subscriptions.TryGetValue(new Uri(Keys[4]), out _));
-            Assert.IsTrue(metadata.SubscriptionFactories.TryGetValue(new Uri(Keys[5]), out _));
+    private static IReactiveEngineProvider CreateEngineProvider(bool operatorContext = false)
+    {
+        var registry = new MockQueryEngineRegistry();
+        return operatorContext ? new MockReactiveEngineProvider(registry, new OperatorContextRegistryQueryProvider(registry)) : new MockReactiveEngineProvider(registry);
+    }
 
-            Assert.IsFalse(metadata.Streams.TryGetValue(new Uri(Keys[1]), out _));
-        }
+    private static ReactiveMetadata CreateMetadata(IReactiveEngineProvider provider)
+    {
+        return new ReactiveMetadata(provider, new ReactiveExpressionServices(typeof(IReactive)));
+    }
 
-        private static IReactiveEngineProvider CreateEngineProvider(bool operatorContext = false)
-        {
-            var registry = new MockQueryEngineRegistry();
-            return operatorContext ? new MockReactiveEngineProvider(registry, new OperatorContextRegistryQueryProvider(registry)) : new MockReactiveEngineProvider(registry);
-        }
+    private static Expression CreateQuery<T, R>(string collection, string key, Expression<Func<IQueryable<KeyValuePair<Uri, T>>, Uri, R>> expression)
+    {
+        return BetaReducer.Reduce(Expression.Invoke(expression, Expression.Parameter(typeof(IQueryable<KeyValuePair<Uri, T>>), collection), Expression.Constant(new Uri(key))));
+    }
 
-        private static ReactiveMetadata CreateMetadata(IReactiveEngineProvider provider)
-        {
-            return new ReactiveMetadata(provider, new ReactiveExpressionServices(typeof(IReactive)));
-        }
+    private static Expression CreateQuery<T, R>(string collection, Expression<Func<IQueryable<KeyValuePair<Uri, T>>, R>> expression)
+    {
+        return BetaReducer.Reduce(Expression.Invoke(expression, Expression.Parameter(typeof(IQueryable<KeyValuePair<Uri, T>>), collection)));
+    }
 
-        private static Expression CreateQuery<T, R>(string collection, string key, Expression<Func<IQueryable<KeyValuePair<Uri, T>>, Uri, R>> expression)
-        {
-            return BetaReducer.Reduce(Expression.Invoke(expression, Expression.Parameter(typeof(IQueryable<KeyValuePair<Uri, T>>), collection), Expression.Constant(new Uri(key))));
-        }
+    private sealed class DummySubject : IReliableMultiSubject<int, int>
+    {
+        public IReliableObserver<int> CreateObserver() => throw new NotImplementedException();
 
-        private static Expression CreateQuery<T, R>(string collection, Expression<Func<IQueryable<KeyValuePair<Uri, T>>, R>> expression)
-        {
-            return BetaReducer.Reduce(Expression.Invoke(expression, Expression.Parameter(typeof(IQueryable<KeyValuePair<Uri, T>>), collection)));
-        }
+        public void Dispose() => throw new NotImplementedException();
 
-        private sealed class DummySubject : IReliableMultiSubject<int, int>
-        {
-            public IReliableObserver<int> CreateObserver() => throw new NotImplementedException();
+        public IReliableSubscription Subscribe(IReliableObserver<int> observer) => throw new NotImplementedException();
+    }
 
-            public void Dispose() => throw new NotImplementedException();
+    private sealed class DummySubscription : ISubscription
+    {
+        public void Accept(ISubscriptionVisitor visitor) => throw new NotImplementedException();
 
-            public IReliableSubscription Subscribe(IReliableObserver<int> observer) => throw new NotImplementedException();
-        }
-
-        private sealed class DummySubscription : ISubscription
-        {
-            public void Accept(ISubscriptionVisitor visitor) => throw new NotImplementedException();
-
-            public void Dispose() => throw new NotImplementedException();
-        }
+        public void Dispose() => throw new NotImplementedException();
     }
 }

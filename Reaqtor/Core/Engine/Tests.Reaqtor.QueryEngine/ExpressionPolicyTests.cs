@@ -11,39 +11,38 @@ using Reaqtive.Expressions;
 
 using Reaqtor.QueryEngine;
 
-namespace Tests.Reaqtor.QueryEngine
+namespace Tests.Reaqtor.QueryEngine;
+
+[TestClass]
+public class ExpressionPolicyTests
 {
-    [TestClass]
-    public class ExpressionPolicyTests
+    [TestMethod]
+    public void ExpressionPolicy_PropertyChecks()
     {
-        [TestMethod]
-        public void ExpressionPolicy_PropertyChecks()
-        {
-            var policy = new ExpressionPolicy();
+        var policy = new ExpressionPolicy();
 
-            Assert.AreSame(DefaultExpressionPolicy.Instance.DelegateCache, policy.DelegateCache);
-            Assert.AreSame(DefaultExpressionPolicy.Instance.InMemoryCache, policy.InMemoryCache);
-            Assert.AreSame(DefaultExpressionPolicy.Instance.ConstantHoister, policy.ConstantHoister);
+        Assert.AreSame(DefaultExpressionPolicy.Instance.DelegateCache, policy.DelegateCache);
+        Assert.AreSame(DefaultExpressionPolicy.Instance.InMemoryCache, policy.InMemoryCache);
+        Assert.AreSame(DefaultExpressionPolicy.Instance.ConstantHoister, policy.ConstantHoister);
 
-            var delegateCache = new SimpleCompiledDelegateCache();
-            var expressionCache = new ExpressionHeap();
-            var constantHoister = ConstantHoister.Create(false);
+        var delegateCache = new SimpleCompiledDelegateCache();
+        var expressionCache = new ExpressionHeap();
+        var constantHoister = ConstantHoister.Create(false);
 
-            policy.DelegateCache = delegateCache;
-            policy.InMemoryCache = expressionCache;
-            policy.ConstantHoister = constantHoister;
+        policy.DelegateCache = delegateCache;
+        policy.InMemoryCache = expressionCache;
+        policy.ConstantHoister = constantHoister;
 
-            Assert.AreSame(delegateCache, policy.DelegateCache);
-            Assert.AreSame(expressionCache, policy.InMemoryCache);
-            Assert.AreSame(constantHoister, policy.ConstantHoister);
+        Assert.AreSame(delegateCache, policy.DelegateCache);
+        Assert.AreSame(expressionCache, policy.InMemoryCache);
+        Assert.AreSame(constantHoister, policy.ConstantHoister);
 
-            policy.DelegateCache = null;
-            policy.InMemoryCache = null;
-            policy.ConstantHoister = null;
+        policy.DelegateCache = null;
+        policy.InMemoryCache = null;
+        policy.ConstantHoister = null;
 
-            Assert.AreSame(DefaultExpressionPolicy.Instance.DelegateCache, policy.DelegateCache);
-            Assert.AreSame(DefaultExpressionPolicy.Instance.InMemoryCache, policy.InMemoryCache);
-            Assert.AreSame(DefaultExpressionPolicy.Instance.ConstantHoister, policy.ConstantHoister);
-        }
+        Assert.AreSame(DefaultExpressionPolicy.Instance.DelegateCache, policy.DelegateCache);
+        Assert.AreSame(DefaultExpressionPolicy.Instance.InMemoryCache, policy.InMemoryCache);
+        Assert.AreSame(DefaultExpressionPolicy.Instance.ConstantHoister, policy.ConstantHoister);
     }
 }

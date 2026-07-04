@@ -7,22 +7,21 @@
 
 using System;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+internal class InvariantException : Exception
 {
-    internal class InvariantException : Exception
+    public InvariantException()
     {
-        public InvariantException()
-        {
-        }
+    }
 
-        public InvariantException(string message)
-            : base(message)
-        {
-        }
+    public InvariantException(string message)
+        : base(message)
+    {
+    }
 
-        public InvariantException(string message, Exception innerException)
-            : base(message, innerException)
-        {
-        }
+    public InvariantException(string message, Exception innerException)
+        : base(message, innerException)
+    {
     }
 }

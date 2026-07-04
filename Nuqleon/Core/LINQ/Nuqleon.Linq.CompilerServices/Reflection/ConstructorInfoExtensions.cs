@@ -10,15 +10,14 @@
 
 using System.Reflection;
 
-namespace System.Linq.CompilerServices.Reflection
-{
-    internal static class ConstructorInfoExtensions
-    {
-        internal static string ToCSharpString(this ConstructorInfo constructor)
-        {
-            // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
+namespace System.Linq.CompilerServices.Reflection;
 
-            return "new " + constructor.DeclaringType.ToCSharpString() + "(" + string.Join(", ", constructor.GetParameters().Select(p => p.ParameterType.ToCSharpString() + " " + p.Name)) + ")";
-        }
+internal static class ConstructorInfoExtensions
+{
+    internal static string ToCSharpString(this ConstructorInfo constructor)
+    {
+        // NOTE: This produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
+
+        return "new " + constructor.DeclaringType.ToCSharpString() + "(" + string.Join(", ", constructor.GetParameters().Select(p => p.ParameterType.ToCSharpString() + " " + p.Name)) + ")";
     }
 }

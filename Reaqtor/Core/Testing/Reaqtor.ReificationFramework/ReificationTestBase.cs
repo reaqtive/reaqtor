@@ -7,33 +7,32 @@ using System.Threading.Tasks;
 
 using Reaqtor.TestingFramework;
 
-namespace Reaqtor.ReificationFramework
+namespace Reaqtor.ReificationFramework;
+
+/// <summary>
+/// A base class for declaring reified operations.
+/// </summary>
+public abstract class ReificationTestBase
 {
     /// <summary>
-    /// A base class for declaring reified operations.
+    /// Produces a set of reified operations.
     /// </summary>
-    public abstract class ReificationTestBase
+    /// <param name="operation">The operation to perform.</param>
+    /// <returns>The set of reified operations.</returns>
+    protected ServiceOperation[] Run(Func<ReificationClientContext, Task> operation)
     {
-        /// <summary>
-        /// Produces a set of reified operations.
-        /// </summary>
-        /// <param name="operation">The operation to perform.</param>
-        /// <returns>The set of reified operations.</returns>
-        protected ServiceOperation[] Run(Func<ReificationClientContext, Task> operation)
-        {
-            ArgumentNullException.ThrowIfNull(operation);
+        ArgumentNullException.ThrowIfNull(operation);
 
-            var expressionServices = GetExpressionServices();
-            var serviceProvider = new ReificationServiceProvider();
-            var ctx = new ReificationClientContext(expressionServices, serviceProvider);
-            operation(ctx).Wait();
-            return serviceProvider.Operations;
-        }
-
-        /// <summary>
-        /// Gets the expression services used to construct a <see cref="ReificationClientContext"/>.
-        /// </summary>
-        /// <returns>An expression services implementation.</returns>
-        protected abstract IReactiveExpressionServices GetExpressionServices(); // E.g. "return new TupletizingExpressionServices(typeof(IReactiveClientProxy))".
+        var expressionServices = GetExpressionServices();
+        var serviceProvider = new ReificationServiceProvider();
+        var ctx = new ReificationClientContext(expressionServices, serviceProvider);
+        operation(ctx).Wait();
+        return serviceProvider.Operations;
     }
+
+    /// <summary>
+    /// Gets the expression services used to construct a <see cref="ReificationClientContext"/>.
+    /// </summary>
+    /// <returns>An expression services implementation.</returns>
+    protected abstract IReactiveExpressionServices GetExpressionServices(); // E.g. "return new TupletizingExpressionServices(typeof(IReactiveClientProxy))".
 }

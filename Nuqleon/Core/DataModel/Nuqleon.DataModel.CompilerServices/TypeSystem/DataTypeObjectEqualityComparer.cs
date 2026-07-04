@@ -15,91 +15,90 @@ using System;
 using System.Collections.Generic;
 using System.Memory;
 
-namespace Nuqleon.DataModel.TypeSystem
-{
-    /// <summary>
-    /// Equality comparer for objects with data model-compliant types.
-    /// </summary>
+namespace Nuqleon.DataModel.TypeSystem;
+
+/// <summary>
+/// Equality comparer for objects with data model-compliant types.
+/// </summary>
 #if SUPPORT_SUBSET_TYPES
-    /// <remarks>
-    /// The left object (i.e., the expected object) may contain a subset
-    /// of the properties available to the right object, so long as these
-    /// remaining properties have default values.
-    /// </remarks>
+/// <remarks>
+/// The left object (i.e., the expected object) may contain a subset
+/// of the properties available to the right object, so long as these
+/// remaining properties have default values.
+/// </remarks>
 #endif
-    [KnownType]
-    public class DataTypeObjectEqualityComparer : IEqualityComparer<object>
+[KnownType]
+public class DataTypeObjectEqualityComparer : IEqualityComparer<object>
+{
+    private static readonly ObjectPool<DataTypeObjectEqualityComparator> s_pool = new(() => new DataTypeObjectEqualityComparator());
+
+    private readonly Func<DataTypeObjectEqualityComparator> _comparatorFactory;
+    private readonly bool _isPooled;
+
+    /// <summary>
+    /// Instantiates the comparer.
+    /// </summary>
+    public DataTypeObjectEqualityComparer()
+        : this(s_pool.Allocate)
     {
-        private static readonly ObjectPool<DataTypeObjectEqualityComparator> s_pool = new(() => new DataTypeObjectEqualityComparator());
+        _isPooled = true;
+    }
 
-        private readonly Func<DataTypeObjectEqualityComparator> _comparatorFactory;
-        private readonly bool _isPooled;
+    /// <summary>
+    /// Instantiates the comparer with a custom comparator factory.
+    /// </summary>
+    /// <param name="comparatorFactory">Produces comparator instances to compute equivalence and hash codes.</param>
+    public DataTypeObjectEqualityComparer(Func<DataTypeObjectEqualityComparator> comparatorFactory)
+    {
+        _comparatorFactory = comparatorFactory;
+    }
 
-        /// <summary>
-        /// Instantiates the comparer.
-        /// </summary>
-        public DataTypeObjectEqualityComparer()
-            : this(s_pool.Allocate)
+    /// <summary>
+    /// Gets the default instance of the comparer.
+    /// </summary>
+    public static DataTypeObjectEqualityComparer Default { get; } = new DataTypeObjectEqualityComparer();
+
+    /// <summary>
+    /// Checks for value equality of two objects with data model-compliant types.
+    /// </summary>
+    /// <param name="x">The first object.</param>
+    /// <param name="y">The second object.</param>
+    /// <returns>true if the objects are equal, false otherwise.</returns>
+    public new bool Equals(object x, object y)
+    {
+        var comparator = _comparatorFactory();
+
+        try
         {
-            _isPooled = true;
+            return comparator.Equals(x, y);
         }
-
-        /// <summary>
-        /// Instantiates the comparer with a custom comparator factory.
-        /// </summary>
-        /// <param name="comparatorFactory">Produces comparator instances to compute equivalence and hash codes.</param>
-        public DataTypeObjectEqualityComparer(Func<DataTypeObjectEqualityComparator> comparatorFactory)
+        finally
         {
-            _comparatorFactory = comparatorFactory;
-        }
-
-        /// <summary>
-        /// Gets the default instance of the comparer.
-        /// </summary>
-        public static DataTypeObjectEqualityComparer Default { get; } = new DataTypeObjectEqualityComparer();
-
-        /// <summary>
-        /// Checks for value equality of two objects with data model-compliant types.
-        /// </summary>
-        /// <param name="x">The first object.</param>
-        /// <param name="y">The second object.</param>
-        /// <returns>true if the objects are equal, false otherwise.</returns>
-        public new bool Equals(object x, object y)
-        {
-            var comparator = _comparatorFactory();
-
-            try
+            if (_isPooled && comparator.ShouldReturnToPool)
             {
-                return comparator.Equals(x, y);
-            }
-            finally
-            {
-                if (_isPooled && comparator.ShouldReturnToPool)
-                {
-                    s_pool.Free(comparator);
-                }
+                s_pool.Free(comparator);
             }
         }
+    }
 
-        /// <summary>
-        /// Gets the hash code of an object.
-        /// </summary>
-        /// <param name="obj">The object.</param>
-        /// <returns>The hash code of the object.</returns>
-        public int GetHashCode(object obj)
+    /// <summary>
+    /// Gets the hash code of an object.
+    /// </summary>
+    /// <param name="obj">The object.</param>
+    /// <returns>The hash code of the object.</returns>
+    public int GetHashCode(object obj)
+    {
+        var comparator = _comparatorFactory();
+
+        try
         {
-            var comparator = _comparatorFactory();
-
-            try
+            return comparator.GetHashCode(obj);
+        }
+        finally
+        {
+            if (_isPooled && comparator.ShouldReturnToPool)
             {
-                return comparator.GetHashCode(obj);
-            }
-            finally
-            {
-                if (_isPooled && comparator.ShouldReturnToPool)
-                {
-                    s_pool.Free(comparator);
-                }
+                s_pool.Free(comparator);
             }
         }
     }

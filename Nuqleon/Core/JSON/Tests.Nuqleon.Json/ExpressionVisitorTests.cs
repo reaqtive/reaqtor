@@ -15,55 +15,54 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Nuqleon.Json.Expressions;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class ExpressionVisitorTests
 {
-    [TestClass]
-    public class ExpressionVisitorTests
+    [TestMethod]
+    public void ExpressionVisitorOfR_Exceptions()
     {
-        [TestMethod]
-        public void ExpressionVisitorOfR_Exceptions()
+        var v = new ExpressionVisitor<int>();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => v.Visit(node: null));
+
+        Assert.ThrowsExactly<NotImplementedException>(() => v.VisitObject(node: null));
+        Assert.ThrowsExactly<NotImplementedException>(() => v.VisitArray(node: null));
+        Assert.ThrowsExactly<NotImplementedException>(() => v.VisitConstant(node: null));
+    }
+
+    [TestMethod]
+    public void ExpressionVisitor_Exceptions()
+    {
+        var v = new ExpressionVisitor();
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => v.Visit(node: null));
+
+        Assert.ThrowsExactly<ArgumentNullException>(() => v.VisitObject(node: null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => v.VisitArray(node: null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => v.VisitConstant(node: null));
+    }
+
+    [TestMethod]
+    public void ExpressionVisitor_Unchanged()
+    {
+        var e1 = Expression.Null();
+        var e2 = Expression.Number("42");
+        var e3 = Expression.String("foo");
+        var e4 = Expression.Array(e2, e3);
+        var e5 = Expression.Object(new Dictionary<string, Expression> { { "bar", e2 }, { "foo", e3 } });
+
+        var v = new ExpressionVisitor();
+
+        var es = new Expression[]
         {
-            var v = new ExpressionVisitor<int>();
+            e1, e2, e3, e4, e5,
+        };
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => v.Visit(node: null));
-
-            Assert.ThrowsExactly<NotImplementedException>(() => v.VisitObject(node: null));
-            Assert.ThrowsExactly<NotImplementedException>(() => v.VisitArray(node: null));
-            Assert.ThrowsExactly<NotImplementedException>(() => v.VisitConstant(node: null));
-        }
-
-        [TestMethod]
-        public void ExpressionVisitor_Exceptions()
+        foreach (var e in es)
         {
-            var v = new ExpressionVisitor();
-
-            Assert.ThrowsExactly<ArgumentNullException>(() => v.Visit(node: null));
-
-            Assert.ThrowsExactly<ArgumentNullException>(() => v.VisitObject(node: null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => v.VisitArray(node: null));
-            Assert.ThrowsExactly<ArgumentNullException>(() => v.VisitConstant(node: null));
-        }
-
-        [TestMethod]
-        public void ExpressionVisitor_Unchanged()
-        {
-            var e1 = Expression.Null();
-            var e2 = Expression.Number("42");
-            var e3 = Expression.String("foo");
-            var e4 = Expression.Array(e2, e3);
-            var e5 = Expression.Object(new Dictionary<string, Expression> { { "bar", e2 }, { "foo", e3 } });
-
-            var v = new ExpressionVisitor();
-
-            var es = new Expression[]
-            {
-                e1, e2, e3, e4, e5,
-            };
-
-            foreach (var e in es)
-            {
-                Assert.AreSame(e, v.Visit(e));
-            }
+            Assert.AreSame(e, v.Visit(e));
         }
     }
 }

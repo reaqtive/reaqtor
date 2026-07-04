@@ -13,67 +13,66 @@ using System.Collections.Specialized;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Collections.Specialized
+namespace Tests.System.Collections.Specialized;
+
+[TestClass]
+public partial class EnumDictionaryFactoryTests
 {
-    [TestClass]
-    public partial class EnumDictionaryFactoryTests
+    [TestMethod]
+    public void EnumDictionaryFactory_Parameter_Validation()
     {
-        [TestMethod]
-        public void EnumDictionaryFactory_Parameter_Validation()
+        try
         {
-            try
-            {
-                EnumDictionary.Create<int, bool>();
-                Assert.Fail();
-            }
-            catch (ArgumentException e)
-            {
-                Assert.AreEqual("TKey", e.ParamName);
-            }
-
-            try
-            {
-                EnumDictionary.Create<Foo, bool>();
-                Assert.Fail();
-            }
-            catch (ArgumentException e)
-            {
-                Assert.AreEqual("TKey", e.ParamName);
-            }
-
-            try
-            {
-                EnumDictionary.Create<Bar, bool>();
-                Assert.Fail();
-            }
-            catch (ArgumentException e)
-            {
-                Assert.AreEqual("TKey", e.ParamName);
-            }
-
-            try
-            {
-                EnumDictionary.Create<Baz, bool>();
-                Assert.Fail();
-            }
-            catch (ArgumentException e)
-            {
-                Assert.AreEqual("TKey", e.ParamName);
-            }
+            EnumDictionary.Create<int, bool>();
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("TKey", e.ParamName);
         }
 
-        private enum Foo : long
+        try
         {
+            EnumDictionary.Create<Foo, bool>();
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("TKey", e.ParamName);
         }
 
-        private enum Bar : int
+        try
         {
-            Qux = -1
+            EnumDictionary.Create<Bar, bool>();
+            Assert.Fail();
+        }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("TKey", e.ParamName);
         }
 
-        [Flags]
-        private enum Baz
+        try
         {
+            EnumDictionary.Create<Baz, bool>();
+            Assert.Fail();
         }
+        catch (ArgumentException e)
+        {
+            Assert.AreEqual("TKey", e.ParamName);
+        }
+    }
+
+    private enum Foo : long
+    {
+    }
+
+    private enum Bar : int
+    {
+        Qux = -1
+    }
+
+    [Flags]
+    private enum Baz
+    {
     }
 }

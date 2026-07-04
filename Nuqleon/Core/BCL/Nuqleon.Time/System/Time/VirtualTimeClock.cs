@@ -8,44 +8,43 @@
 //   BD - 07/29/2015 - Created this type.
 //
 
-namespace System.Time
+namespace System.Time;
+
+/// <summary>
+/// Represents a clock that uses virtual time.
+/// </summary>
+public class VirtualTimeClock : IClock
 {
+    private long _now;
+
     /// <summary>
-    /// Represents a clock that uses virtual time.
+    /// Creates a new virtual time clock with an initial time set to zero ticks.
     /// </summary>
-    public class VirtualTimeClock : IClock
+    public VirtualTimeClock() => _now = 0L;
+
+    /// <summary>
+    /// Creates a new virtual time clock with the specified initial time.
+    /// </summary>
+    /// <param name="initialTime">Initial time to set the clock to.</param>
+    public VirtualTimeClock(long initialTime)
     {
-        private long _now;
+        ArgumentOutOfRangeException.ThrowIfNegative(initialTime);
 
-        /// <summary>
-        /// Creates a new virtual time clock with an initial time set to zero ticks.
-        /// </summary>
-        public VirtualTimeClock() => _now = 0L;
+        _now = initialTime;
+    }
 
-        /// <summary>
-        /// Creates a new virtual time clock with the specified initial time.
-        /// </summary>
-        /// <param name="initialTime">Initial time to set the clock to.</param>
-        public VirtualTimeClock(long initialTime)
+    /// <summary>
+    /// Gets or sets the current time in ticks.
+    /// </summary>
+    public long Now
+    {
+        get => _now;
+
+        set
         {
-            ArgumentOutOfRangeException.ThrowIfNegative(initialTime);
+            ArgumentOutOfRangeException.ThrowIfNegative(value);
 
-            _now = initialTime;
-        }
-
-        /// <summary>
-        /// Gets or sets the current time in ticks.
-        /// </summary>
-        public long Now
-        {
-            get => _now;
-
-            set
-            {
-                ArgumentOutOfRangeException.ThrowIfNegative(value);
-
-                _now = value;
-            }
+            _now = value;
         }
     }
 }

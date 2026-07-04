@@ -4,18 +4,17 @@
 
 using System;
 
-namespace Reaqtive
+namespace Reaqtive;
+
+/// <summary>
+/// Represents a factory for operator state writers.
+/// </summary>
+public interface IOperatorStateWriterFactory : IDisposable
 {
     /// <summary>
-    /// Represents a factory for operator state writers.
+    /// Creates a new operator state writer for the specified operator.
     /// </summary>
-    public interface IOperatorStateWriterFactory : IDisposable
-    {
-        /// <summary>
-        /// Creates a new operator state writer for the specified operator.
-        /// </summary>
-        /// <param name="node">Operator whose state will be written by the created reader.</param>
-        /// <returns>Operator state writer for the specified operator.</returns>
-        IOperatorStateWriter Create(IStatefulOperator node);
-    }
+    /// <param name="node">Operator whose state will be written by the created reader.</param>
+    /// <returns>Operator state writer for the specified operator.</returns>
+    IOperatorStateWriter Create(IStatefulOperator node);
 }

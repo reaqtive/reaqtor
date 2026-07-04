@@ -14,163 +14,162 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 using Reaqtive.Storage;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class IntegerKeyTests
 {
-    [TestClass]
-    public class IntegerKeyTests
+    [TestMethod]
+    public void NullAlphabet()
     {
-        [TestMethod]
-        public void NullAlphabet()
+        Assert.ThrowsExactly<ArgumentNullException>(() => new IntegerKey(default));
+    }
+
+    [TestMethod]
+    public void EmptyAlphabet()
+    {
+        Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey());
+    }
+
+    [TestMethod]
+    public void OneLetterAlphabet()
+    {
+        Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey('a'));
+    }
+
+    [TestMethod]
+    public void ReservedAlphabetCharacter()
+    {
+        Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey('a', 'b', '-'));
+    }
+
+    [TestMethod]
+    public void NonDistinctAlphabet()
+    {
+        Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey('a', 'b', 'a'));
+    }
+
+    [TestMethod]
+    public void ParseNull()
+    {
+        var key = new IntegerKey('a', 'b');
+        Assert.ThrowsExactly<ArgumentNullException>(() => key.Parse(default));
+    }
+
+    [TestMethod]
+    public void ParseEmpty()
+    {
+        var key = new IntegerKey('a', 'b');
+        Assert.ThrowsExactly<ArgumentException>(() => key.Parse(""));
+    }
+
+    [TestMethod]
+    public void ParseIncompleteNegative()
+    {
+        var key = new IntegerKey('a', 'b');
+        Assert.ThrowsExactly<ArgumentException>(() => key.Parse("-"));
+    }
+
+    [TestMethod]
+    public void ParseNotInAlphabet()
+    {
+        var key = new IntegerKey('a', 'b');
+        Assert.ThrowsExactly<ArgumentException>(() => key.Parse("abcab"));
+    }
+
+    [TestMethod]
+    public void KeyToString_Binary()
+    {
+        var key = new IntegerKey('0', '1');
+
+        for (var i = 0; i <= 1000; i++) // NB: We don't use 2-complement.
         {
-            Assert.ThrowsExactly<ArgumentNullException>(() => new IntegerKey(default));
+            var s = key.ToString(i);
+            Assert.AreEqual(Convert.ToString(i, 2), s);
         }
+    }
 
-        [TestMethod]
-        public void EmptyAlphabet()
+    [TestMethod]
+    public void StringToKey_Binary()
+    {
+        var key = new IntegerKey('0', '1');
+
+        for (var i = 0; i <= 1000; i++) // NB: We don't use 2-complement.
         {
-            Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey());
+            var j = key.Parse(Convert.ToString(i, 2));
+            Assert.AreEqual(i, j);
         }
+    }
 
-        [TestMethod]
-        public void OneLetterAlphabet()
+    [TestMethod]
+    public void KeyToString_Octal()
+    {
+        var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7');
+
+        for (var i = 0; i <= 1000; i++) // NB: We don't use 8-complement.
         {
-            Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey('a'));
+            var s = key.ToString(i);
+            Assert.AreEqual(Convert.ToString(i, 8), s);
         }
+    }
 
-        [TestMethod]
-        public void ReservedAlphabetCharacter()
+    [TestMethod]
+    public void StringToKey_Octal()
+    {
+        var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7');
+
+        for (var i = 0; i <= 1000; i++) // NB: We don't use 8-complement.
         {
-            Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey('a', 'b', '-'));
+            var j = key.Parse(Convert.ToString(i, 8));
+            Assert.AreEqual(i, j);
         }
+    }
 
-        [TestMethod]
-        public void NonDistinctAlphabet()
+    [TestMethod]
+    public void KeyToString_Decimal()
+    {
+        var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+
+        for (var i = -1000; i <= 1000; i++)
         {
-            Assert.ThrowsExactly<ArgumentException>(() => new IntegerKey('a', 'b', 'a'));
+            var s = key.ToString(i);
+            Assert.AreEqual(i.ToString(), s);
         }
+    }
 
-        [TestMethod]
-        public void ParseNull()
+    [TestMethod]
+    public void StringToKey_Decimal()
+    {
+        var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
+
+        for (var i = -1000; i <= 1000; i++)
         {
-            var key = new IntegerKey('a', 'b');
-            Assert.ThrowsExactly<ArgumentNullException>(() => key.Parse(default));
+            var j = key.Parse(i.ToString());
+            Assert.AreEqual(i, j);
         }
+    }
 
-        [TestMethod]
-        public void ParseEmpty()
+    [TestMethod]
+    public void KeyToString_Hexadecimal()
+    {
+        var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+
+        for (var i = 0; i <= 1000; i++) // NB: We don't use 16-complement.
         {
-            var key = new IntegerKey('a', 'b');
-            Assert.ThrowsExactly<ArgumentException>(() => key.Parse(""));
+            var s = key.ToString(i);
+            Assert.AreEqual(Convert.ToString(i, 16), s);
         }
+    }
 
-        [TestMethod]
-        public void ParseIncompleteNegative()
+    [TestMethod]
+    public void StringToKey_Hexadecimal()
+    {
+        var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
+
+        for (var i = 0; i <= 1000; i++) // NB: We don't use 16-complement.
         {
-            var key = new IntegerKey('a', 'b');
-            Assert.ThrowsExactly<ArgumentException>(() => key.Parse("-"));
-        }
-
-        [TestMethod]
-        public void ParseNotInAlphabet()
-        {
-            var key = new IntegerKey('a', 'b');
-            Assert.ThrowsExactly<ArgumentException>(() => key.Parse("abcab"));
-        }
-
-        [TestMethod]
-        public void KeyToString_Binary()
-        {
-            var key = new IntegerKey('0', '1');
-
-            for (var i = 0; i <= 1000; i++) // NB: We don't use 2-complement.
-            {
-                var s = key.ToString(i);
-                Assert.AreEqual(Convert.ToString(i, 2), s);
-            }
-        }
-
-        [TestMethod]
-        public void StringToKey_Binary()
-        {
-            var key = new IntegerKey('0', '1');
-
-            for (var i = 0; i <= 1000; i++) // NB: We don't use 2-complement.
-            {
-                var j = key.Parse(Convert.ToString(i, 2));
-                Assert.AreEqual(i, j);
-            }
-        }
-
-        [TestMethod]
-        public void KeyToString_Octal()
-        {
-            var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7');
-
-            for (var i = 0; i <= 1000; i++) // NB: We don't use 8-complement.
-            {
-                var s = key.ToString(i);
-                Assert.AreEqual(Convert.ToString(i, 8), s);
-            }
-        }
-
-        [TestMethod]
-        public void StringToKey_Octal()
-        {
-            var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7');
-
-            for (var i = 0; i <= 1000; i++) // NB: We don't use 8-complement.
-            {
-                var j = key.Parse(Convert.ToString(i, 8));
-                Assert.AreEqual(i, j);
-            }
-        }
-
-        [TestMethod]
-        public void KeyToString_Decimal()
-        {
-            var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-
-            for (var i = -1000; i <= 1000; i++)
-            {
-                var s = key.ToString(i);
-                Assert.AreEqual(i.ToString(), s);
-            }
-        }
-
-        [TestMethod]
-        public void StringToKey_Decimal()
-        {
-            var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7', '8', '9');
-
-            for (var i = -1000; i <= 1000; i++)
-            {
-                var j = key.Parse(i.ToString());
-                Assert.AreEqual(i, j);
-            }
-        }
-
-        [TestMethod]
-        public void KeyToString_Hexadecimal()
-        {
-            var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
-
-            for (var i = 0; i <= 1000; i++) // NB: We don't use 16-complement.
-            {
-                var s = key.ToString(i);
-                Assert.AreEqual(Convert.ToString(i, 16), s);
-            }
-        }
-
-        [TestMethod]
-        public void StringToKey_Hexadecimal()
-        {
-            var key = new IntegerKey('0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f');
-
-            for (var i = 0; i <= 1000; i++) // NB: We don't use 16-complement.
-            {
-                var j = key.Parse(Convert.ToString(i, 16));
-                Assert.AreEqual(i, j);
-            }
+            var j = key.Parse(Convert.ToString(i, 16));
+            Assert.AreEqual(i, j);
         }
     }
 }

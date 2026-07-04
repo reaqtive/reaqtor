@@ -7,13 +7,12 @@ using System;
 using Reaqtor.Reliable;
 using Reaqtor.TestingFramework;
 
-namespace Reaqtor.QueryEngine
+namespace Reaqtor.QueryEngine;
+
+internal class TestReliableExecutionEnvironment : TestExecutionEnvironment, IReliableExecutionEnvironment
 {
-    internal class TestReliableExecutionEnvironment : TestExecutionEnvironment, IReliableExecutionEnvironment
+    public IReliableMultiSubject<TInput, TOutput> GetReliableSubject<TInput, TOutput>(Uri uri)
     {
-        public IReliableMultiSubject<TInput, TOutput> GetReliableSubject<TInput, TOutput>(Uri uri)
-        {
-            return (IReliableMultiSubject<TInput, TOutput>)GetArtifact(uri);
-        }
+        return (IReliableMultiSubject<TInput, TOutput>)GetArtifact(uri);
     }
 }

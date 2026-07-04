@@ -5,50 +5,49 @@
 using System;
 using System.Collections.Generic;
 
-namespace Nuqleon.DataModel.Serialization.Json
+namespace Nuqleon.DataModel.Serialization.Json;
+
+/// <summary>
+/// Type extensions.
+/// </summary>
+internal static class TypeExtensions
 {
     /// <summary>
-    /// Type extensions.
+    /// Determines whether the specified type is a Tuple.
     /// </summary>
-    internal static class TypeExtensions
+    /// <param name="type">The type.</param>
+    /// <returns>
+    ///   <c>true</c> if the specified type is a tuple; otherwise, <c>false</c>.
+    /// </returns>
+    public static bool IsTuple(this Type type)
     {
-        /// <summary>
-        /// Determines whether the specified type is a Tuple.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>
-        ///   <c>true</c> if the specified type is a tuple; otherwise, <c>false</c>.
-        /// </returns>
-        public static bool IsTuple(this Type type)
+        if (!type.IsGenericType)
         {
-            if (!type.IsGenericType)
-            {
-                return false;
-            }
-
-            Type genericType = type.GetGenericTypeDefinition();
-            return genericType == typeof(Tuple<>)
-                 || genericType == typeof(Tuple<,>)
-                 || genericType == typeof(Tuple<,,>)
-                 || genericType == typeof(Tuple<,,,>)
-                 || genericType == typeof(Tuple<,,,,>)
-                 || genericType == typeof(Tuple<,,,,,>)
-                 || genericType == typeof(Tuple<,,,,,,>)
-                 || genericType == typeof(Tuple<,,,,,,,>);
+            return false;
         }
 
-        /// <summary>
-        /// Returns the class inheritance chain for the type including the type itself.
-        /// </summary>
-        /// <param name="type">The type.</param>
-        /// <returns>Class inheritance chain.</returns>
-        public static IEnumerable<Type> InheritanceChain(this Type type)
+        Type genericType = type.GetGenericTypeDefinition();
+        return genericType == typeof(Tuple<>)
+             || genericType == typeof(Tuple<,>)
+             || genericType == typeof(Tuple<,,>)
+             || genericType == typeof(Tuple<,,,>)
+             || genericType == typeof(Tuple<,,,,>)
+             || genericType == typeof(Tuple<,,,,,>)
+             || genericType == typeof(Tuple<,,,,,,>)
+             || genericType == typeof(Tuple<,,,,,,,>);
+    }
+
+    /// <summary>
+    /// Returns the class inheritance chain for the type including the type itself.
+    /// </summary>
+    /// <param name="type">The type.</param>
+    /// <returns>Class inheritance chain.</returns>
+    public static IEnumerable<Type> InheritanceChain(this Type type)
+    {
+        while (type != null)
         {
-            while (type != null)
-            {
-                yield return type;
-                type = type.BaseType;
-            }
+            yield return type;
+            type = type.BaseType;
         }
     }
 }

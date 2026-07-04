@@ -176,217 +176,216 @@ using System;
 using System.Globalization;
 using System.Windows.Forms;
 
-namespace Rxcel
+namespace Rxcel;
+
+internal static partial class Program
 {
-    internal static partial class Program
+    [STAThread]
+    public static void Main()
     {
-        [STAThread]
-        public static void Main()
+        var open = new ToolStripMenuItem("&Open") { ShortcutKeys = Keys.Control | Keys.O };
+        var save = new ToolStripMenuItem("&Save") { ShortcutKeys = Keys.Control | Keys.S };
+
+        var menu = new MenuStrip()
         {
-            var open = new ToolStripMenuItem("&Open") { ShortcutKeys = Keys.Control | Keys.O };
-            var save = new ToolStripMenuItem("&Save") { ShortcutKeys = Keys.Control | Keys.S };
-
-            var menu = new MenuStrip()
+            Items =
             {
-                Items =
+                new ToolStripMenuItem("&File")
                 {
-                    new ToolStripMenuItem("&File")
+                    DropDownItems =
                     {
-                        DropDownItems =
-                        {
-                            open,
-                            save
-                        }
-                    }
-                }
-            };
-
-            using var frm = new Form
-            {
-                Text = "Rxcel",
-                Width = 1200,
-                Height = 400,
-                MainMenuStrip = menu
-            };
-
-            var txt = new TextBox
-            {
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
-                Left = 0,
-                Top = 0,
-                Width = frm.Width
-            };
-
-            var panel = new Panel
-            {
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
-                Left = 0,
-                Top = menu.Height,
-                Width = frm.Width,
-                Height = frm.Height - txt.Height
-            };
-
-            panel.Controls.Add(txt);
-
-            var dg = new DataGridView
-            {
-                Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
-                Left = 0,
-                Top = txt.Height,
-                Width = frm.Width,
-                Height = frm.Height - txt.Height
-            };
-
-            var C = 10;
-            var R = 10;
-
-            var sheet = new Sheet(R, C);
-
-            void DrawSheet()
-            {
-                dg.Rows.Clear();
-                dg.Columns.Clear();
-
-                for (var c = 'A'; c < 'A' + sheet.ColumnCount; c++)
-                {
-                    dg.Columns.Add(c.ToString(), c.ToString());
-                }
-
-                for (var i = 0; i < sheet.ColumnCount; i++)
-                {
-                    var j = dg.Rows.Add();
-                    dg.Rows[j].HeaderCell.Value = (i + 1).ToString(CultureInfo.InvariantCulture);
-                }
-
-                for (var r = 0; r < dg.Rows.Count - 1; r++)
-                {
-                    var row = dg.Rows[r];
-                    for (var c = 0; c < dg.Columns.Count; c++)
-                    {
-                        row.Cells[c].Value = sheet[r, c];
+                        open,
+                        save
                     }
                 }
             }
+        };
 
-            DrawSheet();
+        using var frm = new Form
+        {
+            Text = "Rxcel",
+            Width = 1200,
+            Height = 400,
+            MainMenuStrip = menu
+        };
 
-            panel.Controls.Add(dg);
+        var txt = new TextBox
+        {
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right,
+            Left = 0,
+            Top = 0,
+            Width = frm.Width
+        };
 
-            open.Click += (_1, _2) =>
+        var panel = new Panel
+        {
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
+            Left = 0,
+            Top = menu.Height,
+            Width = frm.Width,
+            Height = frm.Height - txt.Height
+        };
+
+        panel.Controls.Add(txt);
+
+        var dg = new DataGridView
+        {
+            Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Bottom,
+            Left = 0,
+            Top = txt.Height,
+            Width = frm.Width,
+            Height = frm.Height - txt.Height
+        };
+
+        var C = 10;
+        var R = 10;
+
+        var sheet = new Sheet(R, C);
+
+        void DrawSheet()
+        {
+            dg.Rows.Clear();
+            dg.Columns.Clear();
+
+            for (var c = 'A'; c < 'A' + sheet.ColumnCount; c++)
             {
-                string file;
+                dg.Columns.Add(c.ToString(), c.ToString());
+            }
 
-                using (var dlg = new OpenFileDialog())
-                {
-                    if (dlg.ShowDialog() != DialogResult.OK)
-                    {
-                        return;
-                    }
-
-                    file = dlg.FileName;
-                }
-
-                try
-                {
-                    var newSheet = Sheet.Load(file);
-                    if (newSheet != null)
-                    {
-                        sheet = newSheet;
-                        DrawSheet();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    ShowError(ex);
-                }
-            };
-
-            save.Click += (_1, _2) =>
+            for (var i = 0; i < sheet.ColumnCount; i++)
             {
-                string file;
+                var j = dg.Rows.Add();
+                dg.Rows[j].HeaderCell.Value = (i + 1).ToString(CultureInfo.InvariantCulture);
+            }
 
-                using (var dlg = new SaveFileDialog())
-                {
-                    if (dlg.ShowDialog() != DialogResult.OK)
-                    {
-                        return;
-                    }
-
-                    file = dlg.FileName;
-                }
-
-                try
-                {
-                    sheet.Save(file);
-                }
-                catch (Exception ex)
-                {
-                    ShowError(ex);
-                }
-            };
-
-            txt.KeyDown += (o, e) =>
+            for (var r = 0; r < dg.Rows.Count - 1; r++)
             {
-                if (e.KeyCode is Keys.Enter or Keys.Return)
+                var row = dg.Rows[r];
+                for (var c = 0; c < dg.Columns.Count; c++)
                 {
-                    if (dg.SelectedCells.Count == 1)
-                    {
-                        var cell = (Cell)dg.SelectedCells[0].Value;
-
-                        cell.Value = txt.Text;
-
-                        dg.Refresh();
-                    }
+                    row.Cells[c].Value = sheet[r, c];
                 }
-            };
+            }
+        }
 
-            dg.SelectionMode = DataGridViewSelectionMode.CellSelect;
-            dg.MultiSelect = false;
+        DrawSheet();
 
-            dg.SelectionChanged += (o, e) =>
+        panel.Controls.Add(dg);
+
+        open.Click += (_1, _2) =>
+        {
+            string file;
+
+            using (var dlg = new OpenFileDialog())
+            {
+                if (dlg.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                file = dlg.FileName;
+            }
+
+            try
+            {
+                var newSheet = Sheet.Load(file);
+                if (newSheet != null)
+                {
+                    sheet = newSheet;
+                    DrawSheet();
+                }
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        };
+
+        save.Click += (_1, _2) =>
+        {
+            string file;
+
+            using (var dlg = new SaveFileDialog())
+            {
+                if (dlg.ShowDialog() != DialogResult.OK)
+                {
+                    return;
+                }
+
+                file = dlg.FileName;
+            }
+
+            try
+            {
+                sheet.Save(file);
+            }
+            catch (Exception ex)
+            {
+                ShowError(ex);
+            }
+        };
+
+        txt.KeyDown += (o, e) =>
+        {
+            if (e.KeyCode is Keys.Enter or Keys.Return)
             {
                 if (dg.SelectedCells.Count == 1)
                 {
-                    var sel = (Cell)dg.SelectedCells[0].Value;
-                    txt.Text = sel?.Value;
+                    var cell = (Cell)dg.SelectedCells[0].Value;
+
+                    cell.Value = txt.Text;
+
+                    dg.Refresh();
                 }
-                else
-                {
-                    txt.Text = "";
-                }
-            };
-
-            var editing = default(DataGridViewCell);
-            var editingCell = default(Cell);
-
-            dg.CellBeginEdit += (o, e) =>
-            {
-                editing = dg.Rows[e.RowIndex].Cells[e.ColumnIndex];
-                editingCell = (Cell)editing.Value;
-            };
-
-            dg.CellEndEdit += (o, e) =>
-            {
-                if (editing != null)
-                {
-                    if (editing.Value is string value)
-                    {
-                        editingCell.Value = value;
-                        editing.Value = editingCell;
-                        dg.Refresh();
-                    }
-                }
-            };
-
-            frm.Controls.Add(panel);
-            frm.Controls.Add(menu);
-
-            Application.Run(frm);
-
-            static void ShowError(Exception ex)
-            {
-                MessageBox.Show("Error: " + ex, "Rxcel", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
+        };
+
+        dg.SelectionMode = DataGridViewSelectionMode.CellSelect;
+        dg.MultiSelect = false;
+
+        dg.SelectionChanged += (o, e) =>
+        {
+            if (dg.SelectedCells.Count == 1)
+            {
+                var sel = (Cell)dg.SelectedCells[0].Value;
+                txt.Text = sel?.Value;
+            }
+            else
+            {
+                txt.Text = "";
+            }
+        };
+
+        var editing = default(DataGridViewCell);
+        var editingCell = default(Cell);
+
+        dg.CellBeginEdit += (o, e) =>
+        {
+            editing = dg.Rows[e.RowIndex].Cells[e.ColumnIndex];
+            editingCell = (Cell)editing.Value;
+        };
+
+        dg.CellEndEdit += (o, e) =>
+        {
+            if (editing != null)
+            {
+                if (editing.Value is string value)
+                {
+                    editingCell.Value = value;
+                    editing.Value = editingCell;
+                    dg.Refresh();
+                }
+            }
+        };
+
+        frm.Controls.Add(panel);
+        frm.Controls.Add(menu);
+
+        Application.Run(frm);
+
+        static void ShowError(Exception ex)
+        {
+            MessageBox.Show("Error: " + ex, "Rxcel", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
     }
 }

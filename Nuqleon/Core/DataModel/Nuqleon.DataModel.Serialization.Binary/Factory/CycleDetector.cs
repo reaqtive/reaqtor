@@ -4,7 +4,6 @@
 
 using System.Collections.Generic;
 
-namespace Nuqleon.DataModel.Serialization.Binary
-{
-    internal delegate void CycleDetector(CycleDetector f, object value, HashSet<object> visited);
-}
+namespace Nuqleon.DataModel.Serialization.Binary;
+
+internal delegate void CycleDetector(CycleDetector f, object value, HashSet<object> visited);

@@ -9,104 +9,103 @@ using System.Memory.Diagnostics;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests
+namespace Tests;
+
+[TestClass]
+public class HeapUsageAnalyzerTests
 {
-    [TestClass]
-    public class HeapUsageAnalyzerTests
+    [TestMethod]
+    [Ignore("HeapUsageAnalyzer walks the GC heap using object-layout assumptions (object header/MethodTable layout) that differ on .NET 10; the analyzer needs runtime-layout updates to run on modern .NET.")]
+    public void HeapUsageAnalyzer_Basics()
     {
-        [TestMethod]
-        [Ignore("HeapUsageAnalyzer walks the GC heap using object-layout assumptions (object header/MethodTable layout) that differ on .NET 10; the analyzer needs runtime-layout updates to run on modern .NET.")]
-        public void HeapUsageAnalyzer_Basics()
-        {
-            var a = new HeapUsageAnalyzer();
+        var a = new HeapUsageAnalyzer();
 
-            var name = "Bart";
+        var name = "Bart";
 
-            var anon1 = new { bar = "bar" };
-            var anon2 = new { now = DateTime.Now };
-            var arr1 = new[] { "foo", "baz" };
-            var arr2 = new[] { "qux", "odd" };
+        var anon1 = new { bar = "bar" };
+        var anon2 = new { now = DateTime.Now };
+        var arr1 = new[] { "foo", "baz" };
+        var arr2 = new[] { "qux", "odd" };
 
-            var objs1 = new object[] { anon1, new KeyValuePair<string, int>(name, 21), arr1 };
-            var objs2 = new object[] { anon2, new Tuple<string, int>(name, 21), arr2 };
-            var objs3 = new object[] { new() };
+        var objs1 = new object[] { anon1, new KeyValuePair<string, int>(name, 21), arr1 };
+        var objs2 = new object[] { anon2, new Tuple<string, int>(name, 21), arr2 };
+        var objs3 = new object[] { new() };
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => a.AddPartition(null, objs1));
-            Assert.ThrowsExactly<ArgumentNullException>(() => a.AddPartition("foo", null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => a.AddPartition(null, objs1));
+        Assert.ThrowsExactly<ArgumentNullException>(() => a.AddPartition("foo", null));
 
-            var p1 = a.AddPartition("Part1", objs1);
-            var p2 = a.AddPartition("Part2", objs2);
-            var p3 = a.AddPartition("Part3", objs3);
+        var p1 = a.AddPartition("Part1", objs1);
+        var p2 = a.AddPartition("Part2", objs2);
+        var p3 = a.AddPartition("Part3", objs3);
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => a.RemovePartition(null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => a.RemovePartition(null));
 
-            a.RemovePartition("Part3");
+        a.RemovePartition("Part3");
 
-            Assert.ThrowsExactly<ArgumentNullException>(() => a.Analyze(null));
+        Assert.ThrowsExactly<ArgumentNullException>(() => a.Analyze(null));
 
-            var res = a.Analyze(new HeapAnalysisOptions { ComputeSharedHeap = true, DegreeOfParallelism = 0 });
+        var res = a.Analyze(new HeapAnalysisOptions { ComputeSharedHeap = true, DegreeOfParallelism = 0 });
 
-            var r1 = res.Reports[p1].Objects;
-            Assert.IsTrue(r1.SetEquals([objs1[0], objs1[1], objs1[2], anon1.bar, arr1[0], arr1[1]]));
+        var r1 = res.Reports[p1].Objects;
+        Assert.IsTrue(r1.SetEquals([objs1[0], objs1[1], objs1[2], anon1.bar, arr1[0], arr1[1]]));
 
-            var r2 = res.Reports[p2].Objects;
-            Assert.IsTrue(r2.SetEquals([objs2[0], objs2[1], objs2[2], arr2[0], arr2[1]]));
+        var r2 = res.Reports[p2].Objects;
+        Assert.IsTrue(r2.SetEquals([objs2[0], objs2[1], objs2[2], arr2[0], arr2[1]]));
 
-            var sh = res.Shared.Objects;
-            Assert.IsTrue(sh.SetEquals([name]));
+        var sh = res.Shared.Objects;
+        Assert.IsTrue(sh.SetEquals([name]));
 
-            var byGen1 = res.Reports[p1].SplitByGeneration();
-            Assert.AreEqual(GC.MaxGeneration + 1, byGen1.Length);
-            Assert.IsTrue(r1.SetEquals(byGen1.SelectMany(g => g.Objects)));
+        var byGen1 = res.Reports[p1].SplitByGeneration();
+        Assert.AreEqual(GC.MaxGeneration + 1, byGen1.Length);
+        Assert.IsTrue(r1.SetEquals(byGen1.SelectMany(g => g.Objects)));
 
-            var byGen2 = res.Reports[p2].SplitByGeneration();
-            Assert.AreEqual(GC.MaxGeneration + 1, byGen2.Length);
-            Assert.IsTrue(r2.SetEquals(byGen2.SelectMany(g => g.Objects)));
+        var byGen2 = res.Reports[p2].SplitByGeneration();
+        Assert.AreEqual(GC.MaxGeneration + 1, byGen2.Length);
+        Assert.IsTrue(r2.SetEquals(byGen2.SelectMany(g => g.Objects)));
 
-            var stats1 = res.Reports[p1].GetStats();
+        var stats1 = res.Reports[p1].GetStats();
 
-            Assert.AreEqual(4, stats1.InstanceCountPerType.Count); // anon, string, KeyValuePair<string, int>, string[]
-            Assert.AreEqual(1, stats1.InstanceCountPerType[anon1.GetType()]);
-            Assert.AreEqual(3, stats1.InstanceCountPerType[typeof(string)]);
-            Assert.AreEqual(1, stats1.InstanceCountPerType[typeof(KeyValuePair<string, int>)]);
-            Assert.AreEqual(1, stats1.InstanceCountPerType[typeof(string[])]);
+        Assert.AreEqual(4, stats1.InstanceCountPerType.Count); // anon, string, KeyValuePair<string, int>, string[]
+        Assert.AreEqual(1, stats1.InstanceCountPerType[anon1.GetType()]);
+        Assert.AreEqual(3, stats1.InstanceCountPerType[typeof(string)]);
+        Assert.AreEqual(1, stats1.InstanceCountPerType[typeof(KeyValuePair<string, int>)]);
+        Assert.AreEqual(1, stats1.InstanceCountPerType[typeof(string[])]);
 
-            Assert.AreEqual(1, stats1.BoxedValueCount); // KeyValuePair<string, int>
-            Assert.AreEqual(3, stats1.StringCount); // "bar", "foo", "baz"
-            Assert.AreEqual(9, stats1.TotalStringCharacterCount); // "bar", "foo", "baz"
+        Assert.AreEqual(1, stats1.BoxedValueCount); // KeyValuePair<string, int>
+        Assert.AreEqual(3, stats1.StringCount); // "bar", "foo", "baz"
+        Assert.AreEqual(9, stats1.TotalStringCharacterCount); // "bar", "foo", "baz"
 
-            Assert.IsFalse(string.IsNullOrEmpty(stats1.ToString()));
+        Assert.IsFalse(string.IsNullOrEmpty(stats1.ToString()));
 
-            var stats2 = res.Reports[p2].GetStats();
+        var stats2 = res.Reports[p2].GetStats();
 
-            Assert.AreEqual(4, stats2.InstanceCountPerType.Count); // anon, string, KeyValuePair<string, int>, string[]
-            Assert.AreEqual(1, stats2.InstanceCountPerType[anon2.GetType()]);
-            Assert.AreEqual(2, stats2.InstanceCountPerType[typeof(string)]);
-            Assert.AreEqual(1, stats2.InstanceCountPerType[typeof(Tuple<string, int>)]);
-            Assert.AreEqual(1, stats2.InstanceCountPerType[typeof(string[])]);
+        Assert.AreEqual(4, stats2.InstanceCountPerType.Count); // anon, string, KeyValuePair<string, int>, string[]
+        Assert.AreEqual(1, stats2.InstanceCountPerType[anon2.GetType()]);
+        Assert.AreEqual(2, stats2.InstanceCountPerType[typeof(string)]);
+        Assert.AreEqual(1, stats2.InstanceCountPerType[typeof(Tuple<string, int>)]);
+        Assert.AreEqual(1, stats2.InstanceCountPerType[typeof(string[])]);
 
-            Assert.AreEqual(0, stats2.BoxedValueCount);
-            Assert.AreEqual(2, stats2.StringCount); // "qux", "odd"
-            Assert.AreEqual(6, stats2.TotalStringCharacterCount); // "qux", "odd"
+        Assert.AreEqual(0, stats2.BoxedValueCount);
+        Assert.AreEqual(2, stats2.StringCount); // "qux", "odd"
+        Assert.AreEqual(6, stats2.TotalStringCharacterCount); // "qux", "odd"
 
-            Assert.IsFalse(string.IsNullOrEmpty(stats2.ToString()));
+        Assert.IsFalse(string.IsNullOrEmpty(stats2.ToString()));
 
-            var statsS = res.Shared.GetStats();
+        var statsS = res.Shared.GetStats();
 
-            Assert.AreEqual(1, statsS.InstanceCountPerType.Count); // string
-            Assert.AreEqual(1, statsS.InstanceCountPerType[typeof(string)]);
+        Assert.AreEqual(1, statsS.InstanceCountPerType.Count); // string
+        Assert.AreEqual(1, statsS.InstanceCountPerType[typeof(string)]);
 
-            Assert.AreEqual(0, statsS.BoxedValueCount);
-            Assert.AreEqual(1, statsS.StringCount);
-            Assert.AreEqual(name.Length, statsS.TotalStringCharacterCount);
+        Assert.AreEqual(0, statsS.BoxedValueCount);
+        Assert.AreEqual(1, statsS.StringCount);
+        Assert.AreEqual(name.Length, statsS.TotalStringCharacterCount);
 
-            Assert.IsFalse(string.IsNullOrEmpty(statsS.ToString()));
+        Assert.IsFalse(string.IsNullOrEmpty(statsS.ToString()));
 
-            var cln = res.Clone();
+        var cln = res.Clone();
 
-            Assert.AreNotSame(res, cln);
-            Assert.AreNotSame(res.Shared, cln.Shared);
-            Assert.AreNotSame(res.Reports, cln.Reports);
-        }
+        Assert.AreNotSame(res, cln);
+        Assert.AreNotSame(res.Shared, cln.Shared);
+        Assert.AreNotSame(res.Reports, cln.Reports);
     }
 }

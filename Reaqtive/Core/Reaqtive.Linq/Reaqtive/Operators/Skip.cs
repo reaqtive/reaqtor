@@ -5,83 +5,82 @@
 using System;
 using System.Diagnostics;
 
-namespace Reaqtive.Operators
+namespace Reaqtive.Operators;
+
+internal sealed class Skip<TSource> : SubscribableBase<TSource>
 {
-    internal sealed class Skip<TSource> : SubscribableBase<TSource>
+    private readonly ISubscribable<TSource> _source;
+    private readonly int _skipCount;
+
+    public Skip(ISubscribable<TSource> source, int skipCount)
     {
-        private readonly ISubscribable<TSource> _source;
-        private readonly int _skipCount;
+        Debug.Assert(source != null);
 
-        public Skip(ISubscribable<TSource> source, int skipCount)
+        _source = source;
+        _skipCount = skipCount;
+    }
+
+    protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+    {
+        return new _(this, observer);
+    }
+
+    private sealed class _ : StatefulUnaryOperator<Skip<TSource>, TSource>, IObserver<TSource>
+    {
+        private int _valuesToSkip;
+
+        public _(Skip<TSource> parent, IObserver<TSource> observer)
+            : base(parent, observer)
         {
-            Debug.Assert(source != null);
-
-            _source = source;
-            _skipCount = skipCount;
+            _valuesToSkip = parent._skipCount;
         }
 
-        protected override ISubscription SubscribeCore(IObserver<TSource> observer)
+        public override string Name => "rc:Skip";
+
+        public override Version Version => Versioning.v1;
+
+        protected override void LoadStateCore(IOperatorStateReader reader)
         {
-            return new _(this, observer);
+            base.LoadStateCore(reader);
+
+            _valuesToSkip = reader.Read<int>();
         }
 
-        private sealed class _ : StatefulUnaryOperator<Skip<TSource>, TSource>, IObserver<TSource>
+        protected override void SaveStateCore(IOperatorStateWriter writer)
         {
-            private int _valuesToSkip;
+            base.SaveStateCore(writer);
 
-            public _(Skip<TSource> parent, IObserver<TSource> observer)
-                : base(parent, observer)
+            writer.Write(_valuesToSkip);
+        }
+
+        protected override ISubscription OnSubscribe()
+        {
+            return Params._source.Subscribe(this);
+        }
+
+        public void OnCompleted()
+        {
+            Output.OnCompleted();
+            Dispose();
+        }
+
+        public void OnError(Exception error)
+        {
+            Output.OnError(error);
+            Dispose();
+        }
+
+        public void OnNext(TSource value)
+        {
+            if (_valuesToSkip <= 0)
             {
-                _valuesToSkip = parent._skipCount;
+                Output.OnNext(value);
             }
-
-            public override string Name => "rc:Skip";
-
-            public override Version Version => Versioning.v1;
-
-            protected override void LoadStateCore(IOperatorStateReader reader)
+            else
             {
-                base.LoadStateCore(reader);
+                _valuesToSkip--;
 
-                _valuesToSkip = reader.Read<int>();
-            }
-
-            protected override void SaveStateCore(IOperatorStateWriter writer)
-            {
-                base.SaveStateCore(writer);
-
-                writer.Write(_valuesToSkip);
-            }
-
-            protected override ISubscription OnSubscribe()
-            {
-                return Params._source.Subscribe(this);
-            }
-
-            public void OnCompleted()
-            {
-                Output.OnCompleted();
-                Dispose();
-            }
-
-            public void OnError(Exception error)
-            {
-                Output.OnError(error);
-                Dispose();
-            }
-
-            public void OnNext(TSource value)
-            {
-                if (_valuesToSkip <= 0)
-                {
-                    Output.OnNext(value);
-                }
-                else
-                {
-                    _valuesToSkip--;
-
-                    StateChanged = true;
-                }
+                StateChanged = true;
             }
         }
     }

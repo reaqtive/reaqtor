@@ -5,21 +5,20 @@
 using System;
 using System.Collections.Immutable;
 
-namespace Reaqtor.QueryEngine.KeyValueStore.InMemory
+namespace Reaqtor.QueryEngine.KeyValueStore.InMemory;
+
+public class ContainsOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
 {
-    public class ContainsOperation<TKey, TValue> : ReifiedOperation<TKey, TValue>
+    public ContainsOperation(TKey key) => Key = key;
+
+    public override OperationType OperationType => OperationType.Contains;
+
+    public TKey Key { get; }
+
+    public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
     {
-        public ContainsOperation(TKey key) => Key = key;
+        ArgumentNullException.ThrowIfNull(dictionary);
 
-        public override OperationType OperationType => OperationType.Contains;
-
-        public TKey Key { get; }
-
-        public override OperationResult<TKey, TValue> Apply(ref ImmutableSortedDictionary<TKey, Sequenced<TValue>> dictionary)
-        {
-            ArgumentNullException.ThrowIfNull(dictionary);
-
-            return new ContainsOperationResult<TKey, TValue>(dictionary.ContainsKey(Key));
-        }
+        return new ContainsOperationResult<TKey, TValue>(dictionary.ContainsKey(Key));
     }
 }

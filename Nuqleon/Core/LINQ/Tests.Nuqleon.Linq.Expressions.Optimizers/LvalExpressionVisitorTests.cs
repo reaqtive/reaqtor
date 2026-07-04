@@ -15,51 +15,50 @@ using System.Threading;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.Expressions.Optimizers
+namespace Tests.System.Linq.Expressions.Optimizers;
+
+[TestClass]
+public partial class LvalExpressionVisitorTests
 {
-    [TestClass]
-    public partial class LvalExpressionVisitorTests
+    [TestMethod]
+    public void LvalExpressionVisitor_Basics()
     {
-        [TestMethod]
-        public void LvalExpressionVisitor_Basics()
-        {
-            var visitor = new MyVisitor();
+        var visitor = new MyVisitor();
 
-            var x = Expression.Parameter(typeof(int), "x");
-            var xs = Expression.Parameter(typeof(int[]), "xs");
-            var sb = Expression.Parameter(typeof(StrongBox<int>), "sb");
-            var m = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), [typeof(int).MakeByRefType()]);
+        var x = Expression.Parameter(typeof(int), "x");
+        var xs = Expression.Parameter(typeof(int[]), "xs");
+        var sb = Expression.Parameter(typeof(StrongBox<int>), "sb");
+        var m = typeof(Interlocked).GetMethod(nameof(Interlocked.Increment), [typeof(int).MakeByRefType()]);
 
-            var xs0 = Expression.ArrayAccess(xs, Expression.Constant(0));
-            var val = Expression.Field(sb, nameof(StrongBox<>.Value));
+        var xs0 = Expression.ArrayAccess(xs, Expression.Constant(0));
+        var val = Expression.Field(sb, nameof(StrongBox<>.Value));
 
-            var e =
-                Expression.Block(
-                    Expression.Assign(x, Expression.Constant(1)),
-                    Expression.Assign(xs0, Expression.Constant(1)),
-                    Expression.Call(m, val)
-                );
-
-            var r = visitor.Visit(e);
-
-            Assert.AreSame(e, r);
-
-            CollectionAssert.AreEqual(
-                new Expression[] { x, xs0, xs, val, sb },
-                visitor.Lvals
+        var e =
+            Expression.Block(
+                Expression.Assign(x, Expression.Constant(1)),
+                Expression.Assign(xs0, Expression.Constant(1)),
+                Expression.Call(m, val)
             );
-        }
 
-        private sealed class MyVisitor : LvalExpressionVisitor
+        var r = visitor.Visit(e);
+
+        Assert.AreSame(e, r);
+
+        CollectionAssert.AreEqual(
+            new Expression[] { x, xs0, xs, val, sb },
+            visitor.Lvals
+        );
+    }
+
+    private sealed class MyVisitor : LvalExpressionVisitor
+    {
+        public readonly List<Expression> Lvals = [];
+
+        protected override Expression VisitLval(Expression node)
         {
-            public readonly List<Expression> Lvals = [];
+            Lvals.Add(node);
 
-            protected override Expression VisitLval(Expression node)
-            {
-                Lvals.Add(node);
-
-                return base.VisitLval(node);
-            }
+            return base.VisitLval(node);
         }
     }
 }

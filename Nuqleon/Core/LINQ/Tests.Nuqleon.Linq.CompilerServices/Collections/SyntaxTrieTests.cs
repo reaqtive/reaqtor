@@ -13,183 +13,182 @@ using System.Linq.CompilerServices;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
-{
-    [TestClass]
-    public class SyntaxTrieTests
-    {
-        [TestMethod]
-        public void SyntaxTrie_ArgumentChecking()
-        {
-            var st = new SyntaxTrie();
+namespace Tests.System.Linq.CompilerServices;
 
-            var ex = Assert.ThrowsExactly<ArgumentNullException>(() => st.Add(identifier: null));
-            Assert.AreEqual("identifier", ex.ParamName);
-            var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => st.Contains(identifier: null));
-            Assert.AreEqual("identifier", ex2.ParamName);
-            var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => st.Remove(identifier: null));
-            Assert.AreEqual("identifier", ex3.ParamName);
+[TestClass]
+public class SyntaxTrieTests
+{
+    [TestMethod]
+    public void SyntaxTrie_ArgumentChecking()
+    {
+        var st = new SyntaxTrie();
+
+        var ex = Assert.ThrowsExactly<ArgumentNullException>(() => st.Add(identifier: null));
+        Assert.AreEqual("identifier", ex.ParamName);
+        var ex2 = Assert.ThrowsExactly<ArgumentNullException>(() => st.Contains(identifier: null));
+        Assert.AreEqual("identifier", ex2.ParamName);
+        var ex3 = Assert.ThrowsExactly<ArgumentNullException>(() => st.Remove(identifier: null));
+        Assert.AreEqual("identifier", ex3.ParamName);
+    }
+
+    [TestMethod]
+    public void SyntaxTrie_Basics()
+    {
+        var st = new SyntaxTrie();
+
+        // { }
+        {
+            Assert.IsFalse(st.Contains("foo"));
+            Assert.IsFalse(st.Contains("bar"));
+            Assert.IsFalse(st.Contains("baz"));
+
+            Assert.IsFalse(st.Contains("fo"));
+            Assert.IsFalse(st.Contains("f"));
+            Assert.IsFalse(st.Contains("ba"));
+            Assert.IsFalse(st.Contains("b"));
         }
 
-        [TestMethod]
-        public void SyntaxTrie_Basics()
+        // { foo }
         {
-            var st = new SyntaxTrie();
+            st.Add("foo");
+            Assert.IsTrue(st.Contains("foo"));
+            Assert.IsFalse(st.Contains("bar"));
+            Assert.IsFalse(st.Contains("baz"));
 
-            // { }
-            {
-                Assert.IsFalse(st.Contains("foo"));
-                Assert.IsFalse(st.Contains("bar"));
-                Assert.IsFalse(st.Contains("baz"));
+            Assert.IsFalse(st.Contains("fo"));
+            Assert.IsFalse(st.Contains("f"));
+            Assert.IsFalse(st.Contains("ba"));
+            Assert.IsFalse(st.Contains("b"));
+        }
 
-                Assert.IsFalse(st.Contains("fo"));
-                Assert.IsFalse(st.Contains("f"));
-                Assert.IsFalse(st.Contains("ba"));
-                Assert.IsFalse(st.Contains("b"));
-            }
+        // { }
+        {
+            Assert.IsFalse(st.Remove("f"));
+            Assert.IsFalse(st.Remove("fo"));
+            Assert.IsFalse(st.Remove("b"));
+            Assert.IsFalse(st.Remove("ba"));
 
-            // { foo }
-            {
-                st.Add("foo");
-                Assert.IsTrue(st.Contains("foo"));
-                Assert.IsFalse(st.Contains("bar"));
-                Assert.IsFalse(st.Contains("baz"));
+            Assert.IsTrue(st.Remove("foo"));
+            Assert.IsFalse(st.Contains("foo"));
+            Assert.IsFalse(st.Remove("foo"));
+            Assert.IsFalse(st.Contains("bar"));
+            Assert.IsFalse(st.Contains("baz"));
 
-                Assert.IsFalse(st.Contains("fo"));
-                Assert.IsFalse(st.Contains("f"));
-                Assert.IsFalse(st.Contains("ba"));
-                Assert.IsFalse(st.Contains("b"));
-            }
+            Assert.IsFalse(st.Contains("fo"));
+            Assert.IsFalse(st.Contains("f"));
+            Assert.IsFalse(st.Contains("ba"));
+            Assert.IsFalse(st.Contains("b"));
+        }
 
-            // { }
-            {
-                Assert.IsFalse(st.Remove("f"));
-                Assert.IsFalse(st.Remove("fo"));
-                Assert.IsFalse(st.Remove("b"));
-                Assert.IsFalse(st.Remove("ba"));
+        // { foo }
+        {
+            Assert.IsFalse(st.Contains("fo"));
+            Assert.IsFalse(st.Contains("f"));
+            Assert.IsFalse(st.Contains("ba"));
+            Assert.IsFalse(st.Contains("b"));
 
-                Assert.IsTrue(st.Remove("foo"));
-                Assert.IsFalse(st.Contains("foo"));
-                Assert.IsFalse(st.Remove("foo"));
-                Assert.IsFalse(st.Contains("bar"));
-                Assert.IsFalse(st.Contains("baz"));
+            st.Add("foo");
+            Assert.IsTrue(st.Contains("foo"));
+            Assert.IsFalse(st.Contains("bar"));
+            Assert.IsFalse(st.Contains("baz"));
 
-                Assert.IsFalse(st.Contains("fo"));
-                Assert.IsFalse(st.Contains("f"));
-                Assert.IsFalse(st.Contains("ba"));
-                Assert.IsFalse(st.Contains("b"));
-            }
+            Assert.IsFalse(st.Remove("f"));
+            Assert.IsFalse(st.Remove("fo"));
+            Assert.IsFalse(st.Remove("b"));
+            Assert.IsFalse(st.Remove("ba"));
+        }
 
-            // { foo }
-            {
-                Assert.IsFalse(st.Contains("fo"));
-                Assert.IsFalse(st.Contains("f"));
-                Assert.IsFalse(st.Contains("ba"));
-                Assert.IsFalse(st.Contains("b"));
+        // { foo, bar }
+        {
+            Assert.IsFalse(st.Remove("f"));
+            Assert.IsFalse(st.Remove("fo"));
+            Assert.IsFalse(st.Remove("b"));
+            Assert.IsFalse(st.Remove("ba"));
 
-                st.Add("foo");
-                Assert.IsTrue(st.Contains("foo"));
-                Assert.IsFalse(st.Contains("bar"));
-                Assert.IsFalse(st.Contains("baz"));
+            st.Add("bar");
+            Assert.IsTrue(st.Contains("foo"));
+            Assert.IsTrue(st.Contains("bar"));
+            Assert.IsFalse(st.Contains("baz"));
 
-                Assert.IsFalse(st.Remove("f"));
-                Assert.IsFalse(st.Remove("fo"));
-                Assert.IsFalse(st.Remove("b"));
-                Assert.IsFalse(st.Remove("ba"));
-            }
+            Assert.IsFalse(st.Contains("fo"));
+            Assert.IsFalse(st.Contains("f"));
+            Assert.IsFalse(st.Contains("ba"));
+            Assert.IsFalse(st.Contains("b"));
+        }
 
-            // { foo, bar }
-            {
-                Assert.IsFalse(st.Remove("f"));
-                Assert.IsFalse(st.Remove("fo"));
-                Assert.IsFalse(st.Remove("b"));
-                Assert.IsFalse(st.Remove("ba"));
+        // { foo, bar, baz }
+        {
+            Assert.IsFalse(st.Remove("f"));
+            Assert.IsFalse(st.Remove("fo"));
+            Assert.IsFalse(st.Remove("b"));
+            Assert.IsFalse(st.Remove("ba"));
 
-                st.Add("bar");
-                Assert.IsTrue(st.Contains("foo"));
-                Assert.IsTrue(st.Contains("bar"));
-                Assert.IsFalse(st.Contains("baz"));
+            st.Add("baz");
+            Assert.IsTrue(st.Contains("foo"));
+            Assert.IsTrue(st.Contains("bar"));
+            Assert.IsTrue(st.Contains("baz"));
 
-                Assert.IsFalse(st.Contains("fo"));
-                Assert.IsFalse(st.Contains("f"));
-                Assert.IsFalse(st.Contains("ba"));
-                Assert.IsFalse(st.Contains("b"));
-            }
+            Assert.IsFalse(st.Contains("fo"));
+            Assert.IsFalse(st.Contains("f"));
+            Assert.IsFalse(st.Contains("ba"));
+            Assert.IsFalse(st.Contains("b"));
+        }
 
-            // { foo, bar, baz }
-            {
-                Assert.IsFalse(st.Remove("f"));
-                Assert.IsFalse(st.Remove("fo"));
-                Assert.IsFalse(st.Remove("b"));
-                Assert.IsFalse(st.Remove("ba"));
+        // { foo, baz }
+        {
+            Assert.IsFalse(st.Remove("f"));
+            Assert.IsFalse(st.Remove("fo"));
+            Assert.IsFalse(st.Remove("b"));
+            Assert.IsFalse(st.Remove("ba"));
 
-                st.Add("baz");
-                Assert.IsTrue(st.Contains("foo"));
-                Assert.IsTrue(st.Contains("bar"));
-                Assert.IsTrue(st.Contains("baz"));
+            Assert.IsTrue(st.Remove("bar"));
+            Assert.IsTrue(st.Contains("foo"));
+            Assert.IsFalse(st.Contains("bar"));
+            Assert.IsTrue(st.Contains("baz"));
+            Assert.IsFalse(st.Remove("bar"));
 
-                Assert.IsFalse(st.Contains("fo"));
-                Assert.IsFalse(st.Contains("f"));
-                Assert.IsFalse(st.Contains("ba"));
-                Assert.IsFalse(st.Contains("b"));
-            }
+            Assert.IsFalse(st.Contains("fo"));
+            Assert.IsFalse(st.Contains("f"));
+            Assert.IsFalse(st.Contains("ba"));
+            Assert.IsFalse(st.Contains("b"));
+        }
 
-            // { foo, baz }
-            {
-                Assert.IsFalse(st.Remove("f"));
-                Assert.IsFalse(st.Remove("fo"));
-                Assert.IsFalse(st.Remove("b"));
-                Assert.IsFalse(st.Remove("ba"));
+        // { baz }
+        {
+            Assert.IsFalse(st.Contains("fo"));
+            Assert.IsFalse(st.Contains("f"));
+            Assert.IsFalse(st.Contains("ba"));
+            Assert.IsFalse(st.Contains("b"));
 
-                Assert.IsTrue(st.Remove("bar"));
-                Assert.IsTrue(st.Contains("foo"));
-                Assert.IsFalse(st.Contains("bar"));
-                Assert.IsTrue(st.Contains("baz"));
-                Assert.IsFalse(st.Remove("bar"));
+            Assert.IsTrue(st.Remove("foo"));
+            Assert.IsFalse(st.Contains("foo"));
+            Assert.IsFalse(st.Contains("bar"));
+            Assert.IsTrue(st.Contains("baz"));
+            Assert.IsFalse(st.Remove("foo"));
 
-                Assert.IsFalse(st.Contains("fo"));
-                Assert.IsFalse(st.Contains("f"));
-                Assert.IsFalse(st.Contains("ba"));
-                Assert.IsFalse(st.Contains("b"));
-            }
+            Assert.IsFalse(st.Remove("f"));
+            Assert.IsFalse(st.Remove("fo"));
+            Assert.IsFalse(st.Remove("b"));
+            Assert.IsFalse(st.Remove("ba"));
+        }
 
-            // { baz }
-            {
-                Assert.IsFalse(st.Contains("fo"));
-                Assert.IsFalse(st.Contains("f"));
-                Assert.IsFalse(st.Contains("ba"));
-                Assert.IsFalse(st.Contains("b"));
+        // { }
+        {
+            Assert.IsTrue(st.Remove("baz"));
+            Assert.IsFalse(st.Contains("foo"));
+            Assert.IsFalse(st.Contains("bar"));
+            Assert.IsFalse(st.Contains("baz"));
+            Assert.IsFalse(st.Remove("baz"));
 
-                Assert.IsTrue(st.Remove("foo"));
-                Assert.IsFalse(st.Contains("foo"));
-                Assert.IsFalse(st.Contains("bar"));
-                Assert.IsTrue(st.Contains("baz"));
-                Assert.IsFalse(st.Remove("foo"));
+            Assert.IsFalse(st.Contains("fo"));
+            Assert.IsFalse(st.Contains("f"));
+            Assert.IsFalse(st.Contains("ba"));
+            Assert.IsFalse(st.Contains("b"));
 
-                Assert.IsFalse(st.Remove("f"));
-                Assert.IsFalse(st.Remove("fo"));
-                Assert.IsFalse(st.Remove("b"));
-                Assert.IsFalse(st.Remove("ba"));
-            }
-
-            // { }
-            {
-                Assert.IsTrue(st.Remove("baz"));
-                Assert.IsFalse(st.Contains("foo"));
-                Assert.IsFalse(st.Contains("bar"));
-                Assert.IsFalse(st.Contains("baz"));
-                Assert.IsFalse(st.Remove("baz"));
-
-                Assert.IsFalse(st.Contains("fo"));
-                Assert.IsFalse(st.Contains("f"));
-                Assert.IsFalse(st.Contains("ba"));
-                Assert.IsFalse(st.Contains("b"));
-
-                Assert.IsFalse(st.Remove("f"));
-                Assert.IsFalse(st.Remove("fo"));
-                Assert.IsFalse(st.Remove("b"));
-                Assert.IsFalse(st.Remove("ba"));
-            }
+            Assert.IsFalse(st.Remove("f"));
+            Assert.IsFalse(st.Remove("fo"));
+            Assert.IsFalse(st.Remove("b"));
+            Assert.IsFalse(st.Remove("ba"));
         }
     }
 }

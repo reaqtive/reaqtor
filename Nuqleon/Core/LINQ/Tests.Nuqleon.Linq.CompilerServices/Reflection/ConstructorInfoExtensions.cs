@@ -14,27 +14,26 @@ using System.Reflection;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Tests.System.Linq.CompilerServices
+namespace Tests.System.Linq.CompilerServices;
+
+[TestClass]
+public class ConstructorInfoExtensions
 {
-    [TestClass]
-    public class ConstructorInfoExtensions
+    [TestMethod]
+    public void ConstructorInfoExtensions_Simple()
     {
-        [TestMethod]
-        public void ConstructorInfoExtensions_Simple()
-        {
-            // NOTE: This internal method produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
+        // NOTE: This internal method produces pseudo-C#. If ever exposed publicly, this would need to align with the declaration syntax.
 
-            var ctor = ReflectionHelpers.InfoOf(() => new TimeSpan(5, 6, 7));
-            var res = ctor.ToCSharpString();
-            Assert.AreEqual("new TimeSpan(int hours, int minutes, int seconds)", res);
-        }
+        var ctor = ReflectionHelpers.InfoOf(() => new TimeSpan(5, 6, 7));
+        var res = ctor.ToCSharpString();
+        Assert.AreEqual("new TimeSpan(int hours, int minutes, int seconds)", res);
+    }
 
-        [TestMethod]
-        public void ReflectionHelpers_Assembly()
-        {
-            Type type = typeof(ReflectionHelpers);
-            string assembly = type.Assembly.GetName().Name;
-            Assert.AreEqual("Nuqleon.Linq.CompilerServices", assembly);
-        }
+    [TestMethod]
+    public void ReflectionHelpers_Assembly()
+    {
+        Type type = typeof(ReflectionHelpers);
+        string assembly = type.Assembly.GetName().Name;
+        Assert.AreEqual("Nuqleon.Linq.CompilerServices", assembly);
     }
 }
