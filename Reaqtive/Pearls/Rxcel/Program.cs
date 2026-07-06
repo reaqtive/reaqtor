@@ -23,149 +23,148 @@ using System.Globalization;
 using System.Linq;
 using System.Threading;
 
-namespace Rxcel
+namespace Rxcel;
+
+internal static partial class Program
 {
-    internal static partial class Program
+    public static void Main()
     {
-        public static void Main()
+        //     |    A    |    B    |
+        // ----+---------+---------+
+        //   1 |         |         |
+        // ----+---------+---------+
+        //   2 |         |         |
+        // ----+---------+---------+
+        //
+
+        const string LeftColLine = "----+";
+        const string CellColLine = "---------+";
+
+        var C = Math.Min((Console.WindowWidth - LeftColLine.Length) / CellColLine.Length, 26);
+        var R = Math.Min((Console.WindowHeight - 2 /* header */ - 5 /* prompts while editing and avoid scroll */) / 2 /* lines per row */, 32);
+
+        var sheet = new Sheet(R, C);
+
+        void Draw()
         {
-            //     |    A    |    B    |
-            // ----+---------+---------+
-            //   1 |         |         |
-            // ----+---------+---------+
-            //   2 |         |         |
-            // ----+---------+---------+
-            //
+            Console.Clear();
 
-            const string LeftColLine = "----+";
-            const string CellColLine = "---------+";
+            Console.Write(new string(' ', LeftColLine.Length - 1) + "|");
 
-            var C = Math.Min((Console.WindowWidth - LeftColLine.Length) / CellColLine.Length, 26);
-            var R = Math.Min((Console.WindowHeight - 2 /* header */ - 5 /* prompts while editing and avoid scroll */) / 2 /* lines per row */, 32);
-
-            var sheet = new Sheet(R, C);
-
-            void Draw()
+            for (var c = 'A'; c < 'A' + C; c++)
             {
-                Console.Clear();
+                Console.Write(Center(c.ToString(), CellColLine.Length - 1) + "|");
+            }
 
-                Console.Write(new string(' ', LeftColLine.Length - 1) + "|");
+            Console.WriteLine();
 
-                for (var c = 'A'; c < 'A' + C; c++)
+            var line = LeftColLine + string.Join("", Enumerable.Repeat(CellColLine, C));
+            Console.WriteLine(line);
+
+            var maxCellWidth = CellColLine.Length - 3 /* spaces and + */;
+
+            for (var r = 1; r <= R; r++)
+            {
+                Console.Write(" " + string.Format(CultureInfo.CurrentCulture, "{0,-" + (LeftColLine.Length - 2 /* space and + */) + "}", r) + "|");
+
+                for (int c = 0; c < C; c++)
                 {
-                    Console.Write(Center(c.ToString(), CellColLine.Length - 1) + "|");
+                    Console.Write(" {0," + maxCellWidth + "} |", sheet[r - 1, c].ToString());
                 }
 
                 Console.WriteLine();
-
-                var line = LeftColLine + string.Join("", Enumerable.Repeat(CellColLine, C));
                 Console.WriteLine(line);
-
-                var maxCellWidth = CellColLine.Length - 3 /* spaces and + */;
-
-                for (var r = 1; r <= R; r++)
-                {
-                    Console.Write(" " + string.Format(CultureInfo.CurrentCulture, "{0,-" + (LeftColLine.Length - 2 /* space and + */) + "}", r) + "|");
-
-                    for (int c = 0; c < C; c++)
-                    {
-                        Console.Write(" {0," + maxCellWidth + "} |", sheet[r - 1, c].ToString());
-                    }
-
-                    Console.WriteLine();
-                    Console.WriteLine(line);
-                }
             }
+        }
 
-            while (true)
+        while (true)
+        {
+            Draw();
+
+            Console.Write("Enter cell (O = Open, S = Save, X = Exit): ");
+            var cell = Console.ReadLine().Trim();
+
+            var option = cell.ToUpper(CultureInfo.InvariantCulture);
+
+            if (option == "O")
             {
-                Draw();
+                Console.Write("Enter file name: ");
+                var file = Console.ReadLine();
 
-                Console.Write("Enter cell (O = Open, S = Save, X = Exit): ");
-                var cell = Console.ReadLine().Trim();
-
-                var option = cell.ToUpper(CultureInfo.InvariantCulture);
-
-                if (option == "O")
+                try
                 {
-                    Console.Write("Enter file name: ");
-                    var file = Console.ReadLine();
-
-                    try
-                    {
-                        sheet = Sheet.Load(file);
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowError("Error: " + ex);
-                        continue;
-                    }
-
-                    Draw();
-                    continue;
+                    sheet = Sheet.Load(file);
                 }
-                else if (option == "S")
+                catch (Exception ex)
                 {
-                    Console.Write("Enter file name: ");
-                    var file = Console.ReadLine();
-
-                    try
-                    {
-                        sheet.Save(file);
-                    }
-                    catch (Exception ex)
-                    {
-                        ShowError("Error: " + ex);
-                    }
-
-                    continue;
-                }
-                else if (option == "X")
-                {
-                    return;
-                }
-
-                if (!Parser.TryParseCell(cell, out var row, out var col) || row <= 0 || row > R || col <= 0 || col > C)
-                {
-                    ShowError("Invalid cell. Press ENTER to retry.");
+                    ShowError("Error: " + ex);
                     continue;
                 }
 
                 Draw();
+                continue;
+            }
+            else if (option == "S")
+            {
+                Console.Write("Enter file name: ");
+                var file = Console.ReadLine();
 
-                Console.WriteLine("Current formula or value: " + sheet[row - 1, col - 1].Value);
-
-                Console.Write("Enter formula or value (use _ to cancel edit): ");
-                var formula = Console.ReadLine().Trim();
-
-                if (formula == "_")
+                try
                 {
-                    continue;
+                    sheet.Save(file);
+                }
+                catch (Exception ex)
+                {
+                    ShowError("Error: " + ex);
                 }
 
-                sheet[row - 1, col - 1].Value = formula;
+                continue;
             }
-
-            static string Center(string s, int width)
+            else if (option == "X")
             {
-                if (s.Length >= width)
-                {
-                    return s;
-                }
-
-                int leftPadding = (width - s.Length) / 2;
-                int rightPadding = width - s.Length - leftPadding;
-
-                return new string(' ', leftPadding) + s + new string(' ', rightPadding);
+                return;
             }
 
-            static void ShowError(string msg)
+            if (!Parser.TryParseCell(cell, out var row, out var col) || row <= 0 || row > R || col <= 0 || col > C)
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(msg);
-                Console.ResetColor();
-                Console.ReadLine();
+                ShowError("Invalid cell. Press ENTER to retry.");
+                continue;
             }
+
+            Draw();
+
+            Console.WriteLine("Current formula or value: " + sheet[row - 1, col - 1].Value);
+
+            Console.Write("Enter formula or value (use _ to cancel edit): ");
+            var formula = Console.ReadLine().Trim();
+
+            if (formula == "_")
+            {
+                continue;
+            }
+
+            sheet[row - 1, col - 1].Value = formula;
+        }
+
+        static string Center(string s, int width)
+        {
+            if (s.Length >= width)
+            {
+                return s;
+            }
+
+            int leftPadding = (width - s.Length) / 2;
+            int rightPadding = width - s.Length - leftPadding;
+
+            return new string(' ', leftPadding) + s + new string(' ', rightPadding);
+        }
+
+        static void ShowError(string msg)
+        {
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(msg);
+            Console.ResetColor();
+            Console.ReadLine();
         }
     }
 }

@@ -4,14 +4,13 @@
 
 using BenchmarkDotNet.Running;
 
-namespace Perf.Nuqleon.Json.Serialization
+namespace Perf.Nuqleon.Json.Serialization;
+
+public static class Program
 {
-    public static class Program
+    public static void Main()
     {
-        public static void Main()
-        {
-            _ = BenchmarkRunner.Run<Serialize>();
-            _ = BenchmarkRunner.Run<Deserialize>();
-        }
+        _ = BenchmarkRunner.Run<Serialize>();
+        _ = BenchmarkRunner.Run<Deserialize>();
     }
 }

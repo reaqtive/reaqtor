@@ -20,639 +20,638 @@ using System.Linq.Expressions;
 #endif
 
 #if USE_SLIM
-namespace System.Linq.Expressions
+namespace System.Linq.Expressions;
 #else
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+#endif
+
+#if USE_SLIM
+#region Aliases
+
+using BinaryExpressionAlias = BinaryExpressionSlim;
+using BlockExpressionAlias = BlockExpressionSlim;
+using ConditionalExpressionAlias = ConditionalExpressionSlim;
+using ConstantExpressionAlias = ConstantExpressionSlim;
+using DefaultExpressionAlias = DefaultExpressionSlim;
+using ExpressionAlias = ExpressionSlim;
+using GotoExpressionAlias = GotoExpressionSlim;
+using IArgumentProviderAlias = IArgumentProviderSlim;
+using IndexExpressionAlias = IndexExpressionSlim;
+using InvocationExpressionAlias = InvocationExpressionSlim;
+using LabelExpressionAlias = LabelExpressionSlim;
+using LambdaExpressionAlias = LambdaExpressionSlim;
+using ListInitExpressionAlias = ListInitExpressionSlim;
+using LoopExpressionAlias = LoopExpressionSlim;
+using MemberExpressionAlias = MemberExpressionSlim;
+using MemberInitExpressionAlias = MemberInitExpressionSlim;
+using MethodCallExpressionAlias = MethodCallExpressionSlim;
+using NewArrayExpressionAlias = NewArrayExpressionSlim;
+using NewExpressionAlias = NewExpressionSlim;
+using ParameterExpressionAlias = ParameterExpressionSlim;
+using SwitchExpressionAlias = SwitchExpressionSlim;
+using TryExpressionAlias = TryExpressionSlim;
+using TypeBinaryExpressionAlias = TypeBinaryExpressionSlim;
+using UnaryExpressionAlias = UnaryExpressionSlim;
+
+#endregion
+#else
+#region Aliases
+
+using BinaryExpressionAlias = BinaryExpression;
+using BlockExpressionAlias = BlockExpression;
+using ConditionalExpressionAlias = ConditionalExpression;
+using ConstantExpressionAlias = ConstantExpression;
+using DefaultExpressionAlias = DefaultExpression;
+using ExpressionAlias = Expression;
+using GotoExpressionAlias = GotoExpression;
+using IndexExpressionAlias = IndexExpression;
+using InvocationExpressionAlias = InvocationExpression;
+using LabelExpressionAlias = LabelExpression;
+using LambdaExpressionAlias = LambdaExpression;
+using ListInitExpressionAlias = ListInitExpression;
+using LoopExpressionAlias = LoopExpression;
+using MemberExpressionAlias = MemberExpression;
+using MemberInitExpressionAlias = MemberInitExpression;
+using MethodCallExpressionAlias = MethodCallExpression;
+using NewArrayExpressionAlias = NewArrayExpression;
+using NewExpressionAlias = NewExpression;
+using ParameterExpressionAlias = ParameterExpression;
+using SwitchExpressionAlias = SwitchExpression;
+using TryExpressionAlias = TryExpression;
+using TypeBinaryExpressionAlias = TypeBinaryExpression;
+using UnaryExpressionAlias = UnaryExpression;
+
+#endregion
+#endif
+
+/// <summary>
+/// Base class for expression visitors that rewrite an expression tree into a target type.
+/// </summary>
+/// <typeparam name="TExpression">Target type for expressions.</typeparam>
+#if USE_SLIM
+public abstract class ExpressionSlimVisitor<TExpression>
+#else
+public abstract class ExpressionVisitor<TExpression>
 #endif
 {
-#if USE_SLIM
-    #region Aliases
-
-    using BinaryExpressionAlias = BinaryExpressionSlim;
-    using BlockExpressionAlias = BlockExpressionSlim;
-    using ConditionalExpressionAlias = ConditionalExpressionSlim;
-    using ConstantExpressionAlias = ConstantExpressionSlim;
-    using DefaultExpressionAlias = DefaultExpressionSlim;
-    using ExpressionAlias = ExpressionSlim;
-    using GotoExpressionAlias = GotoExpressionSlim;
-    using IArgumentProviderAlias = IArgumentProviderSlim;
-    using IndexExpressionAlias = IndexExpressionSlim;
-    using InvocationExpressionAlias = InvocationExpressionSlim;
-    using LabelExpressionAlias = LabelExpressionSlim;
-    using LambdaExpressionAlias = LambdaExpressionSlim;
-    using ListInitExpressionAlias = ListInitExpressionSlim;
-    using LoopExpressionAlias = LoopExpressionSlim;
-    using MemberExpressionAlias = MemberExpressionSlim;
-    using MemberInitExpressionAlias = MemberInitExpressionSlim;
-    using MethodCallExpressionAlias = MethodCallExpressionSlim;
-    using NewArrayExpressionAlias = NewArrayExpressionSlim;
-    using NewExpressionAlias = NewExpressionSlim;
-    using ParameterExpressionAlias = ParameterExpressionSlim;
-    using SwitchExpressionAlias = SwitchExpressionSlim;
-    using TryExpressionAlias = TryExpressionSlim;
-    using TypeBinaryExpressionAlias = TypeBinaryExpressionSlim;
-    using UnaryExpressionAlias = UnaryExpressionSlim;
-
-    #endregion
-#else
-    #region Aliases
-
-    using BinaryExpressionAlias = BinaryExpression;
-    using BlockExpressionAlias = BlockExpression;
-    using ConditionalExpressionAlias = ConditionalExpression;
-    using ConstantExpressionAlias = ConstantExpression;
-    using DefaultExpressionAlias = DefaultExpression;
-    using ExpressionAlias = Expression;
-    using GotoExpressionAlias = GotoExpression;
-    using IndexExpressionAlias = IndexExpression;
-    using InvocationExpressionAlias = InvocationExpression;
-    using LabelExpressionAlias = LabelExpression;
-    using LambdaExpressionAlias = LambdaExpression;
-    using ListInitExpressionAlias = ListInitExpression;
-    using LoopExpressionAlias = LoopExpression;
-    using MemberExpressionAlias = MemberExpression;
-    using MemberInitExpressionAlias = MemberInitExpression;
-    using MethodCallExpressionAlias = MethodCallExpression;
-    using NewArrayExpressionAlias = NewArrayExpression;
-    using NewExpressionAlias = NewExpression;
-    using ParameterExpressionAlias = ParameterExpression;
-    using SwitchExpressionAlias = SwitchExpression;
-    using TryExpressionAlias = TryExpression;
-    using TypeBinaryExpressionAlias = TypeBinaryExpression;
-    using UnaryExpressionAlias = UnaryExpression;
-
-    #endregion
-#endif
-
     /// <summary>
-    /// Base class for expression visitors that rewrite an expression tree into a target type.
+    /// Visits the specified expression and rewrites it to the target expression type.
     /// </summary>
-    /// <typeparam name="TExpression">Target type for expressions.</typeparam>
-#if USE_SLIM
-    public abstract class ExpressionSlimVisitor<TExpression>
-#else
-    public abstract class ExpressionVisitor<TExpression>
-#endif
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
+    public virtual TExpression Visit(ExpressionAlias node)
     {
-        /// <summary>
-        /// Visits the specified expression and rewrites it to the target expression type.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
-        public virtual TExpression Visit(ExpressionAlias node)
+        if (node == null)
         {
-            if (node == null)
-            {
-                return default;
-            }
-
-            return node.NodeType switch
-            {
-                ExpressionType.Add or
-                ExpressionType.AddChecked or
-                ExpressionType.And or
-                ExpressionType.AndAlso or
-                ExpressionType.ArrayIndex or
-                ExpressionType.Coalesce or
-                ExpressionType.Divide or
-                ExpressionType.Equal or
-                ExpressionType.ExclusiveOr or
-                ExpressionType.GreaterThan or
-                ExpressionType.GreaterThanOrEqual or
-                ExpressionType.LeftShift or
-                ExpressionType.LessThan or
-                ExpressionType.LessThanOrEqual or
-                ExpressionType.Modulo or
-                ExpressionType.Multiply or
-                ExpressionType.MultiplyChecked or
-                ExpressionType.NotEqual or
-                ExpressionType.Or or
-                ExpressionType.OrElse or
-                ExpressionType.Power or
-                ExpressionType.RightShift or
-                ExpressionType.Subtract or
-                ExpressionType.SubtractChecked or
-                ExpressionType.AddAssign or
-                ExpressionType.AddAssignChecked or
-                ExpressionType.AndAssign or
-                ExpressionType.Assign or
-                ExpressionType.DivideAssign or
-                ExpressionType.ExclusiveOrAssign or
-                ExpressionType.LeftShiftAssign or
-                ExpressionType.ModuloAssign or
-                ExpressionType.MultiplyAssign or
-                ExpressionType.MultiplyAssignChecked or
-                ExpressionType.OrAssign or
-                ExpressionType.PowerAssign or
-                ExpressionType.RightShiftAssign or
-                ExpressionType.SubtractAssign or
-                ExpressionType.SubtractAssignChecked => VisitBinary((BinaryExpressionAlias)node),
-                ExpressionType.Block => VisitBlock((BlockExpressionAlias)node),
-                ExpressionType.Call => VisitMethodCall((MethodCallExpressionAlias)node),
-                ExpressionType.Conditional => VisitConditional((ConditionalExpressionAlias)node),
-                ExpressionType.Constant => VisitConstant((ConstantExpressionAlias)node),
-                ExpressionType.Default => VisitDefault((DefaultExpressionAlias)node),
-                ExpressionType.Extension => VisitExtension(node),
-                ExpressionType.Goto => VisitGoto((GotoExpressionAlias)node),
-                ExpressionType.Index => VisitIndex((IndexExpressionAlias)node),
-                ExpressionType.Invoke => VisitInvocation((InvocationExpressionAlias)node),
-                ExpressionType.Label => VisitLabel((LabelExpressionAlias)node),
-                ExpressionType.Lambda => VisitLambda((LambdaExpressionAlias)node),
-                ExpressionType.ListInit => VisitListInit((ListInitExpressionAlias)node),
-                ExpressionType.Loop => VisitLoop((LoopExpressionAlias)node),
-                ExpressionType.MemberAccess => VisitMember((MemberExpressionAlias)node),
-                ExpressionType.MemberInit => VisitMemberInit((MemberInitExpressionAlias)node),
-                ExpressionType.New => VisitNew((NewExpressionAlias)node),
-                ExpressionType.NewArrayBounds or
-                ExpressionType.NewArrayInit => VisitNewArray((NewArrayExpressionAlias)node),
-                ExpressionType.Parameter => VisitParameter((ParameterExpressionAlias)node),
-                ExpressionType.Switch => VisitSwitch((SwitchExpressionAlias)node),
-                ExpressionType.Try => VisitTry((TryExpressionAlias)node),
-                ExpressionType.TypeEqual or
-                ExpressionType.TypeIs => VisitTypeBinary((TypeBinaryExpressionAlias)node),
-                ExpressionType.ArrayLength or
-                ExpressionType.Convert or
-                ExpressionType.ConvertChecked or
-                ExpressionType.Decrement or
-                ExpressionType.Increment or
-                ExpressionType.IsFalse or
-                ExpressionType.IsTrue or
-                ExpressionType.Negate or
-                ExpressionType.NegateChecked or
-                ExpressionType.Not or
-                ExpressionType.OnesComplement or
-                ExpressionType.PostDecrementAssign or
-                ExpressionType.PostIncrementAssign or
-                ExpressionType.PreDecrementAssign or
-                ExpressionType.PreIncrementAssign or
-                ExpressionType.Quote or
-                ExpressionType.Throw or
-                ExpressionType.TypeAs or
-                ExpressionType.UnaryPlus or
-                ExpressionType.Unbox => VisitUnary((UnaryExpressionAlias)node),
-#if !USE_SLIM
-                ExpressionType.DebugInfo => VisitDebugInfo((DebugInfoExpression)node),
-                ExpressionType.Dynamic => VisitDynamic((DynamicExpression)node),
-                ExpressionType.RuntimeVariables => VisitRuntimeVariables((RuntimeVariablesExpression)node),
-#endif
-                _ => throw new NotSupportedException(),
-            };
-        }
-
-#if !USE_SLIM
-        private sealed class LambdaDispatch : ExpressionVisitor
-        {
-            private readonly ExpressionVisitor<TExpression> _parent;
-
-            public LambdaDispatch(ExpressionVisitor<TExpression> parent)
-            {
-                _parent = parent;
-            }
-
-            protected override ExpressionAlias VisitLambda<T>(Expression<T> node)
-            {
-                return new ExpressionHolder { Result = _parent.VisitLambda(node) };
-            }
-        }
-
-        private sealed class ExpressionHolder : ExpressionAlias
-        {
-            public TExpression Result;
-        }
-
-        private LambdaDispatch _dispatch;
-
-        private TExpression VisitLambda(LambdaExpressionAlias node)
-        {
-            _dispatch ??= new LambdaDispatch(this);
-
-            return ((ExpressionHolder)_dispatch.Visit(node)).Result;
-        }
-#endif
-
-        /// <summary>
-        /// Visits the collection of expression nodes and rewrites them to the target expression type.
-        /// </summary>
-        /// <typeparam name="T">Type of the expressions to rewrite. This type should derive from Expression.</typeparam>
-        /// <param name="nodes">Expression nodes to rewrite.</param>
-        /// <returns>Collection of rewritten expression nodes.</returns>
-        protected ReadOnlyCollection<TExpression> Visit<T>(ReadOnlyCollection<T> nodes)
-            where T : ExpressionAlias
-        {
-            var n = nodes.Count;
-
-            if (n == 0)
-            {
-                return EmptyReadOnlyCollection<TExpression>.Instance;
-            }
-
-            var res = new TExpression[n];
-
-            for (var i = 0; i < n; i++)
-            {
-                var node = Visit(nodes[i]);
-                res[i] = node;
-            }
-
-            return new TrueReadOnlyCollection<TExpression>(/* transfer ownership */ res);
-        }
-
-#if USE_SLIM
-        /// <summary>
-        /// Visits the arguments in an argument provider.
-        /// </summary>
-        /// <param name="nodes">The argument provider whose arguments to visit.</param>
-        /// <returns>The rewritten arguments.</returns>
-        protected internal ReadOnlyCollection<TExpression> VisitArguments(IArgumentProviderAlias nodes)
-        {
-            var n = nodes.ArgumentCount;
-
-            var res = new TExpression[n];
-
-            for (var i = 0; i < n; i++)
-            {
-                var argument = nodes.GetArgument(i);
-                var expression = Visit(argument);
-                res[i] = expression;
-            }
-
-            return new TrueReadOnlyCollection<TExpression>(/* transfer ownership */ res);
-        }
-#endif
-
-        /// <summary>
-        /// Visits the specified expression and rewrites it to the specified target expression type.
-        /// </summary>
-        /// <typeparam name="TStronglyTypedResult">Type of the result of the rewrite. This type should derive from TExpression.</typeparam>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
-        protected TStronglyTypedResult VisitAndConvert<TStronglyTypedResult>(ExpressionAlias node)
-            where TStronglyTypedResult : TExpression
-        {
-            return (TStronglyTypedResult)Visit(node);
-        }
-
-        /// <summary>
-        /// Visits the collection of expression nodes and rewrites them to the specified target expression type.
-        /// </summary>
-        /// <typeparam name="T">Type of the expressions to rewrite. This type should derive from Expression.</typeparam>
-        /// <typeparam name="TStronglyTypedResult">Type of the results of the rewrite. This type should derive from TExpression.</typeparam>
-        /// <param name="nodes">Expression nodes to rewrite.</param>
-        /// <returns>Collection of rewritten expression nodes.</returns>
-        protected ReadOnlyCollection<TStronglyTypedResult> VisitAndConvert<T, TStronglyTypedResult>(ReadOnlyCollection<T> nodes)
-            where T : ExpressionAlias
-            where TStronglyTypedResult : TExpression
-        {
-            var n = nodes.Count;
-
-            if (n == 0)
-            {
-                return EmptyReadOnlyCollection<TStronglyTypedResult>.Instance;
-            }
-
-            var res = new TStronglyTypedResult[n];
-
-            for (var i = 0; i < n; i++)
-            {
-                var node = VisitAndConvert<TStronglyTypedResult>(nodes[i]);
-                res[i] = node;
-            }
-
-            return new TrueReadOnlyCollection<TStronglyTypedResult>(/* transfer ownership */ res);
-        }
-
-        /// <summary>
-        /// Visits the specified node using the specified visitor function if it's not null.
-        /// </summary>
-        /// <typeparam name="T">Type of the node to visit.</typeparam>
-        /// <typeparam name="TResult">Type of the result of visiting the node.</typeparam>
-        /// <param name="node">Node to visit.</param>
-        /// <param name="nodeVisitor">Visitor function to apply to the node.</param>
-        /// <returns>Result of applying the visitor function to the node.</returns>
-        protected static TResult VisitIfNotNull<T, TResult>(T node, Func<T, TResult> nodeVisitor)
-        {
-            ArgumentNullException.ThrowIfNull(nodeVisitor);
-
-            if (node != null)
-            {
-                return nodeVisitor(node);
-            }
-
             return default;
         }
 
-        /// <summary>
-        /// Visits the children of the BinaryExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+        return node.NodeType switch
+        {
+            ExpressionType.Add or
+            ExpressionType.AddChecked or
+            ExpressionType.And or
+            ExpressionType.AndAlso or
+            ExpressionType.ArrayIndex or
+            ExpressionType.Coalesce or
+            ExpressionType.Divide or
+            ExpressionType.Equal or
+            ExpressionType.ExclusiveOr or
+            ExpressionType.GreaterThan or
+            ExpressionType.GreaterThanOrEqual or
+            ExpressionType.LeftShift or
+            ExpressionType.LessThan or
+            ExpressionType.LessThanOrEqual or
+            ExpressionType.Modulo or
+            ExpressionType.Multiply or
+            ExpressionType.MultiplyChecked or
+            ExpressionType.NotEqual or
+            ExpressionType.Or or
+            ExpressionType.OrElse or
+            ExpressionType.Power or
+            ExpressionType.RightShift or
+            ExpressionType.Subtract or
+            ExpressionType.SubtractChecked or
+            ExpressionType.AddAssign or
+            ExpressionType.AddAssignChecked or
+            ExpressionType.AndAssign or
+            ExpressionType.Assign or
+            ExpressionType.DivideAssign or
+            ExpressionType.ExclusiveOrAssign or
+            ExpressionType.LeftShiftAssign or
+            ExpressionType.ModuloAssign or
+            ExpressionType.MultiplyAssign or
+            ExpressionType.MultiplyAssignChecked or
+            ExpressionType.OrAssign or
+            ExpressionType.PowerAssign or
+            ExpressionType.RightShiftAssign or
+            ExpressionType.SubtractAssign or
+            ExpressionType.SubtractAssignChecked => VisitBinary((BinaryExpressionAlias)node),
+            ExpressionType.Block => VisitBlock((BlockExpressionAlias)node),
+            ExpressionType.Call => VisitMethodCall((MethodCallExpressionAlias)node),
+            ExpressionType.Conditional => VisitConditional((ConditionalExpressionAlias)node),
+            ExpressionType.Constant => VisitConstant((ConstantExpressionAlias)node),
+            ExpressionType.Default => VisitDefault((DefaultExpressionAlias)node),
+            ExpressionType.Extension => VisitExtension(node),
+            ExpressionType.Goto => VisitGoto((GotoExpressionAlias)node),
+            ExpressionType.Index => VisitIndex((IndexExpressionAlias)node),
+            ExpressionType.Invoke => VisitInvocation((InvocationExpressionAlias)node),
+            ExpressionType.Label => VisitLabel((LabelExpressionAlias)node),
+            ExpressionType.Lambda => VisitLambda((LambdaExpressionAlias)node),
+            ExpressionType.ListInit => VisitListInit((ListInitExpressionAlias)node),
+            ExpressionType.Loop => VisitLoop((LoopExpressionAlias)node),
+            ExpressionType.MemberAccess => VisitMember((MemberExpressionAlias)node),
+            ExpressionType.MemberInit => VisitMemberInit((MemberInitExpressionAlias)node),
+            ExpressionType.New => VisitNew((NewExpressionAlias)node),
+            ExpressionType.NewArrayBounds or
+            ExpressionType.NewArrayInit => VisitNewArray((NewArrayExpressionAlias)node),
+            ExpressionType.Parameter => VisitParameter((ParameterExpressionAlias)node),
+            ExpressionType.Switch => VisitSwitch((SwitchExpressionAlias)node),
+            ExpressionType.Try => VisitTry((TryExpressionAlias)node),
+            ExpressionType.TypeEqual or
+            ExpressionType.TypeIs => VisitTypeBinary((TypeBinaryExpressionAlias)node),
+            ExpressionType.ArrayLength or
+            ExpressionType.Convert or
+            ExpressionType.ConvertChecked or
+            ExpressionType.Decrement or
+            ExpressionType.Increment or
+            ExpressionType.IsFalse or
+            ExpressionType.IsTrue or
+            ExpressionType.Negate or
+            ExpressionType.NegateChecked or
+            ExpressionType.Not or
+            ExpressionType.OnesComplement or
+            ExpressionType.PostDecrementAssign or
+            ExpressionType.PostIncrementAssign or
+            ExpressionType.PreDecrementAssign or
+            ExpressionType.PreIncrementAssign or
+            ExpressionType.Quote or
+            ExpressionType.Throw or
+            ExpressionType.TypeAs or
+            ExpressionType.UnaryPlus or
+            ExpressionType.Unbox => VisitUnary((UnaryExpressionAlias)node),
+#if !USE_SLIM
+            ExpressionType.DebugInfo => VisitDebugInfo((DebugInfoExpression)node),
+            ExpressionType.Dynamic => VisitDynamic((DynamicExpression)node),
+            ExpressionType.RuntimeVariables => VisitRuntimeVariables((RuntimeVariablesExpression)node),
+#endif
+            _ => throw new NotSupportedException(),
+        };
+    }
+
+#if !USE_SLIM
+    private sealed class LambdaDispatch : ExpressionVisitor
+    {
+        private readonly ExpressionVisitor<TExpression> _parent;
+
+        public LambdaDispatch(ExpressionVisitor<TExpression> parent)
+        {
+            _parent = parent;
+        }
+
+        protected override ExpressionAlias VisitLambda<T>(Expression<T> node)
+        {
+            return new ExpressionHolder { Result = _parent.VisitLambda(node) };
+        }
+    }
+
+    private sealed class ExpressionHolder : ExpressionAlias
+    {
+        public TExpression Result;
+    }
+
+    private LambdaDispatch _dispatch;
+
+    private TExpression VisitLambda(LambdaExpressionAlias node)
+    {
+        _dispatch ??= new LambdaDispatch(this);
+
+        return ((ExpressionHolder)_dispatch.Visit(node)).Result;
+    }
+#endif
+
+    /// <summary>
+    /// Visits the collection of expression nodes and rewrites them to the target expression type.
+    /// </summary>
+    /// <typeparam name="T">Type of the expressions to rewrite. This type should derive from Expression.</typeparam>
+    /// <param name="nodes">Expression nodes to rewrite.</param>
+    /// <returns>Collection of rewritten expression nodes.</returns>
+    protected ReadOnlyCollection<TExpression> Visit<T>(ReadOnlyCollection<T> nodes)
+        where T : ExpressionAlias
+    {
+        var n = nodes.Count;
+
+        if (n == 0)
+        {
+            return EmptyReadOnlyCollection<TExpression>.Instance;
+        }
+
+        var res = new TExpression[n];
+
+        for (var i = 0; i < n; i++)
+        {
+            var node = Visit(nodes[i]);
+            res[i] = node;
+        }
+
+        return new TrueReadOnlyCollection<TExpression>(/* transfer ownership */ res);
+    }
+
 #if USE_SLIM
-        protected internal
+    /// <summary>
+    /// Visits the arguments in an argument provider.
+    /// </summary>
+    /// <param name="nodes">The argument provider whose arguments to visit.</param>
+    /// <returns>The rewritten arguments.</returns>
+    protected internal ReadOnlyCollection<TExpression> VisitArguments(IArgumentProviderAlias nodes)
+    {
+        var n = nodes.ArgumentCount;
+
+        var res = new TExpression[n];
+
+        for (var i = 0; i < n; i++)
+        {
+            var argument = nodes.GetArgument(i);
+            var expression = Visit(argument);
+            res[i] = expression;
+        }
+
+        return new TrueReadOnlyCollection<TExpression>(/* transfer ownership */ res);
+    }
+#endif
+
+    /// <summary>
+    /// Visits the specified expression and rewrites it to the specified target expression type.
+    /// </summary>
+    /// <typeparam name="TStronglyTypedResult">Type of the result of the rewrite. This type should derive from TExpression.</typeparam>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
+    protected TStronglyTypedResult VisitAndConvert<TStronglyTypedResult>(ExpressionAlias node)
+        where TStronglyTypedResult : TExpression
+    {
+        return (TStronglyTypedResult)Visit(node);
+    }
+
+    /// <summary>
+    /// Visits the collection of expression nodes and rewrites them to the specified target expression type.
+    /// </summary>
+    /// <typeparam name="T">Type of the expressions to rewrite. This type should derive from Expression.</typeparam>
+    /// <typeparam name="TStronglyTypedResult">Type of the results of the rewrite. This type should derive from TExpression.</typeparam>
+    /// <param name="nodes">Expression nodes to rewrite.</param>
+    /// <returns>Collection of rewritten expression nodes.</returns>
+    protected ReadOnlyCollection<TStronglyTypedResult> VisitAndConvert<T, TStronglyTypedResult>(ReadOnlyCollection<T> nodes)
+        where T : ExpressionAlias
+        where TStronglyTypedResult : TExpression
+    {
+        var n = nodes.Count;
+
+        if (n == 0)
+        {
+            return EmptyReadOnlyCollection<TStronglyTypedResult>.Instance;
+        }
+
+        var res = new TStronglyTypedResult[n];
+
+        for (var i = 0; i < n; i++)
+        {
+            var node = VisitAndConvert<TStronglyTypedResult>(nodes[i]);
+            res[i] = node;
+        }
+
+        return new TrueReadOnlyCollection<TStronglyTypedResult>(/* transfer ownership */ res);
+    }
+
+    /// <summary>
+    /// Visits the specified node using the specified visitor function if it's not null.
+    /// </summary>
+    /// <typeparam name="T">Type of the node to visit.</typeparam>
+    /// <typeparam name="TResult">Type of the result of visiting the node.</typeparam>
+    /// <param name="node">Node to visit.</param>
+    /// <param name="nodeVisitor">Visitor function to apply to the node.</param>
+    /// <returns>Result of applying the visitor function to the node.</returns>
+    protected static TResult VisitIfNotNull<T, TResult>(T node, Func<T, TResult> nodeVisitor)
+    {
+        ArgumentNullException.ThrowIfNull(nodeVisitor);
+
+        if (node != null)
+        {
+            return nodeVisitor(node);
+        }
+
+        return default;
+    }
+
+    /// <summary>
+    /// Visits the children of the BinaryExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
+#if USE_SLIM
+    protected internal
 #else
-        protected
+    protected
 # endif
-        abstract TExpression VisitBinary(BinaryExpressionAlias node);
+    abstract TExpression VisitBinary(BinaryExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the BlockExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the BlockExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitBlock(BlockExpressionAlias node);
+    abstract TExpression VisitBlock(BlockExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the ConditionalExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the ConditionalExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitConditional(ConditionalExpressionAlias node);
+    abstract TExpression VisitConditional(ConditionalExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the ConstantExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the ConstantExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitConstant(ConstantExpressionAlias node);
+    abstract TExpression VisitConstant(ConstantExpressionAlias node);
 
 #if !USE_SLIM
-        /// <summary>
-        /// Visits the children of the DebugInfoExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
-        protected abstract TExpression VisitDebugInfo(DebugInfoExpression node);
+    /// <summary>
+    /// Visits the children of the DebugInfoExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
+    protected abstract TExpression VisitDebugInfo(DebugInfoExpression node);
 #endif
 
-        /// <summary>
-        /// Visits the children of the DefaultExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the DefaultExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitDefault(DefaultExpressionAlias node);
+    abstract TExpression VisitDefault(DefaultExpressionAlias node);
 
 #if !USE_SLIM
-        /// <summary>
-        /// Visits the children of the DynamicExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
-        protected abstract TExpression VisitDynamic(DynamicExpression node);
+    /// <summary>
+    /// Visits the children of the DynamicExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
+    protected abstract TExpression VisitDynamic(DynamicExpression node);
 #endif
 
-        /// <summary>
-        /// Visits the children of the extension expression node.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the extension expression node.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitExtension(ExpressionAlias node);
+    abstract TExpression VisitExtension(ExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the GotoExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the GotoExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitGoto(GotoExpressionAlias node);
+    abstract TExpression VisitGoto(GotoExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the IndexExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the IndexExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitIndex(IndexExpressionAlias node);
+    abstract TExpression VisitIndex(IndexExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the InvocationExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the InvocationExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitInvocation(InvocationExpressionAlias node);
+    abstract TExpression VisitInvocation(InvocationExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the LabelExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the LabelExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitLabel(LabelExpressionAlias node);
+    abstract TExpression VisitLabel(LabelExpressionAlias node);
 
 #if USE_SLIM
-        /// <summary>
-        /// Visits the children of the LambdaExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
-        protected internal abstract TExpression VisitLambda(LambdaExpressionAlias node);
+    /// <summary>
+    /// Visits the children of the LambdaExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
+    protected internal abstract TExpression VisitLambda(LambdaExpressionAlias node);
 #else
-        /// <summary>
-        /// Visits the children of the LambdaExpression.
-        /// </summary>
-        /// <typeparam name="T">The type of the delegate.</typeparam>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
-        protected abstract TExpression VisitLambda<T>(Expression<T> node);
+    /// <summary>
+    /// Visits the children of the LambdaExpression.
+    /// </summary>
+    /// <typeparam name="T">The type of the delegate.</typeparam>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
+    protected abstract TExpression VisitLambda<T>(Expression<T> node);
 #endif
 
-        /// <summary>
-        /// Visits the children of the ListInitExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the ListInitExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitListInit(ListInitExpressionAlias node);
+    abstract TExpression VisitListInit(ListInitExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the LoopExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the LoopExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitLoop(LoopExpressionAlias node);
+    abstract TExpression VisitLoop(LoopExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the MemberExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the MemberExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitMember(MemberExpressionAlias node);
+    abstract TExpression VisitMember(MemberExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the MemberInitExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the MemberInitExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitMemberInit(MemberInitExpressionAlias node);
+    abstract TExpression VisitMemberInit(MemberInitExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the MethodCallExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the MethodCallExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitMethodCall(MethodCallExpressionAlias node);
+    abstract TExpression VisitMethodCall(MethodCallExpressionAlias node);
 
 #pragma warning disable IDE0079 // Remove unnecessary suppression.
 #pragma warning disable CA1711 // Replace New suffix. (Name of expression tree node.)
 
-        /// <summary>
-        /// Visits the children of the NewExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the NewExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitNew(NewExpressionAlias node);
+    abstract TExpression VisitNew(NewExpressionAlias node);
 
 #pragma warning restore CA1711
 #pragma warning restore IDE0079
 
-        /// <summary>
-        /// Visits the children of the NewArrayExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the NewArrayExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitNewArray(NewArrayExpressionAlias node);
+    abstract TExpression VisitNewArray(NewArrayExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the ParameterExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the ParameterExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitParameter(ParameterExpressionAlias node);
+    abstract TExpression VisitParameter(ParameterExpressionAlias node);
 
 #if !USE_SLIM
-        /// <summary>
-        /// Visits the children of the RuntimeVariablesExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
-        protected abstract TExpression VisitRuntimeVariables(RuntimeVariablesExpression node);
+    /// <summary>
+    /// Visits the children of the RuntimeVariablesExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
+    protected abstract TExpression VisitRuntimeVariables(RuntimeVariablesExpression node);
 #endif
 
-        /// <summary>
-        /// Visits the children of the SwitchExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the SwitchExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitSwitch(SwitchExpressionAlias node);
+    abstract TExpression VisitSwitch(SwitchExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the TryExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the TryExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitTry(TryExpressionAlias node);
+    abstract TExpression VisitTry(TryExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the TypeBinaryExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the TypeBinaryExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitTypeBinary(TypeBinaryExpressionAlias node);
+    abstract TExpression VisitTypeBinary(TypeBinaryExpressionAlias node);
 
-        /// <summary>
-        /// Visits the children of the UnaryExpression.
-        /// </summary>
-        /// <param name="node">Expression to visit.</param>
-        /// <returns>Result of visiting the expression.</returns>
+    /// <summary>
+    /// Visits the children of the UnaryExpression.
+    /// </summary>
+    /// <param name="node">Expression to visit.</param>
+    /// <returns>Result of visiting the expression.</returns>
 #if USE_SLIM
-        protected internal
+    protected internal
 #else
-        protected
+    protected
 #endif
-        abstract TExpression VisitUnary(UnaryExpressionAlias node);
-    }
+    abstract TExpression VisitUnary(UnaryExpressionAlias node);
 }

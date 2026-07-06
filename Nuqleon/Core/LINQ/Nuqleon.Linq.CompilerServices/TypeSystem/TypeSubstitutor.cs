@@ -9,62 +9,61 @@
 //
 
 #if USE_SLIM
-namespace System.Linq.CompilerServices.Bonsai
+namespace System.Linq.CompilerServices.Bonsai;
 #else
-namespace System.Linq.CompilerServices
+namespace System.Linq.CompilerServices;
+#endif
+
+#if USE_SLIM
+#region Aliases
+
+using Type = System.Reflection.TypeSlim;
+
+#endregion
+#endif
+
+/// <summary>
+/// Substitutes occurrences of the specified types in a given type by recursing over its structure.
+/// Matches for substitution are based on referential equality for types. In particular, subtyping relationships are not taken into consideration.
+/// </summary>
+#if USE_SLIM
+public class TypeSlimSubstitutor : System.Reflection.TypeSlimVisitor
+#else
+public class TypeSubstitutor : TypeVisitor
 #endif
 {
-#if USE_SLIM
-    #region Aliases
-
-    using Type = System.Reflection.TypeSlim;
-
-    #endregion
-#endif
+    private readonly IDictionary<Type, Type> _map;
 
     /// <summary>
-    /// Substitutes occurrences of the specified types in a given type by recursing over its structure.
-    /// Matches for substitution are based on referential equality for types. In particular, subtyping relationships are not taken into consideration.
+    /// Creates a new type substitutor with the specified map for replacements.
     /// </summary>
+    /// <param name="map">Map used for replacements. Each key represents a types to be substituted by its corresponding value.</param>
 #if USE_SLIM
-    public class TypeSlimSubstitutor : System.Reflection.TypeSlimVisitor
+    public TypeSlimSubstitutor(IDictionary<Type, Type> map)
 #else
-    public class TypeSubstitutor : TypeVisitor
+    public TypeSubstitutor(IDictionary<Type, Type> map)
 #endif
     {
-        private readonly IDictionary<Type, Type> _map;
+        _map = map ?? throw new ArgumentNullException(nameof(map));
+    }
 
-        /// <summary>
-        /// Creates a new type substitutor with the specified map for replacements.
-        /// </summary>
-        /// <param name="map">Map used for replacements. Each key represents a types to be substituted by its corresponding value.</param>
-#if USE_SLIM
-        public TypeSlimSubstitutor(IDictionary<Type, Type> map)
-#else
-        public TypeSubstitutor(IDictionary<Type, Type> map)
-#endif
+    /// <summary>
+    /// Visits a CLR type.
+    /// </summary>
+    /// <param name="type">Type to visit.</param>
+    /// <returns>Resulting type after the visit.</returns>
+    public override Type Visit(Type type)
+    {
+        if (type == null)
         {
-            _map = map ?? throw new ArgumentNullException(nameof(map));
+            return null;
         }
 
-        /// <summary>
-        /// Visits a CLR type.
-        /// </summary>
-        /// <param name="type">Type to visit.</param>
-        /// <returns>Resulting type after the visit.</returns>
-        public override Type Visit(Type type)
+        if (_map.TryGetValue(type, out Type res))
         {
-            if (type == null)
-            {
-                return null;
-            }
-
-            if (_map.TryGetValue(type, out Type res))
-            {
-                return res;
-            }
-
-            return base.Visit(type);
+            return res;
         }
+
+        return base.Visit(type);
     }
 }

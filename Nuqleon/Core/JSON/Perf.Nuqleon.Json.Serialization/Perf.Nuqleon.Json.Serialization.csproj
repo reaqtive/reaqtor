@@ -10,12 +10,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <Optimize>true</Optimize>
     <Configuration>Release</Configuration>
-
-    <!-- Works around error "MSB4086: A numeric comparison was attempted on "$(LangVersion)" that evaluates to "latest" instead of a number" at runtime. -->
-    <LangVersion>9.0</LangVersion>
-    <!-- LangVersion 9.0 (above) predates 'global using', so the SDK-generated GlobalUsings.g.cs cannot
-         compile here; opt this one benchmark project out of the repo-wide implicit usings. -->
-    <ImplicitUsings>disable</ImplicitUsings>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="BenchmarkDotNet" />

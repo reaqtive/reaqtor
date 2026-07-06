@@ -105,9 +105,10 @@ csharp_style_inlined_variable_declaration = true:suggestion
 # (re-)applied by `dotnet format` / IDE code cleanup.
 csharp_style_prefer_primary_constructors = false:silent
 dotnet_diagnostic.IDE0290.severity = none
-# Namespace declarations: prefer file-scoped (C# 10+). Enforced at build (IDE0161). Files with more
-# than one namespace stay block-scoped automatically (the fixer only converts single-namespace files);
-# generated files are excluded below so their T4 templates need not change.
+# Namespace declarations: prefer file-scoped (C# 10+). Enforced at build (IDE0161). Generated files
+# are excluded below so their T4 templates need not change. The USE_SLIM linked files use a
+# conditional file-scoped declaration (#if USE_SLIM namespace X.Bonsai; #else namespace X; #endif),
+# which satisfies this rule in every compilation.
 csharp_style_namespace_declarations = file_scoped:warning
 ###############################
 # C# Formatting Rules         #
@@ -194,13 +195,5 @@ visual_basic_preferred_modifier_order = Partial,Default,Private,Protected,Public
 # style choice with no semantic effect, so we do not convert generated outputs (nor churn ~100 .tt
 # templates to emit file-scoped). Keep IDE0161 off for them; hand-authored files are still enforced.
 [*.{Generated,generated,g,Designer}.cs]
-csharp_style_namespace_declarations = block_scoped:silent
-dotnet_diagnostic.IDE0161.severity = none
-
-# The USE_SLIM Bonsai mirror links these files into multiple projects and wraps the namespace in a
-# compile-time conditional (#if USE_SLIM namespace X.Bonsai #else namespace X #endif). File-scoped
-# conversion only ever sees one branch and breaks the other (the dotnet format #138 linked-file issue),
-# so they stay block-scoped — the same files eng/Run-DotnetFormat.ps1 excludes from the format pass.
-[Nuqleon/Core/LINQ/**/{ExpressionEqualityComparator,ExpressionEqualityComparer,ExpressionTupletizer,TypeSubstitutionExpressionVisitor,ExpressionVisitor.Generic,ExpressionVisitorBase.Generic,ExpressionVisitorWithReflection,ScopedExpressionVisitor,ScopedExpressionVisitor.Generic,ScopedExpressionVisitorBase,ScopedExpressionVisitorBase.Generic,TypeSubstitutor,ExpressionEqualityComparerTests,ExpressionTupletizerTests,UnsafeExpressionTests,ScopedExpressionVisitorGenericTests}.cs]
 csharp_style_namespace_declarations = block_scoped:silent
 dotnet_diagnostic.IDE0161.severity = none

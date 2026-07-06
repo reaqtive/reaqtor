@@ -20,28 +20,27 @@ using Reaqtor.TestingFramework;
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace Test.Reaqtive.Operators
+namespace Test.Reaqtive.Operators;
+
+public partial class Throw : OperatorTestBase
 {
-    public partial class Throw : OperatorTestBase
+    [TestMethod]
+    public void Throw_Simple()
     {
-        [TestMethod]
-        public void Throw_Simple()
+        Run(client =>
         {
-            Run(client =>
-            {
-                var ex = new Exception();
+            var ex = new Exception();
 
-                var context = GetContext(client);
+            var context = GetContext(client);
 
-                var res = client.Start(() =>
-                    context.Throw<int>(ex)
-                );
+            var res = client.Start(() =>
+                context.Throw<int>(ex)
+            );
 
-                res.Messages.AssertEqual(
-                    OnError<int>(Increment(200, 1), ex)
-                );
-            });
-        }
+            res.Messages.AssertEqual(
+                OnError<int>(Increment(200, 1), ex)
+            );
+        });
     }
 }
 

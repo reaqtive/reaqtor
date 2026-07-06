@@ -9,41 +9,40 @@
 using System.Reflection;
 using System.Reflection.Emit;
 
-namespace System.Linq.Expressions.Tests
+namespace System.Linq.Expressions.Tests;
+
+public class ILReaderFactory
 {
-    public class ILReaderFactory
+    public static ILReader Create(object obj)
     {
-        public static ILReader Create(object obj)
+        Type type = obj.GetType();
+
+        if (type == s_dynamicMethodType || type == s_rtDynamicMethodType)
         {
-            Type type = obj.GetType();
-
-            if (type == s_dynamicMethodType || type == s_rtDynamicMethodType)
+            DynamicMethod dm;
+            if (type == s_rtDynamicMethodType)
             {
-                DynamicMethod dm;
-                if (type == s_rtDynamicMethodType)
-                {
-                    //
-                    // if the target is RTDynamicMethod, get the value of
-                    // RTDynamicMethod.m_owner instead
-                    //
-                    dm = (DynamicMethod)s_fiOwner.GetValue(obj);
-                }
-                else
-                {
-                    dm = obj as DynamicMethod;
-                }
-
-                return new ILReader(new DynamicMethodILProvider(dm), new DynamicScopeTokenResolver(dm));
+                //
+                // if the target is RTDynamicMethod, get the value of
+                // RTDynamicMethod.m_owner instead
+                //
+                dm = (DynamicMethod)s_fiOwner.GetValue(obj);
+            }
+            else
+            {
+                dm = obj as DynamicMethod;
             }
 
-            throw new NotSupportedException($"Reading IL from type '{type}' is currently not supported.");
+            return new ILReader(new DynamicMethodILProvider(dm), new DynamicScopeTokenResolver(dm));
         }
 
-        private static readonly Type s_dynamicMethodType = Type.GetType("System.Reflection.Emit.DynamicMethod", throwOnError: true);
-        //private static readonly Type s_runtimeMethodInfoType = Type.GetType("System.Reflection.RuntimeMethodInfo", throwOnError: true);
-        //private static readonly Type s_runtimeConstructorInfoType = Type.GetType("System.Reflection.RuntimeConstructorInfo", throwOnError: true);
-
-        private static readonly Type s_rtDynamicMethodType = Type.GetType("System.Reflection.Emit.DynamicMethod+RTDynamicMethod", throwOnError: true);
-        private static readonly FieldInfo s_fiOwner = s_rtDynamicMethodType.GetFieldAssert("m_owner");
+        throw new NotSupportedException($"Reading IL from type '{type}' is currently not supported.");
     }
+
+    private static readonly Type s_dynamicMethodType = Type.GetType("System.Reflection.Emit.DynamicMethod", throwOnError: true);
+    //private static readonly Type s_runtimeMethodInfoType = Type.GetType("System.Reflection.RuntimeMethodInfo", throwOnError: true);
+    //private static readonly Type s_runtimeConstructorInfoType = Type.GetType("System.Reflection.RuntimeConstructorInfo", throwOnError: true);
+
+    private static readonly Type s_rtDynamicMethodType = Type.GetType("System.Reflection.Emit.DynamicMethod+RTDynamicMethod", throwOnError: true);
+    private static readonly FieldInfo s_fiOwner = s_rtDynamicMethodType.GetFieldAssert("m_owner");
 }

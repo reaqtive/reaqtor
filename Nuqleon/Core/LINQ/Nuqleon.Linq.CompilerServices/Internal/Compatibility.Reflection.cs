@@ -8,15 +8,15 @@
 // BD - June 2014 - Created this file.
 //
 
+// NB: Split out of Compatibility.cs so both files can use a file-scoped namespace (a file can
+//     hold only one namespace in that style).
+
 using System.Runtime.CompilerServices;
 
-namespace System;
+namespace System.Reflection;
 
-internal static class TypeCompatibilityExtensions
+internal static class MemberInfoCompatibilityExtensions
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsGenericType(this Type type) => type.IsGenericType;
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool IsGenericTypeDefinition(this Type type) => type.IsGenericTypeDefinition;
+    public static MemberTypes GetMemberType(this MemberInfo member) => member.MemberType;
 }
